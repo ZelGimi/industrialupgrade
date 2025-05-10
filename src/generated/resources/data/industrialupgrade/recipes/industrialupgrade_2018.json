@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_504_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_480_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tungsten"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/hafniumboride"
+      }
+    ]
+  },
+  "pattern": [
+    "C B",
+    " BD",
+    "BDA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_691_element"
+  }
+}

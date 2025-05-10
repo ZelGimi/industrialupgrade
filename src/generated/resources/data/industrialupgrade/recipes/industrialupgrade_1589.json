@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/redbrass"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    }
+  },
+  "pattern": [
+    " B ",
+    "ACA",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_40_element"
+  }
+}

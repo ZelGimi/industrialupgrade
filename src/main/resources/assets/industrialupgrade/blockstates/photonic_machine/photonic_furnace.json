@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=photonic_furnace": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace"
+    },
+    "facing=south,type=photonic_furnace": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace",
+      "y": 180
+    },
+    "facing=west,type=photonic_furnace": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace",
+      "y": 270
+    },
+    "facing=east,type=photonic_furnace": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace",
+      "y": 90
+    },
+    "facing=down,type=photonic_furnace": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace",
+      "x": 90
+    },
+    "facing=up,type=photonic_furnace": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace",
+      "x": 270
+    },
+    "facing=north,type=photonic_furnace_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active"
+    },
+    "facing=south,type=photonic_furnace_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_furnace_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_furnace_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_furnace_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_furnace_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "x": 270
+    },
+    "facing=north,type=photonic_furnace_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active"
+    },
+    "facing=south,type=photonic_furnace_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_furnace_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_furnace_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_furnace_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_furnace_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_furnace_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_202_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_90_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_251_element"
+      }
+    ]
+  },
+  "pattern": [
+    "ACE",
+    " B ",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/wireless_oil_pump"
+  }
+}

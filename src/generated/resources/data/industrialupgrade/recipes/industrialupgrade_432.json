@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring/glass6"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:photoniy"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "BCB",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/glass7"
+  }
+}

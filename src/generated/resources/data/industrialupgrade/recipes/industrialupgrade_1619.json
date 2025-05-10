@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/nichrome"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/energy_crystal"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:itemcell/itemcell",
+      "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidgas\"}}"
+    }
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_263_element"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:water_rotor/water_rotor_carbon"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:corewater/core_wind5"
+  }
+}

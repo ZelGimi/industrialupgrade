@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:slabs"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:rubber_wood/plain_y"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "B B",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:apiary/apiary"
+  }
+}

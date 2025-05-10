@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_24_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/itembatlamacrystal"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_233_element"
+  }
+}

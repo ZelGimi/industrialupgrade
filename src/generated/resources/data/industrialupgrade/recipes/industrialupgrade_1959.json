@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:water_rotor/water_barionrotor"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:10}"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "CBC",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:corewater/core_wind12"
+  }
+}

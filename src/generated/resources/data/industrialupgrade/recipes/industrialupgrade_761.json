@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/draconid"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_139_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/woods"
+      }
+    ]
+  },
+  "pattern": [
+    "BC ",
+    "AA ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_140_element"
+  }
+}

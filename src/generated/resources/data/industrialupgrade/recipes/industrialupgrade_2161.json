@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_122_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/cobaltchrome"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:redstone"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "item": "industrialupgrade:wiring/itemcable24"
+  }
+}

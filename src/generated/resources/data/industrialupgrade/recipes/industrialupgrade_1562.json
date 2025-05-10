@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_150_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_10_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:molecular/molecular"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    " D ",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/nether_assembler"
+  }
+}

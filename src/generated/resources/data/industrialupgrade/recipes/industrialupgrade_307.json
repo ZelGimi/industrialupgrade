@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:alloynugget/hafnium_boride_alloy"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:alloyingot/hafnium_boride_alloy"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring/gold1"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/advanced_re_battery"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    }
+  },
+  "pattern": [
+    " A ",
+    "DBC",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_208_element"
+  }
+}

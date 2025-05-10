@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring_storage/bar_mfsu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/phocore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:transformer_iu/lv"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_620_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:blockresource/reinforced_stone"
+      }
+    ]
+  },
+  "pattern": [
+    "EDE",
+    "BBB",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_634_element"
+  }
+}

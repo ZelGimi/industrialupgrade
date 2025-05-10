@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:moremachine3/orewashing"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_12_element"
+      }
+    ],
+    "G": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_6_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AGA",
+    "DBE",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:moremachine3/doubleorewashing"
+  }
+}

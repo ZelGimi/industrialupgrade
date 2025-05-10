@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:machineblock"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_354_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_44_element"
+      }
+    ],
+    "H": [
+      {
+        "item": "industrialupgrade:basemachine3/steam_sharpener"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "CAC",
+    "B H"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/laser_polisher"
+  }
+}

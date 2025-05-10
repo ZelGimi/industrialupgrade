@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:polonium_palladium_composite"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:alloyplate/beryllium_bronze"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:antisoilpollution"
+  }
+}

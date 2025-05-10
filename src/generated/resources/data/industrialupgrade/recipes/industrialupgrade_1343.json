@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/woods"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/permalloy"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:geothermalpump/geothermal_casing"
+  }
+}

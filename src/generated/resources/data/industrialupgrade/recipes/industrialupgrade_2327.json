@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:blockprecious/meteoric_block"
+      }
+    ]
+  ],
+  "result": {
+    "count": 9,
+    "item": "industrialupgrade:itemingots/meteoric_iron"
+  }
+}

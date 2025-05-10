@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wax_stick"
+      }
+    ],
+    "B": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:adv_bee_frame_template"
+  }
+}

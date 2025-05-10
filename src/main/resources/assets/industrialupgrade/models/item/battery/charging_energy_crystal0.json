@@ -1,0 +1,6 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/battery/charging_energy_crystal_0"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring_storage/mfsu_iu"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/lapotron_crystal"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "DAD",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring_storage/adv_mfsu"
+  }
+}

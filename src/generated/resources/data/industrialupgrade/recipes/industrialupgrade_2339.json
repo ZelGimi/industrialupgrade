@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/copper"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/ampere"
+  }
+}

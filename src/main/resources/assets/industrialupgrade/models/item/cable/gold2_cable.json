@@ -1,0 +1,6 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/gold_cable_2"
+  }
+}

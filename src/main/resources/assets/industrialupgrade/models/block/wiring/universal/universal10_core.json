@@ -1,0 +1,6 @@
+{
+	"parent": "industrialupgrade:block/wiring/cable/cable_base",
+	"textures": {
+		"texture": "industrialupgrade:blocks/wiring/universal_cable/glass10_cable"
+	}
+}

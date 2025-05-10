@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_112_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:itemplates/mythril"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_turbine/gas_turbine_blower"
+  }
+}

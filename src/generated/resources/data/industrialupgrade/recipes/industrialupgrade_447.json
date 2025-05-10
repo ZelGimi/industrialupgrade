@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:storage_blocks/bronze"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:rotor/rotor_wood"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:corewind/core_wind1"
+  }
+}

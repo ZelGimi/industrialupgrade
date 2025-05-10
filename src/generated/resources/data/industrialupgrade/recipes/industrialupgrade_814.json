@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/electrum"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_37_element"
+  }
+}

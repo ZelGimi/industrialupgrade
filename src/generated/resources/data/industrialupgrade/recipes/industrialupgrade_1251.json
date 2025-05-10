@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "C": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "CBC",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:dryer/dryer"
+  }
+}

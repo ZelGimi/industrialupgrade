@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=moon_spotter": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter"
+    },
+    "facing=south,type=moon_spotter": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter",
+      "y": 180
+    },
+    "facing=west,type=moon_spotter": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter",
+      "y": 270
+    },
+    "facing=east,type=moon_spotter": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter",
+      "y": 90
+    },
+    "facing=down,type=moon_spotter": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter",
+      "x": 90
+    },
+    "facing=up,type=moon_spotter": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter",
+      "x": 270
+    },
+    "facing=north,type=moon_spotter_invalid": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active"
+    },
+    "facing=south,type=moon_spotter_invalid": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "y": 180
+    },
+    "facing=west,type=moon_spotter_invalid": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "y": 270
+    },
+    "facing=east,type=moon_spotter_invalid": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "y": 90
+    },
+    "facing=down,type=moon_spotter_invalid": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "x": 90
+    },
+    "facing=up,type=moon_spotter_invalid": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "x": 270
+    },
+    "facing=north,type=moon_spotter_active": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active"
+    },
+    "facing=south,type=moon_spotter_active": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "y": 180
+    },
+    "facing=west,type=moon_spotter_active": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "y": 270
+    },
+    "facing=east,type=moon_spotter_active": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "y": 90
+    },
+    "facing=down,type=moon_spotter_active": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "x": 90
+    },
+    "facing=up,type=moon_spotter_active": {
+      "model": "industrialupgrade:block/basemachine/moon_spotter_active",
+      "x": 270
+    }
+  }
+}

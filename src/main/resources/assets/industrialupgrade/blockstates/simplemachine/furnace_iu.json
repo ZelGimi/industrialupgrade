@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=furnace_iu": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace"
+    },
+    "facing=south,type=furnace_iu": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace",
+      "y": 180
+    },
+    "facing=west,type=furnace_iu": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace",
+      "y": 270
+    },
+    "facing=east,type=furnace_iu": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace",
+      "y": 90
+    },
+    "facing=down,type=furnace_iu": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace",
+      "x": 90
+    },
+    "facing=up,type=furnace_iu": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace",
+      "x": 270
+    },
+    "facing=north,type=furnace_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active"
+    },
+    "facing=south,type=furnace_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "y": 180
+    },
+    "facing=west,type=furnace_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "y": 270
+    },
+    "facing=east,type=furnace_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "y": 90
+    },
+    "facing=down,type=furnace_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "x": 90
+    },
+    "facing=up,type=furnace_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "x": 270
+    },
+    "facing=north,type=furnace_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active"
+    },
+    "facing=south,type=furnace_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "y": 180
+    },
+    "facing=west,type=furnace_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "y": 270
+    },
+    "facing=east,type=furnace_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "y": 90
+    },
+    "facing=down,type=furnace_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "x": 90
+    },
+    "facing=up,type=furnace_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electric_furnace_active",
+      "x": 270
+    }
+  }
+}

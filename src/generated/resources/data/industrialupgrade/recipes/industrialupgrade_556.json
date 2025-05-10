@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:paints/emptybox"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:red_dye"
+      }
+    ]
+  },
+  "pattern": [
+    "AB ",
+    "   ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:paints/redpaint"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=pump_iu": {
+      "model": "industrialupgrade:block/basemachine/pump"
+    },
+    "facing=south,type=pump_iu": {
+      "model": "industrialupgrade:block/basemachine/pump",
+      "y": 180
+    },
+    "facing=west,type=pump_iu": {
+      "model": "industrialupgrade:block/basemachine/pump",
+      "y": 270
+    },
+    "facing=east,type=pump_iu": {
+      "model": "industrialupgrade:block/basemachine/pump",
+      "y": 90
+    },
+    "facing=down,type=pump_iu": {
+      "model": "industrialupgrade:block/basemachine/pump",
+      "x": 90
+    },
+    "facing=up,type=pump_iu": {
+      "model": "industrialupgrade:block/basemachine/pump",
+      "x": 270
+    },
+    "facing=north,type=pump_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/pump_active"
+    },
+    "facing=south,type=pump_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "y": 180
+    },
+    "facing=west,type=pump_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "y": 270
+    },
+    "facing=east,type=pump_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "y": 90
+    },
+    "facing=down,type=pump_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "x": 90
+    },
+    "facing=up,type=pump_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "x": 270
+    },
+    "facing=north,type=pump_iu_active": {
+      "model": "industrialupgrade:block/basemachine/pump_active"
+    },
+    "facing=south,type=pump_iu_active": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "y": 180
+    },
+    "facing=west,type=pump_iu_active": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "y": 270
+    },
+    "facing=east,type=pump_iu_active": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "y": 90
+    },
+    "facing=down,type=pump_iu_active": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "x": 90
+    },
+    "facing=up,type=pump_iu_active": {
+      "model": "industrialupgrade:block/basemachine/pump_active",
+      "x": 270
+    }
+  }
+}

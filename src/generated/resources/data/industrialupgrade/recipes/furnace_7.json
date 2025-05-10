@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone/dione_cobblestone"
+  },
+  "result": "industrialupgrade:spacestone/dione_stone"
+}

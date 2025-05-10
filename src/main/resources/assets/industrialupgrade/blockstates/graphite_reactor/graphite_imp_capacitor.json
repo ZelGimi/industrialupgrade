@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=graphite_imp_capacitor": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor"
+    },
+    "facing=south,type=graphite_imp_capacitor": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "y": 180
+    },
+    "facing=west,type=graphite_imp_capacitor": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "y": 270
+    },
+    "facing=east,type=graphite_imp_capacitor": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "y": 90
+    },
+    "facing=down,type=graphite_imp_capacitor": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "x": 90
+    },
+    "facing=up,type=graphite_imp_capacitor": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "x": 270
+    },
+    "facing=north,type=graphite_imp_capacitor_invalid": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor"
+    },
+    "facing=south,type=graphite_imp_capacitor_invalid": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "y": 180
+    },
+    "facing=west,type=graphite_imp_capacitor_invalid": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "y": 270
+    },
+    "facing=east,type=graphite_imp_capacitor_invalid": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "y": 90
+    },
+    "facing=down,type=graphite_imp_capacitor_invalid": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "x": 90
+    },
+    "facing=up,type=graphite_imp_capacitor_invalid": {
+      "model": "industrialupgrade:block/graphite_reactor/graphite_imp_capacitor",
+      "x": 270
+    }
+  }
+}

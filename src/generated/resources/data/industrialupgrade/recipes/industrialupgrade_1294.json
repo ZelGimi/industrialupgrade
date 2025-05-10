@@ -1,0 +1,48 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_32_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_51_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/steam_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_123_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_219_element"
+      }
+    ],
+    "F": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "H": [
+      {
+        "tag": "forge:plates/bismuth"
+      }
+    ]
+  },
+  "pattern": [
+    "DAE",
+    "FBF",
+    "HCH"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/steam_handler_ore"
+  }
+}

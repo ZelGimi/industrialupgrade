@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=sintezator": {
+      "model": "industrialupgrade:block/basemachine/sintezator"
+    },
+    "facing=south,type=sintezator": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "y": 180
+    },
+    "facing=west,type=sintezator": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "y": 270
+    },
+    "facing=east,type=sintezator": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "y": 90
+    },
+    "facing=down,type=sintezator": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "x": 90
+    },
+    "facing=up,type=sintezator": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "x": 270
+    },
+    "facing=north,type=sintezator_invalid": {
+      "model": "industrialupgrade:block/basemachine/sintezator"
+    },
+    "facing=south,type=sintezator_invalid": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "y": 180
+    },
+    "facing=west,type=sintezator_invalid": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "y": 270
+    },
+    "facing=east,type=sintezator_invalid": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "y": 90
+    },
+    "facing=down,type=sintezator_invalid": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "x": 90
+    },
+    "facing=up,type=sintezator_invalid": {
+      "model": "industrialupgrade:block/basemachine/sintezator",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone1/titania_cobblestone"
+  },
+  "result": "industrialupgrade:spacestone1/titania_stone"
+}

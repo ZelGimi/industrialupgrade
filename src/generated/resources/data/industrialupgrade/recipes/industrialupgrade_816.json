@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:platedense/steel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/copper"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "DAD",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_74_element"
+  }
+}

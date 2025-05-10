@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:paper"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    }
+  },
+  "pattern": [
+    "A A",
+    " C ",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:quarrymodules/whitemodule"
+  }
+}

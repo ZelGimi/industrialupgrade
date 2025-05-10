@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=photonic_gearing": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing"
+    },
+    "facing=south,type=photonic_gearing": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing",
+      "y": 180
+    },
+    "facing=west,type=photonic_gearing": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing",
+      "y": 270
+    },
+    "facing=east,type=photonic_gearing": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing",
+      "y": 90
+    },
+    "facing=down,type=photonic_gearing": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing",
+      "x": 90
+    },
+    "facing=up,type=photonic_gearing": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing",
+      "x": 270
+    },
+    "facing=north,type=photonic_gearing_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active"
+    },
+    "facing=south,type=photonic_gearing_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_gearing_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_gearing_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_gearing_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_gearing_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "x": 270
+    },
+    "facing=north,type=photonic_gearing_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active"
+    },
+    "facing=south,type=photonic_gearing_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_gearing_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_gearing_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_gearing_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_gearing_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_gearing_active",
+      "x": 270
+    }
+  }
+}

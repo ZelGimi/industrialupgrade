@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=steam_turbine_pressure": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure"
+    },
+    "facing=south,type=steam_turbine_pressure": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_pressure": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_pressure": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "y": 90
+    },
+    "facing=down,type=steam_turbine_pressure": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "x": 90
+    },
+    "facing=up,type=steam_turbine_pressure": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "x": 270
+    },
+    "facing=north,type=steam_turbine_pressure_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure"
+    },
+    "facing=south,type=steam_turbine_pressure_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_pressure_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_pressure_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "y": 90
+    },
+    "facing=down,type=steam_turbine_pressure_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "x": 90
+    },
+    "facing=up,type=steam_turbine_pressure_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_pressure",
+      "x": 270
+    }
+  }
+}

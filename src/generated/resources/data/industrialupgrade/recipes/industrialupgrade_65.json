@@ -1,0 +1,49 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_510_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_513_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/muntsa"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:energy_tools/nanoshovel"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    },
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_516_element"
+      }
+    ],
+    "H": [
+      {
+        "tag": "forge:rods/electrum"
+      }
+    ]
+  },
+  "pattern": [
+    "ADB",
+    "EFE",
+    "CHC"
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/quantumshovel"
+  }
+}

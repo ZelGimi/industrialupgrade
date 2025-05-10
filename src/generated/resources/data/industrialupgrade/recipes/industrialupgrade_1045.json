@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_240_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:imp_motors_with_improved_bearings_"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_90_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CBE",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/matter_collector"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:rotor/rotor_iron"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:corewind/core_wind3"
+  }
+}

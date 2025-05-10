@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/replicator_iu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_17_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_6_element"
+      }
+    ]
+  },
+  "pattern": [
+    "DED",
+    "CAB",
+    "D D"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/adv_replicator"
+  }
+}

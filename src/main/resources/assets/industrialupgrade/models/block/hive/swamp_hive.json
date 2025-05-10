@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockbeehive_swamp",
+    "down" : "industrialupgrade:blocks/blockbeehive_top_swamp",
+    "up" : "industrialupgrade:blocks/blockbeehive_top_swamp",
+    "north" : "industrialupgrade:blocks/blockbeehive_swamp",
+    "east" : "industrialupgrade:blocks/blockbeehive_swamp",
+    "south" : "industrialupgrade:blocks/blockbeehive_swamp",
+    "west" : "industrialupgrade:blocks/blockbeehive_swamp"
+  }
+}

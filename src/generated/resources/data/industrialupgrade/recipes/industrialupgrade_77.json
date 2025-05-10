@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "minecraft:wool"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    " B ",
+    "A  "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/purifier"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 5.0,
+  "ingredient": {
+    "item": "industrialupgrade:blockspace2/io_emerald_ore"
+  },
+  "result": "minecraft:emerald"
+}

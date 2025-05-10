@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:graphite_reactor/graphite_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_327_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_356_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_414_element"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:graphite_reactor/graphite_socket"
+  }
+}

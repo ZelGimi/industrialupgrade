@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blastfurnace/blast_furnace_part"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:blastfurnace/blast_furnace_main"
+  }
+}

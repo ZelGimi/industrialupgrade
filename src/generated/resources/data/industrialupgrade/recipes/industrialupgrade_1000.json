@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_458_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_60_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/energy_trash"
+  }
+}

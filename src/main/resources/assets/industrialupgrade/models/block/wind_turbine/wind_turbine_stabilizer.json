@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/wind_turbine_stabilizer",
+    "down" : "industrialupgrade:blocks/wind_turbine_casing_1",
+    "up" : "industrialupgrade:blocks/wind_turbine_casing_1",
+    "north" : "industrialupgrade:blocks/wind_turbine_stabilizer",
+    "east" : "industrialupgrade:blocks/wind_turbine_casing_1",
+    "south" : "industrialupgrade:blocks/wind_turbine_stabilizer",
+    "west" : "industrialupgrade:blocks/wind_turbine_casing_1"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:baseblockalloy1/gallium_arcenic"
+      }
+    ]
+  ],
+  "result": {
+    "count": 9,
+    "item": "industrialupgrade:alloyingot/gallium_arsenic"
+  }
+}

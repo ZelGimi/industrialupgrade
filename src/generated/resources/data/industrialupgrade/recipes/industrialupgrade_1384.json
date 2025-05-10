@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:moremachine2/rolling"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_166_element"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "DBE",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:moremachine2/double_rolling"
+  }
+}

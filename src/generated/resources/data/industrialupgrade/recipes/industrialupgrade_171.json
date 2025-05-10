@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:baseblockingot/caravky"
+      }
+    ]
+  ],
+  "result": {
+    "count": 9,
+    "item": "industrialupgrade:itemingots/caravky_ingot"
+  }
+}

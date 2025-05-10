@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=steam_electrolyzer": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer"
+    },
+    "facing=south,type=steam_electrolyzer": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer",
+      "y": 180
+    },
+    "facing=west,type=steam_electrolyzer": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer",
+      "y": 270
+    },
+    "facing=east,type=steam_electrolyzer": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer",
+      "y": 90
+    },
+    "facing=down,type=steam_electrolyzer": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer",
+      "x": 90
+    },
+    "facing=up,type=steam_electrolyzer": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer",
+      "x": 270
+    },
+    "facing=north,type=steam_electrolyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active"
+    },
+    "facing=south,type=steam_electrolyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "y": 180
+    },
+    "facing=west,type=steam_electrolyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "y": 270
+    },
+    "facing=east,type=steam_electrolyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "y": 90
+    },
+    "facing=down,type=steam_electrolyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "x": 90
+    },
+    "facing=up,type=steam_electrolyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "x": 270
+    },
+    "facing=north,type=steam_electrolyzer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active"
+    },
+    "facing=south,type=steam_electrolyzer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "y": 180
+    },
+    "facing=west,type=steam_electrolyzer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "y": 270
+    },
+    "facing=east,type=steam_electrolyzer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "y": 90
+    },
+    "facing=down,type=steam_electrolyzer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "x": 90
+    },
+    "facing=up,type=steam_electrolyzer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_electrolyzer_active",
+      "x": 270
+    }
+  }
+}

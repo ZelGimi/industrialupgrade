@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=double_cutting": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting"
+    },
+    "facing=south,type=double_cutting": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting",
+      "y": 180
+    },
+    "facing=west,type=double_cutting": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting",
+      "y": 270
+    },
+    "facing=east,type=double_cutting": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting",
+      "y": 90
+    },
+    "facing=down,type=double_cutting": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting",
+      "x": 90
+    },
+    "facing=up,type=double_cutting": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting",
+      "x": 270
+    },
+    "facing=north,type=double_cutting_invalid": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active"
+    },
+    "facing=south,type=double_cutting_invalid": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "y": 180
+    },
+    "facing=west,type=double_cutting_invalid": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "y": 270
+    },
+    "facing=east,type=double_cutting_invalid": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "y": 90
+    },
+    "facing=down,type=double_cutting_invalid": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "x": 90
+    },
+    "facing=up,type=double_cutting_invalid": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "x": 270
+    },
+    "facing=north,type=double_cutting_active": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active"
+    },
+    "facing=south,type=double_cutting_active": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "y": 180
+    },
+    "facing=west,type=double_cutting_active": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "y": 270
+    },
+    "facing=east,type=double_cutting_active": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "y": 90
+    },
+    "facing=down,type=double_cutting_active": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "x": 90
+    },
+    "facing=up,type=double_cutting_active": {
+      "model": "industrialupgrade:block/moremachine2/double_cutting_active",
+      "x": 270
+    }
+  }
+}

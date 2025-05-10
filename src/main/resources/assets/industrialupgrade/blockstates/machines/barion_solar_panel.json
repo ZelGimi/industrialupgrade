@@ -1,0 +1,211 @@
+{
+  "variants": {
+    "facing=north,type=barion_solar_panel": {
+      "model": "industrialupgrade:block/barion_solar_panel"
+    },
+    "facing=south,type=barion_solar_panel": {
+      "model": "industrialupgrade:block/barion_solar_panel",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel": {
+      "model": "industrialupgrade:block/barion_solar_panel",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel": {
+      "model": "industrialupgrade:block/barion_solar_panel",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel": {
+      "model": "industrialupgrade:block/barion_solar_panel",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel": {
+      "model": "industrialupgrade:block/barion_solar_panel",
+      "x": 270
+    },
+    "facing=north,type=barion_solar_panel_invalid": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain"
+    },
+    "facing=south,type=barion_solar_panel_invalid": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel_invalid": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel_invalid": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel_invalid": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel_invalid": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "x": 270
+    },
+    "facing=north,type=barion_solar_panel_aer": {
+      "model": "industrialupgrade:block/barion_solar_panel_aer"
+    },
+    "facing=south,type=barion_solar_panel_aer": {
+      "model": "industrialupgrade:block/barion_solar_panel_aer",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel_aer": {
+      "model": "industrialupgrade:block/barion_solar_panel_aer",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel_aer": {
+      "model": "industrialupgrade:block/barion_solar_panel_aer",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel_aer": {
+      "model": "industrialupgrade:block/barion_solar_panel_aer",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel_aer": {
+      "model": "industrialupgrade:block/barion_solar_panel_aer",
+      "x": 270
+    },
+    "facing=north,type=barion_solar_panel_earth": {
+      "model": "industrialupgrade:block/barion_solar_panel_earth"
+    },
+    "facing=south,type=barion_solar_panel_earth": {
+      "model": "industrialupgrade:block/barion_solar_panel_earth",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel_earth": {
+      "model": "industrialupgrade:block/barion_solar_panel_earth",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel_earth": {
+      "model": "industrialupgrade:block/barion_solar_panel_earth",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel_earth": {
+      "model": "industrialupgrade:block/barion_solar_panel_earth",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel_earth": {
+      "model": "industrialupgrade:block/barion_solar_panel_earth",
+      "x": 270
+    },
+    "facing=north,type=barion_solar_panel_end": {
+      "model": "industrialupgrade:block/barion_solar_panel_end"
+    },
+    "facing=south,type=barion_solar_panel_end": {
+      "model": "industrialupgrade:block/barion_solar_panel_end",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel_end": {
+      "model": "industrialupgrade:block/barion_solar_panel_end",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel_end": {
+      "model": "industrialupgrade:block/barion_solar_panel_end",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel_end": {
+      "model": "industrialupgrade:block/barion_solar_panel_end",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel_end": {
+      "model": "industrialupgrade:block/barion_solar_panel_end",
+      "x": 270
+    },
+    "facing=north,type=barion_solar_panel_nether": {
+      "model": "industrialupgrade:block/barion_solar_panel_nether"
+    },
+    "facing=south,type=barion_solar_panel_nether": {
+      "model": "industrialupgrade:block/barion_solar_panel_nether",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel_nether": {
+      "model": "industrialupgrade:block/barion_solar_panel_nether",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel_nether": {
+      "model": "industrialupgrade:block/barion_solar_panel_nether",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel_nether": {
+      "model": "industrialupgrade:block/barion_solar_panel_nether",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel_nether": {
+      "model": "industrialupgrade:block/barion_solar_panel_nether",
+      "x": 270
+    },
+    "facing=north,type=barion_solar_panel_sun": {
+      "model": "industrialupgrade:block/barion_solar_panel_sun"
+    },
+    "facing=south,type=barion_solar_panel_sun": {
+      "model": "industrialupgrade:block/barion_solar_panel_sun",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel_sun": {
+      "model": "industrialupgrade:block/barion_solar_panel_sun",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel_sun": {
+      "model": "industrialupgrade:block/barion_solar_panel_sun",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel_sun": {
+      "model": "industrialupgrade:block/barion_solar_panel_sun",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel_sun": {
+      "model": "industrialupgrade:block/barion_solar_panel_sun",
+      "x": 270
+    },
+    "facing=north,type=barion_solar_panel_night": {
+      "model": "industrialupgrade:block/barion_solar_panel_night"
+    },
+    "facing=south,type=barion_solar_panel_night": {
+      "model": "industrialupgrade:block/barion_solar_panel_night",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel_night": {
+      "model": "industrialupgrade:block/barion_solar_panel_night",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel_night": {
+      "model": "industrialupgrade:block/barion_solar_panel_night",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel_night": {
+      "model": "industrialupgrade:block/barion_solar_panel_night",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel_night": {
+      "model": "industrialupgrade:block/barion_solar_panel_night",
+      "x": 270
+    },
+    "facing=north,type=barion_solar_panel_rain": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain"
+    },
+    "facing=south,type=barion_solar_panel_rain": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "y": 180
+    },
+    "facing=west,type=barion_solar_panel_rain": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "y": 270
+    },
+    "facing=east,type=barion_solar_panel_rain": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "y": 90
+    },
+    "facing=down,type=barion_solar_panel_rain": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "x": 90
+    },
+    "facing=up,type=barion_solar_panel_rain": {
+      "model": "industrialupgrade:block/barion_solar_panel_rain",
+      "x": 270
+    }
+  }
+}

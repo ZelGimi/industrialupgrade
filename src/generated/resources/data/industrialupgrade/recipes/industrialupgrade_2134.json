@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/osmiridium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tantalumtungstenhafnium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gems/ruby"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:gems/topaz"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_688_element"
+  }
+}

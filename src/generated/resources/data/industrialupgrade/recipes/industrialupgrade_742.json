@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_46_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/chromium"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_35_element"
+  }
+}

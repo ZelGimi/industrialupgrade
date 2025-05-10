@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:machines/quantum_solar_paneliu"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:modulestype/module64"
+  }
+}

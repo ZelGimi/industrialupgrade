@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemsunnarium/sunnarium_plate"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemiucrafring/itemirradiantglasspane"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:stick/mikhail"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:photoniumglass/photoniyglass1"
+  }
+}

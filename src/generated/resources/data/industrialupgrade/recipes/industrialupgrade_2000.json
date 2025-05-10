@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/hafniumcarbide"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    " A ",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_712_element"
+  }
+}

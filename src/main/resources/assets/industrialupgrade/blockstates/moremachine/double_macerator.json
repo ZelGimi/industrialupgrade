@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=double_macerator": {
+      "model": "industrialupgrade:block/moremachine/double_macerator"
+    },
+    "facing=south,type=double_macerator": {
+      "model": "industrialupgrade:block/moremachine/double_macerator",
+      "y": 180
+    },
+    "facing=west,type=double_macerator": {
+      "model": "industrialupgrade:block/moremachine/double_macerator",
+      "y": 270
+    },
+    "facing=east,type=double_macerator": {
+      "model": "industrialupgrade:block/moremachine/double_macerator",
+      "y": 90
+    },
+    "facing=down,type=double_macerator": {
+      "model": "industrialupgrade:block/moremachine/double_macerator",
+      "x": 90
+    },
+    "facing=up,type=double_macerator": {
+      "model": "industrialupgrade:block/moremachine/double_macerator",
+      "x": 270
+    },
+    "facing=north,type=double_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active"
+    },
+    "facing=south,type=double_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "y": 180
+    },
+    "facing=west,type=double_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "y": 270
+    },
+    "facing=east,type=double_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "y": 90
+    },
+    "facing=down,type=double_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "x": 90
+    },
+    "facing=up,type=double_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "x": 270
+    },
+    "facing=north,type=double_macerator_active": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active"
+    },
+    "facing=south,type=double_macerator_active": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "y": 180
+    },
+    "facing=west,type=double_macerator_active": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "y": 270
+    },
+    "facing=east,type=double_macerator_active": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "y": 90
+    },
+    "facing=down,type=double_macerator_active": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "x": 90
+    },
+    "facing=up,type=double_macerator_active": {
+      "model": "industrialupgrade:block/moremachine/double_macerator_active",
+      "x": 270
+    }
+  }
+}

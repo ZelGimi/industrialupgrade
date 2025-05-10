@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/tin"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "ABA",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_51_element"
+  }
+}

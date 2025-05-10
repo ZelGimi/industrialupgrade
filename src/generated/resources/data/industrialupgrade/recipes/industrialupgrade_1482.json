@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:lava_bucket"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/redbrass"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_228_element"
+  }
+}

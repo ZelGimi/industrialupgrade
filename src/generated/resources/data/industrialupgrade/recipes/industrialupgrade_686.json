@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/magnesium"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:bricks"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:blastfurnace/blast_furnace_part"
+  }
+}

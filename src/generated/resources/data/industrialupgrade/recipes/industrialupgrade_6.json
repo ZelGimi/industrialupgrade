@@ -1,0 +1,53 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/osmium"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:baseblockingot1/osmium"
+  }
+}

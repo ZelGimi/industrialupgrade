@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:itemcell/itemcell",
+      "nbt": "{Fluid:{Amount:1000,FluidName:\"minecraft:water\"}}"
+    },
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:quantumitems6"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:doubleplate/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:module_infinity_water"
+  }
+}

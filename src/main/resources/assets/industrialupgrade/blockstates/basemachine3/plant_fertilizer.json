@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=plant_fertilizer": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer"
+    },
+    "facing=south,type=plant_fertilizer": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "y": 180
+    },
+    "facing=west,type=plant_fertilizer": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "y": 270
+    },
+    "facing=east,type=plant_fertilizer": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "y": 90
+    },
+    "facing=down,type=plant_fertilizer": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "x": 90
+    },
+    "facing=up,type=plant_fertilizer": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "x": 270
+    },
+    "facing=north,type=plant_fertilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer"
+    },
+    "facing=south,type=plant_fertilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "y": 180
+    },
+    "facing=west,type=plant_fertilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "y": 270
+    },
+    "facing=east,type=plant_fertilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "y": 90
+    },
+    "facing=down,type=plant_fertilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "x": 90
+    },
+    "facing=up,type=plant_fertilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_fertilizer",
+      "x": 270
+    }
+  }
+}

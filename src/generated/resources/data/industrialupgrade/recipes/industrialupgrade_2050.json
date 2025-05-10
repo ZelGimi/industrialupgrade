@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/woods"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/molybdenumsteel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/vanadoalumite"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "C C",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_756_element"
+  }
+}

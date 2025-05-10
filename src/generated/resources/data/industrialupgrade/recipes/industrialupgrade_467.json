@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/phocore"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:10}"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:sintezator/sintezator"
+  }
+}

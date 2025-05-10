@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=alkalineearthquarry": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry"
+    },
+    "facing=south,type=alkalineearthquarry": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry",
+      "y": 180
+    },
+    "facing=west,type=alkalineearthquarry": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry",
+      "y": 270
+    },
+    "facing=east,type=alkalineearthquarry": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry",
+      "y": 90
+    },
+    "facing=down,type=alkalineearthquarry": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry",
+      "x": 90
+    },
+    "facing=up,type=alkalineearthquarry": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry",
+      "x": 270
+    },
+    "facing=north,type=alkalineearthquarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active"
+    },
+    "facing=south,type=alkalineearthquarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "y": 180
+    },
+    "facing=west,type=alkalineearthquarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "y": 270
+    },
+    "facing=east,type=alkalineearthquarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "y": 90
+    },
+    "facing=down,type=alkalineearthquarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "x": 90
+    },
+    "facing=up,type=alkalineearthquarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "x": 270
+    },
+    "facing=north,type=alkalineearthquarry_active": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active"
+    },
+    "facing=south,type=alkalineearthquarry_active": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "y": 180
+    },
+    "facing=west,type=alkalineearthquarry_active": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "y": 270
+    },
+    "facing=east,type=alkalineearthquarry_active": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "y": 90
+    },
+    "facing=down,type=alkalineearthquarry_active": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "x": 90
+    },
+    "facing=up,type=alkalineearthquarry_active": {
+      "model": "industrialupgrade:block/basemachine/alkalineearthquarry_active",
+      "x": 270
+    }
+  }
+}

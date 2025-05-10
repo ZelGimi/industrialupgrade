@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_356_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/copper"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "A A",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_582_element"
+  }
+}

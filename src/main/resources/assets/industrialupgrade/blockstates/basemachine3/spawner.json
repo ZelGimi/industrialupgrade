@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=spawner": {
+      "model": "industrialupgrade:block/basemachine/spawner"
+    },
+    "facing=south,type=spawner": {
+      "model": "industrialupgrade:block/basemachine/spawner",
+      "y": 180
+    },
+    "facing=west,type=spawner": {
+      "model": "industrialupgrade:block/basemachine/spawner",
+      "y": 270
+    },
+    "facing=east,type=spawner": {
+      "model": "industrialupgrade:block/basemachine/spawner",
+      "y": 90
+    },
+    "facing=down,type=spawner": {
+      "model": "industrialupgrade:block/basemachine/spawner",
+      "x": 90
+    },
+    "facing=up,type=spawner": {
+      "model": "industrialupgrade:block/basemachine/spawner",
+      "x": 270
+    },
+    "facing=north,type=spawner_invalid": {
+      "model": "industrialupgrade:block/basemachine/spawner_active"
+    },
+    "facing=south,type=spawner_invalid": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "y": 180
+    },
+    "facing=west,type=spawner_invalid": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "y": 270
+    },
+    "facing=east,type=spawner_invalid": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "y": 90
+    },
+    "facing=down,type=spawner_invalid": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "x": 90
+    },
+    "facing=up,type=spawner_invalid": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "x": 270
+    },
+    "facing=north,type=spawner_active": {
+      "model": "industrialupgrade:block/basemachine/spawner_active"
+    },
+    "facing=south,type=spawner_active": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "y": 180
+    },
+    "facing=west,type=spawner_active": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "y": 270
+    },
+    "facing=east,type=spawner_active": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "y": 90
+    },
+    "facing=down,type=spawner_active": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "x": 90
+    },
+    "facing=up,type=spawner_active": {
+      "model": "industrialupgrade:block/basemachine/spawner_active",
+      "x": 270
+    }
+  }
+}

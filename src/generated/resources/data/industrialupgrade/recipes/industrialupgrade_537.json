@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:daynight_solar_panel_glass/bar"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:excitednucleus/barcore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:machines/neutronium_solar_panel"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:excitednucleus/neucore"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:machines/barion_solar_panel"
+  }
+}

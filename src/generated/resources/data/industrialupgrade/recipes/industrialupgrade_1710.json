@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/beryllium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/bor"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_367_element"
+  }
+}

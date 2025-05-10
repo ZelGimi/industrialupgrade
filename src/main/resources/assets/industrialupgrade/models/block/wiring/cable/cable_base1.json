@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "#texture"
+	},
+	"elements": [
+		{
+			"name": "cable_base",
+			"from": [5, 5, 5],
+			"to": [11, 11, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [5, 5, 11, 11], "texture": "#texture"},
+				"east": {"uv": [5, 5, 11, 11], "texture": "#texture"},
+				"south": {"uv": [5, 5, 11, 11], "texture": "#texture"},
+				"west": {"uv": [5, 5, 11, 11], "texture": "#texture"},
+				"up": {"uv": [11, 11, 5, 5], "texture": "#texture"},
+				"down": {"uv": [11, 5, 5, 11], "texture": "#texture"}
+			}
+		}
+	]
+}

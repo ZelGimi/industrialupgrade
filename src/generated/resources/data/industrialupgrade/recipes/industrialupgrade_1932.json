@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/per_comb_pump"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_632_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_623_element"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    " A ",
+    "C C"
+  ],
+  "result": {
+    "item": "industrialupgrade:photonic_machine/photonic_comb_pump"
+  }
+}

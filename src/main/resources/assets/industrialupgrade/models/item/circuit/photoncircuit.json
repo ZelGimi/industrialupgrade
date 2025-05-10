@@ -1,0 +1,20 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/photoncircuit"
+  },
+  "overrides" : [
+    {
+      "predicate" : {
+        "level" : 0
+      },
+      "model" : "industrialupgrade:item/circuit/photoncircuit_0"
+    },
+    {
+      "predicate" : {
+        "level" : 1
+      },
+      "model" : "industrialupgrade:item/circuit/photoncircuit_1"
+    }
+	]
+}

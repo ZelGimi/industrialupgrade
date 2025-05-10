@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=refrigerator_coolant": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant"
+    },
+    "facing=south,type=refrigerator_coolant": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant",
+      "y": 180
+    },
+    "facing=west,type=refrigerator_coolant": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant",
+      "y": 270
+    },
+    "facing=east,type=refrigerator_coolant": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant",
+      "y": 90
+    },
+    "facing=down,type=refrigerator_coolant": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant",
+      "x": 90
+    },
+    "facing=up,type=refrigerator_coolant": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant",
+      "x": 270
+    },
+    "facing=north,type=refrigerator_coolant_invalid": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active"
+    },
+    "facing=south,type=refrigerator_coolant_invalid": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "y": 180
+    },
+    "facing=west,type=refrigerator_coolant_invalid": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "y": 270
+    },
+    "facing=east,type=refrigerator_coolant_invalid": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "y": 90
+    },
+    "facing=down,type=refrigerator_coolant_invalid": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "x": 90
+    },
+    "facing=up,type=refrigerator_coolant_invalid": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "x": 270
+    },
+    "facing=north,type=refrigerator_coolant_active": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active"
+    },
+    "facing=south,type=refrigerator_coolant_active": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "y": 180
+    },
+    "facing=west,type=refrigerator_coolant_active": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "y": 270
+    },
+    "facing=east,type=refrigerator_coolant_active": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "y": 90
+    },
+    "facing=down,type=refrigerator_coolant_active": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "x": 90
+    },
+    "facing=up,type=refrigerator_coolant_active": {
+      "model": "industrialupgrade:block/basemachine/refrigerator_coolant_active",
+      "x": 270
+    }
+  }
+}

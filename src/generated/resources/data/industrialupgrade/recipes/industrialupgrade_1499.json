@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_23_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:platedense/iron"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_245_element"
+  }
+}

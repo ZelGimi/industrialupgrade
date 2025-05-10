@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine3/substitute"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:cutter",
+      "nbt": "{Damage:0}"
+    }
+  },
+  "pattern": [
+    "EEE",
+    " B ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/energy_remover"
+  }
+}

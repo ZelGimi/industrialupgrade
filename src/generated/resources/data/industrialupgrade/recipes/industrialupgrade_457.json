@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:rotor/neutron"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:excitednucleus/procore"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "CBC",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:corewind/core_wind11"
+  }
+}

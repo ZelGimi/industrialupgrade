@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:wither_skeleton_skull"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:soul_sand"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_28_element"
+  }
+}

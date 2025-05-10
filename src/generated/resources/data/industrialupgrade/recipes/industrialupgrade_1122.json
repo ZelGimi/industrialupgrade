@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:daylight_detector"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:glass/reinforced"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_170_element"
+  }
+}

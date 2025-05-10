@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:machines/ultimate_solar_paneliu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:armour/hybrid_solar_helmet"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    },
+    "E": [
+      {
+        "item": "industrialupgrade:compresscarbonultra"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "DCD",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/ultimate_solar_helmet"
+  }
+}

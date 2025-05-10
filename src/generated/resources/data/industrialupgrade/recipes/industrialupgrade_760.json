@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_479_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:casings/bloodstone"
+      }
+    ]
+  },
+  "pattern": [
+    "BA ",
+    "CC ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_139_element"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    },
+    "B": [
+      {
+        "tag": "forge:plates/lithium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_386_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/obsidian"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "DBD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_342_element"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wind_turbine/wind_turbine_casing_1"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:electronic_stabilizers"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_599_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_594_element"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:wind_turbine/wind_turbine_stabilizer"
+  }
+}

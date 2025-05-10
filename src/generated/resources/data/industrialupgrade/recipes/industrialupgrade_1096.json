@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_371_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/spinel"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_397_element"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/cobaltchrome"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/vitalium"
+      }
+    ]
+  },
+  "pattern": [
+    " AA",
+    "ABA",
+    "AA "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_698_element"
+  }
+}

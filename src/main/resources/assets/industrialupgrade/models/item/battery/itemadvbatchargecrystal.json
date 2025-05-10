@@ -1,0 +1,38 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/itemadvbatchargecrystal0"
+  },
+  "overrides" : [
+    {
+      "predicate" : {
+        "level" : 0
+      },
+      "model" : "industrialupgrade:item/battery/itemadvbatchargecrystal0"
+    },
+    {
+      "predicate" : {
+        "level" : 0.25
+      },
+      "model" : "industrialupgrade:item/battery/itemadvbatchargecrystal1"
+    },
+    {
+      "predicate" : {
+        "level" : 0.5
+      },
+      "model" : "industrialupgrade:item/battery/itemadvbatchargecrystal2"
+    },
+    {
+      "predicate" : {
+        "level" : 0.75
+      },
+      "model" : "industrialupgrade:item/battery/itemadvbatchargecrystal3"
+    },
+    {
+      "predicate" : {
+        "level" : 1
+      },
+      "model" : "industrialupgrade:item/battery/itemadvbatchargecrystal4"
+    }
+	]
+}

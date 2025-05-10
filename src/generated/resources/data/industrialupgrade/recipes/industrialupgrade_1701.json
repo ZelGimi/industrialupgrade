@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:armour/quantum_chestplate"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    },
+    "C": [
+      {
+        "item": "industrialupgrade:battery/itembatlamacrystal"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:adv_spectral_box"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:armour/impjetpack"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "EFE"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/spectral_chestplate"
+  }
+}

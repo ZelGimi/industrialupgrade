@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/oak_tank"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/electrum"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_601_element"
+  }
+}

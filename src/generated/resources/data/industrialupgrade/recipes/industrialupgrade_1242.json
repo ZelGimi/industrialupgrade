@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/obsidian"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:stick"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "ACA",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:obsidian_hammer"
+  }
+}

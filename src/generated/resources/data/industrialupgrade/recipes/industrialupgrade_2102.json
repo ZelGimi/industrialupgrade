@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gears/alcled"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/thallium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/chromium"
+      }
+    ]
+  },
+  "pattern": [
+    "BEB",
+    "CAC",
+    "EEE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_657_element"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ],
+    "B": [
+      {
+        "tag": "minecraft:logs"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    "C C",
+    "ACA",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:primal_wire_insulator/primal_wire_insulator"
+  }
+}

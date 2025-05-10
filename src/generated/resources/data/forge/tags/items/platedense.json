@@ -1,0 +1,14 @@
+{
+  "values": [
+    "industrialupgrade:crafting_elements/crafting_452_element",
+    "industrialupgrade:itemdoubleplates/steel_doubleplate",
+    "industrialupgrade:itemdoubleplates/iron_doubleplate",
+    "industrialupgrade:itemdoubleplates/gold_doubleplate",
+    "industrialupgrade:itemdoubleplates/copper_doubleplate",
+    "industrialupgrade:itemdoubleplates/tin_doubleplate",
+    "industrialupgrade:itemdoubleplates/lead_doubleplate",
+    "industrialupgrade:itemdoubleplates/lapis_doubleplate",
+    "industrialupgrade:itemdoubleplates/obsidian_doubleplate",
+    "industrialupgrade:itemdoubleplates/bronze_doubleplate"
+  ]
+}

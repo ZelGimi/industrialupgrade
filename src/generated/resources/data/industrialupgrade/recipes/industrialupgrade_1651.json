@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:ingots/copper"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    " A ",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:cutter"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_27_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_43_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_65_element"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_44_element"
+      }
+    ]
+  },
+  "pattern": [
+    "ACE",
+    "FBC",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/fluid_integrator"
+  }
+}

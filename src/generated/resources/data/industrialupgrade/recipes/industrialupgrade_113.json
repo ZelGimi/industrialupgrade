@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcore/sincore"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quarrymodules/ef2"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:10}"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CEC",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:quarrymodules/ef3"
+  }
+}

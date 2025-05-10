@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:additionmodule/charger"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:additionmodule/wireless"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "   ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:additionmodule/mov_charge_eu"
+  }
+}

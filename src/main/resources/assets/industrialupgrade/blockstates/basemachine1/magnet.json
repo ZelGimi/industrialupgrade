@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=magnet": {
+      "model": "industrialupgrade:block/basemachine/magnet"
+    },
+    "facing=south,type=magnet": {
+      "model": "industrialupgrade:block/basemachine/magnet",
+      "y": 180
+    },
+    "facing=west,type=magnet": {
+      "model": "industrialupgrade:block/basemachine/magnet",
+      "y": 270
+    },
+    "facing=east,type=magnet": {
+      "model": "industrialupgrade:block/basemachine/magnet",
+      "y": 90
+    },
+    "facing=down,type=magnet": {
+      "model": "industrialupgrade:block/basemachine/magnet",
+      "x": 90
+    },
+    "facing=up,type=magnet": {
+      "model": "industrialupgrade:block/basemachine/magnet",
+      "x": 270
+    },
+    "facing=north,type=magnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/magnet_active"
+    },
+    "facing=south,type=magnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "y": 180
+    },
+    "facing=west,type=magnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "y": 270
+    },
+    "facing=east,type=magnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "y": 90
+    },
+    "facing=down,type=magnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "x": 90
+    },
+    "facing=up,type=magnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "x": 270
+    },
+    "facing=north,type=magnet_active": {
+      "model": "industrialupgrade:block/basemachine/magnet_active"
+    },
+    "facing=south,type=magnet_active": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "y": 180
+    },
+    "facing=west,type=magnet_active": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "y": 270
+    },
+    "facing=east,type=magnet_active": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "y": 90
+    },
+    "facing=down,type=magnet_active": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "x": 90
+    },
+    "facing=up,type=magnet_active": {
+      "model": "industrialupgrade:block/basemachine/magnet_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_232_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_139_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_82_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine1/adv_geo"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "ADC",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine1/imp_geo"
+  }
+}

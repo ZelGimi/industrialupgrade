@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/vending"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    " A ",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/adv_vending"
+  }
+}

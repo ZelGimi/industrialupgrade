@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:synthetic_plate"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/glass"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/stainlesssteel"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:high_current_converter_to_low"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:imp_motors_with_improved_bearings_"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BDB",
+    "CEC"
+  ],
+  "result": {
+    "item": "industrialupgrade:extreme_current_converter_to_low"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=adv_gas_coolant": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant"
+    },
+    "facing=south,type=adv_gas_coolant": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "y": 180
+    },
+    "facing=west,type=adv_gas_coolant": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "y": 270
+    },
+    "facing=east,type=adv_gas_coolant": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "y": 90
+    },
+    "facing=down,type=adv_gas_coolant": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "x": 90
+    },
+    "facing=up,type=adv_gas_coolant": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "x": 270
+    },
+    "facing=north,type=adv_gas_coolant_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant"
+    },
+    "facing=south,type=adv_gas_coolant_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "y": 180
+    },
+    "facing=west,type=adv_gas_coolant_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "y": 270
+    },
+    "facing=east,type=adv_gas_coolant_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "y": 90
+    },
+    "facing=down,type=adv_gas_coolant_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "x": 90
+    },
+    "facing=up,type=adv_gas_coolant_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_coolant",
+      "x": 270
+    }
+  }
+}

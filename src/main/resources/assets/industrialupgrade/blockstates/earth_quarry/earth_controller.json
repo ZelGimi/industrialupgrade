@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=earth_controller": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller"
+    },
+    "facing=south,type=earth_controller": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "y": 180
+    },
+    "facing=west,type=earth_controller": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "y": 270
+    },
+    "facing=east,type=earth_controller": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "y": 90
+    },
+    "facing=down,type=earth_controller": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "x": 90
+    },
+    "facing=up,type=earth_controller": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "x": 270
+    },
+    "facing=north,type=earth_controller_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller"
+    },
+    "facing=south,type=earth_controller_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "y": 180
+    },
+    "facing=west,type=earth_controller_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "y": 270
+    },
+    "facing=east,type=earth_controller_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "y": 90
+    },
+    "facing=down,type=earth_controller_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "x": 90
+    },
+    "facing=up,type=earth_controller_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_controller",
+      "x": 270
+    }
+  }
+}

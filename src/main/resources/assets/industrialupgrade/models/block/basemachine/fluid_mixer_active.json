@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/fluid_mixer_main",
+    "down" : "industrialupgrade:blocks/fluid_mixer_sides",
+    "up" : "industrialupgrade:blocks/fluid_mixer_top_active",
+    "north" : "industrialupgrade:blocks/fluid_mixer_main_active",
+    "east" : "industrialupgrade:blocks/fluid_mixer_sides",
+    "south" : "industrialupgrade:blocks/fluid_mixer_sides",
+    "west" : "industrialupgrade:blocks/fluid_mixer_sides"
+  }
+}

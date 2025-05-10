@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/generator_iu"
+  }
+}

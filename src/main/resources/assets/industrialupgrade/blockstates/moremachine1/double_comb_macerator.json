@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=double_comb_macerator": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator"
+    },
+    "facing=south,type=double_comb_macerator": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator",
+      "y": 180
+    },
+    "facing=west,type=double_comb_macerator": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator",
+      "y": 270
+    },
+    "facing=east,type=double_comb_macerator": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator",
+      "y": 90
+    },
+    "facing=down,type=double_comb_macerator": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator",
+      "x": 90
+    },
+    "facing=up,type=double_comb_macerator": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator",
+      "x": 270
+    },
+    "facing=north,type=double_comb_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active"
+    },
+    "facing=south,type=double_comb_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "y": 180
+    },
+    "facing=west,type=double_comb_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "y": 270
+    },
+    "facing=east,type=double_comb_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "y": 90
+    },
+    "facing=down,type=double_comb_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "x": 90
+    },
+    "facing=up,type=double_comb_macerator_invalid": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "x": 270
+    },
+    "facing=north,type=double_comb_macerator_active": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active"
+    },
+    "facing=south,type=double_comb_macerator_active": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "y": 180
+    },
+    "facing=west,type=double_comb_macerator_active": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "y": 270
+    },
+    "facing=east,type=double_comb_macerator_active": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "y": 90
+    },
+    "facing=down,type=double_comb_macerator_active": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "x": 90
+    },
+    "facing=up,type=double_comb_macerator_active": {
+      "model": "industrialupgrade:block/moremachine1/double_comb_macerator_active",
+      "x": 270
+    }
+  }
+}

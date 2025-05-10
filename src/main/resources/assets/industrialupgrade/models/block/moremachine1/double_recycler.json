@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockrecycler_side",
+    "down" : "industrialupgrade:blocks/blockrecycler_side",
+    "up" : "industrialupgrade:blocks/blockrecycler_top",
+    "north" : "industrialupgrade:blocks/blockrecycler_main",
+    "east" : "industrialupgrade:blocks/blockrecycler_side",
+    "south" : "industrialupgrade:blocks/blockrecycler_side",
+    "west" : "industrialupgrade:blocks/blockrecycler_side"
+  }
+}

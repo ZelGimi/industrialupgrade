@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/aluminumbronze"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/muntsa"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:adv_spectral_box"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "ADA",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/auto_digger"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=aer_assembler": {
+      "model": "industrialupgrade:block/basemachine/air_collector"
+    },
+    "facing=south,type=aer_assembler": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 180
+    },
+    "facing=west,type=aer_assembler": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 270
+    },
+    "facing=east,type=aer_assembler": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 90
+    },
+    "facing=down,type=aer_assembler": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "x": 90
+    },
+    "facing=up,type=aer_assembler": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "x": 270
+    },
+    "facing=north,type=aer_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/air_collector"
+    },
+    "facing=south,type=aer_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 180
+    },
+    "facing=west,type=aer_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 270
+    },
+    "facing=east,type=aer_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 90
+    },
+    "facing=down,type=aer_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "x": 90
+    },
+    "facing=up,type=aer_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "x": 270
+    },
+    "facing=north,type=aer_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/air_collector"
+    },
+    "facing=south,type=aer_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 180
+    },
+    "facing=west,type=aer_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 270
+    },
+    "facing=east,type=aer_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "y": 90
+    },
+    "facing=down,type=aer_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "x": 90
+    },
+    "facing=up,type=aer_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/air_collector",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_24_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/stainlesssteel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/inconel"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/permalloy"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "DAD",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_619_element"
+  }
+}

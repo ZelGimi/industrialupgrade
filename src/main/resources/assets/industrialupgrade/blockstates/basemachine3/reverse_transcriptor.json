@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=reverse_transcriptor": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor"
+    },
+    "facing=south,type=reverse_transcriptor": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor",
+      "y": 180
+    },
+    "facing=west,type=reverse_transcriptor": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor",
+      "y": 270
+    },
+    "facing=east,type=reverse_transcriptor": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor",
+      "y": 90
+    },
+    "facing=down,type=reverse_transcriptor": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor",
+      "x": 90
+    },
+    "facing=up,type=reverse_transcriptor": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor",
+      "x": 270
+    },
+    "facing=north,type=reverse_transcriptor_invalid": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active"
+    },
+    "facing=south,type=reverse_transcriptor_invalid": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "y": 180
+    },
+    "facing=west,type=reverse_transcriptor_invalid": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "y": 270
+    },
+    "facing=east,type=reverse_transcriptor_invalid": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "y": 90
+    },
+    "facing=down,type=reverse_transcriptor_invalid": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "x": 90
+    },
+    "facing=up,type=reverse_transcriptor_invalid": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "x": 270
+    },
+    "facing=north,type=reverse_transcriptor_active": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active"
+    },
+    "facing=south,type=reverse_transcriptor_active": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "y": 180
+    },
+    "facing=west,type=reverse_transcriptor_active": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "y": 270
+    },
+    "facing=east,type=reverse_transcriptor_active": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "y": 90
+    },
+    "facing=down,type=reverse_transcriptor_active": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "x": 90
+    },
+    "facing=up,type=reverse_transcriptor_active": {
+      "model": "industrialupgrade:block/basemachine/reverse_transcriptor_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/duralumin"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:reactors/per_reactor_plate"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:exchanger/per_exchanger"
+  }
+}

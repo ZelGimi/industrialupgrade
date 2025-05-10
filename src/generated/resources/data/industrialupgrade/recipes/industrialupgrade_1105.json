@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_24_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/germanium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/germanium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/nichrome"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_105_element"
+  }
+}

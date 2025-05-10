@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:blockprecious/topaz_block"
+      }
+    ]
+  ],
+  "result": {
+    "count": 9,
+    "item": "industrialupgrade:preciousgem/topaz_gem"
+  }
+}

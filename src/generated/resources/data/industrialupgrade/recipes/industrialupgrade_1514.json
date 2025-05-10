@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine2/adv_pump"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_96_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_83_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_245_element"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_139_element"
+      }
+    ]
+  },
+  "pattern": [
+    "F F",
+    "CAE",
+    "FBF"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine2/imp_pump"
+  }
+}

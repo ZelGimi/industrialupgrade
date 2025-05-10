@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gears/vanady"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_7_element"
+  }
+}

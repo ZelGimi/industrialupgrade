@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=photonic_extruding": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding"
+    },
+    "facing=south,type=photonic_extruding": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding",
+      "y": 180
+    },
+    "facing=west,type=photonic_extruding": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding",
+      "y": 270
+    },
+    "facing=east,type=photonic_extruding": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding",
+      "y": 90
+    },
+    "facing=down,type=photonic_extruding": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding",
+      "x": 90
+    },
+    "facing=up,type=photonic_extruding": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding",
+      "x": 270
+    },
+    "facing=north,type=photonic_extruding_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active"
+    },
+    "facing=south,type=photonic_extruding_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_extruding_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_extruding_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_extruding_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_extruding_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "x": 270
+    },
+    "facing=north,type=photonic_extruding_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active"
+    },
+    "facing=south,type=photonic_extruding_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_extruding_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_extruding_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_extruding_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_extruding_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_extruding_active",
+      "x": 270
+    }
+  }
+}

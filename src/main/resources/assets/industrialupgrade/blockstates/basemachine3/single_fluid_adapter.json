@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=single_fluid_adapter": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter"
+    },
+    "facing=south,type=single_fluid_adapter": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter",
+      "y": 180
+    },
+    "facing=west,type=single_fluid_adapter": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter",
+      "y": 270
+    },
+    "facing=east,type=single_fluid_adapter": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter",
+      "y": 90
+    },
+    "facing=down,type=single_fluid_adapter": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter",
+      "x": 90
+    },
+    "facing=up,type=single_fluid_adapter": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter",
+      "x": 270
+    },
+    "facing=north,type=single_fluid_adapter_invalid": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active"
+    },
+    "facing=south,type=single_fluid_adapter_invalid": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "y": 180
+    },
+    "facing=west,type=single_fluid_adapter_invalid": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "y": 270
+    },
+    "facing=east,type=single_fluid_adapter_invalid": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "y": 90
+    },
+    "facing=down,type=single_fluid_adapter_invalid": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "x": 90
+    },
+    "facing=up,type=single_fluid_adapter_invalid": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "x": 270
+    },
+    "facing=north,type=single_fluid_adapter_active": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active"
+    },
+    "facing=south,type=single_fluid_adapter_active": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "y": 180
+    },
+    "facing=west,type=single_fluid_adapter_active": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "y": 270
+    },
+    "facing=east,type=single_fluid_adapter_active": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "y": 90
+    },
+    "facing=down,type=single_fluid_adapter_active": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "x": 90
+    },
+    "facing=up,type=single_fluid_adapter_active": {
+      "model": "industrialupgrade:block/basemachine/single_fluid_adapter_active",
+      "x": 270
+    }
+  }
+}

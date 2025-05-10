@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_469_element"
+      }
+    ],
+    "G": [
+      {
+        "item": "industrialupgrade:bags/iu_bags"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CBG",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/itemmanipulator"
+  }
+}

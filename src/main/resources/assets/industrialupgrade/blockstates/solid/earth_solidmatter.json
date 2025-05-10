@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=earth_solidmatter": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter"
+    },
+    "facing=south,type=earth_solidmatter": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter",
+      "y": 180
+    },
+    "facing=west,type=earth_solidmatter": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter",
+      "y": 270
+    },
+    "facing=east,type=earth_solidmatter": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter",
+      "y": 90
+    },
+    "facing=down,type=earth_solidmatter": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter",
+      "x": 90
+    },
+    "facing=up,type=earth_solidmatter": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter",
+      "x": 270
+    },
+    "facing=north,type=earth_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active"
+    },
+    "facing=south,type=earth_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "y": 180
+    },
+    "facing=west,type=earth_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "y": 270
+    },
+    "facing=east,type=earth_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "y": 90
+    },
+    "facing=down,type=earth_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "x": 90
+    },
+    "facing=up,type=earth_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "x": 270
+    },
+    "facing=north,type=earth_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active"
+    },
+    "facing=south,type=earth_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "y": 180
+    },
+    "facing=west,type=earth_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "y": 270
+    },
+    "facing=east,type=earth_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "y": 90
+    },
+    "facing=down,type=earth_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "x": 90
+    },
+    "facing=up,type=earth_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/earth_solidmatter_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_620_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:dirt"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:stick"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:glass"
+      }
+    ]
+  },
+  "pattern": [
+    "DDD",
+    "CAC",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_604_element"
+  }
+}

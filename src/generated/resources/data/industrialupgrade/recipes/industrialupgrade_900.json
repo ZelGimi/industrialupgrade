@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/nichrome"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:helium_cooling_mixture"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_299_element"
+  }
+}

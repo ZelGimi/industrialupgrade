@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "BBB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/wrench"
+  }
+}

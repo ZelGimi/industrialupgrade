@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/electric_wire_insulator_other-sides",
+    "down" : "industrialupgrade:blocks/electric_wire_insulator_other-sides",
+    "up" : "industrialupgrade:blocks/electric_wire_insulator_other-sides",
+    "north" : "industrialupgrade:blocks/electric_wire_insulator_front",
+    "east" : "industrialupgrade:blocks/electric_wire_insulator_left-right",
+    "south" : "industrialupgrade:blocks/electric_wire_insulator_other-sides",
+    "west" : "industrialupgrade:blocks/electric_wire_insulator_left-right"
+  }
+}

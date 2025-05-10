@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemdust/energium_dust"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:dusts/silver"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "count": 6,
+    "item": "industrialupgrade:wiring/glass_1"
+  }
+}

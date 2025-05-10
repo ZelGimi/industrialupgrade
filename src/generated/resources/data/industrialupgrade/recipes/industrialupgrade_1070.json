@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/lead"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tantalum"
+      }
+    ]
+  },
+  "pattern": [
+    "AB ",
+    "BC ",
+    "   "
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_366_element"
+  }
+}

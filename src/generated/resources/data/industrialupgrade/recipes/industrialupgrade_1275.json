@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gears/electrum"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gems/topaz"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/aluminumbronze"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/aluminumbronze"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "EDE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_123_element"
+  }
+}

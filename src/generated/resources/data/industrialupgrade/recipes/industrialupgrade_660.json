@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "tag": "forge:doubleplate/ferromanganese"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:armour/jetpack"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:single_use_battery"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "CDC",
+    "BFB"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/advjetpack"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/io_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/io_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/io_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/io_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/io_boulder"
+  }
+}

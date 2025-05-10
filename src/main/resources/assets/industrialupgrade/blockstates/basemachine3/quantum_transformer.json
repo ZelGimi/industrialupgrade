@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=quantum_transformer": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer"
+    },
+    "facing=south,type=quantum_transformer": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 180
+    },
+    "facing=west,type=quantum_transformer": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 270
+    },
+    "facing=east,type=quantum_transformer": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 90
+    },
+    "facing=down,type=quantum_transformer": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "x": 90
+    },
+    "facing=up,type=quantum_transformer": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "x": 270
+    },
+    "facing=north,type=quantum_transformer_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer"
+    },
+    "facing=south,type=quantum_transformer_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 180
+    },
+    "facing=west,type=quantum_transformer_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 270
+    },
+    "facing=east,type=quantum_transformer_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 90
+    },
+    "facing=down,type=quantum_transformer_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "x": 90
+    },
+    "facing=up,type=quantum_transformer_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "x": 270
+    },
+    "facing=north,type=quantum_transformer_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer"
+    },
+    "facing=south,type=quantum_transformer_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 180
+    },
+    "facing=west,type=quantum_transformer_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 270
+    },
+    "facing=east,type=quantum_transformer_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "y": 90
+    },
+    "facing=down,type=quantum_transformer_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "x": 90
+    },
+    "facing=up,type=quantum_transformer_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_transformer",
+      "x": 270
+    }
+  }
+}

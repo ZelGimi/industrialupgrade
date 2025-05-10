@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
+    },
+    [
+      {
+        "item": "industrialupgrade:wiring_storage/bar_mfsu"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:upgradekitstorage/upgradekit5"
+  }
+}

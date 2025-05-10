@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:machines/quark_solar_panel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:excitednucleus/kvrcore"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "BAB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:admpanel/admpanel"
+  }
+}

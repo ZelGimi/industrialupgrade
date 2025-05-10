@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:transformer_iu/umhv"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_214_element"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:transformer_iu/umev"
+  }
+}

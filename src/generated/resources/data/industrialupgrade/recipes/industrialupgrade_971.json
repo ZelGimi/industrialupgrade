@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:nuclearresource/uranium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/lapis"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    "DCD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_325_element"
+  }
+}

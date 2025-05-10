@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/alcled"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/aluminumbronze"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "ABA",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_690_element"
+  }
+}

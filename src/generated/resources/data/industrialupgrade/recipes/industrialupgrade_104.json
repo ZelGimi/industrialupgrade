@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:compresscarbonultra"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/vanadoalumite"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    },
+    "F": [
+      {
+        "tag": "forge:doubleplate/duralumin"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "EFE"
+  ],
+  "result": {
+    "item": "industrialupgrade:additionmodule/rf"
+  }
+}

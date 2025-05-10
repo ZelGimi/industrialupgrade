@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/callisto_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/callisto_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/callisto_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/callisto_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/callisto_boulder"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=steamdryer_active": {
+      "model": "industrialupgrade:block/basemachine/steamdryer_active"
+    },
+    "facing=south,type=steamdryer_active": {
+      "model": "industrialupgrade:block/basemachine/steamdryer_active",
+      "y": 180
+    },
+    "facing=west,type=steamdryer_active": {
+      "model": "industrialupgrade:block/basemachine/steamdryer_active",
+      "y": 270
+    },
+    "facing=east,type=steamdryer_active": {
+      "model": "industrialupgrade:block/basemachine/steamdryer_active",
+      "y": 90
+    },
+    "facing=down,type=steamdryer_active": {
+      "model": "industrialupgrade:block/basemachine/steamdryer_active",
+      "x": 90
+    },
+    "facing=up,type=steamdryer_active": {
+      "model": "industrialupgrade:block/basemachine/steamdryer_active",
+      "x": 270
+    },
+    "facing=north,type=steamdryer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steamdryer"
+    },
+    "facing=south,type=steamdryer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "y": 180
+    },
+    "facing=west,type=steamdryer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "y": 270
+    },
+    "facing=east,type=steamdryer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "y": 90
+    },
+    "facing=down,type=steamdryer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "x": 90
+    },
+    "facing=up,type=steamdryer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "x": 270
+    },
+    "facing=north,type=steamdryer": {
+      "model": "industrialupgrade:block/basemachine/steamdryer"
+    },
+    "facing=south,type=steamdryer": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "y": 180
+    },
+    "facing=west,type=steamdryer": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "y": 270
+    },
+    "facing=east,type=steamdryer": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "y": 90
+    },
+    "facing=down,type=steamdryer": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "x": 90
+    },
+    "facing=up,type=steamdryer": {
+      "model": "industrialupgrade:block/basemachine/steamdryer",
+      "x": 270
+    }
+  }
+}

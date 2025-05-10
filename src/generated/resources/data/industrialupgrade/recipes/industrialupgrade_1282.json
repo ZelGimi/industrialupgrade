@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_32_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:block_anvil/block_anvil"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/steam_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_123_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_163_element"
+      }
+    ]
+  },
+  "pattern": [
+    "DAE",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/steam_extruder"
+  }
+}

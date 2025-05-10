@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=gas_well_analyzer": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer"
+    },
+    "facing=south,type=gas_well_analyzer": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "y": 180
+    },
+    "facing=west,type=gas_well_analyzer": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "y": 270
+    },
+    "facing=east,type=gas_well_analyzer": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "y": 90
+    },
+    "facing=down,type=gas_well_analyzer": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "x": 90
+    },
+    "facing=up,type=gas_well_analyzer": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "x": 270
+    },
+    "facing=north,type=gas_well_analyzer_invalid": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer"
+    },
+    "facing=south,type=gas_well_analyzer_invalid": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "y": 180
+    },
+    "facing=west,type=gas_well_analyzer_invalid": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "y": 270
+    },
+    "facing=east,type=gas_well_analyzer_invalid": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "y": 90
+    },
+    "facing=down,type=gas_well_analyzer_invalid": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "x": 90
+    },
+    "facing=up,type=gas_well_analyzer_invalid": {
+      "model": "industrialupgrade:block/gas_well/gas_well_analyzer",
+      "x": 270
+    }
+  }
+}

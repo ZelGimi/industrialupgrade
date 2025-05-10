@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/hafniumboride"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/tantalumtungstenhafnium"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "DAD",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:cyclotron/cyclotron_casing"
+  }
+}

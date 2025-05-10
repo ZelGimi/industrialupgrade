@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/beryllium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tantalumtungstenhafnium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/cobaltchrome"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:casings/bismuth"
+      }
+    ]
+  },
+  "pattern": [
+    "EEE",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_656_element"
+  }
+}

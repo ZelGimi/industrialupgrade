@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=photonic_cutting": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting"
+    },
+    "facing=south,type=photonic_cutting": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting",
+      "y": 180
+    },
+    "facing=west,type=photonic_cutting": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting",
+      "y": 270
+    },
+    "facing=east,type=photonic_cutting": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting",
+      "y": 90
+    },
+    "facing=down,type=photonic_cutting": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting",
+      "x": 90
+    },
+    "facing=up,type=photonic_cutting": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting",
+      "x": 270
+    },
+    "facing=north,type=photonic_cutting_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active"
+    },
+    "facing=south,type=photonic_cutting_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_cutting_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_cutting_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_cutting_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_cutting_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "x": 270
+    },
+    "facing=north,type=photonic_cutting_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active"
+    },
+    "facing=south,type=photonic_cutting_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_cutting_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_cutting_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_cutting_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_cutting_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_cutting_active",
+      "x": 270
+    }
+  }
+}

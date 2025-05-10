@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/chromium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/stellite"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:wiring/copper"
+      }
+    ]
+  },
+  "pattern": [
+    "ABC",
+    "BBC",
+    "ABC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_596_element"
+  }
+}

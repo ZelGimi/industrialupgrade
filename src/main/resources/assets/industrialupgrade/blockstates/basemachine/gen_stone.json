@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=gen_stone": {
+      "model": "industrialupgrade:block/basemachine/gen_stone"
+    },
+    "facing=south,type=gen_stone": {
+      "model": "industrialupgrade:block/basemachine/gen_stone",
+      "y": 180
+    },
+    "facing=west,type=gen_stone": {
+      "model": "industrialupgrade:block/basemachine/gen_stone",
+      "y": 270
+    },
+    "facing=east,type=gen_stone": {
+      "model": "industrialupgrade:block/basemachine/gen_stone",
+      "y": 90
+    },
+    "facing=down,type=gen_stone": {
+      "model": "industrialupgrade:block/basemachine/gen_stone",
+      "x": 90
+    },
+    "facing=up,type=gen_stone": {
+      "model": "industrialupgrade:block/basemachine/gen_stone",
+      "x": 270
+    },
+    "facing=north,type=gen_stone_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active"
+    },
+    "facing=south,type=gen_stone_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "y": 180
+    },
+    "facing=west,type=gen_stone_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "y": 270
+    },
+    "facing=east,type=gen_stone_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "y": 90
+    },
+    "facing=down,type=gen_stone_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "x": 90
+    },
+    "facing=up,type=gen_stone_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "x": 270
+    },
+    "facing=north,type=gen_stone_active": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active"
+    },
+    "facing=south,type=gen_stone_active": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "y": 180
+    },
+    "facing=west,type=gen_stone_active": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "y": 270
+    },
+    "facing=east,type=gen_stone_active": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "y": 90
+    },
+    "facing=down,type=gen_stone_active": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "x": 90
+    },
+    "facing=up,type=gen_stone_active": {
+      "model": "industrialupgrade:block/basemachine/gen_stone_active",
+      "x": 270
+    }
+  }
+}

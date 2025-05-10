@@ -1,0 +1,38 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/forest_bee"
+  },
+	"overrides" : [
+    {
+      "predicate" : {
+        "mode" : 1
+      },
+      "model" : "industrialupgrade:item/jar_bee/winter_bee"
+    },
+    {
+      "predicate" : {
+        "mode" : 2
+      },
+      "model" : "industrialupgrade:item/jar_bee/forest_bee"
+    },
+    {
+      "predicate" : {
+        "mode" : 3
+      },
+      "model" : "industrialupgrade:item/jar_bee/tropical_bee"
+    },
+    {
+      "predicate" : {
+        "mode" : 4
+      },
+      "model" : "industrialupgrade:item/jar_bee/plains_bee"
+    },
+    {
+      "predicate" : {
+        "mode" : 5
+      },
+      "model" : "industrialupgrade:item/jar_bee/swamp_bee"
+    }
+	]
+}

@@ -1,0 +1,6 @@
+{
+	"parent": "industrialupgrade:item/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/quantum_leggings_demon"
+	}
+}

@@ -1,4 +1,3 @@
-
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
@@ -11,170 +10,166 @@ buildscript {
     }
 }
 
+
+
+
 plugins {
-    id 'eclipse'
-    id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+
 }
 
-version = mod_version
-group = mod_group_id
+group = 'com.denfop'
+version = minecraftRelease + '-' + modVersion
 
-base {
-    archivesName = mod_id
+java {
+    archivesBaseName = 'industrialupgrade'
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
-
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-
-
 
 minecraft {
 
-    mappings channel: mapping_channel, version: mapping_version
-
+    mappings channel: 'parchment', version: '2022.10.16-1.19.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    copyIdeResources = true
 
     runs {
-        // applies to all the run configs below
-        configureEach {
+        client {
             workingDirectory project.file('run')
-
-            arg "-mixin.config="+archivesBaseName+".mixins.json"
-
+            arg "-mixin.config=industrialupgrade.mixins.json"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             property 'forge.logging.markers', 'REGISTRIES'
-
             property 'forge.logging.console.level', 'debug'
 
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-
             mods {
-                "${mod_id}" {
+                industrialupgrade {
                     source sourceSets.main
                 }
             }
         }
 
-        client {
-
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
         server {
+            workingDirectory project.file('run')
+            arg "-mixin.config=industrialupgrade.mixins.json"
+            property 'mixin.env.disableRefMap', 'true'
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
 
-
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
+            mods {
+                industrialupgrade {
+                    source sourceSets.main
+                }
+            }
         }
 
         data {
-            workingDirectory project.file('run-data')
+            workingDirectory project.file('run')
+			workingDirectory project.file('run-data')
+			arg "-mixin.config=industrialupgrade.mixins.json"
+			 property 'forge.logging.markers', 'REGISTRIES'
 
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', archivesBaseName, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                industrialupgrade {
+                    source sourceSets.main
+                }
+            }
+
         }
     }
 }
-
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven { url = 'https://maven.minecraftforge.net' }
+
+
     maven {
-        name = "Cursemaven"
-        url = "https://www.cursemaven.com/"
+        name 'tterrag maven'
+        url "https://maven.tterrag.com/"
+    }
+    maven {
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
 dependencies {
+     minecraft "net.minecraftforge:forge:${forgeVersion}"
 
-   minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraftRelease}-common-api:${jeiVersion}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraftRelease}-forge-api:${jeiVersion}"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraftRelease}-forge:${jeiVersion}"))
+
+    implementation fg.deobf("curse.maven:the-one-probe-245211:3965693")
+    implementation fg.deobf("curse.maven:pipez-443900:3920730")
 
 
+    implementation fg.deobf("curse.maven:allthecompressed-514045:4068231")
+    implementation fg.deobf("curse.maven:ato-405593:4046926")
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    compileOnly fg.deobf(files('lib/quantumgenerators-1.1-dev.jar'))
+    compileOnly (files('lib/simplyquarries-1.1-dev.jar'))
+    compileOnly (files('lib/powerutils-1.1-dev.jar'))
 
-    runtimeOnly fg.deobf("curse.maven:refined-storage-243076:4861827")
-    compileOnly fg.deobf("curse.maven:refined-storage-243076:4861827")
+    runtimeOnly fg.deobf("curse.maven:jade-324717:4914105")
+    compileOnly fg.deobf("curse.maven:jade-324717:4914105")
+
+    runtimeOnly fg.deobf("curse.maven:jade-addons-583345:4850581")
+    compileOnly fg.deobf("curse.maven:jade-addons-583345:4850581")
+    runtimeOnly fg.deobf("curse.maven:thermal-expansion-69163:4782929")
+    compileOnly fg.deobf("curse.maven:thermal-expansion-69163:4782929")
+    runtimeOnly fg.deobf("curse.maven:thermal-foundation-222880:4782926")
+    compileOnly fg.deobf("curse.maven:thermal-foundation-222880:4782926")
+    runtimeOnly fg.deobf("curse.maven:thermal-dynamics-227443:4760633")
+    compileOnly fg.deobf("curse.maven:thermal-dynamics-227443:4760633")
+    compileOnly fg.deobf("curse.maven:ic2-classic-242942:4879119")
+    runtimeOnly fg.deobf("curse.maven:cofh-core-69162:4759876")
+    compileOnly fg.deobf("curse.maven:cofh-core-69162:4759876")
+    compileOnly fg.deobf("curse.maven:botania-225643:5608807")
+
+    runtimeOnly fg.deobf("curse.maven:crafttweaker-239197:4886432")
+    compileOnly fg.deobf("curse.maven:crafttweaker-239197:4886432")
+
+    runtimeOnly fg.deobf("curse.maven:thermal-innovation-291737:4759913")
+    compileOnly fg.deobf("curse.maven:thermal-innovation-291737:4759913")
+
 }
-tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version: forge_version, forge_version_range: forge_version_range,
-            loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
-    ]
-    inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
-}
 
-tasks.named('jar', Jar).configure {
+jar {
     manifest {
         attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1', // We are version 1 of ourselves
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title"     : "industrialupgrade",
+                "Specification-Vendor"    : "Denfop",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "Denfop",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "industrialupgrade.mixins.json"
         ])
     }
-    finalizedBy 'reobfJar'
 }
 apply plugin: 'org.spongepowered.mixin'
-
 mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
+    add sourceSets.main, "mixins.industrialupgrade.refmap.json"
 }
-
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
-
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    options.incremental = true // one flag, and things will get so MUCH faster
+    options.encoding = 'UTF-8'
 }
-sourceSets { main { output.resourcesDir = output.classesDirs[0] } }
-
-task devJar(type: Jar) {
-    archiveClassifier.set('dev')
-    from sourceSets.main.output
-}
-
-task sourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives devJar
-    archives sourcesJar
-}
+jar.finalizedBy('reobfJar')

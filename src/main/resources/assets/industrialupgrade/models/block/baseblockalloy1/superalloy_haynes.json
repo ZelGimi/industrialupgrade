@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "industrialupgrade:blocks/superalloy_haynes_block"
+	}
+}

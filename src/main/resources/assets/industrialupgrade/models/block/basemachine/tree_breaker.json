@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/tree_breaker_main",
+    "down" : "industrialupgrade:blocks/tree_breaker_side-bottom",
+    "up" : "industrialupgrade:blocks/tree_breaker_top",
+    "north" : "industrialupgrade:blocks/tree_breaker_main",
+    "east" : "industrialupgrade:blocks/tree_breaker_side-bottom",
+    "south" : "industrialupgrade:blocks/tree_breaker_side-bottom",
+    "west" : "industrialupgrade:blocks/tree_breaker_side-bottom"
+  }
+}

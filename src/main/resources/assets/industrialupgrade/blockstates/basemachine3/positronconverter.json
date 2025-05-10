@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=positronconverter": {
+      "model": "industrialupgrade:block/basemachine/positronconverter"
+    },
+    "facing=south,type=positronconverter": {
+      "model": "industrialupgrade:block/basemachine/positronconverter",
+      "y": 180
+    },
+    "facing=west,type=positronconverter": {
+      "model": "industrialupgrade:block/basemachine/positronconverter",
+      "y": 270
+    },
+    "facing=east,type=positronconverter": {
+      "model": "industrialupgrade:block/basemachine/positronconverter",
+      "y": 90
+    },
+    "facing=down,type=positronconverter": {
+      "model": "industrialupgrade:block/basemachine/positronconverter",
+      "x": 90
+    },
+    "facing=up,type=positronconverter": {
+      "model": "industrialupgrade:block/basemachine/positronconverter",
+      "x": 270
+    },
+    "facing=north,type=positronconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active"
+    },
+    "facing=south,type=positronconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "y": 180
+    },
+    "facing=west,type=positronconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "y": 270
+    },
+    "facing=east,type=positronconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "y": 90
+    },
+    "facing=down,type=positronconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "x": 90
+    },
+    "facing=up,type=positronconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "x": 270
+    },
+    "facing=north,type=positronconverter_active": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active"
+    },
+    "facing=south,type=positronconverter_active": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "y": 180
+    },
+    "facing=west,type=positronconverter_active": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "y": 270
+    },
+    "facing=east,type=positronconverter_active": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "y": 90
+    },
+    "facing=down,type=positronconverter_active": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "x": 90
+    },
+    "facing=up,type=positronconverter_active": {
+      "model": "industrialupgrade:block/basemachine/positronconverter_active",
+      "x": 270
+    }
+  }
+}

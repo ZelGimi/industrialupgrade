@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/gold"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_367_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/electrum"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_415_element"
+  }
+}

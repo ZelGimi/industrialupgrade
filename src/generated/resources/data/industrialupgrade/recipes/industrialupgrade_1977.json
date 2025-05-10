@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine3/steam_quarry"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_256_element"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    " B ",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/adv_steam_quarry"
+  }
+}

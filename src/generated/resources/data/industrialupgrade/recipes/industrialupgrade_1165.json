@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/invar"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/aluminiumsilicon"
+      }
+    ]
+  },
+  "pattern": [
+    "AB ",
+    "BAB",
+    "BBA"
+  ],
+  "result": {
+    "item": "industrialupgrade:recipe_schedule"
+  }
+}

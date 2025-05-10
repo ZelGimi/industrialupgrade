@@ -1,0 +1,39 @@
+{
+  "parent" : "industrialupgrade:item/tool/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/gravitoolhoe"
+  },
+	"overrides" : [
+    
+    {
+      "predicate" : {
+        "mode" : 0
+      },
+      "model" : "industrialupgrade:item/gravitool/gravitoolhoe"
+    },
+	{
+      "predicate" : {
+        "mode" : 0.25
+      },
+      "model" : "industrialupgrade:item/gravitool/gravitooltreetap"
+    },
+    {
+      "predicate" : {
+        "mode" : 0.5
+      },
+      "model" : "industrialupgrade:item/gravitool/gravitoolwrench"
+    },
+    {
+      "predicate" : {
+        "mode" : 0.75
+      },
+      "model" : "industrialupgrade:item/gravitool/gravitoolscrewdriver"
+    },
+    {
+      "predicate" : {
+        "mode" : 1
+      },
+      "model" : "industrialupgrade:item/gravitool/gravitoolpurifier"
+    }
+	]
+}

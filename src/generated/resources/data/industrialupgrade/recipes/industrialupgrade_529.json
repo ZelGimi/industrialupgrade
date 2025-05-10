@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:daynight_solar_panel_glass/sin"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:excitednucleus/sincore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:machines/proton_solar_panel"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:excitednucleus/procore"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:machines/singular_solar_panel"
+  }
+}

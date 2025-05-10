@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=adv_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller"
+    },
+    "facing=south,type=adv_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "y": 180
+    },
+    "facing=west,type=adv_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "y": 270
+    },
+    "facing=east,type=adv_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "y": 90
+    },
+    "facing=down,type=adv_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "x": 90
+    },
+    "facing=up,type=adv_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "x": 270
+    },
+    "facing=north,type=adv_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller"
+    },
+    "facing=south,type=adv_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "y": 180
+    },
+    "facing=west,type=adv_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "y": 270
+    },
+    "facing=east,type=adv_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "y": 90
+    },
+    "facing=down,type=adv_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "x": 90
+    },
+    "facing=up,type=adv_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_solar_destiller",
+      "x": 270
+    }
+  }
+}

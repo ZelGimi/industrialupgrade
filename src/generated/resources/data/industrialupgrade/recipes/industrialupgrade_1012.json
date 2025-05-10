@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/inconel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_242_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:tools/reactor_data_item"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_90_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "CBE",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/wireless_controller_reactors"
+  }
+}

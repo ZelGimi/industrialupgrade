@@ -1,0 +1,14 @@
+{
+  "values": [
+    "industrialupgrade:basemachine3/oak_tank",
+    "industrialupgrade:block_squeezer/squeezer",
+    "industrialupgrade:dryer/dryer",
+    "industrialupgrade:barrel/barrel",
+    "industrialupgrade:crop/crop",
+    "industrialupgrade:apiary/apiary",
+    "industrialupgrade:primal_wire_insulator/primal_wire_insulator",
+    "industrialupgrade:rubber_wood",
+    "industrialupgrade:swamp_rubber_wood",
+    "industrialupgrade:tropical_rubber_wood"
+  ]
+}

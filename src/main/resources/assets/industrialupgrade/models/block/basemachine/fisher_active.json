@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockfisher_bottom_active",
+    "down" : "industrialupgrade:blocks/blockfisher_bottom_active",
+    "up" : "industrialupgrade:blocks/blockfisher_top_active",
+    "north" : "industrialupgrade:blocks/blockfisher_side_active",
+    "east" : "industrialupgrade:blocks/blockfisher_side_active",
+    "south" : "industrialupgrade:blocks/blockfisher_side_active",
+    "west" : "industrialupgrade:blocks/blockfisher_side_active"
+  }
+}

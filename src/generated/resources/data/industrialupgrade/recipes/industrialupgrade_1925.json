@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:dusts/redstone"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/gold"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " A ",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:laser"
+  }
+}

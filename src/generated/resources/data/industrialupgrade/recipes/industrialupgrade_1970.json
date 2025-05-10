@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gears/invar"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:storage_blocks/tungsten"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:furnace"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine3/steel_tank"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "EDE",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:refractory_furnace/refractory_furnace"
+  }
+}

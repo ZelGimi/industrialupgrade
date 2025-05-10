@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=vending": {
+      "model": "industrialupgrade:block/basemachine/vending"
+    },
+    "facing=south,type=vending": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "y": 180
+    },
+    "facing=west,type=vending": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "y": 270
+    },
+    "facing=east,type=vending": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "y": 90
+    },
+    "facing=down,type=vending": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "x": 90
+    },
+    "facing=up,type=vending": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "x": 270
+    },
+    "facing=north,type=vending_invalid": {
+      "model": "industrialupgrade:block/basemachine/vending"
+    },
+    "facing=south,type=vending_invalid": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "y": 180
+    },
+    "facing=west,type=vending_invalid": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "y": 270
+    },
+    "facing=east,type=vending_invalid": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "y": 90
+    },
+    "facing=down,type=vending_invalid": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "x": 90
+    },
+    "facing=up,type=vending_invalid": {
+      "model": "industrialupgrade:block/basemachine/vending",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_51_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_243_element"
+      }
+    ],
+    "G": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_128_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "BAD",
+    "GCF"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/rods_manufacturer"
+  }
+}

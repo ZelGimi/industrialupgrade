@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=insulator": {
+      "model": "industrialupgrade:block/basemachine/insulator"
+    },
+    "facing=south,type=insulator": {
+      "model": "industrialupgrade:block/basemachine/insulator",
+      "y": 180
+    },
+    "facing=west,type=insulator": {
+      "model": "industrialupgrade:block/basemachine/insulator",
+      "y": 270
+    },
+    "facing=east,type=insulator": {
+      "model": "industrialupgrade:block/basemachine/insulator",
+      "y": 90
+    },
+    "facing=down,type=insulator": {
+      "model": "industrialupgrade:block/basemachine/insulator",
+      "x": 90
+    },
+    "facing=up,type=insulator": {
+      "model": "industrialupgrade:block/basemachine/insulator",
+      "x": 270
+    },
+    "facing=north,type=insulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/insulator_active"
+    },
+    "facing=south,type=insulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "y": 180
+    },
+    "facing=west,type=insulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "y": 270
+    },
+    "facing=east,type=insulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "y": 90
+    },
+    "facing=down,type=insulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "x": 90
+    },
+    "facing=up,type=insulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "x": 270
+    },
+    "facing=north,type=insulator_active": {
+      "model": "industrialupgrade:block/basemachine/insulator_active"
+    },
+    "facing=south,type=insulator_active": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "y": 180
+    },
+    "facing=west,type=insulator_active": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "y": 270
+    },
+    "facing=east,type=insulator_active": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "y": 90
+    },
+    "facing=down,type=insulator_active": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "x": 90
+    },
+    "facing=up,type=insulator_active": {
+      "model": "industrialupgrade:block/basemachine/insulator_active",
+      "x": 270
+    }
+  }
+}

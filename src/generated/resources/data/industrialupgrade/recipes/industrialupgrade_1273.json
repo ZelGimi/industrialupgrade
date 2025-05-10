@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    },
+    "B": [
+      {
+        "tag": "forge:plates/nimonic"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/woods"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/zeliber"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:tools/reactor_data_item"
+  }
+}

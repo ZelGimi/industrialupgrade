@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/universal7"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "AAA",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/universal8"
+  }
+}

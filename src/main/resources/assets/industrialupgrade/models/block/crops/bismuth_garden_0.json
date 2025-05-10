@@ -1,0 +1,6 @@
+{
+    "parent": "industrialupgrade:block/crop_1",
+    "textures": {
+        "texture": "industrialupgrade:blocks/crop/bismuth_garden_0"
+    }
+}

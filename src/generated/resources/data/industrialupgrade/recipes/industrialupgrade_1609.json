@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring/tin1"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:casings/aluminiumlithium"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:charged_redstone"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:charged_quartz"
+      }
+    ]
+  },
+  "pattern": [
+    "AEA",
+    "CDC",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:battery/re_battery"
+  }
+}

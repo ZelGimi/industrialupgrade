@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "minecraft:shield",
+      "nbt": "{Damage:0}"
+    },
+    "B": [
+      {
+        "tag": "forge:plates/vitalium"
+      }
+    ]
+  },
+  "pattern": [
+    "  B",
+    " BB",
+    "BBA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_693_element"
+  }
+}

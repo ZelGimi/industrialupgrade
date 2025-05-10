@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_501_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_97_element"
+  }
+}

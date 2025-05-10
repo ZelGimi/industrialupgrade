@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_170_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/scanner_iu"
+  }
+}

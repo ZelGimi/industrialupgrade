@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=inoculator": {
+      "model": "industrialupgrade:block/basemachine/inoculator"
+    },
+    "facing=south,type=inoculator": {
+      "model": "industrialupgrade:block/basemachine/inoculator",
+      "y": 180
+    },
+    "facing=west,type=inoculator": {
+      "model": "industrialupgrade:block/basemachine/inoculator",
+      "y": 270
+    },
+    "facing=east,type=inoculator": {
+      "model": "industrialupgrade:block/basemachine/inoculator",
+      "y": 90
+    },
+    "facing=down,type=inoculator": {
+      "model": "industrialupgrade:block/basemachine/inoculator",
+      "x": 90
+    },
+    "facing=up,type=inoculator": {
+      "model": "industrialupgrade:block/basemachine/inoculator",
+      "x": 270
+    },
+    "facing=north,type=inoculator_invalid": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active"
+    },
+    "facing=south,type=inoculator_invalid": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "y": 180
+    },
+    "facing=west,type=inoculator_invalid": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "y": 270
+    },
+    "facing=east,type=inoculator_invalid": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "y": 90
+    },
+    "facing=down,type=inoculator_invalid": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "x": 90
+    },
+    "facing=up,type=inoculator_invalid": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "x": 270
+    },
+    "facing=north,type=inoculator_active": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active"
+    },
+    "facing=south,type=inoculator_active": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "y": 180
+    },
+    "facing=west,type=inoculator_active": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "y": 270
+    },
+    "facing=east,type=inoculator_active": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "y": 90
+    },
+    "facing=down,type=inoculator_active": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "x": 90
+    },
+    "facing=up,type=inoculator_active": {
+      "model": "industrialupgrade:block/basemachine/inoculator_active",
+      "x": 270
+    }
+  }
+}

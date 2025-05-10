@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=per_scanner": {
+      "model": "industrialupgrade:block/basemachine/per_scanner"
+    },
+    "facing=south,type=per_scanner": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "y": 180
+    },
+    "facing=west,type=per_scanner": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "y": 270
+    },
+    "facing=east,type=per_scanner": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "y": 90
+    },
+    "facing=down,type=per_scanner": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "x": 90
+    },
+    "facing=up,type=per_scanner": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "x": 270
+    },
+    "facing=north,type=per_scanner_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_scanner"
+    },
+    "facing=south,type=per_scanner_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "y": 180
+    },
+    "facing=west,type=per_scanner_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "y": 270
+    },
+    "facing=east,type=per_scanner_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "y": 90
+    },
+    "facing=down,type=per_scanner_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "x": 90
+    },
+    "facing=up,type=per_scanner_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_scanner",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_274_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:rods/invar"
+      }
+    ]
+  },
+  "pattern": [
+    " AA",
+    "BCA",
+    "BB "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_437_element"
+  }
+}

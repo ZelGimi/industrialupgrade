@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": [
+      {
+        "item": "industrialupgrade:wiring/copper1"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    }
+  },
+  "pattern": [
+    " C ",
+    "CDC",
+    "ECE"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/energy_controller"
+  }
+}

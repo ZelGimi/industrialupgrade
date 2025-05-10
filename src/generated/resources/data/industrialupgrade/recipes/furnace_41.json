@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:baseore/spinel"
+  },
+  "result": "industrialupgrade:itemingots/spinel_ingot"
+}

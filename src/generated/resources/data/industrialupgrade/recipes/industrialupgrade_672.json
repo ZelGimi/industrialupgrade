@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine1"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine2"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/manganese"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "BDC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine3"
+  }
+}

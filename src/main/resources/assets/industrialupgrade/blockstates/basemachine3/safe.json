@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=safe": {
+      "model": "industrialupgrade:block/basemachine/safe"
+    },
+    "facing=south,type=safe": {
+      "model": "industrialupgrade:block/basemachine/safe",
+      "y": 180
+    },
+    "facing=west,type=safe": {
+      "model": "industrialupgrade:block/basemachine/safe",
+      "y": 270
+    },
+    "facing=east,type=safe": {
+      "model": "industrialupgrade:block/basemachine/safe",
+      "y": 90
+    },
+    "facing=down,type=safe": {
+      "model": "industrialupgrade:block/basemachine/safe",
+      "x": 90
+    },
+    "facing=up,type=safe": {
+      "model": "industrialupgrade:block/basemachine/safe",
+      "x": 270
+    },
+    "facing=north,type=safe_invalid": {
+      "model": "industrialupgrade:block/basemachine/safe_active"
+    },
+    "facing=south,type=safe_invalid": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "y": 180
+    },
+    "facing=west,type=safe_invalid": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "y": 270
+    },
+    "facing=east,type=safe_invalid": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "y": 90
+    },
+    "facing=down,type=safe_invalid": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "x": 90
+    },
+    "facing=up,type=safe_invalid": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "x": 270
+    },
+    "facing=north,type=safe_active": {
+      "model": "industrialupgrade:block/basemachine/safe_active"
+    },
+    "facing=south,type=safe_active": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "y": 180
+    },
+    "facing=west,type=safe_active": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "y": 270
+    },
+    "facing=east,type=safe_active": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "y": 90
+    },
+    "facing=down,type=safe_active": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "x": 90
+    },
+    "facing=up,type=safe_active": {
+      "model": "industrialupgrade:block/basemachine/safe_active",
+      "x": 270
+    }
+  }
+}

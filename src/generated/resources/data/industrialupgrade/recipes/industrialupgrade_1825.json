@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_reactor/gas_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:fan/fan"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_414_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/bor"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/invar"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ]
+  },
+  "pattern": [
+    "EFE",
+    "CAC",
+    "DBD"
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_reactor/gas_intercooler"
+  }
+}

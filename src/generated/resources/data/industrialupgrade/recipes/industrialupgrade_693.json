@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/spinel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:coal_chunk"
+      }
+    ]
+  },
+  "pattern": [
+    "DAD",
+    "ABA",
+    "CEC"
+  ],
+  "result": {
+    "item": "industrialupgrade:adv_spectral_box"
+  }
+}

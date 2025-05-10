@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=quad_assamplerscrap": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap"
+    },
+    "facing=south,type=quad_assamplerscrap": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap",
+      "y": 180
+    },
+    "facing=west,type=quad_assamplerscrap": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap",
+      "y": 270
+    },
+    "facing=east,type=quad_assamplerscrap": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap",
+      "y": 90
+    },
+    "facing=down,type=quad_assamplerscrap": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap",
+      "x": 90
+    },
+    "facing=up,type=quad_assamplerscrap": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap",
+      "x": 270
+    },
+    "facing=north,type=quad_assamplerscrap_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active"
+    },
+    "facing=south,type=quad_assamplerscrap_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "y": 180
+    },
+    "facing=west,type=quad_assamplerscrap_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "y": 270
+    },
+    "facing=east,type=quad_assamplerscrap_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "y": 90
+    },
+    "facing=down,type=quad_assamplerscrap_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "x": 90
+    },
+    "facing=up,type=quad_assamplerscrap_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "x": 270
+    },
+    "facing=north,type=quad_assamplerscrap_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active"
+    },
+    "facing=south,type=quad_assamplerscrap_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "y": 180
+    },
+    "facing=west,type=quad_assamplerscrap_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "y": 270
+    },
+    "facing=east,type=quad_assamplerscrap_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "y": 90
+    },
+    "facing=down,type=quad_assamplerscrap_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "x": 90
+    },
+    "facing=up,type=quad_assamplerscrap_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_assamplerscrap_active",
+      "x": 270
+    }
+  }
+}

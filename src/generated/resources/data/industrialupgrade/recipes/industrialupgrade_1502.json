@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems6"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_23_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:photoniy"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_246_element"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/automatic_mechanism-sides",
+    "down" : "industrialupgrade:blocks/automatic_mechanism-sides",
+    "up" : "industrialupgrade:blocks/automatic_mechanism-sides",
+    "north" : "industrialupgrade:blocks/automatic_mechanism_main",
+    "east" : "industrialupgrade:blocks/automatic_mechanism_left-right",
+    "south" : "industrialupgrade:blocks/automatic_mechanism-sides",
+    "west" : "industrialupgrade:blocks/automatic_mechanism_left-right"
+  }
+}

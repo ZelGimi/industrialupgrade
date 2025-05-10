@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=painter": {
+      "model": "industrialupgrade:block/basemachine/painter"
+    },
+    "facing=south,type=painter": {
+      "model": "industrialupgrade:block/basemachine/painter",
+      "y": 180
+    },
+    "facing=west,type=painter": {
+      "model": "industrialupgrade:block/basemachine/painter",
+      "y": 270
+    },
+    "facing=east,type=painter": {
+      "model": "industrialupgrade:block/basemachine/painter",
+      "y": 90
+    },
+    "facing=down,type=painter": {
+      "model": "industrialupgrade:block/basemachine/painter",
+      "x": 90
+    },
+    "facing=up,type=painter": {
+      "model": "industrialupgrade:block/basemachine/painter",
+      "x": 270
+    },
+    "facing=north,type=painter_invalid": {
+      "model": "industrialupgrade:block/basemachine/painter_active"
+    },
+    "facing=south,type=painter_invalid": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "y": 180
+    },
+    "facing=west,type=painter_invalid": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "y": 270
+    },
+    "facing=east,type=painter_invalid": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "y": 90
+    },
+    "facing=down,type=painter_invalid": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "x": 90
+    },
+    "facing=up,type=painter_invalid": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "x": 270
+    },
+    "facing=north,type=painter_active": {
+      "model": "industrialupgrade:block/basemachine/painter_active"
+    },
+    "facing=south,type=painter_active": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "y": 180
+    },
+    "facing=west,type=painter_active": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "y": 270
+    },
+    "facing=east,type=painter_active": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "y": 90
+    },
+    "facing=down,type=painter_active": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "x": 90
+    },
+    "facing=up,type=painter_active": {
+      "model": "industrialupgrade:block/basemachine/painter_active",
+      "x": 270
+    }
+  }
+}

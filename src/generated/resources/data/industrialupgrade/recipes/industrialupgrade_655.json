@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:energy_tools/nanodrill"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_516_element"
+      }
+    ],
+    "H": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_509_element"
+      }
+    ],
+    "T": [
+      {
+        "tag": "forge:doubleplate/muntsa"
+      }
+    ]
+  },
+  "pattern": [
+    "THT",
+    "CDC",
+    "BFB"
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/quantumdrill"
+  }
+}

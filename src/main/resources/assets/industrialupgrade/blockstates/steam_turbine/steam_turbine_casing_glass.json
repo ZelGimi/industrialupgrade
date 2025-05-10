@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=steam_turbine_casing_glass": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass"
+    },
+    "facing=south,type=steam_turbine_casing_glass": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_casing_glass": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_casing_glass": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "y": 90
+    },
+    "facing=down,type=steam_turbine_casing_glass": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "x": 90
+    },
+    "facing=up,type=steam_turbine_casing_glass": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "x": 270
+    },
+    "facing=north,type=steam_turbine_casing_glass_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass"
+    },
+    "facing=south,type=steam_turbine_casing_glass_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_casing_glass_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_casing_glass_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "y": 90
+    },
+    "facing=down,type=steam_turbine_casing_glass_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "x": 90
+    },
+    "facing=up,type=steam_turbine_casing_glass_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_casing_glass",
+      "x": 270
+    }
+  }
+}

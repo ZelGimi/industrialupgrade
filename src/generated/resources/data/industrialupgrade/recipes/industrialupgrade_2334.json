@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:lightning_rod/lightning_rod_casing"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:charged_redstone"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "ACA",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:lightning_rod/lightning_rod_grounding"
+  }
+}

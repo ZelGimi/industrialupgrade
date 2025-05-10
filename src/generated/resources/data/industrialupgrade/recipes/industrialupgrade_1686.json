@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:charged_redstone"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemdust/diamond_dust"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:quartz"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "count": 9,
+    "item": "industrialupgrade:itemdust/energium_dust"
+  }
+}

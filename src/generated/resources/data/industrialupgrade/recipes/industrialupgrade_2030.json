@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    },
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/copper"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:graphene_wire"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:itemplates/orichalcum"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/yttriumaluminiumgarnet"
+      }
+    ]
+  },
+  "pattern": [
+    "BDD",
+    "CAE",
+    "BCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_757_element"
+  }
+}

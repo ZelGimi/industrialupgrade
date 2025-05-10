@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/iridium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/germanium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/redbrass"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_275_element"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_3_element"
+  }
+}

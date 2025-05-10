@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=cyclotron_coolant": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant"
+    },
+    "facing=south,type=cyclotron_coolant": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "y": 180
+    },
+    "facing=west,type=cyclotron_coolant": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "y": 270
+    },
+    "facing=east,type=cyclotron_coolant": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "y": 90
+    },
+    "facing=down,type=cyclotron_coolant": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "x": 90
+    },
+    "facing=up,type=cyclotron_coolant": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "x": 270
+    },
+    "facing=north,type=cyclotron_coolant_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant"
+    },
+    "facing=south,type=cyclotron_coolant_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "y": 180
+    },
+    "facing=west,type=cyclotron_coolant_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "y": 270
+    },
+    "facing=east,type=cyclotron_coolant_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "y": 90
+    },
+    "facing=down,type=cyclotron_coolant_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "x": 90
+    },
+    "facing=up,type=cyclotron_coolant_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_coolant",
+      "x": 270
+    }
+  }
+}

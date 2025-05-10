@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=incubator": {
+      "model": "industrialupgrade:block/basemachine/incubator"
+    },
+    "facing=south,type=incubator": {
+      "model": "industrialupgrade:block/basemachine/incubator",
+      "y": 180
+    },
+    "facing=west,type=incubator": {
+      "model": "industrialupgrade:block/basemachine/incubator",
+      "y": 270
+    },
+    "facing=east,type=incubator": {
+      "model": "industrialupgrade:block/basemachine/incubator",
+      "y": 90
+    },
+    "facing=down,type=incubator": {
+      "model": "industrialupgrade:block/basemachine/incubator",
+      "x": 90
+    },
+    "facing=up,type=incubator": {
+      "model": "industrialupgrade:block/basemachine/incubator",
+      "x": 270
+    },
+    "facing=north,type=incubator_invalid": {
+      "model": "industrialupgrade:block/basemachine/incubator_active"
+    },
+    "facing=south,type=incubator_invalid": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "y": 180
+    },
+    "facing=west,type=incubator_invalid": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "y": 270
+    },
+    "facing=east,type=incubator_invalid": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "y": 90
+    },
+    "facing=down,type=incubator_invalid": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "x": 90
+    },
+    "facing=up,type=incubator_invalid": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "x": 270
+    },
+    "facing=north,type=incubator_active": {
+      "model": "industrialupgrade:block/basemachine/incubator_active"
+    },
+    "facing=south,type=incubator_active": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "y": 180
+    },
+    "facing=west,type=incubator_active": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "y": 270
+    },
+    "facing=east,type=incubator_active": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "y": 90
+    },
+    "facing=down,type=incubator_active": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "x": 90
+    },
+    "facing=up,type=incubator_active": {
+      "model": "industrialupgrade:block/basemachine/incubator_active",
+      "x": 270
+    }
+  }
+}

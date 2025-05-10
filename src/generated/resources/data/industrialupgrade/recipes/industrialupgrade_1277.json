@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_32_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine3/steamboiler"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_63_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_123_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "DBC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/steampressureconverter"
+  }
+}

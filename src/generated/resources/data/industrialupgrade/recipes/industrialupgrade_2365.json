@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "quantumgenerators:qg/bsp_gen"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/adrcore"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "quantumgenerators:qg/adsp_gen"
+  }
+}

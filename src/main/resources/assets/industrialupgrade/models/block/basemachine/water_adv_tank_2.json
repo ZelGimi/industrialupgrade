@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/water_reactor/tank/filling/adv_tank_front-left-right-back_2",
+    "down" : "industrialupgrade:blocks/water_reactor/tank/adv_tank_top-bottom",
+    "up" : "industrialupgrade:blocks/water_reactor/tank/adv_tank_top-bottom",
+    "north" : "industrialupgrade:blocks/water_reactor/tank/filling/adv_tank_front-left-right-back_2",
+    "east" : "industrialupgrade:blocks/water_reactor/tank/filling/adv_tank_front-left-right-back_2",
+    "south" : "industrialupgrade:blocks/water_reactor/tank/filling/adv_tank_front-left-right-back_2",
+    "west" : "industrialupgrade:blocks/water_reactor/tank/filling/adv_tank_front-left-right-back_2"
+  }
+}

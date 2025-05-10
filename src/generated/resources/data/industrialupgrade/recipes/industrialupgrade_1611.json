@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/copper1"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:battery/advanced_re_battery"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:upgrade_casing"
+      }
+    ],
+    "F": [
+      {
+        "tag": "forge:plates/obsidian"
+      }
+    ]
+  },
+  "pattern": [
+    "FEF",
+    "BDB",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:upgrades/energy_storage"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/specore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade3"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade4"
+  }
+}

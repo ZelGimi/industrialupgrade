@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:honeycomb"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_480_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/bor"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_295_element"
+      }
+    ]
+  },
+  "pattern": [
+    "DBD",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_667_element"
+  }
+}

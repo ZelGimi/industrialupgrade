@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:bricks"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/hafniumcarbide"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:casings/aluminiumsilicon"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:cokeoven/coke_oven_part"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_234_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_5_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine3/geogenerator_iu"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "ADC",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine1/adv_geo"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_599_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemplates/hafnium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:itemplates/bismuth"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_583_element"
+  }
+}

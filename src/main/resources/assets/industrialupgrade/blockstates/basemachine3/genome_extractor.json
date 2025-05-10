@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=genome_extractor": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor"
+    },
+    "facing=south,type=genome_extractor": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor",
+      "y": 180
+    },
+    "facing=west,type=genome_extractor": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor",
+      "y": 270
+    },
+    "facing=east,type=genome_extractor": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor",
+      "y": 90
+    },
+    "facing=down,type=genome_extractor": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor",
+      "x": 90
+    },
+    "facing=up,type=genome_extractor": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor",
+      "x": 270
+    },
+    "facing=north,type=genome_extractor_invalid": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active"
+    },
+    "facing=south,type=genome_extractor_invalid": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "y": 180
+    },
+    "facing=west,type=genome_extractor_invalid": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "y": 270
+    },
+    "facing=east,type=genome_extractor_invalid": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "y": 90
+    },
+    "facing=down,type=genome_extractor_invalid": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "x": 90
+    },
+    "facing=up,type=genome_extractor_invalid": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "x": 270
+    },
+    "facing=north,type=genome_extractor_active": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active"
+    },
+    "facing=south,type=genome_extractor_active": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "y": 180
+    },
+    "facing=west,type=genome_extractor_active": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "y": 270
+    },
+    "facing=east,type=genome_extractor_active": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "y": 90
+    },
+    "facing=down,type=genome_extractor_active": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "x": 90
+    },
+    "facing=up,type=genome_extractor_active": {
+      "model": "industrialupgrade:block/basemachine/genome_extractor_active",
+      "x": 270
+    }
+  }
+}

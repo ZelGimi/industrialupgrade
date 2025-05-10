@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemsunnariumpanel/hsp"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:photoniumglass/photoniyglass1"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:stick/cobalt"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:photoniumglass/photoniyglass2"
+  }
+}

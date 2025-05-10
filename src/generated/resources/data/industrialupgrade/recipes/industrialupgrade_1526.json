@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_232_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_139_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine/adv_gen"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    " D ",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine/imp_gen"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:reactors/reactorberkeliumquad"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/lead"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:wiring/radiation"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:pellets/berkelium_gem_pellet"
+  }
+}

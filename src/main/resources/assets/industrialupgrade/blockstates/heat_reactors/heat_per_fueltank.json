@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=heat_per_fueltank": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank"
+    },
+    "facing=south,type=heat_per_fueltank": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "y": 180
+    },
+    "facing=west,type=heat_per_fueltank": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "y": 270
+    },
+    "facing=east,type=heat_per_fueltank": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "y": 90
+    },
+    "facing=down,type=heat_per_fueltank": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "x": 90
+    },
+    "facing=up,type=heat_per_fueltank": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "x": 270
+    },
+    "facing=north,type=heat_per_fueltank_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank"
+    },
+    "facing=south,type=heat_per_fueltank_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "y": 180
+    },
+    "facing=west,type=heat_per_fueltank_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "y": 270
+    },
+    "facing=east,type=heat_per_fueltank_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "y": 90
+    },
+    "facing=down,type=heat_per_fueltank_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "x": 90
+    },
+    "facing=up,type=heat_per_fueltank_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_per_fueltank",
+      "x": 270
+    }
+  }
+}

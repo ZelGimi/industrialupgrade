@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/advanced_re_battery"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:redstone_block"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_258_element"
+  }
+}

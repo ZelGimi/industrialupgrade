@@ -1,0 +1,22 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		
+			"state=plain_y": { "model": "industrialupgrade:block/swamp_rubber_wood" },
+			"state=plain_x": { "model": "industrialupgrade:block/swamp_rubber_wood", "x": 90, "y": 90 },
+			"state=plain_z": { "model": "industrialupgrade:block/swamp_rubber_wood", "x": 90 },
+			"state=dry_north": { "model": "industrialupgrade:block/swamp_rubber_wood_dry" },
+			"state=dry_south": { "model": "industrialupgrade:block/swamp_rubber_wood_dry", "y": 180 },
+			"state=dry_west": { "model": "industrialupgrade:block/swamp_rubber_wood_dry", "y": 270 },
+			"state=dry_east": { "model": "industrialupgrade:block/swamp_rubber_wood_dry", "y": 90 },
+			"state=wet_north": { "model": "industrialupgrade:block/swamp_rubber_wood_wet" },
+			"state=wet_south": { "model": "industrialupgrade:block/swamp_rubber_wood_wet", "y": 180 },
+			"state=wet_west": { "model": "industrialupgrade:block/swamp_rubber_wood_wet", "y": 270 },
+			"state=wet_east": { "model": "industrialupgrade:block/swamp_rubber_wood_wet", "y": 90 }
+		}
+		
+}
+

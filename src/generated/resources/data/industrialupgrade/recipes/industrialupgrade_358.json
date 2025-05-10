@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:alloyingot/yttrium_aluminium_garnet"
+      }
+    ]
+  ],
+  "result": {
+    "count": 9,
+    "item": "industrialupgrade:alloynugget/yttrium_aluminium_garnet"
+  }
+}

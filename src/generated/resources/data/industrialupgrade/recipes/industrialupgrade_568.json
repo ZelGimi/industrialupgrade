@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/manganese"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/spinel"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    },
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "D D",
+    "EEE"
+  ],
+  "result": {
+    "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine2"
+  }
+}

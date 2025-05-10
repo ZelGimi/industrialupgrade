@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/tin"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:glass_pane"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "count": 3,
+    "item": "industrialupgrade:itemcell/itemcell"
+  }
+}

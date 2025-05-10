@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=autofuse": {
+      "model": "industrialupgrade:block/basemachine/autofuse"
+    },
+    "facing=south,type=autofuse": {
+      "model": "industrialupgrade:block/basemachine/autofuse",
+      "y": 180
+    },
+    "facing=west,type=autofuse": {
+      "model": "industrialupgrade:block/basemachine/autofuse",
+      "y": 270
+    },
+    "facing=east,type=autofuse": {
+      "model": "industrialupgrade:block/basemachine/autofuse",
+      "y": 90
+    },
+    "facing=down,type=autofuse": {
+      "model": "industrialupgrade:block/basemachine/autofuse",
+      "x": 90
+    },
+    "facing=up,type=autofuse": {
+      "model": "industrialupgrade:block/basemachine/autofuse",
+      "x": 270
+    },
+    "facing=north,type=autofuse_invalid": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active"
+    },
+    "facing=south,type=autofuse_invalid": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "y": 180
+    },
+    "facing=west,type=autofuse_invalid": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "y": 270
+    },
+    "facing=east,type=autofuse_invalid": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "y": 90
+    },
+    "facing=down,type=autofuse_invalid": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "x": 90
+    },
+    "facing=up,type=autofuse_invalid": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "x": 270
+    },
+    "facing=north,type=autofuse_active": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active"
+    },
+    "facing=south,type=autofuse_active": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "y": 180
+    },
+    "facing=west,type=autofuse_active": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "y": 270
+    },
+    "facing=east,type=autofuse_active": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "y": 90
+    },
+    "facing=down,type=autofuse_active": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "x": 90
+    },
+    "facing=up,type=autofuse_active": {
+      "model": "industrialupgrade:block/basemachine/autofuse_active",
+      "x": 270
+    }
+  }
+}

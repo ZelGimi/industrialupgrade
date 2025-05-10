@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/tempered_glass"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/woods"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_678_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:photoniumglass/photoniyglass5"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/permalloy"
+      }
+    ]
+  },
+  "pattern": [
+    "BEB",
+    "CAD",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:colonial_building/high_panel"
+  }
+}

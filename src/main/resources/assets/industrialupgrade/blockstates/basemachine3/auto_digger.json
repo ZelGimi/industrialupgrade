@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=auto_digger": {
+      "model": "industrialupgrade:block/basemachine/auto-digger"
+    },
+    "facing=south,type=auto_digger": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "y": 180
+    },
+    "facing=west,type=auto_digger": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "y": 270
+    },
+    "facing=east,type=auto_digger": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "y": 90
+    },
+    "facing=down,type=auto_digger": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "x": 90
+    },
+    "facing=up,type=auto_digger": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "x": 270
+    },
+    "facing=north,type=auto_digger_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto-digger"
+    },
+    "facing=south,type=auto_digger_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "y": 180
+    },
+    "facing=west,type=auto_digger_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "y": 270
+    },
+    "facing=east,type=auto_digger_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "y": 90
+    },
+    "facing=down,type=auto_digger_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "x": 90
+    },
+    "facing=up,type=auto_digger_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto-digger",
+      "x": 270
+    }
+  }
+}

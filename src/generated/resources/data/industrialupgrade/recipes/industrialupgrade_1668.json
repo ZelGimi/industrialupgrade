@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:dusts/coal"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:flint"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_283_element"
+  }
+}

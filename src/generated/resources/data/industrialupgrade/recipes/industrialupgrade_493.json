@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcore/specore"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    },
+    "C": [
+      {
+        "item": "industrialupgrade:quarrymodules/blackmodule"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:quarrymodules/whitemodule"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "BEB",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine/modulator"
+  }
+}

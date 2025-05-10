@@ -1,0 +1,6 @@
+{
+	"parent": "industrialupgrade:block/wiring/cable/cable_connect",
+	"textures": {
+		"texture": "industrialupgrade:blocks/wiring/universal_cable/glass8_cable"
+	}
+}

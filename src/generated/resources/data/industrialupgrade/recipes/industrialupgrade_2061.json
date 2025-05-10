@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/aluminiumsilicon"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/vitalium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/cobaltchrome"
+      }
+    ]
+  },
+  "pattern": [
+    " AB",
+    "ABC",
+    " BC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_766_element"
+  }
+}

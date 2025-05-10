@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemsunnariumpanel/hsp"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_319_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:itemsunnarium/sunnarium2"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "BAB",
+    "BDB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_442_element"
+  }
+}

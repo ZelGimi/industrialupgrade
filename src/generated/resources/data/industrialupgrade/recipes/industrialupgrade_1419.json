@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/adv_water_generator"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_81_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_96_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_139_element"
+      }
+    ]
+  },
+  "pattern": [
+    "D D",
+    "CAB",
+    "D D"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/imp_water_generator"
+  }
+}

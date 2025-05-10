@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:logs"
+      }
+    ],
+    "B": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:lapis_lazuli"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:corewater/core_wind"
+  }
+}

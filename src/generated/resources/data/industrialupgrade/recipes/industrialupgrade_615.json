@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/mercury_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/mercury_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/mercury_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/mercury_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/mercury_boulder"
+  }
+}

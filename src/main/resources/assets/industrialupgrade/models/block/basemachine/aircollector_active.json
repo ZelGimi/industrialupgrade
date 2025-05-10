@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/aircollector_main_active",
+    "down" : "industrialupgrade:blocks/blockcircuit_side2",
+    "up" : "industrialupgrade:blocks/aircollector_top",
+    "north" : "industrialupgrade:blocks/aircollector_top_active",
+    "east" : "industrialupgrade:blocks/blockcircuit_side2",
+    "south" : "industrialupgrade:blocks/blockcircuit_side2",
+    "west" : "industrialupgrade:blocks/blockcircuit_side2"
+  }
+}

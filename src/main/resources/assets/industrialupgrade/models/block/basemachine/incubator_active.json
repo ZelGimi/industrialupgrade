@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/incubator_side_active",
+    "down" : "industrialupgrade:blocks/incubator_bottom",
+    "up" : "industrialupgrade:blocks/incubator_top_active",
+    "north" : "industrialupgrade:blocks/incubator_side_active",
+    "east" : "industrialupgrade:blocks/incubator_bottom",
+    "south" : "industrialupgrade:blocks/incubator_bottom",
+    "west" : "industrialupgrade:blocks/incubator_bottom"
+  }
+}

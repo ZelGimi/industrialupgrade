@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "minecraft:wool"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/spinel"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:mutton"
+      }
+    ]
+  },
+  "pattern": [
+    "DBD",
+    "CAC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_670_element"
+  }
+}

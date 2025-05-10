@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/triple_solid_mixer_front_active",
+    "down" : "industrialupgrade:blocks/triple_solid_mixer_side",
+    "up" : "industrialupgrade:blocks/triple_solid_mixer_top-active",
+    "north" : "industrialupgrade:blocks/triple_solid_mixer_front_active",
+    "east" : "industrialupgrade:blocks/triple_solid_mixer_side",
+    "south" : "industrialupgrade:blocks/triple_solid_mixer_side",
+    "west" : "industrialupgrade:blocks/triple_solid_mixer_side"
+  }
+}

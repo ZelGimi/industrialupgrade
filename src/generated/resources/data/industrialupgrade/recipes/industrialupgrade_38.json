@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring_storage/per_mfsu"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:10}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:itemcore/phocore"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "DAD",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring_storage/bar_mfsu"
+  }
+}

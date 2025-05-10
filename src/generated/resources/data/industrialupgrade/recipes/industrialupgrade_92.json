@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/cobalt"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/magnesium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine/per_matter"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:solid/aqua_solidmatter"
+  }
+}

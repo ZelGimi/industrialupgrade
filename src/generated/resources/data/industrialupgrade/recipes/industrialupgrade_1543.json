@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_174_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_232_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:adv_se_gen/adv_se_gen"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:imp_se_gen/imp_se_gen"
+  }
+}

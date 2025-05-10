@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler"
+    },
+    "facing=south,type=silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 180
+    },
+    "facing=west,type=silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 270
+    },
+    "facing=east,type=silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 90
+    },
+    "facing=down,type=silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "x": 90
+    },
+    "facing=up,type=silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "x": 270
+    },
+    "facing=north,type=silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler"
+    },
+    "facing=south,type=silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 180
+    },
+    "facing=west,type=silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 270
+    },
+    "facing=east,type=silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 90
+    },
+    "facing=down,type=silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "x": 90
+    },
+    "facing=up,type=silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "x": 270
+    },
+    "facing=north,type=silicon_crystal_handler_active": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler"
+    },
+    "facing=south,type=silicon_crystal_handler_active": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 180
+    },
+    "facing=west,type=silicon_crystal_handler_active": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 270
+    },
+    "facing=east,type=silicon_crystal_handler_active": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "y": 90
+    },
+    "facing=down,type=silicon_crystal_handler_active": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "x": 90
+    },
+    "facing=up,type=silicon_crystal_handler_active": {
+      "model": "industrialupgrade:block/basemachine/silicon_crystal_handler",
+      "x": 270
+    }
+  }
+}

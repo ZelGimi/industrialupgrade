@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BBB",
+    "B  "
+  ],
+  "result": {
+    "item": "industrialupgrade:tools/treetap"
+  }
+}

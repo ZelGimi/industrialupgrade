@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:solderingiron",
+      "nbt": "{Damage:0}"
+    },
+    "D": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "ADA",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:primal_soldering_mechanism/primal_soldering_mechanism"
+  }
+}

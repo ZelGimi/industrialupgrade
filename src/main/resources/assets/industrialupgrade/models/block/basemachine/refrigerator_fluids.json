@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/refrigerator_fluids_front-right-left-back",
+    "down" : "industrialupgrade:blocks/refrigerator_fluids_bottom",
+    "up" : "industrialupgrade:blocks/refrigerator_fluids_top",
+    "north" : "industrialupgrade:blocks/refrigerator_fluids_front-right-left-back",
+    "east" : "industrialupgrade:blocks/refrigerator_fluids_front-right-left-back",
+    "south" : "industrialupgrade:blocks/refrigerator_fluids_front-right-left-back",
+    "west" : "industrialupgrade:blocks/refrigerator_fluids_front-right-left-back"
+  }
+}

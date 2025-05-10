@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/imp_wind_generator"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_104_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_120_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_140_element"
+      }
+    ]
+  },
+  "pattern": [
+    "D D",
+    "CAB",
+    "D D"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/per_wind_generator"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:rods/arsenic"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:circuit/photon_part1"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:circuit/photon_part2"
+  }
+}

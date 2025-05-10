@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:machines/singular_solar_panel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:armour/spectral_solar_helmet"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:10}"
+    }
+  },
+  "pattern": [
+    " A ",
+    "DCD",
+    "BDB"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/singular_solar_helmet"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_583_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:alloyplate/permalloy"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_597_element"
+  }
+}

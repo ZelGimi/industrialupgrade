@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockspawner_bottom",
+    "down" : "industrialupgrade:blocks/blockspawner_bottom",
+    "up" : "industrialupgrade:blocks/blockspawner_top_active",
+    "north" : "industrialupgrade:blocks/blockspawner_main_active",
+    "east" : "industrialupgrade:blocks/blockspawner_side_active",
+    "south" : "industrialupgrade:blocks/blockspawner_bottom",
+    "west" : "industrialupgrade:blocks/blockspawner_side_active"
+  }
+}

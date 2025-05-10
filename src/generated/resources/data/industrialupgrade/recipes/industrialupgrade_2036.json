@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/nimonic"
+      }
+    ]
+  },
+  "pattern": [
+    " AA",
+    "AAA",
+    "AA "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_741_element"
+  }
+}

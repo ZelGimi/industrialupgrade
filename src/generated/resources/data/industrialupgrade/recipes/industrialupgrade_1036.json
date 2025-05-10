@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_88_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:itemplates/thallium"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:itemplates/tantalum"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "CBC",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/radiation_storage"
+  }
+}

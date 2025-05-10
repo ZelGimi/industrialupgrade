@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/steam_boiler_exchanger",
+    "down" : "industrialupgrade:blocks/steam_boiler_exchanger",
+    "up" : "industrialupgrade:blocks/steam_boiler_exchanger",
+    "north" : "industrialupgrade:blocks/steam_boiler_exchanger",
+    "east" : "industrialupgrade:blocks/steam_boiler_exchanger",
+    "south" : "industrialupgrade:blocks/steam_boiler_exchanger",
+    "west" : "industrialupgrade:blocks/steam_boiler_exchanger"
+  }
+}

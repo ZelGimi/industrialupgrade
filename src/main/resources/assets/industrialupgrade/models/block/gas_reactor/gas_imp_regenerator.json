@@ -1,0 +1,6 @@
+{
+  "parent" : "block/cube_all",
+  "textures" : {
+    "all" : "industrialupgrade:blocks/gas_reactor/regenerator/imp_regenerator_side"
+  }
+}

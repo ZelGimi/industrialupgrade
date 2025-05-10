@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_36_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_441_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "ABC",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/industrial_ore_purifier"
+  }
+}

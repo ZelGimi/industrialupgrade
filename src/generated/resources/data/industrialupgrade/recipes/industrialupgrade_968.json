@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:reactormodules/capacitor1"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/cadmium"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:6}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:reactors/imp_capacitor"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "DED",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:reactormodules/capacitor2"
+  }
+}

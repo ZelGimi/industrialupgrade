@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/water_solid",
+    "down" : "industrialupgrade:blocks/water_solid",
+    "up" : "industrialupgrade:blocks/water_solid",
+    "north" : "industrialupgrade:blocks/water_solid",
+    "east" : "industrialupgrade:blocks/water_solid",
+    "south" : "industrialupgrade:blocks/water_solid",
+    "west" : "industrialupgrade:blocks/water_solid"
+  }
+}

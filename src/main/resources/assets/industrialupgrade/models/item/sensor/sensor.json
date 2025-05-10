@@ -1,0 +1,200 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/sensor"
+  },
+  "overrides": [
+        {
+            "predicate": {
+                "type": 0.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_magnetite"
+        },
+        {
+            "predicate": {
+                "type": 1.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_calaverite"
+        },
+        {
+            "predicate": {
+                "type": 2.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_galena"
+        },
+        {
+            "predicate": {
+                "type": 3.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_nickelite"
+        },
+        {
+            "predicate": {
+                "type": 4.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_pyrite"
+        },
+        {
+            "predicate": {
+                "type": 5.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_quartzite"
+        },
+        {
+            "predicate": {
+                "type": 6.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_uranite"
+        },
+        {
+            "predicate": {
+                "type": 7.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_azurite"
+        },
+        {
+            "predicate": {
+                "type": 8.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_rhodonite"
+        },
+        {
+            "predicate": {
+                "type": 9.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_alfildit"
+        },
+        {
+            "predicate": {
+                "type": 10.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_euxenite"
+        },
+        {
+            "predicate": {
+                "type": 11.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_smithsonite"
+        },
+        {
+            "predicate": {
+                "type": 12.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_ilmenite"
+        },
+        {
+            "predicate": {
+                "type": 13.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_todorokite"
+        },
+        {
+            "predicate": {
+                "type": 14.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_ferroaugite"
+        },
+        {
+            "predicate": {
+                "type": 15.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_sheelite"
+        },
+        {
+            "predicate": {
+                "type": 16.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_oil"
+        },
+        {
+            "predicate": {
+                "type": 17.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_arsenopyrite"
+        },
+        {
+            "predicate": {
+                "type": 18.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_braggite"
+        },
+        {
+            "predicate": {
+                "type": 19.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_wolframite"
+        },
+        {
+            "predicate": {
+                "type": 20.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_germanite"
+        },
+        {
+            "predicate": {
+                "type": 21.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_coltan"
+        },
+        {
+            "predicate": {
+                "type": 22.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_crocoite"
+        },
+        {
+            "predicate": {
+                "type": 23.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_xenotime"
+        },
+        {
+            "predicate": {
+                "type": 24.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_iridosmine"
+        },
+        {
+            "predicate": {
+                "type": 25.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_theoprastite"
+        },
+        {
+            "predicate": {
+                "type": 26.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_tetrahedrite"
+        },
+        {
+            "predicate": {
+                "type": 27.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_fergusonite"
+        },
+        {
+            "predicate": {
+                "type": 28.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_celestine"
+        },
+        {
+            "predicate": {
+                "type": 29.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_zircon"
+        },
+        {
+            "predicate": {
+                "type": 30.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_crystal"
+        },
+        {
+            "predicate": {
+                "type": 31.0
+            },
+            "model": "industrialupgrade:item/sensor/sensor_gas"
+        }
+    ]
+}

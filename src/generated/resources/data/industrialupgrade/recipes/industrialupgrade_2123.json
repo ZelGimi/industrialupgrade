@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/thallium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/niobium"
+      }
+    ]
+  },
+  "pattern": [
+    "ABB",
+    "AB ",
+    "B  "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_765_element"
+  }
+}

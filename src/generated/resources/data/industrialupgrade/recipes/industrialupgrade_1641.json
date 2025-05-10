@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:energy_tools/drill"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gems/diamond"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    " B ",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/diamond_drill"
+  }
+}

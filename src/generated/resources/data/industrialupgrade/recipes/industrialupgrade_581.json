@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/alumel"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/aluminium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:spawnermodules/spawner_module4"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:6}"
+    },
+    "E": [
+      {
+        "item": "industrialupgrade:nanobox"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "DCD",
+    "EEE"
+  ],
+  "result": {
+    "item": "industrialupgrade:spawnermodules/spawner_module5"
+  }
+}

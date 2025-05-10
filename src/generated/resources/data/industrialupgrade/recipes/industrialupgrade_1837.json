@@ -1,0 +1,49 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_reactor/gas_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_324_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_414_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_320_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_342_element"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_321_element"
+      }
+    ],
+    "G": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_273_element",
+      "nbt": "{level:3}"
+    }
+  },
+  "pattern": [
+    "EGF",
+    "CAC",
+    "DBD"
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_reactor/gas_controller"
+  }
+}

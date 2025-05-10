@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:upgrades/imp_storageupgrade"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:battery/itembatlamacrystal"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:upgrades/per_storageupgrade"
+  }
+}

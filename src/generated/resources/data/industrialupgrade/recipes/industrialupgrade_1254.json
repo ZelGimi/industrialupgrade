@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/aluminumbronze"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/bronze"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_601_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:primal_fluid_heater/primal_fluid_heater"
+  }
+}

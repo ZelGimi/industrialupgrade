@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=adv_reactor": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor"
+    },
+    "facing=south,type=adv_reactor": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor",
+      "y": 180
+    },
+    "facing=west,type=adv_reactor": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor",
+      "y": 270
+    },
+    "facing=east,type=adv_reactor": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor",
+      "y": 90
+    },
+    "facing=down,type=adv_reactor": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor",
+      "x": 90
+    },
+    "facing=up,type=adv_reactor": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor",
+      "x": 270
+    },
+    "facing=north,type=adv_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active"
+    },
+    "facing=south,type=adv_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "y": 180
+    },
+    "facing=west,type=adv_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "y": 270
+    },
+    "facing=east,type=adv_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "y": 90
+    },
+    "facing=down,type=adv_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "x": 90
+    },
+    "facing=up,type=adv_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "x": 270
+    },
+    "facing=north,type=adv_reactor_active": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active"
+    },
+    "facing=south,type=adv_reactor_active": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "y": 180
+    },
+    "facing=west,type=adv_reactor_active": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "y": 270
+    },
+    "facing=east,type=adv_reactor_active": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "y": 90
+    },
+    "facing=down,type=adv_reactor_active": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "x": 90
+    },
+    "facing=up,type=adv_reactor_active": {
+      "model": "industrialupgrade:block/basemachine/adv_reactor_active",
+      "x": 270
+    }
+  }
+}

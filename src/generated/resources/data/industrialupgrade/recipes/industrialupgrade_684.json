@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/vanadoalumite"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:moremachine1/quad_comb_macerator"
+      }
+    ]
+  },
+  "pattern": [
+    " D ",
+    "ABA",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:quarrymodules/comb_macerator"
+  }
+}

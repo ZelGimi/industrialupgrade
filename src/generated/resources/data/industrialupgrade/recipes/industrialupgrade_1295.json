@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:reactors/per_heat_exchange"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:reactors/per_vent"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:reactors/proton"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:reactors/proton_energy_coupler"
+  }
+}

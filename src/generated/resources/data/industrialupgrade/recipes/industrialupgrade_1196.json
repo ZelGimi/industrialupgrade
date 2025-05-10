@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/iron"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    " BB",
+    " BB",
+    "A  "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_571_element"
+  }
+}

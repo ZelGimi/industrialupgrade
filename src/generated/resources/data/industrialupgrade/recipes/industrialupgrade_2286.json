@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gears/molybdenum"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:bee_frame_template"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tantalum"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/silver"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:frame/storage_jelly_1"
+  }
+}

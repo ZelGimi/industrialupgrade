@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring/universal4"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemdoubleplates/steel_doubleplate"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/vitalium"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "BCB",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/universal5"
+  }
+}

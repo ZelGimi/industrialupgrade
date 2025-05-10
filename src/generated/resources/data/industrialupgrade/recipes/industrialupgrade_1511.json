@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/generator_iu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_27_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_236_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CAD",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine2/gen_pet"
+  }
+}

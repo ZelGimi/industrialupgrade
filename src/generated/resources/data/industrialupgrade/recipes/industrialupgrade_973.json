@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_386_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tantalum"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_320_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "BAB",
+    "DCD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_440_element"
+  }
+}

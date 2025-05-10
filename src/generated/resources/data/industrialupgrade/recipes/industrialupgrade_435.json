@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:gold_ingot"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:redstone"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:flint"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "ADA",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:circuit/circuit_part1"
+  }
+}

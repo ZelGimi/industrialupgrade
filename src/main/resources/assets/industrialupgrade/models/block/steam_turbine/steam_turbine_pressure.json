@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/steam_turbine_pressure",
+    "down" : "industrialupgrade:blocks/steam_turbine_casing",
+    "up" : "industrialupgrade:blocks/steam_turbine_casing",
+    "north" : "industrialupgrade:blocks/steam_turbine_pressure",
+    "east" : "industrialupgrade:blocks/steam_turbine_casing",
+    "south" : "industrialupgrade:blocks/steam_turbine_casing",
+    "west" : "industrialupgrade:blocks/steam_turbine_casing"
+  }
+}

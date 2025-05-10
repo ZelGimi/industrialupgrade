@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine2/electrolyzer_iu"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/solid_state_electrolyzer"
+  }
+}

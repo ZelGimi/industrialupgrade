@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:tnt"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:nuclearresource/uranium"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BAB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:nuclear_bomb/nuclear_bomb"
+  }
+}

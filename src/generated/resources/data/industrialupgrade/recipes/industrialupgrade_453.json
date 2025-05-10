@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems7"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:rotor/compressiridium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "ABA",
+    "DCD"
+  ],
+  "result": {
+    "item": "industrialupgrade:corewind/core_wind7"
+  }
+}

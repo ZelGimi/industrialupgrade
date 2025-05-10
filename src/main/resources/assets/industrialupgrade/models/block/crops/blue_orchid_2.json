@@ -1,0 +1,6 @@
+{
+    "parent": "industrialupgrade:block/crop_1",
+    "textures": {
+        "texture": "industrialupgrade:blocks/crop/blue_orchid_2"
+    }
+}

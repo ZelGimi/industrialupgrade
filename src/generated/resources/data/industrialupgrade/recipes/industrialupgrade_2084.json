@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    },
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crops/crop"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:tools/agricultural_analyzer"
+  }
+}

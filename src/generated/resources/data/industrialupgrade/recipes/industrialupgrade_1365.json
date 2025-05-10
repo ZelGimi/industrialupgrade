@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:cyclotron/cyclotron_casing"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_68_element"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    " A ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:cyclotron/cyclotron_quantum"
+  }
+}

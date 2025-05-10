@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone/eris_cobblestone"
+  },
+  "result": "industrialupgrade:spacestone/eris_stone"
+}

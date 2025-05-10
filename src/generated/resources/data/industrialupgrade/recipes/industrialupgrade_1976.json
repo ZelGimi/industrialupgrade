@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_123_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine3/quarry_pipe"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/steam_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_32_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_158_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AED",
+    "BCB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/steam_quarry"
+  }
+}

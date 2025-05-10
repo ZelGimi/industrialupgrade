@@ -1,0 +1,26 @@
+package com.denfop.blocks.blockitem;
+
+import com.denfop.IUCore;
+import com.denfop.blocks.BlockBasaltHeavyOre;
+import com.denfop.blocks.BlockCore;
+import com.denfop.blocks.ItemBlockCore;
+import com.denfop.datagen.itemtag.IItemTag;
+import net.minecraft.world.item.Item;
+
+public class ItemBlockBasaltHeavyOre extends ItemBlockCore<BlockBasaltHeavyOre.Type> implements IItemTag {
+    public ItemBlockBasaltHeavyOre(BlockCore p_40565_, BlockBasaltHeavyOre.Type element) {
+        super(p_40565_, element, new Properties().tab(IUCore.OreTab));
+    }
+
+    @Override
+    public Item getItem() {
+        return this;
+    }
+
+
+    @Override
+    public String[] getTags() {
+        return new String[]{"forge:ores/" + getElement().getName().toLowerCase(), "forge:ores"};
+    }
+
+}

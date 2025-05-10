@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:spaceupgrademodule_schedule"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/alcled"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/inconel"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:itemplates/bloodstone"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:spaceupgrademodules/space_upgrademodule6"
+  }
+}

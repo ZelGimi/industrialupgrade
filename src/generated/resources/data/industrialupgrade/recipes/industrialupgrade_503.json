@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemsunnariumpanel/nsp"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:photoniumglass/photoniyglass9"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:stick/germanium"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:neutroniumingot"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:photoniumglass/photoniyglass10"
+  }
+}

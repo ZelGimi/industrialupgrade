@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:blockspace/dione_platinum_ore"
+  },
+  "result": "industrialupgrade:itemingots/platium_ingot"
+}

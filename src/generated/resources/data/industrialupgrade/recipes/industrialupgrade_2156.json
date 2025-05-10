@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/cobalt"
+      }
+    ],
+    "B": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "item": "industrialupgrade:wiring/itemcable20"
+  }
+}

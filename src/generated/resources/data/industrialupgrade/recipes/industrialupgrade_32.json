@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/bronze"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/copper1"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/re_battery"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:wiring_storage/batbox_iu"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CCC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring_storage/cesu_iu"
+  }
+}

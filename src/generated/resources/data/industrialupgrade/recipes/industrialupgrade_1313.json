@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_219_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_72_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_44_element"
+      }
+    ],
+    "H": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_35_element"
+      }
+    ]
+  },
+  "pattern": [
+    "B H",
+    "DAE",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:simplemachine/furnace_iu"
+  }
+}

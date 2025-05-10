@@ -1,0 +1,58 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_153_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_152_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_151_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_150_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_149_element"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_148_element"
+      }
+    ],
+    "G": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_147_element"
+      }
+    ],
+    "H": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_145_element"
+      }
+    ],
+    "J": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_56_element"
+      }
+    ]
+  },
+  "pattern": [
+    "ABC",
+    "DJE",
+    "FGH"
+  ],
+  "result": {
+    "item": "industrialupgrade:combiner_solid_matter/combiner_solid_matter"
+  }
+}

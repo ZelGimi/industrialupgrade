@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=solarium_storage": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage"
+    },
+    "facing=south,type=solarium_storage": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "y": 180
+    },
+    "facing=west,type=solarium_storage": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "y": 270
+    },
+    "facing=east,type=solarium_storage": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "y": 90
+    },
+    "facing=down,type=solarium_storage": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "x": 90
+    },
+    "facing=up,type=solarium_storage": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "x": 270
+    },
+    "facing=north,type=solarium_storage_invalid": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage"
+    },
+    "facing=south,type=solarium_storage_invalid": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "y": 180
+    },
+    "facing=west,type=solarium_storage_invalid": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "y": 270
+    },
+    "facing=east,type=solarium_storage_invalid": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "y": 90
+    },
+    "facing=down,type=solarium_storage_invalid": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "x": 90
+    },
+    "facing=up,type=solarium_storage_invalid": {
+      "model": "industrialupgrade:block/basemachine/solarium_storage",
+      "x": 270
+    }
+  }
+}

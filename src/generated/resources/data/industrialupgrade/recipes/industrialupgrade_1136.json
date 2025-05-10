@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_23_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:furnace"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:redstone"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_221_element"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/polymerizer_sides",
+    "down" : "industrialupgrade:blocks/polymerizer_sides",
+    "up" : "industrialupgrade:blocks/polymerizer_top",
+    "north" : "industrialupgrade:blocks/polymerizer_front",
+    "east" : "industrialupgrade:blocks/polymerizer_sides",
+    "south" : "industrialupgrade:blocks/polymerizer_sides",
+    "west" : "industrialupgrade:blocks/polymerizer_sides"
+  }
+}

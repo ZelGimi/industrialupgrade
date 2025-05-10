@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_9_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:refiner/refiner"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:adv_refiner/adv_refiner"
+  }
+}

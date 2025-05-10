@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:granite"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/palladium"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_660_element"
+  }
+}

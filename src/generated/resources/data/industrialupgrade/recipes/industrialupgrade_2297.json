@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gears/germanium"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:imp_bee_frame_template"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/bronze"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:frame/chance_healing_3"
+  }
+}

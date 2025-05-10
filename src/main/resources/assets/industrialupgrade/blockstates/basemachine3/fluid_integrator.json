@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator"
+    },
+    "facing=south,type=fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator",
+      "y": 180
+    },
+    "facing=west,type=fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator",
+      "y": 270
+    },
+    "facing=east,type=fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator",
+      "y": 90
+    },
+    "facing=down,type=fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator",
+      "x": 90
+    },
+    "facing=up,type=fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator",
+      "x": 270
+    },
+    "facing=north,type=fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active"
+    },
+    "facing=south,type=fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "y": 180
+    },
+    "facing=west,type=fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "y": 270
+    },
+    "facing=east,type=fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "y": 90
+    },
+    "facing=down,type=fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "x": 90
+    },
+    "facing=up,type=fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "x": 270
+    },
+    "facing=north,type=fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active"
+    },
+    "facing=south,type=fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "y": 180
+    },
+    "facing=west,type=fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "y": 270
+    },
+    "facing=east,type=fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "y": 90
+    },
+    "facing=down,type=fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "x": 90
+    },
+    "facing=up,type=fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/fluid_integrator_active",
+      "x": 270
+    }
+  }
+}

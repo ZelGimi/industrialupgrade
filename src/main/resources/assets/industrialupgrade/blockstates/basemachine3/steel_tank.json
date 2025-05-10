@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=steel_tank": {
+      "model": "industrialupgrade:block/basemachine/steel_tank"
+    },
+    "facing=south,type=steel_tank": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "y": 180
+    },
+    "facing=west,type=steel_tank": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "y": 270
+    },
+    "facing=east,type=steel_tank": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "y": 90
+    },
+    "facing=down,type=steel_tank": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "x": 90
+    },
+    "facing=up,type=steel_tank": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "x": 270
+    },
+    "facing=north,type=steel_tank_invalid": {
+      "model": "industrialupgrade:block/basemachine/steel_tank"
+    },
+    "facing=south,type=steel_tank_invalid": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "y": 180
+    },
+    "facing=west,type=steel_tank_invalid": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "y": 270
+    },
+    "facing=east,type=steel_tank_invalid": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "y": 90
+    },
+    "facing=down,type=steel_tank_invalid": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "x": 90
+    },
+    "facing=up,type=steel_tank_invalid": {
+      "model": "industrialupgrade:block/basemachine/steel_tank",
+      "x": 270
+    }
+  }
+}

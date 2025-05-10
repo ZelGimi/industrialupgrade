@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemplates/draconid"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/advancedalloy"
+      }
+    ]
+  },
+  "pattern": [
+    "AA ",
+    "BB ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_711_element"
+  }
+}

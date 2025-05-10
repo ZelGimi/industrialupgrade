@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:wiring/copper1"
+      }
+    ],
+    {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    }
+  ],
+  "result": {
+    "item": "industrialupgrade:tools/frequency_transmitter"
+  }
+}

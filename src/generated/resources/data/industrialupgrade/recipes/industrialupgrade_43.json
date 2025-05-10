@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/polonium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/palladium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_274_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BBB",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:polonium_palladium_composite"
+  }
+}

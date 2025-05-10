@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemplates/meteoric_iron"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/alumel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/berylliumbronze"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "C C",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_764_element"
+  }
+}

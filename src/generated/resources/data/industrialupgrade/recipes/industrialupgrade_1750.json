@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_582_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:alloyplate/ferromanganese"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:itemplates/gadolinium"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_599_element"
+  }
+}

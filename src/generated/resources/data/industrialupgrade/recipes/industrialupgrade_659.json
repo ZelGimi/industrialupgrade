@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:bags/adv_iu_bags"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:compresscarbon"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/re_battery"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "BAB",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:bags/imp_iu_bags"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:upgrades/energy_storage"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:battery/re_battery"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:upgrades/storageupgrade"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_478_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "B B",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/hazmat_leggings"
+  }
+}

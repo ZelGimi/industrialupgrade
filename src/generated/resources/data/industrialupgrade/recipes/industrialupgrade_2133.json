@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/advancedalloy"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/bor"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_687_element"
+  }
+}

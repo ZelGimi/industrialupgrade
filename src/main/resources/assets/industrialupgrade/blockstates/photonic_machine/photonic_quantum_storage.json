@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=photonic_quantum_storage": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage"
+    },
+    "facing=south,type=photonic_quantum_storage": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "y": 180
+    },
+    "facing=west,type=photonic_quantum_storage": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "y": 270
+    },
+    "facing=east,type=photonic_quantum_storage": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "y": 90
+    },
+    "facing=down,type=photonic_quantum_storage": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "x": 90
+    },
+    "facing=up,type=photonic_quantum_storage": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "x": 270
+    },
+    "facing=north,type=photonic_quantum_storage_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage"
+    },
+    "facing=south,type=photonic_quantum_storage_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "y": 180
+    },
+    "facing=west,type=photonic_quantum_storage_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "y": 270
+    },
+    "facing=east,type=photonic_quantum_storage_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "y": 90
+    },
+    "facing=down,type=photonic_quantum_storage_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "x": 90
+    },
+    "facing=up,type=photonic_quantum_storage_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_quantum_storage",
+      "x": 270
+    }
+  }
+}

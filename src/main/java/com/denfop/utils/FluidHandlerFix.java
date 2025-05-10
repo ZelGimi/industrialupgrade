@@ -1,0 +1,21 @@
+package com.denfop.utils;
+
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+
+public class FluidHandlerFix {
+    public static IFluidHandlerItem getFluidHandler(ItemStack stack) {
+        ICapabilityProvider cap = stack.getItem().initCapabilities(stack, stack.getTag());
+        if (cap instanceof IFluidHandlerItem) {
+            return (IFluidHandlerItem) cap;
+        } else {
+            return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
+        }
+    }
+
+    public static boolean hasFluidHandler(ItemStack stack) {
+        return getFluidHandler(stack) != null;
+    }
+}

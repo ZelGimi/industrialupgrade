@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone/europe_cobblestone"
+  },
+  "result": "industrialupgrade:spacestone/europe_stone"
+}

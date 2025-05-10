@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:plastic_plate"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/alumel"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_226_element"
+  }
+}

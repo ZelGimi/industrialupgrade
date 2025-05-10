@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:chemical_plant/chemical_plant_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:reactors/heat_exchange"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:chemical_plant/chemical_plant_exchanger"
+  }
+}

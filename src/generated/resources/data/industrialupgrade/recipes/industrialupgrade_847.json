@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/muntsa"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/nichrome"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_39_element"
+  }
+}

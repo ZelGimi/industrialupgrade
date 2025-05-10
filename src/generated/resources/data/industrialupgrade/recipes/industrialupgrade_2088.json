@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_well/gas_well_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/itemcable27"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:wiring/itemcable28"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    "DAD",
+    "BDB"
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_well/gas_well_transport"
+  }
+}

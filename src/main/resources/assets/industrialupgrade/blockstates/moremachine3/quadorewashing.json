@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=quadorewashing": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing"
+    },
+    "facing=south,type=quadorewashing": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing",
+      "y": 180
+    },
+    "facing=west,type=quadorewashing": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing",
+      "y": 270
+    },
+    "facing=east,type=quadorewashing": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing",
+      "y": 90
+    },
+    "facing=down,type=quadorewashing": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing",
+      "x": 90
+    },
+    "facing=up,type=quadorewashing": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing",
+      "x": 270
+    },
+    "facing=north,type=quadorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active"
+    },
+    "facing=south,type=quadorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "y": 180
+    },
+    "facing=west,type=quadorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "y": 270
+    },
+    "facing=east,type=quadorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "y": 90
+    },
+    "facing=down,type=quadorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "x": 90
+    },
+    "facing=up,type=quadorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "x": 270
+    },
+    "facing=north,type=quadorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active"
+    },
+    "facing=south,type=quadorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "y": 180
+    },
+    "facing=west,type=quadorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "y": 270
+    },
+    "facing=east,type=quadorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "y": 90
+    },
+    "facing=down,type=quadorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "x": 90
+    },
+    "facing=up,type=quadorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/quadorewashing_active",
+      "x": 270
+    }
+  }
+}

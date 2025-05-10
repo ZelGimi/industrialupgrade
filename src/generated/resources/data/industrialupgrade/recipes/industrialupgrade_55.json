@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/vitalium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:ingots/ferromanganese"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/mikhail"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:battery/advanced_re_battery"
+      }
+    ]
+  },
+  "pattern": [
+    "A B",
+    "CDC",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/magnet"
+  }
+}

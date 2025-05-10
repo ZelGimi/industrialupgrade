@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_122_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/stellite"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "item": "industrialupgrade:wiring/itemcable5"
+  }
+}

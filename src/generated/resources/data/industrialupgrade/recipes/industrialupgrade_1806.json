@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:heat_reactors/heat_socket"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_417_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_426_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_424_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_410_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:heat_reactors/heat_adv_socket"
+  }
+}

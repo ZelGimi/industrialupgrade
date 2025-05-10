@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gears/aluminiumsilicon"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/obsidian"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/osmiridium"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_680_element"
+  }
+}

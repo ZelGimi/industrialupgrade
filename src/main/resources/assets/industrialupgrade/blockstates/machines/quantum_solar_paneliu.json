@@ -1,0 +1,211 @@
+{
+  "variants": {
+    "facing=north,type=quantum_solar_paneliu": {
+      "model": "industrialupgrade:block/quantum_solar_panel"
+    },
+    "facing=south,type=quantum_solar_paneliu": {
+      "model": "industrialupgrade:block/quantum_solar_panel",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu": {
+      "model": "industrialupgrade:block/quantum_solar_panel",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu": {
+      "model": "industrialupgrade:block/quantum_solar_panel",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu": {
+      "model": "industrialupgrade:block/quantum_solar_panel",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu": {
+      "model": "industrialupgrade:block/quantum_solar_panel",
+      "x": 270
+    },
+    "facing=north,type=quantum_solar_paneliu_invalid": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain"
+    },
+    "facing=south,type=quantum_solar_paneliu_invalid": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu_invalid": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu_invalid": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu_invalid": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu_invalid": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "x": 270
+    },
+    "facing=north,type=quantum_solar_paneliu_aer": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_aer"
+    },
+    "facing=south,type=quantum_solar_paneliu_aer": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_aer",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu_aer": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_aer",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu_aer": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_aer",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu_aer": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_aer",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu_aer": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_aer",
+      "x": 270
+    },
+    "facing=north,type=quantum_solar_paneliu_earth": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_earth"
+    },
+    "facing=south,type=quantum_solar_paneliu_earth": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_earth",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu_earth": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_earth",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu_earth": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_earth",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu_earth": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_earth",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu_earth": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_earth",
+      "x": 270
+    },
+    "facing=north,type=quantum_solar_paneliu_end": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_end"
+    },
+    "facing=south,type=quantum_solar_paneliu_end": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_end",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu_end": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_end",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu_end": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_end",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu_end": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_end",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu_end": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_end",
+      "x": 270
+    },
+    "facing=north,type=quantum_solar_paneliu_nether": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_nether"
+    },
+    "facing=south,type=quantum_solar_paneliu_nether": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_nether",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu_nether": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_nether",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu_nether": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_nether",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu_nether": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_nether",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu_nether": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_nether",
+      "x": 270
+    },
+    "facing=north,type=quantum_solar_paneliu_sun": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_sun"
+    },
+    "facing=south,type=quantum_solar_paneliu_sun": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_sun",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu_sun": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_sun",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu_sun": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_sun",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu_sun": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_sun",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu_sun": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_sun",
+      "x": 270
+    },
+    "facing=north,type=quantum_solar_paneliu_night": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_night"
+    },
+    "facing=south,type=quantum_solar_paneliu_night": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_night",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu_night": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_night",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu_night": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_night",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu_night": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_night",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu_night": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_night",
+      "x": 270
+    },
+    "facing=north,type=quantum_solar_paneliu_rain": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain"
+    },
+    "facing=south,type=quantum_solar_paneliu_rain": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "y": 180
+    },
+    "facing=west,type=quantum_solar_paneliu_rain": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "y": 270
+    },
+    "facing=east,type=quantum_solar_paneliu_rain": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "y": 90
+    },
+    "facing=down,type=quantum_solar_paneliu_rain": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "x": 90
+    },
+    "facing=up,type=quantum_solar_paneliu_rain": {
+      "model": "industrialupgrade:block/quantum_solar_paneliu_rain",
+      "x": 270
+    }
+  }
+}

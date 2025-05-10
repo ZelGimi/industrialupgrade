@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/tungsten"
+      }
+    ]
+  },
+  "pattern": [
+    " AA",
+    " BA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_732_element"
+  }
+}

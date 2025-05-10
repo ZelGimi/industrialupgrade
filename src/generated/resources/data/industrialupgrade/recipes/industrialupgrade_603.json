@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/europe_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/europe_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/europe_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/europe_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/europe_boulder"
+  }
+}

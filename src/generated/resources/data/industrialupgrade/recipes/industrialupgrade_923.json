@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:reactors/reactor_plate"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:exchanger/simple_exchanger"
+  }
+}

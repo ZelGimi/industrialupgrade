@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:heat_reactors/heat_adv_fueltank"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_375_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_380_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_48_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_372_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    "EAE",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:heat_reactors/heat_imp_fueltank"
+  }
+}

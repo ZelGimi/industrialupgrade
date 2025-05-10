@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_279_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_508_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    " B ",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/drill"
+  }
+}

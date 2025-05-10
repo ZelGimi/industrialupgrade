@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems7"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:rotorupgrade_schemes"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:casings/nichrome"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "CBC",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:rotors_upgrade/rotorupgrade"
+  }
+}

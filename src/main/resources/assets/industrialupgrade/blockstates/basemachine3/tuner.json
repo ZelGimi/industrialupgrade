@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=tuner": {
+      "model": "industrialupgrade:block/basemachine/tuner"
+    },
+    "facing=south,type=tuner": {
+      "model": "industrialupgrade:block/basemachine/tuner",
+      "y": 180
+    },
+    "facing=west,type=tuner": {
+      "model": "industrialupgrade:block/basemachine/tuner",
+      "y": 270
+    },
+    "facing=east,type=tuner": {
+      "model": "industrialupgrade:block/basemachine/tuner",
+      "y": 90
+    },
+    "facing=down,type=tuner": {
+      "model": "industrialupgrade:block/basemachine/tuner",
+      "x": 90
+    },
+    "facing=up,type=tuner": {
+      "model": "industrialupgrade:block/basemachine/tuner",
+      "x": 270
+    },
+    "facing=north,type=tuner_invalid": {
+      "model": "industrialupgrade:block/basemachine/tuner_active"
+    },
+    "facing=south,type=tuner_invalid": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "y": 180
+    },
+    "facing=west,type=tuner_invalid": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "y": 270
+    },
+    "facing=east,type=tuner_invalid": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "y": 90
+    },
+    "facing=down,type=tuner_invalid": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "x": 90
+    },
+    "facing=up,type=tuner_invalid": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "x": 270
+    },
+    "facing=north,type=tuner_active": {
+      "model": "industrialupgrade:block/basemachine/tuner_active"
+    },
+    "facing=south,type=tuner_active": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "y": 180
+    },
+    "facing=west,type=tuner_active": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "y": 270
+    },
+    "facing=east,type=tuner_active": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "y": 90
+    },
+    "facing=down,type=tuner_active": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "x": 90
+    },
+    "facing=up,type=tuner_active": {
+      "model": "industrialupgrade:block/basemachine/tuner_active",
+      "x": 270
+    }
+  }
+}

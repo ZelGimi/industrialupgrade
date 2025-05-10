@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_354_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "ADA",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:primal_programming_table/primal_programming_table"
+  }
+}

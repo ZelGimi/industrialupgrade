@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:adv_spectral_box"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:rotors_upgrade/rotorupgrade1"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/muntsa"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:rotors_upgrade/rotorupgrade2"
+  }
+}

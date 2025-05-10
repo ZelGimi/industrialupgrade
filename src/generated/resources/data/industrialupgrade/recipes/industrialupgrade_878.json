@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/specore"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/muntsa"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_68_element"
+  }
+}

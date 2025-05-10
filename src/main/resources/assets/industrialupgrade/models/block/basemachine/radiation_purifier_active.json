@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/radiation_purifier_active_main",
+    "down" : "industrialupgrade:blocks/radiation_purifier_active_all",
+    "up" : "industrialupgrade:blocks/radiation_purifier_active_up",
+    "north" : "industrialupgrade:blocks/radiation_purifier_active_main",
+    "east" : "industrialupgrade:blocks/radiation_purifier_active_all",
+    "south" : "industrialupgrade:blocks/radiation_purifier_active_all",
+    "west" : "industrialupgrade:blocks/radiation_purifier_active_all"
+  }
+}

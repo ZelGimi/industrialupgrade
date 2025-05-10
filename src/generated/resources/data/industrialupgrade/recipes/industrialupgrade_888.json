@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemiucrafring/itemmtcore"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/cobalt"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    " A ",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_75_element"
+  }
+}

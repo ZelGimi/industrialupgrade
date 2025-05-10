@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:armour/nano_chestplate"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/ferromanganese"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/lapotron_crystal"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:compresscarbon"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems7"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:armour/jetpack"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "EFE"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/adv_nano_chestplate"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:research_lens/lens_5"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/stellite"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:research_lens/lens_6"
+  }
+}

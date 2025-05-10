@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/imp_quantum_storage"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_178_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_140_element"
+      }
+    ]
+  },
+  "pattern": [
+    "DBD",
+    " A ",
+    "D D"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/per_quantum_storage"
+  }
+}

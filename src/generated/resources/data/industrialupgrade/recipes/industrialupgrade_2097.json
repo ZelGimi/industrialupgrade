@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:spaceupgrademodule_schedule"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/hafniumcarbide"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/osmiridium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/niobiumtitanium"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:spaceupgrademodules/space_upgrademodule2"
+  }
+}

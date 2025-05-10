@@ -1,0 +1,7 @@
+{
+"variants": {
+    "": {
+       "model": "industrialupgrade:block/thorium_ore/thorium_ore"
+    }
+  }
+}

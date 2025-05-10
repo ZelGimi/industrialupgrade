@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/titan_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/titan_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/titan_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/titan_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/titan_boulder"
+  }
+}

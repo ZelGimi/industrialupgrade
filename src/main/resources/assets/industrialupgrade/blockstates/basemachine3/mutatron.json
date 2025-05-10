@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=mutatron": {
+      "model": "industrialupgrade:block/basemachine/mutatron"
+    },
+    "facing=south,type=mutatron": {
+      "model": "industrialupgrade:block/basemachine/mutatron",
+      "y": 180
+    },
+    "facing=west,type=mutatron": {
+      "model": "industrialupgrade:block/basemachine/mutatron",
+      "y": 270
+    },
+    "facing=east,type=mutatron": {
+      "model": "industrialupgrade:block/basemachine/mutatron",
+      "y": 90
+    },
+    "facing=down,type=mutatron": {
+      "model": "industrialupgrade:block/basemachine/mutatron",
+      "x": 90
+    },
+    "facing=up,type=mutatron": {
+      "model": "industrialupgrade:block/basemachine/mutatron",
+      "x": 270
+    },
+    "facing=north,type=mutatron_invalid": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active"
+    },
+    "facing=south,type=mutatron_invalid": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "y": 180
+    },
+    "facing=west,type=mutatron_invalid": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "y": 270
+    },
+    "facing=east,type=mutatron_invalid": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "y": 90
+    },
+    "facing=down,type=mutatron_invalid": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "x": 90
+    },
+    "facing=up,type=mutatron_invalid": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "x": 270
+    },
+    "facing=north,type=mutatron_active": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active"
+    },
+    "facing=south,type=mutatron_active": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "y": 180
+    },
+    "facing=west,type=mutatron_active": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "y": 270
+    },
+    "facing=east,type=mutatron_active": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "y": 90
+    },
+    "facing=down,type=mutatron_active": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "x": 90
+    },
+    "facing=up,type=mutatron_active": {
+      "model": "industrialupgrade:block/basemachine/mutatron_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=steam_macerator_active": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator_active"
+    },
+    "facing=south,type=steam_macerator_active": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator_active",
+      "y": 180
+    },
+    "facing=west,type=steam_macerator_active": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator_active",
+      "y": 270
+    },
+    "facing=east,type=steam_macerator_active": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator_active",
+      "y": 90
+    },
+    "facing=down,type=steam_macerator_active": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator_active",
+      "x": 90
+    },
+    "facing=up,type=steam_macerator_active": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator_active",
+      "x": 270
+    },
+    "facing=north,type=steam_macerator_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator"
+    },
+    "facing=south,type=steam_macerator_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "y": 180
+    },
+    "facing=west,type=steam_macerator_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "y": 270
+    },
+    "facing=east,type=steam_macerator_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "y": 90
+    },
+    "facing=down,type=steam_macerator_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "x": 90
+    },
+    "facing=up,type=steam_macerator_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "x": 270
+    },
+    "facing=north,type=steam_macerator": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator"
+    },
+    "facing=south,type=steam_macerator": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "y": 180
+    },
+    "facing=west,type=steam_macerator": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "y": 270
+    },
+    "facing=east,type=steam_macerator": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "y": 90
+    },
+    "facing=down,type=steam_macerator": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "x": 90
+    },
+    "facing=up,type=steam_macerator": {
+      "model": "industrialupgrade:block/basemachine/steam_macerator",
+      "x": 270
+    }
+  }
+}

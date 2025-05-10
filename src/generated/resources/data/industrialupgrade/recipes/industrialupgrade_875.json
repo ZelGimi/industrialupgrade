@@ -1,0 +1,58 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_620_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:oak_sapling"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:dandelion"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:poppy"
+      }
+    ],
+    "E": [
+      {
+        "item": "minecraft:nether_wart"
+      }
+    ],
+    "F": [
+      {
+        "item": "minecraft:vine"
+      }
+    ],
+    "G": [
+      {
+        "item": "minecraft:lily_pad"
+      }
+    ],
+    "H": [
+      {
+        "item": "minecraft:brown_mushroom"
+      }
+    ],
+    "J": [
+      {
+        "item": "minecraft:red_mushroom"
+      }
+    ]
+  },
+  "pattern": [
+    "BCD",
+    "EAF",
+    "GHJ"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_611_element"
+  }
+}

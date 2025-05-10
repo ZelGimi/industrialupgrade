@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=genetic_polymerizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer"
+    },
+    "facing=south,type=genetic_polymerizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer",
+      "y": 180
+    },
+    "facing=west,type=genetic_polymerizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer",
+      "y": 270
+    },
+    "facing=east,type=genetic_polymerizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer",
+      "y": 90
+    },
+    "facing=down,type=genetic_polymerizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer",
+      "x": 90
+    },
+    "facing=up,type=genetic_polymerizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer",
+      "x": 270
+    },
+    "facing=north,type=genetic_polymerizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active"
+    },
+    "facing=south,type=genetic_polymerizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "y": 180
+    },
+    "facing=west,type=genetic_polymerizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "y": 270
+    },
+    "facing=east,type=genetic_polymerizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "y": 90
+    },
+    "facing=down,type=genetic_polymerizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "x": 90
+    },
+    "facing=up,type=genetic_polymerizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "x": 270
+    },
+    "facing=north,type=genetic_polymerizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active"
+    },
+    "facing=south,type=genetic_polymerizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "y": 180
+    },
+    "facing=west,type=genetic_polymerizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "y": 270
+    },
+    "facing=east,type=genetic_polymerizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "y": 90
+    },
+    "facing=down,type=genetic_polymerizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "x": 90
+    },
+    "facing=up,type=genetic_polymerizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_polymerizer_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/geothermal_casing",
+    "down" : "industrialupgrade:blocks/geothermal_casing",
+    "up" : "industrialupgrade:blocks/geothermal_casing",
+    "north" : "industrialupgrade:blocks/geothermal_casing",
+    "east" : "industrialupgrade:blocks/geothermal_casing",
+    "south" : "industrialupgrade:blocks/geothermal_casing",
+    "west" : "industrialupgrade:blocks/geothermal_casing"
+  }
+}

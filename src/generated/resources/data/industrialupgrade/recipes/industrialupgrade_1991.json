@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/alumel"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/advancedalloy"
+      }
+    ]
+  },
+  "pattern": [
+    "AA ",
+    "BB ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_707_element"
+  }
+}

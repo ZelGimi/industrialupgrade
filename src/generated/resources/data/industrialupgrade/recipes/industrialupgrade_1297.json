@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/nimonic"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:reactors/adv_proton_energy_coupler"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:reactors/imp_proton_energy_coupler"
+  }
+}

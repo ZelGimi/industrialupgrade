@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems7"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:rotorupgrade_schemes"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "CBC",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:rotors_upgrade/rotorupgrade3"
+  }
+}

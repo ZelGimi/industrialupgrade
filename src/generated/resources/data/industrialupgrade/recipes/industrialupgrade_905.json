@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/titanium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:ingots/chromium"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    " A ",
+    "C C"
+  ],
+  "result": {
+    "item": "industrialupgrade:connect_item"
+  }
+}

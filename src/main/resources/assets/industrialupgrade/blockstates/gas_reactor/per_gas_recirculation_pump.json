@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=per_gas_recirculation_pump": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump"
+    },
+    "facing=south,type=per_gas_recirculation_pump": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "y": 180
+    },
+    "facing=west,type=per_gas_recirculation_pump": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "y": 270
+    },
+    "facing=east,type=per_gas_recirculation_pump": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "y": 90
+    },
+    "facing=down,type=per_gas_recirculation_pump": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "x": 90
+    },
+    "facing=up,type=per_gas_recirculation_pump": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "x": 270
+    },
+    "facing=north,type=per_gas_recirculation_pump_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump"
+    },
+    "facing=south,type=per_gas_recirculation_pump_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "y": 180
+    },
+    "facing=west,type=per_gas_recirculation_pump_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "y": 270
+    },
+    "facing=east,type=per_gas_recirculation_pump_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "y": 90
+    },
+    "facing=down,type=per_gas_recirculation_pump_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "x": 90
+    },
+    "facing=up,type=per_gas_recirculation_pump_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_per_recirculation_pump",
+      "x": 270
+    }
+  }
+}

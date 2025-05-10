@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:earth_quarry/earth_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/itemcable1"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:wiring/itemcable"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    "DAD",
+    "BDB"
+  ],
+  "result": {
+    "item": "industrialupgrade:earth_quarry/earth_transport"
+  }
+}

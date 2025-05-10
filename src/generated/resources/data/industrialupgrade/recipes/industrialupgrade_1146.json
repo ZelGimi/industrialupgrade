@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_23_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gears/cobalt"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_274_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:plastic_plate"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_202_element"
+  }
+}

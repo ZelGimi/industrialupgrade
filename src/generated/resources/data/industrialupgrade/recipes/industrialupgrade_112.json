@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcore/specore"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quarrymodules/ef1"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems6"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CEC",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:quarrymodules/ef2"
+  }
+}

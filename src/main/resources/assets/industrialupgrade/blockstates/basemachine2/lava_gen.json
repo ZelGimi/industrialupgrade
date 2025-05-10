@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=lava_gen": {
+      "model": "industrialupgrade:block/basemachine/lava_gen"
+    },
+    "facing=south,type=lava_gen": {
+      "model": "industrialupgrade:block/basemachine/lava_gen",
+      "y": 180
+    },
+    "facing=west,type=lava_gen": {
+      "model": "industrialupgrade:block/basemachine/lava_gen",
+      "y": 270
+    },
+    "facing=east,type=lava_gen": {
+      "model": "industrialupgrade:block/basemachine/lava_gen",
+      "y": 90
+    },
+    "facing=down,type=lava_gen": {
+      "model": "industrialupgrade:block/basemachine/lava_gen",
+      "x": 90
+    },
+    "facing=up,type=lava_gen": {
+      "model": "industrialupgrade:block/basemachine/lava_gen",
+      "x": 270
+    },
+    "facing=north,type=lava_gen_invalid": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active"
+    },
+    "facing=south,type=lava_gen_invalid": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "y": 180
+    },
+    "facing=west,type=lava_gen_invalid": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "y": 270
+    },
+    "facing=east,type=lava_gen_invalid": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "y": 90
+    },
+    "facing=down,type=lava_gen_invalid": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "x": 90
+    },
+    "facing=up,type=lava_gen_invalid": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "x": 270
+    },
+    "facing=north,type=lava_gen_active": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active"
+    },
+    "facing=south,type=lava_gen_active": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "y": 180
+    },
+    "facing=west,type=lava_gen_active": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "y": 270
+    },
+    "facing=east,type=lava_gen_active": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "y": 90
+    },
+    "facing=down,type=lava_gen_active": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "x": 90
+    },
+    "facing=up,type=lava_gen_active": {
+      "model": "industrialupgrade:block/basemachine/lava_gen_active",
+      "x": 270
+    }
+  }
+}

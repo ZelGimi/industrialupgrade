@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_424_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_371_element"
+  }
+}

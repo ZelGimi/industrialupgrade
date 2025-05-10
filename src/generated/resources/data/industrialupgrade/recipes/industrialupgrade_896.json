@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:nuclearresource/uranium_238"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/vanady"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/chromium"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "DBD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_99_element"
+  }
+}

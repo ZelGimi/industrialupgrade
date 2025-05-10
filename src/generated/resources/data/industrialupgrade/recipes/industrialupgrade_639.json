@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/triton_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/triton_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/triton_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/triton_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/triton_boulder"
+  }
+}

@@ -1,0 +1,53 @@
+package com.denfop.api.space.upgrades.info;
+
+import com.denfop.Localization;
+import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
+import com.denfop.utils.ModUtils;
+import net.minecraft.ChatFormatting;
+
+public class SpaceUpgradeItemInform {
+
+    public final EnumTypeUpgrade upgrade;
+    public final int number;
+
+    public SpaceUpgradeItemInform(EnumTypeUpgrade modules, int number) {
+        this.upgrade = modules;
+        this.number = number;
+
+    }
+
+    public boolean matched(EnumTypeUpgrade modules) {
+        return this.upgrade.getUpgrade().equals(modules.getUpgrade());
+    }
+
+    public int getInformation(EnumTypeUpgrade modules) {
+        if (this.upgrade.getUpgrade().equals(modules.getUpgrade())) {
+            return this.number;
+        }
+        return 0;
+    }
+
+    public String getName() {
+        switch (this.upgrade) {
+            case SOLAR:
+                return ChatFormatting.YELLOW + Localization.translate("iu.spaceupgrade.solar") + ChatFormatting.GREEN + ModUtils.getString((30 * this.number));
+            case DRILL:
+                return ChatFormatting.AQUA + Localization.translate("iu.spaceupgrade.drill") + ChatFormatting.GREEN + ModUtils.getString(this.number);
+            case PROTECTION:
+                return ChatFormatting.GOLD + Localization.translate("protect") + ChatFormatting.GREEN + ModUtils.getString(0.2 * this.number * 100) + "%";
+            case COOLER:
+                return ChatFormatting.LIGHT_PURPLE + Localization.translate("iu.spaceupgrade.cool") + ChatFormatting.GREEN + ModUtils.getString(
+                        this.number * -37) + "C°";
+            case ENGINE:
+                return ChatFormatting.RED + Localization.translate("iu.spaceupgrade.engine") + ChatFormatting.GREEN + ModUtils.getString(
+                        this.number * 12.5) + "%";
+            case HEATER:
+                return ChatFormatting.RED + Localization.translate("iu.spaceupgrade.heat") + ChatFormatting.GREEN + ModUtils.getString(350 * this.number) + "C°";
+            case PRESSURE:
+                return ChatFormatting.GOLD + Localization.translate("iu.spaceupgrade.pressure");
+        }
+        return "";
+    }
+
+
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:smeltery/smeltery_furnace"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/thallium"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "CBC",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:smeltery/smeltery_casting"
+  }
+}

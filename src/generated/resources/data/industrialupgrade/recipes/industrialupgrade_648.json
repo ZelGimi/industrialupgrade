@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcell/itemcell"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/muntsa"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "BAB",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:chemistry/anode"
+  }
+}

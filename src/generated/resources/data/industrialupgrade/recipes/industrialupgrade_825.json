@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gears/magnesium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:itemcell/itemcell"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "CBC",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_6_element"
+  }
+}

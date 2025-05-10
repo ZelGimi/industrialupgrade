@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_274_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_53_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "G": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_251_element"
+      }
+    ]
+  },
+  "pattern": [
+    "C G",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:quarry_vein/quarry_vein"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/vitalium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/barium"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_762_element"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_1"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_2"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_3"
+  }
+}

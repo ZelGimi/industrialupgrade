@@ -1,0 +1,120 @@
+package com.denfop.items;
+
+import com.denfop.IUCore;
+import com.denfop.api.Recipes;
+import com.denfop.api.recipe.*;
+import com.denfop.utils.ModUtils;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ItemRecipeSchedule extends Item {
+
+    private final String name;
+
+    public ItemRecipeSchedule() {
+        super(new Properties().tab(IUCore.IUTab).stacksTo(1).setNoRepair());
+        this.name = "recipe_schedule";
+    }
+
+
+    public List<ItemStack> getItems(ItemStack stack) {
+        List<ItemStack> list = new ArrayList<>();
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        for (int i = 0; i < 9; i++) {
+            final CompoundTag tag = nbt.getCompound("recipe_" + i);
+            ItemStack stack1 = ItemStack.of(tag);
+            if (!stack1.isEmpty()) {
+                list.add(stack1);
+            }
+        }
+        return list;
+    }
+
+    public RecipeArrayList<IRecipeInputStack> getInputs(IBaseRecipe baseRecipe, ItemStack stack) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        final List<ItemStack> items = this.getItems(stack);
+        final List<BaseMachineRecipe> recipe_list = Recipes.recipes.getRecipeList(baseRecipe.getName());
+        if (nbt.getBoolean("mode")) {
+            if (items.isEmpty()) {
+                return new RecipeArrayList<>();
+            }
+            RecipeArrayList<IRecipeInputStack> recipeArrayList = new RecipeArrayList<>();
+            for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
+                boolean find = false;
+                cycle:
+                for (ItemStack output_schedule : items) {
+                    for (ItemStack output : baseMachineRecipe.output.items) {
+                        if (output.is(output_schedule.getItem())) {
+                            find = true;
+                            break cycle;
+                        }
+                    }
+                }
+                if (find) {
+                    baseMachineRecipe.input.getInputs().forEach(iInputItemStack -> recipeArrayList.add(new RecipeInputStack(
+                            iInputItemStack)));
+                }
+            }
+            return recipeArrayList;
+        } else {
+            if (items.isEmpty()) {
+                return Recipes.recipes.getMap_recipe_managers_itemStack(baseRecipe.getName());
+            }
+            RecipeArrayList<IRecipeInputStack> recipeArrayList = new RecipeArrayList<>();
+            for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
+                boolean find = false;
+                cycle:
+                for (ItemStack output_schedule : items) {
+                    for (ItemStack output : baseMachineRecipe.output.items) {
+                        if (!output.is(output_schedule.getItem())) {
+                            find = true;
+                            break cycle;
+                        }
+                    }
+                }
+                if (find) {
+                    baseMachineRecipe.input.getInputs().forEach(iInputItemStack -> recipeArrayList.add(new RecipeInputStack(
+                            iInputItemStack)));
+                }
+            }
+            return recipeArrayList;
+
+
+        }
+    }
+
+  /*  @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(
+            final ItemStack stack,
+            @Nullable final World worldIn,
+            final List<String> tooltip,
+            final ITooltipFlag flagIn
+    ) {
+        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            tooltip.add(Localization.translate("press.lshift"));
+        } else {
+            final NBTTagCompound nbt = ModUtils.nbt(stack);
+            List<BagsDescription> list = new ArrayList<>();
+            for (int i = 0; i < 9; i++) {
+                if (!nbt.hasKey("recipe_" + i)) {
+                    continue;
+                }
+                ItemStack stack1 = new ItemStack(nbt.getCompoundTag("recipe_" + i));
+                if (!stack1.isEmpty()) {
+                    list.add(new BagsDescription(stack1));
+                }
+            }
+            for (BagsDescription description : list) {
+                tooltip.add(TextFormatting.GREEN + description.getStack().getDisplayName());
+            }
+        }
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+    }*/
+
+
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemiucrafring/itemmtcore"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/silver"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_10_element"
+  }
+}

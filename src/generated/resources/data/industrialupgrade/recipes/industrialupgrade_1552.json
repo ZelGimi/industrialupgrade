@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:itemcell/itemcell",
+      "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidneft\"}}"
+    },
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_273_element",
+      "nbt": "{level:3}"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "BAB",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_251_element"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=apothecary_bee": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee"
+    },
+    "facing=south,type=apothecary_bee": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "y": 180
+    },
+    "facing=west,type=apothecary_bee": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "y": 270
+    },
+    "facing=east,type=apothecary_bee": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "y": 90
+    },
+    "facing=down,type=apothecary_bee": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "x": 90
+    },
+    "facing=up,type=apothecary_bee": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "x": 270
+    },
+    "facing=north,type=apothecary_bee_invalid": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee"
+    },
+    "facing=south,type=apothecary_bee_invalid": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "y": 180
+    },
+    "facing=west,type=apothecary_bee_invalid": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "y": 270
+    },
+    "facing=east,type=apothecary_bee_invalid": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "y": 90
+    },
+    "facing=down,type=apothecary_bee_invalid": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "x": 90
+    },
+    "facing=up,type=apothecary_bee_invalid": {
+      "model": "industrialupgrade:block/basemachine/apothecary_bee",
+      "x": 270
+    }
+  }
+}

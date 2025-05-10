@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/per_scanner"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_635_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_622_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_623_element"
+      }
+    ]
+  },
+  "pattern": [
+    "D D",
+    "CAB",
+    "D D"
+  ],
+  "result": {
+    "item": "industrialupgrade:photonic_machine/photonic_scanner"
+  }
+}

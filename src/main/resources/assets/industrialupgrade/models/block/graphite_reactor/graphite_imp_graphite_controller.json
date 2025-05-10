@@ -1,0 +1,6 @@
+{
+  "parent" : "block/cube_all",
+    "textures": {
+        "all": "industrialupgrade:blocks/graphite_reactor/graphite_monitor/imp_monitor_side"
+    }
+}

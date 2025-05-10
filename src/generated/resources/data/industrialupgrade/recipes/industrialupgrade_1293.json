@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_501_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine3/steam_converter"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:cultivated_peat"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/steam_peat_generator"
+  }
+}

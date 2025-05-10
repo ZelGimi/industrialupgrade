@@ -1,0 +1,74 @@
+{
+    "parent": "industrialupgrade:item/tool/default",
+    "textures": {
+        "layer0": "industrialupgrade:items/drill"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "mode": 1
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_zelen"
+        },
+        {
+            "predicate": {
+                "mode": 2
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_demon"
+        },
+        {
+            "predicate": {
+                "mode": 3
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_dark"
+        },
+        {
+            "predicate": {
+                "mode": 4
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_cold"
+        },
+        {
+            "predicate": {
+                "mode": 5
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_ender"
+        },
+        {
+            "predicate": {
+                "mode": 6
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_ukraine"
+        },
+        {
+            "predicate": {
+                "mode": 7
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_fire"
+        },
+        {
+            "predicate": {
+                "mode": 8
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_snow"
+        },
+        {
+            "predicate": {
+                "mode": 9
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_taiga"
+        },
+        {
+            "predicate": {
+                "mode": 10
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_desert"
+        },
+        {
+            "predicate": {
+                "mode": 11
+            },
+            "model": "industrialupgrade:item/energy_tools/drill_emerald"
+        }
+    ]
+}

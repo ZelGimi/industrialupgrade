@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:rotor/adronrotor"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/photoncircuit",
+      "nbt": "{level:11}"
+    }
+  },
+  "pattern": [
+    "ECE",
+    "CBC",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:corewind/core_wind13"
+  }
+}

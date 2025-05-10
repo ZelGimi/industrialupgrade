@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:storage_blocks/iron"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:storage_blocks/titanium"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    " A ",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:block_anvil/block_anvil"
+  }
+}

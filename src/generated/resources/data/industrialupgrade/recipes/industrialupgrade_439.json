@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems6"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:chest"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/germanium"
+      }
+    ]
+  },
+  "pattern": [
+    " D ",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/analyzer_chest"
+  }
+}

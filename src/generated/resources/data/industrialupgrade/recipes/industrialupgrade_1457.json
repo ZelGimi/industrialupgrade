@@ -1,0 +1,48 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_230_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_227_element"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_231_element"
+      }
+    ],
+    "H": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      }
+    ]
+  },
+  "pattern": [
+    " H ",
+    "BAE",
+    "DCF"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine/gen_stone"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/osmium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/silver"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:nanobox"
+      }
+    ]
+  },
+  "pattern": [
+    "ECE",
+    "BAB",
+    "DCD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_328_element"
+  }
+}

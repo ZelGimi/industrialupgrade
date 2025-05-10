@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/per_centrifuge_side",
+    "down" : "industrialupgrade:blocks/per_centrifuge_side",
+    "up" : "industrialupgrade:blocks/per_centrifuge_top",
+    "north" : "industrialupgrade:blocks/per_centrifuge_front",
+    "east" : "industrialupgrade:blocks/per_centrifuge_side",
+    "south" : "industrialupgrade:blocks/per_centrifuge_side",
+    "west" : "industrialupgrade:blocks/per_centrifuge_side"
+  }
+}

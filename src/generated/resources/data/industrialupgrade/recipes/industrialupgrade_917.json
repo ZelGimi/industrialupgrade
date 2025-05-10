@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:fan/adv_fan"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "CBC",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:fan/imp_fan"
+  }
+}

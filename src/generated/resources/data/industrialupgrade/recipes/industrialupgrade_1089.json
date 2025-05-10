@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    },
+    "D": [
+      {
+        "tag": "forge:plates/bor"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_445_element"
+      }
+    ],
+    "F": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ],
+    "G": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_446_element"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "EFG",
+    "DCD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_385_element"
+  }
+}

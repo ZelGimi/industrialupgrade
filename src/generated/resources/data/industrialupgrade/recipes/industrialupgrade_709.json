@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems6"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    },
+    "E": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ]
+  },
+  "pattern": [
+    "ECE",
+    "BAB",
+    "DCD"
+  ],
+  "result": {
+    "item": "industrialupgrade:spawnermodules/spawner_module8"
+  }
+}

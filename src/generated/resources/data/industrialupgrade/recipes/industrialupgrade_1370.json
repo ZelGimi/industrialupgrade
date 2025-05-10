@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_24_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:itemcell/itemcell"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "BCB",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_106_element"
+  }
+}

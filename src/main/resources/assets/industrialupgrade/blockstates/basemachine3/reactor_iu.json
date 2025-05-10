@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=reactor_iu": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor"
+    },
+    "facing=south,type=reactor_iu": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor",
+      "y": 180
+    },
+    "facing=west,type=reactor_iu": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor",
+      "y": 270
+    },
+    "facing=east,type=reactor_iu": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor",
+      "y": 90
+    },
+    "facing=down,type=reactor_iu": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor",
+      "x": 90
+    },
+    "facing=up,type=reactor_iu": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor",
+      "x": 270
+    },
+    "facing=north,type=reactor_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active"
+    },
+    "facing=south,type=reactor_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "y": 180
+    },
+    "facing=west,type=reactor_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "y": 270
+    },
+    "facing=east,type=reactor_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "y": 90
+    },
+    "facing=down,type=reactor_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "x": 90
+    },
+    "facing=up,type=reactor_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "x": 270
+    },
+    "facing=north,type=reactor_iu_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active"
+    },
+    "facing=south,type=reactor_iu_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "y": 180
+    },
+    "facing=west,type=reactor_iu_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "y": 270
+    },
+    "facing=east,type=reactor_iu_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "y": 90
+    },
+    "facing=down,type=reactor_iu_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "x": 90
+    },
+    "facing=up,type=reactor_iu_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_reactor_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=pig_farm": {
+      "model": "industrialupgrade:block/basemachine/pig_farm"
+    },
+    "facing=south,type=pig_farm": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "y": 180
+    },
+    "facing=west,type=pig_farm": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "y": 270
+    },
+    "facing=east,type=pig_farm": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "y": 90
+    },
+    "facing=down,type=pig_farm": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "x": 90
+    },
+    "facing=up,type=pig_farm": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "x": 270
+    },
+    "facing=north,type=pig_farm_invalid": {
+      "model": "industrialupgrade:block/basemachine/pig_farm"
+    },
+    "facing=south,type=pig_farm_invalid": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "y": 180
+    },
+    "facing=west,type=pig_farm_invalid": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "y": 270
+    },
+    "facing=east,type=pig_farm_invalid": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "y": 90
+    },
+    "facing=down,type=pig_farm_invalid": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "x": 90
+    },
+    "facing=up,type=pig_farm_invalid": {
+      "model": "industrialupgrade:block/basemachine/pig_farm",
+      "x": 270
+    }
+  }
+}

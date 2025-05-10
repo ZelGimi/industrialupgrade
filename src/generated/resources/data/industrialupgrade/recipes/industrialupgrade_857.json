@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:wither_skeleton_skull"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/aluminumbronze"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/alumel"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "CAC",
+    "EEE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_54_element"
+  }
+}

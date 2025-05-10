@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/per_solarium_storage"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_627_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_623_element"
+      }
+    ]
+  },
+  "pattern": [
+    "DBD",
+    " A ",
+    "D D"
+  ],
+  "result": {
+    "item": "industrialupgrade:photonic_machine/photonic_solarium_storage"
+  }
+}

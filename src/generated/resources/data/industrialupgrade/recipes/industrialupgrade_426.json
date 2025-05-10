@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring/glass"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemdoubleplates/tin_doubleplate"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:ingots/cobalt"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "BCB",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/glass1"
+  }
+}

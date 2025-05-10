@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gears/alumel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/aluminumbronze"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_262_element"
+  }
+}

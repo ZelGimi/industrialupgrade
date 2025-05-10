@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/tantalumtungstenhafnium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:nuggets/iridium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/mikhail"
+      }
+    ]
+  },
+  "pattern": [
+    "C C",
+    "ACA",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_694_element"
+  }
+}

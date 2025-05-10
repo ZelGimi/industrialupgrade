@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=wireless_controller_graphite_reactors": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors"
+    },
+    "facing=south,type=wireless_controller_graphite_reactors": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "y": 180
+    },
+    "facing=west,type=wireless_controller_graphite_reactors": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "y": 270
+    },
+    "facing=east,type=wireless_controller_graphite_reactors": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "y": 90
+    },
+    "facing=down,type=wireless_controller_graphite_reactors": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "x": 90
+    },
+    "facing=up,type=wireless_controller_graphite_reactors": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "x": 270
+    },
+    "facing=north,type=wireless_controller_graphite_reactors_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors"
+    },
+    "facing=south,type=wireless_controller_graphite_reactors_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "y": 180
+    },
+    "facing=west,type=wireless_controller_graphite_reactors_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "y": 270
+    },
+    "facing=east,type=wireless_controller_graphite_reactors_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "y": 90
+    },
+    "facing=down,type=wireless_controller_graphite_reactors_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "x": 90
+    },
+    "facing=up,type=wireless_controller_graphite_reactors_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_controller_graphite_reactors",
+      "x": 270
+    }
+  }
+}

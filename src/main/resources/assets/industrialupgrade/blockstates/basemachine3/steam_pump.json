@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=steam_pump": {
+      "model": "industrialupgrade:block/basemachine/steam_pump"
+    },
+    "facing=south,type=steam_pump": {
+      "model": "industrialupgrade:block/basemachine/steam_pump",
+      "y": 180
+    },
+    "facing=west,type=steam_pump": {
+      "model": "industrialupgrade:block/basemachine/steam_pump",
+      "y": 270
+    },
+    "facing=east,type=steam_pump": {
+      "model": "industrialupgrade:block/basemachine/steam_pump",
+      "y": 90
+    },
+    "facing=down,type=steam_pump": {
+      "model": "industrialupgrade:block/basemachine/steam_pump",
+      "x": 90
+    },
+    "facing=up,type=steam_pump": {
+      "model": "industrialupgrade:block/basemachine/steam_pump",
+      "x": 270
+    },
+    "facing=north,type=steam_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active"
+    },
+    "facing=south,type=steam_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "y": 180
+    },
+    "facing=west,type=steam_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "y": 270
+    },
+    "facing=east,type=steam_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "y": 90
+    },
+    "facing=down,type=steam_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "x": 90
+    },
+    "facing=up,type=steam_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "x": 270
+    },
+    "facing=north,type=steam_pump_active": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active"
+    },
+    "facing=south,type=steam_pump_active": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "y": 180
+    },
+    "facing=west,type=steam_pump_active": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "y": 270
+    },
+    "facing=east,type=steam_pump_active": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "y": 90
+    },
+    "facing=down,type=steam_pump_active": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "x": 90
+    },
+    "facing=up,type=steam_pump_active": {
+      "model": "industrialupgrade:block/basemachine/steam_pump_active",
+      "x": 270
+    }
+  }
+}

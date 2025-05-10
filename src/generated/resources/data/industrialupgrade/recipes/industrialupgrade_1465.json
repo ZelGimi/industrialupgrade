@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_99_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "AEB",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine1/enrichment"
+  }
+}

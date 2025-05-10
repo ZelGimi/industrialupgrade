@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=hv": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer"
+    },
+    "facing=south,type=hv": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "y": 180
+    },
+    "facing=west,type=hv": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "y": 270
+    },
+    "facing=east,type=hv": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "y": 90
+    },
+    "facing=down,type=hv": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "x": 90
+    },
+    "facing=up,type=hv": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "x": 270
+    },
+    "facing=north,type=hv_invalid": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer"
+    },
+    "facing=south,type=hv_invalid": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "y": 180
+    },
+    "facing=west,type=hv_invalid": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "y": 270
+    },
+    "facing=east,type=hv_invalid": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "y": 90
+    },
+    "facing=down,type=hv_invalid": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "x": 90
+    },
+    "facing=up,type=hv_invalid": {
+      "model": "industrialupgrade:block/basemachine/hv_transformer",
+      "x": 270
+    }
+  }
+}

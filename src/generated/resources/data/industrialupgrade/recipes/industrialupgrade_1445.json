@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/per_solar_destiller"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_636_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_623_element"
+      }
+    ]
+  },
+  "pattern": [
+    "DBD",
+    " A ",
+    "D D"
+  ],
+  "result": {
+    "item": "industrialupgrade:photonic_machine/photonic_destiller"
+  }
+}

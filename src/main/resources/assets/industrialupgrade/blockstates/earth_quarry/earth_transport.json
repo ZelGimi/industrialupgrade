@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=earth_transport": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport"
+    },
+    "facing=south,type=earth_transport": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "y": 180
+    },
+    "facing=west,type=earth_transport": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "y": 270
+    },
+    "facing=east,type=earth_transport": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "y": 90
+    },
+    "facing=down,type=earth_transport": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "x": 90
+    },
+    "facing=up,type=earth_transport": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "x": 270
+    },
+    "facing=north,type=earth_transport_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport"
+    },
+    "facing=south,type=earth_transport_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "y": 180
+    },
+    "facing=west,type=earth_transport_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "y": 270
+    },
+    "facing=east,type=earth_transport_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "y": 90
+    },
+    "facing=down,type=earth_transport_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "x": 90
+    },
+    "facing=up,type=earth_transport_invalid": {
+      "model": "industrialupgrade:block/earth_quarry/earth_transport",
+      "x": 270
+    }
+  }
+}

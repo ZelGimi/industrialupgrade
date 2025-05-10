@@ -1,0 +1,8 @@
+{
+  "parent" : "industrialupgrade:block/solar_side",
+  "textures" : {
+    "bottom" : "industrialupgrade:blocks/solar_panels/bottom_panels",
+    "glass" : "industrialupgrade:blocks/solar_panels/hybrid/glass",
+    "side" : "industrialupgrade:blocks/solar_panels/hybrid/side"
+  }
+}

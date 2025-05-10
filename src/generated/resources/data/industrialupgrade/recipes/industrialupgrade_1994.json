@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_0_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BBA",
+    "AAA"
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_725_element"
+  }
+}

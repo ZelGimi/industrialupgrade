@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/tempered_glass"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/molybdenumsteel"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_678_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/cadmium"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "CAD",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:colonial_building/medium_house"
+  }
+}

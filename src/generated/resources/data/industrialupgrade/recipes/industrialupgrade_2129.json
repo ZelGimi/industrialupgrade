@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemplates/palladium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/thallium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/stellite"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_682_element"
+  }
+}

@@ -1,0 +1,158 @@
+package com.denfop.items;
+
+import com.denfop.IUCore;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.utils.ModUtils;
+import net.minecraft.Util;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.NetworkHooks;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class ItemFacadeItem extends Item implements IItemStackInventory {
+    private final int slots;
+    private String nameItem;
+
+    public ItemFacadeItem() {
+        super(new Properties().tab(IUCore.EnergyTab).stacksTo(1));
+        this.slots = 1;
+    }
+
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu.facadeItem";
+        }
+
+        return this.nameItem;
+    }
+
+    public IAdvInventory getInventory(Player player, ItemStack stack) {
+        return new FacadeItemInventory(player, stack, this.slots);
+    }
+
+    public void save(ItemStack stack, Player player) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("open", true);
+        nbt.putInt("slot_inventory", player.getInventory().selected);
+    }
+
+    @Override
+    public void inventoryTick(
+            ItemStack stack,
+            Level world,
+            Entity entity,
+            int itemSlot,
+            boolean isSelected
+    ) {
+        super.inventoryTick(stack, world, entity, itemSlot, isSelected);
+
+        if (!(entity instanceof Player)) {
+            return;
+        }
+        Player player = (Player) entity;
+        CompoundTag nbt = stack.getOrCreateTag();
+
+        if (nbt.getBoolean("open")) {
+            int slotId = nbt.getInt("slot_inventory");
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerFacadeItem) {
+                FacadeItemInventory toolbox = ((ContainerFacadeItem) player.containerMenu).base;
+                if (toolbox.isThisContainer(stack)) {
+                    toolbox.saveAsThrown(stack);
+                    player.closeContainer();
+                    nbt.putBoolean("open", false);
+                }
+            }
+        }
+
+
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(
+            ItemStack stack,
+            @Nullable Level world,
+            List<Component> tooltip,
+            TooltipFlag flag
+    ) {
+        tooltip.add(Component.translatable("iu.radiationbox"));
+        CompoundTag nbt = stack.getOrCreateTag();
+        boolean rod = nbt.getBoolean("rod");
+        tooltip.add(Component.translatable("message.text.mode_no_instrument").append(": ")
+                .append(rod ? Component.translatable("message.leadbox.enable") : Component.translatable("message.leadbox.disable")));
+
+        if (!Screen.hasShiftDown()) {
+            tooltip.add(Component.translatable("press.lshift"));
+        } else {
+            tooltip.add(Component.translatable("iu.changemode_key").append(Component.translatable("iu.changemode_rcm1")).append(" + SHIFT"));
+        }
+        super.appendHoverText(stack, world, tooltip, flag);
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
+        if (!player.level.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerFacadeItem) {
+            FacadeItemInventory toolbox = ((ContainerFacadeItem) player.containerMenu).base;
+            if (toolbox.isThisContainer(stack)) {
+                toolbox.saveAndThrow(stack);
+                player.closeContainer();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    @Nonnull
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
+        ItemStack stack = ModUtils.get(player, hand);
+        BlockHitResult blockhitresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.SOURCE_ONLY);
+        if (!player.getLevel().isClientSide && world.getBlockEntity(blockhitresult.getBlockPos()) == null) {
+            save(stack, player);
+
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+            growingBuffer.writeByte(1);
+
+            growingBuffer.flip();
+            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+        }
+
+        return InteractionResultHolder.success(player.getItemInHand(hand));
+
+    }
+
+    public boolean canInsert(Player player, ItemStack stack, ItemStack stack1) {
+
+        return true;
+    }
+
+}

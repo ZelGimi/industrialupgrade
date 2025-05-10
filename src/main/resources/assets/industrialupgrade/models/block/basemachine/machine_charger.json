@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/machine_charger_side",
+    "down" : "industrialupgrade:blocks/machine_charger_side",
+    "up" : "industrialupgrade:blocks/machine_charger_side",
+    "north" : "industrialupgrade:blocks/machine_charger_side",
+    "east" : "industrialupgrade:blocks/machine_charger_side",
+    "south" : "industrialupgrade:blocks/machine_charger_side",
+    "west" : "industrialupgrade:blocks/machine_charger_side"
+  }
+}

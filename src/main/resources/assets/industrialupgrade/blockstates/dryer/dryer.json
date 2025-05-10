@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=dryer": {
+      "model": "industrialupgrade:block/dryer/dryer"
+    },
+    "facing=south,type=dryer": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "y": 180
+    },
+    "facing=west,type=dryer": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "y": 270
+    },
+    "facing=east,type=dryer": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "y": 90
+    },
+    "facing=down,type=dryer": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "x": 90
+    },
+    "facing=up,type=dryer": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "x": 270
+    },
+    "facing=north,type=dryer_invalid": {
+      "model": "industrialupgrade:block/dryer/dryer"
+    },
+    "facing=south,type=dryer_invalid": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "y": 180
+    },
+    "facing=west,type=dryer_invalid": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "y": 270
+    },
+    "facing=east,type=dryer_invalid": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "y": 90
+    },
+    "facing=down,type=dryer_invalid": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "x": 90
+    },
+    "facing=up,type=dryer_invalid": {
+      "model": "industrialupgrade:block/dryer/dryer",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcell/itemcell"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemdoubleplates/invar_doubleplate"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:alloyplate/nichrome"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "CAC",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:tank_iu/tank_iu"
+  }
+}

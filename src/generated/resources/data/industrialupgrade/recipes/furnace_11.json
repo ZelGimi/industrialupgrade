@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone/ganymede_cobblestone"
+  },
+  "result": "industrialupgrade:spacestone/ganymede_stone"
+}

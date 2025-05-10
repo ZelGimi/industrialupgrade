@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:steam_boiler/steam_boiler_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_601_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_154_element"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    " A ",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:steam_boiler/steam_boiler_tank"
+  }
+}

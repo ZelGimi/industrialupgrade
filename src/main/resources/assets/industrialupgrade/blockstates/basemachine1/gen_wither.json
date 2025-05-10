@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=gen_wither": {
+      "model": "industrialupgrade:block/basemachine/gen_wither"
+    },
+    "facing=south,type=gen_wither": {
+      "model": "industrialupgrade:block/basemachine/gen_wither",
+      "y": 180
+    },
+    "facing=west,type=gen_wither": {
+      "model": "industrialupgrade:block/basemachine/gen_wither",
+      "y": 270
+    },
+    "facing=east,type=gen_wither": {
+      "model": "industrialupgrade:block/basemachine/gen_wither",
+      "y": 90
+    },
+    "facing=down,type=gen_wither": {
+      "model": "industrialupgrade:block/basemachine/gen_wither",
+      "x": 90
+    },
+    "facing=up,type=gen_wither": {
+      "model": "industrialupgrade:block/basemachine/gen_wither",
+      "x": 270
+    },
+    "facing=north,type=gen_wither_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active"
+    },
+    "facing=south,type=gen_wither_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "y": 180
+    },
+    "facing=west,type=gen_wither_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "y": 270
+    },
+    "facing=east,type=gen_wither_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "y": 90
+    },
+    "facing=down,type=gen_wither_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "x": 90
+    },
+    "facing=up,type=gen_wither_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "x": 270
+    },
+    "facing=north,type=gen_wither_active": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active"
+    },
+    "facing=south,type=gen_wither_active": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "y": 180
+    },
+    "facing=west,type=gen_wither_active": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "y": 270
+    },
+    "facing=east,type=gen_wither_active": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "y": 90
+    },
+    "facing=down,type=gen_wither_active": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "x": 90
+    },
+    "facing=up,type=gen_wither_active": {
+      "model": "industrialupgrade:block/basemachine/gen_wither_active",
+      "x": 270
+    }
+  }
+}

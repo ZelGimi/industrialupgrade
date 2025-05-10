@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/muntsa"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "   ",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_720_element"
+  }
+}

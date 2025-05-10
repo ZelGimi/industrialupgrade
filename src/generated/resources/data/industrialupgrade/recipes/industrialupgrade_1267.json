@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:string"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    " BB",
+    " AA",
+    " BB"
+  ],
+  "result": {
+    "item": "industrialupgrade:mesh/ironmesh"
+  }
+}

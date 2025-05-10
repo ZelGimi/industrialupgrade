@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/industrial_ore_purifier_front",
+    "down" : "industrialupgrade:blocks/industrial_ore_purifier_sides",
+    "up" : "industrialupgrade:blocks/industrial_ore_purifier_top",
+    "north" : "industrialupgrade:blocks/industrial_ore_purifier_front",
+    "east" : "industrialupgrade:blocks/industrial_ore_purifier_sides",
+    "south" : "industrialupgrade:blocks/industrial_ore_purifier_sides",
+    "west" : "industrialupgrade:blocks/industrial_ore_purifier_sides"
+  }
+}

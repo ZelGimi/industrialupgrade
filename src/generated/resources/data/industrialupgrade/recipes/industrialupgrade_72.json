@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:energy_tools/vajra"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:energy_tools/ultddrill"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/nimonic"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/superalloyrene"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "DBD",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/ult_vajra"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:research_lens/lens_4"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemplates/draconid"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:research_lens/lens_5"
+  }
+}

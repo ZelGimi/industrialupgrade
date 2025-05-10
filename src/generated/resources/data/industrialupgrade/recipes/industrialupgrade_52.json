@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems7"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/iridium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/iridium"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "BAB",
+    "CFC"
+  ],
+  "result": {
+    "item": "industrialupgrade:quantumitems3"
+  }
+}

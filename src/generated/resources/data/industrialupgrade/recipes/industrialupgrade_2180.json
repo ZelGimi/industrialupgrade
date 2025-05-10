@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_666_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_656_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CAE",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/apothecary_bee"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:cyclotron/cyclotron_casing"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_43_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:cryogenic_cooling_mixture"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "DAD",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:cyclotron/cyclotron_cryogen"
+  }
+}

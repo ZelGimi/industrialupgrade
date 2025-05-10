@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemdust/silicon_dust"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/gold"
+      }
+    ]
+  },
+  "pattern": [
+    "A  ",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_573_element"
+  }
+}

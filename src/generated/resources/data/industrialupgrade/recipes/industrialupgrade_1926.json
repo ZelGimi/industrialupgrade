@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gems/quartz"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/gold"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:ingots/iron"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " C ",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:solderingiron"
+  }
+}

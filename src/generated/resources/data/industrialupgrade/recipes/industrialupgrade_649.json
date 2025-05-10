@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:experience_bottle"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:expmodule"
+  }
+}

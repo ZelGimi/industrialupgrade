@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_620_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/manganese"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/aluminium"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BCB",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_610_element"
+  }
+}

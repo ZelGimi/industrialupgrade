@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:spectral_box"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:alloydoubleplate/alcled"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:alloydoubleplate/inconel"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "CAC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_625_element"
+  }
+}

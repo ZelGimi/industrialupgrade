@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcore/admcore"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    }
+  },
+  "pattern": [
+    "EDE",
+    "BAB",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_250_element"
+  }
+}

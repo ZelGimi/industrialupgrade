@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/ganymede_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/ganymede_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/ganymede_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/ganymede_boulder"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:spacecobblestone/ganymede_cobblestone"
+  }
+}

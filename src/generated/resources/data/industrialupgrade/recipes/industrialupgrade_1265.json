@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/tantalumtungstenhafnium"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:chemistry/cathode",
+      "nbt": "{Damage:0}"
+    },
+    "C": [
+      {
+        "item": "industrialupgrade:itemdust/silver_chloride_dust"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:chemistry/adv_cathode"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:casing/tin"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:casing/bronze"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_278_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " AC"
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/wind_meter"
+  }
+}

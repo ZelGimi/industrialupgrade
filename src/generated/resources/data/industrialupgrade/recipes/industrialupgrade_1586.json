@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_206_element"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:transformer_iu/lv"
+  }
+}

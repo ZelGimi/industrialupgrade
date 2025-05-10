@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=steam_squeezer": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer"
+    },
+    "facing=south,type=steam_squeezer": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer",
+      "y": 180
+    },
+    "facing=west,type=steam_squeezer": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer",
+      "y": 270
+    },
+    "facing=east,type=steam_squeezer": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer",
+      "y": 90
+    },
+    "facing=down,type=steam_squeezer": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer",
+      "x": 90
+    },
+    "facing=up,type=steam_squeezer": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer",
+      "x": 270
+    },
+    "facing=north,type=steam_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active"
+    },
+    "facing=south,type=steam_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "y": 180
+    },
+    "facing=west,type=steam_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "y": 270
+    },
+    "facing=east,type=steam_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "y": 90
+    },
+    "facing=down,type=steam_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "x": 90
+    },
+    "facing=up,type=steam_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "x": 270
+    },
+    "facing=north,type=steam_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active"
+    },
+    "facing=south,type=steam_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "y": 180
+    },
+    "facing=west,type=steam_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "y": 270
+    },
+    "facing=east,type=steam_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "y": 90
+    },
+    "facing=down,type=steam_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "x": 90
+    },
+    "facing=up,type=steam_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/steam_squeezer_active",
+      "x": 270
+    }
+  }
+}

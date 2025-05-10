@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/hafniumcarbide"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/stellite"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gems/sapphire"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_668_element"
+  }
+}

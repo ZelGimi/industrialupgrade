@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/mikhail"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/chromium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/alcled"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine/per_matter"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:solid/earth_solidmatter"
+  }
+}

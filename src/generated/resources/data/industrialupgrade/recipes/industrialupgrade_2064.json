@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wind_turbine/wind_turbine_casing_1"
+      }
+    ]
+  },
+  "pattern": [
+    "A  ",
+    "AA ",
+    "AAA"
+  ],
+  "result": {
+    "count": 4,
+    "item": "industrialupgrade:wind_turbine/wind_turbine_casing_2"
+  }
+}

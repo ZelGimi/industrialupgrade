@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=water_adv_security_unstable": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable"
+    },
+    "facing=south,type=water_adv_security_unstable": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "y": 180
+    },
+    "facing=west,type=water_adv_security_unstable": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "y": 270
+    },
+    "facing=east,type=water_adv_security_unstable": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "y": 90
+    },
+    "facing=down,type=water_adv_security_unstable": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "x": 90
+    },
+    "facing=up,type=water_adv_security_unstable": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "x": 270
+    },
+    "facing=north,type=water_adv_security_unstable_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable"
+    },
+    "facing=south,type=water_adv_security_unstable_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "y": 180
+    },
+    "facing=west,type=water_adv_security_unstable_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "y": 270
+    },
+    "facing=east,type=water_adv_security_unstable_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "y": 90
+    },
+    "facing=down,type=water_adv_security_unstable_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "x": 90
+    },
+    "facing=up,type=water_adv_security_unstable_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_adv_security_unstable",
+      "x": 270
+    }
+  }
+}

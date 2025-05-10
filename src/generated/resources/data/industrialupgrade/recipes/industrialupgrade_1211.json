@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/niobiumtitanium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/stainlesssteel"
+      }
+    ]
+  },
+  "pattern": [
+    "BA ",
+    " BA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_514_element"
+  }
+}

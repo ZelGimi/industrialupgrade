@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcore/adrcore"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_23_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/alcled"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:doubleplate/germanium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/vitalium"
+      }
+    ]
+  },
+  "pattern": [
+    "CEC",
+    "ABA",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_253_element"
+  }
+}

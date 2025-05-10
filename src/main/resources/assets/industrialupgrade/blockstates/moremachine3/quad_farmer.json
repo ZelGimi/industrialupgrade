@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=quad_farmer": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer"
+    },
+    "facing=south,type=quad_farmer": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer",
+      "y": 180
+    },
+    "facing=west,type=quad_farmer": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer",
+      "y": 270
+    },
+    "facing=east,type=quad_farmer": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer",
+      "y": 90
+    },
+    "facing=down,type=quad_farmer": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer",
+      "x": 90
+    },
+    "facing=up,type=quad_farmer": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer",
+      "x": 270
+    },
+    "facing=north,type=quad_farmer_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active"
+    },
+    "facing=south,type=quad_farmer_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "y": 180
+    },
+    "facing=west,type=quad_farmer_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "y": 270
+    },
+    "facing=east,type=quad_farmer_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "y": 90
+    },
+    "facing=down,type=quad_farmer_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "x": 90
+    },
+    "facing=up,type=quad_farmer_invalid": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "x": 270
+    },
+    "facing=north,type=quad_farmer_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active"
+    },
+    "facing=south,type=quad_farmer_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "y": 180
+    },
+    "facing=west,type=quad_farmer_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "y": 270
+    },
+    "facing=east,type=quad_farmer_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "y": 90
+    },
+    "facing=down,type=quad_farmer_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "x": 90
+    },
+    "facing=up,type=quad_farmer_active": {
+      "model": "industrialupgrade:block/moremachine3/quad_farmer_active",
+      "x": 270
+    }
+  }
+}

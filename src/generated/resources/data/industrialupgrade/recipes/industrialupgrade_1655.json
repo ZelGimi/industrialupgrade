@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/copper"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tin"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BBB",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:itemingots/alloy_ingot"
+  }
+}

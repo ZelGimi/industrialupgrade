@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:steam_turbine/steam_turbine_casing"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "AAA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:steam_turbine/steam_turbine_rod"
+  }
+}

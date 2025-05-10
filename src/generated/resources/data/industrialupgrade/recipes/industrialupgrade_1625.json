@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/nichrome"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_296_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/vanadoalumite"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_264_element"
+  }
+}

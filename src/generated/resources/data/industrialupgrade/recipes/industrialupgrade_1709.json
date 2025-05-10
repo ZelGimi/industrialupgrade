@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/zinc"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "ABA",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_433_element"
+  }
+}

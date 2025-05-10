@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_123_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:block_strong_anvil/block_strong_anvil"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/steam_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_32_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_165_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AED",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/steam_rolling"
+  }
+}

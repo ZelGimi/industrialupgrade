@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_140_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/nimonic"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/superalloyrene"
+      }
+    ]
+  },
+  "pattern": [
+    "AC ",
+    "BB ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_623_element"
+  }
+}

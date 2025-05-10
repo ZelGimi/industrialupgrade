@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=mfe_iu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe"
+    },
+    "facing=south,type=mfe_iu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe",
+      "y": 180
+    },
+    "facing=west,type=mfe_iu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe",
+      "y": 270
+    },
+    "facing=east,type=mfe_iu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe",
+      "y": 90
+    },
+    "facing=down,type=mfe_iu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe",
+      "x": 90
+    },
+    "facing=up,type=mfe_iu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe",
+      "x": 270
+    },
+    "facing=north,type=mfe_iu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active"
+    },
+    "facing=south,type=mfe_iu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "y": 180
+    },
+    "facing=west,type=mfe_iu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "y": 270
+    },
+    "facing=east,type=mfe_iu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "y": 90
+    },
+    "facing=down,type=mfe_iu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "x": 90
+    },
+    "facing=up,type=mfe_iu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "x": 270
+    },
+    "facing=north,type=mfe_iu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active"
+    },
+    "facing=south,type=mfe_iu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "y": 180
+    },
+    "facing=west,type=mfe_iu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "y": 270
+    },
+    "facing=east,type=mfe_iu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "y": 90
+    },
+    "facing=down,type=mfe_iu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "x": 90
+    },
+    "facing=up,type=mfe_iu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/chargepad_mfe_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=elec_heat": {
+      "model": "industrialupgrade:block/basemachine/elec_heat"
+    },
+    "facing=south,type=elec_heat": {
+      "model": "industrialupgrade:block/basemachine/elec_heat",
+      "y": 180
+    },
+    "facing=west,type=elec_heat": {
+      "model": "industrialupgrade:block/basemachine/elec_heat",
+      "y": 270
+    },
+    "facing=east,type=elec_heat": {
+      "model": "industrialupgrade:block/basemachine/elec_heat",
+      "y": 90
+    },
+    "facing=down,type=elec_heat": {
+      "model": "industrialupgrade:block/basemachine/elec_heat",
+      "x": 90
+    },
+    "facing=up,type=elec_heat": {
+      "model": "industrialupgrade:block/basemachine/elec_heat",
+      "x": 270
+    },
+    "facing=north,type=elec_heat_invalid": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active"
+    },
+    "facing=south,type=elec_heat_invalid": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "y": 180
+    },
+    "facing=west,type=elec_heat_invalid": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "y": 270
+    },
+    "facing=east,type=elec_heat_invalid": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "y": 90
+    },
+    "facing=down,type=elec_heat_invalid": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "x": 90
+    },
+    "facing=up,type=elec_heat_invalid": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "x": 270
+    },
+    "facing=north,type=elec_heat_active": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active"
+    },
+    "facing=south,type=elec_heat_active": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "y": 180
+    },
+    "facing=west,type=elec_heat_active": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "y": 270
+    },
+    "facing=east,type=elec_heat_active": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "y": 90
+    },
+    "facing=down,type=elec_heat_active": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "x": 90
+    },
+    "facing=up,type=elec_heat_active": {
+      "model": "industrialupgrade:block/basemachine/elec_heat_active",
+      "x": 270
+    }
+  }
+}

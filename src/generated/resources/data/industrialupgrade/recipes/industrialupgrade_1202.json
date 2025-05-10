@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems6"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_517_element"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BBB",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_509_element"
+  }
+}

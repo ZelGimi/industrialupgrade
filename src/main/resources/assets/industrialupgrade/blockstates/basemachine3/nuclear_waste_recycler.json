@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=nuclear_waste_recycler": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler"
+    },
+    "facing=south,type=nuclear_waste_recycler": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler",
+      "y": 180
+    },
+    "facing=west,type=nuclear_waste_recycler": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler",
+      "y": 270
+    },
+    "facing=east,type=nuclear_waste_recycler": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler",
+      "y": 90
+    },
+    "facing=down,type=nuclear_waste_recycler": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler",
+      "x": 90
+    },
+    "facing=up,type=nuclear_waste_recycler": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler",
+      "x": 270
+    },
+    "facing=north,type=nuclear_waste_recycler_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active"
+    },
+    "facing=south,type=nuclear_waste_recycler_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "y": 180
+    },
+    "facing=west,type=nuclear_waste_recycler_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "y": 270
+    },
+    "facing=east,type=nuclear_waste_recycler_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "y": 90
+    },
+    "facing=down,type=nuclear_waste_recycler_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "x": 90
+    },
+    "facing=up,type=nuclear_waste_recycler_invalid": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "x": 270
+    },
+    "facing=north,type=nuclear_waste_recycler_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active"
+    },
+    "facing=south,type=nuclear_waste_recycler_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "y": 180
+    },
+    "facing=west,type=nuclear_waste_recycler_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "y": 270
+    },
+    "facing=east,type=nuclear_waste_recycler_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "y": 90
+    },
+    "facing=down,type=nuclear_waste_recycler_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "x": 90
+    },
+    "facing=up,type=nuclear_waste_recycler_active": {
+      "model": "industrialupgrade:block/basemachine/nuclear_waste_recycler_active",
+      "x": 270
+    }
+  }
+}

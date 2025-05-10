@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=electric_brewing": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing"
+    },
+    "facing=south,type=electric_brewing": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing",
+      "y": 180
+    },
+    "facing=west,type=electric_brewing": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing",
+      "y": 270
+    },
+    "facing=east,type=electric_brewing": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing",
+      "y": 90
+    },
+    "facing=down,type=electric_brewing": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing",
+      "x": 90
+    },
+    "facing=up,type=electric_brewing": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing",
+      "x": 270
+    },
+    "facing=north,type=electric_brewing_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active"
+    },
+    "facing=south,type=electric_brewing_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "y": 180
+    },
+    "facing=west,type=electric_brewing_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "y": 270
+    },
+    "facing=east,type=electric_brewing_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "y": 90
+    },
+    "facing=down,type=electric_brewing_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "x": 90
+    },
+    "facing=up,type=electric_brewing_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "x": 270
+    },
+    "facing=north,type=electric_brewing_active": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active"
+    },
+    "facing=south,type=electric_brewing_active": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "y": 180
+    },
+    "facing=west,type=electric_brewing_active": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "y": 270
+    },
+    "facing=east,type=electric_brewing_active": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "y": 90
+    },
+    "facing=down,type=electric_brewing_active": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "x": 90
+    },
+    "facing=up,type=electric_brewing_active": {
+      "model": "industrialupgrade:block/basemachine/electric_brewing_active",
+      "x": 270
+    }
+  }
+}

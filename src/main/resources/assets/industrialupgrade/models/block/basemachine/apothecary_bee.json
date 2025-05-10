@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/apothecary_bee_main",
+    "down" : "industrialupgrade:blocks/apothecary_bee_bottom",
+    "up" : "industrialupgrade:blocks/apothecary_bee_top",
+    "north" : "industrialupgrade:blocks/apothecary_bee_main",
+    "east" : "industrialupgrade:blocks/apothecary_bee_side",
+    "south" : "industrialupgrade:blocks/apothecary_bee_bottom",
+    "west" : "industrialupgrade:blocks/apothecary_bee_side"
+  }
+}

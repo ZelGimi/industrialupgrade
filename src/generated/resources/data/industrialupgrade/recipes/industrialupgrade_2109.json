@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:milk_bucket"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/vanadoalumite"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:beef"
+      }
+    ]
+  },
+  "pattern": [
+    "DBD",
+    "CAC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_664_element"
+  }
+}

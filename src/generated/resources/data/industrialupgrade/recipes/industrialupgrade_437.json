@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:circuit/circuit_part1"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:wiring/copper1"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/silver"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "A A",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:circuit/circuit_part3"
+  }
+}

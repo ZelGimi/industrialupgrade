@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/solar_iu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_79_element"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    " A ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:se_gen/se_gen"
+  }
+}

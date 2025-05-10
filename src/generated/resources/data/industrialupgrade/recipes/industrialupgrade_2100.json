@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:spaceupgrademodule_schedule"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/obsidian"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/muntsa"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/germanium"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:spaceupgrademodules/space_upgrademodule4"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemsunnarium/sunnarium2"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/copper"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_271_element"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "ABA",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/solarium"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_54_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_439_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CAE",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/shield"
+  }
+}

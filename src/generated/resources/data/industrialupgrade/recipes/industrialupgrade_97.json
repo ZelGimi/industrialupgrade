@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/manganese"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/chromium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/redbrass"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine/per_matter"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:solid/night_solidmatter"
+  }
+}

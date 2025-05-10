@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/lead"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:chest"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:bags/lead_box"
+  }
+}

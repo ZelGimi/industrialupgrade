@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=batbox_iu": {
+      "model": "industrialupgrade:block/wiring/batbox"
+    },
+    "facing=south,type=batbox_iu": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "y": 180
+    },
+    "facing=west,type=batbox_iu": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "y": 270
+    },
+    "facing=east,type=batbox_iu": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "y": 90
+    },
+    "facing=down,type=batbox_iu": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "x": 90
+    },
+    "facing=up,type=batbox_iu": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "x": 270
+    },
+    "facing=north,type=batbox_iu_invalid": {
+      "model": "industrialupgrade:block/wiring/batbox"
+    },
+    "facing=south,type=batbox_iu_invalid": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "y": 180
+    },
+    "facing=west,type=batbox_iu_invalid": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "y": 270
+    },
+    "facing=east,type=batbox_iu_invalid": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "y": 90
+    },
+    "facing=down,type=batbox_iu_invalid": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "x": 90
+    },
+    "facing=up,type=batbox_iu_invalid": {
+      "model": "industrialupgrade:block/wiring/batbox",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=water_imp_reactor": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor"
+    },
+    "facing=south,type=water_imp_reactor": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "y": 180
+    },
+    "facing=west,type=water_imp_reactor": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "y": 270
+    },
+    "facing=east,type=water_imp_reactor": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "y": 90
+    },
+    "facing=down,type=water_imp_reactor": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "x": 90
+    },
+    "facing=up,type=water_imp_reactor": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "x": 270
+    },
+    "facing=north,type=water_imp_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor"
+    },
+    "facing=south,type=water_imp_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "y": 180
+    },
+    "facing=west,type=water_imp_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "y": 270
+    },
+    "facing=east,type=water_imp_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "y": 90
+    },
+    "facing=down,type=water_imp_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "x": 90
+    },
+    "facing=up,type=water_imp_reactor_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_reactor",
+      "x": 270
+    }
+  }
+}

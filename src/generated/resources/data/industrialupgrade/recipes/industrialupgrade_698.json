@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/quacore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:rotors_upgrade/rotorupgrade"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/redbrass"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:rotors_upgrade/rotorupgrade1"
+  }
+}

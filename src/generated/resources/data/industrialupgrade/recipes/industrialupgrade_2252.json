@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:glass/reinforced"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/titanium"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BAB",
+    "ABA"
+  ],
+  "result": {
+    "count": 5,
+    "item": "industrialupgrade:steam_turbine/steam_turbine_casing_glass"
+  }
+}

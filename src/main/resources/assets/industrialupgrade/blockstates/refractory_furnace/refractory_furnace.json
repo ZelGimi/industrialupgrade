@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=refractory_furnace": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace"
+    },
+    "facing=south,type=refractory_furnace": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace",
+      "y": 180
+    },
+    "facing=west,type=refractory_furnace": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace",
+      "y": 270
+    },
+    "facing=east,type=refractory_furnace": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace",
+      "y": 90
+    },
+    "facing=down,type=refractory_furnace": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace",
+      "x": 90
+    },
+    "facing=up,type=refractory_furnace": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace",
+      "x": 270
+    },
+    "facing=north,type=refractory_furnace_invalid": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active"
+    },
+    "facing=south,type=refractory_furnace_invalid": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "y": 180
+    },
+    "facing=west,type=refractory_furnace_invalid": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "y": 270
+    },
+    "facing=east,type=refractory_furnace_invalid": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "y": 90
+    },
+    "facing=down,type=refractory_furnace_invalid": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "x": 90
+    },
+    "facing=up,type=refractory_furnace_invalid": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "x": 270
+    },
+    "facing=north,type=refractory_furnace_active": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active"
+    },
+    "facing=south,type=refractory_furnace_active": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "y": 180
+    },
+    "facing=west,type=refractory_furnace_active": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "y": 270
+    },
+    "facing=east,type=refractory_furnace_active": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "y": 90
+    },
+    "facing=down,type=refractory_furnace_active": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "x": 90
+    },
+    "facing=up,type=refractory_furnace_active": {
+      "model": "industrialupgrade:block/refractory_furnace/refractory_furnace_active",
+      "x": 270
+    }
+  }
+}

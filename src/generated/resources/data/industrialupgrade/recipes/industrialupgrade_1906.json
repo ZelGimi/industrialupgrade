@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:adv_spectral_box"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:doubleplate/alumel"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade9"
+  }
+}

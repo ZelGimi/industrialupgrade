@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/deimos_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/deimos_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/deimos_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/deimos_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/deimos_boulder"
+  }
+}

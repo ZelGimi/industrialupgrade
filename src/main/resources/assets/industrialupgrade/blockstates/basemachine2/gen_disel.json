@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=gen_disel": {
+      "model": "industrialupgrade:block/basemachine/gen_disel"
+    },
+    "facing=south,type=gen_disel": {
+      "model": "industrialupgrade:block/basemachine/gen_disel",
+      "y": 180
+    },
+    "facing=west,type=gen_disel": {
+      "model": "industrialupgrade:block/basemachine/gen_disel",
+      "y": 270
+    },
+    "facing=east,type=gen_disel": {
+      "model": "industrialupgrade:block/basemachine/gen_disel",
+      "y": 90
+    },
+    "facing=down,type=gen_disel": {
+      "model": "industrialupgrade:block/basemachine/gen_disel",
+      "x": 90
+    },
+    "facing=up,type=gen_disel": {
+      "model": "industrialupgrade:block/basemachine/gen_disel",
+      "x": 270
+    },
+    "facing=north,type=gen_disel_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active"
+    },
+    "facing=south,type=gen_disel_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "y": 180
+    },
+    "facing=west,type=gen_disel_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "y": 270
+    },
+    "facing=east,type=gen_disel_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "y": 90
+    },
+    "facing=down,type=gen_disel_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "x": 90
+    },
+    "facing=up,type=gen_disel_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "x": 270
+    },
+    "facing=north,type=gen_disel_active": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active"
+    },
+    "facing=south,type=gen_disel_active": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "y": 180
+    },
+    "facing=west,type=gen_disel_active": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "y": 270
+    },
+    "facing=east,type=gen_disel_active": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "y": 90
+    },
+    "facing=down,type=gen_disel_active": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "x": 90
+    },
+    "facing=up,type=gen_disel_active": {
+      "model": "industrialupgrade:block/basemachine/gen_disel_active",
+      "x": 270
+    }
+  }
+}

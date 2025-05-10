@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:chemical_plant/chemical_plant_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/itemcable1"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:wiring/itemcable"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:chemical_plant/chemical_plant_transport"
+  }
+}

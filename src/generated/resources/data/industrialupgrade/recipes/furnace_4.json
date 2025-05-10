@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone/ceres_cobblestone"
+  },
+  "result": "industrialupgrade:spacestone/ceres_stone"
+}

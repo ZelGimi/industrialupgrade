@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=per_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller"
+    },
+    "facing=south,type=per_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "y": 180
+    },
+    "facing=west,type=per_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "y": 270
+    },
+    "facing=east,type=per_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "y": 90
+    },
+    "facing=down,type=per_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "x": 90
+    },
+    "facing=up,type=per_solar_destiller": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "x": 270
+    },
+    "facing=north,type=per_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller"
+    },
+    "facing=south,type=per_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "y": 180
+    },
+    "facing=west,type=per_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "y": 270
+    },
+    "facing=east,type=per_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "y": 90
+    },
+    "facing=down,type=per_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "x": 90
+    },
+    "facing=up,type=per_solar_destiller_invalid": {
+      "model": "industrialupgrade:block/basemachine/per_solar_destiller",
+      "x": 270
+    }
+  }
+}

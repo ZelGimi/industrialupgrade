@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=sawmill": {
+      "model": "industrialupgrade:block/basemachine/sawmill"
+    },
+    "facing=south,type=sawmill": {
+      "model": "industrialupgrade:block/basemachine/sawmill",
+      "y": 180
+    },
+    "facing=west,type=sawmill": {
+      "model": "industrialupgrade:block/basemachine/sawmill",
+      "y": 270
+    },
+    "facing=east,type=sawmill": {
+      "model": "industrialupgrade:block/basemachine/sawmill",
+      "y": 90
+    },
+    "facing=down,type=sawmill": {
+      "model": "industrialupgrade:block/basemachine/sawmill",
+      "x": 90
+    },
+    "facing=up,type=sawmill": {
+      "model": "industrialupgrade:block/basemachine/sawmill",
+      "x": 270
+    },
+    "facing=north,type=sawmill_invalid": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active"
+    },
+    "facing=south,type=sawmill_invalid": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "y": 180
+    },
+    "facing=west,type=sawmill_invalid": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "y": 270
+    },
+    "facing=east,type=sawmill_invalid": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "y": 90
+    },
+    "facing=down,type=sawmill_invalid": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "x": 90
+    },
+    "facing=up,type=sawmill_invalid": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "x": 270
+    },
+    "facing=north,type=sawmill_active": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active"
+    },
+    "facing=south,type=sawmill_active": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "y": 180
+    },
+    "facing=west,type=sawmill_active": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "y": 270
+    },
+    "facing=east,type=sawmill_active": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "y": 90
+    },
+    "facing=down,type=sawmill_active": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "x": 90
+    },
+    "facing=up,type=sawmill_active": {
+      "model": "industrialupgrade:block/basemachine/sawmill_active",
+      "x": 270
+    }
+  }
+}

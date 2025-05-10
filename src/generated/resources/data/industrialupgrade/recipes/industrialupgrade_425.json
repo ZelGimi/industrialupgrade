@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring/glass_1"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemiucrafring/itemirradianturanium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:synthetic_rubber"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "BBB",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/glass"
+  }
+}

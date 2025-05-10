@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_68_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:imp_motors_with_improved_bearings_"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/positronconverter"
+  }
+}

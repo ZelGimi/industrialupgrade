@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/nuclear_waste_recycler_main",
+    "down" : "industrialupgrade:blocks/nuclear_waste_recycler_all",
+    "up" : "industrialupgrade:blocks/nuclear_waste_recycler_up",
+    "north" : "industrialupgrade:blocks/nuclear_waste_recycler_main",
+    "east" : "industrialupgrade:blocks/nuclear_waste_recycler_all",
+    "south" : "industrialupgrade:blocks/nuclear_waste_recycler_all",
+    "west" : "industrialupgrade:blocks/nuclear_waste_recycler_all"
+  }
+}

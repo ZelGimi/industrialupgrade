@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=handler_ho": {
+      "model": "industrialupgrade:block/basemachine/handler_ho"
+    },
+    "facing=south,type=handler_ho": {
+      "model": "industrialupgrade:block/basemachine/handler_ho",
+      "y": 180
+    },
+    "facing=west,type=handler_ho": {
+      "model": "industrialupgrade:block/basemachine/handler_ho",
+      "y": 270
+    },
+    "facing=east,type=handler_ho": {
+      "model": "industrialupgrade:block/basemachine/handler_ho",
+      "y": 90
+    },
+    "facing=down,type=handler_ho": {
+      "model": "industrialupgrade:block/basemachine/handler_ho",
+      "x": 90
+    },
+    "facing=up,type=handler_ho": {
+      "model": "industrialupgrade:block/basemachine/handler_ho",
+      "x": 270
+    },
+    "facing=north,type=handler_ho_invalid": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active"
+    },
+    "facing=south,type=handler_ho_invalid": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "y": 180
+    },
+    "facing=west,type=handler_ho_invalid": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "y": 270
+    },
+    "facing=east,type=handler_ho_invalid": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "y": 90
+    },
+    "facing=down,type=handler_ho_invalid": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "x": 90
+    },
+    "facing=up,type=handler_ho_invalid": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "x": 270
+    },
+    "facing=north,type=handler_ho_active": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active"
+    },
+    "facing=south,type=handler_ho_active": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "y": 180
+    },
+    "facing=west,type=handler_ho_active": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "y": 270
+    },
+    "facing=east,type=handler_ho_active": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "y": 90
+    },
+    "facing=down,type=handler_ho_active": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "x": 90
+    },
+    "facing=up,type=handler_ho_active": {
+      "model": "industrialupgrade:block/basemachine/handler_ho_active",
+      "x": 270
+    }
+  }
+}

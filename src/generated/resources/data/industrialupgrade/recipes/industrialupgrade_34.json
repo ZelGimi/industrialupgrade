@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring_storage/mfe_iu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/lapotron_crystal"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:6}"
+    }
+  },
+  "pattern": [
+    "CDC",
+    "CAC",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring_storage/mfsu_iu"
+  }
+}

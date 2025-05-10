@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone/enceladus_cobblestone"
+  },
+  "result": "industrialupgrade:spacestone/enceladus_stone"
+}

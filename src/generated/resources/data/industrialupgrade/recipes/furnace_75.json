@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 5.0,
+  "ingredient": {
+    "item": "industrialupgrade:blockspace3/moon_tin_ore"
+  },
+  "result": "industrialupgrade:itemingots/tin_ingot"
+}

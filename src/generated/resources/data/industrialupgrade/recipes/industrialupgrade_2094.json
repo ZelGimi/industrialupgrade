@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemplates/meteoric_iron"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:spaceupgrademodule_schedule"
+  }
+}

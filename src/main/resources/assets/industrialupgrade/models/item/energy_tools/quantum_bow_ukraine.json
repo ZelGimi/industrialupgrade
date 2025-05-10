@@ -1,0 +1,27 @@
+{
+	"parent": "industrialupgrade:item/tool/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/quantum_bow_ukraine"	},
+"overrides" : [
+	{
+"predicate" : { 
+ "pulling" : 1.0 
+}, 
+ "model" : "industrialupgrade:item/energy_tools/quantum_bow_1_ukraine"
+},
+{
+"predicate" : {
+"pulling" : 1.0,
+"pull" : 0.65
+},
+"model" : "industrialupgrade:item/energy_tools/quantum_bow_2_ukraine"
+},
+{
+"predicate" : {
+"pulling" : 1.0,
+"pull" : 0.9
+},
+"model" : "industrialupgrade:item/energy_tools/quantum_bow_3_ukraine"
+}
+]
+}

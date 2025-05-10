@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_158_element"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    },
+    "C": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:ingots/germanium"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "DCD",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:quarrymodule"
+  }
+}

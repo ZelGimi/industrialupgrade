@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/osmiridium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/niobiumtitanium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:double_transformer/double_transformer"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:10}"
+    },
+    "F": [
+      {
+        "item": "industrialupgrade:neutronium"
+      }
+    ]
+  },
+  "pattern": [
+    "AFB",
+    "ECE",
+    "BDA"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/quantum_transformer"
+  }
+}

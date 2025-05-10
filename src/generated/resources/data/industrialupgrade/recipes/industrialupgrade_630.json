@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/proteus_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/proteus_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/proteus_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/proteus_boulder"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:spacecobblestone1/proteus_cobblestone"
+  }
+}

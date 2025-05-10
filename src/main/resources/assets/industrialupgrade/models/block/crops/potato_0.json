@@ -1,0 +1,6 @@
+{
+    "parent": "industrialupgrade:block/crop_0",
+    "textures": {
+        "texture": "industrialupgrade:blocks/crop/potato_0"
+    }
+}

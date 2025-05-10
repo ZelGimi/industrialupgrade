@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_32_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:primal_fluid_heater/primal_fluid_heater"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/steam_machine"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/steamboiler"
+  }
+}

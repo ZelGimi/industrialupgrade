@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=plastic_creator": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator"
+    },
+    "facing=south,type=plastic_creator": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator",
+      "y": 180
+    },
+    "facing=west,type=plastic_creator": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator",
+      "y": 270
+    },
+    "facing=east,type=plastic_creator": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator",
+      "y": 90
+    },
+    "facing=down,type=plastic_creator": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator",
+      "x": 90
+    },
+    "facing=up,type=plastic_creator": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator",
+      "x": 270
+    },
+    "facing=north,type=plastic_creator_invalid": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active"
+    },
+    "facing=south,type=plastic_creator_invalid": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "y": 180
+    },
+    "facing=west,type=plastic_creator_invalid": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "y": 270
+    },
+    "facing=east,type=plastic_creator_invalid": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "y": 90
+    },
+    "facing=down,type=plastic_creator_invalid": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "x": 90
+    },
+    "facing=up,type=plastic_creator_invalid": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "x": 270
+    },
+    "facing=north,type=plastic_creator_active": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active"
+    },
+    "facing=south,type=plastic_creator_active": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "y": 180
+    },
+    "facing=west,type=plastic_creator_active": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "y": 270
+    },
+    "facing=east,type=plastic_creator_active": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "y": 90
+    },
+    "facing=down,type=plastic_creator_active": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "x": 90
+    },
+    "facing=up,type=plastic_creator_active": {
+      "model": "industrialupgrade:block/basemachine/plastic_creator_active",
+      "x": 270
+    }
+  }
+}

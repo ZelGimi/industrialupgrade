@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_22_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "ABC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/geogenerator_iu"
+  }
+}

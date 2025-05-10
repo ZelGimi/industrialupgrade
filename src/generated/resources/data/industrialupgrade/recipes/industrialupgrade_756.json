@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_200_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/tungsten"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "B B",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_164_element"
+  }
+}

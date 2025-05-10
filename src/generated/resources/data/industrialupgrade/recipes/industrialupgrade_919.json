@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/iron"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/invar"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BBB",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:capacitor/simple_capacitor"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/tempered_glass"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/nimonic"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_678_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/gadolinium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/superalloyhaynes"
+      }
+    ]
+  },
+  "pattern": [
+    "BEB",
+    "CAD",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:colonial_building/very_high_protection"
+  }
+}

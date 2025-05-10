@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=orewashing": {
+      "model": "industrialupgrade:block/moremachine3/orewashing"
+    },
+    "facing=south,type=orewashing": {
+      "model": "industrialupgrade:block/moremachine3/orewashing",
+      "y": 180
+    },
+    "facing=west,type=orewashing": {
+      "model": "industrialupgrade:block/moremachine3/orewashing",
+      "y": 270
+    },
+    "facing=east,type=orewashing": {
+      "model": "industrialupgrade:block/moremachine3/orewashing",
+      "y": 90
+    },
+    "facing=down,type=orewashing": {
+      "model": "industrialupgrade:block/moremachine3/orewashing",
+      "x": 90
+    },
+    "facing=up,type=orewashing": {
+      "model": "industrialupgrade:block/moremachine3/orewashing",
+      "x": 270
+    },
+    "facing=north,type=orewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active"
+    },
+    "facing=south,type=orewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "y": 180
+    },
+    "facing=west,type=orewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "y": 270
+    },
+    "facing=east,type=orewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "y": 90
+    },
+    "facing=down,type=orewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "x": 90
+    },
+    "facing=up,type=orewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "x": 270
+    },
+    "facing=north,type=orewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active"
+    },
+    "facing=south,type=orewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "y": 180
+    },
+    "facing=west,type=orewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "y": 270
+    },
+    "facing=east,type=orewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "y": 90
+    },
+    "facing=down,type=orewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "x": 90
+    },
+    "facing=up,type=orewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/orewashing_active",
+      "x": 270
+    }
+  }
+}

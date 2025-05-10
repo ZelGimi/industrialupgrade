@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:machineblockadvanced"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_35_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "minecraft:enchanted_book"
+      }
+    ],
+    "F": [
+      {
+        "tag": "forge:doubleplate/cadmium"
+      }
+    ]
+  },
+  "pattern": [
+    "FEF",
+    "BAC",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/enchanter_books"
+  }
+}

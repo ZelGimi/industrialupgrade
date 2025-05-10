@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=electric_squeezer": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer"
+    },
+    "facing=south,type=electric_squeezer": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer",
+      "y": 180
+    },
+    "facing=west,type=electric_squeezer": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer",
+      "y": 270
+    },
+    "facing=east,type=electric_squeezer": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer",
+      "y": 90
+    },
+    "facing=down,type=electric_squeezer": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer",
+      "x": 90
+    },
+    "facing=up,type=electric_squeezer": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer",
+      "x": 270
+    },
+    "facing=north,type=electric_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active"
+    },
+    "facing=south,type=electric_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "y": 180
+    },
+    "facing=west,type=electric_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "y": 270
+    },
+    "facing=east,type=electric_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "y": 90
+    },
+    "facing=down,type=electric_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "x": 90
+    },
+    "facing=up,type=electric_squeezer_invalid": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "x": 270
+    },
+    "facing=north,type=electric_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active"
+    },
+    "facing=south,type=electric_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "y": 180
+    },
+    "facing=west,type=electric_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "y": 270
+    },
+    "facing=east,type=electric_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "y": 90
+    },
+    "facing=down,type=electric_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "x": 90
+    },
+    "facing=up,type=electric_squeezer_active": {
+      "model": "industrialupgrade:block/basemachine/electric_squeezer_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:additionmodule/personality"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    " A ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/safe"
+  }
+}

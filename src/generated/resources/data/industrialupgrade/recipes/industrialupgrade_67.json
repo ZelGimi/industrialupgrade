@@ -1,0 +1,49 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_527_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_530_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:energy_tools/quantumaxe"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    },
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_532_element"
+      }
+    ],
+    "H": [
+      {
+        "tag": "forge:rods/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    "ADB",
+    "EFE",
+    "CHC"
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/spectralaxe"
+  }
+}

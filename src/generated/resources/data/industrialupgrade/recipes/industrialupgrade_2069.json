@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:bricks"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/inconel"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:hydro_turbine/hydro_turbine_casing_1"
+  }
+}

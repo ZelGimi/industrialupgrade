@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:solar_panel_glass/spe"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/osmium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/aluminiumlithium"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_696_element"
+  }
+}

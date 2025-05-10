@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/imp_replicator_side",
+    "down" : "industrialupgrade:blocks/imp_replicator_side",
+    "up" : "industrialupgrade:blocks/imp_replicator_top",
+    "north" : "industrialupgrade:blocks/imp_replicator_side",
+    "east" : "industrialupgrade:blocks/imp_replicator_side",
+    "south" : "industrialupgrade:blocks/imp_replicator_side",
+    "west" : "industrialupgrade:blocks/imp_replicator_side"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcell/itemcell"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/vanady"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "BAB",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_238_element"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=water_per_casing": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing"
+    },
+    "facing=south,type=water_per_casing": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "y": 180
+    },
+    "facing=west,type=water_per_casing": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "y": 270
+    },
+    "facing=east,type=water_per_casing": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "y": 90
+    },
+    "facing=down,type=water_per_casing": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "x": 90
+    },
+    "facing=up,type=water_per_casing": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "x": 270
+    },
+    "facing=north,type=water_per_casing_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing"
+    },
+    "facing=south,type=water_per_casing_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "y": 180
+    },
+    "facing=west,type=water_per_casing_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "y": 270
+    },
+    "facing=east,type=water_per_casing_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "y": 90
+    },
+    "facing=down,type=water_per_casing_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "x": 90
+    },
+    "facing=up,type=water_per_casing_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_casing",
+      "x": 270
+    }
+  }
+}

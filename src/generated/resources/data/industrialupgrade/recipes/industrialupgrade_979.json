@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:machines/advanced_solar_paneliu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    " A ",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/minipanel"
+  }
+}

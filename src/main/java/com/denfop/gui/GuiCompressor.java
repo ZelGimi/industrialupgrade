@@ -1,0 +1,62 @@
+package com.denfop.gui;
+
+import com.denfop.Constants;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentButton;
+import com.denfop.container.ContainerCompressor;
+import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.resources.ResourceLocation;
+
+public class GuiCompressor<T extends ContainerCompressor> extends GuiIU<ContainerCompressor> {
+
+    public GuiCompressor(ContainerCompressor guiContainer) {
+        super(guiContainer);
+        this.componentList.clear();
+        this.imageWidth = 186;
+        this.imageHeight = 211;
+        this.addComponent(new GuiComponent(this, 83, 57 - 26, 22, 22,
+                new Component<>(new ComponentButton(this.container.base, 0) {
+                    @Override
+                    public String getText() {
+                        return "+1";
+                    }
+                })
+        ));
+        this.addComponent(new GuiComponent(this, 83, 57 + 20, 22, 22,
+                new Component<>(new ComponentButton(this.container.base, 1) {
+                    @Override
+                    public String getText() {
+                        return "-1";
+                    }
+                })
+        ));
+    }
+
+
+    @Override
+    protected void drawForegroundLayer(PoseStack poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+        this.font.draw(poseStack, String.valueOf(this.container.base.getPressure()), 93, 60, ModUtils.convertRGBcolorToInt(15,
+                125, 205
+        ));
+    }
+
+
+    @Override
+    protected void drawBackgroundAndTitle(PoseStack poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        this.bindTexture();
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack,this.guiLeft + 83, this.guiTop + 57 - 26, 188, 43, 22, 22);
+        this.drawTexturedModalRect(poseStack,this.guiLeft + 80, this.guiTop + 57, 197, 26, 30, 15);
+        this.drawTexturedModalRect(poseStack,this.guiLeft + 83, this.guiTop + 57 + 20, 211, 43, 22, 22);
+
+    }
+
+    @Override
+    protected ResourceLocation getTexture() {
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor5.png");
+    }
+
+}

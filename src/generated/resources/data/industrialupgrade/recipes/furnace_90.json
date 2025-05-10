@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:blockspace2/ganymede_tungsten_ore"
+  },
+  "result": "industrialupgrade:itemingots/wolfram_ingot"
+}

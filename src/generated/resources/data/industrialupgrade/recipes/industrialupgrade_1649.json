@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/iron"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:stick"
+      }
+    ]
+  },
+  "pattern": [
+    "AA ",
+    "ABB",
+    "AA "
+  ],
+  "result": {
+    "item": "industrialupgrade:forge_hammer"
+  }
+}

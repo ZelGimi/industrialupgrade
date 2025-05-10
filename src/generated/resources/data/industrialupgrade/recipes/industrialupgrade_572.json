@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/mikhail"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:armour/rubber_boots",
+      "nbt": "{Damage:0}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_0_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/hazmatboosts"
+  }
+}

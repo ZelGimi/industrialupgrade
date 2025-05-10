@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/makemake_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/makemake_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/makemake_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/makemake_boulder"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:spacecobblestone/makemake_cobblestone"
+  }
+}

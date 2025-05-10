@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:spaceupgrademodule_schedule"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemplates/adamantite"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/redbrass"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/palladium"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:spaceupgrademodules/space_upgrademodule1"
+  }
+}

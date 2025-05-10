@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:circuit/circuit_part1"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:stick/zinc"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:circuit/circuit_part2"
+  }
+}

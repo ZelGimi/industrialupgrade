@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=uhv": {
+      "model": "industrialupgrade:block/basemachine/uhv"
+    },
+    "facing=south,type=uhv": {
+      "model": "industrialupgrade:block/basemachine/uhv",
+      "y": 180
+    },
+    "facing=west,type=uhv": {
+      "model": "industrialupgrade:block/basemachine/uhv",
+      "y": 270
+    },
+    "facing=east,type=uhv": {
+      "model": "industrialupgrade:block/basemachine/uhv",
+      "y": 90
+    },
+    "facing=down,type=uhv": {
+      "model": "industrialupgrade:block/basemachine/uhv",
+      "x": 90
+    },
+    "facing=up,type=uhv": {
+      "model": "industrialupgrade:block/basemachine/uhv",
+      "x": 270
+    },
+    "facing=north,type=uhv_invalid": {
+      "model": "industrialupgrade:block/basemachine/uhv_active"
+    },
+    "facing=south,type=uhv_invalid": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "y": 180
+    },
+    "facing=west,type=uhv_invalid": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "y": 270
+    },
+    "facing=east,type=uhv_invalid": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "y": 90
+    },
+    "facing=down,type=uhv_invalid": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "x": 90
+    },
+    "facing=up,type=uhv_invalid": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "x": 270
+    },
+    "facing=north,type=uhv_active": {
+      "model": "industrialupgrade:block/basemachine/uhv_active"
+    },
+    "facing=south,type=uhv_active": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "y": 180
+    },
+    "facing=west,type=uhv_active": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "y": 270
+    },
+    "facing=east,type=uhv_active": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "y": 90
+    },
+    "facing=down,type=uhv_active": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "x": 90
+    },
+    "facing=up,type=uhv_active": {
+      "model": "industrialupgrade:block/basemachine/uhv_active",
+      "x": 270
+    }
+  }
+}

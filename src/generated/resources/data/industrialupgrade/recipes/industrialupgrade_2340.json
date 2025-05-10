@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/meteoric"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:book"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gems/ruby"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "ABA",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:tome_research"
+  }
+}

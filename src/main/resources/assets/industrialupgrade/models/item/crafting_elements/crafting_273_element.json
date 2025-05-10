@@ -1,0 +1,20 @@
+{
+	"parent": "industrialupgrade:item/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/advanced_circuit"
+	},
+  "overrides" : [
+    {
+      "predicate" : {
+        "level" : 0
+      },
+      "model" : "industrialupgrade:item/crafting_elements/crafting_273_element_0"
+    },
+    {
+      "predicate" : {
+        "level" : 1
+      },
+      "model" : "industrialupgrade:item/crafting_elements/crafting_273_element_1"
+    }
+	]
+}
