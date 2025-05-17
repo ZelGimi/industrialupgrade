@@ -3,12 +3,7 @@ package com.denfop.integration.jei.plasticcreator;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
-import com.denfop.api.recipe.InvSlotMultiRecipes;
+import com.denfop.api.gui.*;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
@@ -38,7 +33,6 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class PlasticCreatorCategory extends GuiIU implements IRecipeCategory<PlasticCreatorHandler> {

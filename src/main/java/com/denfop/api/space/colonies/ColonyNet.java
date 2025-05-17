@@ -276,7 +276,7 @@ public class ColonyNet implements IColonyNet {
         list = new LinkedList<>();
         List<Sends> list1 = new LinkedList<>();
         for (int i = 0; i < nbt1.size(); i++) {
-            CompoundTag nbt2 = nbt.getCompound(i);
+            CompoundTag nbt2 = nbt1.getCompound(i);
             Sends sends1 = new Sends(nbt2);
             list1.add(sends1);
         }

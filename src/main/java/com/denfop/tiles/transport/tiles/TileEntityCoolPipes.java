@@ -12,7 +12,6 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.transport.types.CableType;
 import com.denfop.tiles.transport.types.CoolType;
 import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.utils.ModUtils;

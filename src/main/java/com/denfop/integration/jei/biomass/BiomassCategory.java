@@ -2,11 +2,7 @@ package com.denfop.integration.jei.biomass;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentProgress;

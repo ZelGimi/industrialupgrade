@@ -1171,9 +1171,6 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
         );
     }
 
-   /* @Override
-    public IAdvInventory getInventory(final EntityPlayer player, final ItemStack stack) {
-        return new ItemStackLegsBags(player, stack);
-    }
-*/
+
+
 }

@@ -8,7 +8,6 @@ import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
 import com.denfop.items.modules.ItemWaterRotorsUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
-import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;

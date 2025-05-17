@@ -3,7 +3,6 @@ package com.denfop.blocks;
 import com.denfop.Constants;
 import com.denfop.DataBlock;
 import com.denfop.DataMultiBlock;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
@@ -19,8 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.List;

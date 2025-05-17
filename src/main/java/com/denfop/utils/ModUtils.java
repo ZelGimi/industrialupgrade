@@ -105,17 +105,31 @@ public class ModUtils {
     public static int getFuelValue(ItemStack stack, boolean allowLava) {
         if (ModUtils.isEmpty(stack)) {
             return 0;
-        } else {
-            FluidStack liquid = FluidUtil.getFluidContained(stack).orElse(FluidStack.EMPTY);
-            boolean isLava = !liquid.isEmpty() && liquid.getAmount() > 0 && liquid.getFluid() == Fluids.LAVA;
-            if (isLava && !allowLava) {
-                return 0;
-            } else {
-                int ret = AbstractFurnaceBlockEntity.getFuel().get(stack.getItem());
-                return isLava ? ret / 10 : ret;
-            }
         }
+
+        FluidStack liquid = FluidStack.EMPTY;
+        try {
+            Optional<FluidStack> optional = FluidUtil.getFluidContained(stack);
+            if (optional != null && optional.isPresent()) {
+                liquid = optional.get();
+            }
+        } catch (Exception e) {
+            liquid = FluidStack.EMPTY;
+        }
+
+        boolean isLava = !liquid.isEmpty() && liquid.getAmount() > 0 && liquid.getFluid() == Fluids.LAVA;
+        if (isLava && !allowLava) {
+            return 0;
+        }
+
+        Integer ret = AbstractFurnaceBlockEntity.getFuel().get(stack.getItem());
+        if (ret == null) {
+            return 0;
+        }
+
+        return isLava ? ret / 10 : ret;
     }
+
 
 
     public static ItemStack get(Player player, InteractionHand hand) {

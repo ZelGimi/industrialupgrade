@@ -2,7 +2,6 @@ package com.denfop.integration.jei.recycler;
 
 
 import com.denfop.IUItem;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;

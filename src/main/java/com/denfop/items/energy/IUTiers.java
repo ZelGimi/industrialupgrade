@@ -1,11 +1,11 @@
 package com.denfop.items.energy;
 
-import java.util.function.Supplier;
-
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.function.Supplier;
 
 public enum IUTiers implements Tier {
 

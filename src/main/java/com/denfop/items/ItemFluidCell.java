@@ -1,6 +1,7 @@
 package com.denfop.items;
 
 import com.denfop.IUItem;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,9 +20,9 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -29,7 +30,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
@@ -122,58 +122,36 @@ public class ItemFluidCell extends ItemFluidContainer {
                                 player, false
                         )) {
                             if (!world.isClientSide()) {
-                                ModUtils.dropAsEntity(world, blockpos, new ItemStack(this, 1));
+                                ModUtils.dropAsEntity(world, player.blockPosition(), new ItemStack(this, 1));
                             }
                         }
                         return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
                     }
 
                 } else {
-                    if (world.getBlockEntity(blockpos) == null) {
-                        BlockState state = world.getBlockState(blockpos);
-                        Block block = state.getBlock();
-                        if (block instanceof IFluidBlock && ((IFluidBlock) block).canDrain(world, blockpos)) {
-                            Fluid liquid = ((IFluidBlock) block).getFluid();
-                            ItemStack stack = this.getItemStack(liquid);
-                            world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 11);
-                            itemstack.shrink(1);
-                            if (!ModUtils.storeInventoryItem(stack, player, false)) {
-                                if (!world.isClientSide()) {
-                                    ModUtils.dropAsEntity(world, blockpos, stack);
-                                }
+                    BlockState block = world.getBlockState(blockpos);
+                    if (block.getMaterial().isLiquid()) {
+                        FluidState fluidState = block.getBlock().getFluidState(block);
 
+                        if (!fluidState.isSource()) {
+                            return InteractionResultHolder.fail(itemstack);
+                        }
+
+                        FluidStack ret = new FluidStack(fluidState.getType(), 1000);
+                        ItemStack stack = new ItemStack(this);
+                        FluidHandlerFix.getFluidHandler(stack).fill(ret, IFluidHandler.FluidAction.EXECUTE);
+
+                        stack = stack.copy();
+                        if (!ModUtils.storeInventoryItem(stack, player, false)) {
+
+                            if (!world.isClientSide()) {
+                                ModUtils.dropAsEntity(world, player.blockPosition(), stack);
                             }
-                            return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
-
-
-                        } else if (block == Blocks.WATER || block == Blocks.LAVA) {
-                            Fluid liquid;
-                            if (block == Blocks.WATER) {
-                                liquid = Fluids.WATER;
-                            } else {
-                                liquid = Fluids.LAVA;
-                            }
-                            ItemStack stack = this.getItemStack(liquid);
-                            world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 11);
-                            itemstack.shrink(1);
-                            if (!ModUtils.storeInventoryItem(stack, player, false)) {
-                                if (!world.isClientSide()) {
-                                    ModUtils.dropAsEntity(world, blockpos, stack);
-                                }
-
-                            }
-                            return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
 
                         }
-                    } else {
-                        BlockEntity blockEntity = world.getBlockEntity(blockpos);
-                        if (blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null) != null) {
-                            IFluidHandler handler = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
-                            if (!handler.drain(1000, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-                                FluidStack fluidStack = handler.drain(1000, IFluidHandler.FluidAction.EXECUTE);
-                                fs.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
-                            }
-                        }
+                        world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 3);
+                        itemstack.shrink(1);
+                        return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
                     }
                 }
 

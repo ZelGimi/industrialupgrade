@@ -20,9 +20,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 

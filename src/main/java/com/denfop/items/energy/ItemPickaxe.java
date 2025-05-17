@@ -1,12 +1,9 @@
 package com.denfop.items.energy;
 
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
 
 public class ItemPickaxe extends PickaxeItem {
     private final String name;

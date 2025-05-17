@@ -106,7 +106,7 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteH
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GraphiteHandler recipe, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotMultiRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {

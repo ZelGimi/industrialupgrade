@@ -24,7 +24,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -42,6 +44,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -59,7 +62,7 @@ public class ItemKatana extends DiggerItem implements IEnergyItem, IUpgradeItem,
     private String nameItem;
 
     public ItemKatana() {
-        super(1, 2, Tiers.DIAMOND, null, new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
+        super(1, 2, Tiers.DIAMOND,  new TagKey<>(Registry.BLOCK_REGISTRY,new ResourceLocation("","block")), new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
         this.soundTicker = 0;
         this.maxCharge = 500000;
         this.transferLimit = 5000;

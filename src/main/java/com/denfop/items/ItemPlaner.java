@@ -93,8 +93,8 @@ public class ItemPlaner extends Item {
                                 ItemBlockTileEntity item1 = (ItemBlockTileEntity) stack1.getItem();
                                 BlockEntity tileEntity = world.getBlockEntity(pos2);
                                 if (tileEntity == null && canPlace(world.getBlockState(pos2))) {
-                                    BlockPlaceContext placeContext = new BlockPlaceContext(context.getLevel(), context.getPlayer(), context.getHand(), context.getItemInHand(), new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos2, false));
-                                    if (item1.place(placeContext) == InteractionResult.SUCCESS) {
+                                    BlockPlaceContext placeContext = new BlockPlaceContext(context.getLevel(), context.getPlayer(), context.getHand(), stack1, new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos2, false));
+                                    if (item1.place(placeContext) == InteractionResult.CONSUME) {
                                         stack1.shrink(1);
                                         TileEntityMultiBlockElement tileEntity2 = (TileEntityMultiBlockElement) world.getBlockEntity(pos2);
                                         Direction facing = ((TileMultiBlockBase) mainMultiBlock).getFacing();
@@ -123,7 +123,7 @@ public class ItemPlaner extends Item {
                 return InteractionResult.SUCCESS;
             }
         }
-        return super.onItemUseFirst(stack, context);
+        return InteractionResult.FAIL;
     }
 
     private Direction adjustRotation(Direction facing, Direction rotation) {

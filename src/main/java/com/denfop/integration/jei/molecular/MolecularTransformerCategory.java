@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
-import com.denfop.blocks.mechanism.BlockMolecular;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;

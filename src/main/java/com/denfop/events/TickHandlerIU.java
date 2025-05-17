@@ -6,7 +6,10 @@ import com.denfop.network.WorldData;
 import com.denfop.world.IWorldTickCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,8 +37,13 @@ public class TickHandlerIU {
 
     @SubscribeEvent
     public void hurt(LivingHurtEvent event) {
-        if (event.getEntity() instanceof Player) {
-            float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), ((Player) event.getEntity()).getInventory().armor, event.getSource(), event.getAmount());
+        if (event.getEntity() instanceof LivingEntity) {
+            NonNullList<ItemStack> armorList = NonNullList.withSize(4, ItemStack.EMPTY);
+            armorList.set(0, (event.getEntity().getItemBySlot(EquipmentSlot.FEET)));
+            armorList.set(1, (event.getEntity().getItemBySlot(EquipmentSlot.LEGS)));
+            armorList.set(2, (event.getEntity().getItemBySlot(EquipmentSlot.CHEST)));
+            armorList.set(3, (event.getEntity().getItemBySlot(EquipmentSlot.HEAD)));
+            float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getAmount());
             event.setAmount(damageAmount);
         }
     }

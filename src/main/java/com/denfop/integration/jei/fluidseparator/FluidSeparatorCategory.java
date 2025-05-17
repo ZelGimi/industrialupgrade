@@ -2,12 +2,7 @@ package com.denfop.integration.jei.fluidseparator;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockRefiner;
 import com.denfop.gui.GuiIU;

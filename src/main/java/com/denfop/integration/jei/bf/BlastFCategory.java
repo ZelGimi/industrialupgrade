@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockBlastFurnace;
 import com.denfop.componets.Fluids;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
@@ -20,10 +19,8 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 

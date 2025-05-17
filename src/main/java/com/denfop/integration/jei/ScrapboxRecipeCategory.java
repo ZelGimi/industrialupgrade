@@ -3,12 +3,8 @@ package com.denfop.integration.jei;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.gui.GuiIU;
-import com.denfop.integration.jei.IRecipeCategory;
-import com.denfop.integration.jei.JeiInform;
-import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -21,13 +17,8 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ScrapboxRecipeCategory extends GuiIU implements IRecipeCategory<ScrapboxRecipeHandler> {
 

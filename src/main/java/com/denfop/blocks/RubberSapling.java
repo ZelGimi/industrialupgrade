@@ -3,23 +3,18 @@ package com.denfop.blocks;
 import com.denfop.IUItem;
 import com.denfop.world.RubTreeFeature;
 import com.denfop.world.RubberTreeGrower;
-import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 
 import java.util.List;
-import java.util.Optional;
 
-import static com.denfop.world.WorldBaseGen.RUB_TREE;
 import static com.denfop.world.WorldBaseGen.RUB_TREE_GENERATOR;
 
 public class RubberSapling extends SaplingBlock {

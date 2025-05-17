@@ -3,12 +3,10 @@ package com.denfop.integration.jei.genstar;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-
 import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.mechanism.TileEntityNuclearWasteRecycler;
 import com.mojang.blaze3d.vertex.PoseStack;

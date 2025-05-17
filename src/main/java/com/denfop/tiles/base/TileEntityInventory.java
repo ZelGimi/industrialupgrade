@@ -93,7 +93,7 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
         try {
             CompoundTag invSlotsTag = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
             for (final InvSlot invSlot : this.invSlots) {
-                invSlot.readFromNbt(invSlotsTag.getCompound(String.valueOf(this.invSlots.indexOf(invSlot))));
+                invSlot.readFromNbt(invSlotsTag.getCompound(String.valueOf(findSlot(invSlot))));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -108,7 +108,7 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
         for (final InvSlot invSlot : this.invSlots) {
             CompoundTag invSlotTag = new CompoundTag();
             invSlot.writeToNbt(invSlotTag);
-            invSlotsTag.put(String.valueOf(this.invSlots.indexOf(invSlot)), invSlotTag);
+            invSlotsTag.put(String.valueOf(findSlot(invSlot)), invSlotTag);
         }
         try {
             EncoderHandler.encode(customPacketBuffer,invSlotsTag);
@@ -382,27 +382,35 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
     public void readFromNBT(CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         CompoundTag invSlotsTag = nbtTagCompound.getCompound("InvSlots");
-
-        for (final InvSlot invSlot : this.invSlots) {
-            invSlot.readFromNbt(invSlotsTag.getCompound(String.valueOf(this.invSlots.indexOf(invSlot))));
+       for (int i = 0; i < invSlots.size(); i++){
+            InvSlot invSlot = invSlots.get(i);
+            invSlot.readFromNbt(invSlotsTag.getCompound(String.valueOf(i)));
         }
     }
 
     public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
         CompoundTag invSlotsTag = new CompoundTag();
-
-        for (final InvSlot invSlot : this.invSlots) {
+        for (int i = 0; i < invSlots.size(); i++){
+            InvSlot invSlot = invSlots.get(i);
             CompoundTag invSlotTag = new CompoundTag();
             invSlot.writeToNbt(invSlotTag);
-            invSlotsTag.put(String.valueOf(this.invSlots.indexOf(invSlot)), invSlotTag);
+            invSlotsTag.put(String.valueOf(i), invSlotTag);
         }
 
         nbt.put("InvSlots", invSlotsTag);
 
         return nbt;
     }
-
+    public int findSlot(InvSlot invSlot){
+        for (int i = 0; i < invSlots.size(); i++){
+            InvSlot invSlot1 = invSlots.get(i);
+            if (invSlot.equals(invSlot1)){
+                return i;
+            }
+        }
+        return -1;
+    }
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack p_19240_, Direction p_19241_) {
         InvSlot targetSlot = this.getInventorySlot(index);

@@ -77,13 +77,16 @@ public class PerAlloySmelterHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("peralloysmelter")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
-                    container.input.getInputs().get(1).getInputs().get(0),
-                    container.input.getInputs().get(2).getInputs().get(0), container.input.getInputs().get(3).getInputs().get(0),
-                    container.input.getInputs().get(4).getInputs().get(0),
-                    container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"),container
-            );
-
+            try {
+                addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+                        container.input.getInputs().get(1).getInputs().get(0),
+                        container.input.getInputs().get(2).getInputs().get(0), container.input.getInputs().get(3).getInputs().get(0),
+                        container.input.getInputs().get(4).getInputs().get(0),
+                        container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"), container
+                );
+            }catch (Exception e){
+                System.out.println(2);
+            }
 
         }
     }

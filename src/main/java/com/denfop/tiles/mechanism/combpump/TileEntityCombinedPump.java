@@ -42,8 +42,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import static net.minecraft.world.level.material.FlowingFluid.LEVEL;
-
 public class TileEntityCombinedPump extends TileElectricLiquidTankInventory implements IUpgradableBlock, IType {
 
     public final int defaultTier;

@@ -3,7 +3,7 @@ package com.denfop.integration.jei.antiupgradeblock;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -11,7 +11,6 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import com.denfop.integration.jei.IRecipeCategory;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;

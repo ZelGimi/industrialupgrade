@@ -58,7 +58,7 @@ public class ItemDeplanner extends Item {
             IMainMultiBlock mainMultiBlock = (IMainMultiBlock) tile;
             List<ItemStack> itemStackList = new ArrayList<>();
 
-            if (mainMultiBlock.isFull()) {
+            if (mainMultiBlock.isFull() && !world.isClientSide) {
                 for (Map.Entry<BlockPos, ItemStack> entry : mainMultiBlock.getMultiBlockStucture().ItemStackMap.entrySet()) {
                     BlockPos pos1;
                     if (entry.getKey().equals(BlockPos.ZERO)) {

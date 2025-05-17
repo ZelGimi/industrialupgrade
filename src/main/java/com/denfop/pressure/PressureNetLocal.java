@@ -276,38 +276,8 @@ public class PressureNetLocal implements IPressureNet {
 
         final BlockPos tile1;
         tile1 = emitter.getPos();
-        if (tile1 != null) {
+        return  emitter.getValidReceivers();
 
-            final List<InfoTile<IPressureTile>> validReceivers = new LinkedList<>();
-            for (InfoTile<IPressureTile> entry : emitter.getValidReceivers()) {
-                IPressureTile target2;
-                target2 = entry.tileEntity;
-                if (target2 == emitter) {
-                    continue;
-                }
-                if (target2 != null) {
-                    final Direction inverseDirection2 = entry.direction;
-                    if (target2 instanceof IPressureAcceptor && !(target2 instanceof IPressureConductor && emitter instanceof IPressureConductor)) {
-                        final IPressureEmitter sender2 = (IPressureEmitter) emitter;
-                        final IPressureAcceptor receiver2 = (IPressureAcceptor) target2;
-                        if (sender2.emitsPressureTo(receiver2, inverseDirection2.getOpposite()) && receiver2.acceptsPressureFrom(
-                                sender2,
-                                inverseDirection2
-                        )) {
-                            validReceivers.add(entry);
-                        }
-                    } else {
-                        validReceivers.add(entry);
-                    }
-                }
-
-                return validReceivers;
-            }
-
-        }
-
-
-        return Collections.emptyList();
     }
 
     public void addTileEntity(final BlockPos coords, final IPressureTile tile) {

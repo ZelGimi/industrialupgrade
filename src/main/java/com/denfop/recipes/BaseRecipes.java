@@ -2,7 +2,6 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.TileBlockCreator;

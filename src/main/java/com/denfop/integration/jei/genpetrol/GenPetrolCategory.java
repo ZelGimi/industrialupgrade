@@ -3,7 +3,6 @@ package com.denfop.integration.jei.genpetrol;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;

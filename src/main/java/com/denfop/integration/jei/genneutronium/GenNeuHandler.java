@@ -1,7 +1,6 @@
 package com.denfop.integration.jei.genneutronium;
 
 
-import com.denfop.Config;
 import com.denfop.blocks.FluidName;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;

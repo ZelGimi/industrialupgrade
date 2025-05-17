@@ -5,7 +5,6 @@ import com.denfop.blocks.BlockDeposits1;
 import com.denfop.blocks.BlockDeposits2;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.world.level.block.Block;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;

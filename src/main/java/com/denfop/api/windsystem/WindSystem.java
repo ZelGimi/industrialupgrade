@@ -376,7 +376,7 @@ public class WindSystem implements IWindSystem {
             } else {
                 coef = coef * (150D / y);
             }
-            return coef * 27;
+            return Math.max(0, coef * 27);
         } else {
             double coef = this.Wind_Strength;
             coef += rotor.getMinWindSpeed();
@@ -389,7 +389,7 @@ public class WindSystem implements IWindSystem {
             } else {
                 coef = coef * (150D / y);
             }
-            return coef * 27;
+            return Math.max(0, coef * 27);
         }
     }
 

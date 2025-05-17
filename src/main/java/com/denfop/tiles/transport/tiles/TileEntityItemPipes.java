@@ -1,7 +1,6 @@
 package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.transport.*;
@@ -17,10 +16,8 @@ import com.denfop.gui.GuiCore;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.transport.types.HeatType;
 import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.tiles.transport.types.ItemType;
-import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

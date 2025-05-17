@@ -1,9 +1,7 @@
 package com.denfop.items;
 
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 
 public class CapabilityFluidHandlerItem extends FluidHandlerItemStack  {

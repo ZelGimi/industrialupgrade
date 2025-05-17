@@ -81,6 +81,13 @@ public class IndustrialOrePurifierCategory extends GuiIU implements IRecipeCateg
 
     @Override
     public void draw(IndustrialOrePurifierHandler recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+        int y = 58;
+        int x = 80;
+
+        int chance = recipe.getChance();
+
+        this.drawSplitString(stack, "" + chance + " SE/t", x, y, 140 - x, 4210752);
+
         progress++;
         if (this.energy < 100) {
             energy++;

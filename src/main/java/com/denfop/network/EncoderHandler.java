@@ -256,6 +256,7 @@ public class EncoderHandler {
                 else
                     encode(os, Fluids.EMPTY, false);
                 os.writeInt(fs.getAmount());
+                if (!fs.isEmpty())
                 encode(os, fs.getTag(), true);
                 break;
             case FluidTank:

@@ -459,7 +459,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     }
                 }
                 if (this.multimachine.getTank() != null) {
-                    if (!this.multimachine.getTank().getFluid().isEmpty() || this.multimachine.getTank().getFluid().getAmount() < 1000) {
+                    if (this.multimachine.getTank().getFluid().isEmpty() || this.multimachine.getTank().getFluid().getAmount() < 1000) {
                         return;
                     }
                 }

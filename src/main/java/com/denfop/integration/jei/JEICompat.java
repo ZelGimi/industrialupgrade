@@ -156,6 +156,7 @@ import com.denfop.integration.jei.genred.GenRedHandler;
 import com.denfop.integration.jei.gense.GenSECategory;
 import com.denfop.integration.jei.gense.GenSEHandler;
 import com.denfop.integration.jei.genstar.GenStarCategory;
+import com.denfop.integration.jei.genstar.GenStarHandler;
 import com.denfop.integration.jei.genstone.GenStoneCategory;
 import com.denfop.integration.jei.genstone.GenStoneHandler;
 import com.denfop.integration.jei.geothermal.GeoThermalCategory;
@@ -444,7 +445,7 @@ public class JEICompat implements IModPlugin {
     public static JeiInform gen_rad = new JeiInform("gen_rad", GenRadCategory.class, GenRadHandler.class);
     public static JeiInform gen_red = new JeiInform("gen_red", GenRedCategory.class, GenRedHandler.class);
     public static JeiInform gen_se = new JeiInform("gen_se", GenSECategory.class, GenSEHandler.class);
-    public static JeiInform gen_star = new JeiInform("gen_star", GenStarCategory.class, GenSEHandler.class);
+    public static JeiInform gen_star = new JeiInform("gen_star", GenStarCategory.class, GenStarHandler.class);
     public static JeiInform gen_stone = new JeiInform("gen_stone", GenStoneCategory.class, GenStoneHandler.class);
     public static JeiInform geothermal = new JeiInform("geothermal", GeoThermalCategory.class, GeoThermalHandler.class);
     public static JeiInform graphite = new JeiInform("graphite", GraphiteCategory.class, GraphiteHandler.class);

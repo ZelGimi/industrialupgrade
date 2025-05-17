@@ -5,7 +5,6 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockCokeOven;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
@@ -22,7 +21,6 @@ import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 

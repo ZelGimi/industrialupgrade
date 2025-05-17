@@ -127,7 +127,7 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
                 "forge:ingots/vanady", "forge:ingots/Cobalt",
                 new ItemStack(IUItem.alloysingot.getStack(6), 1), 4500
         );
-        addAlloysmelter("forge:ingots/Aluminum",
+        addAlloysmelter("forge:ingots/Aluminium",
                 "forge:ingots/vanady", "forge:ingots/Cobalt",
                 new ItemStack(IUItem.alloysingot.getStack(6), 1), 4500
         );
@@ -147,7 +147,7 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
                 3000
         );
 
-        addAlloysmelter("forge:ingots/Aluminum", "forge:ingots/Magnesium", Items.FLINT, new ItemStack(IUItem.alloysingot.getStack(10), 1), 3000);
+        addAlloysmelter("forge:ingots/Aluminium", "forge:ingots/Magnesium", Items.FLINT, new ItemStack(IUItem.alloysingot.getStack(10), 1), 3000);
 
         addAlloysmelter(
                 "forge:gems/Beryllium",

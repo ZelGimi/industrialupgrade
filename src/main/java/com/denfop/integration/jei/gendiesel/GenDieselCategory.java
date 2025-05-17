@@ -3,11 +3,9 @@ package com.denfop.integration.jei.gendiesel;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.gui.GuiIU;
-
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
 import com.denfop.recipes.ItemStackHelper;

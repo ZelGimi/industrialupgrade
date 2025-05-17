@@ -3,8 +3,6 @@ package com.denfop.items.energy;
 import com.denfop.IUCore;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 
 public class ItemShovel extends ShovelItem {

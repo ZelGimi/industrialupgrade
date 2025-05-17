@@ -27,6 +27,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -42,6 +43,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,7 +54,7 @@ import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-public class ItemQuantumSaber extends DiggerItem implements IEnergyItem, IUpgradeItem, IProperties {
+public class ItemQuantumSaber extends TieredItem implements IEnergyItem, IUpgradeItem, IProperties {
     public static int ticker = 0;
     public final int maxCharge;
     public final int transferLimit;
@@ -65,17 +69,41 @@ public class ItemQuantumSaber extends DiggerItem implements IEnergyItem, IUpgrad
             int maxCharge,
             int transferLimit, int tier, int activedamage1, int damage
     ) {
-        super(0, 2, Tiers.DIAMOND, null, new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
+        super(Tiers.DIAMOND,  new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
         this.soundTicker = 0;
         this.maxCharge = maxCharge;
         this.transferLimit = transferLimit;
         this.tier = tier;
         this.activedamage = activedamage1;
         this.damage1 = damage;
-
         IUCore.proxy.addProperties(this);
         runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.SABERS.list));
+
     }
+    public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
+        return !pPlayer.isCreative();
+    }
+
+    public float getDestroySpeed(ItemStack pStack, BlockState pState) {
+        if (pState.is(Blocks.COBWEB)) {
+            return 15.0F;
+        } else {
+            Material material = pState.getMaterial();
+            return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && !pState.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
+        }
+    }
+    public boolean isCorrectToolForDrops(BlockState pBlock) {
+        return pBlock.is(Blocks.COBWEB);
+    }
+
+    /**
+     * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
+     */
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
+        return pEquipmentSlot == EquipmentSlot.MAINHAND ? getAttributeModifiers(EquipmentSlot.MAINHAND,new ItemStack(this)) : super.getDefaultAttributeModifiers(pEquipmentSlot);
+    }
+
+
     protected String getOrCreateDescriptionId() {
         if (this.nameItem == null) {
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", Registry.ITEM.getKey(this)));

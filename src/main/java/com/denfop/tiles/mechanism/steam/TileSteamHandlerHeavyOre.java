@@ -55,24 +55,17 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
     private int[] col;
     private boolean work = false;
 
-    public TileSteamHandlerHeavyOre(BlockPos pos, BlockState state) {
-        this(1, 300, 3, EnumTypeStyle.DEFAULT,pos,state);
-    }
 
     public TileSteamHandlerHeavyOre(
-            int energyPerTick,
-            int length,
-            int outputSlots,
-            EnumTypeStyle enumTypeSlot,
             BlockPos pos, BlockState state) {
         super(0, 1, 1,BlockBaseMachine3.steam_handler_ore,pos,state);
-        this.enumTypeSlot = enumTypeSlot;
-        this.outputSlot = new InvSlotOutput(this, outputSlots + 2 * enumTypeSlot.ordinal());
+        this.enumTypeSlot = EnumTypeStyle.DEFAULT;
+        this.outputSlot = new InvSlotOutput(this, 3 + 2 * enumTypeSlot.ordinal());
         this.inputSlotA = new InvSlotRecipes(this, "handlerho", this);
         this.col = new int[0];
         this.coef = getCoef();
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
-                (short) length
+                (short) 300
         ));
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = fluids.addTank("fluidTank2", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
@@ -83,8 +76,8 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 3));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.steam.setFluidTank(fluidTank);
-        this.componentProcess = this.addComponent(new ComponentSteamProcess(this, (int) (length / this.getSpeed()),
-                energyPerTick, 3
+        this.componentProcess = this.addComponent(new ComponentSteamProcess(this, (int) (300 / this.getSpeed()),
+                1, 3
         ) {
             @Override
             public void operateWithMax(final MachineRecipe output) {

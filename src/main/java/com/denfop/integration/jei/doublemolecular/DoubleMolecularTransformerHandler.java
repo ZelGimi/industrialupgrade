@@ -2,7 +2,6 @@ package com.denfop.integration.jei.doublemolecular;
 
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;

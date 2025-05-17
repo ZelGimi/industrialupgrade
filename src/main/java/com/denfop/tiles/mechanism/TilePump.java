@@ -31,15 +31,12 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-
-import static net.minecraft.world.level.material.FlowingFluid.LEVEL;
 
 public class TilePump extends TileElectricLiquidTankInventory implements IUpgradableBlock, IType {
 

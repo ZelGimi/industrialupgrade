@@ -9,7 +9,6 @@ import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.integration.jei.gendiesel.GenDieselHandler;
 import com.denfop.tiles.mechanism.multimechanism.simple.TileGearMachine;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -22,7 +21,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;

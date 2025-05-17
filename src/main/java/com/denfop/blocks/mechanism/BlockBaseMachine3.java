@@ -109,7 +109,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     gas_combiner(TileEntityGasCombiner.class, 26),
     analyzer_chest(TileEntityAnalyzerChest.class, 27),
     simple_wind_generator(TileSimpleWindGenerator.class, 28),
-    adv_wind_generator(TileAdvWindGenerator.class, 29),
+ adv_wind_generator(TileAdvWindGenerator.class, 29),
     imp_wind_generator(TileImpWindGenerator.class, 30),
     per_wind_generator(TilePerWindGenerator.class, 31),
     energy_controller(TileEnergyController.class, 32),
@@ -382,7 +382,7 @@ rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
             try {
                 this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
             } catch (Exception e) {
-
+                System.out.println(2);
             }
         }
     }

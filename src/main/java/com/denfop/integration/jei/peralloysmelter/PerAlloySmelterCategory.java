@@ -32,8 +32,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class PerAlloySmelterCategory extends GuiIU implements IRecipeCategory<PerAlloySmelterHandler> {
@@ -105,7 +103,7 @@ public class PerAlloySmelterCategory extends GuiIU implements IRecipeCategory<Pe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PerAlloySmelterHandler recipe, IFocusGroup focuses) {
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotMultiRecipes.class);
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
         final List<ItemStack> inputs = recipe.getInputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
@@ -115,7 +113,7 @@ public class PerAlloySmelterCategory extends GuiIU implements IRecipeCategory<Pe
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX()-5, outputSlot.getJeiY()).addItemStack(recipe.getOutput());
     }
 
     @Override

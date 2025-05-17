@@ -6,12 +6,8 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerRodFactory;
-import com.denfop.network.IUpdatableTileEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 
 public class GuiRodFactory<T extends ContainerRodFactory> extends GuiIU<ContainerRodFactory> {
 

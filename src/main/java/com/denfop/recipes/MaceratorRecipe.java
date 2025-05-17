@@ -2,7 +2,6 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;

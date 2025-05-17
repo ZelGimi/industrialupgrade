@@ -18,6 +18,7 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.network.packet.PacketUpdateTile;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileExtractor;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
@@ -230,22 +231,34 @@ public abstract class TileEntityBlock extends BlockEntity {
 
     @Override
     public void setRemoved() {
-        this.onUnloaded();
+        if (loaded)
+            this.onUnloaded();
         super.setRemoved();
+    }
+
+    boolean loaded = false;
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (!this.loaded) {
+            Level world = this.getLevel();
+            if (this.worldPosition != null) {
+                TickHandlerIU.requestSingleWorldTick(world, world1 -> {
+                    TileEntityBlock.this.onLoaded();
+                });
+            }
+        }
     }
 
     @Override
     public void clearRemoved() {
         super.clearRemoved();
-        Level world = this.getLevel();
-        if (this.worldPosition != null) {
-            TickHandlerIU.requestSingleWorldTick(world, world1 -> {
-                TileEntityBlock.this.onLoaded();
-            });
-        }
+
     }
 
     public void onLoaded() {
+        this.loaded = true;
         this.pos = worldPosition;
         this.componentList.forEach(AbstractComponent::onLoaded);
         this.rerender();
@@ -280,8 +293,8 @@ public abstract class TileEntityBlock extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
-        writeToNBT(nbt);
 
+        writeToNBT(nbt);
     }
 
     @javax.annotation.Nullable
@@ -699,11 +712,13 @@ public abstract class TileEntityBlock extends BlockEntity {
 
     @Override
     public void onChunkUnloaded() {
-        this.onUnloaded();
+        if (loaded)
+            this.onUnloaded();
         super.onChunkUnloaded();
     }
 
     public void onUnloaded() {
+        this.loaded = false;
         if (this.needUpdate())
             IUCore.network.getServer().removeTileToOvertimeUpdate(this);
         this.componentList.forEach(AbstractComponent::onUnloaded);
@@ -903,7 +918,7 @@ public abstract class TileEntityBlock extends BlockEntity {
                     break;
                 case Generator:
                     if (fortune < 2) {
-                             drop = new ItemStack(IUItem.basemachine2.getItem(78), 1);
+                        drop = new ItemStack(IUItem.basemachine2.getItem(78), 1);
                     }
                     break;
                 case None:
@@ -930,6 +945,7 @@ public abstract class TileEntityBlock extends BlockEntity {
         packet.writeByte(this.facing);
         return packet;
     }
+
     public CompoundTag getNBTFromSlot(CustomPacketBuffer customPacketBuffer) {
         try {
             InvSlot slot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
@@ -939,6 +955,7 @@ public abstract class TileEntityBlock extends BlockEntity {
         }
 
     }
+
     public void updateField(String name, CustomPacketBuffer is) {
 
         if (name.equals("active")) {

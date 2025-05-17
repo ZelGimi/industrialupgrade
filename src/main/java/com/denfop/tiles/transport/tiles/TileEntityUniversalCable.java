@@ -24,7 +24,6 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.transport.types.ICableItem;
-import com.denfop.tiles.transport.types.ItemType;
 import com.denfop.tiles.transport.types.UniversalType;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;

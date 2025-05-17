@@ -173,29 +173,8 @@ public class ItemBooze extends Item implements IProperties {
         return new ItemStack(this);
     }
 
-    @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab tab, @Nonnull NonNullList<ItemStack> items) {
-        if (allowedIn(tab)) {
-            items.add(new ItemStack(this));
 
-            for (EnumWaterVariety waterVariety : EnumWaterVariety.values()) {
-                for (EnumTimeVariety timeVariety : EnumTimeVariety.values()) {
-                    for (EnumBeerVariety beerVariety : EnumBeerVariety.values()) {
-                        ItemStack stack = new ItemStack(this);
-                        CompoundTag nbt = stack.getOrCreateTag();
 
-                        nbt.putBoolean("beer", true);
-                        nbt.putByte("waterVariety", (byte) waterVariety.ordinal());
-                        nbt.putByte("timeVariety", (byte) timeVariety.ordinal());
-                        nbt.putByte("beerVariety", (byte) beerVariety.ordinal());
-                        nbt.putByte("amount", (byte) 5);
-
-                        items.add(stack);
-                    }
-                }
-            }
-        }
-    }
 
     @Override
     public void appendHoverText(

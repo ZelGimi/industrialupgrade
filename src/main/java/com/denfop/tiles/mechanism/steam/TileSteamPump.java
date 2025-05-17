@@ -37,12 +37,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
-
-import static net.minecraft.world.level.material.FlowingFluid.LEVEL;
 
 public class TileSteamPump extends TileElectricLiquidTankInventory {
 

@@ -7,6 +7,7 @@ import com.denfop.api.vein.Vein;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
+import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.math.Vector3d;
@@ -329,12 +330,7 @@ public class DecoderHandler {
                 return new RecipeInfo(is);
             case Radiation:
                 return new Radiation(is);
-          /*  case PlayerStreakInfo:
-                return new PlayerStreakInfo((NBTTagCompound) decode(is));
 
-            case FAKE_PLANET:
-                String planet = is.readString();
-                return new FakePlanet(new FakePlayer(((NBTTagCompound) decode(is))), planet);*/
             case World:
 
                 return IUCore.proxy.getWorld(is.readResourceKey(Registry.DIMENSION_REGISTRY));

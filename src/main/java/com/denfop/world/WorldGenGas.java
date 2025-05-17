@@ -59,7 +59,7 @@ public class WorldGenGas extends Feature<NoneFeatureConfiguration> {
             if (biome.is(BiomeTags.IS_OCEAN) || biome.is(BiomeTags.IS_RIVER)) {
                 int rand = WorldBaseGen.random.nextInt(100);
                 this.typeGas = (rand < 50) ? TypeGas.GAS : TypeGas.IODINE;
-                block = gasFluidMap.get(typeGas).getInstance().get().defaultFluidState().createLegacyBlock();
+                block = gasFluidMap.get(typeGas).getInstance().get().getSource().defaultFluidState().createLegacyBlock();
                 return this.generate(level, WorldBaseGen.random, new BlockPos(var3, var4, var5));
 
             } else {
@@ -72,7 +72,7 @@ public class WorldGenGas extends Feature<NoneFeatureConfiguration> {
                 } else {
                     this.typeGas = TypeGas.CHLORINE;
                 }
-                block = gasFluidMap.get(typeGas).getInstance().get().defaultFluidState().createLegacyBlock();
+                block = gasFluidMap.get(typeGas).getInstance().get().getSource().defaultFluidState().createLegacyBlock();
 
                 return this.generate(level, WorldBaseGen.random, new BlockPos(var3, var4, var5));
             }

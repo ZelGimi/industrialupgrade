@@ -78,7 +78,7 @@ public class GlobalRenderManager {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
 
-        if (player == null || mc.level == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
+        if (player == null || mc.level == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS) {
             return;
         }
 
@@ -94,7 +94,7 @@ public class GlobalRenderManager {
                     double dopY = 0;
 
                     poseStack.pushPose();
-                    poseStack.translate(-x, -y, -z);
+                    poseStack.translate(-x, -y+0.5, -z);
 
 
                     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

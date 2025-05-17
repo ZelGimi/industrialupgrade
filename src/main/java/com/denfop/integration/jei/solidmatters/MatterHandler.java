@@ -1,7 +1,6 @@
 package com.denfop.integration.jei.solidmatters;
 
 
-import com.denfop.Config;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;

@@ -3,7 +3,6 @@ package com.denfop.items.energy;
 import com.denfop.*;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.tile.IWrenchable;
-import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
@@ -505,7 +504,6 @@ public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeIt
 
     @Override
     public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
-        super.fillItemCategory(p_41391_, p_41392_);
         if (this.allowedIn(p_41391_)) {
             ElectricItemManager.addChargeVariants(this, p_41392_);
         }

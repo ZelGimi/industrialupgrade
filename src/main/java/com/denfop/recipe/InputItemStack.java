@@ -3,7 +3,6 @@ package com.denfop.recipe;
 
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;

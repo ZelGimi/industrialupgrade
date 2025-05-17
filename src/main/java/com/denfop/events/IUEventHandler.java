@@ -86,7 +86,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static com.denfop.tiles.lightning_rod.TileEntityLightningRodController.controllerMap;

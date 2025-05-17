@@ -16,7 +16,7 @@ public class ItemRecipeSchedule extends Item {
     private final String name;
 
     public ItemRecipeSchedule() {
-        super(new Properties().tab(IUCore.IUTab).stacksTo(1).setNoRepair());
+        super(new Properties().tab(IUCore.ItemTab).stacksTo(1).setNoRepair());
         this.name = "recipe_schedule";
     }
 

@@ -1,7 +1,10 @@
 package com.denfop.tiles.mechanism.energy;
 
 import com.denfop.IUItem;
-import com.denfop.api.energy.*;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.IEnergyConductor;
+import com.denfop.api.energy.IEnergyController;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.event.EventLoadController;
 import com.denfop.api.energy.event.EventUnloadController;
 import com.denfop.api.inv.IAdvInventory;

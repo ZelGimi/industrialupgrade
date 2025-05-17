@@ -3,7 +3,6 @@ package com.denfop.integration.jei.quarry_mac;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
@@ -18,7 +17,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 

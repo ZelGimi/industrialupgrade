@@ -7,7 +7,6 @@ import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
-import com.denfop.register.Register;
 import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.Item;

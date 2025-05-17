@@ -1,8 +1,6 @@
 package com.denfop.integration.jei;
 
 
-import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import net.minecraft.world.item.ItemStack;
 

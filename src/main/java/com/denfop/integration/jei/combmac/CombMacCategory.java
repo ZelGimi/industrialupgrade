@@ -8,7 +8,6 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.blocks.mechanism.BlockMoreMachine1;
 import com.denfop.blocks.mechanism.BlockSimpleMachine;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentRenderInventory;

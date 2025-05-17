@@ -17,7 +17,6 @@ import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JeiInform;
-import com.denfop.integration.jei.macerator.MaceratorHandler;
 import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.mechanism.multimechanism.simple.TileGearMachine;
 import com.mojang.blaze3d.vertex.PoseStack;

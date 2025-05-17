@@ -127,7 +127,7 @@ public class WorldBaseGen {
     );
     public static final RegistryObject<ConfiguredFeature<?, ?>> CALCIUM = CONFIGURED_FEATURES.register("calcium", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.ore2.getStateFromMeta(7).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.ore2.getStateFromMeta(7).getBlock())), UniformInt.of(3, 4), 1)));
     public static final RegistryObject<ConfiguredFeature<?, ?>> SALTPETER = CONFIGURED_FEATURES.register("saltpeter", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.ore2.getStateFromMeta(6).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.ore2.getStateFromMeta(6).getBlock())), UniformInt.of(3, 4), 1)));
-    public static final RegistryObject<ConfiguredFeature<?, ?>> PEAT = CONFIGURED_FEATURES.register("peat", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.blockResource.getStateFromMeta(10).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.blockResource.getStateFromMeta(9).getBlock())), UniformInt.of(2, 3), 1)));
+    public static final RegistryObject<ConfiguredFeature<?, ?>> PEAT = CONFIGURED_FEATURES.register("peat", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.blockResource.getStateFromMeta(10).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.blockResource.getStateFromMeta(9).getBlock())), UniformInt.of(3, 4), 1)));
     public static final RegistryObject<PlacedFeature> CALCIUM_PLACER = PLACED_FEATURES.register(
             "calcium_placed",
             () -> new PlacedFeature(

@@ -3,8 +3,6 @@ package com.denfop.recipes;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.simplyquarries.SimplyQuarries;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 public class RecipeSimplyQuarries {
     public static void register() {

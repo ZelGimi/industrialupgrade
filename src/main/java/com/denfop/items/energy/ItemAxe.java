@@ -4,7 +4,6 @@ import com.denfop.IUCore;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.PickaxeItem;
 
 public class ItemAxe extends AxeItem {
     private final String name;
