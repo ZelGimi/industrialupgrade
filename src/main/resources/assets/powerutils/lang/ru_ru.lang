@@ -1,9 +1,0 @@
-pu.module_ic.name=Модуль IU
-pu.module_te.name=Модуль TE
-pu.module_rf.name=Модуль RF
-pu.module_fe.name=Модуль FE
-pu.module_qe.name=Модуль QE
-powerutils.powerutils.power_utilities=Конвертер энергии EF/RF
-powerutils.powerutils.power_utilities_fe=Конвертер энергии EF/FE
-powerutils.powerutils.power_utilities_te=Конвертер энергии EF/TE
-powerutils.powerutils.power_utilities_qe=Конвертер энергии EF/QE

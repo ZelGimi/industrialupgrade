@@ -1,6 +1,0 @@
-{
-	"parent": "industrialupgrade:item/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/quantum_chestplate_demon"
-	}
-}
