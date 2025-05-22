@@ -7493,7 +7493,7 @@
   "iu.cyclotron.info4": "将物品放入轰击室",
   "iu.cyclotron.info5": "从静电偏转器取出",
 
-  "block.industrialupgrade.fluid.fluid_colling": "使用氢、氮、氦，按效率递增顺序",
+  "iu.fluid_colling": "使用氢、氮、氦，按效率递增顺序",
   "iu.solid_colling": "使用雪球、雪、冰、固态冰，按效率递增顺序",
 
   "iu.panel_upgrade.info0": "超频",

@@ -98,7 +98,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
             public void operateOnce(final List<ItemStack> processResult) {
                 for (int i = 0; i < col.length; i++) {
                     RandomSource rand = level.random;
-                    if ((col[i]) <= rand.nextInt(100)) {
+                    if ((100-col[i]) <= rand.nextInt(100)) {
                         this.outputSlot.add(processResult.get(i));
                     }
                 }

@@ -38,7 +38,7 @@ public class RenderFluidBlock {
 
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(stillTexture);
         int tintColor = fluidTypeExtensions.getTintColor(state, level, pos);
-
+        scale*=0.99;
         poseStack.translate(-0.5, 0, -0.5);
         poseStack.scale(2f * scale1, scale, 2f * scale1);
         float height = 1f;
@@ -72,7 +72,7 @@ public class RenderFluidBlock {
         drawQuad(builder, poseStack, 0.25f, 0, 0.25f, 0.75f, height, 0.25f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
         poseStack.popPose();
         poseStack.pushPose();
-        poseStack.translate(-0, 1.1, 1);
+        poseStack.translate(-0, 1.01, 1);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(180));
         drawQuad(builder, poseStack, 0.25f, height, 0.25f, 0.75f, height, 0.75f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
         drawQuad(builder, poseStack, 0.25f, 0, 0.25f, 0.75f, height, 0.25f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
@@ -110,6 +110,7 @@ public class RenderFluidBlock {
         } else {
             i = 15728880;
         }
+        scale*=0.99;
         drawQuad(builder, poseStack, 0.25f, height, 0.25f, 0.75f, height, 0.75f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
 
         drawQuad(builder, poseStack, 0.25f, 0, 0.25f, 0.75f, height, 0.25f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
@@ -132,7 +133,7 @@ public class RenderFluidBlock {
         drawQuad(builder, poseStack, 0.25f, 0, 0.25f, 0.75f, height, 0.25f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
         poseStack.popPose();
         poseStack.pushPose();
-        poseStack.translate(-0, 1.1, 1);
+        poseStack.translate(-0, 1.01, 1);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(180));
         drawQuad(builder, poseStack, 0.25f, height, 0.25f, 0.75f, height, 0.75f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);
         drawQuad(builder, poseStack, 0.25f, 0, 0.25f, 0.75f, height, 0.25f, sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1(), i, tintColor);

@@ -16,13 +16,18 @@ import com.denfop.container.ContainerBaseGenerationChipMachine;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGenerationMicrochip;
 import com.denfop.invslot.InvSlot;
+import com.denfop.items.resource.ItemIngots;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileBaseGenerationMicrochip;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,6 +35,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class TileGenerationMicrochip extends TileBaseGenerationMicrochip implements IUpdateTick, IHasRecipe {
@@ -120,11 +126,19 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         nbt.putShort("temperature", temperatures);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
 
-        first1 = input.getInput(first, first.getCount());
-        second1 = input.getInput(second, second.getCount());
-        three1 = input.getInput(three, three.getCount());
-        four1 = input.getInput(four, four.getCount());
-        five1 = input.getInput(five, five.getCount());
+        if (check) {
+            first1 = getInputFromTagOrStack(first, input);
+            second1 = getInputFromTagOrStack(second, input);
+            three1 = getInputFromTagOrStack(three, input);
+            four1 = getInputFromTagOrStack(four, input);
+            five1 = getInputFromTagOrStack(five, input);
+        } else {
+            first1 = input.getInput(first, first.getCount());
+            second1 = input.getInput(second, second.getCount());
+            three1 = input.getInput(three, three.getCount());
+            four1 = input.getInput(four, four.getCount());
+            five1 = input.getInput(five, five.getCount());
+        }
 
         Recipes.recipes.addRecipe(
                 "microchip",
@@ -133,6 +147,18 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
                         new RecipeOutput(nbt, output)
                 )
         );
+    }
+
+    private static IInputItemStack getInputFromTagOrStack(ItemStack stack, IInputHandler input) {
+        Optional<TagKey<Item>> tag = stack.getTags()
+                .filter(loc -> loc.location().getNamespace().equals("forge") && loc.location().getPath().contains("/"))
+                .findFirst();
+
+        if (tag.isPresent() && stack.getItem() instanceof Item) {
+            return input.getInput(tag.get(), stack.getCount());
+        } else {
+            return input.getInput(stack);
+        }
     }
 
 
@@ -155,46 +181,14 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         CompoundTag nbt = new CompoundTag();
         nbt.putShort("temperature", temperatures);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        if (check) {
-            first1 = input.getInput(first, first.getCount());
-            second1 = input.getInput(second, second.getCount());
-            three1 = input.getInput(three, three.getCount());
-            four1 = input.getInput(four, four.getCount());
-            five1 = input.getInput(five);
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
-        }
-    }
 
-    public static void add(
-            String first,
-            ItemStack second,
-            ItemStack three,
-            ItemStack four,
-            ItemStack five,
-            ItemStack output,
-            boolean check
-    ) {
-        IInputItemStack first1;
-        IInputItemStack second1;
-        IInputItemStack three1;
-        IInputItemStack four1;
-        IInputItemStack five1;
-
-        CompoundTag nbt = new CompoundTag();
-        nbt.putShort("temperature", (short) 4500);
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         if (check) {
-            first1 = input.getInput(first);
-            second1 = input.getInput(second, second.getCount());
-            three1 = input.getInput(three, three.getCount());
-            four1 = input.getInput(four, four.getCount());
-            five1 = input.getInput(five, five.getCount());
+            first1 = getInputFromTagOrStack(first, input);
+            second1 = getInputFromTagOrStack(second, input);
+            three1 = getInputFromTagOrStack(three, input);
+            four1 = getInputFromTagOrStack(four, input);
+            five1 = input.getInput(ItemTags.create(new ResourceLocation(five)));
+
             Recipes.recipes.addRecipe(
                     "microchip",
                     new BaseMachineRecipe(
@@ -213,10 +207,9 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
                     ),
                     new RecipeOutput(nbt, output)
             ));
-
-
         }
     }
+
 
     public static void add(
             ItemStack first,
@@ -236,34 +229,30 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         CompoundTag nbt = new CompoundTag();
         nbt.putShort("temperature", (short) 4500);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+
         if (check) {
-            first1 = input.getInput(first);
-            second1 = input.getInput(second, second.getCount());
-            three1 = input.getInput(three, three.getCount());
-            four1 = input.getInput(four);
-            five1 = input.getInput(five, five.getCount());
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
+            first1 = getInputFromTagOrStack(first, input);
+            second1 = getInputFromTagOrStack(second, input);
+            three1 = getInputFromTagOrStack(three, input);
+            four1 =input.getInput(ItemTags.create(new ResourceLocation(four)));
+            five1 = getInputFromTagOrStack(five, input);
         } else {
-            Recipes.recipes.addRecipe("microchip", new BaseMachineRecipe(
-                    new Input(
-                            input.getInput(first),
-                            input.getInput(second),
-                            input.getInput(three),
-                            input.getInput(four),
-                            input.getInput(five)
-                    ),
-                    new RecipeOutput(nbt, output)
-            ));
-
-
+            first1 = input.getInput(first);
+            second1 = input.getInput(second);
+            three1 = input.getInput(three);
+            four1 = input.getInput(four);
+            five1 = input.getInput(five);
         }
+
+        Recipes.recipes.addRecipe(
+                "microchip",
+                new BaseMachineRecipe(
+                        new Input(first1, second1, three1, four1, five1),
+                        new RecipeOutput(nbt, output)
+                )
+        );
     }
+
 
     public static ItemStack getLevelCircuit(ItemStack stack, int level) {
         stack = stack.copy();

@@ -65,10 +65,12 @@ public class ClientTickHandler {
         }
     }
 
+
+
     private static ResourceLocation getRadiationLevelTexture(Radiation radiation, long worldTime) {
         if (radiation == null) {
             if (Minecraft.getInstance().player.getLevel().getGameTime() % 20 == 0) {
-                Minecraft.getInstance().player.playSound(EnumSound.low_radiation.getSoundEvent(), 10, 1);
+                Minecraft.getInstance().player.playSound(EnumSound.low_radiation.getSoundEvent(), 1, 1);
             }
             if (worldTime % 4 == 0) {
                 return new ResourceLocation(
@@ -84,7 +86,7 @@ public class ClientTickHandler {
 
         } else {
             if (Minecraft.getInstance().player.getLevel().getGameTime() % 20 == 0) {
-                Minecraft.getInstance().player.playSound(EnumSound.low_radiation.getSoundEvent(), 10, 1);
+                Minecraft.getInstance().player.playSound(EnumSound.low_radiation.getSoundEvent(), 1, 1);
             }
             if (radiation.getLevel() == EnumLevelRadiation.LOW) {
                 int col = (int) ((radiation.getRadiation() / 800) * 2);
@@ -114,7 +116,7 @@ public class ClientTickHandler {
             } else if (radiation.getLevel() == EnumLevelRadiation.DEFAULT) {
                 int col = (int) ((radiation.getRadiation() / 800) * 4);
                 if (Minecraft.getInstance().player.getLevel().getGameTime() % 20 == 0) {
-                    Minecraft.getInstance().player.playSound(EnumSound.default_radiation.getSoundEvent(), 10, 1);
+                    Minecraft.getInstance().player.playSound(EnumSound.default_radiation.getSoundEvent(), 1, 1);
                 }
                 if (worldTime % 2 == 0) {
                     return new ResourceLocation(
@@ -141,7 +143,7 @@ public class ClientTickHandler {
             } else if (radiation.getLevel() == EnumLevelRadiation.MEDIUM) {
                 int col = (int) ((radiation.getRadiation() / 800) * 3);
                 if (Minecraft.getInstance().player.getLevel().getGameTime() % 20 == 0) {
-                    Minecraft.getInstance().player.playSound(EnumSound.medium_radiation.getSoundEvent(), 10, 1);
+                    Minecraft.getInstance().player.playSound(EnumSound.medium_radiation.getSoundEvent(), 1, 1);
                 }
                 if (worldTime % 2 == 0) {
                     return new ResourceLocation(
@@ -168,7 +170,7 @@ public class ClientTickHandler {
             } else if (radiation.getLevel() == EnumLevelRadiation.HIGH) {
                 int col = (int) ((radiation.getRadiation() / 800) * 2);
                 if (Minecraft.getInstance().player.getLevel().getGameTime() % 30 == 0) {
-                    Minecraft.getInstance().player.playSound(EnumSound.high_radiation.getSoundEvent(), 10, 1);
+                    Minecraft.getInstance().player.playSound(EnumSound.high_radiation.getSoundEvent(), 1, 1);
                 }
                 if (worldTime % 2 == 0) {
                     return new ResourceLocation(
@@ -195,7 +197,7 @@ public class ClientTickHandler {
             } else if (radiation.getLevel() == EnumLevelRadiation.VERY_HIGH) {
                 int col = (int) ((radiation.getRadiation() / 800) * 2);
                 if (Minecraft.getInstance().player.getLevel().getGameTime() % 30 == 0) {
-                    Minecraft.getInstance().player.playSound(EnumSound.very_high_radiation.getSoundEvent(), 10, 1);
+                    Minecraft.getInstance().player.playSound(EnumSound.very_high_radiation.getSoundEvent(), 1, 1);
                 }
                 if (worldTime % 2 == 0) {
                     return new ResourceLocation(

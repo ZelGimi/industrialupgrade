@@ -4,6 +4,7 @@ import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.CapabilityFluidHandlerItem;
+import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -77,7 +78,7 @@ public class SlotVirtual extends Slot {
                 itemstack12.setCount(1);
                 IFluidHandlerItem handler = null;
                 try {
-                    handler = itemstack12.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((CapabilityFluidHandlerItem) itemstack12.getItem().initCapabilities(itemstack12, itemstack12.getTag()));
+                    handler = FluidHandlerFix.getFluidHandler(itemstack12);
                 } catch (Exception e) {
                 }
                 ;
@@ -89,21 +90,24 @@ public class SlotVirtual extends Slot {
 
                         this.container.setItem(this.getSlotIndex(), itemstack12);
                         if (this.slotInfo.getFluidStackList() == null || this.slotInfo.getFluidStackList().isEmpty()) {
-                            this.slotInfo.setFluidList(new ArrayList<>(Collections.nCopies(this.slotInfo.size(), null)));
+                            this.slotInfo.setFluidList(new ArrayList<>(Collections.nCopies(this.slotInfo.size(), FluidStack.EMPTY)));
                         }
                         this.slotInfo.getFluidStackList().set(index, containerFluid);
+                    }else{
+                        this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
                     }
                 }
             }
         } else {
 
             if (this.slotInfo.isFluid()) {
-                Block block = Block.byItem(this.slotInfo.get(index).getItem());
-                if (block != Blocks.AIR) {
-                    if (block instanceof IFluidBlock) {
-                        this.slotInfo.getFluidStackList().set(index, null);
-                    }
+              ItemStack stack = this.slotInfo.get(index);
+                if (FluidHandlerFix.hasFluidHandler(stack)) {
+                    this.slotInfo.getFluidStackList().set(index, new FluidStack(FluidHandlerFix.getFluidHandler(stack).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), 1));
+                }else{
+                    this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
                 }
+
             }
             set(itemstack12);
         }

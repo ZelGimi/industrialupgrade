@@ -44,7 +44,7 @@ public class GasVeinSystem implements IGasVeinSystem {
         int chance = rand.nextInt(100);
         rand.setSeed(rand.nextLong());
         GasVein vein = new GasVein(TypeGas.NONE, chunk.getPos());
-        if (chance < 20) {
+        if (chance < 25) {
             vein.setType(TypeGas.values()[rand.nextInt(4) + 1]);
             vein.setMaxCol(200000);
             vein.setCol(200000);

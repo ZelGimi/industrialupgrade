@@ -9,11 +9,14 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.KelpBlock;
+import net.minecraft.world.level.block.SeagrassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
@@ -654,6 +657,9 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
         final boolean can =
                 block == Blocks.GRASS_BLOCK || block == Blocks.GRAVEL || block == Blocks.DIRT || block == Blocks.SAND || block == Blocks.COBBLESTONE || block == Blocks.STONE;
         if (can) {
+            if (isCoralOrCoralBlock(state) || isWaterPlant(state)) {
+                return false;
+            }
             if (state.getMaterial() == Material.AIR || state.getMaterial() == Material.REPLACEABLE_PLANT || state.getBlock() == Blocks.TALL_GRASS || state.getBlock() == Blocks.LARGE_FERN || state.getBlock() == Blocks.ROSE_BUSH) {
                 return true;
             }
@@ -670,6 +676,9 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
         if (state.getMaterial() == Material.AIR || pos.getY() >= chunk.getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()) - 4) {
             return false;
         }
+        if (isCoralOrCoralBlock(state) || isWaterPlant(state)) {
+            return false;
+        }
         if (pos.getY() >= 60) {
             return false;
         }
@@ -680,7 +689,21 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
         }
         return state.getMaterial() == Material.AIR || state.getDestroySpeed(chunk, pos) != -1;
     }
+    private static boolean isCoralOrCoralBlock(BlockState state) {
+        return state.is(BlockTags.CORALS) || state.is(BlockTags.CORAL_BLOCKS);
+    }
 
+
+    private static boolean isWaterPlant(BlockState state) {
+        Block b = state.getBlock();
+        return b instanceof SeagrassBlock
+                || b instanceof KelpBlock
+                || b == Blocks.SEAGRASS
+                || b == Blocks.TALL_SEAGRASS
+                || b == Blocks.KELP
+                || b == Blocks.KELP_PLANT
+                || b == Blocks.SEA_PICKLE;
+    }
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_159749_) {
         if (WorldBaseGen.random.nextInt(4) <= 2) {

@@ -5,6 +5,7 @@ import com.denfop.api.transport.ITransportTile;
 import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.api.transport.event.TransportTileUnLoadEvent;
 import com.denfop.network.packet.PacketExplosion;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -767,7 +768,9 @@ public class EnergyNetLocal {
             explodeMachineAt(getTileFromIEnergy(source));
         }
         for (IEnergyConductor conductor : conductorsRemove) {
-            conductor.removeConductor();
+            TileEntityBlock tile = (TileEntityBlock)conductor;
+            tile.onUnloaded();
+           this.world.removeBlock( conductor.getPos(),false);
         }
         conductorsRemove.clear();
         energySourceList.clear();

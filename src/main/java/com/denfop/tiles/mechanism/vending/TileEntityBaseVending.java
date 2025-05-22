@@ -159,6 +159,9 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
             if (privateStack.isEmpty()) {
                 continue;
             }
+            if (!stack.is(privateStack.getItem())){
+                return;
+            }
             ItemStack privateSell = this.invSlotSellPrivate.get(i);
             if (privateSell.isEmpty()) {
                 continue;

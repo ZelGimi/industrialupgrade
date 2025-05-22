@@ -51,8 +51,8 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof IPlantable && ((IPlantable) ((BlockItem) stack.getItem()).getBlock()).getPlantType(
-                        null,
-                        null) == PlantType.PLAINS;
+                        level,
+                        getBlockPos()) == PlantType.PLAINS;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));

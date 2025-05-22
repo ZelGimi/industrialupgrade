@@ -93,7 +93,12 @@ public class TileMolecularTransformer extends TileElectricMachine implements
 
         for (int i = 0; i < 4; i++) {
             this.output_stack[i] = new ItemStack(Items.AIR);
-            this.inputSlot[i] = new InvSlotRecipes(this, "molecular", this);
+            this.inputSlot[i] = new InvSlotRecipes(this, "molecular", this){
+                @Override
+                public boolean accepts(ItemStack itemStack, int index) {
+                    return getIndex() < maxAmount;
+                }
+            };
             this.inputSlot[i].setIndex(i);
             this.outputSlot[i] = new InvSlotOutput(this, 1);
         }

@@ -125,7 +125,7 @@ public class GuiAdvCokeOven<T extends ContainerAdvCokeOven> extends GuiIU<Contai
                         fluidX += 4;
                         fluidY += 4;
                         fluidWidth = 12;
-                        fluidHeight = 48;
+                        fluidHeight = 47;
                     }
 
                     Fluid fluid = fs.getFluid();
@@ -205,7 +205,7 @@ public class GuiAdvCokeOven<T extends ContainerAdvCokeOven> extends GuiIU<Contai
                         fluidX += 4;
                         fluidY += 4;
                         fluidWidth = 12;
-                        fluidHeight = 48;
+                        fluidHeight = 47;
                     }
 
                     Fluid fluid = fs.getFluid();

@@ -479,7 +479,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         list = getInfoSlotFromFacing(facing);
         if (this.getWorld().getGameTime() % 20 == 0) {
             blackList =
-                    this.list.getFluidStackList().subList(0, 9).stream().filter(Objects::nonNull).collect(Collectors.toList());
+                    this.list.getFluidStackList().subList(0, 9).stream().filter(fluidStack -> !fluidStack.isEmpty()).collect(Collectors.toList());
         }
         return blackList;
 
@@ -494,7 +494,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
                             .getFluidStackList()
                             .subList(9, this.list.size())
                             .stream()
-                            .filter(Objects::nonNull)
+                            .filter(fluidStack -> !fluidStack.isEmpty())
                             .collect(Collectors.toList());
         }
         return whiteList;

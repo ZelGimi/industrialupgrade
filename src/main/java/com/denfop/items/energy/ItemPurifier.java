@@ -6,6 +6,7 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.audio.EnumSound;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.EnumInfoUpgradeModules;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.denfop.IUCore.runnableListAfterRegisterItem;
@@ -118,11 +120,118 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
             }
 
             if (!player.isCrouching()) {
-                dropModules(world, player, base);
-            } else {
-                dropAllModules(world, player, base);
-            }
+                ItemStack stack_quickly = ItemStack.EMPTY;
+                ItemStack stack_modulesize = ItemStack.EMPTY;
+                ItemStack stack_modulestorage = ItemStack.EMPTY;
+                ItemStack panel = ItemStack.EMPTY;
+                ItemStack module_infinity_water = ItemStack.EMPTY;
+                ItemStack module_separate = ItemStack.EMPTY;
+                if (base.multi_process.quickly) {
+                    stack_quickly = new ItemStack(IUItem.module_quickly.getItem());
+                }
+                if (base.multi_process.modulesize) {
+                    stack_modulesize = new ItemStack(IUItem.module_stack.getItem());
+                }
+                if (base.multi_process.modulestorage) {
+                    stack_modulestorage = new ItemStack(IUItem.module_storage.getItem());
+                }
+                if (base.multi_process.modulestorage) {
+                    module_infinity_water = new ItemStack(IUItem.module_infinity_water.getItem());
+                }
+                if (base.multi_process.module_separate) {
+                    module_separate = new ItemStack(IUItem.module_separate.getItem());
+                }
+                if (base.solartype != null) {
+                    panel = new ItemStack(IUItem.module6.getStack( base.solartype.meta), 1);
+                }
+                if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), ItemStack.EMPTY);
 
+                    if (!stack_quickly.isEmpty()) {
+                        item.setItem(stack_quickly);
+                        base.multi_process.shrinkModule(1);
+                        base.multi_process.setQuickly(false);
+                    } else if (!stack_modulesize.isEmpty()) {
+                        item.setItem(stack_modulesize);
+                        base.multi_process.setModulesize(false);
+                        base.multi_process.shrinkModule(1);
+                    } else if (!module_infinity_water.isEmpty()) {
+                        item.setItem(module_infinity_water);
+                        base.multi_process.module_infinity_water = false;
+                        base.multi_process.shrinkModule(1);
+                    } else if (!module_separate.isEmpty()) {
+                        item.setItem(module_separate);
+                        base.multi_process.module_separate = false;
+                        base.multi_process.shrinkModule(1);
+                    } else if (!panel.isEmpty()) {
+                        item.setItem(panel);
+                        base.solartype = null;
+                    } else if (!stack_modulestorage.isEmpty()) {
+                        item.setItem(stack_modulestorage);
+                        base.multi_process.setModulestorage(false);
+                        base.multi_process.shrinkModule(1);
+                    }
+                    if (!player.getInventory().isEmpty()) {
+                        item.setPickUpDelay(0);
+                        world.addFreshEntity(item);
+                        ElectricItem.manager.use(itemstack, 500 * coef, player);
+                        if (player.getLevel().isClientSide) {
+                            player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
+
+                        }
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+            } else {
+                List<ItemStack> stack_list = new ArrayList<>();
+                if (base.multi_process.quickly) {
+                    stack_list.add(new ItemStack(IUItem.module_quickly.getItem()));
+                    base.multi_process.setQuickly(false);
+                    base.multi_process.shrinkModule(1);
+                }
+                if (base.multi_process.modulesize) {
+                    stack_list.add(new ItemStack(IUItem.module_stack.getItem()));
+                    base.multi_process.setModulesize(false);
+                    base.multi_process.shrinkModule(1);
+                }
+                if (base.solartype != null) {
+                    stack_list.add(new ItemStack(IUItem.module6.getStack( base.solartype.meta), 1));
+                    base.solartype = null;
+                }
+                if (base.multi_process.modulestorage) {
+                    stack_list.add(new ItemStack(IUItem.module_storage.getItem()));
+                    base.multi_process.setModulestorage(false);
+                    base.multi_process.shrinkModule(1);
+
+                }
+                if (base.multi_process.module_infinity_water) {
+                    stack_list.add(new ItemStack(IUItem.module_infinity_water.getItem()));
+                    base.multi_process.module_infinity_water = false;
+                    base.multi_process.shrinkModule(1);
+
+                }
+                if (base.multi_process.module_separate) {
+                    stack_list.add(new ItemStack(IUItem.module_separate.getItem()));
+                    base.multi_process.module_separate = false;
+                    base.multi_process.shrinkModule(1);
+
+                }
+                for (ItemStack stack : stack_list) {
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(),stack);
+                    if (!player.getLevel().isClientSide) {
+                        item.setPickUpDelay(0);
+                        world.addFreshEntity(item);
+
+
+                    }
+                    if (player.getLevel().isClientSide) {
+                        player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
+
+                    }
+                }
+                ElectricItem.manager.use(itemstack, 500 * coef, player);
+                return InteractionResult.SUCCESS;
+            }
             ElectricItem.manager.use(itemstack, 500 * coef, player);
             return InteractionResult.SUCCESS;
         }
@@ -139,18 +248,8 @@ public class ItemPurifier extends BaseEnergyItem implements IUpgradeItem {
         return InteractionResult.PASS;
     }
 
-    private void dropModules(Level world, Player player, TileMultiMachine base) {
-        dropItem(world, player, base.multi_process.quickly ? new ItemStack(IUItem.module_quickly.getItem()) : ItemStack.EMPTY);
-        dropItem(world, player, base.multi_process.modulesize ? new ItemStack(IUItem.module_stack.getItem()) : ItemStack.EMPTY);
-        dropItem(world, player, base.solartype != null ? new ItemStack(IUItem.module6.getStack(base.solartype.meta), 1) : ItemStack.EMPTY);
-        dropItem(world, player, base.multi_process.modulestorage ? new ItemStack(IUItem.module_storage.getItem()) : ItemStack.EMPTY);
-        dropItem(world, player, base.multi_process.module_infinity_water ? new ItemStack(IUItem.module_infinity_water.getItem()) : ItemStack.EMPTY);
-        dropItem(world, player, base.multi_process.module_separate ? new ItemStack(IUItem.module_separate.getItem()) : ItemStack.EMPTY);
-    }
 
-    private void dropAllModules(Level world, Player player, TileMultiMachine base) {
-        dropModules(world, player, base);
-    }
+
 
     private void dropUpgrade(Level world, Player player, IManufacturerBlock base) {
         int level = base.getLevelMechanism();

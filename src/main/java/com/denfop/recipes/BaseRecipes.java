@@ -3288,7 +3288,7 @@ public class BaseRecipes {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 185), " A ", "A A", "   ",
                 ('A'), "forge:plates/Iron"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 186), " A ", "A  ", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 186), " A ", "A  ", "AA ",
                 ('A'), "forge:plates/Iron"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 187), " A ", "  A", " A ",
@@ -3312,7 +3312,7 @@ public class BaseRecipes {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 195), "   ", "A A", " A ",
                 ('A'), "forge:plates/Spinel"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 193), " A ", "A  ", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 193), " A ", "A  ", "AA ",
                 ('A'), "forge:plates/Spinel"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 192), " A ", "  A", " A ",

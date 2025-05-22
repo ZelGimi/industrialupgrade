@@ -50,7 +50,7 @@ public class GuiObsidianGenerator<T extends ContainerObsidianGenerator> extends 
             drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 40, 177, 41, progress, 19);
         }
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack, this.guiLeft() + this.imageWidth / 2 + 15, guiTop() + 5, net.minecraft.network.chat.Component.literal(name), 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2 + 15,  5, net.minecraft.network.chat.Component.literal(name), 4210752, false);
 
     }
 

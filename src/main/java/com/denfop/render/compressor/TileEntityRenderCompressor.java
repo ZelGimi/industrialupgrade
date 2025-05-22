@@ -22,7 +22,15 @@ public class TileEntityRenderCompressor implements BlockEntityRenderer<TileEntit
         ItemStack itemstack = te.outputSlot.get(0);
         if (!itemstack.isEmpty()) {
             poseStack.pushPose();
-            poseStack.translate(0.5, 0.65, 0.4);
+            if ((itemstack.getItem() instanceof BlockItem)) {
+                if (te.facing == 4 || te.facing == 5) {
+                    poseStack.translate(0.5, 0.41, 0.31);
+                } else {
+                    poseStack.translate(0.5, 0.41, 0.3);
+                }
+            } else {
+                poseStack.translate(0.5, 0.42, 0.37501);
+            }
 
             poseStack.mulPose(com.mojang.math.Vector3f.XP.rotationDegrees(90));
             contex.getItemRenderer().renderStatic(itemstack, net.minecraft.client.renderer.block.model.ItemTransforms.TransformType.GROUND,

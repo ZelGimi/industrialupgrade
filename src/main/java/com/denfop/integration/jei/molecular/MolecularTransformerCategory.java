@@ -62,6 +62,7 @@ public class MolecularTransformerCategory extends GuiIU implements IRecipeCatego
         if (xScale > 18) {
             progress = 0;
         }
+        bindTexture();
         drawTexturedModalRect(stack,23 - 10, 75 - 49, 242, 32, 14, (int) xScale);
         int y = 5;
         int x = 49;

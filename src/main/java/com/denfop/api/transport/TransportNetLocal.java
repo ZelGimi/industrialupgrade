@@ -617,10 +617,10 @@ public class TransportNetLocal {
             }
             IFluidHandler handler = TransportPath.getFluidHandler();
             for (FluidStack fluidStack : list) {
-                if (!canInsertOrExtract(TransportPath.first, fluidStack, TransportPath.firstSide.getOpposite())) {
+                if (!canInsertOrExtract(TransportPath.first, fluidStack, TransportPath.firstSide)) {
                     continue;
                 }
-                if (!canInsertOrExtract(TransportPath.end, fluidStack, TransportPath.targetDirection.getOpposite())) {
+                if (!canInsertOrExtract(TransportPath.end, fluidStack, TransportPath.targetDirection)) {
                     continue;
                 }
                 if (fluidStack.getAmount() <= 0) {

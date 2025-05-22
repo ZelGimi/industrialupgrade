@@ -422,7 +422,7 @@ public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemS
                     }
                     if (slot > -1) {
                         ItemStack stack = player.getInventory().items.get(slot);
-                        stack = player.eat(world, stack);
+                        stack = stack.getItem().finishUsingItem(stack,world, player);
                         if (stack.getCount() <= 0) {
                             player.getInventory().items.set(slot, ItemStack.EMPTY);
                         }

@@ -88,8 +88,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
             if (this.pos.below().distSqr(neighborPos) == 0) {
                 FluidState blockState = level.getFluidState(this.pos.below());
                 if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
-                    this.work =
-                            blockState.getType() == Fluids.LAVA;
+                    this.work = blockState.getType().isSame(Fluids.LAVA);
                 } else {
                     work = false;
                 }
@@ -98,8 +97,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
             if (this.pos.below().distSqr(neighborPos) == 0) {
                 FluidState blockState = level.getFluidState(this.pos.below());
                 if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
-                    this.work =
-                            blockState.getType() == Fluids.LAVA;
+                    this.work = blockState.getType().isSame(Fluids.LAVA);
                 } else {
                     work = false;
                 }
@@ -153,8 +151,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
 
             FluidState blockState = level.getFluidState(this.pos.below());
             if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
-                this.work =
-                        blockState.getType() == Fluids.LAVA;
+                this.work = blockState.getType().isSame(Fluids.LAVA);
             } else {
                 work = false;
             }

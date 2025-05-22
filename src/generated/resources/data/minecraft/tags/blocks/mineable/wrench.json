@@ -1,18 +1,5 @@
 {
   "values": [
-    "powerutils:converter/power_utilities_fe",
-    "quantumgenerators:qg/phsp_gen",
-    "simplyquarries:simplyquarries/simply_quarry",
-    "quantumgenerators:qg/nsp_gen",
-    "quantumgenerators:qg/bsp_gen",
-    "quantumgenerators:qg/adsp_gen",
-    "quantumgenerators:qg/grasp_gen",
-    "quantumgenerators:qg/kvsp_gen",
-    "powerutils:converter/power_utilities_qe",
-    "simplyquarries:simplyquarries/adv_simply_quarry",
-    "simplyquarries:simplyquarries/imp_simply_quarry",
-    "simplyquarries:simplyquarries/per_simply_quarry",
-    "simplyquarries:simplyquarries/pho_simply_quarry",
     "industrialupgrade:combiner_solid_matter/combiner_solid_matter",
     "industrialupgrade:adv_refiner/adv_refiner",
     "industrialupgrade:adv_se_gen/adv_se_gen",

@@ -3,6 +3,7 @@ package com.denfop.container;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
 import com.denfop.tiles.base.TilePainting;
+import com.denfop.tiles.mechanism.TileEntityUpgradeRover;
 import com.denfop.tiles.mechanism.TileSunnariumPanelMaker;
 import com.denfop.tiles.mechanism.dual.TileEnrichment;
 import com.denfop.tiles.mechanism.dual.TileSynthesis;
@@ -90,7 +91,7 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
                  ));
                 }
             else if (tileEntity1 instanceof TileUpgradeBlock
-                //|| tileEntity1 instanceof TileEntityUpgradeRover
+                || tileEntity1 instanceof TileEntityUpgradeRover
             ) {
                 addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
                         i, upgradeX + 5, upgradeY + 1 + i * 18

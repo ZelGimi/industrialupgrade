@@ -1282,6 +1282,13 @@ public class JEICompat implements IModPlugin {
                 gen_se.recipeType
         );
         registry.addRecipeCatalyst(
+                ItemStackHelper.fromData(IUItem.imp_se_generator, 1, 0),
+                gen_se.recipeType
+        );  registry.addRecipeCatalyst(
+                ItemStackHelper.fromData(IUItem.blockSE, 1, 0),
+                gen_se.recipeType
+        );
+        registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockBaseMachine3.redstone_generator),
                 gen_red.recipeType
         );
@@ -1733,7 +1740,10 @@ public class JEICompat implements IModPlugin {
                 getBlockStack(BlockBaseMachine3.steam_compressor),
                 compressor.recipeType
         );
-
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockCompressor.compressor),
+                compressor.recipeType
+        );
         registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.machines_base1, 1, 6),
                 comb_mac.recipeType
@@ -1760,6 +1770,10 @@ public class JEICompat implements IModPlugin {
                     space_colony.recipeType
             );
         }
+        registry.addRecipeCatalyst(
+                ItemStackHelper.fromData(IUItem.cokeoven, 1, 0),
+                coke_oven.recipeType
+        );
         registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.adv_cokeoven, 1, 0),
                 coke_oven.recipeType

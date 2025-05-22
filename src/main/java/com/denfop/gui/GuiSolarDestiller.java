@@ -42,7 +42,7 @@ public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<
                         fluidX += 3;
                         fluidY += 3;
                         fluidWidth = 17;
-                        fluidHeight = 45;
+                        fluidHeight = 44;
                     }
                     Fluid fluid = fs.getFluid();
                     if (fluid == Fluids.WATER)
@@ -89,7 +89,7 @@ public class GuiSolarDestiller<T extends ContainerSolarDestiller> extends GuiIU<
                         fluidX += 3;
                         fluidY += 3;
                         fluidWidth = 17;
-                        fluidHeight = 45;
+                        fluidHeight = 44;
                     }
 
                     Fluid fluid = fs.getFluid();

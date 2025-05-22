@@ -293,6 +293,7 @@ public class TileConverterSolidMatter extends TileElectricMachine
     public void setOverclockRates() {
         this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
         this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
+        this.energyConsume = (int) this.upgradeSlot.getEnergyDemand(2);
 
 
     }

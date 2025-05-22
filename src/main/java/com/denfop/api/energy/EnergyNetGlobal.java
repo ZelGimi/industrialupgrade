@@ -213,9 +213,9 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     public void update() {
         this.transformer = true;
         this.losing = true;
-        this.ignoring = true;
+        this.ignoring = false;
         this.explosing = true;
-        this.hasrestrictions = !true;
+        this.hasrestrictions = true;
     }
 
 }

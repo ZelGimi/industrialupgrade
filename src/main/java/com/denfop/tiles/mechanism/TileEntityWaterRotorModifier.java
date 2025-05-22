@@ -2,16 +2,19 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.inv.VirtualSlot;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWaterRotorUpgrade;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWaterRotorUpgrade;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotRotorWater;
 import com.denfop.invslot.InvSlotWaterUpgrade;
 import com.denfop.items.modules.ItemWaterRotorsUpgrade;
@@ -30,6 +33,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TileEntityWaterRotorModifier extends TileEntityInventory implements IWindUpgradeBlock, IUpdatableTileEvent {
 
@@ -50,7 +55,25 @@ public class TileEntityWaterRotorModifier extends TileEntityInventory implements
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-
+    @Override
+    public List<ItemStack> getAuxDrops(int fortune) {
+        List<ItemStack> ret = new ArrayList<>();
+        for (final InvSlot slot : this.invSlots) {
+            if (!(slot instanceof VirtualSlot)  && !(slot instanceof InvSlotWaterUpgrade && !this.rotor_slot.isEmpty())) {
+                for (final ItemStack stack : slot) {
+                    if (!ModUtils.isEmpty(stack)) {
+                        ret.add(stack);
+                    }
+                }
+            }
+        }
+        for (AbstractComponent component : this.getComponentList()) {
+            if (!component.getDrops().isEmpty()) {
+                ret.addAll(component.getDrops());
+            }
+        }
+        return ret;
+    }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {

@@ -115,7 +115,7 @@ public enum BlockSunnariumMaker implements IMultiTileBlock {
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
-        return true;
+        return false;
     }
 
     @Override

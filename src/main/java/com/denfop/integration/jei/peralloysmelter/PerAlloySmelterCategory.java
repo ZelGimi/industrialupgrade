@@ -98,6 +98,9 @@ public class PerAlloySmelterCategory extends GuiIU implements IRecipeCategory<Pe
         this.slots.drawBackground( stack,0, 0);
         this.slots1.drawBackground( stack,-5, 0);
         progress_bar.renderBar( stack,10, 0, xScale);
+        int temp = recipe.temperature;
+
+        drawString(stack, "" + temp + "°C", 82, 55, 4210752);
 
     }
 

@@ -3,6 +3,7 @@ package com.denfop.container;
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +29,7 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     public SlotInfo(TileEntityInventory multiCable, int size, boolean fluid) {
         super(multiCable, null, size);
         this.fluid = fluid;
-        this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
+        this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), FluidStack.EMPTY));
         this.listBlack = new ArrayList<>();
         this.listWhite = new ArrayList<>();
     }
@@ -45,16 +47,12 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
         super.readFromNbt(nbt);
         fluid = nbt.getBoolean("fluid");
         if (this.fluid) {
-            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
+            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), FluidStack.EMPTY));
 
             for (int i = 0; i < size(); i++) {
                 if (!this.get(i).isEmpty()) {
-                    Item item = this.get(i).getItem();
-                    Block block = Block.byItem(item);
-                    if (block != Blocks.AIR) {
-                        if (block instanceof IFluidBlock) {
-                            fluidStackList.set(i, new FluidStack(((IFluidBlock) block).getFluid(), 1));
-                        }
+                    if (FluidHandlerFix.hasFluidHandler(this.get(i))) {
+                        fluidStackList.set(i, new FluidStack(FluidHandlerFix.getFluidHandler(this.get(i)).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), 1));
                     }
                 }
             }

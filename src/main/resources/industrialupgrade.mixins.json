@@ -8,6 +8,7 @@
     "FluidUtilMixin",
     "ItemStackMixin",
     "MixinInventory",
+    "MixinServerGamePacketListenerImpl",
     "access.AbstractContainerMenuAccessor",
     "access.ContainerAccessor",
     "access.DeferredRegisterAccessor",

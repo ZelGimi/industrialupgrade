@@ -50,6 +50,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import static com.denfop.render.base.RenderType.LEASH;
+import static com.denfop.render.base.RenderType.LEASH_TRANSPARENT;
 
 public class TileEntityShield extends TileEntityInventory implements IUpdatableTileEvent {
 
@@ -311,7 +312,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         VertexConsumer bufferSource = Minecraft.getInstance()
                 .renderBuffers()
                 .bufferSource()
-                .getBuffer(LEASH);
+                .getBuffer(LEASH_TRANSPARENT);
         Color color1 = new Color(color);
         if (!write) {
             writeData();

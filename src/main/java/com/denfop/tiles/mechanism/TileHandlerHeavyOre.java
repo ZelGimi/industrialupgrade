@@ -309,12 +309,12 @@ public class TileHandlerHeavyOre extends TileBaseHandlerHeavyOre implements IHas
         addhandlerore(
                 new ItemStack(IUItem.space_stone.getItem(9), 1),
                 new ItemStack[]{new ItemStack(IUItem.space_ore1.getItem(), 1),
-                        new ItemStack(IUItem.space_ore1.getItem(1), 1), new ItemStack(IUItem.space_ore1.getItem(2), 1)},
+                        new ItemStack(IUItem.space_ore1.getItem(1), 1), new ItemStack(IUItem.space_ore1.getItem(4), 1)},
                 (short) 4000, 35, 35, 30
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone.getItem(10), 1),
-                new ItemStack[]{new ItemStack(IUItem.space_ore1.getItem(4), 1),
+                new ItemStack[]{new ItemStack(IUItem.space_ore1.getItem(2), 1),
                         new ItemStack(IUItem.space_ore1.getItem(3), 1), new ItemStack(IUItem.spaceItem.getStack(40), 2),
                         new ItemStack(IUItem.spaceItem.getStack(40), 1)},
                 (short) 4000, 25, 25, 25, 25

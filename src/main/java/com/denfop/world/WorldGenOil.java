@@ -35,7 +35,7 @@ public class WorldGenOil extends Feature<NoneFeatureConfiguration> {
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
-        if (WorldBaseGen.random.nextInt(100) + 1 <= 70)
+        if (WorldBaseGen.random.nextInt(100) + 1 <= 90)
             return false;
         FluidName fluidName = fluids[context.random().nextInt(fluids.length)];
         this.spreadBlock = fluidName.getInstance().get().getSource().defaultFluidState().createLegacyBlock();

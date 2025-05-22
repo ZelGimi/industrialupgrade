@@ -39,7 +39,9 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends AbstractContainerScreen<T> implements MenuAccess<T> {
     public static final int textHeight = 8;
@@ -719,20 +721,96 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
 
     public void drawSprite(PoseStack graphics, double x, double y, double width, double height, TextureAtlasSprite sprite, int color, double textureSize, boolean wrapX, boolean wrapY) {
         if (sprite == null) {
-            sprite = ((TextureAtlas) this.minecraft.getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS)).getSprite(MissingTextureAtlasSprite.getLocation());
+            sprite = ((TextureAtlas) Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS))
+                    .getSprite(MissingTextureAtlasSprite.getLocation());
         }
 
+        double startX = x;
+        double startY = y;
+        double tileSize = 16.0;
 
-        textureSize *= 16.0D;
-        double xS;
-        for (xS = x; xS < x + width; xS += textureSize) {
-            double yS;
-            for (yS = y; yS < y + height; yS += textureSize) {
-                double segmentWidth = Math.min(textureSize, x + width - xS);
-                double segmentHeight = Math.min(textureSize, y + height - yS);
-                blit(graphics, (int) xS, (int) yS, color, (int) segmentWidth, (int) segmentHeight, sprite);
+        double u0 = sprite.getU0();
+        double v0 = sprite.getV0();
+        double u1 = sprite.getU1();
+        double v1 = sprite.getV1();
+        double uSize = u1 - u0;
+        double vSize = v1 - v0;
+
+        int alpha = (color >> 24) & 0xFF;
+        int red   = (color >> 16) & 0xFF;
+        int green = (color >> 8)  & 0xFF;
+        int blue  = color & 0xFF;
+
+        Matrix4f matrix = graphics.last().pose();
+
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+
+        double remX = width % tileSize;
+        double remY = height % tileSize;
+
+        for (double tileX = startX; tileX < startX + width; ) {
+            double tileWidth = tileSize;
+            double uStart = u0;
+
+            if (tileX == startX && remX > 0.0) {
+                tileWidth = remX;
+                uStart = u0 + uSize * (1.0 - remX / tileSize);
             }
+
+            if (tileX + tileWidth > startX + width) {
+                tileWidth = (startX + width) - tileX;
+
+                uStart = u0;
+            }
+
+            double tileXEnd = tileX + tileWidth;
+            double uEnd = uStart + (tileXEnd - tileX) / tileSize * uSize;
+
+            for (double tileY = startY; tileY < startY + height; ) {
+                double tileHeight = tileSize;
+                double vStart = v0;
+
+                if (tileY == startY && remY > 0.0) {
+                    tileHeight = remY;
+                    vStart = v0 + vSize * (1.0 - remY / tileSize);
+                }
+                if (tileY + tileHeight > startY + height) {
+                    tileHeight = (startY + height) - tileY;
+                    vStart = v0;
+                }
+
+                double tileYEnd = tileY + tileHeight;
+                double vEnd = vStart + (tileYEnd - tileY) / tileSize * vSize;
+
+                buffer.vertex(matrix, (float) tileX,    (float) tileY,     0.0F)
+                        .uv((float) uStart, (float) vStart)
+                        .color(red, green, blue, alpha)
+                        .endVertex();
+                buffer.vertex(matrix, (float) tileX,    (float) tileYEnd,  0.0F)
+                        .uv((float) uStart, (float) vEnd)
+                        .color(red, green, blue, alpha)
+                        .endVertex();
+                buffer.vertex(matrix, (float) tileXEnd, (float) tileYEnd,  0.0F)
+                        .uv((float) uEnd,   (float) vEnd)
+                        .color(red, green, blue, alpha)
+                        .endVertex();
+                buffer.vertex(matrix, (float) tileXEnd, (float) tileY,     0.0F)
+                        .uv((float) uEnd,   (float) vStart)
+                        .color(red, green, blue, alpha)
+                        .endVertex();
+
+
+                tileY += tileHeight;
+            }
+
+
+            tileX += tileWidth;
         }
+
+
+        BufferUploader.drawWithShader(buffer.end());
     }
 
     public void drawItem(int x, int y, ItemStack itemStack) {
@@ -770,16 +848,22 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
     }
 
     public int drawString(PoseStack poseStack, String text, int x, int y, int color) {
+        if (font == null)
+            font = Minecraft.getInstance().font;
         this.font.draw(poseStack, text, x + this.guiLeft - leftPos, y + this.guiTop - topPos, color);
         return x;
     }
 
     public int drawString(PoseStack poseStack, int x, int y, String text, int color) {
+        if (font == null)
+            font = Minecraft.getInstance().font;
         this.font.draw(poseStack, text, x + this.guiLeft - leftPos, y + this.guiTop - topPos, color);
         return x;
     }
 
     public int drawString(PoseStack poseStack, int x, int y, String text, int color, boolean shadow) {
+        if (font == null)
+            font = Minecraft.getInstance().font;
         if (shadow) {
             this.font.drawShadow(poseStack, text, x + this.guiLeft - leftPos, y + this.guiTop - topPos, color);
         } else {
@@ -858,13 +942,50 @@ public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> 
     }
 
     protected void flushTooltips(PoseStack graphics) {
+        List<Tooltip> tooltips = new ArrayList<>(this.queuedTooltips);
+        List<Tooltip> tooltipsToRender = new ArrayList<>();
+        List<Rectangle> usedAreas = new ArrayList<>();
 
-        for (Tooltip tooltip : this.queuedTooltips) {
+
+        for (int i = tooltips.size() - 1; i >= 0; i--) {
+            Tooltip tooltip = tooltips.get(i);
+
+
+            int maxWidth = 0;
+            for (FormattedText line : tooltip.text) {
+                int lineWidth = Minecraft.getInstance().font.width(line);
+                if (lineWidth > maxWidth) maxWidth = lineWidth;
+            }
+
+            int tooltipWidth = maxWidth + 8;
+            int tooltipHeight = tooltip.text.size() * 10 + 8;
+
+            Rectangle tooltipArea = new Rectangle(tooltip.x, tooltip.y, tooltipWidth, tooltipHeight);
+
+
+            boolean overlaps = false;
+            for (Rectangle area : usedAreas) {
+                if (tooltipArea.intersects(area)) {
+                    overlaps = true;
+                    break;
+                }
+            }
+
+            if (!overlaps) {
+                usedAreas.add(tooltipArea);
+                tooltipsToRender.add(tooltip);
+            }
+        }
+
+
+        Collections.reverse(tooltipsToRender);
+        for (Tooltip tooltip : tooltipsToRender) {
             this.renderTooltip(graphics, tooltip.text, Optional.empty(), tooltip.x, tooltip.y);
         }
 
         this.queuedTooltips.clear();
     }
+
 
     protected void addElement(GuiElement<?> guiElement) {
         this.elements.add(guiElement);

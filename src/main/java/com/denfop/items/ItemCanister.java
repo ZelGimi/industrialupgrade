@@ -18,12 +18,13 @@ public class ItemCanister extends ItemFluidContainer {
         if (this.allowedIn(p_41391_)) {
             p_41392_.add(new ItemStack(this));
             p_41392_.add(this.getItemStack(FluidName.fluidmotoroil.getInstance().get()));
+            p_41392_.add(this.getItemStack(FluidName.fluidsteam_oil.getInstance().get()));
         }
     }
 
 
     public boolean canfill(Fluid fluid) {
-        return fluid == FluidName.fluidmotoroil.getInstance().get();
+        return fluid == FluidName.fluidmotoroil.getInstance().get() || fluid == FluidName.fluidsteam_oil.getInstance().get() ;
     }
 
 

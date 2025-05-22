@@ -2,6 +2,7 @@ package com.denfop.container;
 
 import com.denfop.tiles.mechanism.vending.TileEntityBaseVending;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 
 public class ContainerVending extends ContainerFullInv<TileEntityBaseVending> {
 
@@ -43,7 +44,12 @@ public class ContainerVending extends ContainerFullInv<TileEntityBaseVending> {
             }
         }
     }
-
+    @Override
+    public void clicked(int slotId, int dragType, ClickType clickType, Player player) {
+        if (clickType == ClickType.QUICK_CRAFT)
+            return;
+        super.clicked(slotId, dragType, clickType, player);
+    }
 
     @Override
     public void broadcastChanges() {

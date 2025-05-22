@@ -26,9 +26,9 @@ public class TileEntityRenderDryer implements BlockEntityRenderer<TileEntityDrye
             final float scale = (te.fluidTank1.getFluidAmount()) * 1F / te.fluidTank1.getCapacity();
 
             poseStack.pushPose();
-            poseStack.translate(0.1, 0, 0.1);
-            poseStack.translate(0.0, 1.1, 0.0);
-            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale * 0.4f, 0.87f);
+            poseStack.translate(0.17, 0, 0.17);
+            poseStack.translate(0.0, 1.2, 0.0);
+            RenderFluidBlock.renderFluid(fluidStack, bufferSource, te.getLevel(), te.getPos(), poseStack, scale * 0.4f, 0.83f);
             poseStack.popPose();
 
             poseStack.pushPose();

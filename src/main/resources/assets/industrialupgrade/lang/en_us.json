@@ -7390,7 +7390,7 @@
   "iu.cyclotron.info4": "Items can be placed in the bombardment chamber",
   "iu.cyclotron.info5": "Items can be retrieved from the electrostatic deflector",
 
-  "block.industrialupgrade.fluid.fluid_colling": "Uses hydrogen, nitrogen, and helium, in order of increasing efficiency.",
+  "iu.fluid_colling": "Uses hydrogen, nitrogen, and helium, in order of increasing efficiency.",
   "iu.solid_colling": "Uses snowballs, snow, ice, and packed ice, in order of increasing efficiency.",
 
   "iu.panel_upgrade.info0": "Overclock",

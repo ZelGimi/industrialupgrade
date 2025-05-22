@@ -62,7 +62,7 @@ public class GuiSmelteryFuelTank<T extends ContainerSmelteryFuelTank> extends Gu
                         fluidX += 3;
                         fluidY += 3;
                         fluidWidth = 37;
-                        fluidHeight = 50;
+                        fluidHeight = 49;
                     }
 
                     Fluid fluid = fs.getFluid();

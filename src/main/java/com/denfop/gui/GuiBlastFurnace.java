@@ -126,7 +126,7 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
                         fluidX += 4;
                         fluidY += 4;
                         fluidWidth = 12;
-                        fluidHeight = 48;
+                        fluidHeight = 47;
                     }
                     Fluid fluid = fs.getFluid();
                     if (fluid == net.minecraft.world.level.material.Fluids.WATER)
@@ -205,7 +205,7 @@ public class GuiBlastFurnace<T extends ContainerBlastFurnace> extends GuiIU<Cont
                         fluidX += 4;
                         fluidY += 4;
                         fluidWidth = 12;
-                        fluidHeight = 48;
+                        fluidHeight = 47;
                     }
 
                     Fluid fluid = fs.getFluid();

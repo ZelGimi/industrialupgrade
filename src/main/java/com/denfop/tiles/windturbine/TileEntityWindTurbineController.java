@@ -2,6 +2,7 @@ package com.denfop.tiles.windturbine;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -393,6 +394,8 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
                 ) * (coefficient_power / 100D);
             }
             this.energy.getEnergy().addEnergy(generation);
+
+            this.energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
             if (this.level.getGameTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
             }

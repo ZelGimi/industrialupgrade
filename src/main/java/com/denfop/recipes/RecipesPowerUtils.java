@@ -24,7 +24,7 @@ public class RecipesPowerUtils {
 
                 Character.valueOf('A'), ItemStackHelper.fromData(IUItem.basecircuit),
 
-                Character.valueOf('B'),ItemStackHelper.fromData(IUItem.tranformer, 1, 9),
+                Character.valueOf('B'),ItemStackHelper.fromData(IUItem.tranformer, 1, 8),
 
                 Character.valueOf('C'), ItemStackHelper.fromData(IUItem.basecircuit, 1, 4),
 
@@ -36,7 +36,7 @@ public class RecipesPowerUtils {
 
                 Character.valueOf('A'), IUItem.advancedAlloy,
 
-                Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                Character.valueOf('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
 
                 Character.valueOf('C'),ItemStackHelper.fromData(PowerUtils.module_ic),
 

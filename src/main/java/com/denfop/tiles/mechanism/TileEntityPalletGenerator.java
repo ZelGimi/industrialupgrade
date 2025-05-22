@@ -36,7 +36,7 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
     public TileEntityPalletGenerator(BlockPos pos, BlockState state) {
         super(0, 14, 0,BlockBaseMachine3.pallet_generator,pos,state);
         this.energy = this.addComponent(Energy.asBasicSource(this, 5000000, tier));
-        this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 50000D));
+        this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 1000000D));
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 6) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {

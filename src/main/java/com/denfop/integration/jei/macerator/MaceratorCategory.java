@@ -81,6 +81,7 @@ public class MaceratorCategory extends GuiIU  implements IRecipeCategory<Macerat
     }
 
 
+
     @Override
     public RecipeType<MaceratorHandler> getRecipeType() {
         return jeiInform.recipeType;

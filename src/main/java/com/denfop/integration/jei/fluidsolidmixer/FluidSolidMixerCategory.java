@@ -99,7 +99,7 @@ public class FluidSolidMixerCategory extends GuiIU implements IRecipeCategory<Fl
         builder.addSlot(RecipeIngredientRole.INPUT,14, 21).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getInputFluid().getFluid(),recipe.getInputFluid().getAmount());
         builder.addSlot(RecipeIngredientRole.OUTPUT,50 + 71, 21).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getOutputFluid().getFluid(),recipe.getOutputFluid().getAmount());
         builder.addSlot(RecipeIngredientRole.OUTPUT,50 + 71 - 28, 21).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getOutputFluid1().getFluid(),recipe.getOutputFluid1().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 21, 44 - 1).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 20, 44 - 0).addItemStack(recipe.getInput());
     }
 
     @Override
