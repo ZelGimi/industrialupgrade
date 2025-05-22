@@ -1,10 +1,6 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityBrewingPlant;
-import com.denfop.tiles.mechanism.TileEntityCentrifuge;
 import com.denfop.tiles.mechanism.TileEntityInoculator;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
-import com.denfop.tiles.mechanism.TileEntitySawmill;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerInoculator extends ContainerFullInv<TileEntityInoculator> {
@@ -18,7 +14,6 @@ public class ContainerInoculator extends ContainerFullInv<TileEntityInoculator> 
             addSlotToContainer(new SlotInvSlot(base.upgradeSlot, i, 152, 8 + i * 18));
         }
     }
-
 
 
 }

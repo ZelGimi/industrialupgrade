@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileCrystalCharger;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerCrystalCharger extends ContainerFullInv<TileCrystalCharger> {
@@ -17,7 +16,6 @@ public class ContainerCrystalCharger extends ContainerFullInv<TileCrystalCharger
                 0, -20, 84
         ));
     }
-
 
 
 }

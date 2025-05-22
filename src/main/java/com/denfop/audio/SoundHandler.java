@@ -12,7 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @SideOnly(Side.CLIENT)
@@ -37,7 +36,9 @@ public class SoundHandler {
 
 
     public static void playSound(EntityPlayer player, Object sound) {
-        if (player == null || sound == null) return;
+        if (player == null || sound == null) {
+            return;
+        }
 
         String soundName = (sound instanceof EnumSound)
                 ? ((EnumSound) sound).getNameSounds().toLowerCase()
@@ -88,4 +89,5 @@ public class SoundHandler {
     private static boolean isSoundAtPosition(ISound sound, BlockPos pos) {
         return new BlockPos(sound.getXPosF(), sound.getYPosF(), sound.getZPosF()).equals(pos);
     }
+
 }

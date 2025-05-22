@@ -8,7 +8,6 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.SteamImageInterface;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.container.ContainerSteamSharpener;
 import com.denfop.container.ContainerSteamWireInsulator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,6 +44,7 @@ public class GuiSteamWireInsulator extends GuiIU<ContainerSteamWireInsulator> {
                 })
         ));
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -60,9 +60,10 @@ public class GuiSteamWireInsulator extends GuiIU<ContainerSteamWireInsulator> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
         handleUpgradeTooltip(par1, par2);

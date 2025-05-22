@@ -26,7 +26,7 @@ public class PacketLandEffect implements IPacket {
         CustomPacketBuffer buffer = new CustomPacketBuffer(60);
         buffer.writeByte(this.getId());
         buffer.writeBlockPos(pos);
-        buffer.writeBlockPos(new BlockPos(x,y,z));
+        buffer.writeBlockPos(new BlockPos(x, y, z));
         buffer.writeShort(count);
         for (final EntityPlayer player : world.playerEntities) {
             if (!(player instanceof EntityPlayerMP)) {

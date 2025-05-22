@@ -5,4 +5,5 @@ import net.minecraft.item.ItemStack;
 public interface IGenomeItem {
 
     GeneticTraits getGenomeTraits(ItemStack stack);
+
 }

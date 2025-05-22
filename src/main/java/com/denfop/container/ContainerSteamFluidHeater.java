@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.steam.TileEntitySteamBoiler;
 import com.denfop.tiles.mechanism.steam.TileEntitySteamFluidHeater;
 import net.minecraft.entity.player.EntityPlayer;
 

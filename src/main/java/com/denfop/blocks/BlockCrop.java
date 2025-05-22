@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.tiles.base.TileEntityAnvil;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.crop.TileEntityCrop;
 import com.denfop.utils.ModUtils;
@@ -19,7 +18,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockCrop implements IMultiTileBlock , IMultiBlockItem {
+public enum BlockCrop implements IMultiTileBlock, IMultiBlockItem {
 
     crop(TileEntityCrop.class, 0),
     ;
@@ -30,21 +29,14 @@ public enum BlockCrop implements IMultiTileBlock , IMultiBlockItem {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockCrop(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
-        idBlock = id;
-    };
     BlockCrop(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
@@ -53,6 +45,18 @@ public enum BlockCrop implements IMultiTileBlock , IMultiBlockItem {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
     }
 
     public void buildDummies() {

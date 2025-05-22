@@ -255,7 +255,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            if (!this.cold.upgrade && this.getMachine().sizeWorkingSlot != 8 ) {
+            if (!this.cold.upgrade && this.getMachine().sizeWorkingSlot != 8) {
                 tooltip.add(Localization.translate("iu.multimachine.info"));
             }
             if (this.heat != null && !this.heat.auto) {
@@ -281,7 +281,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                     energy.getCapacity())
                     + " EF");
         }
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
 

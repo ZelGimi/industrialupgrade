@@ -79,7 +79,6 @@ public class TileEntityWirelessHeatController extends TileEntityInventory implem
     }
 
 
-
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {

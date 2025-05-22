@@ -263,10 +263,11 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
                         item.setPickupDelay(0);
                         item.setItem(stack);
                         world.spawnEntity(item);
-                        if (IUCore.proxy.isRendering()) {
-                            player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
 
-                        }
+
+                    }
+                    if (IUCore.proxy.isRendering()) {
+                        player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
 
                     }
                 }

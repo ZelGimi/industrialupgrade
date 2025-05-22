@@ -67,6 +67,7 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
@@ -194,7 +195,7 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 new Input(
                         new FluidStack(FluidName.fluidnitricacid.getInstance(), 100),
                         input.getInput(new ItemStack(IUItem.toriyore)),
-                        input.getInput(new ItemStack(IUItem.iudust,2,54), 2)
+                        input.getInput(new ItemStack(IUItem.iudust, 2, 54), 2)
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.nuclear_res, 9, 16))
         ));
@@ -217,9 +218,11 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
         ));
         for (int i = 0; i < 14; i++) {
             Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
-                    new Input( new FluidStack(FluidName.fluidtemperedglass.getInstance(), 144),
+                    new Input(
+                            new FluidStack(FluidName.fluidtemperedglass.getInstance(), 144),
                             input.getInput(new ItemStack(IUItem.solar_day_glass, 1, i)),
-                            input.getInput(new ItemStack(IUItem.solar_night_glass, 1, i))),
+                            input.getInput(new ItemStack(IUItem.solar_night_glass, 1, i))
+                    ),
                     new RecipeOutput(null, new ItemStack(IUItem.solar_night_day_glass, 1, i))
             ));
         }

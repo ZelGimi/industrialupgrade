@@ -4,7 +4,6 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.TileEntityDryer;
 import com.denfop.tiles.mechanism.TileEntityMiniSmeltery;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
@@ -27,8 +26,8 @@ public enum BlockMiniSmeltery implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockMiniSmeltery(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -55,14 +54,19 @@ public enum BlockMiniSmeltery implements IMultiTileBlock {
             }
         }
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     @Override
     public String getName() {
         return this.name();

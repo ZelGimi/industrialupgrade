@@ -11,10 +11,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.io.IOException;
 import java.util.UUID;
 
-public class PacketAddBuildingToColony  implements IPacket{
+public class PacketAddBuildingToColony implements IPacket {
 
-    public PacketAddBuildingToColony(){}
-    public PacketAddBuildingToColony(IColony colony){
+    public PacketAddBuildingToColony() {
+    }
+
+    public PacketAddBuildingToColony(IColony colony) {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
         customPacketBuffer.writeByte(getId());
         try {
@@ -25,6 +27,7 @@ public class PacketAddBuildingToColony  implements IPacket{
         }
         IUCore.network.getClient().sendPacket(customPacketBuffer);
     }
+
     @Override
     public byte getId() {
         return 47;
@@ -38,10 +41,10 @@ public class PacketAddBuildingToColony  implements IPacket{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (entityPlayer.getUniqueID().equals(uuid)){
-                String body = customPacketBuffer.readString();
-                IBody body1 = SpaceNet.instance.getBodyFromName(body);
-                SpaceNet.instance.getColonieNet().addItemToColony(body1,entityPlayer);
+        if (entityPlayer.getUniqueID().equals(uuid)) {
+            String body = customPacketBuffer.readString();
+            IBody body1 = SpaceNet.instance.getBodyFromName(body);
+            SpaceNet.instance.getColonieNet().addItemToColony(body1, entityPlayer);
 
         }
     }

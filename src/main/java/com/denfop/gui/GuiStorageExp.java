@@ -57,7 +57,7 @@ public class GuiStorageExp extends GuiIU<ContainerStorageExp> {
         drawTexturedModalRect(xoffset + 7, yoffset + 22, 18,
                 34, 24, 55
         );
-         int chargeLevel = (int) (47.0F * Math.min(this.container.base.expirencelevel
+        int chargeLevel = (int) (47.0F * Math.min(this.container.base.expirencelevel
                 / 23926D, 1));
         int chargeLevel1 = 0;
         if (this.container.base.energy.getCapacity() > 2000000000) {

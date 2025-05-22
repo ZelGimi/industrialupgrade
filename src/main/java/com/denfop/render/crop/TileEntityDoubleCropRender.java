@@ -1,7 +1,6 @@
 package com.denfop.render.crop;
 
 import com.denfop.render.base.BakedBlockModel;
-import com.denfop.tiles.bee.TileEntityApiary;
 import com.denfop.tiles.crop.TileEntityCrop;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -23,11 +22,11 @@ import java.util.function.Function;
 
 public class TileEntityDoubleCropRender extends TileEntitySpecialRenderer<TileEntityCrop> {
 
-    public static Function createFunction(TileEntityCrop tile){
-        Function function= o -> {
+    public static Function createFunction(TileEntityCrop tile) {
+        Function function = o -> {
             if (tile.upDataBlock != null) {
                 GL11.glPushMatrix();
-                GL11.glTranslated(tile.getPos().getX(), tile.getPos().getY()+1, tile.getPos().getZ());
+                GL11.glTranslated(tile.getPos().getX(), tile.getPos().getY() + 1, tile.getPos().getZ());
 
                 RenderHelper.enableStandardItemLighting();
                 GlStateManager.depthMask(true);
@@ -41,26 +40,12 @@ public class TileEntityDoubleCropRender extends TileEntitySpecialRenderer<TileEn
         return function;
     }
 
-    public void render(
-            TileEntityCrop tile,
-            double x,
-            double y,
-            double z,
-            float partialTicks,
-            int destroyStage,
-            float alpha
-    ) {
-
-
-    }
-
-
     public static void render(BakedBlockModel model, IBlockState state, EnumFacing enumfacing) {
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         int i = 0;
-        final List<BakedQuad> listQuads = ((IBakedModel)model).getQuads(state, enumfacing, 0L);
+        final List<BakedQuad> listQuads = ((IBakedModel) model).getQuads(state, enumfacing, 0L);
         for (int j = listQuads.size(); i < j; ++i) {
             BakedQuad bakedquad = listQuads.get(i);
 
@@ -73,6 +58,19 @@ public class TileEntityDoubleCropRender extends TileEntitySpecialRenderer<TileEn
             bufferbuilder.putNormal((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
             tessellator.draw();
         }
+
+    }
+
+    public void render(
+            TileEntityCrop tile,
+            double x,
+            double y,
+            double z,
+            float partialTicks,
+            int destroyStage,
+            float alpha
+    ) {
+
 
     }
 

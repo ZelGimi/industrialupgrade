@@ -45,8 +45,8 @@ public class CustomButton extends GuiElement<CustomButton> {
     public void drawForeground(int mouseX, int mouseY) {
         super.drawForeground(mouseX, mouseY);
         highlighted = this.contains(mouseX, mouseY);
-        if (highlighted&&visible()){
-            new Area(this.gui,x,y,x1,y1).withTooltip(getText()).drawForeground(mouseX, mouseY);
+        if (highlighted && visible()) {
+            new Area(this.gui, x, y, x1, y1).withTooltip(getText()).drawForeground(mouseX, mouseY);
         }
     }
 

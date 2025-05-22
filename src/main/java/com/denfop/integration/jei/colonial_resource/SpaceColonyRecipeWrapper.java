@@ -7,14 +7,9 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class SpaceColonyRecipeWrapper implements IRecipeWrapper {
@@ -35,8 +30,6 @@ public class SpaceColonyRecipeWrapper implements IRecipeWrapper {
     public List<ItemStack> getInputs1() {
         return inputstack;
     }
-
-
 
 
     public List<ItemStack> getInputs() {
@@ -61,8 +54,11 @@ public class SpaceColonyRecipeWrapper implements IRecipeWrapper {
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         minecraft.fontRenderer.drawSplitString(
-                Localization.translate("iu.space_recipe.jei")+Localization.translate("iu.body."+body.getName().toLowerCase()), 5, 3,
-                recipeWidth - 5, 4210752
+                Localization.translate("iu.space_recipe.jei") + Localization.translate("iu.body." + body.getName().toLowerCase()),
+                5,
+                3,
+                recipeWidth - 5,
+                4210752
         );
         minecraft.fontRenderer.drawSplitString(
                 Localization.translate("iu.space_recipe.jei2"), 5, 20,
@@ -70,7 +66,6 @@ public class SpaceColonyRecipeWrapper implements IRecipeWrapper {
         );
 
     }
-
 
 
 }

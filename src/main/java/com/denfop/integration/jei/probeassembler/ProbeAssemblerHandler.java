@@ -41,7 +41,6 @@ public class ProbeAssemblerHandler {
     }
 
 
-
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("probeassembler")) {
             addRecipe(
@@ -62,7 +61,6 @@ public class ProbeAssemblerHandler {
     public ItemStack getOutput() {
         return output.copy();
     }
-
 
 
 }

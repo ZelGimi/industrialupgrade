@@ -5,12 +5,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public interface IEnergyTile {
+
     List<InfoTile<IEnergyTile>> getValidReceivers();
+
     TileEntity getTileEntity();
 
     BlockPos getBlockPos();
@@ -25,10 +26,9 @@ public interface IEnergyTile {
 
     Map<EnumFacing, IEnergyTile> getTiles();
 
-    int hashCode();
-
-    void setHashCodeSource(int hashCode);
 
     int getHashCodeSource();
+
+    void setHashCodeSource(int hashCode);
 
 }

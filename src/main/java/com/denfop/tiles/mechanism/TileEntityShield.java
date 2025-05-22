@@ -54,17 +54,41 @@ import java.util.function.Function;
 
 public class TileEntityShield extends TileEntityInventory implements IUpdatableTileEvent {
 
+    final int latitudeSegments = 16;
+    final int longitudeSegments = 16;
     private final InvSlot slot;
+    public boolean visibleShield = false;
+    public boolean visibleLaser = false;
     Energy energy;
+    List<Integer> integerList = new LinkedList<>();
+    AxisAlignedBB shieldBox;
+    AxisAlignedBB shieldDefaultBox = new AxisAlignedBB(-8, -8, -8, 8, 8, 8);
+    Vec3d center;
+    LinkedList<Chunk> chunks = new LinkedList<>();
+    List<UUID> uuidList = new LinkedList<>();
+    double[] sinLat = new double[latitudeSegments + 1];
+    double[] cosLat = new double[latitudeSegments + 1];
+    double[] sinLng = new double[longitudeSegments + 1];
+    double[] cosLng = new double[longitudeSegments + 1];
+    boolean write = false;
+    double[][] x1 = new double[latitudeSegments][longitudeSegments];
+    double[][] x2 = new double[latitudeSegments][longitudeSegments];
+    double[][] x3 = new double[latitudeSegments][longitudeSegments];
+    double[][] x4 = new double[latitudeSegments][longitudeSegments];
+    double[][] y1 = new double[latitudeSegments][longitudeSegments];
+    double[][] y2 = new double[latitudeSegments][longitudeSegments];
+    double[][] y3 = new double[latitudeSegments][longitudeSegments];
+    double[][] y4 = new double[latitudeSegments][longitudeSegments];
+    double[][] z1 = new double[latitudeSegments][longitudeSegments];
+    double[][] z2 = new double[latitudeSegments][longitudeSegments];
+    double[][] z3 = new double[latitudeSegments][longitudeSegments];
+    double[][] z4 = new double[latitudeSegments][longitudeSegments];
     @SideOnly(Side.CLIENT)
     private Function render;
     private double laserProgress;
-    List<Integer> integerList = new LinkedList<>();
-    public boolean visibleShield = false;
-    public boolean visibleLaser = false;
-
     private byte mode = 0;
-
+    private long lastShotTime = 0;
+    private boolean isShooting = false;
     public TileEntityShield() {
         energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
         slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9) {
@@ -97,6 +121,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         };
 
     }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -110,10 +135,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     public boolean isNormalCube() {
         return false;
     }
-    AxisAlignedBB shieldBox;
-    AxisAlignedBB shieldDefaultBox = new AxisAlignedBB(-8, -8, -8, 8, 8, 8);
-    Vec3d center;
-    LinkedList<Chunk> chunks = new LinkedList<>();
+
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
@@ -123,6 +145,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
 
         return compound;
     }
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -130,6 +153,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         this.visibleLaser = compound.getBoolean("VisibleLaser");
         this.mode = compound.getByte("Mode");
     }
+
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -161,8 +185,6 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
             GlobalRenderManager.removeRender(world, pos);
         }
     }
-
-    List<UUID> uuidList = new LinkedList<>();
 
     @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
@@ -324,26 +346,6 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         GlStateManager.popMatrix();
     }
 
-    final int latitudeSegments = 16;
-    final int longitudeSegments = 16;
-    double[] sinLat = new double[latitudeSegments + 1];
-    double[] cosLat = new double[latitudeSegments + 1];
-    double[] sinLng = new double[longitudeSegments + 1];
-    double[] cosLng = new double[longitudeSegments + 1];
-    boolean write = false;
-    double[][] x1 = new double[latitudeSegments][longitudeSegments];
-    double[][] x2 = new double[latitudeSegments][longitudeSegments];
-    double[][] x3 = new double[latitudeSegments][longitudeSegments];
-    double[][] x4 = new double[latitudeSegments][longitudeSegments];
-    double[][] y1 = new double[latitudeSegments][longitudeSegments];
-    double[][] y2 = new double[latitudeSegments][longitudeSegments];
-    double[][] y3 = new double[latitudeSegments][longitudeSegments];
-    double[][] y4 = new double[latitudeSegments][longitudeSegments];
-    double[][] z1 = new double[latitudeSegments][longitudeSegments];
-    double[][] z2 = new double[latitudeSegments][longitudeSegments];
-    double[][] z3 = new double[latitudeSegments][longitudeSegments];
-    double[][] z4 = new double[latitudeSegments][longitudeSegments];
-
     @SideOnly(Side.CLIENT)
     private void writeData() {
         write = true;
@@ -443,9 +445,6 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         tessellator.draw();
     }
 
-    private long lastShotTime = 0;
-    private boolean isShooting = false;
-
     @SideOnly(Side.CLIENT)
     private void renderLaserEffect(Entity entity) {
 
@@ -506,8 +505,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
                 GlStateManager.popMatrix();
 
 
-                    spawnLaserParticles(segmentStart, segmentEnd);
-
+                spawnLaserParticles(segmentStart, segmentEnd);
 
 
                 laserProgress += 0.1;

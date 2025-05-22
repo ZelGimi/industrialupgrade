@@ -54,7 +54,6 @@ public class ItemEnergyCoupler extends ItemDamage implements IReactorItem {
     }
 
 
-
     public String getItemStackDisplayName(ItemStack stack) {
         return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
     }
@@ -63,11 +62,13 @@ public class ItemEnergyCoupler extends ItemDamage implements IReactorItem {
     public void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
+
     @Override
     public boolean needClear(ItemStack stack) {
         return this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack) == 0;
     }
+
     @Override
     public EnumTypeComponent getType() {
         return EnumTypeComponent.ENERGY_COUPLER;

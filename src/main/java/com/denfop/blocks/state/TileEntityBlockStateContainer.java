@@ -21,7 +21,7 @@ public class TileEntityBlockStateContainer extends BlockStateContainer {
 
     public TileEntityBlockStateContainer(Block blockIn, Material material, IProperty<?>... properties) {
         super(blockIn, properties);
-        this.material=material;
+        this.material = material;
     }
 
     protected BlockStateContainer.StateImplementation createState(

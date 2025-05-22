@@ -39,7 +39,7 @@ public class ItemSteelHammer extends ItemToolIU {
         super("steel_hammer", 2, 8, new HashSet<>());
         this.efficiency = 8;
         this.setHarvestLevel("pickaxe", 3);
-        setMaxDamage((int) (ToolMaterial.IRON.getMaxUses()*3));
+        setMaxDamage((int) (ToolMaterial.IRON.getMaxUses() * 3));
         this.blocks = Sets.newHashSet(
                 Blocks.COBBLESTONE.getDefaultState(),
                 Blocks.DOUBLE_STONE_SLAB.getDefaultState(),

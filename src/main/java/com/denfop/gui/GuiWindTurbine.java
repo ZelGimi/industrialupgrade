@@ -14,8 +14,6 @@ import com.denfop.api.gui.ItemStackImage;
 import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
-import com.denfop.componets.ComponentButton;
-import com.denfop.container.ContainerWindGenerator;
 import com.denfop.container.ContainerWindTurbine;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
@@ -24,12 +22,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -41,6 +35,7 @@ public class GuiWindTurbine extends GuiIU<ContainerWindTurbine> implements GuiPa
         GuiVerticalSlider.FormatHelper {
 
     private final ResourceLocation background;
+    float scaled = -1;
     private int prevText;
 
     public GuiWindTurbine(ContainerWindTurbine guiContainer) {
@@ -169,7 +164,7 @@ public class GuiWindTurbine extends GuiIU<ContainerWindTurbine> implements GuiPa
                     i++;
                     continue;
                 }
-                new ItemStackImage(this,181, 19 + i * 18,() -> stack).drawBackground(xoffset,yoffset);
+                new ItemStackImage(this, 181, 19 + i * 18, () -> stack).drawBackground(xoffset, yoffset);
                 i++;
 
             }
@@ -184,25 +179,25 @@ public class GuiWindTurbine extends GuiIU<ContainerWindTurbine> implements GuiPa
         handleUpgradeTooltip(mouseX, mouseY);
         if (this.container.base.getWorld().provider.getDimension() == 0) {
             float scale = (float) (2D / new ScaledResolution(mc).getScaleFactor());
-            String fields="";
+            String fields = "";
             if (this.container.base.getMinWind() != 0) {
-                fields+=Localization.translate("iu.wind_meter.info") + String.format(
-                                "%.1f",
-                                Math.min(24.7 + this.container.base.mind_speed, WindSystem.windSystem.getSpeedFromPower(
-                                                this.container.base.getBlockPos(),
-                                                this.container.base,
-                                                this.container.base.generation
-                                        ) / this.container.base.getCoefficient()
-                                )
-                        ) + " m/s";
+                fields += Localization.translate("iu.wind_meter.info") + String.format(
+                        "%.1f",
+                        Math.min(24.7 + this.container.base.mind_speed, WindSystem.windSystem.getSpeedFromPower(
+                                        this.container.base.getBlockPos(),
+                                        this.container.base,
+                                        this.container.base.generation
+                                ) / this.container.base.getCoefficient()
+                        )
+                ) + " m/s";
             } else {
-                fields+=Localization.translate("iu.wind_meter.info") + String.format(
-                                "%.1f",
-                                this.container.base.wind_speed + this.container.base.mind_speed
-                        ) + " m/s";
+                fields += Localization.translate("iu.wind_meter.info") + String.format(
+                        "%.1f",
+                        this.container.base.wind_speed + this.container.base.mind_speed
+                ) + " m/s";
             }
-            scale = adjustTextScale(fields, 125-10, 20, scale, 0.8F);
-            drawTextInCanvas(fields,27+30, 48, 125-10, 20, scale*0.8f,ModUtils.convertRGBcolorToInt(13, 229, 34));
+            scale = adjustTextScale(fields, 125 - 10, 20, scale, 0.8F);
+            drawTextInCanvas(fields, 27 + 30, 48, 125 - 10, 20, scale * 0.8f, ModUtils.convertRGBcolorToInt(13, 229, 34));
 
         }
 
@@ -223,35 +218,35 @@ public class GuiWindTurbine extends GuiIU<ContainerWindTurbine> implements GuiPa
             }
         }
         if (this.container.base.getRotor() != null) {
-            String fields =Localization.translate("iu.wind_side") + Localization.translate(("iu.wind." + container.base.wind_side
+            String fields = Localization.translate("iu.wind_side") + Localization.translate(("iu.wind." + container.base.wind_side
                     .name()
                     .toLowerCase()));
             if (this.container.base.getRotorSide() != null) {
-                fields  += "\n"+ Localization.translate("iu.wind_mec_side") + Localization.translate(("iu.wind." + this.container.base
+                fields += "\n" + Localization.translate("iu.wind_mec_side") + Localization.translate(("iu.wind." + this.container.base
                         .getRotorSide()
                         .name()
-                        .toLowerCase())) ;
+                        .toLowerCase()));
 
             }
-            fields  += "\n"+Localization.translate("iu.wind_gen") +
-                            ModUtils.getString(this.container.base.generation) + " EF/t";
-            fields  += "\n"+Localization.translate("iu.wind_coef") + String.format(
-                            "%.2f",
-                            this.container.base.getCoefficient()
-                    );
-            fields  += "\n"+Localization.translate("iu.wind_tier") + String.format(
-                            "%d",
-                            this.container.base.getRotor().getLevel()
-                    );
+            fields += "\n" + Localization.translate("iu.wind_gen") +
+                    ModUtils.getString(this.container.base.generation) + " EF/t";
+            fields += "\n" + Localization.translate("iu.wind_coef") + String.format(
+                    "%.2f",
+                    this.container.base.getCoefficient()
+            );
+            fields += "\n" + Localization.translate("iu.wind_tier") + String.format(
+                    "%d",
+                    this.container.base.getRotor().getLevel()
+            );
             if (this.container.base.enumTypeWind != null) {
                 int meta = Math.min(this.container.base.enumTypeWind.ordinal() + this.container.base.getMinWind(), 9);
                 EnumTypeWind enumTypeWinds = WindSystem.windSystem.getEnumTypeWind().values()[meta];
 
 
-                fields  += "\n"+Localization.translate("iu.wind_level_info") + String.format(
-                                "%d",
-                                enumTypeWinds.ordinal() + 1
-                        );
+                fields += "\n" + Localization.translate("iu.wind_level_info") + String.format(
+                        "%d",
+                        enumTypeWinds.ordinal() + 1
+                );
 
                 double hours = 0;
                 double minutes = 0;
@@ -265,7 +260,7 @@ public class GuiWindTurbine extends GuiIU<ContainerWindTurbine> implements GuiPa
                 String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") + "" : "";
                 String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
                 String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") + "" : "";
-                fields  += "\n"+Localization.translate("iu.wind_change_time") + time1 + time2 + time3;
+                fields += "\n" + Localization.translate("iu.wind_change_time") + time1 + time2 + time3;
                 String tooltip3 = Localization.translate("iu.wind_meter.info") +
                         String.format(
                                 "%.1f",
@@ -284,16 +279,15 @@ public class GuiWindTurbine extends GuiIU<ContainerWindTurbine> implements GuiPa
                 prevText = fields.length();
             }
             if (scaled == -1) {
-                scale = adjustTextScale(fields, 150-10, 80-10, scale, 0.8F);
+                scale = adjustTextScale(fields, 150 - 10, 80 - 10, scale, 0.8F);
                 scaled = scale;
             } else {
                 scale = scaled;
             }
-            drawTextInCanvas(fields,27+4, 65+4, 150-4, 80-4, scale * 1.3f,ModUtils.convertRGBcolorToInt(13, 229, 34));
+            drawTextInCanvas(fields, 27 + 4, 65 + 4, 150 - 4, 80 - 4, scale * 1.3f, ModUtils.convertRGBcolorToInt(13, 229, 34));
         }
     }
 
-    float scaled = -1;
     @Override
     protected ResourceLocation getTexture() {
         return background;

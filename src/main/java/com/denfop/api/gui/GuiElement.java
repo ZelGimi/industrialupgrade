@@ -96,12 +96,15 @@ public abstract class GuiElement<T extends GuiElement<T>> {
     public static void bindCommonTexture3() {
         Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture3);
     }
+
     public static void bindCommonTexture4() {
         Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture4);
     }
+
     public static void bindCommonTexture5() {
         Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture5);
     }
+
     public static void bindBlockTexture() {
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
     }

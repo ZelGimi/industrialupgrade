@@ -47,6 +47,7 @@ public class GuiWirelessControllerHeatReactors extends GuiIU<ContainerWirelessCo
             }
         }
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
@@ -62,9 +63,10 @@ public class GuiWirelessControllerHeatReactors extends GuiIU<ContainerWirelessCo
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-120, mouseY, text);
+            this.drawTooltip(mouseX - 120, mouseY, text);
         }
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);

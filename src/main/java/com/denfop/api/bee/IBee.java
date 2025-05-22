@@ -1,13 +1,8 @@
 package com.denfop.api.bee;
 
 import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.pollution.LevelPollution;
-import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.INetworkObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.biome.Biome;
 
@@ -24,16 +19,13 @@ public interface IBee extends INetworkObject {
 
     List<IBee> getUnCompatibleBees();
 
+    void setUnCompatibleBees(List<IBee> bees);
+
     boolean isSun();
 
     boolean isNight();
 
-
-
-
     int getWeatherResistance();
-
-    void setUnCompatibleBees(List<IBee> bees);
 
     int getChance();
 
@@ -47,7 +39,6 @@ public interface IBee extends INetworkObject {
     boolean canWorkInBiome(Biome biomeName);
 
     void addBiome(Biome biomeName);
-
 
 
     int getOffspring();

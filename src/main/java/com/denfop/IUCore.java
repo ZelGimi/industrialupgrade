@@ -51,13 +51,16 @@ import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.VeinType;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -76,6 +79,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -295,7 +299,6 @@ public final class IUCore {
         initENet();
 
 
-
     }
 
     @SubscribeEvent
@@ -375,20 +378,33 @@ public final class IUCore {
         }
 
     }
+
     @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent event) {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
             if (!world.isRemote && world.provider.getDimension() == 0) {
                 EventHandlerPlanet.data = (WorldSavedDataIU) world.loadData(WorldSavedDataIU.class, Constants.MOD_ID);
-                if ( EventHandlerPlanet.data == null) {
+                if (EventHandlerPlanet.data == null) {
                     EventHandlerPlanet.data = new WorldSavedDataIU();
                     EventHandlerPlanet.data.setWorld(world);
-                    world.setData(Constants.MOD_ID,  EventHandlerPlanet.data);
+                    world.setData(Constants.MOD_ID, EventHandlerPlanet.data);
                 }
             }
         }
     }
+    int tickCounter = 0;
+
+
+    @Mod.EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        if (FMLCommonHandler
+                .instance()
+                .getEffectiveSide() == Side.SERVER && EventHandlerPlanet.data != null) {
+            EventHandlerPlanet.data.setDirty(true);
+        }
+    }
+
     @Mod.EventHandler
     public void postInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);
@@ -616,6 +632,15 @@ public final class IUCore {
             ++ItemSpectralSaber.ticker;
             ++ItemNanoSaber.ticker;
         }
+        if (event.phase == TickEvent.Phase.END && FMLCommonHandler
+                .instance()
+                .getEffectiveSide() == Side.SERVER &&  EventHandlerPlanet.data != null) {
+            tickCounter++;
+            if (tickCounter >= 6000) {
+                tickCounter = 0;
+                EventHandlerPlanet.data.setDirty(true);
+            }
+        }
 
     }
 
@@ -632,7 +657,9 @@ public final class IUCore {
             ++ListInformationUtils.tick;
             if (ListInformationUtils.tick % 40 == 0) {
                 ListInformationUtils.index = (ListInformationUtils.index + 1) % ListInformationUtils.mechanism_info.size();
-                ListInformationUtils.index1 = (ListInformationUtils.index1 + 1) % ListInformationUtils.mechanism_info1.values().size();
+                ListInformationUtils.index1 = (ListInformationUtils.index1 + 1) % ListInformationUtils.mechanism_info1
+                        .values()
+                        .size();
                 ListInformationUtils.index2 = (ListInformationUtils.index2 + 1) % ListInformationUtils.mechanism_info2.size();
 
             }

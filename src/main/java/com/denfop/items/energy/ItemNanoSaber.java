@@ -412,6 +412,7 @@ public class ItemNanoSaber extends ItemTool implements IEnergyItem, IUpgradeItem
             }
         }
     }
+
     @Override
     public void addInformation(
             final ItemStack stack,
@@ -430,6 +431,7 @@ public class ItemNanoSaber extends ItemTool implements IEnergyItem, IUpgradeItem
         }
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
+
     protected String getIdleSound() {
         return "NanosabreIdle".toLowerCase();
     }

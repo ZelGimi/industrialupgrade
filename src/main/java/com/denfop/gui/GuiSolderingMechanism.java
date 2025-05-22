@@ -34,6 +34,7 @@ public class GuiSolderingMechanism extends GuiIU<ContainerSolderingMechanism> {
         this.componentList.clear();
 
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -49,9 +50,10 @@ public class GuiSolderingMechanism extends GuiIU<ContainerSolderingMechanism> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     @Override
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -76,6 +78,7 @@ public class GuiSolderingMechanism extends GuiIU<ContainerSolderingMechanism> {
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
+
     public void updateTickInterface() {
         final boolean left = Keyboard.isKeyDown(Keyboard.KEY_LEFT);
         final boolean right = Keyboard.isKeyDown(Keyboard.KEY_RIGHT);
@@ -127,6 +130,7 @@ public class GuiSolderingMechanism extends GuiIU<ContainerSolderingMechanism> {
         }
         tick++;
     }
+
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         int xoffset = (this.width - this.xSize) / 2;

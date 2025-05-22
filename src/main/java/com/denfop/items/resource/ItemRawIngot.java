@@ -32,8 +32,9 @@ public class ItemRawIngot extends ItemSubTypes<ItemRawIngot.Types> implements IM
         if (this.isInCreativeTab(tab)) {
 
             for (final Types type : this.typeProperty.getAllowedValues()) {
-                if (type != Types.uranium)
-                subItems.add(this.getItemStackUnchecked(type));
+                if (type != Types.uranium) {
+                    subItems.add(this.getItemStackUnchecked(type));
+                }
             }
 
         }
@@ -49,8 +50,10 @@ public class ItemRawIngot extends ItemSubTypes<ItemRawIngot.Types> implements IM
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + "raw_ingot_"+ Types.getFromID(meta).getName(),
-                        null)
+                new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + "raw_ingot_" + Types.getFromID(meta).getName(),
+                        null
+                )
         );
     }
 

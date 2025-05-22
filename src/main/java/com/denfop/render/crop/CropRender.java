@@ -36,16 +36,14 @@ import java.util.function.Function;
 @SideOnly(Side.CLIENT)
 public class CropRender extends AbstractModel {
 
-    private static final ResourceLocation STICK = new ResourceLocation(Constants.MOD_ID, "blocks/stick");
-    private static final ResourceLocation UPGRADED_STICK = new ResourceLocation(Constants.MOD_ID, "blocks/stick_upgraded");
-
-
-    private static final CropList<CropTextures> textures = new CropList<>();
-    private static final List<ResourceLocation> texturesList = new ArrayList<>();
     public static final IUnlistedProperty<CropRenderState> renderStateProperty = new UnlistedProperty<>(
             "renderstate",
             CropRenderState.class
     );
+    private static final ResourceLocation STICK = new ResourceLocation(Constants.MOD_ID, "blocks/stick");
+    private static final ResourceLocation UPGRADED_STICK = new ResourceLocation(Constants.MOD_ID, "blocks/stick_upgraded");
+    private static final CropList<CropTextures> textures = new CropList<>();
+    private static final List<ResourceLocation> texturesList = new ArrayList<>();
     private final LoadingCache<CropRenderState, IBakedModel> modelCache;
 
     public CropRender() {

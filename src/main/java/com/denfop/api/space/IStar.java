@@ -12,4 +12,5 @@ public interface IStar extends IBody {
     List<IPlanet> getPlanetList();
 
     List<IAsteroid> getAsteroidList();
+
 }

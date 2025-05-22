@@ -2,7 +2,6 @@ package com.denfop.tiles.mechanism.generator.energy.coal;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
-import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerGenerator;
 import com.denfop.gui.GuiGenerator;
@@ -87,7 +86,7 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
         }
 
 
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     public int gaugeFuelScaled(int i) {

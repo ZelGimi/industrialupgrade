@@ -25,7 +25,7 @@ public class ContainerBeeAnalyzer extends ContainerHandHeldInventory<ItemStackBe
 
         inventorySize = Toolbox1.inventorySize;
         int slots = Toolbox1.inventorySize;
-        this.addSlotToContainer(new Slot(Toolbox1, 0, 12 , 24) {
+        this.addSlotToContainer(new Slot(Toolbox1, 0, 12, 24) {
             @Override
             public boolean isItemValid(final ItemStack stack) {
                 return stack.getItem() instanceof ItemJarBees;
@@ -43,7 +43,7 @@ public class ContainerBeeAnalyzer extends ContainerHandHeldInventory<ItemStackBe
                     Toolbox1.crop = null;
                     Toolbox1.genome = null;
                 } else {
-                    ModUtils.nbt(stack).setBoolean("analyzed",true);
+                    ModUtils.nbt(stack).setBoolean("analyzed", true);
                     Toolbox1.genome = new Genome(stack);
                     Toolbox1.crop = ItemJarBees.getBee(stack);
                 }

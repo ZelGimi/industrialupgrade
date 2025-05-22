@@ -12,9 +12,11 @@ public interface ITransportConductor<T, E> extends ITransportAcceptor<T, E>, ITr
     boolean isOutput();
 
     boolean isInput();
-   InfoCable getCable();
+
+    InfoCable getCable();
 
     void setCable(InfoCable cable);
+
     boolean isItem();
 
     List<ItemStack> getBlackListItems(EnumFacing facing);
@@ -29,9 +31,10 @@ public interface ITransportConductor<T, E> extends ITransportAcceptor<T, E>, ITr
 
     int getMax();
 
+    void setMax(int value);
+
     int getMax(byte tick);
 
-    void setMax(int value);
 }
 
 

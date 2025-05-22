@@ -24,13 +24,7 @@ public class OxygenFactory extends Building implements IOxygenFactory {
             this.getColony().addBuilding(this);
         }
     }
-    @Override
-    public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
-        super.writePacket(customPacketBuffer);
-        customPacketBuffer.writeByte(type.ordinal());
-        customPacketBuffer.writeByte(people);
-        return customPacketBuffer;
-    }
+
     public OxygenFactory(CustomPacketBuffer packetBuffer, Colony colony) {
         super(colony);
         this.type = EnumTypeOxygenFactory.values()[packetBuffer.readByte()];
@@ -38,6 +32,22 @@ public class OxygenFactory extends Building implements IOxygenFactory {
 
         this.getColony().addMaxOxygen(this.getMax());
         this.getColony().addBuilding(this);
+    }
+
+    public OxygenFactory(NBTTagCompound tag, final IColony colonie) {
+        super(colonie);
+        this.type = EnumTypeOxygenFactory.values()[tag.getByte("id")];
+        this.people = tag.getByte("people");
+        this.getColony().addMaxOxygen(this.getMax());
+        this.getColony().addBuilding(this);
+    }
+
+    @Override
+    public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
+        super.writePacket(customPacketBuffer);
+        customPacketBuffer.writeByte(type.ordinal());
+        customPacketBuffer.writeByte(people);
+        return customPacketBuffer;
     }
 
     @Override
@@ -48,14 +58,6 @@ public class OxygenFactory extends Building implements IOxygenFactory {
     @Override
     public byte getId() {
         return 5;
-    }
-
-    public OxygenFactory(NBTTagCompound tag, final IColony colonie) {
-        super(colonie);
-        this.type =  EnumTypeOxygenFactory.values()[tag.getByte("id")];
-        this.people = tag.getByte("people");
-        this.getColony().addMaxOxygen(this.getMax());
-        this.getColony().addBuilding(this);
     }
 
     @Override

@@ -89,7 +89,6 @@ public class BlockTexGlass extends BlockBase {
         reinforced;
 
 
-
         public String getName() {
             return this.name();
         }

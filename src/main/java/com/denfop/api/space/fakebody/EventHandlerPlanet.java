@@ -1,20 +1,18 @@
 package com.denfop.api.space.fakebody;
 
 
-import com.denfop.Constants;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.research.api.IResearchTable;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.research.event.ResearchTableLoadEvent;
+import com.denfop.api.space.research.event.ResearchTableReLoadEvent;
 import com.denfop.api.space.research.event.ResearchTableUnLoadEvent;
 import com.denfop.api.space.research.event.RocketPadLoadEvent;
+import com.denfop.api.space.research.event.RocketPadReLoadEvent;
 import com.denfop.api.space.research.event.RocketPadUnLoadEvent;
 import com.denfop.events.WorldSavedDataIU;
-import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,26 +22,50 @@ import java.util.UUID;
 
 public class EventHandlerPlanet {
 
-    private final boolean load;
     public static WorldSavedDataIU data;
+    private final boolean load;
+    public int tick;
 
     public EventHandlerPlanet() {
         this.load = false;
     }
 
     @SubscribeEvent
-    public void tick(final TickEvent.WorldTickEvent event) {
+    public void tick(final TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
-            if (event.world.provider.getDimension() == 0 && event.world.provider.getWorldTime() % 20 == 0) {
+            if (tick % 20 == 0) {
                 SpaceNet.instance.getFakeSpaceSystem().working();
                 SpaceNet.instance.getColonieNet().working();
             }
+            tick++;
         }
 
 
     }
+    @SubscribeEvent
+    public void reLoad(final RocketPadReLoadEvent event) {
+        if (event.getWorld().isRemote) {
+            return;
+        }
+        final Map<UUID, IRocketLaunchPad> map = SpaceNet.instance
+                .getFakeSpaceSystem()
+                .getRocketPadMap();
+        map.replace(event.table.getPlayer(), event.table);
 
 
+    }
+    @SubscribeEvent
+    public void reLoad(final ResearchTableReLoadEvent event) {
+        if (event.getWorld().isRemote) {
+            return;
+        }
+        final Map<UUID, IResearchTable> map = SpaceNet.instance
+                .getFakeSpaceSystem()
+                .getResearchTableMap();
+        map.replace(event.table.getPlayer(), event.table);
+
+
+    }
 
     @SubscribeEvent
     public void load(final ResearchTableLoadEvent event) {
@@ -55,8 +77,6 @@ public class EventHandlerPlanet {
                 .getResearchTableMap();
         if (!map.containsKey(event.table.getPlayer())) {
             map.put(event.table.getPlayer(), event.table);
-        } else {
-            map.replace(event.table.getPlayer(), event.table);
         }
 
     }
@@ -83,8 +103,6 @@ public class EventHandlerPlanet {
                 .getRocketPadMap();
         if (!map.containsKey(event.table.getPlayer())) {
             map.put(event.table.getPlayer(), event.table);
-        } else {
-            map.replace(event.table.getPlayer(), event.table);
         }
 
     }
@@ -101,21 +119,23 @@ public class EventHandlerPlanet {
 
     }
 
-     @SubscribeEvent
+    @SubscribeEvent
     public void onSave(WorldEvent.Save event) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && data != null && event.getWorld().provider.getDimension() == 0) {
+        if (FMLCommonHandler
+                .instance()
+                .getEffectiveSide() == Side.SERVER && data != null && event.getWorld().provider.getDimension() == 0) {
             data.setDirty(true);
         }
     }
 
     @SubscribeEvent
     public void onUnload(WorldEvent.Unload event) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && data != null && event.getWorld().provider.getDimension() == 0) {
+        if (FMLCommonHandler
+                .instance()
+                .getEffectiveSide() == Side.SERVER && data != null && event.getWorld().provider.getDimension() == 0) {
             data.setDirty(true);
         }
     }
-
-
 
 
 }

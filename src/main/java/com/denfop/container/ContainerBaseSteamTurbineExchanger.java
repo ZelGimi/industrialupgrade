@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.steamturbine.exchanger.TileEntityBaseSteamTurbineExchanger;
-import com.denfop.tiles.reactors.graphite.exchanger.TileEntityExchanger;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerBaseSteamTurbineExchanger extends ContainerFullInv<TileEntityBaseSteamTurbineExchanger> {

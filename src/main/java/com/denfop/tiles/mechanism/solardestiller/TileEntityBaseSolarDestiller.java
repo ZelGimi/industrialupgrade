@@ -161,6 +161,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         }
         return 4;
     }
+
     public int getTickRate() {
         Biome biome = world.getBiome(pos);
         if (BiomeDictionary.hasType(biome, Type.HOT)) {

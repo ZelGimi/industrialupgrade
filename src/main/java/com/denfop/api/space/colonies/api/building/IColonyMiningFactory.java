@@ -1,7 +1,7 @@
 package com.denfop.api.space.colonies.api.building;
 
-import com.denfop.api.space.colonies.enums.EnumMiningFactory;
 import com.denfop.api.space.colonies.api.IColonyBuilding;
+import com.denfop.api.space.colonies.enums.EnumMiningFactory;
 
 public interface IColonyMiningFactory extends IColonyBuilding {
 
@@ -10,9 +10,11 @@ public interface IColonyMiningFactory extends IColonyBuilding {
     EnumMiningFactory getFactory();
 
     int getWorkers();
+
     int needWorkers();
 
     void addWorkers(int workers);
 
     void removeWorkers(int remove);
+
 }

@@ -248,7 +248,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                     if (input.isEmpty()) {
                                         if (invSlot.accepts(output, j)) {
                                             if (invSlot.add(output)) {
-                                                slot.put(j, ItemStack.EMPTY);
+                                                slot.put(jj, ItemStack.EMPTY);
                                                 output = ItemStack.EMPTY;
                                             }
                                         }

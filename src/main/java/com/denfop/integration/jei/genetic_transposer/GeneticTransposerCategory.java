@@ -1,7 +1,6 @@
 package com.denfop.integration.jei.genetic_transposer;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
@@ -10,11 +9,9 @@ import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerEnchanterBooks;
 import com.denfop.container.ContainerGeneticTransposer;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
@@ -76,7 +73,7 @@ public class GeneticTransposerCategory extends GuiIU implements IRecipeCategory<
     @Nonnull
     @Override
     public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack( BlockBaseMachine3.genetic_transposer).getUnlocalizedName());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.genetic_transposer).getUnlocalizedName());
     }
 
     @Nonnull

@@ -14,8 +14,8 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.Energy;
 import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerWaterRotorAssembler;
 import com.denfop.gui.GuiWaterRotorAssembler;
@@ -171,7 +171,7 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

@@ -3,10 +3,7 @@ package com.denfop.tiles.gasturbine;
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.mechanism.BlockCyclotron;
 import com.denfop.blocks.mechanism.BlockGasTurbine;
-import com.denfop.blocks.mechanism.BlockHydroTurbine;
-import com.denfop.blocks.mechanism.BlockWindTurbine;
 import com.denfop.componets.Energy;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 
@@ -14,8 +11,8 @@ public class TileEntityGasTurbineSocket extends TileEntityMultiBlockElement impl
 
     private final Energy energy;
 
-    public TileEntityGasTurbineSocket(){
-        this.energy= this.addComponent(Energy.asBasicSource(this,2000000,14));
+    public TileEntityGasTurbineSocket() {
+        this.energy = this.addComponent(Energy.asBasicSource(this, 2000000, 14));
     }
 
     @Override

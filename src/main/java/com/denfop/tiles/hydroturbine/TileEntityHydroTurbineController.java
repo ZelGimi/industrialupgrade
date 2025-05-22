@@ -2,6 +2,7 @@ package com.denfop.tiles.hydroturbine;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules;
@@ -71,9 +72,9 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
         IUpdatableTileEvent {
 
 
-    public ISocket energy;
     public final InvSlotHydroTurbineRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
+    public ISocket energy;
     public InvSlotHydroTurbineRotor slot;
     public double generation = 0;
     public boolean need_repair;
@@ -95,9 +96,9 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
     private float speed;
     private float angle;
     private long lastcheck;
-    private boolean work;
+    private boolean work = true;
     private int time;
-    private boolean can_work;
+    private boolean can_work= true;
     private double biome;
 
     public TileEntityHydroTurbineController() {
@@ -143,11 +144,12 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
         if (coefficient_power == 100) {
             return 1;
         }
-        return (int) ((int) (this.getRotor().getLevel() * this.coefficient_power / 100D) * Math.pow(
+        return (int) ((int) (1 * this.coefficient_power / 100D) * Math.pow(
                 this.coefficient_power / 100D,
                 this.getRotor().getLevel() - 1
-        ))* getCoefDamage();
+        )) * getCoefDamage();
     }
+
     private int getCoefDamage() {
         switch ((int) (coefficient * 10)) {
             case 10:
@@ -432,6 +434,8 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
                             this.getItemStack()
                     ) * this.biome * this.coefficient_power / 100D;
             this.energy.getEnergy().addEnergy(generation);
+            this.energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
+
             if (this.world.getWorldTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
             }
@@ -439,6 +443,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
             generation = 0;
         }
     }
+
     @SideOnly(Side.CLIENT)
     public void render(
             TileMultiBlockBase tileEntityMultiBlockBase
@@ -446,11 +451,12 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
         super.render(tileEntityMultiBlockBase);
         if (this.isFull()) {
             GL11.glPushMatrix();
-            GlStateManager.translate(-0.5,0,-0.5);
+            GlStateManager.translate(-0.5, 0, -0.5);
             this.renderBlockRotor(this, this.getWorld(), this.getPos());
             GL11.glPopMatrix();
         }
     }
+
     @SideOnly(Side.CLIENT)
     protected void renderBlockRotor(IWindMechanism windGen, World world, BlockPos pos) {
         int diameter = windGen.getRotorDiameter();
@@ -496,6 +502,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
             GlStateManager.popMatrix();
         }
     }
+
     public void updateField(String name, CustomPacketBuffer is) {
         super.updateField(name, is);
         if (name.equals("speed")) {
@@ -621,6 +628,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), false));
         super.onUnloaded();
     }
+
     @Override
     public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
         for (int i = pos.getX() - 4; i <= pos.getX() + 4; i++) {
@@ -635,6 +643,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
         }
         return true;
     }
+
     @Override
     public void onBlockBreak(boolean w) {
         super.onBlockBreak(w);
@@ -721,6 +730,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
     public void usingBeforeGUI() {
 
     }
+
     @Override
     public void setFull(final boolean full) {
         super.setFull(full);
@@ -730,6 +740,7 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
 
 
     }
+
     @Override
     public float getAngle() {
         if (this.getWorld().provider.getDimension() != 0) {

@@ -5,22 +5,11 @@ import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.energy.event.EventLoadController;
 import com.denfop.api.energy.event.EventUnloadController;
-import com.denfop.api.energy.event.TileLoadEvent;
-import com.denfop.api.energy.event.TileUnLoadEvent;
-import com.denfop.api.energy.event.TilesUpdateEvent;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class EventHandler {
 
@@ -40,75 +29,6 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void worldLoad(WorldEvent.Load event) {
-        World world = event.getWorld();
-        if (!world.isRemote) {
-            List<TileEntity> list = new LinkedList<TileEntity>(world.loadedTileEntityList) {
-                @Override
-                public boolean removeAll(final Collection<?> c) {
-                    List<TileEntity> collection = (List<TileEntity>) c.stream().collect(Collectors.toList());
-                    boolean removed = false;
-                    for (TileEntity entity : collection) {
-                        removed = removed || remove(entity);
-                    }
-                    return removed;
-                }
-
-                @Override
-                public boolean addAll(final Collection<? extends TileEntity> c) {
-
-                    boolean add = false;
-                    for (TileEntity entity : c) {
-                        add = add || add(entity);
-                    }
-                    return add;
-                }
-
-                @Override
-                public boolean add(final TileEntity o) {
-                    final boolean b = super.add(o);
-                    if (b) {
-                        MinecraftForge.EVENT_BUS.post(new TileLoadEvent(
-                                event.getWorld(),
-                                o
-                        ));
-                    }
-                    return b;
-                }
-
-                @Override
-                public boolean remove(final Object o) {
-                    final boolean b = super.remove(o);
-                    if (b) {
-                        MinecraftForge.EVENT_BUS.post(new TileUnLoadEvent(
-                                event.getWorld(),
-                                (TileEntity) o
-                        ));
-                    }
-
-                    return b;
-                }
-
-                @Override
-                public TileEntity remove(final int index) {
-                    final TileEntity tile = super.remove(index);
-                    MinecraftForge.EVENT_BUS.post(new TileUnLoadEvent(
-                            event.getWorld(),
-                            tile
-                    ));
-
-                    return tile;
-                }
-
-            };
-            world.loadedTileEntityList = list;
-            MinecraftForge.EVENT_BUS.post(new TilesUpdateEvent(
-                    event.getWorld(),
-                    list
-            ));
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEnergyTileUnLoad(EventUnloadController event) {

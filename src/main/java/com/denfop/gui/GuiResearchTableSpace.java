@@ -43,7 +43,6 @@ import com.denfop.network.packet.PacketReturnRoversToPlanet;
 import com.denfop.network.packet.PacketSendResourceToEarth;
 import com.denfop.network.packet.PacketSendRoversToPlanet;
 import com.denfop.network.packet.PacketUpdateBody;
-import com.denfop.tiles.bee.EnumProblem;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import net.minecraft.client.Minecraft;
@@ -80,14 +79,33 @@ import static com.denfop.events.client.SolarSystemRenderer.ASTEROID_TEXTURE;
 public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> implements GuiPageButtonList.GuiResponder,
         GuiVerticalSliderList.FormatHelper {
 
+    private final List<float[]> cachedStars = new ArrayList<>();
+    private final List<float[]> cachedStars1 = new ArrayList<>();
+    IAsteroid asteroid;
+    int mode = 0;
+    int value1 = 0;
+    int value2 = 0;
+    int value3 = 0;
+    int value4 = 0;
+    IStar star;
+    IPlanet planet;
+    ISatellite satellite;
+    IBody focusedPlanet = null;
+    boolean starsGenerated1 = false;
+    float scaled = -1;
+    int prevText;
+    int textIndex = 0;
     private GuiVerticalSliderList slider;
     private GuiVerticalSliderList slider1;
-    IAsteroid asteroid;
     private boolean starsGenerated = false;
     private GuiVerticalSliderList slider2;
     private GuiVerticalSliderList slider3;
     private List<ItemStack> itemList;
     private List<FluidStack> fluidList;
+    private float scale = 1.0F;
+    private int offsetX = 0, offsetY = 0;
+    private boolean isDragging = false;
+    private int lastMouseX, lastMouseY;
 
     public GuiResearchTableSpace(ContainerResearchTableSpace guiContainer) {
         super(guiContainer, EnumTypeStyle.PERFECT);
@@ -209,7 +227,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                 return true;
             }
         });
-        this.elements.add(new CustomButton(this,  167, 20 + 30 + 10, 68, 18, guiContainer.base, 0, "") {
+        this.elements.add(new CustomButton(this, 167, 20 + 30 + 10, 68, 18, guiContainer.base, 0, "") {
             @Override
             public boolean visible() {
                 boolean can = true;
@@ -424,17 +442,6 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         });
     }
 
-    int mode = 0;
-    int value1 = 0;
-    int value2 = 0;
-    int value3 = 0;
-    int value4 = 0;
-    IStar star;
-    IPlanet planet;
-    ISatellite satellite;
-
-    IBody focusedPlanet = null;
-
     public void initGui() {
         super.initGui();
 
@@ -525,8 +532,9 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         slider1.visible = planet != null && this.planet.getSatelliteList().size() > 2 && satellite == null;
         if (planet != null) {
             slider1.setMax(this.planet.getSatelliteList().size() - 2);
-            if (value2 > this.planet.getSatelliteList().size() - 2)
+            if (value2 > this.planet.getSatelliteList().size() - 2) {
                 value2 = 0;
+            }
         }
         if (this.container.base.colony != null && mode == 5) {
             slider2.visible = itemList.size() / 16 > 0;
@@ -564,7 +572,6 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.popMatrix();
     }
-
 
     public void renderStars(int x, int y, int width, int height, int starCount) {
         if (!starsGenerated) {
@@ -623,8 +630,6 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         }
     }
 
-    boolean starsGenerated1 = false;
-
     private void generateStars1(int x, int y, int width, int height, int starCount) {
         Random random = new Random();
         cachedStars1.clear();
@@ -640,9 +645,6 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         buffer.pos(x1, y1, 0).color(255, 255, 255, 255).endVertex();
         buffer.pos(x2, y2, 0).color(255, 255, 255, 255).endVertex();
     }
-
-    private final List<float[]> cachedStars = new ArrayList<>();
-    private final List<float[]> cachedStars1 = new ArrayList<>();
 
     @Override
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
@@ -1106,11 +1108,6 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         GlStateManager.popMatrix();
     }
 
-    private float scale = 1.0F;
-    private int offsetX = 0, offsetY = 0;
-    private boolean isDragging = false;
-    private int lastMouseX, lastMouseY;
-
     private void renderOrbit(double radius) {
         GlStateManager.disableTexture2D();
         GlStateManager.color(0.0F, 0.0F, 1.0F, 0.4F);
@@ -1573,8 +1570,9 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                 text.add(Localization.translate("iu.research2.info"));
                 List<String> compatibleUpgrades = new ArrayList<>();
                 for (int i = 1; i < 14; i++) {
-                    if (i == 12)
+                    if (i == 12) {
                         continue;
+                    }
                     compatibleUpgrades.add(Localization.translate("iu.research2.info" + i));
                 }
                 Iterator<String> var5 = compatibleUpgrades.iterator();
@@ -1962,9 +1960,9 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
     }
 
     private String getProblem(IColony colony) {
-        if (!colony.getProblems().isEmpty()){
+        if (!colony.getProblems().isEmpty()) {
             StringBuilder problem = new StringBuilder();
-            for (EnumProblems problems : colony.getProblems()){
+            for (EnumProblems problems : colony.getProblems()) {
                 problem.append(problems.name()).append("\n");
             }
             return problem.toString();
@@ -2012,10 +2010,6 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                     .drawForeground(par1, par2);
         }
     }
-
-    float scaled = -1;
-    int prevText;
-
 
     public String getInformationFromBody(IBody body, Data data) {
         if (body instanceof IPlanet) {
@@ -2129,9 +2123,6 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         }
         return "";
     }
-
-
-    int textIndex = 0;
 
     @Override
     protected ResourceLocation getTexture() {

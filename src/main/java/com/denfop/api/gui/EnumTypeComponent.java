@@ -2,35 +2,35 @@ package com.denfop.api.gui;
 
 public enum EnumTypeComponent {
     ENERGY(103, 0, 116, 1, 12, 16, EnumTypeRender.HEIGHT, 0, 1, true),
-    AMPERE(84, 175, 84, 194, 162, 20, EnumTypeRender.HEIGHT, 0, 0, true,false,true),
-    ENERGY_WEIGHT_2(114, 136, 142, 136, 142-114, 10, EnumTypeRender.WEIGHT, 0, 0, true,false,true),
-    SPACE_PROGRESS(89, 221, 117, 221, 117-89, 33, EnumTypeRender.WEIGHT, 0, 0, true,false,true),
+    AMPERE(84, 175, 84, 194, 162, 20, EnumTypeRender.HEIGHT, 0, 0, true, false, true),
+    ENERGY_WEIGHT_2(114, 136, 142, 136, 142 - 114, 10, EnumTypeRender.WEIGHT, 0, 0, true, false, true),
+    SPACE_PROGRESS(89, 221, 117, 221, 117 - 89, 33, EnumTypeRender.WEIGHT, 0, 0, true, false, true),
     ENERGY_WEIGHT(170, 0, 213, 0, 43, 16, EnumTypeRender.WEIGHT, 0, 0, true),
     ADVANCED(36, 0, 220, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false),
     IMPROVED(18, 0, 202, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false),
     PERFECT(0, 0, 184, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false),
     PHOTONIC(184, 20, 184, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false, true),
-    NEXT(189, 197, 238, 0, 208-188, 217-207, EnumTypeRender.WEIGHT, 0, 0, false, true, false,false),
-    PREV(189, 208, 238, 0, 208-188, 218-207, EnumTypeRender.WEIGHT, 0, 0, true, true, false,false),
+    NEXT(189, 197, 238, 0, 208 - 188, 217 - 207, EnumTypeRender.WEIGHT, 0, 0, false, true, false, false),
+    PREV(189, 208, 238, 0, 208 - 188, 218 - 207, EnumTypeRender.WEIGHT, 0, 0, true, true, false, false),
 
     DEFAULT(54, 0, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false),
     STEAM_DEFAULT(1, 1, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false, false, true),
     STEAM_FLUID(1, 20, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, true, false, true),
-    BIO_DEFAULT(1, 1, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false, false, false,true),
-    BIO_FLUID(1, 20, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, true, false, false,true),
-    SPACE_DEFAULT(1, 1, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false, false, false,false,true),
-    SPACE_FLUID(1, 20, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, true, false, false,false,true),
-    SPACE_MULTI_PROCESS(48, 16, 66, 16, 16, 24, EnumTypeRender.WEIGHT, 0, 0, true, false, false,false,true),
+    BIO_DEFAULT(1, 1, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false, false, false, true),
+    BIO_FLUID(1, 20, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, true, false, false, true),
+    SPACE_DEFAULT(1, 1, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false, false, false, false, true),
+    SPACE_FLUID(1, 20, 238, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, true, false, false, false, true),
+    SPACE_MULTI_PROCESS(48, 16, 66, 16, 16, 24, EnumTypeRender.WEIGHT, 0, 0, true, false, false, false, true),
 
 
     MULTI_PROCESS(102, 54, 23, 50, 16, 24, EnumTypeRender.WEIGHT, 0, 0, true),
     STEAM_MULTI_PROCESS(48, 16, 66, 16, 16, 24, EnumTypeRender.WEIGHT, 0, 0, true, false, true),
-    BIO_MULTI_PROCESS(48, 16, 66, 16, 16, 24, EnumTypeRender.WEIGHT, 0, 0, true, false, false,true),
+    BIO_MULTI_PROCESS(48, 16, 66, 16, 16, 24, EnumTypeRender.WEIGHT, 0, 0, true, false, false, true),
     COLD(132, 0, 137, 0, 4, 16, EnumTypeRender.HEIGHT, 0, 0, true),
     HEAT(170, 34, 213, 34, 43, 16, EnumTypeRender.WEIGHT, 0, 0, true),
     PROGRESS3(170, 17, 213, 17, 43, 16, EnumTypeRender.WEIGHT, 0, 0, true),
     PROGRESS4(179, 101, 179, 85, 15, 16, EnumTypeRender.WEIGHT, 0, 0, true),
-    CIRCLE_BAR(190,118,221,118,32,32, EnumTypeRender.UNIQUE,0,0,false,true),
+    CIRCLE_BAR(190, 118, 221, 118, 32, 32, EnumTypeRender.UNIQUE, 0, 0, false, true),
     EXP(132, 0, 147, 0, 4, 16, EnumTypeRender.HEIGHT, 0, 0, true),
     FLUID_PART(132, 24, 132, 24, 154 - 132, 17, EnumTypeRender.WEIGHT, 0, 0, false),
     FLUID_PART1(143, 46, 132, 24, 18, 13, EnumTypeRender.WEIGHT, 0, 0, false),
@@ -51,7 +51,7 @@ public enum EnumTypeComponent {
 
     WATER(132, 0, 142, 0, 4, 16, EnumTypeRender.HEIGHT, 0, 0, true),
     SOLARIUM_ENERGY_WEIGHT(170, 51, 213, 51, 43, 16, EnumTypeRender.WEIGHT, 0, 0, true),
-    NIGHT_ENERGY_WEIGHT(112, 114, 155, 114, 43, 17, EnumTypeRender.WEIGHT, 0, 0, true,false,true),
+    NIGHT_ENERGY_WEIGHT(112, 114, 155, 114, 43, 17, EnumTypeRender.WEIGHT, 0, 0, true, false, true),
 
     QUANTUM_ENERGY_WEIGHT(170, 68, 213, 68, 43, 16, EnumTypeRender.WEIGHT, 0, 0, true),
     COOL_ENERGY_WEIGHT(170, 68, 213, 68, 43, 16, EnumTypeRender.WEIGHT, 0, 0, true),
@@ -87,7 +87,7 @@ public enum EnumTypeComponent {
     RAD_1(195, 88, 195, 102, 60, 15, EnumTypeRender.WEIGHT, 0, 0, true),
     ENERGY_WEIGHT_1(215, 116, 215, 130, 183 - 143, 191 - 178, EnumTypeRender.WEIGHT, 0, 0, true),
     ENERGY_HEIGHT(183, 119, 197, 119, 191 - 178, 183 - 143, EnumTypeRender.HEIGHT, 0, 0, true),
-    ENERGY_HEIGHT_1(219, 104, 237, 104, 237 - 219, 145 - 104, EnumTypeRender.HEIGHT, 0, 0, true,false,true),
+    ENERGY_HEIGHT_1(219, 104, 237, 104, 237 - 219, 145 - 104, EnumTypeRender.HEIGHT, 0, 0, true, false, true),
     STEAM_ENERGY_HEIGHT(94, 1, 94, 21, 167 - 94, 19, EnumTypeRender.HEIGHT, 0, 0, true, false, true),
 
     QUANTUM_ENERGY_HEIGHT(1, 1, 21, 1, 18, 72, EnumTypeRender.HEIGHT, 0, 0, true, true),
@@ -113,15 +113,15 @@ public enum EnumTypeComponent {
     POSITRONS(170, 239, 212, 239, 43, 17, EnumTypeRender.WEIGHT, 0, 0, true, true),
     FLUIDS_SLOT(45, 30, 45, 30, 18, 18, EnumTypeRender.WEIGHT, 0, 0, true, true),
     NULL(255, 255, 132, 24, 0, 0, EnumTypeRender.WEIGHT, 0, 0, false),
-    DEFAULT_REACTOR(185, 166, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false,true),
-    ADV_REACTOR(197, 166, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false,true),
-    IMP_REACTOR(209, 166, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false,true),
-    PER_REACTOR(221, 166, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false,true),
-    FLUID_REACTOR(185, 177, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false,true),
-    GAS_REACTOR(197, 177, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false,true),
-    GRAPHITE_REACTOR(209, 177, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false,true),
-    HEAT_REACTOR(221, 177, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false,true),
-    CHECK_MARK(220, 189, 185, 166, 10, 11, EnumTypeRender.WEIGHT, 0, 0, false,true),
+    DEFAULT_REACTOR(185, 166, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false, true),
+    ADV_REACTOR(197, 166, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false, true),
+    IMP_REACTOR(209, 166, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false, true),
+    PER_REACTOR(221, 166, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false, true),
+    FLUID_REACTOR(185, 177, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false, true),
+    GAS_REACTOR(197, 177, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false, true),
+    GRAPHITE_REACTOR(209, 177, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false, true),
+    HEAT_REACTOR(221, 177, 185, 166, 9, 9, EnumTypeRender.WEIGHT, 0, 0, false, true),
+    CHECK_MARK(220, 189, 185, 166, 10, 11, EnumTypeRender.WEIGHT, 0, 0, false, true),
 
     ;
 
@@ -194,6 +194,7 @@ public enum EnumTypeComponent {
         this.steam = steam;
         space = false;
     }
+
     EnumTypeComponent(
             int x,
             int y,
@@ -218,9 +219,10 @@ public enum EnumTypeComponent {
         this.hasDescription = hasDescription;
         this.nextBar = nextBar;
         this.steam = steam;
-        this.bio= bio;
+        this.bio = bio;
         space = false;
     }
+
     EnumTypeComponent(
             int x,
             int y,
@@ -245,9 +247,10 @@ public enum EnumTypeComponent {
         this.hasDescription = hasDescription;
         this.nextBar = nextBar;
         this.steam = steam;
-        this.bio= bio;
+        this.bio = bio;
         this.space = space;
     }
+
     EnumTypeComponent(
             int x,
             int y,

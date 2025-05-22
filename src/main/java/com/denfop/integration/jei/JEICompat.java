@@ -959,7 +959,7 @@ public final class JEICompat implements IModPlugin {
 
         registry.addRecipes(
                 BiomassHandler.getRecipes(),
-                new  BiomassCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new BiomassCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.handleRecipes(
@@ -974,11 +974,11 @@ public final class JEICompat implements IModPlugin {
 
         registry.addRecipes(
                 GenBioHandler.getRecipes(),
-                new    GenBioCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new GenBioCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.handleRecipes(
-                GenBioHandler.class,  GenBioWrapper::new,
+                GenBioHandler.class, GenBioWrapper::new,
                 BlockBaseMachine3.gen_bio.getName()
         );
 
@@ -1134,7 +1134,7 @@ public final class JEICompat implements IModPlugin {
 
         registry.addRecipes(
                 GasWellHandler.getRecipes(),
-                new  GasWellCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new GasWellCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.handleRecipes(
@@ -1160,69 +1160,69 @@ public final class JEICompat implements IModPlugin {
         );
         registry.addRecipes(
                 AnalyzerHandler.getRecipes(),
-                new  AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.handleRecipes(
-                AnalyzerHandler.class,  AnalyzerWrapper::new,
+                AnalyzerHandler.class, AnalyzerWrapper::new,
                 BlockBaseMachine2.analyzer.getName()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockBaseMachine2.analyzer),
-                new  AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockBaseMachine3.wireless_mineral_quarry),
-                new  AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockBaseMachine.quantum_quarry),
-                new  AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockBaseMachine.imp_quantum_quarry),
-                new  AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockBaseMachine.adv_quantum_quarry),
-                new  AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockBaseMachine.per_quantum_quarry),
-                new  AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new AnalyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
-        if (Loader.isModLoaded("simplyquarries")){
+        if (Loader.isModLoaded("simplyquarries")) {
             SimplyQuarriesJei.init(registry);
         }
         registry.addRecipes(
                 BeeHandler.getRecipes(),
-                new  BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.handleRecipes(
-                BeeHandler.class,  BeeWrapper::new,
+                BeeHandler.class, BeeWrapper::new,
                 BlockHive.forest_hive.getName()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockHive.forest_hive),
-                new  BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockHive.winter_hive),
-                new  BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockHive.tropical_hive),
-                new  BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockHive.plains_hive),
-                new  BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.addRecipeCatalyst(
                 JEICompat.getBlockStack(BlockHive.swamp_hive),
-                new  BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new BeeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
         registry.addRecipes(
                 SpaceBodyHandler.getRecipes(),
@@ -2347,13 +2347,13 @@ public final class JEICompat implements IModPlugin {
                 BlockBaseMachine3.upgrade_rover.getName()
         );
         registry.addRecipeCatalyst(
-               JEICompat.getBlockStack( BlockBaseMachine3.upgrade_rover),
+                JEICompat.getBlockStack(BlockBaseMachine3.upgrade_rover),
                 new UpgradeRoverCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.addRecipes(
                 ChargedRedstoneHandler.getRecipes(),
-                new  ChargedRedstoneCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+                new ChargedRedstoneCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.handleRecipes(ChargedRedstoneHandler.class, ChargedRedstoneWrapper::new,
@@ -2404,7 +2404,7 @@ public final class JEICompat implements IModPlugin {
         );
 
         registry.addRecipeCatalyst(
-               JEICompat.getBlockStack(BlockBaseMachine3.wireless_oil_pump),
+                JEICompat.getBlockStack(BlockBaseMachine3.wireless_oil_pump),
                 new OilPumpCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
@@ -3885,8 +3885,8 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.triple_furnace), "minecraft.smelting");
         registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.quad_furnace), "minecraft.smelting");
         registry.addRecipeCatalyst(getBlockStack(BlockSimpleMachine.furnace_iu), "minecraft.smelting");
-        registry.addRecipeCatalyst(       getBlockStack(BlocksPhotonicMachine.photonic_furnace), "minecraft.smelting");
-        registry.addRecipeCatalyst(       getBlockStack(BlockBaseMachine3.bio_furnace), "minecraft.smelting");
+        registry.addRecipeCatalyst(getBlockStack(BlocksPhotonicMachine.photonic_furnace), "minecraft.smelting");
+        registry.addRecipeCatalyst(getBlockStack(BlockBaseMachine3.bio_furnace), "minecraft.smelting");
 
 
         final IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();

@@ -66,6 +66,7 @@ public class GuiSteamElectrolyzer extends GuiIU<ContainerSteamElectrolyzer> {
         ));
 
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -81,9 +82,10 @@ public class GuiSteamElectrolyzer extends GuiIU<ContainerSteamElectrolyzer> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
 

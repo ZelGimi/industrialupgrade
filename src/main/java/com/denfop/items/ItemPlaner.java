@@ -220,8 +220,9 @@ public class ItemPlaner extends Item implements IModelRegister {
                                         }
                                     }
                                 }
-                                if (rotation == null)
+                                if (rotation == null) {
                                     rotation = EnumFacing.NORTH;
+                                }
                                 tileEntity2.setFacing(rotation);
                             }
                         }

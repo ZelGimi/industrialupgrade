@@ -53,6 +53,7 @@ public class GeneticTransposerWrapper implements IRecipeWrapper {
     public ItemStack getInput4() {
         return inputstack4;
     }
+
     public List<List<ItemStack>> getInputs() {
         ItemStack inputs = this.inputstack;
         List<ItemStack> stack = new ArrayList<>();

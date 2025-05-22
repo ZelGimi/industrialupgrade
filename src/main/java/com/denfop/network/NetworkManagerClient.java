@@ -37,11 +37,14 @@ public class NetworkManagerClient extends NetworkManager {
     @SubscribeEvent
     public void onPacket(ClientCustomPacketEvent event) {
 
-
-        try {
-            this.onPacketData(new CustomPacketBuffer(event.getPacket().payload()), Minecraft.getMinecraft().player);
-        } catch (Throwable var3) {
-            throw new RuntimeException(var3);
+        if (event.getPacket() != null && Minecraft.getMinecraft() != null && Minecraft.getMinecraft().player != null && event
+                .getPacket()
+                .payload() != null) {
+            try {
+                this.onPacketData(new CustomPacketBuffer(event.getPacket().payload()), Minecraft.getMinecraft().player);
+            } catch (Throwable var3) {
+                throw new RuntimeException(var3);
+            }
         }
     }
 

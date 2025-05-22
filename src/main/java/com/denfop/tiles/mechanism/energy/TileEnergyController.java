@@ -46,7 +46,11 @@ public class TileEnergyController extends TileEntityInventory implements
     public List<Path> energyPathList = new ArrayList<>();
     public boolean work = false;
     public int size;
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
     private ChunkPos chunkPos;
+    private long id;
 
     public TileEnergyController() {
         this.addComponent(Energy.asBasicSink(this, 0, 14));
@@ -66,10 +70,6 @@ public class TileEnergyController extends TileEntityInventory implements
         tooltip.add(Localization.translate("iu.controller.info1"));
     }
 
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
-
-
     public List<InfoTile<IEnergyTile>> getValidReceivers() {
         return validReceivers;
     }
@@ -78,7 +78,7 @@ public class TileEnergyController extends TileEntityInventory implements
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<IEnergyTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -87,24 +87,23 @@ public class TileEnergyController extends TileEntityInventory implements
             }
         }
     }
+
     public long getIdNetwork() {
         return this.id;
     }
 
-
     public void setId(final long id) {
         this.id = id;
-    }
-    private long id;
-    int hashCodeSource;
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
     public int getHashCodeSource() {
         return hashCodeSource;
+    }
+
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
     }
 
     public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
@@ -113,6 +112,7 @@ public class TileEnergyController extends TileEntityInventory implements
             validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
         }
     }
+
     public Map<EnumFacing, IEnergyTile> getTiles() {
         return energyConductorMap;
     }

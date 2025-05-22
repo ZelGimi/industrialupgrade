@@ -9,21 +9,14 @@ import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.ItemStackImage;
-import com.denfop.container.ContainerChickenFarm;
-import com.denfop.container.ContainerCowFarm;
 import com.denfop.container.ContainerGenomeExtractor;
-import com.denfop.container.ContainerSaplingGardener;
-import com.denfop.container.ContainerTreeBreaker;
 import com.denfop.network.packet.PacketUpdateServerTile;
-import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
 
@@ -45,10 +38,10 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
             int x = i - xMin;
             int y = j - yMin;
             List<GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genCrop.getGeneticTraitsMap().values());
-            for (int index = 0; index < geneticTraitsList.size();index++){
+            for (int index = 0; index < geneticTraitsList.size(); index++) {
                 final int coordX = 40 + (index % 7) * 18;
                 final int coordY = 6 + (index / 7) * 18;
-                if (x >= coordX && x < coordX + 18 && y >= coordY && y < coordY + 18){
+                if (x >= coordX && x < coordX + 18 && y >= coordY && y < coordY + 18) {
                     new PacketUpdateServerTile(this.container.base, geneticTraitsList.get(index).ordinal());
                 }
             }
@@ -58,11 +51,13 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
             int yMin = (this.height - this.ySize) / 2;
             int x = i - xMin;
             int y = j - yMin;
-            List<com.denfop.api.bee.genetics.GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genBee.getGeneticTraitsMap().values());
-            for (int index = 0; index < geneticTraitsList.size();index++){
+            List<com.denfop.api.bee.genetics.GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genBee
+                    .getGeneticTraitsMap()
+                    .values());
+            for (int index = 0; index < geneticTraitsList.size(); index++) {
                 final int coordX = 40 + (index % 7) * 18;
                 final int coordY = 6 + (index / 7) * 18;
-                if (x >= coordX && x < coordX + 18 && y >= coordY && y < coordY + 18){
+                if (x >= coordX && x < coordX + 18 && y >= coordY && y < coordY + 18) {
                     new PacketUpdateServerTile(this.container.base, geneticTraitsList.get(index).ordinal());
                 }
             }
@@ -74,18 +69,22 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
         super.drawForegroundLayer(par1, par2);
         if (container.base.genCrop != null) {
             List<GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genCrop.getGeneticTraitsMap().values());
-            for (int i = 0; i < geneticTraitsList.size();i++){
+            for (int i = 0; i < geneticTraitsList.size(); i++) {
                 final int finalI = i;
-                new ItemStackImage(this,40+(i%7)*18,6 + (i/7)*18,() -> new ItemStack(IUItem.genome_crop,1,
-                        geneticTraitsList.get(finalI).ordinal())).drawForeground(par1, par2);
+                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_crop, 1,
+                        geneticTraitsList.get(finalI).ordinal()
+                )).drawForeground(par1, par2);
             }
         }
         if (container.base.genBee != null) {
-            List<com.denfop.api.bee.genetics.GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genBee.getGeneticTraitsMap().values());
-            for (int i = 0; i < geneticTraitsList.size();i++){
+            List<com.denfop.api.bee.genetics.GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genBee
+                    .getGeneticTraitsMap()
+                    .values());
+            for (int i = 0; i < geneticTraitsList.size(); i++) {
                 final int finalI = i;
-                new ItemStackImage(this,40+(i%7)*18,6 + (i/7)*18,() -> new ItemStack(IUItem.genome_bee,1,
-                        geneticTraitsList.get(finalI).ordinal())).drawForeground(par1, par2);
+                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_bee, 1,
+                        geneticTraitsList.get(finalI).ordinal()
+                )).drawForeground(par1, par2);
             }
         }
     }
@@ -95,18 +94,22 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         if (container.base.genCrop != null) {
             List<GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genCrop.getGeneticTraitsMap().values());
-            for (int i = 0; i < geneticTraitsList.size();i++){
+            for (int i = 0; i < geneticTraitsList.size(); i++) {
                 final int finalI = i;
-                new ItemStackImage(this,40+(i%7)*18,6 + (i/7)*18,() -> new ItemStack(IUItem.genome_crop,1,
-                        geneticTraitsList.get(finalI).ordinal())).drawBackground(this.guiLeft, guiTop);
+                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_crop, 1,
+                        geneticTraitsList.get(finalI).ordinal()
+                )).drawBackground(this.guiLeft, guiTop);
             }
         }
         if (container.base.genBee != null) {
-            List<com.denfop.api.bee.genetics.GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genBee.getGeneticTraitsMap().values());
-            for (int i = 0; i < geneticTraitsList.size();i++){
+            List<com.denfop.api.bee.genetics.GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genBee
+                    .getGeneticTraitsMap()
+                    .values());
+            for (int i = 0; i < geneticTraitsList.size(); i++) {
                 final int finalI = i;
-                new ItemStackImage(this,40+(i%7)*18,6 + (i/7)*18,() -> new ItemStack(IUItem.genome_bee,1,
-                        geneticTraitsList.get(finalI).ordinal())).drawBackground(this.guiLeft, guiTop);
+                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_bee, 1,
+                        geneticTraitsList.get(finalI).ordinal()
+                )).drawBackground(this.guiLeft, guiTop);
             }
         }
     }

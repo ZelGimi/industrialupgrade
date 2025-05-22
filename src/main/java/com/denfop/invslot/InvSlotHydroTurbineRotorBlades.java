@@ -5,7 +5,6 @@ import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemWaterRod;
 import com.denfop.items.ItemWaterRotor;
 import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineController;
-import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotHydroTurbineRotorBlades extends InvSlot implements ITypeSlot {

@@ -29,7 +29,7 @@ public class AnalyzerWrapper implements IRecipeWrapper {
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 
         minecraft.fontRenderer.drawSplitString(Localization.translate("iu.analyzer.jei"), 5, 3,
-                recipeWidth , 4210752
+                recipeWidth, 4210752
         );
 
     }

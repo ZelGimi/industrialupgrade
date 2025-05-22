@@ -5,11 +5,12 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
 
-public class TileEntitySimpleSteamTurbineExchanger extends TileEntityBaseSteamTurbineExchanger{
+public class TileEntitySimpleSteamTurbineExchanger extends TileEntityBaseSteamTurbineExchanger {
 
     public TileEntitySimpleSteamTurbineExchanger() {
         super(0);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockSteamTurbine.steam_turbine_exchanger;
@@ -19,4 +20,5 @@ public class TileEntitySimpleSteamTurbineExchanger extends TileEntityBaseSteamTu
     public BlockTileEntity getBlock() {
         return IUItem.steam_turbine;
     }
+
 }

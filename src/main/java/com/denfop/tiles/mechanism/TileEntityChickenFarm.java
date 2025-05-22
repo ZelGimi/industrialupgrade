@@ -12,7 +12,6 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerChickenFarm;
 import com.denfop.gui.GuiChickenFarm;
 import com.denfop.invslot.InvSlot;
@@ -42,17 +41,20 @@ import java.util.Set;
 
 public class TileEntityChickenFarm extends TileEntityInventory implements IUpgradableBlock {
 
+    private static final int RADIUS = 4;
+    private static final int MAX_CHICKENS = 12;
     public final InvSlot slotSeeds;
     public final InvSlotOutput output;
-    private static final int RADIUS = 4;
     public final Energy energy;
+    public final InvSlotUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
-
+    private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
             pos.add(RADIUS, RADIUS, RADIUS)
     );
+    List<Chunk> chunks = new ArrayList<>();
 
     public TileEntityChickenFarm() {
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
@@ -69,11 +71,10 @@ public class TileEntityChickenFarm extends TileEntityInventory implements IUpgra
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
+
     @Override
     public ContainerChickenFarm getGuiContainer(final EntityPlayer var1) {
-        return new ContainerChickenFarm(this,var1);
+        return new ContainerChickenFarm(this, var1);
     }
 
     @Override
@@ -106,8 +107,6 @@ public class TileEntityChickenFarm extends TileEntityInventory implements IUpgra
         }
     }
 
-    private static final int MAX_CHICKENS = 12;
-
     public <T extends Entity> List<T> getEntitiesWithinAABB(
             Class<? extends T> clazz,
             AxisAlignedBB aabb,
@@ -117,8 +116,6 @@ public class TileEntityChickenFarm extends TileEntityInventory implements IUpgra
         this.chunks.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(clazz, aabb, list, filter));
         return list;
     }
-
-    List<Chunk> chunks = new ArrayList<>();
 
     @Override
     public void onLoaded() {
@@ -203,7 +200,11 @@ public class TileEntityChickenFarm extends TileEntityInventory implements IUpgra
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
+        return EnumSet.of(
+                UpgradableProperty.Transformer,
+                UpgradableProperty.EnergyStorage,
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 

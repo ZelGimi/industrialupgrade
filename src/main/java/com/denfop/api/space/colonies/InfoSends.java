@@ -7,22 +7,29 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class InfoSends {
+
     List<Timer> timers = new LinkedList<>();
-    public InfoSends(){}
-    public InfoSends(CustomPacketBuffer customPacketBuffer){
+
+    public InfoSends() {
+    }
+
+    public InfoSends(CustomPacketBuffer customPacketBuffer) {
         int size = customPacketBuffer.readInt();
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             timers.add(new Timer(customPacketBuffer));
         }
     }
-    public void addTimer(Timer timer){
+
+    public void addTimer(Timer timer) {
         timers.add(timer);
     }
-    public CustomPacketBuffer writeBuffer(){
+
+    public CustomPacketBuffer writeBuffer() {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
         customPacketBuffer.writeInt(timers.size());
-        for (Timer timer : timers)
+        for (Timer timer : timers) {
             timer.writeBuffer(customPacketBuffer);
+        }
         return customPacketBuffer;
     }
 

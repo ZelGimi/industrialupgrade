@@ -5,7 +5,6 @@ import com.denfop.Localization;
 import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.FluidItem;
 import com.denfop.api.gui.GuiElement;
-import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSmelteryController;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.smeltery.ITank;
@@ -14,7 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +28,7 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
     boolean hover1 = false;
     boolean hover2 = false;
     boolean hover3 = false;
+
     public GuiSmelteryController(ContainerSmelteryController guiContainer) {
         super(guiContainer);
         this.componentList.clear();
@@ -39,7 +38,7 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
             integerList.add(i);
             i++;
         }
-        this.addElement(new CustomButton(this, 139, 33, 161-139, 55-33, container.base, -1, "") {
+        this.addElement(new CustomButton(this, 139, 33, 161 - 139, 55 - 33, container.base, -1, "") {
             @Override
             public String getText() {
                 return Localization.translate("iu.mix");
@@ -53,14 +52,14 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
             public void drawBackground(int mouseX, int mouseY) {
                 this.getGui().bindTexture();
                 if (highlighted) {
-                   this.gui.drawTexturedModalRect(this.gui.guiLeft + x, guiTop + y, 177,
-                           25,  161-139, 55-33
+                    this.gui.drawTexturedModalRect(this.gui.guiLeft + x, guiTop + y, 177,
+                            25, 161 - 139, 55 - 33
                     );
                 }
             }
 
         });
-        this.addElement(new CustomButton(this, 139, 9, 161-139, 31-9, container.base, -3, "") {
+        this.addElement(new CustomButton(this, 139, 9, 161 - 139, 31 - 9, container.base, -3, "") {
             @Override
             public String getText() {
                 return Localization.translate("iu.separate");
@@ -70,16 +69,17 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
             public boolean visible() {
                 return container.base.list.size() == 1;
             }
+
             public void drawBackground(int mouseX, int mouseY) {
                 this.getGui().bindTexture();
                 if (highlighted) {
                     this.gui.drawTexturedModalRect(this.gui.guiLeft + x, guiTop + y, 177,
-                            1,  161-139, 55-33
+                            1, 161 - 139, 55 - 33
                     );
                 }
             }
         });
-        this.addElement(new CustomButton(this, 139, 57, 161-139, 79-57, container.base, -2, "") {
+        this.addElement(new CustomButton(this, 139, 57, 161 - 139, 79 - 57, container.base, -2, "") {
             @Override
             public String getText() {
                 return Localization.translate("iu.mix_max");
@@ -89,17 +89,19 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
             public boolean visible() {
                 return container.base.list.size() > 1;
             }
+
             public void drawBackground(int mouseX, int mouseY) {
                 this.getGui().bindTexture();
                 if (highlighted) {
                     this.gui.drawTexturedModalRect(this.gui.guiLeft + x, guiTop + y, 177,
-                            49,  161-139, 55-33
+                            49, 161 - 139, 55 - 33
                     );
                 }
 
             }
         });
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -115,9 +117,10 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     @Override
     protected void mouseClicked(int i, final int j, final int k) throws IOException {
         super.mouseClicked(i, j, k);
@@ -139,7 +142,7 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
         handleUpgradeTooltip(par1, par2);
         for (int i = 0; i < fluidTanks1.size(); i++) {
             final int finalI = i;
-            (new FluidItem(this, 21 + (finalI % 6) * 18, 17 + (finalI / 6) * 18, fluidTanks1.get(finalI).getFluid()){
+            (new FluidItem(this, 21 + (finalI % 6) * 18, 17 + (finalI / 6) * 18, fluidTanks1.get(finalI).getFluid()) {
                 protected List<String> getToolTip() {
                     List<String> ret = new ArrayList<>();
                     FluidStack fs = fluidTanks1.get(finalI).getFluid();
@@ -150,7 +153,7 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
                             ret.add("Amount: " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
                             String state = fs.getFluid().isGaseous() ? "Gas" : "Liquid";
                             ret.add("Type: " + state);
-                            ret.add("Ingots: " + fs.amount/144);
+                            ret.add("Ingots: " + fs.amount / 144);
                         } else {
                             ret.add("Invalid FluidStack instance.");
                         }
@@ -162,8 +165,10 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
 
                     return ret;
                 }
-            }).drawForeground(par1,
-                par2);
+            }).drawForeground(
+                    par1,
+                    par2
+            );
         }
     }
 
@@ -192,8 +197,9 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        for (GuiElement element : elements)
-            element.drawBackground(guiLeft,guiTop);
+        for (GuiElement element : elements) {
+            element.drawBackground(guiLeft, guiTop);
+        }
         this.bindTexture();
         GlStateManager.color(1, 1, 1, 1);
 

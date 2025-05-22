@@ -10,13 +10,9 @@ public class CropTextures {
     private final ResourceLocation location;
     private TextureAtlasSprite sprite;
 
-    public CropTextures(ResourceLocation location){
-        this.location=location;
+    public CropTextures(ResourceLocation location) {
+        this.location = location;
         this.sprite = null;
-    }
-
-    public void setSprite(final TextureAtlasSprite sprite) {
-        this.sprite = sprite;
     }
 
     public ResourceLocation getLocation() {
@@ -27,10 +23,18 @@ public class CropTextures {
         return sprite;
     }
 
+    public void setSprite(final TextureAtlasSprite sprite) {
+        this.sprite = sprite;
+    }
+
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         CropTextures that = (CropTextures) o;
         return location.equals(that.location);
     }

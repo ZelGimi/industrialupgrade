@@ -52,6 +52,7 @@ public class GuiSteamPressureConverter extends GuiIU<ContainerSteamPressureConve
                 })
         ));
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -67,9 +68,10 @@ public class GuiSteamPressureConverter extends GuiIU<ContainerSteamPressureConve
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     protected void mouseClicked(int i, int j, int k) throws IOException {
         super.mouseClicked(i, j, k);
         int xMin = (this.width - this.xSize) / 2;
@@ -82,7 +84,7 @@ public class GuiSteamPressureConverter extends GuiIU<ContainerSteamPressureConve
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-         this.fontRenderer.drawString(String.valueOf(this.container.base.maxpressure), 100, 43,
+        this.fontRenderer.drawString(String.valueOf(this.container.base.maxpressure), 100, 43,
                 4210752
         );
         handleUpgradeTooltip(par1, par2);

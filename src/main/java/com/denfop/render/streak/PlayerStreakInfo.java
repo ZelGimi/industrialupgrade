@@ -25,7 +25,11 @@ public class PlayerStreakInfo {
     }
 
     public PlayerStreakInfo(CustomPacketBuffer customPacketBuffer) {
-        this.rgb = new RGB((short) (customPacketBuffer.readByte()+128), (short) (customPacketBuffer.readByte()+128), (short) (customPacketBuffer.readByte()+128));
+        this.rgb = new RGB(
+                (short) (customPacketBuffer.readByte() + 128),
+                (short) (customPacketBuffer.readByte() + 128),
+                (short) (customPacketBuffer.readByte() + 128)
+        );
         this.rainbow = customPacketBuffer.readBoolean();
         this.render = customPacketBuffer.readBoolean();
         this.renderPlayer = customPacketBuffer.readBoolean();
@@ -44,9 +48,9 @@ public class PlayerStreakInfo {
 
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
-        packetBuffer.writeByte(rgb.getRed()-128);
-        packetBuffer.writeByte(rgb.getBlue()-128);
-        packetBuffer.writeByte(rgb.getGreen()-128);
+        packetBuffer.writeByte(rgb.getRed() - 128);
+        packetBuffer.writeByte(rgb.getBlue() - 128);
+        packetBuffer.writeByte(rgb.getGreen() - 128);
         packetBuffer.writeBoolean(this.rainbow);
         packetBuffer.writeBoolean(this.render);
         packetBuffer.writeBoolean(this.renderPlayer);

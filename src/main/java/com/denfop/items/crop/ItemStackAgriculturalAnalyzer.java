@@ -4,13 +4,9 @@ import com.denfop.api.agriculture.ICrop;
 import com.denfop.api.agriculture.ICropItem;
 import com.denfop.api.agriculture.genetics.Genome;
 import com.denfop.container.ContainerAgriculturalAnalyzer;
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerLeadBox;
 import com.denfop.gui.GuiAgriculturalAnalyzer;
-import com.denfop.gui.GuiLeadBox;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.items.energy.ItemMagnet;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
@@ -40,6 +36,7 @@ public class ItemStackAgriculturalAnalyzer extends ItemStackInventory {
         this.inventorySize = inventorySize;
         this.itemStack1 = stack;
     }
+
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 
         return itemstack.getItem() instanceof ICropItem;

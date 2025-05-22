@@ -27,7 +27,7 @@ public class GasVein implements IGasVein {
         this.chunk = new ChunkPos(tagCompound.getShort("x"), tagCompound.getShort("z"));
         this.col = tagCompound.getInteger("col");
         this.maxcol = tagCompound.getInteger("maxcol");
-        this.find =tagCompound.getBoolean("find");
+        this.find = tagCompound.getBoolean("find");
         if (!this.find) {
             if (this.col != this.maxcol) {
                 this.find = true;
@@ -114,7 +114,7 @@ public class GasVein implements IGasVein {
     @Override
     public NBTTagCompound writeTag() {
         NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setBoolean("find",find);
+        tagCompound.setBoolean("find", find);
         tagCompound.setShort("x", (short) chunk.x);
         tagCompound.setShort("z", (short) chunk.z);
         tagCompound.setByte("type", (byte) type.ordinal());
@@ -141,7 +141,6 @@ public class GasVein implements IGasVein {
     public int hashCode() {
         return Objects.hash(chunk, find, type, col, maxcol);
     }
-
 
 
 }

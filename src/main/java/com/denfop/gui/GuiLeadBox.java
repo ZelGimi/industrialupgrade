@@ -2,11 +2,6 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.componets.ComponentRenderInventory;
-import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerLeadBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +24,7 @@ public class GuiLeadBox extends GuiIU<ContainerLeadBox> {
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2 , 5, 0);
+        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 5, 0);
     }
 
     protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {

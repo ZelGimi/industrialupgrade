@@ -3,7 +3,6 @@ package com.denfop.invslot;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.generator.energy.fluid.TileGasGenerator;
 import net.minecraftforge.fluids.Fluid;
 
 import java.util.Arrays;
@@ -32,10 +31,12 @@ public class InvSlotFluidByList extends InvSlotFluid implements ITypeSlot {
         super(base1, TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
         this.acceptedFluids = new HashSet<>(Collections.singletonList(fluidlist));
     }
+
     public InvSlotFluidByList(TileEntityInventory base1, int count, Fluid... fluidlist) {
         super(base1, TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
         this.acceptedFluids = new HashSet<>(Arrays.asList(fluidlist));
     }
+
     public InvSlotFluidByList(TileEntityInventory base1, int count, List<Fluid> fluidlist) {
         super(base1, TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
         this.acceptedFluids = new HashSet<>(fluidlist);

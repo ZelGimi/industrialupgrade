@@ -7,9 +7,4 @@ public interface IFakeAsteroid extends IFakeBody {
     IAsteroid getAsteroid();
 
 
-
-
-
-
-
 }

@@ -9,7 +9,6 @@ import com.denfop.api.gui.SteamImageInterface;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSteamCharger;
-import com.denfop.container.ContainerSteamSharpener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -45,6 +44,7 @@ public class GuiSteamCharger extends GuiIU<ContainerSteamCharger> {
                 })
         ));
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -60,9 +60,10 @@ public class GuiSteamCharger extends GuiIU<ContainerSteamCharger> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
 

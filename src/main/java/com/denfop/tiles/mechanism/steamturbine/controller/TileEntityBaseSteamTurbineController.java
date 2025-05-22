@@ -71,7 +71,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return level;
     }
 

@@ -1,14 +1,11 @@
 package com.denfop.recipe;
 
-import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class InputItemStacks implements IInputItemStack {
 
@@ -47,10 +44,11 @@ public class InputItemStacks implements IInputItemStack {
     @Override
     public void growAmount(final int col) {
         amount += col;
-        for (ItemStack stack :input) {
+        for (ItemStack stack : input) {
             stack.setCount(this.getAmount());
         }
     }
+
     public List<ItemStack> getInputs() {
         return input;
     }

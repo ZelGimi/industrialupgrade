@@ -16,8 +16,8 @@ import java.util.Random;
 
 public class Radiation {
 
-    private final ChunkPos pos;
     private final static Random rand = new Random();
+    private final ChunkPos pos;
     private double radiation;
     private EnumLevelRadiation level;
     private EnumCoefficient coef;
@@ -46,7 +46,7 @@ public class Radiation {
 
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
-        customPacketBuffer.writeShort((short) (this.radiation*32.5));
+        customPacketBuffer.writeShort((short) (this.radiation * 32.5));
         byte levelAndCoef = (byte) ((this.level.ordinal() & 0x07) | ((this.coef.ordinal() & 0x07) << 3));
         customPacketBuffer.writeByte(levelAndCoef);
         customPacketBuffer.writeShort((short) this.pos.x);

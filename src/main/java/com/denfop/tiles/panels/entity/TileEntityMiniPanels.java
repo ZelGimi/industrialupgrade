@@ -388,17 +388,17 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     @Override
     public List<ItemStack> getCapacityItems() {
-        return Arrays.asList(invSlotStorage.gets());
+        return invSlotStorage;
     }
 
     @Override
     public List<ItemStack> getOutputItems() {
-        return Arrays.asList(invSlotOutput.gets());
+        return invSlotOutput;
     }
 
     @Override
     public List<ItemStack> getGenerationItems() {
-        return Arrays.asList(invSlotGlass.gets());
+        return invSlotGlass;
     }
 
     @Override
@@ -452,7 +452,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     @Override
     public List<ItemStack> getCoresItems() {
-        return Arrays.asList(invSlotCore.gets());
+        return invSlotCore;
     }
 
     @Override

@@ -85,7 +85,7 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
             tooltip.add(Localization.translate("iu.info_upgrade_energy") + this.coef);
         }
 
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
 
     }
 

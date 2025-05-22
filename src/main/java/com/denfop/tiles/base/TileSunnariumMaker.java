@@ -53,10 +53,12 @@ public class TileSunnariumMaker extends TileBaseSunnariumMaker implements IUpdat
                     ((TileSunnariumMaker) this.base).inputSlotA.changeAccepts(this.get());
                 }
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
+
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;

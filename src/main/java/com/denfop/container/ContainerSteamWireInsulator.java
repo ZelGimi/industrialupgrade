@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.steam.TileSteamSharpener;
 import com.denfop.tiles.mechanism.steam.TileSteamWireInsulator;
 import net.minecraft.entity.player.EntityPlayer;
 

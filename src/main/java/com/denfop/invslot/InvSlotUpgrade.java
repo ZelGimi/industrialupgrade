@@ -264,6 +264,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 this.whiteList1.set(i, fluidStacks1);
             }
         }
+
     }
 
     private void resetRates() {

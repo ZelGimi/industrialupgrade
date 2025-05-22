@@ -58,7 +58,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -71,48 +70,21 @@ import static com.denfop.api.bee.genetics.GeneticsManager.geneticTraitsMap;
 
 public class TileEntityApiary extends TileEntityInventory implements IApiaryTile {
 
-    public static BeeAI beeAI = BeeAI.beeAI;
     static final int percentAttackBee = 20;
     static final int percentDoctorBee = 20;
     static final int percentWorkersBee = 45;
-
     static final int percentBuildersBee = 15;
+    public static BeeAI beeAI = BeeAI.beeAI;
     public final InvSlotOutput invSlotProduct;
     public final InvSlot frameSlot;
     public final InvSlotOutput invSlotFood;
     public final InvSlotOutput invSlotJelly;
     public final InvSlot foodCellSlot;
     public final InvSlot jellyCellSlot;
-    double[] massiveNeeds = new double[5];
-    List<Bee> apairyBeeList = new LinkedList<>();
-
-    IBee queen;
-
-    List<Bee> attackBeeList = new LinkedList<>();
-    List<Bee> doctorBeeList = new LinkedList<>();
-    List<Bee> workersBeeList = new LinkedList<>();
-    List<Bee> buildersBeeList = new LinkedList<>();
     public List<Bee> birthBeeList = new LinkedList<>();
-    List<Bee> illBeeList = new LinkedList<>();
-    Map<EntityPlayer, Double> enemy;
     public double royalJelly = 0;
     public double food = 0;
-    private AxisAlignedBB axisAlignedBB;
-    private Vec3d center;
-    private double maxDistance;
     public long id;
-    private byte tickDrainFood = 0;
-    private byte tickDrainJelly = 0;
-    Map<Long, EnumStatus> statusMap = new HashMap<>();
-    Map<EntityPlayer, Double> entityWeightMap = new HashMap<>();
-    Set<ChunkPos> chunkPositions = new HashSet<>();
-    Map<ChunkPos, List<TileEntityCrop>> chunkPosListMap = new HashMap<>();
-    Map<ChunkPos, List<TileEntityApiary>> chunkPosListMap1 = new HashMap<>();
-    List<TileEntityCrop> crops = new ArrayList<>();
-    List<TileEntityCrop> passedCrops = new ArrayList<>();
-
-    List<TileEntityApiary> apiaries = new ArrayList<>();
-    List<TileEntityApiary> passedApiaries = new ArrayList<>();
     public int harvest = 0;
     public ChunkPos chunkPos;
     public ChunkLevel chunkLevel;
@@ -132,6 +104,30 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     public byte illTask;
     public int birth;
     public int ill;
+    public List<EnumProblem> problemList = new ArrayList<>();
+    public boolean work;
+    public short maxFood = 1000;
+    public short maxJelly = 200;
+    public short maxDefaultFood = 1000;
+    public short maxDefaultJelly = 200;
+    double[] massiveNeeds = new double[5];
+    List<Bee> apairyBeeList = new LinkedList<>();
+    IBee queen;
+    List<Bee> attackBeeList = new LinkedList<>();
+    List<Bee> doctorBeeList = new LinkedList<>();
+    List<Bee> workersBeeList = new LinkedList<>();
+    List<Bee> buildersBeeList = new LinkedList<>();
+    List<Bee> illBeeList = new LinkedList<>();
+    Map<EntityPlayer, Double> enemy;
+    Map<Long, EnumStatus> statusMap = new HashMap<>();
+    Map<EntityPlayer, Double> entityWeightMap = new HashMap<>();
+    Set<ChunkPos> chunkPositions = new HashSet<>();
+    Map<ChunkPos, List<TileEntityCrop>> chunkPosListMap = new HashMap<>();
+    Map<ChunkPos, List<TileEntityApiary>> chunkPosListMap1 = new HashMap<>();
+    List<TileEntityCrop> crops = new ArrayList<>();
+    List<TileEntityCrop> passedCrops = new ArrayList<>();
+    List<TileEntityApiary> apiaries = new ArrayList<>();
+    List<TileEntityApiary> passedApiaries = new ArrayList<>();
     double slowAging = 1;
     double producing = 1;
     double speedCrop = 1;
@@ -139,15 +135,16 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     int chanceCrossing = 0;
     double chanceHealing = 1;
     int generation = 0;
-
-    private Map<TileEntityApiary, Double> bees_nearby;
-    public List<EnumProblem> problemList = new ArrayList<>();
-    public boolean work;
-    private double coef;
     Genome genome;
+    List<Chunk> chunks = new ArrayList<>();
+    private AxisAlignedBB axisAlignedBB;
+    private Vec3d center;
+    private double maxDistance;
+    private byte tickDrainFood = 0;
+    private byte tickDrainJelly = 0;
+    private Map<TileEntityApiary, Double> bees_nearby;
+    private double coef;
     private ItemStack stack;
-
-
     private int weatherGenome = 0;
     private double pestGenome = 1;
     private double birthRateGenome = 1;
@@ -161,10 +158,6 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     private double mortalityGenome = 1;
     private boolean sunGenome = false;
     private boolean nightGenome = false;
-    public short maxFood = 1000;
-    public short maxJelly = 200;
-    public short maxDefaultFood = 1000;
-    public short maxDefaultJelly = 200;
     private int genomeResistance = 0;
     private int genomeAdaptive = 0;
     private LevelPollution airPollution = LevelPollution.LOW;
@@ -301,6 +294,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
 
         return entityWeightMap;
     }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -380,7 +374,6 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             this.genomeAdaptive = genome.getLevelGenome(EnumGenetic.GENOME_ADAPTIVE, Integer.class);
         }
     }
-
 
     public void reset() {
         this.weatherGenome = 0;
@@ -467,8 +460,6 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             GlobalRenderManager.removeRender(pos);
         }*/
     }
-
-    List<Chunk> chunks = new ArrayList<>();
 
     public List<EntityPlayer> getEntitiesWithinAABB(AxisAlignedBB aabb) {
         List<EntityPlayer> list = Lists.newArrayList();
@@ -565,10 +556,11 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        if (queen == null){
+        if (queen == null) {
             tooltip.add(Localization.translate("iu.use_bee"));
         }
     }
+
     private double calculateWeight(double distance, double maxDistance) {
         return Math.max(0.0, 1.0 - (distance / maxDistance));
     }
@@ -582,7 +574,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             final float hitY,
             final float hitZ
     ) {
-        if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemJarBees && queen == null && !this.getWorld().isRemote) {
+        if (player
+                .getHeldItem(EnumHand.MAIN_HAND)
+                .getItem() instanceof ItemJarBees && queen == null && !this.getWorld().isRemote) {
             ItemStack stack = player.getHeldItem(hand);
             final NBTTagCompound nbt = ModUtils.nbt(stack);
             if (nbt.hasKey("swarm")) {
@@ -605,28 +599,28 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                     int buildersBeeCount = totalBeeCount - (attackBeeCount + doctorBeeCount + workersBeeCount);
                     for (int i = 0; i < attackBeeCount; i++) {
                         Bee bee = new Bee(EnumTypeBee.ATTACK, queen, EnumTypeLife.BEE, 25,
-                                WorldBaseGen.random.nextInt(queen.getTickLifecycles()-queen.getTickBirthRate()) + queen.getTickBirthRate()
+                                WorldBaseGen.random.nextInt(queen.getTickLifecycles() - queen.getTickBirthRate()) + queen.getTickBirthRate()
                         );
                         attackBeeList.add(bee);
                         apairyBeeList.add(bee);
                     }
                     for (int i = 0; i < doctorBeeCount; i++) {
                         Bee bee = new Bee(EnumTypeBee.DOCTOR, queen, EnumTypeLife.BEE, 25,
-                                WorldBaseGen.random.nextInt(queen.getTickLifecycles()-queen.getTickBirthRate()) + queen.getTickBirthRate()
+                                WorldBaseGen.random.nextInt(queen.getTickLifecycles() - queen.getTickBirthRate()) + queen.getTickBirthRate()
                         );
                         doctorBeeList.add(bee);
                         apairyBeeList.add(bee);
                     }
                     for (int i = 0; i < workersBeeCount; i++) {
                         Bee bee = new Bee(EnumTypeBee.WORKER, queen, EnumTypeLife.BEE, 25,
-                                WorldBaseGen.random.nextInt(queen.getTickLifecycles()-queen.getTickBirthRate()) + queen.getTickBirthRate()
+                                WorldBaseGen.random.nextInt(queen.getTickLifecycles() - queen.getTickBirthRate()) + queen.getTickBirthRate()
                         );
                         workersBeeList.add(bee);
                         apairyBeeList.add(bee);
                     }
                     for (int i = 0; i < buildersBeeCount; i++) {
                         Bee bee = new Bee(EnumTypeBee.BUILDER, queen, EnumTypeLife.BEE, 25,
-                                WorldBaseGen.random.nextInt(queen.getTickLifecycles()-queen.getTickBirthRate()) + queen.getTickBirthRate()
+                                WorldBaseGen.random.nextInt(queen.getTickLifecycles() - queen.getTickBirthRate()) + queen.getTickBirthRate()
                         );
                         buildersBeeList.add(bee);
                         apairyBeeList.add(bee);
@@ -697,7 +691,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
 
                 stack.shrink(1);
             }
-        } else if (queen != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemNet&& !this.getWorld().isRemote) {
+        } else if (queen != null && player
+                .getHeldItem(EnumHand.MAIN_HAND)
+                .getItem() instanceof ItemNet && !this.getWorld().isRemote) {
             ItemStack stack = new ItemStack(IUItem.jarBees, 1);
 
             final NBTTagCompound nbt = ModUtils.nbt(stack);
@@ -851,8 +847,8 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             nbt.setTag("stack", stack.serializeNBT());
         }
 
-        nbt.setShort("royalJelly", (short) (royalJelly*10));
-        nbt.setShort("food", (short) (food*10));
+        nbt.setShort("royalJelly", (short) (royalJelly * 10));
+        nbt.setShort("food", (short) (food * 10));
         nbt.setByte("harvest", (byte) harvest);
         nbt.setInteger("birth", birth);
         nbt.setInteger("generation", generation);
@@ -914,14 +910,15 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             EnumStatus status = EnumStatus.values()[statusOrdinal];
             statusMap.put(id, status);
         }
-        royalJelly = nbt.getShort("royalJelly")/10D;
-        food = nbt.getShort("food")/10D;
+        royalJelly = nbt.getShort("royalJelly") / 10D;
+        food = nbt.getShort("food") / 10D;
         harvest = nbt.getByte("harvest");
         birth = nbt.getInteger("birth");
         death = nbt.getInteger("death");
         generation = nbt.getInteger("generation");
     }
-    public void death(Bee bee){
+
+    public void death(Bee bee) {
         death++;
         deathTask = 1;
         switch (bee.getTypeBee()) {
@@ -946,20 +943,20 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         apairyBeeList.remove(bee);
     }
 
-    public void setTickDrainJelly(final byte tickDrainJelly) {
-        this.tickDrainJelly = tickDrainJelly;
+    public byte getTickDrainFood() {
+        return tickDrainFood;
     }
 
     public void setTickDrainFood(final byte tickDrainFood) {
         this.tickDrainFood = tickDrainFood;
     }
 
-    public byte getTickDrainFood() {
-        return tickDrainFood;
-    }
-
     public byte getTickDrainJelly() {
         return tickDrainJelly;
+    }
+
+    public void setTickDrainJelly(final byte tickDrainJelly) {
+        this.tickDrainJelly = tickDrainJelly;
     }
 
     @Override
@@ -977,7 +974,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                     }
                 }
             }
-            if (this.getWorld().getWorldTime() % 3600 == 0){
+            if (this.getWorld().getWorldTime() % 3600 == 0) {
                 generation++;
                 canAdaptationBee();
             }
@@ -1070,7 +1067,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             boolean needChangeBuilders = targetBuilders < builders;
             EnumTypeBee typeBee = needChangeWorkers ? EnumTypeBee.WORKER : needChangeDoctors ? EnumTypeBee.DOCTOR :
                     needChangeAttacks ? EnumTypeBee.ATTACK : needChangeBuilders ? EnumTypeBee.BUILDER : EnumTypeBee.NONE;
-          for (Bee bee : iterator){
+            for (Bee bee : iterator) {
                 boolean isChild = bee.isChild();
                 bee.addTick((int) (20 + (isChild ? speedBirthRate * 20 : -20 * slowAging)), populationGenome);
                 if (bee.isDead()) {
@@ -1088,7 +1085,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                             illBeeList.remove(bee);
                         } else {
                             royalJelly -= 0.05;
-                            if (WorldBaseGen.random.nextDouble() < 0.25 && WorldBaseGen.random.nextDouble() < queen.getMaxMortalityRate() * this.mortalityGenome ) {
+                            if (WorldBaseGen.random.nextDouble() < 0.25 && WorldBaseGen.random.nextDouble() < queen.getMaxMortalityRate() * this.mortalityGenome) {
                                 bee.setDead(true);
                                 death(bee);
                                 continue;
@@ -1151,7 +1148,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                         if (airPollution != null && airPollution.getLevelPollution().ordinal() > this.airPollution.ordinal()) {
                             illnessChance += (4 * (airPollution.getLevelPollution().ordinal() - this.airPollution.ordinal()));
                         }
-                        if (bee.getTypeBee() == EnumTypeBee.DOCTOR){
+                        if (bee.getTypeBee() == EnumTypeBee.DOCTOR) {
                             illnessChance = (int) (illnessChance * 0.5);
                         }
                         if (WorldBaseGen.random.nextInt(1500) < illnessChance * hardeningGenome) {
@@ -1159,10 +1156,12 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                             illTask = 1;
                             illBeeList.add(bee);
                         }
-                        if (this.radLevel.getLevel().ordinal() > this.radiationPollution.ordinal()){
-                            if (WorldBaseGen.random.nextInt(100) < (this.radLevel.getLevel().ordinal()-this.radiationPollution.ordinal()) * 25){
+                        if (this.radLevel.getLevel().ordinal() > this.radiationPollution.ordinal()) {
+                            if (WorldBaseGen.random.nextInt(100) < (this.radLevel
+                                    .getLevel()
+                                    .ordinal() - this.radiationPollution.ordinal()) * 25) {
                                 bee.setDead(true);
-                              death(bee);
+                                death(bee);
                             }
                         }
                     }
@@ -1211,7 +1210,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         int geneticAdaptive = genomeAdaptive != 0 ? genomeAdaptive : 5;
         int geneticResistance = genomeResistance != 0 ? genomeResistance : 5;
         cycle:
-        for (EnumGenetic enumGenetic :  EnumGenetic.values()) {
+        for (EnumGenetic enumGenetic : EnumGenetic.values()) {
             final List<GeneticTraits> genetic = enumGeneticListMap.get(enumGenetic);
             if (WorldBaseGen.random.nextInt(100) <= geneticAdaptive) {
                 if (WorldBaseGen.random.nextInt(100) > geneticResistance) {
@@ -1225,7 +1224,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                         boolean canUpgrade =
                                 WorldBaseGen.random.nextInt(geneticAdaptive) > WorldBaseGen.random.nextInt(geneticResistance);
                         if ((needRemove || !canUpgrade) && hasGenome) {
-                           genome.removeGenome(enumGenetic, stack);
+                            genome.removeGenome(enumGenetic, stack);
                         } else if (canUpgrade) {
                             switch (enumGenetic) {
                                 case SUN:
@@ -1245,7 +1244,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                                             genome.addGenome(genetic.get(0), stack);
                                         }
                                     } else {
-                                        if (canWork  && (WorldBaseGen.random.nextInt(4) == 0)) {
+                                        if (canWork && (WorldBaseGen.random.nextInt(4) == 0)) {
                                             genome.removeGenome(genetic.get(0), stack);
                                         }
                                     }
@@ -1261,7 +1260,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                                             if (traits.getPrev() != null) {
                                                 genome.removeGenome(traits, this.stack);
                                                 genome.addGenome(traits.getPrev(), stack);
-                                             } else {
+                                            } else {
                                                 genome.removeGenome(traits, this.stack);
                                             }
 
@@ -1292,9 +1291,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                                             if (traits.getPrev() != null) {
                                                 genome.removeGenome(traits, this.stack);
                                                 genome.addGenome(traits.getPrev(), stack);
-                                           } else {
+                                            } else {
                                                 genome.removeGenome(traits, this.stack);
-                                             }
+                                            }
                                         } else {
                                             GeneticTraits traits1 = geneticTraitsMap.get(traits);
                                             if (traits1 != null) {
@@ -1332,7 +1331,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                                                 genome.addGenome(traits.getPrev(), stack);
                                             } else {
                                                 genome.removeGenome(traits, this.stack);
-                                             }
+                                            }
                                         } else {
                                             GeneticTraits traits1 = geneticTraitsMap.get(traits);
                                             if (traits1 != null) {
@@ -1350,7 +1349,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                                         EnumLevelRadiation levelPollution = geneticTraits.getValue(EnumLevelRadiation.class);
                                         if (levelPollution.ordinal() >= this.radLevel.getLevel().ordinal()) {
                                             genome.addGenome(geneticTraits, stack);
-                                         }
+                                        }
                                     } else {
                                         GeneticTraits traits = genome.getGenome(enumGenetic);
                                         EnumLevelRadiation levelPollution = traits.getValue(EnumLevelRadiation.class);
@@ -1362,9 +1361,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                                             if (traits.getPrev() != null) {
                                                 genome.removeGenome(traits, this.stack);
                                                 genome.addGenome(traits.getPrev(), stack);
-                                                   } else {
+                                            } else {
                                                 genome.removeGenome(traits, this.stack);
-                                           }
+                                            }
                                         } else {
                                             GeneticTraits traits1 = geneticTraitsMap.get(traits);
                                             if (traits1 != null) {
@@ -1624,9 +1623,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     private void findWork(Bee bee) {
         int totalBees = (apairyBeeList.size() - birthBeeList.size());
         double targetWorkers = Math.ceil(totalBees * (percentWorkersBee / 100.0));
-        double targetDoctors =  Math.ceil(totalBees * (percentDoctorBee / 100.0));
-        double targetAttackers =  Math.ceil(totalBees * (percentAttackBee / 100.0));
-        double targetBuilders =  Math.ceil(totalBees * (percentBuildersBee / 100.0));
+        double targetDoctors = Math.ceil(totalBees * (percentDoctorBee / 100.0));
+        double targetAttackers = Math.ceil(totalBees * (percentAttackBee / 100.0));
+        double targetBuilders = Math.ceil(totalBees * (percentBuildersBee / 100.0));
         if (targetWorkers > workersBeeList.size()) {
             bee.setTypeBee(EnumTypeBee.WORKER);
             bee.setType(EnumTypeLife.BEE);
@@ -1639,11 +1638,11 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             bee.setTypeBee(EnumTypeBee.BUILDER);
             bee.setType(EnumTypeLife.BEE);
             buildersBeeList.add(bee);
-        } else if (targetAttackers > attackBeeList.size() ){
+        } else if (targetAttackers > attackBeeList.size()) {
             bee.setTypeBee(EnumTypeBee.ATTACK);
             bee.setType(EnumTypeLife.BEE);
             attackBeeList.add(bee);
-        }else{
+        } else {
             bee.setDead(true);
             death(bee);
         }
@@ -1756,10 +1755,10 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
 
 
         if (harvest >= 3 / coef) {
-            if (addFood){
+            if (addFood) {
                 this.tickDrainFood++;
             }
-            if (addJelly){
+            if (addJelly) {
                 this.tickDrainJelly++;
             }
             if (WorldBaseGen.random.nextBoolean()) {
@@ -1791,7 +1790,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         });
 
     }
-    public Genome getGenome(){
+
+    public Genome getGenome() {
         return genome;
     }
+
 }

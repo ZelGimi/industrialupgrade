@@ -73,7 +73,7 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
         super(100, 1, 1);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
-        this.defaultOperationLength = this.operationLength = 2*60*20;
+        this.defaultOperationLength = this.operationLength = 2 * 60 * 20;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
         this.output1 = new InvSlotOutput(this, 2);
@@ -107,16 +107,19 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
     }
 
 
-
     @Override
     public void init() {
-        Recipes.recipes.getRecipeFluid().addRecipe("insulator",
+        Recipes.recipes.getRecipeFluid().addRecipe(
+                "insulator",
                 new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidplantmixture.getInstance(), 250), new FluidStack(FluidName.fluidprotein.getInstance(),
-                        500)), new RecipeOutput(
-                null,
-                new ItemStack(IUItem.larva)
-        )));
+                        new FluidStack(FluidName.fluidplantmixture.getInstance(), 250), new FluidStack(
+                        FluidName.fluidprotein.getInstance(),
+                        500
+                )), new RecipeOutput(
+                        null,
+                        new ItemStack(IUItem.larva)
+                ))
+        );
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "insulator",
@@ -210,6 +213,7 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
         this.fluid_handler.setOutput(null);
         return this.output;
     }
+
     public void onUnloaded() {
         super.onUnloaded();
 
@@ -241,18 +245,19 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
             }
             check = true;
         }
-        if (check || (this.fluid_handler.output() == null && this.output != null  && this.fluidTank1.getFluidAmount() >= 1 && this.fluidTank2.getFluidAmount() >= 1)) {
+        if (check || (this.fluid_handler.output() == null && this.output != null && this.fluidTank1.getFluidAmount() >= 1 && this.fluidTank2.getFluidAmount() >= 1)) {
             this.fluid_handler.getOutput();
         } else {
-            if (this.fluid_handler.output() != null && !this.fluid_handler.checkFluids()  || this.output == null) {
+            if (this.fluid_handler.output() != null && !this.fluid_handler.checkFluids() || this.output == null) {
                 this.fluid_handler.setOutput(null);
             }
         }
 
 
-        if (this.output != null && !this.inputSlotA.isEmpty() && this.inputSlotA.continue_process(this.output) &&this.fluid_handler.output() != null && this.outputSlot.canAdd(this.fluid_handler
-                .output()
-                .getOutput().items) && this.fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.energy.canUseEnergy(
+        if (this.output != null && !this.inputSlotA.isEmpty() && this.inputSlotA.continue_process(this.output) && this.fluid_handler.output() != null && this.outputSlot.canAdd(
+                this.fluid_handler
+                        .output()
+                        .getOutput().items) && this.fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.energy.canUseEnergy(
                 energyConsume)) {
 
             if (!this.getActive()) {
@@ -341,8 +346,8 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of( UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage,  UpgradableProperty.ItemInput,
+        return EnumSet.of(UpgradableProperty.Transformer,
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemInput,
                 UpgradableProperty.FluidInput, UpgradableProperty.ItemExtract
         );
     }

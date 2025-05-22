@@ -16,6 +16,7 @@ public interface IFakeSpaceSystemBase {
 
 
     Map<UUID, IRocketLaunchPad> getRocketPadMap();
+
     Map<UUID, IResearchTable> getResearchTableMap();
 
     Map<UUID, List<IFakeBody>> getBodyMap();
@@ -24,12 +25,7 @@ public interface IFakeSpaceSystemBase {
     List<FakeAsteroid> getFakeAsteroidList();
 
 
-
-
-
-
-
-    Map<IBody,Data> getDataFromUUID(UUID uuid);
+    Map<IBody, Data> getDataFromUUID(UUID uuid);
 
 
     List<FakePlanet> getFakePlanetList();
@@ -46,9 +42,6 @@ public interface IFakeSpaceSystemBase {
     void addFakePlanet(FakePlanet planet);
 
     void addFakeAsteroid(FakeAsteroid asteroid);
-
-
-
 
 
     IRovers getRoversFromPlanet(FakePlanet planet);
@@ -68,4 +61,5 @@ public interface IFakeSpaceSystemBase {
     void addDataBody(UUID name, Map<IBody, Data> map);
 
     void copyData(Map<IBody, Data> data, UUID uniqueID);
+
 }

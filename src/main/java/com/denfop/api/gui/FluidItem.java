@@ -45,7 +45,7 @@ public class FluidItem extends GuiElement<FluidItem> {
 
     public void drawBackground(int mouseX, int mouseY) {
         bindCommonTexture();
-        GlStateManager.color(1,1,1,1);
+        GlStateManager.color(1, 1, 1, 1);
         FluidStack fs = fluid;
         if (fs != null && fs.amount > 0) {
             int fluidX = this.x + 1;

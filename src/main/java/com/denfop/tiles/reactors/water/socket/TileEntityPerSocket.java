@@ -23,7 +23,7 @@ public class TileEntityPerSocket extends TileEntityMainSocket implements ISocket
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 3;
     }
 

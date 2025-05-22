@@ -189,13 +189,13 @@ public class ReplicatorRecipe {
             add("block" + s, 25 * 9 * 0.9);
         }
 
-        add(new ItemStack(IUItem.iudust,1,66), 8);
-        add(new ItemStack(IUItem.iudust,1,69), 8);
-        add(new ItemStack(IUItem.iudust,1,70), 8);
-        add(new ItemStack(IUItem.crafting_elements,1,461), 5);
-        add(new ItemStack(IUItem.crafting_elements,1,462), 3);
-        add(new ItemStack(IUItem.crafting_elements,1,463), 3);
-        add(new ItemStack(IUItem.crafting_elements,1,481), 6.5);
+        add(new ItemStack(IUItem.iudust, 1, 66), 8);
+        add(new ItemStack(IUItem.iudust, 1, 69), 8);
+        add(new ItemStack(IUItem.iudust, 1, 70), 8);
+        add(new ItemStack(IUItem.crafting_elements, 1, 461), 5);
+        add(new ItemStack(IUItem.crafting_elements, 1, 462), 3);
+        add(new ItemStack(IUItem.crafting_elements, 1, 463), 3);
+        add(new ItemStack(IUItem.crafting_elements, 1, 481), 6.5);
     }
 
     public static double getInBuckets(ItemStack request) {

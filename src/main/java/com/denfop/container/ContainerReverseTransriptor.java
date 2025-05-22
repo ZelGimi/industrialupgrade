@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityPolymerizer;
 import com.denfop.tiles.mechanism.TileEntityReverseTransriptor;
 import net.minecraft.entity.player.EntityPlayer;
 

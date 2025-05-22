@@ -14,7 +14,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeHills;
@@ -26,7 +25,6 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -43,133 +41,17 @@ public class WorldBaseGen implements IWorldGenerator {
     public static List<VeinType> veinTypes = new ArrayList<>();
     public static List<VeinType> veinTypes1 = new ArrayList<>();
     public static Random random = new Random();
-    final FluidName[] fluids = new FluidName[]{ FluidName.fluidneft, FluidName.fluidsweet_medium_oil,
+    final FluidName[] fluids = new FluidName[]{FluidName.fluidneft, FluidName.fluidsweet_medium_oil,
             FluidName.fluidsweet_heavy_oil, FluidName.fluidsour_light_oil, FluidName.fluidsour_medium_oil,
-            FluidName.fluidsour_heavy_oil};;
+            FluidName.fluidsour_heavy_oil};
+    ;
 
     public static void init() {
         GameRegistry.registerWorldGenerator(new WorldBaseGen(), 0);
         GameRegistry.registerWorldGenerator(new HiveGenerator(IUItem.hive), 0);
         WorldGenGas.registerFluid();
     }
-    @Override
-    public void generate(
-            final Random random,
-            final int chunkX,
-            final int chunkZ,
-            final World world,
-            final IChunkGenerator chunkGenerator,
-            final IChunkProvider chunkProvider
-    ) {
-        if (Config.DimensionList.contains(world.provider.getDimension())) {
-            final BlockPos chunkPos = new BlockPos(chunkX << 4, 0,
-                    chunkZ << 4
-            );
-            net.minecraft.util.math.ChunkPos forgeChunkPos = new net.minecraft.util.math.ChunkPos(chunkPos);
-            if (net.minecraftforge.event.terraingen.TerrainGen.decorate(world, random, forgeChunkPos,
-                    net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.CLAY
-            ) && WorldBaseGen.random.nextInt(100) >= 70) {
-                if (world.getBiome(new BlockPos(chunkX * 16, 0,
-                        chunkZ * 16
-                )) != Biome.getBiome(6)) {
-                    if (WorldBaseGen.random.nextInt(100) > 39) {
-                        for (int i1 = 0; i1 < 1; ++i1) {
 
-                            int l1 = random.nextInt(16) + 8;
-                            int i6 = random.nextInt(16) + 8;
-                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.ore2.getStateFromMeta(7)).generate(world, random,
-                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
-                            );
-                        }
-                    } else {
-                        for (int i1 = 0; i1 < 1; ++i1) {
-
-                            int l1 = random.nextInt(16) + 8;
-                            int i6 = random.nextInt(16) + 8;
-                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.ore2.getStateFromMeta(6)).generate(world, random,
-                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
-                            );
-                        }
-                    }
-                } else {
-                    if (WorldBaseGen.random.nextInt(100) > 39) {
-                        for (int i1 = 0; i1 < 1; ++i1) {
-
-                            int l1 = random.nextInt(16) + 8;
-                            int i6 = random.nextInt(16) + 8;
-                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.blockResource.getStateFromMeta(10)).generate(
-                                    world,
-                                    random,
-                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
-                            );
-                        }
-                    }
-                }
-            }
-
-            int var2;
-            int var3;
-            int var4;
-            int var5;
-
-            if (random.nextInt(100) + 1 > 70 && world.getBiome(new BlockPos(chunkX * 16, 0,
-                    chunkZ * 16
-            )) == Biome.getBiome(2)) {
-                for (var2 = 0; var2 < 1; ++var2) {
-                    var3 = chunkX * 16 + random.nextInt(16) + 8;
-                    var4 = random.nextInt(random.nextInt(random.nextInt(112) + 8) + 8) + 60;
-                    var5 = chunkZ * 16 + random.nextInt(16) + 8;
-                    FluidName fluidName = fluids[random.nextInt(fluids.length)];
-                    if (fluidName != null) {
-                        new WorldGenOil(fluidName.getInstance().getBlock(),fluidName.getInstance().getBlock())
-                                .generate(world, random, new BlockPos(var3, var4, var5));
-                    }
-
-                }
-            }
-
-            if (WorldBaseGen.random.nextInt(900) + 1 > 500) {
-                final Biome biome = world.getBiome(new BlockPos(chunkX * 16, 0,
-                        chunkZ * 16
-                ));
-                var3 = chunkX * 16 + random.nextInt(16) + 8;
-                var4 = random.nextInt(random.nextInt(random.nextInt(30) + 20) + 8);
-                var5 = chunkZ * 16 + random.nextInt(16) + 8;
-                if (biome instanceof BiomeOcean || biome instanceof BiomeRiver) {
-                    final int rand = WorldBaseGen.random.nextInt(100);
-                    TypeGas typeGas;
-                    if (rand < 50) {
-                        typeGas = TypeGas.GAS;
-                    }  else if (rand < 75) {
-                        typeGas = TypeGas.IODINE;
-                    } else {
-                        typeGas = TypeGas.FLUORINE;
-                    }
-                    new WorldGenGas(typeGas).generate(world, random, new BlockPos(var3, var4, var5));
-
-                } else {
-
-                    TypeGas typeGas;
-                    final int rand = WorldBaseGen.random.nextInt(100);
-                    if (rand < 50) {
-                        typeGas = TypeGas.GAS;
-                    } else if (rand < 75) {
-                        typeGas = TypeGas.BROMIDE;
-                    } else {
-                        typeGas = TypeGas.CHLORINE;
-                    }
-                    new WorldGenGas(typeGas).generate(world, random, new BlockPos(var3, var4, var5));
-
-                }
-            }
-
-
-            Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
-            generateSurface(world, random, chunkX * 16, chunkZ * 16, chunkGenerator, chunkProvider, chunk);
-
-            genRubberTree(chunk, 2);
-        }
-    }
     public static void initVein() {
         veinTypes.add(new VeinType(IUItem.heavyore, 0, TypeVein.SMALL,
                 new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 60, 0),
@@ -206,17 +88,22 @@ public class WorldBaseGen implements IWorldGenerator {
                         new ChanceOre(IUItem.ore.getStateFromMeta(10), 34, 10),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 6,true, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY,true), 60, 3,
-                        IUItem.classic_ore.getStateFromMeta(3)),
+        veinTypes.add(new VeinType(IUItem.heavyore, 6, true, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY, true), 60, 3,
+                        IUItem.classic_ore.getStateFromMeta(3)
+                ),
                         new ChanceOre(IUItem.toriyore.getDefaultState(), 32, 0,
-                                IUItem.toriyore.getDefaultState().withProperty(BlockThoriumOre.BOOL_PROPERTY,false)),
+                                IUItem.toriyore.getDefaultState().withProperty(BlockThoriumOre.BOOL_PROPERTY, false)
+                        ),
                         new ChanceOre(IUItem.radiationore.getStateFromMeta(1), 4, 1,
-                                IUItem.radiationore.getStateFromMeta(1).withProperty(BlocksRadiationOre.BOOL_PROPERTY,false)),
+                                IUItem.radiationore.getStateFromMeta(1).withProperty(BlocksRadiationOre.BOOL_PROPERTY, false)
+                        ),
                         new ChanceOre(IUItem.radiationore.getStateFromMeta(0), 3, 0,
-                                IUItem.radiationore.getStateFromMeta(0).withProperty(BlocksRadiationOre.BOOL_PROPERTY,false)),
+                                IUItem.radiationore.getStateFromMeta(0).withProperty(BlocksRadiationOre.BOOL_PROPERTY, false)
+                        ),
                         new ChanceOre(IUItem.radiationore.getStateFromMeta(2), 1, 2,
-                                IUItem.radiationore.getStateFromMeta(2).withProperty(BlocksRadiationOre.BOOL_PROPERTY,false)),
+                                IUItem.radiationore.getStateFromMeta(2).withProperty(BlocksRadiationOre.BOOL_PROPERTY, false)
+                        ),
                 }
 
         ));
@@ -240,9 +127,15 @@ public class WorldBaseGen implements IWorldGenerator {
         ));
         veinTypes.add(new VeinType(IUItem.heavyore, 10, TypeVein.SMALL,
                 new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(8), 50, 8),
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY,true), 25, 3,
-                                IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY,false)),
-                        new ChanceOre(IUItem.toriyore.getDefaultState(), 25, 0,  IUItem.toriyore.getDefaultState().withProperty(BlockThoriumOre.BOOL_PROPERTY,false)),
+                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY, true), 25, 3,
+                                IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY, false)
+                        ),
+                        new ChanceOre(
+                                IUItem.toriyore.getDefaultState(),
+                                25,
+                                0,
+                                IUItem.toriyore.getDefaultState().withProperty(BlockThoriumOre.BOOL_PROPERTY, false)
+                        ),
                 }
         ));
         veinTypes.add(new VeinType(IUItem.heavyore, 11, TypeVein.SMALL,
@@ -509,7 +402,124 @@ public class WorldBaseGen implements IWorldGenerator {
         }
     }
 
+    @Override
+    public void generate(
+            final Random random,
+            final int chunkX,
+            final int chunkZ,
+            final World world,
+            final IChunkGenerator chunkGenerator,
+            final IChunkProvider chunkProvider
+    ) {
+        if (Config.DimensionList.contains(world.provider.getDimension())) {
+            final BlockPos chunkPos = new BlockPos(chunkX << 4, 0,
+                    chunkZ << 4
+            );
+            net.minecraft.util.math.ChunkPos forgeChunkPos = new net.minecraft.util.math.ChunkPos(chunkPos);
+            if (net.minecraftforge.event.terraingen.TerrainGen.decorate(world, random, forgeChunkPos,
+                    net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.CLAY
+            ) && WorldBaseGen.random.nextInt(100) >= 70) {
+                if (world.getBiome(new BlockPos(chunkX * 16, 0,
+                        chunkZ * 16
+                )) != Biome.getBiome(6)) {
+                    if (WorldBaseGen.random.nextInt(100) > 39) {
+                        for (int i1 = 0; i1 < 1; ++i1) {
 
+                            int l1 = random.nextInt(16) + 8;
+                            int i6 = random.nextInt(16) + 8;
+                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.ore2.getStateFromMeta(7)).generate(world, random,
+                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
+                            );
+                        }
+                    } else {
+                        for (int i1 = 0; i1 < 1; ++i1) {
+
+                            int l1 = random.nextInt(16) + 8;
+                            int i6 = random.nextInt(16) + 8;
+                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.ore2.getStateFromMeta(6)).generate(world, random,
+                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
+                            );
+                        }
+                    }
+                } else {
+                    if (WorldBaseGen.random.nextInt(100) > 39) {
+                        for (int i1 = 0; i1 < 1; ++i1) {
+
+                            int l1 = random.nextInt(16) + 8;
+                            int i6 = random.nextInt(16) + 8;
+                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.blockResource.getStateFromMeta(10)).generate(
+                                    world,
+                                    random,
+                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
+                            );
+                        }
+                    }
+                }
+            }
+
+            int var2;
+            int var3;
+            int var4;
+            int var5;
+
+            if (random.nextInt(100) + 1 > 70 && world.getBiome(new BlockPos(chunkX * 16, 0,
+                    chunkZ * 16
+            )) == Biome.getBiome(2)) {
+                for (var2 = 0; var2 < 1; ++var2) {
+                    var3 = chunkX * 16 + random.nextInt(16) + 8;
+                    var4 = random.nextInt(random.nextInt(random.nextInt(112) + 8) + 8) + 60;
+                    var5 = chunkZ * 16 + random.nextInt(16) + 8;
+                    FluidName fluidName = fluids[random.nextInt(fluids.length)];
+                    if (fluidName != null) {
+                        new WorldGenOil(fluidName.getInstance().getBlock(), fluidName.getInstance().getBlock())
+                                .generate(world, random, new BlockPos(var3, var4, var5));
+                    }
+
+                }
+            }
+
+            if (WorldBaseGen.random.nextInt(900) + 1 > 500) {
+                final Biome biome = world.getBiome(new BlockPos(chunkX * 16, 0,
+                        chunkZ * 16
+                ));
+                var3 = chunkX * 16 + random.nextInt(16) + 8;
+                var4 = random.nextInt(random.nextInt(random.nextInt(30) + 20) + 8);
+                var5 = chunkZ * 16 + random.nextInt(16) + 8;
+                if (biome instanceof BiomeOcean || biome instanceof BiomeRiver) {
+                    final int rand = WorldBaseGen.random.nextInt(100);
+                    TypeGas typeGas;
+                    if (rand < 50) {
+                        typeGas = TypeGas.GAS;
+                    } else if (rand < 75) {
+                        typeGas = TypeGas.IODINE;
+                    } else {
+                        typeGas = TypeGas.FLUORINE;
+                    }
+                    new WorldGenGas(typeGas).generate(world, random, new BlockPos(var3, var4, var5));
+
+                } else {
+
+                    TypeGas typeGas;
+                    final int rand = WorldBaseGen.random.nextInt(100);
+                    if (rand < 50) {
+                        typeGas = TypeGas.GAS;
+                    } else if (rand < 75) {
+                        typeGas = TypeGas.BROMIDE;
+                    } else {
+                        typeGas = TypeGas.CHLORINE;
+                    }
+                    new WorldGenGas(typeGas).generate(world, random, new BlockPos(var3, var4, var5));
+
+                }
+            }
+
+
+            Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
+            generateSurface(world, random, chunkX * 16, chunkZ * 16, chunkGenerator, chunkProvider, chunk);
+
+            genRubberTree(chunk, 2);
+        }
+    }
 
     private void generateSurface(
             World world, Random random, int x, int y,

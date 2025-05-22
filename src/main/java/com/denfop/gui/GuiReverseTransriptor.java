@@ -10,7 +10,6 @@ import com.denfop.api.gui.TankGauge;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
-import com.denfop.container.ContainerPolymerizer;
 import com.denfop.container.ContainerReverseTransriptor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

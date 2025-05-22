@@ -1,6 +1,5 @@
 package com.denfop.componets;
 
-import com.denfop.IUItem;
 import com.denfop.api.pressure.IPressureAcceptor;
 import com.denfop.api.pressure.IPressureEmitter;
 import com.denfop.api.pressure.IPressureSink;
@@ -170,7 +169,6 @@ public class PressureComponent extends AbstractComponent {
     public boolean canUsePurifier(EntityPlayer player) {
         return false;
     }
-
 
 
     public void createDelegate() {

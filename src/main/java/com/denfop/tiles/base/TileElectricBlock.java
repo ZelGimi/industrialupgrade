@@ -73,6 +73,7 @@ public class TileElectricBlock extends TileEntityInventory implements
     public boolean movementchargeitem = false;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
+    public boolean addedToEnergyNet = false;
     private byte redstoneMode = 0;
     private EntityPlayer player;
 
@@ -107,7 +108,6 @@ public class TileElectricBlock extends TileEntityInventory implements
         this.wirelessComponent = this.addComponent(new WirelessComponent(this));
 
     }
-
 
     public TileElectricBlock(EnumElectricBlock electricBlock) {
         this(electricBlock.tier, electricBlock.producing, electricBlock.maxstorage, electricBlock.chargepad, electricBlock.name1);
@@ -182,11 +182,9 @@ public class TileElectricBlock extends TileEntityInventory implements
         }
     }
 
-
     public SoundEvent getSound() {
         return EnumSound.pen.getSoundEvent();
     }
-
 
     public List<ItemStack> getDrop() {
         return getAuxDrops(0);
@@ -227,12 +225,11 @@ public class TileElectricBlock extends TileEntityInventory implements
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
 
     }
-    public boolean addedToEnergyNet = false;
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if(!addedToEnergyNet) {
+        if (!addedToEnergyNet) {
             this.addedToEnergyNet = true;
             if (!this.chargepad) {
                 this.energy.setDirections(
@@ -338,7 +335,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         double charge;
         if (freeamount > 0.0D) {
             charge = Math.min(freeamount, chargefactor);
-            charge = Math.min(charge, ((IEnergyItem)itemstack.getItem()).getTransferEnergy(itemstack));
+            charge = Math.min(charge, ((IEnergyItem) itemstack.getItem()).getTransferEnergy(itemstack));
             if (this.energy.getEnergy() < charge) {
                 charge = this.energy.getEnergy();
             }

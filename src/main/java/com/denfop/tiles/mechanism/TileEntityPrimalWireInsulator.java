@@ -37,7 +37,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     public final InvSlotOutput outputSlot;
     public int progress;
     public MachineRecipe output;
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.WIRE_INSULATOR);
+    public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.WIRE_INSULATOR);
 
     public TileEntityPrimalWireInsulator() {
 
@@ -232,17 +231,19 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     ) {
         ItemStack stack = player.getHeldItem(hand);
         if (!this.getWorld().isRemote) {
-            if (stack.getItem() == IUItem.cutter && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output)) {
+            if (stack.getItem() == IUItem.cutter && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(
+                    this.output)) {
                 this.getCooldownTracker().setTick(10);
-                progress += (short) (20 + (short) (data.getOrDefault(player.getUniqueID(),0.0) / 3.3d));
+                progress += (short) (20 + (short) (data.getOrDefault(player.getUniqueID(), 0.0) / 3.3d));
                 if (!this.getWorld().isRemote) {
                     this.initiate(0);
                 }
                 if (progress >= 100) {
                     this.progress = 0;
                     this.outputSlot.add(this.output.getRecipe().output.items.get(0));
-                    if (!this.getWorld().isRemote)
-                    PrimitiveHandler.addExperience(EnumPrimitive.WIRE_INSULATOR,0.5,player.getUniqueID());
+                    if (!this.getWorld().isRemote) {
+                        PrimitiveHandler.addExperience(EnumPrimitive.WIRE_INSULATOR, 0.5, player.getUniqueID());
+                    }
                     this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
                     this.inputSlotA.consume(1, this.output.getRecipe().input.getInputs().get(1).getAmount());
                     this.output = null;
@@ -373,7 +374,7 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
             } else {
                 setActive("");
             }
-        }else{
+        } else {
             switch (outputSlot.get().getItemDamage()) {
                 case 12:
                     setActive("copper_final");

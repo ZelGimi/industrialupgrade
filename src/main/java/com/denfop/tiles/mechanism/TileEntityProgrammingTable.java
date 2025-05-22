@@ -60,7 +60,7 @@ public class TileEntityProgrammingTable extends TileElectricMachine implements
                 return (int) Math.max(1, 20 - ((TileEntityProgrammingTable) this.parent).getLevel() * 1.75);
             }
         });
-        this.upgradeSlot = new InvSlotUpgrade(this,4);
+        this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));

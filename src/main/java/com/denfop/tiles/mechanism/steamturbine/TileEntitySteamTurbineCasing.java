@@ -7,10 +7,12 @@ import com.denfop.blocks.mechanism.BlockSteamTurbine;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 
 public class TileEntitySteamTurbineCasing extends TileEntityMultiBlockElement implements ICasing {
-public TileEntitySteamTurbineCasing(){}
+
+    public TileEntitySteamTurbineCasing() {
+    }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
 

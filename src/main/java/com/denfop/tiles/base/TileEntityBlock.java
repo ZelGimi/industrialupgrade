@@ -75,7 +75,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             1.0,
             1.0
     ));
-    CooldownTracker cooldownTracker = new CooldownTracker();
     public static final EnumPlantType noCrop = EnumPlantType.getPlantType("noCrop");
     public final IMultiTileBlock teBlock;
     public final BlockTileEntity block;
@@ -85,11 +84,15 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public List<AbstractComponent> updateServerList = new ArrayList<>();
     public List<AbstractComponent> updateClientList = new ArrayList<>();
     public Map<String, AbstractComponent> advComponentMap = new HashMap<>();
-
     public String active = "";
     public byte facing;
     public boolean isLoaded;
+    CooldownTracker cooldownTracker = new CooldownTracker();
+    boolean hasHashCode = false;
+    boolean isLoadedFirst = false;
+    boolean init = false;
     private boolean isClientLoaded;
+    private int hashCode;
 
     public TileEntityBlock() {
         this.facing = (byte) EnumFacing.DOWN.ordinal();
@@ -98,32 +101,12 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     }
 
-
-    private int hashCode;
-    boolean hasHashCode = false;
-
-    @Override
-    public int hashCode() {
-        if (!hasHashCode) {
-
-            hasHashCode = true;
-            this.hashCode = super.hashCode();
-            return hashCode;
-        } else {
-            return hashCode;
-        }
-    }
-
     public static <T extends TileEntityBlock> T instantiate(Class<T> cls) {
         try {
             return cls.newInstance();
         } catch (Exception var2) {
             throw new RuntimeException(var2);
         }
-    }
-
-    public EnumPlantType getPlantType() {
-        return noCrop;
     }
 
     public static boolean checkSide(List<AxisAlignedBB> aabbs, EnumFacing side, boolean strict) {
@@ -195,6 +178,22 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     }
 
     @Override
+    public int hashCode() {
+        if (!hasHashCode) {
+
+            hasHashCode = true;
+            this.hashCode = super.hashCode();
+            return hashCode;
+        } else {
+            return hashCode;
+        }
+    }
+
+    public EnumPlantType getPlantType() {
+        return noCrop;
+    }
+
+    @Override
     public void setWorld(final World worldIn) {
         super.setWorld(worldIn);
 
@@ -249,7 +248,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         return false;
     }
 
-
     public abstract IMultiTileBlock getTeBlock();
 
     public abstract BlockTileEntity getBlock();
@@ -294,7 +292,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         super.onChunkUnload();
     }
 
-
     public final void validate() {
         super.validate();
         World world = this.getWorld();
@@ -305,7 +302,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
-    boolean isLoadedFirst = false;
     public void onLoaded() {
         if (!isLoadedFirst) {
             this.componentList.forEach(AbstractComponent::onLoaded);
@@ -317,8 +313,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             isLoadedFirst = true;
         }
     }
-
-
 
     public void onUnloaded() {
         if (isLoadedFirst) {
@@ -452,14 +446,12 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
-
     public void onNetworkUpdate(String field) {
         if (field.equals("active") || field.equals("facing")) {
             this.rerender();
         }
 
     }
-
 
     public boolean canEntityDestroy(final Entity entity) {
         for (AbstractComponent component : this.componentList) {
@@ -726,7 +718,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         return null;
     }
 
-
     public boolean hasComponent(Class<? extends AbstractComponent> cls) {
         for (final AbstractComponent component : componentList) {
             if (component.getClass() == cls) {
@@ -739,7 +730,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public List<AbstractComponent> getComponentList() {
         return componentList;
     }
-
 
     public <T extends AbstractComponent> T getComponent(String cls) {
         for (AbstractComponent component : this.componentList) {
@@ -871,7 +861,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         return true;
     }
 
-
     public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
         return this.block.getItemStack(this.teBlock);
     }
@@ -883,7 +872,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public float getHardness() {
         return this.teBlock.getHardness();
     }
-
 
     public EnumFacing getFacing() {
         return EnumFacing.VALUES[this.facing];
@@ -924,14 +912,12 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
-
     public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
         List<ItemStack> ret = new ArrayList();
         ret.addAll(this.getSelfDrops(fortune, true));
         ret.addAll(this.getAuxDrops(fortune));
         return ret;
     }
-
 
     public SoundType getBlockSound(Entity entity) {
         return SoundType.STONE;
@@ -1067,8 +1053,6 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
-    boolean init = false;
-
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (this.world == null && !init) {
             init = true;
@@ -1082,7 +1066,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             AirPollutionComponent air = this.getComp(AirPollutionComponent.class);
             SoilPollutionComponent soil = this.getComp(SoilPollutionComponent.class);
             if (air != null || soil != null) {
-                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     tooltip.add(Localization.translate("iu.pollution.info1"));
                     tooltip.add(Localization.translate("iu.pollution.info2"));
                     tooltip.add(Localization.translate("iu.pollution.info3"));
@@ -1092,8 +1076,9 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             }
 
         }
-        for (AbstractComponent component : this.componentList)
-            component.addInformation(stack,tooltip);
+        for (AbstractComponent component : this.componentList) {
+            component.addInformation(stack, tooltip);
+        }
 
     }
 

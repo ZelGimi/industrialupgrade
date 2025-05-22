@@ -47,16 +47,16 @@ public class TileCrystalCharger extends TileElectricMachine implements
     public final ComponentProcess componentProcess;
     public final InvSlotRecipes inputSlotA;
     public final InvSlot input_slot;
+    public final ComponentBaseEnergy ampere;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
-    public final ComponentBaseEnergy ampere;
     public MachineRecipe output;
 
     public TileCrystalCharger() {
         super(200, 1, 1);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot){
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
             public void onLoaded() {
                 super.onLoaded();
@@ -69,15 +69,15 @@ public class TileCrystalCharger extends TileElectricMachine implements
                 (short) 100
         ));
         this.inputSlotA = new InvSlotRecipes(this, "charger", this);
-        this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1){
+        this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1) {
             @Override
             public boolean checkRecipe() {
-                return ampere.getEnergy() >= 2D*(this.defaultOperationLength * 1D/this.operationLength);
+                return ampere.getEnergy() >= 2D * (this.defaultOperationLength * 1D / this.operationLength);
             }
 
             @Override
             public void consumeEnergy() {
-                ampere.useEnergy(2D*(this.defaultOperationLength * 1D/this.operationLength));
+                ampere.useEnergy(2D * (this.defaultOperationLength * 1D / this.operationLength));
             }
         });
         this.componentProcess.setHasAudio(false);
@@ -110,8 +110,6 @@ public class TileCrystalCharger extends TileElectricMachine implements
     }
 
 
-
-
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -129,7 +127,6 @@ public class TileCrystalCharger extends TileElectricMachine implements
     public ContainerCrystalCharger getGuiContainer(final EntityPlayer var1) {
         return new ContainerCrystalCharger(var1, this);
     }
-
 
 
     @Override

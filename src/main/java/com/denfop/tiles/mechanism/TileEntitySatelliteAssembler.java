@@ -23,7 +23,6 @@ import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerSatelliteAssembler;
-import com.denfop.gui.GuiRoverAssembler;
 import com.denfop.gui.GuiSatelliteAssembler;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
@@ -43,7 +42,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntitySatelliteAssembler  extends TileElectricMachine implements
+public class TileEntitySatelliteAssembler extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-0.5, 0.0D, -0.5, 1.5, 2.0D,
@@ -58,6 +57,7 @@ public class TileEntitySatelliteAssembler  extends TileElectricMachine implement
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
+
     public TileEntitySatelliteAssembler() {
         super(800, 1, 1);
         Recipes.recipes.addInitRecipes(this);
@@ -66,7 +66,7 @@ public class TileEntitySatelliteAssembler  extends TileElectricMachine implement
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 800
         ));
-        this.inputSlotA = new InvSlotRecipes(this, "satelliteassembler", this){
+        this.inputSlotA = new InvSlotRecipes(this, "satelliteassembler", this) {
             @Override
             public int getStackSizeLimit() {
                 return 1;
@@ -81,10 +81,7 @@ public class TileEntitySatelliteAssembler  extends TileElectricMachine implement
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    @Override
-    public void onUpdate() {
 
-    }
     public static void addRecipe(ItemStack container, ItemStack fill1, ItemStack fill2, ItemStack fill3, ItemStack output) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
@@ -96,26 +93,26 @@ public class TileEntitySatelliteAssembler  extends TileElectricMachine implement
                                 input.getInput(container),
                                 input.getInput(fill1),
                                 input.getInput(container),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,752)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,766)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 752)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 766)),
                                 input.getInput(fill2),
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(fill3),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,739)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 739)),
                                 input.getInput(fill2),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,734)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 734)),
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(fill3),
                                 input.getInput(fill3),
                                 input.getInput(fill2),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,738)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,768)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 738)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 768)),
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(fill3),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,731)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 731)),
                                 input.getInput(fill3),
                                 input.getInput(fill3),
                                 input.getInput(container),
@@ -132,6 +129,12 @@ public class TileEntitySatelliteAssembler  extends TileElectricMachine implement
                 )
         );
     }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
     public void onLoaded() {
         super.onLoaded();
         if (IUCore.proxy.isSimulating()) {
@@ -156,6 +159,7 @@ public class TileEntitySatelliteAssembler  extends TileElectricMachine implement
         this.output = this.inputSlotA.process();
         return this.output;
     }
+
     @Override
     public ContainerSatelliteAssembler getGuiContainer(final EntityPlayer var1) {
         return new ContainerSatelliteAssembler(this, var1);
@@ -177,6 +181,7 @@ public class TileEntitySatelliteAssembler  extends TileElectricMachine implement
                 UpgradableProperty.ItemInput
         );
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.satellite_assembler;
     }
@@ -216,18 +221,22 @@ public class TileEntitySatelliteAssembler  extends TileElectricMachine implement
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,726),new ItemStack(IUItem.crafting_elements,1,729),
-                new ItemStack(IUItem.crafting_elements,1,746),new ItemStack(IUItem.crafting_elements,1,740),
-                new ItemStack(IUItem.satellite));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,707),new ItemStack(IUItem.crafting_elements,1,735),
-                new ItemStack(IUItem.crafting_elements,1,730),new ItemStack(IUItem.crafting_elements,1,767),
-                new ItemStack(IUItem.adv_satellite));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,727),new ItemStack(IUItem.crafting_elements,1,728),
-                new ItemStack(IUItem.crafting_elements,1,737),new ItemStack(IUItem.crafting_elements,1,736),
-                new ItemStack(IUItem.imp_satellite));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,711),new ItemStack(IUItem.crafting_elements,1,760),
-                new ItemStack(IUItem.crafting_elements,1,759),new ItemStack(IUItem.crafting_elements,1,741),
-                new ItemStack(IUItem.per_satellite));
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 726), new ItemStack(IUItem.crafting_elements, 1, 729),
+                new ItemStack(IUItem.crafting_elements, 1, 746), new ItemStack(IUItem.crafting_elements, 1, 740),
+                new ItemStack(IUItem.satellite)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 707), new ItemStack(IUItem.crafting_elements, 1, 735),
+                new ItemStack(IUItem.crafting_elements, 1, 730), new ItemStack(IUItem.crafting_elements, 1, 767),
+                new ItemStack(IUItem.adv_satellite)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 727), new ItemStack(IUItem.crafting_elements, 1, 728),
+                new ItemStack(IUItem.crafting_elements, 1, 737), new ItemStack(IUItem.crafting_elements, 1, 736),
+                new ItemStack(IUItem.imp_satellite)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 711), new ItemStack(IUItem.crafting_elements, 1, 760),
+                new ItemStack(IUItem.crafting_elements, 1, 759), new ItemStack(IUItem.crafting_elements, 1, 741),
+                new ItemStack(IUItem.per_satellite)
+        );
     }
 
 }

@@ -5,7 +5,6 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.bee.TileEntityApiary;
-import com.denfop.tiles.mechanism.TileEntityDryer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
@@ -26,8 +25,8 @@ public enum BlockApiary implements IMultiTileBlock {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockApiary(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -42,14 +41,19 @@ public enum BlockApiary implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         for (final BlockApiary block : values()) {
             if (block.teClass != null) {

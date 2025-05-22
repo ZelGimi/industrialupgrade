@@ -42,7 +42,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,14 +60,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     protected final List<InvSlot> invSlots = new ArrayList<>();
     protected final List<InfoInvSlots> infoInvSlotsList = new ArrayList<>();
-    protected AirPollutionComponent pollutionAir;
-    protected SoilPollutionComponent pollutionSoil;
     protected final List<InvSlot> inputSlots = new LinkedList<>();
-
     protected final List<InvSlot> outputSlots = new LinkedList<>();
-
     protected final IItemHandler[] itemHandler;
     private final ComponentPrivate componentPrivate;
+    protected AirPollutionComponent pollutionAir;
+    protected SoilPollutionComponent pollutionSoil;
     protected boolean isLoaded = false;
     protected int size_inventory;
     protected ComponentClientEffectRender componentClientEffectRender;
@@ -401,9 +398,11 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         }
         return this.slotsFace;
     }
-    public boolean ignoreHooperUp(){
+
+    public boolean ignoreHooperUp() {
         return false;
     }
+
     public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
         if (ModUtils.isEmpty(stack)) {
             return false;
@@ -510,7 +509,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         List<ItemStack> ret = new ArrayList<>(super.getAuxDrops(fortune));
         for (final InvSlot slot : this.invSlots) {
             if (!(slot instanceof VirtualSlot)) {
-                for (final ItemStack stack : slot.gets()) {
+                for (final ItemStack stack : slot) {
                     if (!ModUtils.isEmpty(stack)) {
                         ret.add(stack);
                     }
@@ -527,10 +526,10 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     }
 
     public <T> T getCapability(@NotNull Capability<T> capability, EnumFacing facing) {
-        if (ignoreHooperUp() && facing != null && facing != EnumFacing.DOWN){
+        if (ignoreHooperUp() && facing != null && facing != EnumFacing.DOWN) {
             TileEntity tile = world.getTileEntity(pos.offset(facing));
-            if (tile instanceof TileEntityHopper){
-                return  CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new EmptyHandler(){
+            if (tile instanceof TileEntityHopper) {
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new EmptyHandler() {
                     @Override
                     public int getSlots() {
                         return 1;
@@ -547,7 +546,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == null) {
                 if (this.itemHandler[this.itemHandler.length - 1] == null) {
-                    this.itemHandler[this.itemHandler.length - 1] = new SidedInvWrapper(this,EnumFacing.NORTH);
+                    this.itemHandler[this.itemHandler.length - 1] = new SidedInvWrapper(this, EnumFacing.NORTH);
                 }
 
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.itemHandler[this.itemHandler.length - 1]);
@@ -685,8 +684,9 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         super.readPacket(customPacketBuffer);
         try {
             this.componentPrivate.onNetworkUpdate((CustomPacketBuffer) DecoderHandler.decode(customPacketBuffer));
-            for (AbstractComponent component : this.componentList)
+            for (AbstractComponent component : this.componentList) {
                 component.onNetworkUpdate(customPacketBuffer);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -699,8 +699,9 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         try {
             EncoderHandler.encode(packetBuffer, this.componentPrivate);
 
-            for (AbstractComponent component : this.componentList)
+            for (AbstractComponent component : this.componentList) {
                 packetBuffer.writeBytes(component.updateComponent());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

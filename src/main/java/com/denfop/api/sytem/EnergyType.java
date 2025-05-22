@@ -23,7 +23,6 @@ public enum EnergyType {
     }
 
 
-
     public String getPrefix() {
         return prefix;
     }

@@ -88,22 +88,28 @@ public class WorldSavedDataIU extends WorldSavedData {
                         FakePlanet fakePlanet = new FakePlanet(nbt1);
                         fakeBodies.add(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().addFakePlanet(fakePlanet);
-                        SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(fakePlanet.getPlanet(),
-                                fakePlanet.getSpaceOperation());
+                        SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(
+                                fakePlanet.getPlanet(),
+                                fakePlanet.getSpaceOperation()
+                        );
                     }
                     if (id == 1) {
                         FakeSatellite fakePlanet = new FakeSatellite(nbt1);
                         fakeBodies.add(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().addFakeSatellite(fakePlanet);
-                        SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(fakePlanet.getSatellite(),
-                                fakePlanet.getSpaceOperation());
+                        SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(
+                                fakePlanet.getSatellite(),
+                                fakePlanet.getSpaceOperation()
+                        );
                     }
                     if (id == 2) {
                         FakeAsteroid fakePlanet = new FakeAsteroid(nbt1);
                         fakeBodies.add(fakePlanet);
                         SpaceNet.instance.getFakeSpaceSystem().addFakeAsteroid(fakePlanet);
-                        SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(fakePlanet.getAsteroid(),
-                                fakePlanet.getSpaceOperation());
+                        SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(fakePlanet.getPlayer()).put(
+                                fakePlanet.getAsteroid(),
+                                fakePlanet.getSpaceOperation()
+                        );
                     }
 
                 }

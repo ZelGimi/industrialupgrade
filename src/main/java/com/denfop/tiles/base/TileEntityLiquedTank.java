@@ -155,7 +155,6 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
     }
 
 
-
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {

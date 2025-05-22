@@ -378,7 +378,7 @@ public class EventSpectralSuitEffect {
                     }
 
                     buffer
-                            .pos(nextPosX - grad1 , nextPosY - posY + (double) infoEnd.height, nextPosZ - posZ)
+                            .pos(nextPosX - grad1, nextPosY - posY + (double) infoEnd.height, nextPosZ - posZ)
                             .tex(endTex, 0.0D)
                             .color(color.getRed(), color.getGreen(), color.getBlue(), (int) (255.0F * endAlpha))
                             .endVertex();

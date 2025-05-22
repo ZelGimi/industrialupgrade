@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.wind;
 
 import com.denfop.Localization;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
 import com.denfop.api.windsystem.EnumLevelGenerators;
 import com.denfop.api.windsystem.EnumRotorSide;
@@ -382,6 +383,8 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
                 ) * (coefficient_power / 100D);
             }
             this.energy.addEnergy(generation);
+            this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
+
             if (this.world.getWorldTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
             }
@@ -475,9 +478,9 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         for (int i = pos.getX() - 8; i <= pos.getX() + 8; i++) {
             for (int j = pos.getY() - 8; j <= pos.getY() + 8; j++) {
                 for (int k = pos.getZ() - 8; k <= pos.getZ() + 8; k++) {
-                    final TileEntity tile =world.getTileEntity(new BlockPos(i, j, k));
+                    final TileEntity tile = world.getTileEntity(new BlockPos(i, j, k));
                     if (tile instanceof IWindMechanism) {
-                      return false;
+                        return false;
                     }
                 }
             }
@@ -787,10 +790,12 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     public ContainerWindGenerator getGuiContainer(final EntityPlayer entityPlayer) {
         return new ContainerWindGenerator(this, entityPlayer);
     }
+
     @Override
     public void setWork(final boolean work) {
         this.work = work;
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {

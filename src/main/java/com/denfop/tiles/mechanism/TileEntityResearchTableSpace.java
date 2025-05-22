@@ -2,23 +2,18 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.space.EnumLevels;
-import com.denfop.api.space.IAsteroid;
 import com.denfop.api.space.IBody;
-import com.denfop.api.space.IPlanet;
-import com.denfop.api.space.ISatellite;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.colonies.Colony;
 import com.denfop.api.space.colonies.InfoSends;
 import com.denfop.api.space.colonies.Sends;
 import com.denfop.api.space.colonies.api.IColony;
 import com.denfop.api.space.fakebody.Data;
-import com.denfop.api.space.fakebody.FakeAsteroid;
-import com.denfop.api.space.fakebody.FakePlanet;
-import com.denfop.api.space.fakebody.FakeSatellite;
 import com.denfop.api.space.fakebody.IFakeBody;
 import com.denfop.api.space.fakebody.SpaceOperation;
 import com.denfop.api.space.research.api.IResearchTable;
 import com.denfop.api.space.research.event.ResearchTableLoadEvent;
+import com.denfop.api.space.research.event.ResearchTableReLoadEvent;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
@@ -56,17 +51,33 @@ import java.util.stream.Collectors;
 
 public class TileEntityResearchTableSpace extends TileEntityInventory implements IResearchTable {
 
+    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 2, 2.0D,
+            1.5
+    ));
+    private static final List<AxisAlignedBB> aabbs_east = Collections.singletonList(new AxisAlignedBB(0, 0.0D, -1, 1, 2.0D,
+            1
+    ));
+    private static final List<AxisAlignedBB> aabbs_south = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 2, 2.0D,
+            1
+    ));
+    private static final List<AxisAlignedBB> aabbs_west = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 1, 2.0D,
+            2
+    ));
+    private static final List<AxisAlignedBB> aabbs_north = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, 0, 1, 2.0D,
+            1
+    ));
     public final InvSlot slotLens;
     public Map<IBody, SpaceOperation> map;
     public List<SpaceOperation> fakeBodySpaceOperationMap;
     public EnumLevels level = EnumLevels.NONE;
     public int timer;
-    private UUID player;
     public Map<IBody, Data> dataMap = new HashMap<>();
     public Map<IBody, SpaceOperation> operationMap;
     public IBody body;
     public IFakeBody fakeBody;
     public IColony colony;
+    boolean added = false;
+    private UUID player;
     private InfoSends sends;
 
     public TileEntityResearchTableSpace() {
@@ -97,22 +108,6 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
         };
     }
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 2, 2.0D,
-            1.5
-    ));
-    private static final List<AxisAlignedBB> aabbs_east = Collections.singletonList(new AxisAlignedBB(0, 0.0D, -1, 1, 2.0D,
-            1
-    ));
-    private static final List<AxisAlignedBB> aabbs_south = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 2, 2.0D,
-            1
-    ));
-    private static final List<AxisAlignedBB> aabbs_west = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 1, 2.0D,
-            2
-    ));
-    private static final List<AxisAlignedBB> aabbs_north = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, 0, 1, 2.0D,
-            1
-    ));
-
     public InfoSends getSends() {
         return sends;
     }
@@ -124,7 +119,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
     }
-    boolean added = false;
+
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -142,7 +137,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
                 }
             }
         }
-        update();
+        this.slotLens.update();
     }
 
 
@@ -171,10 +166,10 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
             throw new RuntimeException(e);
         }
         boolean hasColony = customPacketBuffer.readBoolean();
-        if (hasColony){
+        if (hasColony) {
             this.colony = new Colony(customPacketBuffer);
             this.sends = new InfoSends(customPacketBuffer);
-        }else{
+        } else {
             colony = null;
             sends = null;
         }
@@ -196,12 +191,15 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
             throw new RuntimeException(e);
         }
         customPacketBuffer.writeBoolean(colony != null);
-        if (colony != null){
+        if (colony != null) {
             customPacketBuffer.writeBytes(colony.writePacket());
-            List<Sends> sends = SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player);
+            List<Sends> sends =
+                    SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player).stream().filter(sends1 -> sends1.getBody() == colony.getBody()).collect(
+                            Collectors.toList());
             InfoSends infoSends = new InfoSends();
-            for (Sends send : sends)
+            for (Sends send : sends) {
                 infoSends.addTimer(send.getTimerToPlanet());
+            }
             customPacketBuffer.writeBytes(infoSends.writeBuffer());
         }
 
@@ -223,6 +221,8 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getWorld().getWorldTime() % 80 == 0)
+            MinecraftForge.EVENT_BUS.post(new ResearchTableReLoadEvent(this.getWorld(), this));
         if (timer > 0) {
             timer--;
         }
@@ -245,20 +245,20 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
                             colony = null;
                         } else {
                             list = list.stream().filter(colony -> colony.matched(body)).collect(Collectors.toList());
-                            if (list.isEmpty()){
+                            if (list.isEmpty()) {
                                 colony = null;
-                            }else{
+                            } else {
                                 colony = list.get(0);
                             }
                         }
                     }
-                }else{
+                } else {
                     List<IColony> list = SpaceNet.instance.getColonieNet().getMap().get(
                             this.player
                     );
                     if (list != null && !list.isEmpty()) {
                         list = list.stream().filter(colony -> colony.matched(body)).collect(Collectors.toList());
-                        if (!list.isEmpty()){
+                        if (!list.isEmpty()) {
                             colony = list.get(0);
                         }
                     }
@@ -279,7 +279,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
                     this.fakeBody = null;
                     new PacketUpdateFakeBody(this, null);
                 }
-            }else{
+            } else {
                 colony = null;
             }
         }

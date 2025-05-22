@@ -72,8 +72,9 @@ public class CropCategory extends Gui implements IRecipeCategory<CropWrapper> {
             @Nonnull final IIngredients ingredients
     ) {
         final IGuiItemStackGroup isg = layout.getItemStacks();
-        final List<ItemStack> list = Arrays.asList(recipes.getInputs(),new ItemStack(IUItem.crop),
-                recipes.getOutput().getSoil().getStack());
+        final List<ItemStack> list = Arrays.asList(recipes.getInputs(), new ItemStack(IUItem.crop),
+                recipes.getOutput().getSoil().getStack()
+        );
         for (int i = 0; i < list.size(); i++) {
             int yDisplayPosition1 = 75 + (20 - list.size()) * i - list.size() * 16;
             isg.init(i, true, 60 - 21, yDisplayPosition1);

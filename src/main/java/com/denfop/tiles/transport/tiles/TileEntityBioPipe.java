@@ -3,10 +3,15 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.SystemTick;
-import com.denfop.api.sytem.*;
+import com.denfop.api.sytem.EnergyEvent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.EnumTypeEvent;
+import com.denfop.api.sytem.IAcceptor;
+import com.denfop.api.sytem.IConductor;
+import com.denfop.api.sytem.IEmitter;
+import com.denfop.api.sytem.ITile;
+import com.denfop.api.sytem.InfoCable;
+import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBioPipes;
@@ -25,7 +30,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
@@ -41,8 +45,13 @@ public class TileEntityBioPipe extends TileEntityMultiCable implements IConducto
 
     public boolean addedToEnergyNet;
     protected BioType cableType;
+    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
+    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
+    boolean updateConnect = false;
     private boolean needUpdate;
-
+    private long id;
+    private InfoCable cable;
 
     public TileEntityBioPipe(BioType cableType) {
         super(cableType);
@@ -88,12 +97,13 @@ public class TileEntityBioPipe extends TileEntityMultiCable implements IConducto
         nbt.setByte("cableType", (byte) this.cableType.ordinal());
         return nbt;
     }
+
     @Override
     public void RemoveTile(EnergyType type, ITile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<ITile>> iter = validReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<ITile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -105,7 +115,7 @@ public class TileEntityBioPipe extends TileEntityMultiCable implements IConducto
     }
 
     @Override
-    public void AddTile(EnergyType type,ITile tile, final EnumFacing facing1) {
+    public void AddTile(EnergyType type, ITile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);
@@ -115,17 +125,8 @@ public class TileEntityBioPipe extends TileEntityMultiCable implements IConducto
         }
     }
 
-
-    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
-
-    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
     public long getIdNetwork() {
         return this.id;
-    }
-    int hashCodeSource;
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
@@ -133,22 +134,23 @@ public class TileEntityBioPipe extends TileEntityMultiCable implements IConducto
         return hashCodeSource;
     }
 
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
 
     public void setId(final long id) {
         this.id = id;
     }
-    private long id;
+
     @Override
     public List<InfoTile<ITile>> getValidReceivers(EnergyType type) {
         return validReceivers;
     }
+
     public Map<EnumFacing, ITile> getTiles(EnergyType type) {
         return energyConductorMap;
     }
-
-
-
-
 
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
@@ -156,7 +158,7 @@ public class TileEntityBioPipe extends TileEntityMultiCable implements IConducto
         MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.BIOFUEL, this));
         this.needUpdate = true;
     }
-    boolean updateConnect = false;
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -167,24 +169,25 @@ public class TileEntityBioPipe extends TileEntityMultiCable implements IConducto
             this.needUpdate = false;
             this.updateConnectivity();
         }
-        if (updateConnect){
+        if (updateConnect) {
             updateConnect = false;
             this.updateConnectivity();
         }
     }
+
     @Override
     public InfoCable getCable(EnergyType type) {
         return cable;
     }
 
-    private InfoCable cable;
     @Override
-    public void setCable(EnergyType type,final InfoCable cable) {
-        this.cable=cable;
+    public void setCable(EnergyType type, final InfoCable cable) {
+        this.cable = cable;
     }
+
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote&& !this.addedToEnergyNet) {
+        if (!this.getWorld().isRemote && !this.addedToEnergyNet) {
             this.energyConductorMap.clear();
             this.validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.BIOFUEL, this));
@@ -280,7 +283,6 @@ public class TileEntityBioPipe extends TileEntityMultiCable implements IConducto
                 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F
         );
     }
-
 
 
     @Override

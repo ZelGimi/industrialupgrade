@@ -11,29 +11,33 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class TileEntitySteamHeaterBoiler extends TileEntityMultiBlockElement implements  IHeater{
+public class TileEntitySteamHeaterBoiler extends TileEntityMultiBlockElement implements IHeater {
 
     private final HeatComponent heat;
 
-    public TileEntitySteamHeaterBoiler(){
-        this.heat = this.addComponent(HeatComponent.asBasicSink(this,1000));
+    public TileEntitySteamHeaterBoiler() {
+        this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 40 == 0 && this.heat.getEnergy() > 0)
+        if (this.getWorld().getWorldTime() % 40 == 0 && this.heat.getEnergy() > 0) {
             this.heat.useEnergy(1);
+        }
     }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.heatmachine.info"));
     }
+
     @Override
     public boolean isWork() {
         return heat.getEnergy() > 500;
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockSteamBoiler.steam_boiler_heater;
@@ -43,4 +47,5 @@ public class TileEntitySteamHeaterBoiler extends TileEntityMultiBlockElement imp
     public BlockTileEntity getBlock() {
         return IUItem.steam_boiler;
     }
+
 }

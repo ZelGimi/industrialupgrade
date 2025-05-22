@@ -1,12 +1,10 @@
 package com.denfop.componets;
 
-import com.denfop.api.cool.CoolTick;
 import com.denfop.api.cool.ICoolAcceptor;
 import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.ICoolSink;
 import com.denfop.api.cool.ICoolSource;
 import com.denfop.api.cool.ICoolTile;
-import com.denfop.api.cool.Path;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
 import com.denfop.api.sytem.InfoTile;
@@ -52,6 +50,8 @@ public class CoolComponent extends AbstractComponent {
     public boolean upgrade = false;
     public int meta = 0;
     public boolean allow = false;
+    Map<EnumFacing, ICoolTile> energyCoolConductorMap = new HashMap<>();
+    List<InfoTile<ICoolTile>> validColdReceivers = new LinkedList<>();
     private double coef;
 
     public CoolComponent(TileEntityInventory parent, double capacity) {
@@ -105,10 +105,6 @@ public class CoolComponent extends AbstractComponent {
     public static CoolComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
         return new CoolComponent(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
-
-    Map<EnumFacing, ICoolTile> energyCoolConductorMap = new HashMap<>();
-
-    List<InfoTile<ICoolTile>> validColdReceivers = new LinkedList<>();
 
     public void readFromNbt(NBTTagCompound nbt) {
         this.storage = nbt.getDouble("storage");
@@ -369,6 +365,9 @@ public class CoolComponent extends AbstractComponent {
     private class EnergyNetDelegateSink extends CoolComponent.EnergyNetDelegate implements ICoolSink {
 
 
+        int hashCodeSource;
+        List<ICoolSource> list = new LinkedList<>();
+        private long id;
 
         private EnergyNetDelegateSink() {
             super();
@@ -381,16 +380,9 @@ public class CoolComponent extends AbstractComponent {
         public boolean acceptsCoolFrom(ICoolEmitter emitter, EnumFacing dir) {
             return CoolComponent.this.sinkDirections.contains(dir);
         }
-        private long id;
+
         public long getIdNetwork() {
             return this.id;
-        }
-
-        int hashCodeSource;
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -398,6 +390,10 @@ public class CoolComponent extends AbstractComponent {
             return hashCodeSource;
         }
 
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
 
         public void setId(final long id) {
             this.id = id;
@@ -407,7 +403,7 @@ public class CoolComponent extends AbstractComponent {
         public void AddCoolTile(final ICoolTile tile, final EnumFacing dir) {
             if (!this.getWorld().isRemote) {
                 energyCoolConductorMap.put(dir, tile);
-                validColdReceivers.add(new InfoTile<>(tile,dir.getOpposite()));
+                validColdReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
             }
         }
 
@@ -416,7 +412,7 @@ public class CoolComponent extends AbstractComponent {
             if (!this.getWorld().isRemote) {
                 energyCoolConductorMap.remove(dir);
                 final Iterator<InfoTile<ICoolTile>> iter = validColdReceivers.iterator();
-                while (iter.hasNext()){
+                while (iter.hasNext()) {
                     InfoTile<ICoolTile> tileInfoTile = iter.next();
                     if (tileInfoTile.tileEntity == tile) {
                         iter.remove();
@@ -430,10 +426,12 @@ public class CoolComponent extends AbstractComponent {
         public Map<EnumFacing, ICoolTile> getCoolTiles() {
             return energyCoolConductorMap;
         }
+
         @Override
         public List<InfoTile<ICoolTile>> getCoolValidReceivers() {
             return validColdReceivers;
         }
+
         @Override
         public @NotNull BlockPos getBlockPos() {
             return CoolComponent.this.parent.getPos();
@@ -459,7 +457,7 @@ public class CoolComponent extends AbstractComponent {
         public boolean needCooling() {
             return CoolComponent.this.storage > 0;
         }
-        List<ICoolSource> list = new LinkedList<>();
+
         @Override
         public List<ICoolSource> getEnergyTickList() {
             return list;
@@ -474,6 +472,7 @@ public class CoolComponent extends AbstractComponent {
 
     private class EnergyNetDelegateSource extends CoolComponent.EnergyNetDelegate implements ICoolSource {
 
+        int hashCodeSource;
         private long id;
 
         private EnergyNetDelegateSource() {
@@ -492,15 +491,9 @@ public class CoolComponent extends AbstractComponent {
         public @NotNull BlockPos getBlockPos() {
             return CoolComponent.this.parent.getPos();
         }
+
         public long getIdNetwork() {
             return this.id;
-        }
-
-        int hashCodeSource;
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -508,6 +501,10 @@ public class CoolComponent extends AbstractComponent {
             return hashCodeSource;
         }
 
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
 
         public void setId(final long id) {
             this.id = id;
@@ -517,7 +514,7 @@ public class CoolComponent extends AbstractComponent {
         public void AddCoolTile(final ICoolTile tile, final EnumFacing dir) {
             if (!this.getWorld().isRemote) {
                 energyCoolConductorMap.put(dir, tile);
-                validColdReceivers.add(new InfoTile<>(tile,dir.getOpposite()));
+                validColdReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
             }
         }
 
@@ -526,7 +523,7 @@ public class CoolComponent extends AbstractComponent {
             if (!this.getWorld().isRemote) {
                 energyCoolConductorMap.remove(dir);
                 final Iterator<InfoTile<ICoolTile>> iter = validColdReceivers.iterator();
-                while (iter.hasNext()){
+                while (iter.hasNext()) {
                     InfoTile<ICoolTile> tileInfoTile = iter.next();
                     if (tileInfoTile.tileEntity == tile) {
                         iter.remove();
@@ -540,10 +537,12 @@ public class CoolComponent extends AbstractComponent {
         public Map<EnumFacing, ICoolTile> getCoolTiles() {
             return energyCoolConductorMap;
         }
+
         @Override
         public List<InfoTile<ICoolTile>> getCoolValidReceivers() {
             return validColdReceivers;
         }
+
         public double getOfferedCool() {
             assert !CoolComponent.this.sourceDirections.isEmpty();
 

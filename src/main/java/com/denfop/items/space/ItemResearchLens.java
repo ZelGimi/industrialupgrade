@@ -15,7 +15,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Locale;
 
 public class ItemResearchLens extends ItemSubTypes<ItemResearchLens.Types> implements IModelRegister {
+
     protected static final String NAME = "research_lens";
+
     public ItemResearchLens() {
         super(Types.class);
         this.setCreativeTab(IUCore.SpaceTab);
@@ -23,6 +25,7 @@ public class ItemResearchLens extends ItemSubTypes<ItemResearchLens.Types> imple
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
+
     @SideOnly(Side.CLIENT)
     public void registerModel(Item item, int meta, String extraName) {
         ModelLoader.setCustomModelResourceLocation(
@@ -31,8 +34,6 @@ public class ItemResearchLens extends ItemSubTypes<ItemResearchLens.Types> imple
                 new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
         );
     }
-
-
 
 
     public enum Types implements ISubEnum {
@@ -66,4 +67,5 @@ public class ItemResearchLens extends ItemSubTypes<ItemResearchLens.Types> imple
             return this.ID;
         }
     }
+
 }

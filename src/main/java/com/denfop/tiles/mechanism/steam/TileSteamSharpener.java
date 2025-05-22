@@ -12,8 +12,6 @@ import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.upgrades.IUpgradableBlock;
-import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
@@ -41,12 +39,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 public class TileSteamSharpener extends TileElectricMachine implements
-         IUpdateTick, IUpdatableTileEvent, IHasRecipe {
+        IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
 
     public final InvSlotRecipes inputSlotA;
@@ -239,7 +235,7 @@ public class TileSteamSharpener extends TileElectricMachine implements
         for (int i = 25; i < 40; i++) {
             Recipes.recipes.addRecipe("sharpener", new BaseMachineRecipe(
                     new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, i))),
-                    new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, i+3))
+                    new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, i + 3))
             ));
         }
     }
@@ -374,7 +370,6 @@ public class TileSteamSharpener extends TileElectricMachine implements
         this.inputSlotA.consume();
         this.outputSlot.add(this.output.getRecipe().getOutput().items);
     }
-
 
 
     public double getProgress() {

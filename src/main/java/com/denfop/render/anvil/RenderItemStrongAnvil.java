@@ -1,6 +1,5 @@
 package com.denfop.render.anvil;
 
-import com.denfop.tiles.base.TileEntityAnvil;
 import com.denfop.tiles.base.TileEntityStrongAnvil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

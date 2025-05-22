@@ -7,6 +7,4 @@ public interface IFakeSatellite extends IFakeBody {
     ISatellite getSatellite();
 
 
-
-
 }

@@ -3,7 +3,6 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.api.gui.ImageInterface;
 import com.denfop.api.gui.TankGauge;
-import com.denfop.container.ContainerGasTank;
 import com.denfop.container.ContainerSteamTurbineTank;
 import net.minecraft.util.ResourceLocation;
 
@@ -11,7 +10,7 @@ public class GuiSteamTurbineTank extends GuiIU<ContainerSteamTurbineTank> {
 
     public GuiSteamTurbineTank(ContainerSteamTurbineTank guiContainer) {
         super(guiContainer);
-        this.addElement(new ImageInterface(this,0,0,this.xSize,this.ySize));
+        this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
         elements.add(TankGauge.createNormal(this, 80, 25, guiContainer.base.getTank()));
     }
 

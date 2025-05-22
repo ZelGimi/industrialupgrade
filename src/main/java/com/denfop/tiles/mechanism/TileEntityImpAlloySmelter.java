@@ -104,6 +104,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
@@ -141,8 +142,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
         }
 
 
-
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     @Override
@@ -230,9 +230,10 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
                 )
                 , 5000);
 
-        addAlloysmelter(new ItemStack(Items.IRON_INGOT,2), new ItemStack(Items.COAL,3), "ingotNickel", "ingotManganese",
+        addAlloysmelter(new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.COAL, 3), "ingotNickel", "ingotManganese",
                 IUItem.advIronIngot
-                , 5000);
+                , 5000
+        );
 
         addAlloysmelter("ingotIron", new ItemStack(IUItem.iudust, 2, 21), "ingotNickel", "ingotMolybdenum",
                 new ItemStack(IUItem.alloysingot, 1, 21)

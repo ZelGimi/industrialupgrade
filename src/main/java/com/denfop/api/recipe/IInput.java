@@ -11,6 +11,7 @@ public interface IInput {
     List<IInputItemStack> getInputs();
 
     List<ItemStack> getStackInputs();
+
     boolean hasFluids();
 
     FluidStack getFluid();

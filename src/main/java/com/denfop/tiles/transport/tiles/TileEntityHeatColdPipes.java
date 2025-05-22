@@ -2,14 +2,12 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.cool.CoolNet;
 import com.denfop.api.cool.ICoolAcceptor;
 import com.denfop.api.cool.ICoolConductor;
 import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
-import com.denfop.api.heat.HeatNet;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatConductor;
 import com.denfop.api.heat.IHeatEmitter;
@@ -27,7 +25,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketCableSound;
 import com.denfop.tiles.transport.types.HeatColdType;
 import com.denfop.tiles.transport.types.ICableItem;
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,7 +35,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
@@ -54,8 +50,16 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
 
     public boolean addedToEnergyNet;
     protected HeatColdType cableType;
+    int hashCodeSource;
+    Map<EnumFacing, ICoolTile> energyCoolConductorMap = new HashMap<>();
+    List<InfoTile<ICoolTile>> validColdReceivers = new LinkedList<>();
+    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
+    boolean updateConnect = false;
+    List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
     private boolean needUpdate;
     private long id;
+    private com.denfop.api.cool.InfoCable typeColdCable;
+    private InfoCable typeHeatCable;
 
     public TileEntityHeatColdPipes(HeatColdType cableType) {
         super(cableType);
@@ -101,7 +105,7 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
         super.readFromNBT(nbt);
         this.cableType = HeatColdType.values[nbt.getByte("cableType") & 255];
     }
-    private com.denfop.api.cool.InfoCable typeColdCable;
+
     @Override
     public com.denfop.api.cool.InfoCable getCoolCable() {
         return typeColdCable;
@@ -116,24 +120,20 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
         return this.id;
     }
 
-    int hashCodeSource;
+    @Override
+    public int getHashCodeSource() {
+        return hashCodeSource;
+    }
 
     @Override
     public void setHashCodeSource(final int hashCode) {
         hashCodeSource = hashCode;
     }
 
-    @Override
-    public int getHashCodeSource() {
-        return hashCodeSource;
-    }
-
-
     public void setId(final long id) {
         this.id = id;
     }
 
-    Map<EnumFacing, ICoolTile> energyCoolConductorMap = new HashMap<>();
     @Override
     public void AddCoolTile(final ICoolTile tile, final EnumFacing dir) {
         if (!this.getWorld().isRemote) {
@@ -150,7 +150,7 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
         if (!this.getWorld().isRemote) {
             this.energyCoolConductorMap.remove(dir);
             final Iterator<InfoTile<ICoolTile>> iter = validColdReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<ICoolTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -165,11 +165,12 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
     public Map<EnumFacing, ICoolTile> getCoolTiles() {
         return energyCoolConductorMap;
     }
-    List<InfoTile<ICoolTile>> validColdReceivers = new LinkedList<>();
+
     @Override
     public List<InfoTile<ICoolTile>> getCoolValidReceivers() {
         return validColdReceivers;
     }
+
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setByte("cableType", (byte) this.cableType.ordinal());
@@ -214,7 +215,7 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
             this.needUpdate = false;
             this.updateConnectivity();
         }
-        if (updateConnect){
+        if (updateConnect) {
             updateConnect = false;
             this.updateConnectivity();
         }
@@ -243,7 +244,7 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
     public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
         return new ItemStack(IUItem.heatcold_pipes, 1, cableType.ordinal());
     }
-    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
+
     @Override
     public void AddHeatTile(final IHeatTile tile, final EnumFacing dir) {
         if (!this.getWorld().isRemote) {
@@ -254,7 +255,7 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
             updateConnect = true;
         }
     }
-    private InfoCable typeHeatCable;
+
     @Override
     public InfoCable getHeatCable() {
         return typeHeatCable;
@@ -265,14 +266,12 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
         typeHeatCable = cable;
     }
 
-
-    boolean updateConnect = false;
     @Override
     public void RemoveHeatTile(final IHeatTile tile, final EnumFacing dir) {
         if (!this.getWorld().isRemote) {
             this.energyHeatConductorMap.remove(dir);
             final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<IHeatTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -287,13 +286,11 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
     public Map<EnumFacing, IHeatTile> getHeatTiles() {
         return energyHeatConductorMap;
     }
-    List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
+
     @Override
     public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
         return validHeatReceivers;
     }
-
-
 
 
     public void updateConnectivity() {

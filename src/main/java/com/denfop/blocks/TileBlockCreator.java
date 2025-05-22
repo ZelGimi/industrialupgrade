@@ -5,17 +5,11 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public final class TileBlockCreator {
 
@@ -30,7 +24,7 @@ public final class TileBlockCreator {
 
 
     public <E extends Enum<E> & IMultiTileBlock> BlockTileEntity create(Class<E> enumClass) {
-        InfoAboutTile<E> instance = new InfoAboutTile<>(enumClass,index);
+        InfoAboutTile<E> instance = new InfoAboutTile<>(enumClass, index);
         final BlockTileEntity block = BlockTileEntity.create(
                 "industrialupgrade_" + instance.teBlocks.get(0).getIdentifier().getResourcePath(),
                 instance.teBlocks.get(0).getIdentifier(),
@@ -63,12 +57,12 @@ public final class TileBlockCreator {
     public static class InfoAboutTile<E extends Enum<E> & IMultiTileBlock> {
 
         private final boolean specialModels;
-        private List<IMultiTileBlock> teBlocks;
         private final int index;
-        private List<IMultiTileBlock> idMap;
         private final CreativeTabs tab;
         private final Material defaultMaterial;
         private final List<? extends IMultiTileBlock> listBlock;
+        private List<IMultiTileBlock> teBlocks;
+        private List<IMultiTileBlock> idMap;
         private BlockTileEntity block;
 
         InfoAboutTile(Class<E> universe, int index) {

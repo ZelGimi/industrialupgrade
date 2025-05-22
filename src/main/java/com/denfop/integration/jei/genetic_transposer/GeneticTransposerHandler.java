@@ -13,7 +13,7 @@ public class GeneticTransposerHandler {
 
     private static final List<GeneticTransposerHandler> recipes = new ArrayList<>();
     private final FluidStack input2;
-    private final ItemStack input, input1,input3,input4, output;
+    private final ItemStack input, input1, input3, input4, output;
 
     public GeneticTransposerHandler(
             ItemStack input, ItemStack input1, ItemStack input3, ItemStack input4, FluidStack input2,
@@ -35,10 +35,10 @@ public class GeneticTransposerHandler {
     }
 
     public static GeneticTransposerHandler addRecipe(
-            ItemStack input, ItemStack input1,  ItemStack input3, ItemStack input4, FluidStack input2,
+            ItemStack input, ItemStack input1, ItemStack input3, ItemStack input4, FluidStack input2,
             ItemStack output
     ) {
-        GeneticTransposerHandler recipe = new GeneticTransposerHandler(input, input1,input3,input4, input2, output);
+        GeneticTransposerHandler recipe = new GeneticTransposerHandler(input, input1, input3, input4, input2, output);
         if (recipes.contains(recipe)) {
             return null;
         }

@@ -32,7 +32,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -52,6 +51,7 @@ public class TileSteamStorage extends TileEntityInventory {
     public int prev = -10;
     @SideOnly(Side.CLIENT)
     public DataFluid dataFluid;
+    public int amount;
 
     public TileSteamStorage() {
 
@@ -72,6 +72,7 @@ public class TileSteamStorage extends TileEntityInventory {
         );
         this.steam.setFluidTank(fluidTank);
     }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -85,6 +86,7 @@ public class TileSteamStorage extends TileEntityInventory {
     public boolean isNormalCube() {
         return false;
     }
+
     @Override
     public int getLightValue() {
         if (this.fluidTank.getFluid() == null || this.fluidTank.getFluid().getFluid().getBlock() == null) {
@@ -169,8 +171,6 @@ public class TileSteamStorage extends TileEntityInventory {
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
-
-
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
@@ -227,7 +227,6 @@ public class TileSteamStorage extends TileEntityInventory {
                 : this.getFluidTank().getFluidAmount() * i / this.getFluidTank().getCapacity();
     }
 
-
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
@@ -250,7 +249,6 @@ public class TileSteamStorage extends TileEntityInventory {
     public boolean needsFluid() {
         return this.getFluidTank().getFluidAmount() < this.getFluidTank().getCapacity();
     }
-    public int amount;
 
     public void updateEntityServer() {
         super.updateEntityServer();

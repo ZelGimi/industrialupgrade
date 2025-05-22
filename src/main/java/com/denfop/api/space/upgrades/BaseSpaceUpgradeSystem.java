@@ -5,8 +5,8 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.rovers.api.IRoversItem;
+import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.api.ISpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.event.EventItemLoad;
 import com.denfop.api.space.upgrades.info.SpaceUpgradeItemInform;
@@ -64,14 +64,6 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
     }
 
 
-
-
-
-
-
-
-
-
     @SubscribeEvent
     public void loadItem(EventItemLoad event) {
 
@@ -83,7 +75,7 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
     public int getRemaining(final ItemStack item) {
         final NBTTagCompound nbt = ModUtils.nbt(item);
         final int id = nbt.getInteger("ID_Item");
-        return this.map_col.getOrDefault(id, 23);
+        return this.map_col.getOrDefault(id, 24);
     }
 
 
@@ -111,7 +103,6 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
     }
 
 
-
     @Override
     public SpaceUpgradeItemInform getModules(final EnumTypeUpgrade module, final ItemStack item) {
         List<SpaceUpgradeItemInform> list = getInformation(item);
@@ -122,7 +113,6 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
         }
         return null;
     }
-
 
 
     @Override
@@ -162,7 +152,7 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
             lst.add(EnumTypeUpgrade.getFromID(index));
         }
 
-        int ost = 23 - modesTagList.tagCount();
+        int ost = 24 - modesTagList.tagCount();
         nbt.setBoolean("canupgrade", ost > 0);
 
         if (this.map_col.containsKey(id)) {
@@ -172,12 +162,9 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
         }
 
 
-
         this.setInformation(item, lst, stack);
 
     }
-
-
 
 
     @Override
@@ -218,15 +205,13 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
     }
 
 
-
     private int getModulesValue(EnumTypeUpgrade module, ItemStack stack) {
-        SpaceUpgradeItemInform modules =  this.getModules(module, stack);
-        if (modules == null)
+        SpaceUpgradeItemInform modules = this.getModules(module, stack);
+        if (modules == null) {
             return 0;
+        }
         return modules.number;
     }
-
-
 
 
     @Override

@@ -42,7 +42,15 @@ public class ItemSprayer extends ItemFluidContainer {
         this.setMaxStackSize(1);
     }
 
+    private static boolean canPlaceFoam(World world, BlockPos pos, Target target) {
+        if (Objects.requireNonNull(target) == Target.Any) {
+            return IUItem.foam.canPlaceBlockOnSide(world, pos, EnumFacing.DOWN);
+        } else {
+            assert false;
+        }
 
+        return false;
+    }
 
     public String getItemStackDisplayName(ItemStack stack) {
         return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu.").replace(".name", ""));
@@ -64,15 +72,7 @@ public class ItemSprayer extends ItemFluidContainer {
                 new ModelResourceLocation(Constants.MOD_ID + ":" + "tools" + "/" + "foam_sprayer", null)
         );
     }
-    private static boolean canPlaceFoam(World world, BlockPos pos, Target target) {
-        if (Objects.requireNonNull(target) == Target.Any) {
-            return IUItem.foam.canPlaceBlockOnSide(world, pos, EnumFacing.DOWN);
-        } else {
-            assert false;
-        }
 
-        return false;
-    }
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         if (IUCore.proxy.isSimulating() && IUCore.keyboard.isChangeKeyDown(player)) {
             ItemStack stack = ModUtils.get(player, hand);

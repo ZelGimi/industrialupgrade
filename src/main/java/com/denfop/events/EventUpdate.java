@@ -3,17 +3,17 @@ package com.denfop.events;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class EventUpdate {
+
     private boolean playerNotified = false;
     private int delay = 80;
 
@@ -22,7 +22,9 @@ public class EventUpdate {
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
+        if (event.phase != TickEvent.Phase.START) {
+            return;
+        }
         if (this.delay > 0) {
             this.delay--;
             return;
@@ -64,12 +66,16 @@ public class EventUpdate {
     }
 
     private String formatAddonStatus(String addonName, boolean isInstalled) {
-        return " " + addonName + ": " + (isInstalled ? TextFormatting.GREEN +"["+ "\u2611" + "]" : TextFormatting.RED + "["+"\u274C" + "]");
+        return " " + addonName + ": " + (isInstalled
+                ? TextFormatting.GREEN + "[" + "\u2611" + "]"
+                : TextFormatting.RED + "[" + "\u274C" + "]");
     }
 
     private void sendDiscordLink(EntityPlayer player) {
-        TextComponentString discordMessage = new TextComponentString(TextFormatting.AQUA + Localization.translate("iu.discord.question") + " " + TextFormatting.UNDERLINE + "[" + Localization.translate("iu.discord.click") + "]");
+        TextComponentString discordMessage = new TextComponentString(TextFormatting.AQUA + Localization.translate(
+                "iu.discord.question") + " " + TextFormatting.UNDERLINE + "[" + Localization.translate("iu.discord.click") + "]");
         discordMessage.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/nFHcxqVx"));
         player.sendMessage(discordMessage);
     }
+
 }

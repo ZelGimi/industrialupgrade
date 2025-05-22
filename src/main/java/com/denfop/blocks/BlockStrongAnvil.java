@@ -2,7 +2,6 @@ package com.denfop.blocks;
 
 import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.tiles.base.TileEntityAnvil;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityStrongAnvil;
 import com.denfop.utils.ModUtils;
@@ -26,8 +25,8 @@ public enum BlockStrongAnvil implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockStrongAnvil(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -43,14 +42,19 @@ public enum BlockStrongAnvil implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         for (final BlockStrongAnvil block : values()) {
             if (block.teClass != null) {
@@ -101,7 +105,7 @@ public enum BlockStrongAnvil implements IMultiTileBlock {
 
     @Override
     public float getHardness() {
-        return 3.0f;
+        return 1.0f;
     }
 
     @Override

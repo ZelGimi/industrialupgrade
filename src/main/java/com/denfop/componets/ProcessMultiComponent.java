@@ -359,7 +359,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         ItemStack stack = player.getHeldItem(hand);
         if (stack.getItem().equals(IUItem.canister)) {
             FluidStack fluid = FluidUtil.getFluidContained(stack);
-            if (fluid != null && fluid.getFluid() == FluidName.fluidmotoroil.getInstance() &&fluid.amount >= 125 && (!timer1.canWork() || timer1.getBar() == 0 )&& (timer == null || !timer.canWork())) {
+            if (fluid != null && fluid.getFluid() == FluidName.fluidmotoroil.getInstance() && fluid.amount >= 125 && (!timer1.canWork() || timer1.getBar() == 0) && (timer == null || !timer.canWork())) {
                 this.timer = new Timer(0, 0, 35);
                 final IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
                 handler.drain(125, true);

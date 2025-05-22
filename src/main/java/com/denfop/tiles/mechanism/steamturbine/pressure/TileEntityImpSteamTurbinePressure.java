@@ -5,11 +5,12 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
 
-public class TileEntityImpSteamTurbinePressure extends TileEntityBaseSteamTurbinePressure{
+public class TileEntityImpSteamTurbinePressure extends TileEntityBaseSteamTurbinePressure {
 
     public TileEntityImpSteamTurbinePressure() {
         super(2);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockSteamTurbine.steam_turbine_imp_pressure;
@@ -19,4 +20,5 @@ public class TileEntityImpSteamTurbinePressure extends TileEntityBaseSteamTurbin
     public BlockTileEntity getBlock() {
         return IUItem.steam_turbine;
     }
+
 }

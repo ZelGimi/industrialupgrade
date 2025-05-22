@@ -111,7 +111,7 @@ public class TileMagnetGenerator extends TileElectricMachine {
         NBTTagCompound nbt = ModUtils.nbt(list.get(0));
         nbt.setInteger("timer", this.timer);
         nbt.setBoolean("work", true);
-        return  list;
+        return list;
     }
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {

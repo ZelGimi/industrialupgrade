@@ -98,7 +98,7 @@ public class ExtractorRecipe {
                 9,
                 new ItemStack(IUItem.compressed_redstone, 1)
         );
-        addextractor(new ItemStack(IUItem.crafting_elements, 4, 481), new ItemStack(Items.BONE,2));
+        addextractor(new ItemStack(IUItem.crafting_elements, 4, 481), new ItemStack(Items.BONE, 2));
 
         addextractor(new ItemStack(IUItem.ore2, 1, 7), new ItemStack(IUItem.crafting_elements, 2, 481));
         addextractor(

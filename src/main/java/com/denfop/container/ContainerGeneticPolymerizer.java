@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityGeneticPolymerizer;
-import com.denfop.tiles.mechanism.TileEntityGeneticTransposer;
-import com.denfop.tiles.mechanism.TilePlasticCreator;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerGeneticPolymerizer extends ContainerFullInv<TileEntityGeneticPolymerizer> {
@@ -20,20 +18,20 @@ public class ContainerGeneticPolymerizer extends ContainerFullInv<TileEntityGene
 
         if (tileEntity1.inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
-                    0, inputX -22 , inputY + 9
+                    0, inputX - 22, inputY + 9
             ));
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
-                    1, inputX  , inputY
+                    1, inputX, inputY
             ));
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
                     2, inputX +
-                     18, inputY
+                    18, inputY
             ));
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
-                    3, inputX , inputY + 18
+                    3, inputX, inputY + 18
             ));
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
-                    4, inputX +18, inputY  + 18
+                    4, inputX + 18, inputY + 18
             ));
         }
         if (tileEntity1.outputSlot != null) {

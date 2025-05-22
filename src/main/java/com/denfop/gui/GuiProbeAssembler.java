@@ -4,20 +4,16 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageScreen;
-import com.denfop.api.gui.ImageSpaceInterface;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.container.ContainerBattery;
 import com.denfop.container.ContainerProbeAssembler;
-import com.denfop.container.ContainerRoverAssembler;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiProbeAssembler extends GuiIU<ContainerProbeAssembler> {
 
     public GuiProbeAssembler(ContainerProbeAssembler guiContainer) {
         super(guiContainer, EnumTypeStyle.SPACE);
-        this.xSize=214;
-        this.ySize=225;
+        this.xSize = 214;
+        this.ySize = 225;
         this.componentList.clear();
         this.addComponent(new GuiComponent(this, 180, 92, EnumTypeComponent.ENERGY_WEIGHT_2,
                 new Component<>(this.container.base.energy)

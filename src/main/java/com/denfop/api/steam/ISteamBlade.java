@@ -11,5 +11,6 @@ public interface ISteamBlade {
 
     boolean damageBlade(ItemStack stack);
 
-ResourceLocation getTexture();
+    ResourceLocation getTexture();
+
 }

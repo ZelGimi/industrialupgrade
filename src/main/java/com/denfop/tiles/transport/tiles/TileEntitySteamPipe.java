@@ -45,27 +45,34 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
 
     public boolean addedToEnergyNet;
     protected SteamType cableType;
+    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
+    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
+    boolean updateConnect = false;
     private boolean needUpdate;
-
+    private long id;
+    private InfoCable cable;
 
     public TileEntitySteamPipe(SteamType cableType) {
         super(cableType);
         this.cableType = cableType;
     }
 
-    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
 
-    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
+    public TileEntitySteamPipe() {
+        super(SteamType.spipe);
+        this.cableType = SteamType.spipe;
+        this.connectivity = 0;
+        this.addedToEnergyNet = false;
+
+    }
+
+    public static TileEntitySteamPipe delegate(SteamType cableType) {
+        return new TileEntitySteamPipe(cableType);
+    }
 
     public long getIdNetwork() {
         return this.id;
-    }
-
-    int hashCodeSource;
-
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
@@ -73,12 +80,14 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         return hashCodeSource;
     }
 
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
 
     public void setId(final long id) {
         this.id = id;
     }
-
-    private long id;
 
     @Override
     public List<InfoTile<ITile>> getValidReceivers(EnergyType type) {
@@ -89,13 +98,10 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         return energyConductorMap;
     }
 
-
     @Override
     public InfoCable getCable(EnergyType type) {
         return cable;
     }
-
-    private InfoCable cable;
 
     @Override
     public void setCable(EnergyType type, final InfoCable cable) {
@@ -127,18 +133,6 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
             }
             updateConnect = true;
         }
-    }
-
-    public TileEntitySteamPipe() {
-        super(SteamType.spipe);
-        this.cableType = SteamType.spipe;
-        this.connectivity = 0;
-        this.addedToEnergyNet = false;
-
-    }
-
-    public static TileEntitySteamPipe delegate(SteamType cableType) {
-        return new TileEntitySteamPipe(cableType);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -176,7 +170,6 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         this.needUpdate = true;
     }
 
-    boolean updateConnect = false;
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -187,7 +180,7 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
             this.needUpdate = false;
             this.updateConnectivity();
         }
-        if (updateConnect){
+        if (updateConnect) {
             updateConnect = false;
             this.updateConnectivity();
         }
@@ -291,7 +284,6 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
                 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F
         );
     }
-
 
 
     @Override

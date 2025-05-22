@@ -41,16 +41,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import org.jetbrains.annotations.NotNull;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -90,11 +86,12 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 1000);
         this.fluidTank2 = fluids.addTank("fluidTank2", 1000, InvSlot.TypeItemSlot.OUTPUT);
-        this.inputSlotA = new InvSlotRecipes(this, "primal_fluid_integrator", this, this.fluidTank1){
+        this.inputSlotA = new InvSlotRecipes(this, "primal_fluid_integrator", this, this.fluidTank1) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
-                if (index == 4)
-                return super.accepts(itemStack, 0);
+                if (index == 4) {
+                    return super.accepts(itemStack, 0);
+                }
                 return false;
             }
         };
@@ -105,7 +102,6 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
 
     }
-
 
 
     public static void addRecipe(ItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
@@ -122,7 +118,6 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
                 outputfluidStack)));
 
     }
-
 
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
@@ -216,10 +211,10 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
             }
         }
         if (name.equals("fluidtank_empty")) {
-            this.fluidTank1.drain(Integer.MAX_VALUE,true);
+            this.fluidTank1.drain(Integer.MAX_VALUE, true);
         }
         if (name.equals("fluidtank1_empty")) {
-            this.fluidTank2.drain(Integer.MAX_VALUE,true);
+            this.fluidTank2.drain(Integer.MAX_VALUE, true);
         }
         if (name.equals("slot")) {
             try {
@@ -460,17 +455,19 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         }
         if (this.prevAmount != this.fluidTank1.getFluidAmount()) {
             this.prevAmount = this.fluidTank1.getFluidAmount();
-            if (prevAmount != 0)
-            new PacketUpdateFieldTile(this, "fluidtank", this.fluidTank1);
-            else
+            if (prevAmount != 0) {
+                new PacketUpdateFieldTile(this, "fluidtank", this.fluidTank1);
+            } else {
                 new PacketUpdateFieldTile(this, "fluidtank_empty", true);
+            }
         }
         if (this.prevAmount1 != this.fluidTank2.getFluidAmount()) {
             this.prevAmount1 = this.fluidTank2.getFluidAmount();
-            if (prevAmount1 != 0)
-            new PacketUpdateFieldTile(this, "fluidtank1", this.fluidTank2);
-            else
+            if (prevAmount1 != 0) {
+                new PacketUpdateFieldTile(this, "fluidtank1", this.fluidTank2);
+            } else {
                 new PacketUpdateFieldTile(this, "fluidtank1_empty", true);
+            }
         }
 
         if (this.output != null && !this.inputSlotA.isEmpty() && this.outputSlot.isEmpty() && this.outputSlot.canAdd(this.output

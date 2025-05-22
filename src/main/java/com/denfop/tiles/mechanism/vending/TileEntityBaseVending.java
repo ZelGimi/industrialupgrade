@@ -17,11 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,35 +35,35 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
     public InvSlot invSlotSellPrivate;
 
     public boolean update;
+    public int timer = 0;
     Map<Item, Map<Integer, Integer>> mapValues = new HashMap<>();
-    public  int timer = 0;
+
     public TileEntityBaseVending(EnumTypeStyle style) {
         this.style = style;
         this.invSlotBuyPrivate = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1);
         this.invSlotSellPrivate = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1);
 
-        this.invSlotBuy = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1){
+        this.invSlotBuy = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, style.ordinal() + 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return !invSlotBuyPrivate.get(index).isEmpty() && invSlotBuyPrivate.get(index).isItemEqual(stack);
             }
         };
-        this.invSlotSell = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, style.ordinal() + 1){
+        this.invSlotSell = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, style.ordinal() + 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return false;
             }
         };
-          this.invSlotInventoryInput = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 18) {
+        this.invSlotInventoryInput = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 18) {
             @Override
             public void onChanged() {
                 super.onChanged();
                 update = true;
             }
         };
-        this.output = new InvSlotOutput(this,18);
+        this.output = new InvSlotOutput(this, 18);
     }
-
 
 
     @Override
@@ -78,13 +75,13 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
             final float hitY,
             final float hitZ
     ) {
-        timer+=5;
+        timer += 5;
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
     public void updateItems() {
         mapValues.clear();
-        for (ItemStack stack : invSlotInventoryInput.gets()) {
+        for (ItemStack stack : invSlotInventoryInput) {
             if (!stack.isEmpty()) {
                 final Map<Integer, Integer> map = mapValues.computeIfAbsent(stack.getItem(), k -> new HashMap<>());
                 int value = map.computeIfAbsent(stack.getItemDamage(), k -> 0);
@@ -150,8 +147,9 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
             this.update = false;
             this.updateItems();
         }
-        if (timer > 0)
+        if (timer > 0) {
             timer--;
+        }
         for (int i = 0; i < this.invSlotBuy.size(); i++) {
             ItemStack stack = this.invSlotBuy.get(i);
             if (stack.isEmpty()) {
@@ -160,6 +158,9 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
             ItemStack privateStack = this.invSlotBuyPrivate.get(i);
             if (privateStack.isEmpty()) {
                 continue;
+            }
+            if (!stack.isItemEqual(privateStack)){
+                return;
             }
             ItemStack privateSell = this.invSlotSellPrivate.get(i);
             if (privateSell.isEmpty()) {
@@ -178,25 +179,25 @@ public class TileEntityBaseVending extends TileEntityInventory implements IType 
                         ? privateSell.getMaxStackSize() / privateSell.getCount()
                         : (privateSell.getMaxStackSize() - output.getCount()) / privateSell.getCount();
 
-                countCan = Math.min(value/ privateSell.getCount(), countCan);
+                countCan = Math.min(value / privateSell.getCount(), countCan);
                 countCan = Math.min(countCan, stack.getCount() / privateStack.getCount());
                 if (countCan == 0) {
                     continue;
                 }
                 final int countCan1 = countCan;
-                for (ItemStack stack1 : invSlotInventoryInput.gets()) {
+                for (ItemStack stack1 : invSlotInventoryInput) {
                     if (countCan == 0) {
                         break;
                     }
                     if (stack1.isItemEqual(privateSell)) {
-                        int shrink = Math.min(countCan * privateSell.getCount(), stack1.getCount());
-                        stack1.shrink(shrink);
+                        int shrink = Math.min(countCan, stack1.getCount());
+                        stack1.shrink(privateSell.getCount()*shrink);
                         countCan -= shrink;
                     }
                 }
-                stack.shrink(countCan1);
-                this.output.add(ModUtils.setSize(privateStack,countCan1*privateStack.getCount()));
-                this.invSlotSell.add(ModUtils.setSize(privateSell,countCan1*privateSell.getCount()));
+                stack.shrink(countCan1* privateStack.getCount());
+                this.output.add(ModUtils.setSize(privateStack, countCan1 * privateStack.getCount()));
+                this.invSlotSell.add(ModUtils.setSize(privateSell, countCan1 * privateSell.getCount()));
                 this.updateItems();
             }
         }

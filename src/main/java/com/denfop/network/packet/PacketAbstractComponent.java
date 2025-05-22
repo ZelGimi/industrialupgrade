@@ -58,25 +58,25 @@ public class PacketAbstractComponent implements IPacket {
         String componentName = is.readString();
 
 
-        final byte[] data = new byte[is.writerIndex()-is.readerIndex()];
+        final byte[] data = new byte[is.writerIndex() - is.readerIndex()];
         is.readBytes(data);
         IUCore.proxy.requestTick(false, () -> {
             World world = Minecraft.getMinecraft().world;
 
-                TileEntity teRaw = world.getTileEntity(pos1);
-                if (teRaw instanceof TileEntityBlock) {
-                    TileEntityBlock tile = (TileEntityBlock) teRaw;
-                    AbstractComponent component = tile.getComp(componentName);
+            TileEntity teRaw = world.getTileEntity(pos1);
+            if (teRaw instanceof TileEntityBlock) {
+                TileEntityBlock tile = (TileEntityBlock) teRaw;
+                AbstractComponent component = tile.getComp(componentName);
 
-                    if (component != null) {
-                        try {
+                if (component != null) {
+                    try {
 
-                            component.onNetworkUpdate(new CustomPacketBuffer(data));
-                        } catch (IOException var6) {
-                            throw new RuntimeException(var6);
-                        }
+                        component.onNetworkUpdate(new CustomPacketBuffer(data));
+                    } catch (IOException var6) {
+                        throw new RuntimeException(var6);
                     }
                 }
+            }
 
         });
     }

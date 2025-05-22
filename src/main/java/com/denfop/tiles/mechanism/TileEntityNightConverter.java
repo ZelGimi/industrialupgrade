@@ -4,7 +4,6 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InvSlotRecipes;
@@ -18,27 +17,18 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentTimer;
-import com.denfop.container.ContainerMoonSpotter;
 import com.denfop.container.ContainerNightConverter;
-import com.denfop.gui.GuiMoonSpotter;
 import com.denfop.gui.GuiNightConverter;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
-import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.utils.Timer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 public class TileEntityNightConverter extends TileElectricMachine implements
@@ -54,8 +44,8 @@ public class TileEntityNightConverter extends TileElectricMachine implements
         super(0, 14, 1);
         inputSlotA = new InvSlotRecipes(this, "solar_glass_recipe", this);
         inputSlotA.setStackSizeLimit(1);
-        this.ne = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.NIGHT,this,10000));
-        this.progress = this.addComponent(new ComponentProgress(this,1,80));
+        this.ne = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.NIGHT, this, 10000));
+        this.progress = this.addComponent(new ComponentProgress(this, 1, 80));
     }
 
     public static void addRecipe(int container) {
@@ -69,11 +59,6 @@ public class TileEntityNightConverter extends TileElectricMachine implements
                 )
         );
     }
-
-
-
-
-
 
 
     @Override
@@ -114,7 +99,7 @@ public class TileEntityNightConverter extends TileElectricMachine implements
                 this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                 getOutput();
             }
-        }else{
+        } else {
             this.setActive(false);
         }
     }

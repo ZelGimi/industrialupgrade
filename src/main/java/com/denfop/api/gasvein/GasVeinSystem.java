@@ -1,15 +1,10 @@
 package com.denfop.api.gasvein;
 
-import com.denfop.Config;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeHills;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,10 +46,9 @@ public class GasVeinSystem implements IGasVeinSystem {
     public void addVein(final Chunk chunk) {
 
         int chance = rand.nextInt(100);
-        rand.setSeed(rand.nextLong());
         GasVein vein = new GasVein(TypeGas.NONE, chunk.getPos());
-        if (chance < 20) {
-            vein.setType(TypeGas.values()[rand.nextInt(4)+1]);
+        if (chance < 25) {
+            vein.setType(TypeGas.values()[rand.nextInt(4) + 1]);
             vein.setMaxCol(200000);
             vein.setCol(200000);
         }

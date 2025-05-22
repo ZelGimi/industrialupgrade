@@ -23,14 +23,11 @@ import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerRocketAssembler;
-import com.denfop.container.ContainerSatelliteAssembler;
 import com.denfop.gui.GuiRocketAssembler;
-import com.denfop.gui.GuiSatelliteAssembler;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -60,6 +57,7 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
+
     public TileEntityRocketAssembler() {
         super(800, 1, 1);
         Recipes.recipes.addInitRecipes(this);
@@ -68,7 +66,7 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 800
         ));
-        this.inputSlotA = new InvSlotRecipes(this, "rocketassembler", this){
+        this.inputSlotA = new InvSlotRecipes(this, "rocketassembler", this) {
             @Override
             public int getStackSizeLimit() {
                 return 1;
@@ -83,12 +81,11 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    @Override
-    public void onUpdate() {
 
-    }
-    public static void addRecipe(ItemStack container, ItemStack fill1, ItemStack fill2, ItemStack fill3,ItemStack fill4,
-                                 ItemStack fill5, ItemStack output) {
+    public static void addRecipe(
+            ItemStack container, ItemStack fill1, ItemStack fill2, ItemStack fill3, ItemStack fill4,
+            ItemStack fill5, ItemStack output
+    ) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "rocketassembler",
@@ -96,17 +93,17 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
                         new Input(
                                 input.getInput(container),
                                 input.getInput(container),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,753)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 753)),
                                 input.getInput(container),
                                 input.getInput(container),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,758)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,747)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,732)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 758)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 747)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 732)),
                                 input.getInput(container),
                                 input.getInput(container),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,698)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,733)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,765)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 698)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 733)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 765)),
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(fill1),
@@ -136,6 +133,12 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
                 )
         );
     }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
     public void onLoaded() {
         super.onLoaded();
         if (IUCore.proxy.isSimulating()) {
@@ -160,6 +163,7 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
         this.output = this.inputSlotA.process();
         return this.output;
     }
+
     @Override
     public ContainerRocketAssembler getGuiContainer(final EntityPlayer var1) {
         return new ContainerRocketAssembler(this, var1);
@@ -170,6 +174,7 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
         return new GuiRocketAssembler(getGuiContainer(var1));
     }
+
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
@@ -180,6 +185,7 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
                 UpgradableProperty.ItemInput
         );
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.rocket_assembler;
     }
@@ -219,22 +225,26 @@ public class TileEntityRocketAssembler extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,726),new ItemStack(IUItem.crafting_elements,1,745),
-                new ItemStack(IUItem.crafting_elements,1,742),new ItemStack(IUItem.crafting_elements,1,744),
-                new ItemStack(IUItem.crafting_elements,1,743),new ItemStack(IUItem.crafting_elements,1,695),
-                new ItemStack(IUItem.rocket));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,707),new ItemStack(IUItem.crafting_elements,1,763),
-                new ItemStack(IUItem.crafting_elements,1,761),new ItemStack(IUItem.crafting_elements,1,764)
-                ,new ItemStack(IUItem.crafting_elements,1,762),new ItemStack(IUItem.crafting_elements,1,702),
-                new ItemStack(IUItem.adv_rocket));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,727),new ItemStack(IUItem.crafting_elements,1,751),
-                new ItemStack(IUItem.crafting_elements,1,748),new ItemStack(IUItem.crafting_elements,1,750),
-                new ItemStack(IUItem.crafting_elements,1,749),new ItemStack(IUItem.crafting_elements,1,692),
-                new ItemStack(IUItem.imp_rocket));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,711),new ItemStack(IUItem.crafting_elements,1,757),
-                new ItemStack(IUItem.crafting_elements,1,754),new ItemStack(IUItem.crafting_elements,1,756),
-                new ItemStack(IUItem.crafting_elements,1,755),new ItemStack(IUItem.crafting_elements,1,699),
-                new ItemStack(IUItem.per_rocket));
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 726), new ItemStack(IUItem.crafting_elements, 1, 745),
+                new ItemStack(IUItem.crafting_elements, 1, 742), new ItemStack(IUItem.crafting_elements, 1, 744),
+                new ItemStack(IUItem.crafting_elements, 1, 743), new ItemStack(IUItem.crafting_elements, 1, 695),
+                new ItemStack(IUItem.rocket)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 707), new ItemStack(IUItem.crafting_elements, 1, 763),
+                new ItemStack(IUItem.crafting_elements, 1, 761), new ItemStack(IUItem.crafting_elements, 1, 764)
+                , new ItemStack(IUItem.crafting_elements, 1, 762), new ItemStack(IUItem.crafting_elements, 1, 702),
+                new ItemStack(IUItem.adv_rocket)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 727), new ItemStack(IUItem.crafting_elements, 1, 751),
+                new ItemStack(IUItem.crafting_elements, 1, 748), new ItemStack(IUItem.crafting_elements, 1, 750),
+                new ItemStack(IUItem.crafting_elements, 1, 749), new ItemStack(IUItem.crafting_elements, 1, 692),
+                new ItemStack(IUItem.imp_rocket)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 711), new ItemStack(IUItem.crafting_elements, 1, 757),
+                new ItemStack(IUItem.crafting_elements, 1, 754), new ItemStack(IUItem.crafting_elements, 1, 756),
+                new ItemStack(IUItem.crafting_elements, 1, 755), new ItemStack(IUItem.crafting_elements, 1, 699),
+                new ItemStack(IUItem.per_rocket)
+        );
     }
 
 }

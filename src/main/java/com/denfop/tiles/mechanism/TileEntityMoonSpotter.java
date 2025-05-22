@@ -53,7 +53,7 @@ public class TileEntityMoonSpotter extends TileElectricMachine implements
         super(0, 14, 1);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InvSlotRecipes(this, "solar_glass_recipe", this);
-        this.upgradeSlot = new InvSlotUpgrade(this,4);
+        this.upgradeSlot = new InvSlotUpgrade(this, 4);
         inputSlotA.setStackSizeLimit(1);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 3, 30)) {
             @Override
@@ -67,12 +67,6 @@ public class TileEntityMoonSpotter extends TileElectricMachine implements
 
     }
 
-    @Override
-    public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        super.addInformation(stack, tooltip);
-        tooltip.add(Localization.translate("moon_spotter.info"));
-    }
-
     public static void addRecipe(int container) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
@@ -83,6 +77,12 @@ public class TileEntityMoonSpotter extends TileElectricMachine implements
                         new RecipeOutput(null, new ItemStack(IUItem.solar_night_glass, 1, container))
                 )
         );
+    }
+
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("moon_spotter.info"));
     }
 
     @Override

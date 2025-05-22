@@ -2,9 +2,7 @@ package com.denfop.tiles.mechanism.steamturbine.tank;
 
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerGasTank;
 import com.denfop.container.ContainerSteamTurbineTank;
-import com.denfop.gui.GuiGasMainTank;
 import com.denfop.gui.GuiSteamTurbineTank;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -12,7 +10,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.render.tank.DataFluid;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.mechanism.steamturbine.ICoolant;
 import com.denfop.tiles.mechanism.steamturbine.ITank;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,7 +19,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,8 +37,9 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
     public TileEntityBaseSteamTurbineTank(int level) {
         this.level = level;
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = this.fluids.addTankInsert("tank", 10000*(level+1));
+        this.tank = this.fluids.addTankInsert("tank", 10000 * (level + 1));
     }
+
     public void updateEntityServer() {
         super.updateEntityServer();
         if (amount != tank.getFluidAmount()) {
@@ -53,13 +50,11 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
     }
 
 
-
-
-
     @Override
     public boolean hasOwnInventory() {
         return this.getMain() != null;
     }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -119,7 +114,7 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
 
@@ -143,13 +138,13 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
 
     @Override
     public void clear(final boolean steam) {
-        if (steam){
-            if (this.tank.getFluid() != null && this.tank.getFluid().getFluid() == FluidRegistry.WATER){
-                this.tank.drain(this.tank.getFluidAmount(),true);
+        if (steam) {
+            if (this.tank.getFluid() != null && this.tank.getFluid().getFluid() == FluidRegistry.WATER) {
+                this.tank.drain(this.tank.getFluidAmount(), true);
             }
-        }else{
-            if (this.tank.getFluid() != null && this.tank.getFluid().getFluid() == FluidName.fluidsteam.getInstance()){
-                this.tank.drain(this.tank.getFluidAmount(),true);
+        } else {
+            if (this.tank.getFluid() != null && this.tank.getFluid().getFluid() == FluidName.fluidsteam.getInstance()) {
+                this.tank.drain(this.tank.getFluidAmount(), true);
             }
         }
     }

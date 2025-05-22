@@ -2,7 +2,6 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.IEnergySource;
 import com.denfop.api.energy.IEnergyTile;
@@ -24,7 +23,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -51,7 +49,6 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     public final InvSlotSintezator inputslot;
     public final InvSlotSintezator inputslotA;
     public final WirelessComponent wirelessComponent;
-    private int size;
     public int machineTire1;
     public int solartype;
     public double generating;
@@ -66,16 +63,19 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     public double storage;
     public double production;
     public double maxStorage;
-
     public boolean rain = false;
     public double progress;
     public boolean wetBiome;
     public EnumType type;
     public TileSolarPanel.GenerationState generationState = TileSolarPanel.GenerationState.NONE;
-
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    int hashCodeSource;
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    private int size;
     private double pastEnergy;
     private double perenergy;
     private ChunkPos chunkPos;
+    private long id;
 
     public TileSintezator() {
         this.facing = 2;
@@ -100,13 +100,12 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         super.loadBeforeFirstUpdate();
         this.inputslot.wirelessmodule();
     }
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
 
     public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<IEnergyTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -115,19 +114,13 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
             }
         }
     }
+
     public long getIdNetwork() {
         return this.id;
     }
 
-
     public void setId(final long id) {
         this.id = id;
-    }
-    private long id;
-    int hashCodeSource;
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
@@ -135,15 +128,22 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         return hashCodeSource;
     }
 
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
+
     public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.put(facing1, tile);
-            validReceivers.add(new InfoTile<>(tile,facing1.getOpposite()));
+            validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
         }
     }
+
     public Map<EnumFacing, IEnergyTile> getTiles() {
         return energyConductorMap;
     }
+
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
@@ -243,7 +243,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
 
         this.rain = this.wetBiome && (this.world.isRaining() || this.world.isThundering());
         this.sunIsUp = this.world.isDaytime();
-        this.skyIsVisible=true;
+        this.skyIsVisible = true;
         if (this.sunIsUp) {
             if (!(this.rain)) {
                 this.generationState = TileSolarPanel.GenerationState.DAY;
@@ -267,7 +267,6 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         }
 
     }
-
 
     public void readFromNBT(final NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
@@ -312,12 +311,11 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         return progress * i;
 
     }
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
-
 
     public List<InfoTile<IEnergyTile>> getValidReceivers() {
         return validReceivers;
     }
+
     public void onLoaded() {
         super.onLoaded();
         if (IUCore.proxy.isSimulating() && !addedToEnergyNet) {
@@ -446,12 +444,12 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
         }
         if (this.getWorld().getWorldTime() % 20 == 0) {
             int size1 = 0;
-            for (ItemStack stack : this.inputslot.gets()) {
-                if (!stack.isEmpty()){
+            for (ItemStack stack : this.inputslot) {
+                if (!stack.isEmpty()) {
                     size1 += stack.getCount();
                 }
             }
-            if (size != size1){
+            if (size != size1) {
                 this.inputslot.update();
                 size = size1;
             }

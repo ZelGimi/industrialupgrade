@@ -14,5 +14,6 @@ public interface IRod extends com.denfop.api.steam.IRod {
 
     List<ISteamBlade> getRods();
 
-    void  updateBlades();
+    void updateBlades();
+
 }

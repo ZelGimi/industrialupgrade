@@ -3,7 +3,6 @@ package com.denfop.tiles.windturbine;
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.mechanism.BlockCyclotron;
 import com.denfop.blocks.mechanism.BlockWindTurbine;
 import com.denfop.componets.Energy;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
@@ -12,8 +11,8 @@ public class TileEntityWindTurbineSocket extends TileEntityMultiBlockElement imp
 
     private final Energy energy;
 
-    public TileEntityWindTurbineSocket(){
-        this.energy= this.addComponent(Energy.asBasicSource(this,2000000,14));
+    public TileEntityWindTurbineSocket() {
+        this.energy = this.addComponent(Energy.asBasicSource(this, 2000000, 14));
     }
 
     @Override

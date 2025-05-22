@@ -20,7 +20,7 @@ public class TileEntityImpReactor extends TileEntityMultiBlockElement implements
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 2;
     }
 

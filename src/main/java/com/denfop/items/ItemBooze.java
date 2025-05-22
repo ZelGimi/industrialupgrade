@@ -27,7 +27,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,10 +38,10 @@ import java.util.List;
 
 public class ItemBooze extends Item implements IModelRegister {
 
-    public int[] baseDuration = new int[]{300, 900, 1200, 1600, 2000, 2400};
-    public float[] baseIntensity = new float[]{0.4F, 0.75F, 1.0F, 1.5F, 2.0F};
     private final String name;
     private final String path;
+    public int[] baseDuration = new int[]{300, 900, 1200, 1600, 2000, 2400};
+    public float[] baseIntensity = new float[]{0.4F, 0.75F, 1.0F, 1.5F, 2.0F};
 
     public ItemBooze(String name) {
         super();
@@ -211,7 +210,7 @@ public class ItemBooze extends Item implements IModelRegister {
             tooltip.add(Localization.translate("iu.beer.recipe1") + " " + beerVariety.getRatioOfComponents().get(0).getSecond());
             tooltip.add(Localization.translate("iu.beer.recipe2") + " " + beerVariety.getRatioOfComponents().get(0).getFirst());
             tooltip.add(Localization.translate("iu.beer.recipe3") + " " + waterVariety.getAmount().get(0));
-            tooltip.add(Localization.translate("iu.beer.recipe4") + " " + new Timer((int) (timeVariety.getTime()*60*60)).getDisplay());
+            tooltip.add(Localization.translate("iu.beer.recipe4") + " " + new Timer((int) (timeVariety.getTime() * 60 * 60)).getDisplay());
             tooltip.add(Localization.translate("iu.beer.recipe5") + " " + waterVariety.name() + " " + beerVariety.name() + " " + timeVariety.name());
 
         }

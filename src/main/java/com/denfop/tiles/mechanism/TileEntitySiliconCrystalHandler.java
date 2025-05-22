@@ -178,7 +178,7 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
 
         if (this.energy.getEnergy() < 1 || this.inputSlotA.get().isEmpty() || this.output == null || this.outputSlot
                 .get()
-                .getCount() >= 64 || ( this.output != null  && !this.inputSlotA.continue_process(this.output))) {
+                .getCount() >= 64 || (this.output != null && !this.inputSlotA.continue_process(this.output))) {
             this.timer.setCanWorkWithOut(false);
             this.setActive(false);
             if (this.upgradeSlot.tickNoMark()) {

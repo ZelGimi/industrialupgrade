@@ -280,7 +280,6 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
     }
 
 
-
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));

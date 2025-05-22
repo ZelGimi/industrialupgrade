@@ -38,7 +38,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -47,7 +46,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -102,8 +100,6 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         return ret;
     }
 
-    public final TypeProperty typeProperty = this.getTypeProperty();
-
     public static EnumFacing getItemFacing(IMultiTileBlock teBlock) {
         Set<EnumFacing> supported = teBlock.getSupportedFacings();
         if (supported.contains(EnumFacing.NORTH)) {
@@ -111,7 +107,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         } else {
             return !supported.isEmpty() ? supported.iterator().next() : EnumFacing.DOWN;
         }
-    }
+    }    public final TypeProperty typeProperty = this.getTypeProperty();
 
     private static TileEntityBlock getTe(IBlockAccess world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
@@ -331,7 +327,6 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         }
 
     }
-
 
     public @NotNull ItemStack getItem(World world, BlockPos pos, IBlockState state) {
         TileEntityBlock te = getTe(world, pos);
@@ -813,7 +808,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     }
 
     public String getHarvestTool(IBlockState state) {
-       return state.getBlock() != this
+        return state.getBlock() != this
                 ? ""
                 : state.getValue(this.typeProperty).teBlock.getHarvestTool().toolClass.toLowerCase();
     }
@@ -976,7 +971,6 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         return this.typeProperty != null ? this.typeProperty : currentTypeProperty;
     }
 
-
     public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
         TileEntityBlock te = getTe(world, pos);
         return te == null ? TileEntityBlock.noCrop : te.getPlantType();
@@ -986,5 +980,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
         return world.getBlockState(pos);
     }
+
+
 
 }

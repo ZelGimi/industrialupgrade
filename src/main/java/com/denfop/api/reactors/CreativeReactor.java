@@ -201,7 +201,7 @@ public class CreativeReactor implements IAdvReactor {
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return level;
     }
 

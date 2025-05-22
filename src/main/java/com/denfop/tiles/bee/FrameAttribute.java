@@ -8,8 +8,7 @@ public enum FrameAttribute {
     CHANCE_CROSSING(),
     CHANCE_HEALING(),
     STORAGE_FOOD(),
-    STORAGE_JELLY()
-        ;
+    STORAGE_JELLY();
 
 
     FrameAttribute() {

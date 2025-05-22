@@ -29,6 +29,7 @@ public class TileEntityRecipeTuner extends TileEntityInventory implements IUpdat
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;

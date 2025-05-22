@@ -18,26 +18,37 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import java.util.Random;
 
 public class HiveGenerator implements IWorldGenerator {
+
     private final Block hiveBlock;
 
     public HiveGenerator(Block hiveBlock) {
         this.hiveBlock = hiveBlock;
     }
 
-    @Override
-    public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        if (world.provider.getDimension() == 0 && WorldBaseGen.random.nextBoolean() && WorldBaseGen.random.nextInt(10) <= 5 ) {
-            generateHives(world, rand, chunkX * 16, chunkZ * 16);
-        }
-    }
     public static boolean canReplace(IBlockState blockState, World world, BlockPos pos) {
         Block block = blockState.getBlock();
         return block.isReplaceable(world, pos) && !blockState.getMaterial().isLiquid();
     }
+
     public static boolean isTreeBlock(IBlockState blockState, World world, BlockPos pos) {
         Block block = blockState.getBlock();
         return block.isLeaves(blockState, world, pos) || block.isWood(world, pos);
     }
+
+    @Override
+    public void generate(
+            Random rand,
+            int chunkX,
+            int chunkZ,
+            World world,
+            IChunkGenerator chunkGenerator,
+            IChunkProvider chunkProvider
+    ) {
+        if (world.provider.getDimension() == 0 && WorldBaseGen.random.nextBoolean() && WorldBaseGen.random.nextInt(10) <= 5) {
+            generateHives(world, rand, chunkX * 16, chunkZ * 16);
+        }
+    }
+
     public BlockPos getPosForHive(World world, int x, int z) {
         BlockPos topPos = world.getHeight(new BlockPos(x, 0, z)).down();
         if (topPos.getY() <= 0) {
@@ -52,12 +63,13 @@ public class HiveGenerator implements IWorldGenerator {
                 do {
                     pos.move(EnumFacing.DOWN);
                     blockState = world.getBlockState(pos);
-                } while(isTreeBlock(blockState, world, pos));
+                } while (isTreeBlock(blockState, world, pos));
 
                 return pos.toImmutable();
             }
         }
     }
+
     private void generateHives(World world, Random rand, int x, int z) {
         int hivesPerChunk = 1;
         for (int i = 0; i < hivesPerChunk; i++) {
@@ -68,12 +80,11 @@ public class HiveGenerator implements IWorldGenerator {
                 Biome biome = world.getBiome(pos);
                 if (BiomeDictionary.hasType(biome, Type.COLD)) {
                     placeHive(world, pos, 2);
-                }
-                else if (BiomeDictionary.hasType(biome, Type.FOREST)) {
+                } else if (BiomeDictionary.hasType(biome, Type.FOREST)) {
                     placeHive(world, pos, 0);
                 } else if (BiomeDictionary.hasType(biome, Type.PLAINS)) {
                     placeHive(world, pos, 1);
-                }  else if (BiomeDictionary.hasType(biome, Type.SWAMP)) {
+                } else if (BiomeDictionary.hasType(biome, Type.SWAMP)) {
                     placeHive(world, pos, 3);
                 } else if (BiomeDictionary.hasType(biome, Type.JUNGLE)) {
                     placeHive(world, pos, 4);
@@ -103,4 +114,5 @@ public class HiveGenerator implements IWorldGenerator {
         }
         return null;
     }
+
 }

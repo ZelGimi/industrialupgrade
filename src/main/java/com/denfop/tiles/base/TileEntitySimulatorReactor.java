@@ -157,7 +157,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
         if (level != -1 && type != -1) {
             this.reactors = EnumReactors.values()[(type - 1) * 4 + (level - 1)];
             this.reactor.level = this.level;
-            this.invSlot.reset(this.reactors.getHeight() * this.reactors.getWidth());
+            this.invSlot.clear();
             this.reactor.reset(reactors);
             this.size_inventory = 0;
             InvSlot invSlot;
@@ -203,8 +203,9 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
         nbtTagCompound.setInteger("level", level);
         nbtTagCompound.setBoolean("work", work);
         nbtTagCompound.setBoolean("explode", explode);
-        if (reactors != null)
-        nbtTagCompound.setInteger("reactors", reactors.ordinal());
+        if (reactors != null) {
+            nbtTagCompound.setInteger("reactors", reactors.ordinal());
+        }
 
         return nbtTagCompound;
     }
@@ -325,7 +326,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
 
         if (!this.world.isRemote && type != -1 && level != -1) {
             this.reactors = EnumReactors.values()[(type - 1) * 4 + (level - 1)];
-            this.invSlot.reset(this.reactors.getHeight() * this.reactors.getWidth());
+            this.invSlot.clear();
             this.reactor.reset(reactors);
             this.reactor.level = level;
             this.work = false;
@@ -364,7 +365,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
         }
         if (level != -1 && type != -1) {
             this.reactors = EnumReactors.values()[(type - 1) * 4 + (level - 1)];
-            this.invSlot.reset(this.reactors.getHeight() * this.reactors.getWidth());
+            this.invSlot.clear();
             this.reactor.reset(reactors);
             this.size_inventory = 0;
 

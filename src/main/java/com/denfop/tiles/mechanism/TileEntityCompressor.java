@@ -53,15 +53,16 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     public int progress;
     public MachineRecipe output;
     public int durability = 96;
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.COMPRESSOR);
+    public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.COMPRESSOR);
 
     public TileEntityCompressor() {
 
         this.inputSlotA = new InvSlotRecipes(this, "compressor", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
-                if (index == 4)
-                    return super.accepts(itemStack,0);
+                if (index == 4) {
+                    return super.accepts(itemStack, 0);
+                }
                 return false;
             }
 
@@ -253,7 +254,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
         ItemStack stack = player.getHeldItem(hand);
         if (!this.getWorld().isRemote) {
             if (stack.isEmpty() && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output) && durability > 0) {
-                progress += (int) (4 + (data.getOrDefault(player.getUniqueID(),0.0)/10d));
+                progress += (int) (4 + (data.getOrDefault(player.getUniqueID(), 0.0) / 10d));
                 this.getCooldownTracker().setTick(15);
                 this.setActive(String.valueOf((int) ((progress * 9D) / 100)));
                 if (!this.getWorld().isRemote) {
@@ -261,8 +262,9 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
                 }
                 if (progress >= 100) {
                     this.progress = 0;
-                    if (!this.getWorld().isRemote)
-                    PrimitiveHandler.addExperience(EnumPrimitive.COMPRESSOR,0.75,player.getUniqueID());
+                    if (!this.getWorld().isRemote) {
+                        PrimitiveHandler.addExperience(EnumPrimitive.COMPRESSOR, 0.75, player.getUniqueID());
+                    }
                     this.setActive(false);
                     durability--;
                     this.outputSlot.add(this.output.getRecipe().output.items.get(0));

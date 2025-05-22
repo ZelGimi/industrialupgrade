@@ -2,12 +2,8 @@ package com.denfop.integration.jei.gas_well;
 
 
 import com.denfop.Localization;
-import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.blocks.FluidName;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +60,6 @@ public class GasWellHandler {
                 Localization.translate("quarry.guide.gas_well7")
         );
     }
-
-
 
 
 }

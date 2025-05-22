@@ -20,10 +20,6 @@ public class InvSlotDischarge extends InvSlot {
     public InvSlotDischarge(IAdvInventory<?> base, int tier) {
         this(base, TypeItemSlot.INPUT, tier);
     }
-    @Override
-    public EnumTypeSlot getTypeSlot() {
-        return EnumTypeSlot.BATTERY;
-    }
 
     public InvSlotDischarge(
             IAdvInventory<?> base,
@@ -34,6 +30,11 @@ public class InvSlotDischarge extends InvSlot {
         super(base, typeItemSlot, 1);
         this.tier = tier;
         this.allowRedstoneDust = allowRedstoneDust;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.BATTERY;
     }
 
     public boolean accepts(ItemStack stack, final int index) {

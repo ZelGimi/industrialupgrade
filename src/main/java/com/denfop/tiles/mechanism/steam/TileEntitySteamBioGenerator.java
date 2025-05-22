@@ -15,7 +15,6 @@ import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -52,7 +51,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntitySteamBioGenerator extends TileElectricMachine implements  IHasRecipe, IUpdateTick {
+public class TileEntitySteamBioGenerator extends TileElectricMachine implements IHasRecipe, IUpdateTick {
 
     public final FluidHandlerRecipe fluid_handler;
     public final Fluids.InternalFluidTank fluidTank1;
@@ -64,8 +63,8 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
     public final ComponentSteamEnergy steam;
     public final PressureComponent pressure;
     public final InvSlotRecipes inputSlotA;
-    private final Fluids fluids;
     public final ComponentBioFuelEnergy bioEnergy;
+    private final Fluids fluids;
     public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
@@ -84,7 +83,8 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
         this.defaultEnergyStorage = 100;
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE,
-                Fluids.fluidPredicate(FluidName.fluidbiomass.getInstance()));
+                Fluids.fluidPredicate(FluidName.fluidbiomass.getInstance())
+        );
         this.fluid_handler = new FluidHandlerRecipe("biomass", fluids);
         this.fluidTank = fluids.addTank("fluidTank2", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
@@ -98,6 +98,7 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
 
     }
+
     public static void addRecipe(ItemStack container, FluidStack fluidStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
@@ -114,7 +115,10 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
 
     }
 
-
+    public static int applyModifier(int base, int extra, double multiplier) {
+        double ret = Math.round((base + extra) * multiplier);
+        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
+    }
 
     @Override
     public void init() {
@@ -128,12 +132,6 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
         );
 
     }
-    public static int applyModifier(int base, int extra, double multiplier) {
-        double ret = Math.round((base + extra) * multiplier);
-        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
-    }
-
-
 
     @Override
     public SoundEvent getSound() {

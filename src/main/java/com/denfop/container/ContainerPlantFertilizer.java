@@ -1,8 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityChickenFarm;
-import com.denfop.tiles.mechanism.TileEntityCowFarm;
-import com.denfop.tiles.mechanism.TileEntityPigFarm;
 import com.denfop.tiles.mechanism.TileEntityPlantFertilizer;
 import net.minecraft.entity.player.EntityPlayer;
 

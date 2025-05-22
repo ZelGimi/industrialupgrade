@@ -16,17 +16,18 @@ public interface IBody {
 
     int getRotationAngle();
 
-   double getRotationTimeX(double time);
+    double getRotationTimeX(double time);
 
-   double getOrbitPeriod();
+    double getOrbitPeriod();
 
-   double getRotationTimeZ(double time);
+    double getRotationTimeZ(double time);
 
-   double getSize();
+    double getSize();
 
-   double getRotation(double time);
+    double getRotation(double time);
 
-   int getTemperature();
+    int getTemperature();
 
     List<IBaseResource> getResources();
+
 }

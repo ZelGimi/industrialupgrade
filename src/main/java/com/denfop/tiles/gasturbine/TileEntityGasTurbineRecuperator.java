@@ -5,16 +5,13 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasTurbine;
-import com.denfop.container.ContainerCyclotronChamber;
 import com.denfop.container.ContainerGasTurbineRecuperator;
-import com.denfop.gui.GuiCyclotronChamber;
 import com.denfop.gui.GuiGasTurbineRecuperator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.graphite.IExchangerItem;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,8 +20,9 @@ public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement
 
     private final InvSlot invSlot;
     double power;
-    public TileEntityGasTurbineRecuperator(){
-        this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,1){
+
+    public TileEntityGasTurbineRecuperator() {
+        this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() instanceof IExchangerItem;
@@ -33,9 +31,9 @@ public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (content.isEmpty()){
+                if (content.isEmpty()) {
                     power = 0;
-                }else{
+                } else {
                     power = getPowerFromLevel((IExchangerItem) content.getItem());
                 }
             }
@@ -46,7 +44,7 @@ public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement
             }
 
             private double getPowerFromLevel(IExchangerItem item) {
-                switch (item.getLevel()){
+                switch (item.getLevel()) {
                     case 2:
                         return 1.025;
                     case 3:
@@ -59,6 +57,7 @@ public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement
             }
         };
     }
+
     @Override
     public ContainerGasTurbineRecuperator getGuiContainer(final EntityPlayer var1) {
         return new ContainerGasTurbineRecuperator(this, var1);
@@ -69,6 +68,7 @@ public class TileEntityGasTurbineRecuperator extends TileEntityMultiBlockElement
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
         return new GuiGasTurbineRecuperator(getGuiContainer(var1));
     }
+
     @Override
     public boolean hasOwnInventory() {
         return true;

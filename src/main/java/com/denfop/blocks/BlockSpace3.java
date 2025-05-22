@@ -3,7 +3,6 @@ package com.denfop.blocks;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.block.SoundType;
@@ -133,12 +132,13 @@ public class BlockSpace3 extends BlockCore implements IModelRegister {
             stack = stack.copy();
             stack.setCount(1 + getDrop(fortune));
             ret.add(stack);
-        }else {
+        } else {
             final int i = WorldBaseGen.random.nextInt(fortune + 2) + 1;
-            ret.add(new ItemStack(Items.DIAMOND,i));
+            ret.add(new ItemStack(Items.DIAMOND, i));
         }
         return ret;
     }
+
     private int getDrop(int fortune) {
         switch (fortune) {
             case 0:
@@ -151,6 +151,7 @@ public class BlockSpace3 extends BlockCore implements IModelRegister {
                 return WorldBaseGen.random.nextDouble() < 0.75 ? 1 : 0;
         }
     }
+
     public enum Type implements IStringSerializable {
         rhea_chromium(0),
         rhea_osmium_ore(1),
@@ -164,11 +165,12 @@ public class BlockSpace3 extends BlockCore implements IModelRegister {
         triton_neodymium(9),
         triton_strontium(10),
         umbriel_spinel_ore(11),
-        venus_diamond_ore(12)
-        ;
+        venus_diamond_ore(12);
 
         private final int metadata;
         private final String name;
+        ItemStack stack;
+        private String raw;
 
         Type(int metadata) {
             this.metadata = metadata;
@@ -196,15 +198,14 @@ public class BlockSpace3 extends BlockCore implements IModelRegister {
             return EnumRarity.COMMON;
         }
 
-        private String raw;
-        public void setRaw(String name){
-            this.raw = "raw"+name;
-        }
-
         public String getRaw() {
             return raw;
         }
-        ItemStack stack;
+
+        public void setRaw(String name) {
+            this.raw = "raw" + name;
+        }
+
         public ItemStack getStack() {
             return stack;
         }

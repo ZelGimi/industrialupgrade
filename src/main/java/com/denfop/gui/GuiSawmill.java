@@ -4,8 +4,6 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerBrewingPlant;
-import com.denfop.container.ContainerLaserPolisher;
 import com.denfop.container.ContainerSawmill;
 import net.minecraft.util.ResourceLocation;
 

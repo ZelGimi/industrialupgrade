@@ -7,12 +7,9 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.recipe.InvSlotBioMultiRecipes;
-import com.denfop.api.recipe.InvSlotSteamMultiRecipes;
 import com.denfop.componets.ComponentBioProcessRender;
-import com.denfop.componets.ComponentSteamProcessRender;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerBioMultiMachine;
-import com.denfop.container.ContainerSteamMultiMachine;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.utils.ModUtils;
@@ -39,16 +36,18 @@ public class GuiBioMultiMachine extends GuiIU<ContainerBioMultiMachine> {
                 new Component<>(this.container.base.bioFuel)
         ));
         xSize = 176 + 16;
-        if (this.container.base.tank != null)
+        if (this.container.base.tank != null) {
             this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.WATER,
                     new Component<>(this.container.base.tank)
             ));
+        }
         if (this.container.base.getMachine().type == EnumTypeMachines.Centrifuge) {
             this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.COLD,
                     new Component<>(this.container.base.heat)
             ));
         }
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -64,14 +63,15 @@ public class GuiBioMultiMachine extends GuiIU<ContainerBioMultiMachine> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-100, mouseY, text);
+            this.drawTooltip(mouseX - 100, mouseY, text);
         }
     }
+
     @Override
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         this.drawForeground(mouseX, mouseY);
-        handleUpgradeTooltip(mouseX,mouseY);
+        handleUpgradeTooltip(mouseX, mouseY);
         int i = 0;
         for (Slot slot : this.container.inventorySlots) {
             if (slot instanceof SlotInvSlot) {

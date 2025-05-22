@@ -26,8 +26,9 @@ public class FluidFactory extends Building implements IColonyMiningFactory {
         super(colonie);
         this.type = type;
         this.people = 0;
-        if (!simulate)
+        if (!simulate) {
             this.getColony().addBuilding(this);
+        }
     }
 
     public FluidFactory(CustomPacketBuffer packetBuffer, Colony colonie) {
@@ -38,16 +39,18 @@ public class FluidFactory extends Building implements IColonyMiningFactory {
         this.getColony().addBuilding(this);
     }
 
-    @Override
-    public byte getId() {
-        return 3;
-    }
     public FluidFactory(final NBTTagCompound tag, final IColony colonie) {
         super(colonie);
         this.type = EnumMiningFactory.getID(tag.getByte("id"));
         this.people = tag.getByte("people");
         this.getColony().addBuilding(this);
     }
+
+    @Override
+    public byte getId() {
+        return 3;
+    }
+
     @Override
     public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
         super.writePacket(customPacketBuffer);
@@ -55,24 +58,36 @@ public class FluidFactory extends Building implements IColonyMiningFactory {
         customPacketBuffer.writeByte(people);
         return customPacketBuffer;
     }
+
     @Override
     public void work() {
         List<IStorage> storageList = this.getColony().getStorageList();
         if (storageList.isEmpty() || this.getColony().getEnergy() < this.getEnergy()) {
             return;
         }
-        if (this.getColony().getTick() % 5 != 0)
+        if (this.getColony().getTick() % 2 != 0) {
             return;
-        if (WorldBaseGen.random.nextInt(100) < this.type.getChance() ) {
+        }
+        if (WorldBaseGen.random.nextInt(100) < this.type.getChance()) {
             for (IStorage storage : storageList) {
                 if (storage.work()) {
-                    List<DataItem<FluidStack>> fluidStacks = SpaceNet.instance.getColonieNet().getFluidsFromBody(getColony().getBody());
+                    List<DataItem<FluidStack>> fluidStacks = SpaceNet.instance
+                            .getColonieNet()
+                            .getFluidsFromBody(getColony().getBody());
                     if (fluidStacks.isEmpty()) {
                         return;
                     }
-                    fluidStacks = fluidStacks.stream().filter(fluidStackDataItem -> fluidStackDataItem.getLevel() <= this.getColony().getLevel()).collect(Collectors.toList());
+                    fluidStacks = fluidStacks.stream().filter(fluidStackDataItem -> fluidStackDataItem.getLevel() <= this
+                            .getColony()
+                            .getLevel()).collect(Collectors.toList());
+                    if (fluidStacks.isEmpty()) {
+                        return;
+                    }
                     FluidStack fluidStack = fluidStacks.get(WorldBaseGen.random.nextInt(fluidStacks.size())).getElement();
-                    int amount = (int) ((WorldBaseGen.random.nextInt(type.getMaxValue() / 2) + (type.getMaxValue() / 2))  * this.getColony().getPercentEntertainment());
+
+                    int amount = (int) ((WorldBaseGen.random.nextInt(type.getMaxValue() / 2) + (type.getMaxValue() / 2)) * this
+                            .getColony()
+                            .getPercentEntertainment());
                     fluidStack = new FluidStack(fluidStack.getFluid(), amount);
                     if (storage.canAddFluidStack(fluidStack)) {
                         this.getColony().useEnergy(this.getEnergy());

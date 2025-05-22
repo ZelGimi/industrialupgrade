@@ -8,8 +8,12 @@ public class CableTextureAtlasSprite extends TextureAtlasSprite {
     public CableTextureAtlasSprite(ResourceLocation spriteResourceLocation) {
         super(spriteResourceLocation.toString());
     }
-    public boolean hasCustomLoader(net.minecraft.client.resources.IResourceManager manager, net.minecraft.util.ResourceLocation location)
-    {
+
+    public boolean hasCustomLoader(
+            net.minecraft.client.resources.IResourceManager manager,
+            net.minecraft.util.ResourceLocation location
+    ) {
         return false;
     }
+
 }

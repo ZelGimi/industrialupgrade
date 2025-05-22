@@ -65,8 +65,8 @@ public enum BlockMoreMachine3 implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockMoreMachine3(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -130,14 +130,19 @@ public enum BlockMoreMachine3 implements IMultiTileBlock {
         // TODO Auto-generated method stub
         return true;
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {

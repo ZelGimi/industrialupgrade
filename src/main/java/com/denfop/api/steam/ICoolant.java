@@ -10,4 +10,5 @@ public interface ICoolant extends IMultiElement {
     double getPower();
 
     int getPressure();
+
 }

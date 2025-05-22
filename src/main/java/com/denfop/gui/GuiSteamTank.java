@@ -27,7 +27,15 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
     public GuiSteamTank(ContainerSteamTank container1) {
         super(container1, EnumTypeStyle.STEAM);
         this.container = container1;
-        this.addElement(new TankGauge(this, 59, 15, 117-59, 73-15, container.base.getFluidTank(), TankGauge.TankGuiStyle.Normal) {
+        this.addElement(new TankGauge(
+                this,
+                59,
+                15,
+                117 - 59,
+                73 - 15,
+                container.base.getFluidTank(),
+                TankGauge.TankGuiStyle.Normal
+        ) {
 
             protected List<String> getToolTip() {
                 List<String> ret = new ArrayList<>();
@@ -90,7 +98,7 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
                             false,
                             true
                     );
-                    GlStateManager.color(1,1,1,1);
+                    GlStateManager.color(1, 1, 1, 1);
                     this.gui.bindTexture();
                     this.gui.drawTexturedModalRect(this.gui.guiLeft + 99, this.gui.guiTop + 23, 177, 1, 12, 46);
                 }

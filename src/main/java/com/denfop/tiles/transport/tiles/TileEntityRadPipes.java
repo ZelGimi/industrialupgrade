@@ -3,19 +3,15 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.energy.SystemTick;
-import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.sytem.EnergyEvent;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.sytem.EnumTypeEvent;
 import com.denfop.api.sytem.IAcceptor;
 import com.denfop.api.sytem.IConductor;
 import com.denfop.api.sytem.IEmitter;
-import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.ITile;
 import com.denfop.api.sytem.InfoCable;
 import com.denfop.api.sytem.InfoTile;
-import com.denfop.api.sytem.Path;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockRadPipes;
@@ -51,8 +47,13 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
 
     public boolean addedToEnergyNet;
     protected RadTypes cableType;
+    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
+    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
+    boolean updateConnect = false;
     private boolean needUpdate;
-
+    private long id;
+    private InfoCable cable;
 
     public TileEntityRadPipes(RadTypes cableType) {
         super(cableType);
@@ -66,16 +67,13 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
         this.addedToEnergyNet = false;
 
     }
-    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
 
-    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
+    public static TileEntityRadPipes delegate(RadTypes cableType) {
+        return new TileEntityRadPipes(cableType);
+    }
+
     public long getIdNetwork() {
         return this.id;
-    }
-    int hashCodeSource;
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
@@ -83,23 +81,22 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
         return hashCodeSource;
     }
 
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
 
     public void setId(final long id) {
         this.id = id;
     }
-    private long id;
+
     @Override
     public List<InfoTile<ITile>> getValidReceivers(EnergyType type) {
         return validReceivers;
     }
+
     public Map<EnumFacing, ITile> getTiles(EnergyType type) {
         return energyConductorMap;
-    }
-
-
-
-    public static TileEntityRadPipes delegate(RadTypes cableType) {
-        return new TileEntityRadPipes(cableType);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -136,7 +133,7 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
         MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.RADIATION, this));
         this.needUpdate = true;
     }
-    boolean updateConnect = false;
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -147,7 +144,7 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
             this.needUpdate = false;
             this.updateConnectivity();
         }
-        if (updateConnect){
+        if (updateConnect) {
             updateConnect = false;
             this.updateConnectivity();
         }
@@ -158,17 +155,17 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
         return cable;
     }
 
-    private InfoCable cable;
     @Override
-    public void setCable(EnergyType type,final InfoCable cable) {
-        this.cable=cable;
+    public void setCable(EnergyType type, final InfoCable cable) {
+        this.cable = cable;
     }
+
     @Override
     public void RemoveTile(EnergyType type, ITile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<ITile>> iter = validReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<ITile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -180,7 +177,7 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
     }
 
     @Override
-    public void AddTile(EnergyType type,ITile tile, final EnumFacing facing1) {
+    public void AddTile(EnergyType type, ITile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);
@@ -189,6 +186,7 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
             updateConnect = true;
         }
     }
+
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote && !addedToEnergyNet) {
@@ -278,7 +276,6 @@ public class TileEntityRadPipes extends TileEntityMultiCable implements IConduct
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
     }
-
 
 
     @Override

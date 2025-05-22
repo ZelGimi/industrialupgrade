@@ -17,11 +17,9 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -48,11 +46,11 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
             }
 
             @Override
-            public void put(int i,final ItemStack content) {
-                super.put(i,content);
+            public void put(int i, final ItemStack content) {
+                super.put(i, content);
                 if (!content.isEmpty()) {
                     doublescrap = !content.isItemEqual(IUItem.scrapBox);
-                }else{
+                } else {
                     doublescrap = false;
                 }
             }
@@ -137,8 +135,9 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.ItemExtract,UpgradableProperty.ItemInput,UpgradableProperty.EnergyStorage,
-                UpgradableProperty.Transformer);
+        return EnumSet.of(UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput, UpgradableProperty.EnergyStorage,
+                UpgradableProperty.Transformer
+        );
     }
 
 }

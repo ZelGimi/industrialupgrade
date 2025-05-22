@@ -5,7 +5,6 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerCrystalCharger;
-import com.denfop.container.ContainerLaserPolisher;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiCrystalCharger extends GuiIU<ContainerCrystalCharger> {

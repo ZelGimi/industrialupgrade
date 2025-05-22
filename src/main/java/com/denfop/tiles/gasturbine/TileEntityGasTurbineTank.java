@@ -13,7 +13,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class TileEntityGasTurbineTank extends TileEntityMultiBlockElement implem
                 .getHeldItem(hand)
                 .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && this.getMain() != null) {
 
-            return ModUtils .interactWithFluidHandler(player, hand,
+            return ModUtils.interactWithFluidHandler(player, hand,
                     fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         } else {

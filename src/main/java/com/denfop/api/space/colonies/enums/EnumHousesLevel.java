@@ -8,9 +8,10 @@ public enum EnumHousesLevel {
 
     private final byte level;
 
-    EnumHousesLevel(int level){
+    EnumHousesLevel(int level) {
         this.level = (byte) level;
     }
+
     public int getLevel() {
         return level;
     }

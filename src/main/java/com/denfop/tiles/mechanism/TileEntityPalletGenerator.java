@@ -5,8 +5,8 @@ import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.Energy;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerPalletGenerator;
 import com.denfop.gui.GuiPalletGenerator;
 import com.denfop.invslot.InvSlot;
@@ -32,7 +32,7 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
     public TileEntityPalletGenerator() {
         super(0, 14, 0);
         this.energy = this.addComponent(Energy.asBasicSource(this, 5000000, tier));
-        this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 50000D));
+        this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 1000000D));
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 6) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {

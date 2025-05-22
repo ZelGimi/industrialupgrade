@@ -10,7 +10,7 @@ public class GenData {
 
     private final TypeGas typeGas;
 
-    public GenData(int y,int x, int z, TypeGas typeGas) {
+    public GenData(int y, int x, int z, TypeGas typeGas) {
 
         this.y = y;
         this.x = x;

@@ -502,25 +502,28 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
     }
 
     private int getModulesValue(EnumInfoUpgradeModules module, ItemStack stack) {
-        UpgradeItemInform modules =  this.getModules(module, stack);
-        if (modules == null)
+        UpgradeItemInform modules = this.getModules(module, stack);
+        if (modules == null) {
             return 0;
+        }
         return modules.number;
     }
 
     private int calculateEfficiencyLevel(ItemStack stack) {
         int baseLevel = 1;
         int moduleLevel = getModulesValue(EnumInfoUpgradeModules.EFFICIENT, stack);
-        if (moduleLevel == 0)
+        if (moduleLevel == 0) {
             return 0;
+        }
         return baseLevel + (moduleLevel - 1) * 2;
     }
 
     private int calculateProjectileProtectionLevel(ItemStack stack) {
         int baseLevel = 1;
         int moduleLevel = getModulesValue(EnumInfoUpgradeModules.PROTECTION_ARROW, stack);
-        if (moduleLevel == 0)
+        if (moduleLevel == 0) {
             return 0;
+        }
         return baseLevel + (moduleLevel - 1) * 2;
     }
 

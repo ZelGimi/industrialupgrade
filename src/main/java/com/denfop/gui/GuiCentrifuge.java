@@ -4,10 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerBrewingPlant;
 import com.denfop.container.ContainerCentrifuge;
-import com.denfop.container.ContainerLaserPolisher;
-import com.denfop.container.ContainerSawmill;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiCentrifuge extends GuiIU<ContainerCentrifuge> {
@@ -26,8 +23,9 @@ public class GuiCentrifuge extends GuiIU<ContainerCentrifuge> {
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
         this.fontRenderer.drawString("RPM: " + this.container.base.rpm,
-                68,  65,
-                0);
+                68, 65,
+                0
+        );
 
     }
 

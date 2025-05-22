@@ -2,7 +2,6 @@ package com.denfop.tiles.crop;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.agriculture.CropBase;
 import com.denfop.api.agriculture.CropInit;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.EnumSoil;
@@ -31,7 +30,6 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.network.packet.INetworkObject;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
@@ -61,24 +59,25 @@ public class TileEntityMultiCrop extends TileEntityInventory {
 
     public final InvSlot downBlockSlot;
     public final InvSlot upBlockSlot;
-    private final Fluids fluids;
     public final Fluids.InternalFluidTank fluidPestTank;
     public final Fluids.InternalFluidTank fluidWaterTank;
     public final InvSlotOutput outputSlot;
     public final InvSlot fertilizerSlot;
+    private final Fluids fluids;
     public ICrop[] crop;
     public Genome[] genome;
-    private Radiation radLevel;
-    private ChunkPos chunkPos;
-    private Chunk chunk;
-    private Biome biome;
     public int[] tickPest;
-    private ChunkLevel chunkLevel;
     public int[] pestUse;
     public EnumSoil[] enumSoils;
     public boolean[] place;
     public int[] tickSoil;
     public int[] maxTickSoil;
+    private Radiation radLevel;
+    private ChunkPos chunkPos;
+    private Chunk chunk;
+    private Biome biome;
+    private ChunkLevel chunkLevel;
+
     public TileEntityMultiCrop(int col) {
         tickPest = new int[col];
         pestUse = new int[col];
@@ -92,8 +91,8 @@ public class TileEntityMultiCrop extends TileEntityInventory {
         this.fluidWaterTank = fluids.addTankInsert("waterTank", 16000, Fluids.fluidPredicate(FluidRegistry.WATER));
         this.fluidPestTank = fluids.addTankInsert("pestTank", 16000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance()));
         this.outputSlot = new InvSlotOutput(this, 9);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1*col/2D));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1*col/2D));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1 * col / 2D));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1 * col / 2D));
         this.fertilizerSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -133,11 +132,14 @@ public class TileEntityMultiCrop extends TileEntityInventory {
         this.upBlockSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, col) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ICropItem && canPlace(((ICropItem) stack.getItem()).getCrop(stack.getItemDamage(),stack), index);
+                return stack.getItem() instanceof ICropItem && canPlace(((ICropItem) stack.getItem()).getCrop(stack.getItemDamage(),
+                        stack), index);
             }
+
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.CROP;
             }
+
             @Override
             public int getStackSizeLimit() {
                 return 1;
@@ -196,8 +198,8 @@ public class TileEntityMultiCrop extends TileEntityInventory {
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer buffer = super.writeContainerPacket();
         try {
-          EncoderHandler.encode(buffer,tickSoil);
-            EncoderHandler.encode(buffer,maxTickSoil);
+            EncoderHandler.encode(buffer, tickSoil);
+            EncoderHandler.encode(buffer, maxTickSoil);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -223,8 +225,8 @@ public class TileEntityMultiCrop extends TileEntityInventory {
     @Override
     public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
         NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setIntArray("tickSoil",tickSoil);
-        nbtTagCompound.setIntArray("maxTickSoil",maxTickSoil);
+        nbtTagCompound.setIntArray("tickSoil", tickSoil);
+        nbtTagCompound.setIntArray("maxTickSoil", maxTickSoil);
         return nbtTagCompound;
     }
 
@@ -232,11 +234,13 @@ public class TileEntityMultiCrop extends TileEntityInventory {
     public void readFromNBT(final NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         tickSoil = nbtTagCompound.getIntArray("tickSoil");
-        if (tickSoil.length == 0)
+        if (tickSoil.length == 0) {
             tickSoil = new int[crop.length];
+        }
         maxTickSoil = nbtTagCompound.getIntArray("maxTickSoil");
-        if (maxTickSoil.length == 0)
+        if (maxTickSoil.length == 0) {
             maxTickSoil = new int[crop.length];
+        }
     }
 
     public int getTickPest(int i) {
@@ -250,11 +254,11 @@ public class TileEntityMultiCrop extends TileEntityInventory {
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
-            for (int i = 0; i < crop.length;i++){
-                if (downBlockSlot.get(i).isEmpty()){
+            for (int i = 0; i < crop.length; i++) {
+                if (downBlockSlot.get(i).isEmpty()) {
                     enumSoils[i] = null;
                     place[i] = false;
-                }else {
+                } else {
                     enumSoils[i] = EnumSoil.get(downBlockSlot.get(i));
                 }
                 final ItemStack content = upBlockSlot.get(i);
@@ -287,6 +291,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
             this.biome = this.getWorld().getBiome(pos);
         }
     }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -307,13 +312,13 @@ public class TileEntityMultiCrop extends TileEntityInventory {
         if (this.getWorld().getWorldTime() % 20 == 0) {
             for (int i = 0; i < downBlockSlot.size(); i++) {
                 ICrop crop = this.crop[i];
-                if (crop == null || crop.getId() == 3){
+                if (crop == null || crop.getId() == 3) {
                     this.tickSoil[i] = 0;
                     this.maxTickSoil[i] = 0;
                 }
                 if (crop != null) {
-                    if (crop.getId() == 3){
-                        this.upBlockSlot.put(i,ItemStack.EMPTY);
+                    if (crop.getId() == 3) {
+                        this.upBlockSlot.put(i, ItemStack.EMPTY);
                         continue;
                     }
                     this.tickSoil[i] = crop.getTick();
@@ -332,7 +337,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                             this.setTickPest(i);
                             this.fluidPestTank.drain(1, true);
                         }
-                        tickPest[i]-=20;
+                        tickPest[i] -= 20;
                         if (crop.getTick() < crop.getMaxTick() && this
                                 .getWorld()
                                 .getWorldTime() % 200 == 0 && crop.getId() != 3 && tickPest[i] == 0) {

@@ -306,8 +306,9 @@ public class GuiHeatController extends GuiIU<ContainerHeatReactor> {
                 par2
         );
         new AdvArea(this, 21, 139, 148, 162)
-                .withTooltip(Localization.translate("iu.reactor_info.heat")+": " +ModUtils.getString(this.container.base.getHeat()) +
-                        "/" + ModUtils.getString(this.container.base.getMaxHeat()) + "°C" + "\n" +Localization.translate("iu.reactor_info.stable_heat")+": " +this.container.base.getStableMaxHeat() + "°C")
+                .withTooltip(Localization.translate("iu.reactor_info.heat") + ": " + ModUtils.getString(this.container.base.getHeat()) +
+                        "/" + ModUtils.getString(this.container.base.getMaxHeat()) + "°C" + "\n" + Localization.translate(
+                        "iu.reactor_info.stable_heat") + ": " + this.container.base.getStableMaxHeat() + "°C")
                 .drawForeground(
                         par1,
                         par2
@@ -320,10 +321,10 @@ public class GuiHeatController extends GuiIU<ContainerHeatReactor> {
                 );
         if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
             new AdvArea(this, 201, 10, 215, 85)
-                    .withTooltip(Localization.translate("iu.reactor_info.energy") +": "+   ModUtils.getString(this.container.base.energy.getEnergy()) +
+                    .withTooltip(Localization.translate("iu.reactor_info.energy") + ": " + ModUtils.getString(this.container.base.energy.getEnergy()) +
                             "/" + ModUtils.getString(this.container.base.energy.getCapacity()))
                     .drawForeground(par1, par2);
-        }else{
+        } else {
             new AdvArea(this, 201, 10, 215, 85)
                     .withTooltip(Localization.translate("iu.reactor_info.upgrade1"))
                     .drawForeground(par1, par2);

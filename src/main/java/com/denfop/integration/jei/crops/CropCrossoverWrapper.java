@@ -3,7 +3,6 @@ package com.denfop.integration.jei.crops;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.agriculture.ICrop;
-import com.denfop.integration.jei.crops.CropCrossoverHandler;
 import com.denfop.utils.ModUtils;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -11,7 +10,6 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -22,6 +20,7 @@ public class CropCrossoverWrapper implements IRecipeWrapper {
 
     public final ICrop output;
     public final List<ICrop> inputs;
+
     public CropCrossoverWrapper(CropCrossoverHandler container) {
 
 
@@ -31,12 +30,10 @@ public class CropCrossoverWrapper implements IRecipeWrapper {
     }
 
 
-
-
     public ItemStack getOutputs() {
         ItemStack stack = new ItemStack(IUItem.crops);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setInteger("crop_id",output.getId());
+        nbt.setInteger("crop_id", output.getId());
         return stack;
     }
 
@@ -51,7 +48,7 @@ public class CropCrossoverWrapper implements IRecipeWrapper {
         inputs.forEach(crop -> {
             ItemStack stack = new ItemStack(IUItem.crops);
             final NBTTagCompound nbt = ModUtils.nbt(stack);
-            nbt.setInteger("crop_id",crop.getId());
+            nbt.setInteger("crop_id", crop.getId());
             itemStackList.add(stack);
         });
         return itemStackList;
@@ -61,7 +58,7 @@ public class CropCrossoverWrapper implements IRecipeWrapper {
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         minecraft.fontRenderer.drawString("+", 45, 48, 4210752);
         minecraft.fontRenderer.drawString("->", 65, 48, 4210752);
-        minecraft.fontRenderer.drawSplitString(Localization.translate("iu.cop.crossing"), 15, 78, recipeWidth - 5,4210752);
+        minecraft.fontRenderer.drawSplitString(Localization.translate("iu.cop.crossing"), 15, 78, recipeWidth - 5, 4210752);
     }
 
 }

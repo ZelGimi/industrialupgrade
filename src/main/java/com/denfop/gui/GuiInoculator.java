@@ -5,11 +5,7 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.upgrades.IUpgradableBlock;
-import com.denfop.container.ContainerBrewingPlant;
-import com.denfop.container.ContainerCentrifuge;
 import com.denfop.container.ContainerInoculator;
-import com.denfop.container.ContainerLaserPolisher;
-import com.denfop.container.ContainerSawmill;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiInoculator extends GuiIU<ContainerInoculator> {

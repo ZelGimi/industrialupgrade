@@ -16,15 +16,11 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,10 +55,11 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
                     new Component<>(this.container.base.cold)
             ));
         }
-        if (this.container.base.tank != null)
-        this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.WATER,
-                new Component<>(this.container.base.tank)
-        ));
+        if (this.container.base.tank != null) {
+            this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.WATER,
+                    new Component<>(this.container.base.tank)
+            ));
+        }
         if (this.container.base.getMachine().type == EnumTypeMachines.Centrifuge) {
             this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.COLD,
                     new Component<>(this.container.base.heat)
@@ -177,18 +174,17 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
 
         int centerX = this.guiLeft + this.xSize / 2;
         int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
-        int textY = (int) ((this.guiTop + 6)/scale);
+        int textY = (int) ((this.guiTop + 6) / scale);
 
 
         this.fontRenderer.drawString(name, textX, textY, 4210752);
-
 
 
         GlStateManager.popMatrix();
 
         i = 0;
         for (ItemStack stack : this.itemStackList) {
-            new ItemStackImage(this,  this.xSize , 5 + i * 18, () -> stack).drawBackground(this.guiLeft,guiTop);
+            new ItemStackImage(this, this.xSize, 5 + i * 18, () -> stack).drawBackground(this.guiLeft, guiTop);
             i++;
         }
 

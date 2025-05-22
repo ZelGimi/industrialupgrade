@@ -58,9 +58,9 @@ public class LogicCreativeHeatReactor extends LogicCreativeReactor {
 
                 temp_heat += rand.nextInt((int) ((this.getMaxHeat() - this.temp_heat)));
             }
-            for (int j = 0; j < pump[this.reactor.getLevel() - 1]; j++) {
+            for (int j = 0; j < pump[this.reactor.getBlockLevel() - 1]; j++) {
 
-                final int power = power_pump[this.reactor.getLevel() - 1];
+                final int power = power_pump[this.reactor.getBlockLevel() - 1];
                 int col = rand.nextInt(10);
                 if (power > col) {
                     this.temp_heat -= rand.nextInt(20 * power);

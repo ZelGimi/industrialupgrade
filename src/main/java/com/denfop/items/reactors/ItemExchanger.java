@@ -58,7 +58,7 @@ public class ItemExchanger extends ItemDamage implements IModelRegister, IExchan
 
     @Override
     public boolean damageItem(final ItemStack stack, final int damage) {
-       return applyCustomDamage(stack, damage, null);
+        return applyCustomDamage(stack, damage, null);
     }
 
     @Override

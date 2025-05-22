@@ -5,8 +5,8 @@ import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.rovers.api.IRoversItem;
+import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.event.EventItemLoad;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -122,6 +122,12 @@ public class TileEntityUpgradeRover extends TileDoubleElectricMachine implements
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
     }
 
+    public static boolean getUpgradeItem(ItemStack stack) {
+        Item item = stack.getItem();
+        return item instanceof IRoversItem;
+
+    }
+
     public void init() {
 
     }
@@ -134,22 +140,14 @@ public class TileEntityUpgradeRover extends TileDoubleElectricMachine implements
         return IUItem.basemachine2;
     }
 
-
     @Override
     public SoundEvent getSound() {
         return EnumSound.upgrade_block.getSoundEvent();
     }
 
-
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiRoverUpgradeBlock(new ContainerDoubleElectricMachine(entityPlayer, this, type));
-    }
-
-    public static boolean getUpgradeItem(ItemStack stack) {
-        Item item = stack.getItem();
-        return item instanceof IRoversItem;
-
     }
 
     @Override

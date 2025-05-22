@@ -36,7 +36,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,7 +55,8 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
     public InvSlotOutput outputSlot;
     public short progress;
 
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.DRYER);
+    public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.DRYER);
+
     public TileEntityDryer() {
         super();
         this.progress = 0;
@@ -81,12 +81,14 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
         return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.6D, 1.0D));
 
     }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         for (int i = 1; i < 4; i++) {
             tooltip.add(Localization.translate("dryer.info" + i));
         }
     }
+
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("dryer", new BaseFluidMachineRecipe(new InputFluid(
@@ -98,7 +100,7 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
         Recipes.recipes.getRecipeFluid().addRecipe("dryer", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(FluidName.fluidhoney.getInstance(), 500)), new RecipeOutput(
                 null,
-               new ItemStack(IUItem.honeycomb)
+                new ItemStack(IUItem.honeycomb)
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("dryer", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(FluidName.fluidbeeswax.getInstance(), 500)), new RecipeOutput(
@@ -228,14 +230,17 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
                 setActive(true);
             }
 
-            this.progress = (short) (this.progress + 1 + (data.getOrDefault(getComponentPrivate().getPlayersUUID().get(0),0.0)/20));
+            this.progress = (short) (this.progress + 1 + (data.getOrDefault(getComponentPrivate().getPlayersUUID().get(0),
+                    0.0) / 20));
             double k = this.progress;
 
             if (this.progress >= 100) {
                 operate();
-                if (!this.getWorld().isRemote)
-                PrimitiveHandler.addExperience(EnumPrimitive.DRYER,0.25,
-                        getComponentPrivate().getPlayersUUID().get(0));
+                if (!this.getWorld().isRemote) {
+                    PrimitiveHandler.addExperience(EnumPrimitive.DRYER, 0.25,
+                            getComponentPrivate().getPlayersUUID().get(0)
+                    );
+                }
                 this.progress = 0;
             }
         } else {

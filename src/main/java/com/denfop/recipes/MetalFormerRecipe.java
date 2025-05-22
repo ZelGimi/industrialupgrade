@@ -33,8 +33,8 @@ public class MetalFormerRecipe {
         for (String s : RegisterOreDictionary.list_baseore1) {
             addcutting("ingot" + s, "stick" + s, 2);
         }
-        addmolot(new ItemStack(IUItem.wolframite),1,new ItemStack(IUItem.crafting_elements,1,655));
-        addmolot(new ItemStack(IUItem.crafting_elements,1,655),1,new ItemStack(IUItem.crafting_elements,2,505));
+        addmolot(new ItemStack(IUItem.wolframite), 1, new ItemStack(IUItem.crafting_elements, 1, 655));
+        addmolot(new ItemStack(IUItem.crafting_elements, 1, 655), 1, new ItemStack(IUItem.crafting_elements, 2, 505));
         for (String s : recipe2) {
             for (int j = 0; j < recipe1.length; j++) {
                 if (j == 0) {

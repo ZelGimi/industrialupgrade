@@ -3,19 +3,21 @@ package com.denfop.items.space;
 import com.denfop.Constants;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumRoversLevel;
 import com.denfop.api.space.rovers.enums.EnumRoversLevelFluid;
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
-import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import com.denfop.api.space.upgrades.event.EventItemLoad;
 import com.denfop.blocks.FluidName;
 import com.denfop.items.ItemFluidContainer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -45,6 +49,7 @@ public class ItemRover extends ItemFluidContainer implements IModelRegister, IRo
     private final EnumRoversLevelFluid fluids;
     private final double progress;
     public List<EnumTypeUpgrade> upgrades = Arrays.asList(EnumTypeUpgrade.values());
+
     public ItemRover(
             String name, int capacity, EnumRoversLevel enumRoversLevel, EnumTypeRovers typeRovers, int tier,
             double maxEnergy, double transferEnergy, EnumRoversLevelFluid fluids, double progress
@@ -56,12 +61,24 @@ public class ItemRover extends ItemFluidContainer implements IModelRegister, IRo
         this.transferEnergy = transferEnergy;
         this.tier = tier;
         setMaxStackSize(1);
-        this.progress=progress;
+        this.progress = progress;
         this.enumRoversLevel = enumRoversLevel;
         this.typeRovers = typeRovers;
         this.setCreativeTab(IUCore.SpaceTab);
         SpaceUpgradeSystem.system.addRecipe(this, EnumTypeUpgrade.values());
 
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(
+            final ItemStack stack,
+            final World world,
+            final List<String> tooltip,
+            final ITooltipFlag advanced
+    ) {
+        super.addInformation(stack, world, tooltip, advanced);
+        tooltip.add(Localization.translate("iu.rover.info_temperature"));
     }
 
     public String getItemStackDisplayName(ItemStack stack) {
@@ -140,6 +157,7 @@ public class ItemRover extends ItemFluidContainer implements IModelRegister, IRo
     public double getTransferEnergy(final ItemStack var1) {
         return transferEnergy;
     }
+
     @Override
     public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
         NBTTagCompound nbt = ModUtils.nbt(itemStack);
@@ -151,6 +169,7 @@ public class ItemRover extends ItemFluidContainer implements IModelRegister, IRo
 
 
     }
+
     @Override
     public boolean canfill(final Fluid var1) {
         for (FluidName fluidName : fluids.getLevelsList()) {

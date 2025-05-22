@@ -80,6 +80,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -235,7 +236,16 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public World getWorld(int dimId) {
-        return DimensionManager.getWorld(dimId);
+        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        if (server != null) {
+            return server.getWorld(dimId);
+        }
+        World world = DimensionManager.getWorld(dimId);
+        if (world == null) {
+            DimensionManager.initDimension(dimId);
+            world = DimensionManager.getWorld(dimId);
+        }
+        return world;
     }
 
     public World getPlayerWorld() {
@@ -329,7 +339,7 @@ public class CommonProxy implements IGuiHandler {
         }
         IUCore.log.debug(
                 "Finished checking recipes for converter matter after " +
-                (System.nanoTime() - startTime) / 1000000L + " ms."
+                        (System.nanoTime() - startTime) / 1000000L + " ms."
         );
         startTime = System.nanoTime();
         Map<List<List<ItemStack>>, MatterRecipe> itemStackMap3 = new HashMap<>();
@@ -343,7 +353,7 @@ public class CommonProxy implements IGuiHandler {
                     continue;
                 }
                 final Iterator<List<ItemStack>> iter = list.iterator();
-                while(iter.hasNext()){
+                while (iter.hasNext()) {
                     List<ItemStack> list1 = iter.next();
                     boolean need_continue = false;
                     for (ItemStack stack : list1) {
@@ -425,9 +435,6 @@ public class CommonProxy implements IGuiHandler {
         }
 
 
-
-
-
         Recipes.recipes.optimize();
     }
 
@@ -488,26 +495,31 @@ public class CommonProxy implements IGuiHandler {
         try {
 
 
-        Field conversionsField = ReflectionHelper.findField(PotionHelper.class, "POTION_TYPE_CONVERSIONS", "field_185213_a");
-        conversionsField.setAccessible(true);
+            Field conversionsField = ReflectionHelper.findField(PotionHelper.class, "POTION_TYPE_CONVERSIONS", "field_185213_a");
+            conversionsField.setAccessible(true);
 
-        List<?> conversions = (List<?>) conversionsField.get(null);
+            List<?> conversions = (List<?>) conversionsField.get(null);
 
-        Class<?> mixPredicateClass = Class.forName("net.minecraft.potion.PotionHelper$MixPredicate");
-        Field inputField = ReflectionHelper.findField(mixPredicateClass, "input", "field_185198_a");
-        Field reagentField = ReflectionHelper.findField(mixPredicateClass, "reagent", "field_185199_b");
-        Field outputField = ReflectionHelper.findField(mixPredicateClass, "output", "field_185200_c");
+            Class<?> mixPredicateClass = Class.forName("net.minecraft.potion.PotionHelper$MixPredicate");
+            Field inputField = ReflectionHelper.findField(mixPredicateClass, "input", "field_185198_a");
+            Field reagentField = ReflectionHelper.findField(mixPredicateClass, "reagent", "field_185199_b");
+            Field outputField = ReflectionHelper.findField(mixPredicateClass, "output", "field_185200_c");
 
-        inputField.setAccessible(true);
-        reagentField.setAccessible(true);
-        outputField.setAccessible(true);
+            inputField.setAccessible(true);
+            reagentField.setAccessible(true);
+            outputField.setAccessible(true);
             for (Object mix : conversions) {
-                net.minecraftforge.registries.IRegistryDelegate<PotionType> inputPotion = ( net.minecraftforge.registries.IRegistryDelegate<PotionType>) inputField.get(mix);
+                net.minecraftforge.registries.IRegistryDelegate<PotionType> inputPotion = (net.minecraftforge.registries.IRegistryDelegate<PotionType>) inputField.get(
+                        mix);
                 Ingredient reagent = (Ingredient) reagentField.get(mix);
-                net.minecraftforge.registries.IRegistryDelegate<PotionType> outputPotion = ( net.minecraftforge.registries.IRegistryDelegate<PotionType>) outputField.get(mix);
+                net.minecraftforge.registries.IRegistryDelegate<PotionType> outputPotion = (net.minecraftforge.registries.IRegistryDelegate<PotionType>) outputField.get(
+                        mix);
 
                 ItemStack inputPotionStack = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), inputPotion.get());
-                ItemStack outputPotionStack = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), outputPotion.get());
+                ItemStack outputPotionStack = PotionUtils.addPotionToItemStack(
+                        new ItemStack(Items.POTIONITEM),
+                        outputPotion.get()
+                );
                 Recipes.recipes.addRecipe(
                         "brewing",
                         new BaseMachineRecipe(
@@ -515,13 +527,14 @@ public class CommonProxy implements IGuiHandler {
                                         inputFactory.getInput(inputPotionStack),
                                         inputFactory.getInput(reagent.matchingStacks[0])
                                 ),
-                                new RecipeOutput(null,outputPotionStack)
+                                new RecipeOutput(null, outputPotionStack)
                         )
                 );
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
-        };
+        }
+        ;
     }
 
     public boolean addIModelRegister(IModelRegister modelRegister) {

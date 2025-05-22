@@ -6,20 +6,12 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.SteamImageInterface;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.EnumTypeStyle;
-import com.denfop.container.ContainerBioGenerator;
 import com.denfop.container.ContainerElectricBioGenerator;
-import com.denfop.container.ContainerSteamSqueezer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiElectricBioGenerator extends GuiIU<ContainerElectricBioGenerator> {
@@ -48,9 +40,11 @@ public class GuiElectricBioGenerator extends GuiIU<ContainerElectricBioGenerator
                 })
         ));
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
 
     }
+
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
 

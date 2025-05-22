@@ -1,10 +1,8 @@
 package com.denfop.integration.jei.refractoryfurnace;
 
 
-import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.blocks.FluidName;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 

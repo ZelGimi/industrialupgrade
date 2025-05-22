@@ -5,15 +5,6 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronCasing;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronChamber;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronController;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronCoolant;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronCryogen;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronElectrostaticDeflector;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronParticleAccelerator;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronPositrons;
-import com.denfop.tiles.cyclotron.TileEntityCyclotronQuantum;
 import com.denfop.tiles.windturbine.TileEntityWindTurbineCasing;
 import com.denfop.tiles.windturbine.TileEntityWindTurbineCasing1;
 import com.denfop.tiles.windturbine.TileEntityWindTurbineCasing2;
@@ -39,8 +30,7 @@ public enum BlockWindTurbine implements IMultiTileBlock {
     wind_turbine_stabilizer(TileEntityWindTurbineStabilizer.class, 2),
     wind_turbine_casing_1(TileEntityWindTurbineCasing.class, 3),
     wind_turbine_casing_2(TileEntityWindTurbineCasing1.class, 4),
-    wind_turbine_casing_3(TileEntityWindTurbineCasing2.class, 5)
-    ;
+    wind_turbine_casing_3(TileEntityWindTurbineCasing2.class, 5);
 
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("wind_turbine");
@@ -48,21 +38,14 @@ public enum BlockWindTurbine implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockWindTurbine(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
-        idBlock = id;
-    };
     BlockWindTurbine(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
@@ -71,6 +54,18 @@ public enum BlockWindTurbine implements IMultiTileBlock {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
     }
 
     @Override

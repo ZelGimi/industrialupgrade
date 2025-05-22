@@ -34,8 +34,9 @@ public class ContainerCable extends ContainerFullInv<TileEntityMultiCable> {
 
     public ContainerCable(EntityPlayer entityPlayer, TileEntityMultiCable tileEntity1, EnumFacing facing) {
         super(entityPlayer, tileEntity1, 166);
-        if (facing.getAxis() == EnumFacing.Axis.Y)
+        if (facing.getAxis() == EnumFacing.Axis.Y) {
             facing = facing.getOpposite();
+        }
         this.facing = facing;
         if (tileEntity1 instanceof TileEntityItemPipes && entityPlayer
                 .getHeldItem(EnumHand.MAIN_HAND)
@@ -44,7 +45,7 @@ public class ContainerCable extends ContainerFullInv<TileEntityMultiCable> {
                 for (int i = 0; i < 9; i++) {
                     addSlotToContainer(new SlotVirtual(
                             tileEntity1,
-                            i ,
+                            i,
                             116 + (i % 3) * 18,
                             19 + (i / 3) * 18,
                             ((TileEntityItemPipes) tileEntity1).getInfoSlotFromFacing(facing)
@@ -52,17 +53,17 @@ public class ContainerCable extends ContainerFullInv<TileEntityMultiCable> {
                 }
                 for (int i = 0; i < 9; i++) {
                     addSlotToContainer(new SlotVirtual(tileEntity1,
-                            i + 9 ,
+                            i + 9,
                             8 + (i % 3) * 18,
                             19 + (i / 3) * 18,
                             ((TileEntityItemPipes) tileEntity1).getInfoSlotFromFacing(facing)
                     ));
                 }
-            }else{
+            } else {
                 for (int i = 0; i < 9; i++) {
                     addSlotToContainer(new SlotVirtual(
                             tileEntity1,
-                            i ,
+                            i,
                             116 + (i % 3) * 18,
                             19 + (i / 3) * 18,
                             ((TileEntityItemPipes) tileEntity1).getInfoSlotFromFacing(facing)
@@ -70,7 +71,7 @@ public class ContainerCable extends ContainerFullInv<TileEntityMultiCable> {
                 }
                 for (int i = 0; i < 9; i++) {
                     addSlotToContainer(new SlotVirtual(tileEntity1,
-                            i + 9 ,
+                            i + 9,
                             8 + (i % 3) * 18,
                             19 + (i / 3) * 18,
                             ((TileEntityItemPipes) tileEntity1).getInfoSlotFromFacing(facing)

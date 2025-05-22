@@ -5,11 +5,9 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,8 +28,6 @@ public class RocketAssemblerRecipeWrapper implements IRecipeWrapper {
     public List<ItemStack> getInputs1() {
         return inputstack;
     }
-
-
 
 
     public List<ItemStack> getInputs() {
@@ -58,7 +54,6 @@ public class RocketAssemblerRecipeWrapper implements IRecipeWrapper {
 
 
     }
-
 
 
 }

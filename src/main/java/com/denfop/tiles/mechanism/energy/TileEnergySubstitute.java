@@ -60,20 +60,23 @@ public class TileEnergySubstitute extends TileEntityInventory implements
     List<CableItem> cableItemList = new ArrayList<>();
     CableItem main_cableItem = null;
     FakePlayerSpawner fakePlayer;
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
     private ChunkPos chunkPos;
+    private long id;
+
 
     public TileEnergySubstitute() {
         slot = new InvSlotSubstitute(this);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
-
     public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<IEnergyTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -82,19 +85,13 @@ public class TileEnergySubstitute extends TileEntityInventory implements
             }
         }
     }
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
-
 
     public List<InfoTile<IEnergyTile>> getValidReceivers() {
         return validReceivers;
     }
+
     public long getIdNetwork() {
         return this.id;
-    }
-    int hashCodeSource;
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
@@ -102,19 +99,26 @@ public class TileEnergySubstitute extends TileEntityInventory implements
         return hashCodeSource;
     }
 
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
+
     public void setId(final long id) {
         this.id = id;
     }
-    private long id;
+
     public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.put(facing1, tile);
             validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
         }
     }
+
     public Map<EnumFacing, IEnergyTile> getTiles() {
         return energyConductorMap;
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.substitute;
     }
@@ -273,7 +277,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
                 for (IEnergyConductor conductor : this.conductorList) {
                     if (conductor.getConductorBreakdownEnergy() - 1 < this.main_cableItem.getProvider()) {
 
-                        for (ItemStack stack : this.slot.gets()) {
+                        for (ItemStack stack : this.slot) {
 
                             if (stack.isItemEqual(main_cableItem.getStack()) && (ModUtils.nbt(main_cableItem.getStack()).equals(
                                     ModUtils.nbt(stack)))) {

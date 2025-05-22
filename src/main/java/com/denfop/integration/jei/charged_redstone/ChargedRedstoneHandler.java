@@ -3,12 +3,7 @@ package com.denfop.integration.jei.charged_redstone;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.blocks.FluidName;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +40,10 @@ public class ChargedRedstoneHandler {
 
     public static void initRecipes() {
         addRecipe(
-              new ItemStack(IUItem.charged_redstone),
+                new ItemStack(IUItem.charged_redstone),
                 Localization.translate("charged_redstone.info")
         );
     }
-
-
 
 
 }

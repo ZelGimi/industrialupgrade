@@ -8,12 +8,9 @@ import com.denfop.api.agriculture.genetics.IGenomeItem;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.resource.ItemSubTypes;
 import com.denfop.register.Register;
-import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,7 +38,10 @@ public class ItemCropGenome extends ItemSubTypes<ItemCropGenome.Types> implement
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" +"crop_genome" + Types.getFromID(meta).getName(), null)
+                new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + "crop_genome" + Types.getFromID(meta).getName(),
+                        null
+                )
         );
     }
 

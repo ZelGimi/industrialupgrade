@@ -38,6 +38,7 @@ import java.util.UUID;
 public class Colony implements IColony {
 
     private final IBody body;
+    byte tick = 0;
     private UUID fakeplayer;
     private List<IColonyBuilding> list;
     private List<IBuildingHouse> buildingHouseList;
@@ -53,7 +54,6 @@ public class Colony implements IColony {
     private int oxygen = 0;
     private int maxoxygen = 0;
     private int freeWorkers = 0;
-
     private int workers = 0;
     private short needWorkers = 0;
     private byte toDelete;
@@ -70,7 +70,6 @@ public class Colony implements IColony {
     private int usingEnergy;
     private int usingFood;
     private int usingOxygen;
-
     private byte timeUsingResetEnergy;
     private byte timeUsingResetFood;
     private byte timeUsingResetOxygen;
@@ -78,8 +77,9 @@ public class Colony implements IColony {
     private byte timeResetFood;
     private byte timeResetOxygen;
     private boolean auto;
-    private  byte timeWork = 0;
+    private byte timeWork = 0;
     private short timeToSend = 300;
+
     public Colony(IBody body, UUID player) {
         this.body = body;
         this.list = new ArrayList<>();
@@ -89,7 +89,7 @@ public class Colony implements IColony {
         this.experience = 0;
         this.enumProblemsList = new LinkedList<>();
         this.storageList = new LinkedList<>();
-        this.colonyStorages= new LinkedList<>();
+        this.colonyStorages = new LinkedList<>();
         this.buildingHouseList = new LinkedList<>();
         this.buildingMiningList = new LinkedList<>();
         this.oxygenFactoriesList = new LinkedList<>();
@@ -109,7 +109,7 @@ public class Colony implements IColony {
         this.oxygenFactoriesList = new LinkedList<>();
         this.entertainments = new LinkedList<>();
         this.factories = new LinkedList<>();
-        this.colonyStorages= new LinkedList<>();
+        this.colonyStorages = new LinkedList<>();
         this.generators = new LinkedList<>();
         this.protections = new LinkedList<>();
         this.body = SpaceNet.instance.getBodyFromName(packetBuffer.readString());
@@ -133,7 +133,7 @@ public class Colony implements IColony {
         auto = packetBuffer.readBoolean();
         int size1 = packetBuffer.readByte();
         this.enumProblemsList = new ArrayList<>();
-        for (int i = 0; i < size1;i++){
+        for (int i = 0; i < size1; i++) {
             this.enumProblemsList.add(EnumProblems.values()[packetBuffer.readByte()]);
         }
         list = new LinkedList<>();
@@ -183,7 +183,7 @@ public class Colony implements IColony {
         this.generators = new LinkedList<>();
         this.entertainments = new LinkedList<>();
         this.protections = new LinkedList<>();
-        this.colonyStorages= new LinkedList<>();
+        this.colonyStorages = new LinkedList<>();
         NBTTagList list1 = tag.getTagList("building", 10);
         list = new LinkedList<>();
         for (int i = 0; i < list1.tagCount(); i++) {
@@ -256,27 +256,31 @@ public class Colony implements IColony {
         customPacketBuffer.writeInt(entertainment);
         customPacketBuffer.writeBoolean(auto);
         customPacketBuffer.writeByte(this.enumProblemsList.size());
-        for (EnumProblems problems : enumProblemsList)
-            customPacketBuffer.writeByte((byte)problems.ordinal());
+        for (EnumProblems problems : enumProblemsList) {
+            customPacketBuffer.writeByte((byte) problems.ordinal());
+        }
         for (IColonyBuilding building : list) {
             building.writePacket(customPacketBuffer);
         }
         return customPacketBuffer;
     }
-    public List<ItemStack> getStacksFromStorage(){
+
+    public List<ItemStack> getStacksFromStorage() {
         List<ItemStack> itemStackList = new LinkedList<>();
-        for (IStorage storage : storageList){
+        for (IStorage storage : storageList) {
             itemStackList.addAll(storage.getStacks());
         }
-        return  new ArrayList<>(itemStackList);
+        return new ArrayList<>(itemStackList);
     }
-    public List<FluidStack> getFluidsFromStorage(){
+
+    public List<FluidStack> getFluidsFromStorage() {
         List<FluidStack> itemStackList = new LinkedList<>();
-        for (IStorage storage : storageList){
+        for (IStorage storage : storageList) {
             itemStackList.addAll(storage.getFluidStacks());
         }
-        return  new ArrayList<>(itemStackList);
+        return new ArrayList<>(itemStackList);
     }
+
     @Override
     public boolean isAuto() {
         return this.auto;
@@ -309,14 +313,13 @@ public class Colony implements IColony {
 
     @Override
     public int getMaxBuilding() {
-        return (int) (8 + (this.level-1) * 2.5);
+        return (int) (8 + (this.level - 1) * 2.5);
     }
 
     @Override
     public int getMaxExperience() {
         return 900 + 400 * (level - 1);
     }
-    byte tick = 0;
 
     @Override
     public boolean matched(final IBody body) {
@@ -380,26 +383,26 @@ public class Colony implements IColony {
                 toDelete = 120;
                 this.tick = 0;
             }
-            if (this.level < 100 && this.tick == 10){
+            if (this.level < 100 && this.tick == 10) {
                 this.tick = 0;
-                this.experience+=this.workers;
-                if (this.experience >= this.getMaxExperience()){
+                this.experience += this.workers;
+                if (this.experience >= this.getMaxExperience()) {
                     this.level++;
                     this.experience = 0;
                 }
             }
         }
         tick++;
-        if (this.tick > 10){
+        if (this.tick > 10) {
             this.tick = 0;
         }
-        if (this.auto){
+        if (this.auto) {
             this.timeToSend--;
-            if (this.timeToSend == 0){
+            if (this.timeToSend == 0) {
                 timeToSend = 300;
-                SpaceNet.instance.getColonieNet().sendResourceToPlanet(getFakePlayer(),body);
+                SpaceNet.instance.getColonieNet().sendResourceToPlanet(getFakePlayer(), body);
             }
-        }else{
+        } else {
             this.timeToSend = 300;
         }
         if (needWorkers > 0) {
@@ -553,7 +556,7 @@ public class Colony implements IColony {
                 building.work();
             }
         }
-        if (this.list.size() * 2 > protection){
+        if (this.list.size() * 2 > protection) {
             this.enumProblemsList.add(EnumProblems.PROTECTION);
         }
 
@@ -562,16 +565,20 @@ public class Colony implements IColony {
     public List<IEntertainment> getEntertainments() {
         return entertainments;
     }
-    public double getPercentEntertainment(){
-        if (level < 7)
+
+    public double getPercentEntertainment() {
+        if (level < 7) {
             return 1;
-        if (this.entertainment == 0)
+        }
+        if (this.entertainment == 0) {
             return 0.8;
-       return  Math.min (1.5, Math.max(0.8,(this.entertainment) * 1D / this.workers));
+        }
+        return Math.min(1.5, Math.max(0.8, (this.entertainment) * 1D / this.workers));
     }
+
     @Override
     public void useEnergy(final int energy) {
-        if (this.timeUsingResetEnergy != this.tick){
+        if (this.timeUsingResetEnergy != this.tick) {
             this.timeUsingResetEnergy = this.tick;
             this.usingEnergy = 0;
         }
@@ -586,7 +593,7 @@ public class Colony implements IColony {
 
     @Override
     public void useOxygen(final int oxygen) {
-        if (this.timeUsingResetOxygen != this.tick){
+        if (this.timeUsingResetOxygen != this.tick) {
             this.timeUsingResetOxygen = this.tick;
             this.usingOxygen = 0;
         }
@@ -597,7 +604,7 @@ public class Colony implements IColony {
 
     @Override
     public void addOxygen(final int oxygen) {
-        if (this.timeResetOxygen != this.tick){
+        if (this.timeResetOxygen != this.tick) {
             this.timeResetOxygen = this.tick;
             this.generationOxygen = 0;
         }
@@ -679,7 +686,7 @@ public class Colony implements IColony {
 
     @Override
     public void addEnergy(final int energy) {
-        if (this.timeResetEnergy != this.tick){
+        if (this.timeResetEnergy != this.tick) {
             this.timeResetEnergy = this.tick;
             this.generationEnergy = 0;
         }
@@ -925,7 +932,7 @@ public class Colony implements IColony {
     }
 
     public void useFood(int food) {
-        if (this.timeUsingResetFood != this.tick){
+        if (this.timeUsingResetFood != this.tick) {
             this.timeUsingResetFood = this.tick;
             this.usingFood = 0;
         }
@@ -934,7 +941,7 @@ public class Colony implements IColony {
     }
 
     public void addFood(int food) {
-        if (this.timeResetFood != this.tick){
+        if (this.timeResetFood != this.tick) {
             this.timeResetFood = this.tick;
             this.generationFood = 0;
         }
@@ -974,7 +981,7 @@ public class Colony implements IColony {
     @Override
     public boolean canUseFood(final EnumHouses houses) {
         int prev = this.generationFood - this.usingFood;
-        return (prev - 1)>= 0;
+        return (prev - 1) >= 0;
     }
 
     @Override

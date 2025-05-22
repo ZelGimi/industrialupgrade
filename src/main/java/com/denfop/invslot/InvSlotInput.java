@@ -6,14 +6,11 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.recipe.IInputHandler;
-import com.denfop.tiles.base.FakePlayerSpawner;
 import com.denfop.tiles.base.TileEntityAutoDigger;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,19 +39,19 @@ public class InvSlotInput extends InvSlot {
             final List<ItemStack> list = block.getDrops(this.tile.getWorld(), new BlockPos(0, 0, 0),
                     block.getStateFromMeta(content.getItemDamage()), this.tile.chance
             );
-            if (block == Blocks.IRON_ORE || block == Blocks.GOLD_ORE){
+            if (block == Blocks.IRON_ORE || block == Blocks.GOLD_ORE) {
                 list.clear();
                 if (block == Blocks.GOLD_ORE) {
                     list.add(new ItemStack(IUItem.rawMetals, Math.min(
                             4,
-                            1 + tile.getWorld().rand.nextInt(Math.min(4, Math.max(1,this.tile.chance)))
+                            1 + tile.getWorld().rand.nextInt(Math.min(4, Math.max(1, this.tile.chance)))
                     )
                             , 17));
                 }
                 if (block == Blocks.IRON_ORE) {
                     list.add(new ItemStack(IUItem.rawMetals, Math.min(
                             4,
-                            1 + tile.getWorld().rand.nextInt(Math.min(4, Math.max(1,this.tile.chance)))
+                            1 + tile.getWorld().rand.nextInt(Math.min(4, Math.max(1, this.tile.chance)))
                     )
                             , 18));
                 }

@@ -7,7 +7,10 @@ import com.denfop.blocks.mechanism.BlockGeothermalPump;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 
 public class TileEntityGeothermalCasing extends TileEntityMultiBlockElement implements ICasing {
-    public TileEntityGeothermalCasing(){}
+
+    public TileEntityGeothermalCasing() {
+    }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockGeothermalPump.geothermal_casing;

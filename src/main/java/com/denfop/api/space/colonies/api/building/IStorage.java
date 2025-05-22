@@ -39,4 +39,5 @@ public interface IStorage {
     boolean work();
 
     void writePacket(CustomPacketBuffer customPacketBuffer);
+
 }

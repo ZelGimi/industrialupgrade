@@ -3,18 +3,21 @@ package com.denfop.network.packet;
 import com.denfop.IUCore;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
-import com.denfop.api.space.fakebody.IFakeBody;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
-public class PacketSendResourceToEarth implements IPacket{
-    public PacketSendResourceToEarth(){};
-    public PacketSendResourceToEarth(EntityPlayer player, IBody iBody){
+public class PacketSendResourceToEarth implements IPacket {
+
+    public PacketSendResourceToEarth() {
+    }
+
+    ;
+
+    public PacketSendResourceToEarth(EntityPlayer player, IBody iBody) {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
         customPacketBuffer.writeByte(getId());
         try {
@@ -28,16 +31,17 @@ public class PacketSendResourceToEarth implements IPacket{
         }
         IUCore.network.getClient().sendPacket(customPacketBuffer);
     }
+
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
         try {
             UUID uuid = (UUID) DecoderHandler.decode(customPacketBuffer);
-            if (entityPlayer.getUniqueID().equals(uuid)){
+            if (entityPlayer.getUniqueID().equals(uuid)) {
                 boolean hasBody = customPacketBuffer.readBoolean();
-                if (hasBody){
+                if (hasBody) {
                     String body = customPacketBuffer.readString();
                     IBody body1 = SpaceNet.instance.getBodyFromName(body);
-                    SpaceNet.instance.getColonieNet().sendResourceToPlanet(entityPlayer.getUniqueID(),body1);
+                    SpaceNet.instance.getColonieNet().sendResourceToPlanet(entityPlayer.getUniqueID(), body1);
                 }
             }
         } catch (IOException e) {

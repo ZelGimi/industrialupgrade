@@ -35,8 +35,11 @@ public class CropNetwork {
     }
 
     public List<TileEntityCrop> getCropsFromChunk(World world, ChunkPos chunkPos) {
-        Map<ChunkPos, List<TileEntityCrop>> map = mapWorldCrop.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
-        return map.computeIfAbsent(chunkPos,k -> new ArrayList<>());
+        Map<ChunkPos, List<TileEntityCrop>> map = mapWorldCrop.computeIfAbsent(
+                world.provider.getDimension(),
+                k -> new HashMap<>()
+        );
+        return map.computeIfAbsent(chunkPos, k -> new ArrayList<>());
     }
 
     public void addNewCropToWorld(TileEntityCrop crop) {
@@ -121,7 +124,9 @@ public class CropNetwork {
         }
         if (crop.isIgnoreSoil() || ((crop.getSoil().getState() == downBlock && !crop.getSoil().isIgnore()) || (crop
                 .getSoil()
-                .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore()) || (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus))) {
+                .getBlock() == downBlock.getBlock() && crop
+                .getSoil()
+                .isIgnore()) || (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus))) {
             return crop.canGrowInBiome(biome);
         }
         return false;
@@ -136,8 +141,10 @@ public class CropNetwork {
             final Chunk chunk, Biome biome, final ChunkLevel chunkLevel
     ) {
         if ((radLevel == null || radLevel.getLevel().ordinal() <= crop.getRadiationRequirements().ordinal()) && isWaterNearby(world
-            , pos,
-                crop)) {
+                ,
+                pos,
+                crop
+        )) {
             int light = chunk.getLightSubtracted(pos, 0);
             if (light >= crop.getLightLevel()) {
                 final ChunkLevel air = PollutionManager.pollutionManager.getChunkLevelAir(chunkPos);
@@ -159,6 +166,7 @@ public class CropNetwork {
         }
         return false;
     }
+
     public boolean canMultiGrow(
             World world, BlockPos pos, ChunkPos chunkPos, ICrop crop, final Radiation radLevel,
             final Chunk chunk, Biome biome, final ChunkLevel chunkLevel
@@ -185,10 +193,12 @@ public class CropNetwork {
         }
         return false;
     }
+
     public boolean isWaterNearby(World world, BlockPos pos, ICrop crop) {
-        if (crop.getWaterRequirement() == 0)
+        if (crop.getWaterRequirement() == 0) {
             return true;
-        int radius = crop.getWaterRequirement()+1;
+        }
+        int radius = crop.getWaterRequirement() + 1;
 
 
         for (int x = -radius; x <= radius; x++) {

@@ -3,17 +3,10 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.FluidItem;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerDefaultMultiElement;
 import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantGenerator;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.List;
 
 public class GuiChemicalGenerator extends GuiIU<ContainerDefaultMultiElement> {
 

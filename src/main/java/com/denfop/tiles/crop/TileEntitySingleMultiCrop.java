@@ -9,7 +9,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntitySingleMultiCrop extends TileEntityMultiCrop{
+public class TileEntitySingleMultiCrop extends TileEntityMultiCrop {
 
     public TileEntitySingleMultiCrop() {
         super(1);
@@ -24,6 +24,7 @@ public class TileEntitySingleMultiCrop extends TileEntityMultiCrop{
         return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2D, 1.0D));
 
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;

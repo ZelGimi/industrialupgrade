@@ -55,7 +55,7 @@ public class InsulatorCategory extends GuiIU implements IRecipeCategory<Insulato
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_OUTPUT))
         );
         this.container1 = (ContainerFluidIntegrator) this.getContainer();
-        progress_bar = new GuiComponent(this, 70+30, 35, EnumTypeComponent.PROCESS,
+        progress_bar = new GuiComponent(this, 70 + 30, 35, EnumTypeComponent.PROCESS,
                 new Component<>(new ComponentProgress(this.container1.base, 1, (short) 100))
         );
         this.componentList.add(progress_bar);
@@ -123,9 +123,9 @@ public class InsulatorCategory extends GuiIU implements IRecipeCategory<Insulato
         fff.set(1, recipes.getOutputFluid());
 
 
-        isg.init(0, true, 60 +10 -1, 44 - 1);
+        isg.init(0, true, 60 + 10 - 1, 44 - 1);
         isg.set(0, recipes.getInput());
-        isg.init(1, false, 115+5 - 1, 44 - 1);
+        isg.init(1, false, 115 + 5 - 1, 44 - 1);
         isg.set(1, recipes.getOutput());
 
 

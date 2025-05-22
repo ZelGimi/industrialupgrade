@@ -139,7 +139,6 @@ import com.denfop.blocks.mechanism.BlockTank;
 import com.denfop.blocks.mechanism.BlockTransformer;
 import com.denfop.blocks.mechanism.BlockUniversalCable;
 import com.denfop.blocks.mechanism.BlockUpgradeBlock;
-import com.denfop.blocks.mechanism.BlockWaterMill;
 import com.denfop.blocks.mechanism.BlockWaterReactors;
 import com.denfop.blocks.mechanism.BlockWindTurbine;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
@@ -216,6 +215,7 @@ import com.denfop.items.energy.ItemIronHammer;
 import com.denfop.items.energy.ItemKatana;
 import com.denfop.items.energy.ItemMagnet;
 import com.denfop.items.energy.ItemNanoSaber;
+import com.denfop.items.energy.ItemNet;
 import com.denfop.items.energy.ItemPickaxe;
 import com.denfop.items.energy.ItemPurifier;
 import com.denfop.items.energy.ItemQuantumSaber;
@@ -225,7 +225,6 @@ import com.denfop.items.energy.ItemSprayer;
 import com.denfop.items.energy.ItemSteelHammer;
 import com.denfop.items.energy.ItemToolWrench;
 import com.denfop.items.energy.ItemToolWrenchEnergy;
-import com.denfop.items.energy.ItemNet;
 import com.denfop.items.energy.ItemTreetap;
 import com.denfop.items.energy.ItemTreetapEnergy;
 import com.denfop.items.energy.ItemWindMeter;
@@ -329,7 +328,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class Register {
@@ -506,7 +504,6 @@ public class Register {
         registerfluid(FluidName.fluidcropgenetic, 1000, 100, false);
 
 
-
         registerfluid(FluidName.fluidhot_coolant, 1000, 3000, false);
         registerfluid(FluidName.fluidpahoehoe_lava, 50000, 250000, false);
         registerfluid(FluidName.fluidbiomass, 1000, 3000, false);
@@ -649,7 +646,7 @@ public class Register {
         IUItem.dryer = TileBlockCreator.instance.create(BlockDryer.class);
         IUItem.mini_smeltery = TileBlockCreator.instance.create(BlockMiniSmeltery.class);
 
-        IUItem.hive =  TileBlockCreator.instance.create(BlockHive.class);
+        IUItem.hive = TileBlockCreator.instance.create(BlockHive.class);
         IUItem.blastfurnace = TileBlockCreator.instance.create(BlockBlastFurnace.class);
         IUItem.cokeoven = TileBlockCreator.instance.create(BlockCokeOven.class);
         IUItem.adv_cokeoven = TileBlockCreator.instance.create(BlockAdvCokeOven.class);
@@ -818,55 +815,55 @@ public class Register {
         IUItem.heatsensor = new ItemsHeatSensor();
         IUItem.frequency_transmitter = new ItemFrequencyTransmitter();
 
-        IUItem.wood_steam_blade = new ItemSteamRod("wood", 0,0.02, 10800 / 2, new ResourceLocation(
+        IUItem.wood_steam_blade = new ItemSteamRod("wood", 0, 0.02, 10800 / 2, new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/items/rotor" +
                         "/wood_rotor_model.png"
         ));
-        IUItem.bronze_steam_blade = new ItemSteamRod("bronze", 0,0.04, 10800, new ResourceLocation(
+        IUItem.bronze_steam_blade = new ItemSteamRod("bronze", 0, 0.04, 10800, new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/items/rotor/bronze_rotor_model_1.png"
         ));
-        IUItem.iron_steam_blade = new ItemSteamRod("iron", 0, 0.08, (int) (10800 * 1.5),new ResourceLocation(
+        IUItem.iron_steam_blade = new ItemSteamRod("iron", 0, 0.08, (int) (10800 * 1.5), new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/items/rotor/iron_rotor_model_1.png"
         ));
-        IUItem.steel_steam_blade = new ItemSteamRod("steel", 0,0.1, (int) (20800 * 1.5), new ResourceLocation(
+        IUItem.steel_steam_blade = new ItemSteamRod("steel", 0, 0.1, (int) (20800 * 1.5), new ResourceLocation(
                 Constants.MOD_ID,
                 "textures/items/rotor/steel_rotor_model_1.png"
         ));
-        IUItem.carbon_steam_blade = new ItemSteamRod("carbon", 1,0.15, (int) (60800 * 1.5), new ResourceLocation(
+        IUItem.carbon_steam_blade = new ItemSteamRod("carbon", 1, 0.15, (int) (60800 * 1.5), new ResourceLocation(
                 Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model_1.png"));
 
 
-        IUItem.iridium_steam_blade = new ItemStack(new ItemSteamRod("iridium", 1,0.2, (int) (60800 * 2),
+        IUItem.iridium_steam_blade = new ItemStack(new ItemSteamRod("iridium", 1, 0.2, (int) (60800 * 2),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbo_rotor_model1.png")
         ));
-        IUItem.compressiridium_steam_blade = new ItemStack(new ItemSteamRod("compressiridium",1,0.25, (int) (60800 * 3),
+        IUItem.compressiridium_steam_blade = new ItemStack(new ItemSteamRod("compressiridium", 1, 0.25, (int) (60800 * 3),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_2.png")
         ));
-        IUItem.spectral_steam_blade = new ItemStack(new ItemSteamRod("spectral",1,0.35, (int) (60800 * 4),
+        IUItem.spectral_steam_blade = new ItemStack(new ItemSteamRod("spectral", 1, 0.35, (int) (60800 * 4),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_3.png")
         ));
-        IUItem.myphical_steam_blade = new ItemStack(new ItemSteamRod("myphical",2,0.45, (int) (60800 * 6),
+        IUItem.myphical_steam_blade = new ItemStack(new ItemSteamRod("myphical", 2, 0.45, (int) (60800 * 6),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_4.png")
         ));
 
-        IUItem.photon_steam_blade = new ItemStack(new ItemSteamRod("photon",2,0.6, (int) (60800 * 10),
+        IUItem.photon_steam_blade = new ItemStack(new ItemSteamRod("photon", 2, 0.6, (int) (60800 * 10),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_6.png")
         ));
-        IUItem.neutron_steam_blade = new ItemStack(new ItemSteamRod("neutron",2,0.7, (int) (60800 * 15),
+        IUItem.neutron_steam_blade = new ItemStack(new ItemSteamRod("neutron", 2, 0.7, (int) (60800 * 15),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_5.png")
         ));
 
-        IUItem.barion_steam_blade = new ItemStack(new ItemSteamRod("barion",3,0.825, (int) (60800 * 20),
+        IUItem.barion_steam_blade = new ItemStack(new ItemSteamRod("barion", 3, 0.825, (int) (60800 * 20),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_7.png")
         ));
 
-        IUItem.hadron_steam_blade = new ItemStack(new ItemSteamRod("hadron",3,0.95, (int) (60800 * 30),
+        IUItem.hadron_steam_blade = new ItemStack(new ItemSteamRod("hadron", 3, 0.95, (int) (60800 * 30),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_8.png")
         ));
-        IUItem.ultramarine_steam_blade = new ItemStack(new ItemSteamRod("ultramarine",3,1.15, (int) (60800 * 50),
+        IUItem.ultramarine_steam_blade = new ItemStack(new ItemSteamRod("ultramarine", 3, 1.15, (int) (60800 * 50),
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_9.png")
         ));
 
@@ -973,10 +970,10 @@ public class Register {
         IUItem.raw_apatite = (IUItemBase) new IUItemBase("raw_apatite").setCreativeTab(IUCore.RecourseTab);
         IUItem.apatite_cube = (IUItemBase) new IUItemBase("apatite_cube").setCreativeTab(IUCore.RecourseTab);
         IUItem.hops = (IUItemBase) new IUItemBase("hops").setCreativeTab(IUCore.CropsTab);
-        IUItem.tomato =  new ItemFoodIU("tomato",3, 0.6F).setCreativeTab(IUCore.CropsTab);
-        IUItem.terra_wart =  new ItemFoodIU("terra_wart",1, 0.4F).setAlwaysEdible().setCreativeTab(IUCore.CropsTab);
-        IUItem.corn =  new ItemFoodIU("corn",2, 0.4f).setCreativeTab(IUCore.CropsTab);
-        IUItem.raspberry =  new ItemFoodIU("raspberry",2, 0.4f).setCreativeTab(IUCore.CropsTab);
+        IUItem.tomato = new ItemFoodIU("tomato", 3, 0.6F).setCreativeTab(IUCore.CropsTab);
+        IUItem.terra_wart = new ItemFoodIU("terra_wart", 1, 0.4F).setAlwaysEdible().setCreativeTab(IUCore.CropsTab);
+        IUItem.corn = new ItemFoodIU("corn", 2, 0.4f).setCreativeTab(IUCore.CropsTab);
+        IUItem.raspberry = new ItemFoodIU("raspberry", 2, 0.4f).setCreativeTab(IUCore.CropsTab);
         IUItem.fertilizer = (IUItemBase) new IUItemBase("fertilizer");
         IUItem.white_phosphorus = (IUItemBase) new IUItemBase("white_phosphorus");
         IUItem.red_phosphorus = (IUItemBase) new IUItemBase("red_phosphorus");
@@ -986,15 +983,15 @@ public class Register {
         IUItem.honey_drop = (IUItemBase) new IUItemBase("honey_drop");
         IUItem.beeswax = (IUItemBase) new IUItemBase("beeswax");
         IUItem.wax_stick = (IUItemBase) new IUItemBase("wax_stick");
-        IUItem.royal_jelly= (IUItemBase) new IUItemBase("royal_jelly");
+        IUItem.royal_jelly = (IUItemBase) new IUItemBase("royal_jelly");
         IUItem.bee_pollen = (IUItemBase) new IUItemBase("bee_pollen");
-        IUItem.polished_stick= (IUItemBase) new IUItemBase("polished_stick");
-        IUItem.bee_frame_template= (IUItemBase) new IUItemBase("bee_frame_template");
-        IUItem.adv_bee_frame_template= (IUItemBase) new IUItemBase("adv_bee_frame_template");
-        IUItem.imp_bee_frame_template= (IUItemBase) new IUItemBase("imp_bee_frame_template");
-        IUItem.wolframite= (IUItemBase) new IUItemBase("wolframite");
-        IUItem.larva= (IUItemBase) new IUItemBase("larva");
-        IUItem.plant_mixture= (IUItemBase) new IUItemBase("plant_mixture");
+        IUItem.polished_stick = (IUItemBase) new IUItemBase("polished_stick");
+        IUItem.bee_frame_template = (IUItemBase) new IUItemBase("bee_frame_template");
+        IUItem.adv_bee_frame_template = (IUItemBase) new IUItemBase("adv_bee_frame_template");
+        IUItem.imp_bee_frame_template = (IUItemBase) new IUItemBase("imp_bee_frame_template");
+        IUItem.wolframite = (IUItemBase) new IUItemBase("wolframite");
+        IUItem.larva = (IUItemBase) new IUItemBase("larva");
+        IUItem.plant_mixture = (IUItemBase) new IUItemBase("plant_mixture");
         IUItem.genome_bee = new ItemBeeGenome();
         IUItem.genome_crop = new ItemCropGenome();
 
@@ -1039,38 +1036,75 @@ public class Register {
         IUItem.scable = new ItemSCable();
         IUItem.steamPipe = new ItemSteamPipe();
         IUItem.spaceItem = new ItemSpace();
-        IUItem.rocket = new ItemRover("rocket",10000, EnumRoversLevel.ONE, EnumTypeRovers.ROCKET,2,500000,2048,
-                EnumRoversLevelFluid.ONE,2);
-        IUItem.adv_rocket = new ItemRover("adv_rocket",20000, EnumRoversLevel.TWO, EnumTypeRovers.ROCKET,3,1000000,4096,
-                EnumRoversLevelFluid.TWO,3.5);
-        IUItem.imp_rocket = new ItemRover("imp_rocket",30000, EnumRoversLevel.THREE, EnumTypeRovers.ROCKET,4,2000000,8192,
-                EnumRoversLevelFluid.THREE,5);
-        IUItem.per_rocket = new ItemRover("per_rocket",40000, EnumRoversLevel.FOUR, EnumTypeRovers.ROCKET,5,5000000,16384,
-                EnumRoversLevelFluid.FOUR,7.5);
-        IUItem.probe = new ItemRover("probe",10000, EnumRoversLevel.ONE, EnumTypeRovers.PROBE,2,500000,2048,
-                EnumRoversLevelFluid.ONE,1.35);
-        IUItem.adv_probe = new ItemRover("adv_probe",20000, EnumRoversLevel.TWO, EnumTypeRovers.PROBE,3,1000000,4096,
-                EnumRoversLevelFluid.TWO,2.25);
-        IUItem.imp_probe = new ItemRover("imp_probe",30000, EnumRoversLevel.THREE, EnumTypeRovers.PROBE,4,2000000,8192,
-                EnumRoversLevelFluid.THREE,3);
-        IUItem.per_probe = new ItemRover("per_probe",40000, EnumRoversLevel.FOUR, EnumTypeRovers.PROBE,5,5000000,16384,
-                EnumRoversLevelFluid.FOUR,4);
-        IUItem.rover =  new ItemRover("rover",10000, EnumRoversLevel.ONE, EnumTypeRovers.ROVERS,2,500000,2048,
-                EnumRoversLevelFluid.ONE,1);
-        IUItem.adv_rover = new ItemRover("adv_rover",20000, EnumRoversLevel.TWO, EnumTypeRovers.ROVERS,3,1000000,4096,
-                EnumRoversLevelFluid.TWO,1.5);
-        IUItem.imp_rover = new ItemRover("imp_rover",30000, EnumRoversLevel.THREE, EnumTypeRovers.ROVERS,4,2000000,8192,
-                EnumRoversLevelFluid.THREE,2);
-        IUItem.per_rover = new ItemRover("per_rover",40000, EnumRoversLevel.FOUR, EnumTypeRovers.ROVERS,5,5000000,16384,
-                EnumRoversLevelFluid.FOUR,3);
-        IUItem.satellite =  new ItemRover("satellite",10000, EnumRoversLevel.ONE, EnumTypeRovers.SATELLITE,2,500000,2048,
-                EnumRoversLevelFluid.ONE,1.65);
-        IUItem.adv_satellite = new ItemRover("adv_satellite",20000, EnumRoversLevel.TWO, EnumTypeRovers.SATELLITE,3,1000000,4096,
-                EnumRoversLevelFluid.TWO,3.1);
-        IUItem.imp_satellite = new ItemRover("imp_satellite",30000, EnumRoversLevel.THREE, EnumTypeRovers.SATELLITE,4,2000000,8192,
-                EnumRoversLevelFluid.THREE,4);
-        IUItem.per_satellite = new ItemRover("per_satellite",40000, EnumRoversLevel.FOUR, EnumTypeRovers.SATELLITE,5,5000000,16384,
-                EnumRoversLevelFluid.FOUR,6);
+        IUItem.rocket = new ItemRover("rocket", 10000, EnumRoversLevel.ONE, EnumTypeRovers.ROCKET, 2, 500000, 2048,
+                EnumRoversLevelFluid.ONE, 2
+        );
+        IUItem.adv_rocket = new ItemRover("adv_rocket", 20000, EnumRoversLevel.TWO, EnumTypeRovers.ROCKET, 3, 1000000, 4096,
+                EnumRoversLevelFluid.TWO, 3.5
+        );
+        IUItem.imp_rocket = new ItemRover("imp_rocket", 30000, EnumRoversLevel.THREE, EnumTypeRovers.ROCKET, 4, 2000000, 8192,
+                EnumRoversLevelFluid.THREE, 5
+        );
+        IUItem.per_rocket = new ItemRover("per_rocket", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.ROCKET, 5, 5000000, 16384,
+                EnumRoversLevelFluid.FOUR, 7.5
+        );
+        IUItem.probe = new ItemRover("probe", 10000, EnumRoversLevel.ONE, EnumTypeRovers.PROBE, 2, 500000, 2048,
+                EnumRoversLevelFluid.ONE, 1.35
+        );
+        IUItem.adv_probe = new ItemRover("adv_probe", 20000, EnumRoversLevel.TWO, EnumTypeRovers.PROBE, 3, 1000000, 4096,
+                EnumRoversLevelFluid.TWO, 2.25
+        );
+        IUItem.imp_probe = new ItemRover("imp_probe", 30000, EnumRoversLevel.THREE, EnumTypeRovers.PROBE, 4, 2000000, 8192,
+                EnumRoversLevelFluid.THREE, 3
+        );
+        IUItem.per_probe = new ItemRover("per_probe", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.PROBE, 5, 5000000, 16384,
+                EnumRoversLevelFluid.FOUR, 4
+        );
+        IUItem.rover = new ItemRover("rover", 10000, EnumRoversLevel.ONE, EnumTypeRovers.ROVERS, 2, 500000, 2048,
+                EnumRoversLevelFluid.ONE, 1
+        );
+        IUItem.adv_rover = new ItemRover("adv_rover", 20000, EnumRoversLevel.TWO, EnumTypeRovers.ROVERS, 3, 1000000, 4096,
+                EnumRoversLevelFluid.TWO, 1.5
+        );
+        IUItem.imp_rover = new ItemRover("imp_rover", 30000, EnumRoversLevel.THREE, EnumTypeRovers.ROVERS, 4, 2000000, 8192,
+                EnumRoversLevelFluid.THREE, 2
+        );
+        IUItem.per_rover = new ItemRover("per_rover", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.ROVERS, 5, 5000000, 16384,
+                EnumRoversLevelFluid.FOUR, 3
+        );
+        IUItem.satellite = new ItemRover("satellite", 10000, EnumRoversLevel.ONE, EnumTypeRovers.SATELLITE, 2, 500000, 2048,
+                EnumRoversLevelFluid.ONE, 1.65
+        );
+        IUItem.adv_satellite = new ItemRover("adv_satellite",
+                20000,
+                EnumRoversLevel.TWO,
+                EnumTypeRovers.SATELLITE,
+                3,
+                1000000,
+                4096,
+                EnumRoversLevelFluid.TWO,
+                3.1
+        );
+        IUItem.imp_satellite = new ItemRover("imp_satellite",
+                30000,
+                EnumRoversLevel.THREE,
+                EnumTypeRovers.SATELLITE,
+                4,
+                2000000,
+                8192,
+                EnumRoversLevelFluid.THREE,
+                4
+        );
+        IUItem.per_satellite = new ItemRover("per_satellite",
+                40000,
+                EnumRoversLevel.FOUR,
+                EnumTypeRovers.SATELLITE,
+                5,
+                5000000,
+                16384,
+                EnumRoversLevelFluid.FOUR,
+                6
+        );
         IUItem.research_lens = new ItemResearchLens();
         IUItem.colonial_building = new ItemColonialBuilding();
         IUItem.ironMesh = new ItemMesh("ironmesh", 1000, 1);
@@ -1330,8 +1364,8 @@ public class Register {
         IUItem.paints = new ItemPaints();
         IUItem.coolpipes = new ItemCoolPipes();
         IUItem.biopipes = new ItemBioPipe();
-        IUItem.nightpipes =  new ItemNightPipe();
-        IUItem.amperepipes =  new ItemAmpereCable();
+        IUItem.nightpipes = new ItemNightPipe();
+        IUItem.amperepipes = new ItemAmpereCable();
         IUItem.photonglass = new ItemPhotoniumGlass();
         IUItem.matter = new ItemSolidMatter();
         IUItem.spawnermodules = new ItemSpawnerModules();
@@ -1522,9 +1556,10 @@ public class Register {
         IUItem.quantumSaber = new ItemQuantumSaber("itemNanoSaber1", Config.maxCharge1, Config.transferLimit1,
                 Config.tier1, Config.spectralsaberactive1, Config.spectralsabernotactive1
         );
-        IUItem.electric_hoe = new ItemEnergyToolHoe();
         IUItem.electric_treetap = new ItemTreetapEnergy();
         IUItem.electric_wrench = new ItemToolWrenchEnergy();
+        IUItem.electric_hoe = new ItemEnergyToolHoe();
+
         IUItem.nanosaber = new ItemNanoSaber("nano_saber", 160000, 500, 3, 19, 4);
         IUItem.spectral_helmet = new ItemSpecialArmor(
                 EnumSubTypeArmor.HELMET, EnumTypeArmor.SPECTRAL
@@ -1644,7 +1679,7 @@ public class Register {
         IUItem.insulatedTinCableItem = new ItemStack(IUItem.cable, 1, 19);
 
 
-       // IUItem.book = new ItemBook("book_iu");
+        // IUItem.book = new ItemBook("book_iu");
         IUItem.nano_boots = new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.NANO);
         IUItem.nano_chestplate = new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.NANO);
         IUItem.nano_helmet = new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.NANO);
@@ -1807,15 +1842,15 @@ public class Register {
         IUItem.imp_heat_exchange = new ItemReactorHeatExchanger("imp_heat_exchange", 7500, 3, 15, 0.6);
         IUItem.per_heat_exchange = new ItemReactorHeatExchanger("per_heat_exchange", 10000, 4, 20, 0.45);
 
-        IUItem.proton_energy_coupler = new ItemEnergyCoupler("proton_energy_coupler", (int) (3600*2.5), 1, 0.05);
-        IUItem.adv_proton_energy_coupler = new ItemEnergyCoupler("adv_proton_energy_coupler", (int) (7200*2.5), 2, 0.1);
-        IUItem.imp_proton_energy_coupler = new ItemEnergyCoupler("imp_proton_energy_coupler", 10800*3, 3, 0.15);
-        IUItem.per_proton_energy_coupler = new ItemEnergyCoupler("per_proton_energy_coupler", (int) (14400*3.5), 4, 0.2);
+        IUItem.proton_energy_coupler = new ItemEnergyCoupler("proton_energy_coupler", (int) (3600 * 2.5), 1, 0.05);
+        IUItem.adv_proton_energy_coupler = new ItemEnergyCoupler("adv_proton_energy_coupler", (int) (7200 * 2.5), 2, 0.1);
+        IUItem.imp_proton_energy_coupler = new ItemEnergyCoupler("imp_proton_energy_coupler", 10800 * 3, 3, 0.15);
+        IUItem.per_proton_energy_coupler = new ItemEnergyCoupler("per_proton_energy_coupler", (int) (14400 * 3.5), 4, 0.2);
 
-        IUItem.neutron_protector = new ItemNeutronProtector("neutron_protector", 3600*4, 1);
-        IUItem.adv_neutron_protector = new ItemNeutronProtector("adv_neutron_protector", 7200*6, 2);
-        IUItem.imp_neutron_protector = new ItemNeutronProtector("imp_neutron_protector", (int) (10800*6), 3);
-        IUItem.per_neutron_protector = new ItemNeutronProtector("per_neutron_protector", (int) (14400*6), 4);
+        IUItem.neutron_protector = new ItemNeutronProtector("neutron_protector", 3600 * 4, 1);
+        IUItem.adv_neutron_protector = new ItemNeutronProtector("adv_neutron_protector", 7200 * 6, 2);
+        IUItem.imp_neutron_protector = new ItemNeutronProtector("imp_neutron_protector", (int) (10800 * 6), 3);
+        IUItem.per_neutron_protector = new ItemNeutronProtector("per_neutron_protector", (int) (14400 * 6), 4);
 
 
         IUItem.capacitor = new ItemReactorCapacitor("capacitor", 25000, 1, 4);

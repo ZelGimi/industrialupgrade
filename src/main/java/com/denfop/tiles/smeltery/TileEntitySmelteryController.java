@@ -1,6 +1,5 @@
 package com.denfop.tiles.smeltery;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.FluidHandlerRecipe;
@@ -198,7 +197,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         for (FluidStack fluidStack : mapRecipes.getValue()) {
                             this.fluidManager[0].fillFluid(fluidStack);
                         }
-                        this.fluidManager[0].drainFluid(mapRecipes.getKey(),  fluidTanks1.get(list.get(0)));
+                        this.fluidManager[0].drainFluid(mapRecipes.getKey(), fluidTanks1.get(list.get(0)));
                         break;
                     }
 
@@ -307,7 +306,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
     @Override
     public void updateEntityClient() {
         super.updateEntityClient();
-        if (this.full && this.listTank.isEmpty()){
+        if (this.full && this.listTank.isEmpty()) {
             updateAfterAssembly();
         }
     }
@@ -357,7 +356,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
         return new GuiSmelteryController(getGuiContainer(var1));
     }
 
-
+    private Integer prevIndex;
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -400,6 +399,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                 if (this.getWorld().getWorldTime() % 20 == 0) {
                     if (this.list.isEmpty()) {
                         this.firstTank = null;
+                        this.prevIndex = -1;
                     } else {
                         this.firstTank = this.fluidManager[0].getOutputTank().stream()
                                 .sorted((tank1, tank2) -> {
@@ -420,13 +420,14 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                                     return 0;
                                 })
                                 .collect(Collectors.toList()).get(this.list.get(0));
+                        this.prevIndex = this.list.get(0);
                     }
                 }
 
 
                 if ((casting.getFluid_handler().output() == null && this.getFirstTank() != null && this
                         .getFirstTank()
-                        .getFluidAmount() >= 1)) {
+                        .getFluidAmount() >= 1 && ( this.prevIndex == this.list.get(0)))) {
                     casting.getFluid_handler().getOutput(this.getFirstTank());
                 } else {
                     if (casting.getFluid_handler().output() != null && !casting.getFluid_handler().checkFluids()) {

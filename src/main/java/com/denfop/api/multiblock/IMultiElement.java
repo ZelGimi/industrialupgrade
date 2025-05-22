@@ -10,7 +10,7 @@ public interface IMultiElement {
         return false;
     }
 
-    default int getLevel() {
+    default int getBlockLevel() {
         return 0;
     }
 

@@ -36,7 +36,7 @@ public class TileEntityPerSecurity extends TileEntityMultiBlockElement implement
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 3;
     }
 

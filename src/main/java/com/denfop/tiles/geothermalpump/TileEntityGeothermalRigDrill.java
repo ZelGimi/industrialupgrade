@@ -7,7 +7,10 @@ import com.denfop.blocks.mechanism.BlockGeothermalPump;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 
 public class TileEntityGeothermalRigDrill extends TileEntityMultiBlockElement implements IRig {
-    public TileEntityGeothermalRigDrill(){}
+
+    public TileEntityGeothermalRigDrill() {
+    }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockGeothermalPump.geothermal_rig;

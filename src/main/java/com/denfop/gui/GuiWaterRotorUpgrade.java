@@ -64,21 +64,7 @@ public class GuiWaterRotorUpgrade extends GuiIU<ContainerWaterRotorUpgrade> {
                     112 + 33 * (this.container.base.getRotor().getIndex() / 4), 54, 32
             );
             setTexture(background);
-            drawTexturedModalRect(j + 77, k + 6, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(j + 34, k + 49, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(j + 77, k + 49, 212,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(j + 120, k + 49, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(j + 77, k + 92, 230,
-                    33, 18, 18
-            );
+          slots.drawBackground(guiLeft,guiTop);
 
         }
 

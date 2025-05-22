@@ -1,15 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.container.ContainerSteamTurbineRod;
-import com.denfop.container.ContainerWaterRotorAssembler;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiSteamTurbineRod extends GuiIU<ContainerSteamTurbineRod> {

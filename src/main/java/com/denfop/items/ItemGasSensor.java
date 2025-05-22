@@ -90,21 +90,22 @@ public class ItemGasSensor extends Item implements IModelRegister {
                             break;
 
                     }
-                    if (typeGas.getX() == 0 && typeGas.getZ() == 0)
-                    IUCore.proxy.messagePlayer(
-                            player,
-                            "X: "+(chunkPos1.getXStart()+16) + ", Y:" + (typeGas.getY()) + ", Z: " + (chunkPos1.getZStart()+16) +
-                                    " " + text
-                    );
-                    else
+                    if (typeGas.getX() == 0 && typeGas.getZ() == 0) {
                         IUCore.proxy.messagePlayer(
                                 player,
-                                "X: "+(typeGas.getX()) + ", Y: " + (typeGas.getY()) + ", Z: " + (typeGas.getZ()) + " --> " + text
+                                "X: " + (chunkPos1.getXStart() + 16) + ", Y:" + (typeGas.getY()) + ", Z: " + (chunkPos1.getZStart() + 16) +
+                                        " " + text
                         );
+                    } else {
+                        IUCore.proxy.messagePlayer(
+                                player,
+                                "X: " + (typeGas.getX()) + ", Y: " + (typeGas.getY()) + ", Z: " + (typeGas.getZ()) + " --> " + text
+                        );
+                    }
                 }
             }
         }
-        if (empty){
+        if (empty) {
             IUCore.proxy.messagePlayer(
                     player,
                     Localization.translate("iu.empty")

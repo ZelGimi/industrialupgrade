@@ -7,7 +7,7 @@ public class ContainerDefaultMultiElement extends ContainerFullInv<TileEntityMul
 
     public ContainerDefaultMultiElement(TileEntityMultiBlockElement multiBlockElement, EntityPlayer var1) {
         super(multiBlockElement, var1);
-        addSlots(multiBlockElement,var1);
+        addSlots(multiBlockElement, var1);
     }
 
     public void addSlots(TileEntityMultiBlockElement multiBlockElement, EntityPlayer var1) {

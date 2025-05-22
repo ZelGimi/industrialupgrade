@@ -1,8 +1,6 @@
 package com.denfop.componets;
 
 
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.SystemTick;
 import com.denfop.api.sytem.EnergyEvent;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.sytem.EnumTypeEvent;
@@ -13,7 +11,6 @@ import com.denfop.api.sytem.ISink;
 import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.ITile;
 import com.denfop.api.sytem.InfoTile;
-import com.denfop.api.sytem.Path;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
@@ -30,7 +27,6 @@ import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,9 +58,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public double tick;
     protected double pastEnergy;
     protected double perenergy;
+    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
+    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
     private double perenergy1;
     private double pastEnergy1;
     private double tick1;
+    private long id;
 
     public ComponentBaseEnergy(EnergyType type, TileEntityInventory parent, double capacity) {
         this(type, parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
@@ -245,7 +244,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
         this.storage = is.readDouble();
     }
 
-
     public double getCapacity() {
         return this.capacity;
     }
@@ -264,7 +262,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public double getFillRatio() {
         return this.storage / this.capacity;
     }
-
 
     public double addEnergy(double amount) {
         amount = Math.min(this.capacity - this.storage, amount);
@@ -291,13 +288,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
             this.parent.getWorld().spawnEntity(entityItem);
         }
     }
+
     public Map<EnumFacing, ITile> getConductors() {
         return energyConductorMap;
     }
 
-    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
-
-    public void RemoveTile(EnergyType type,ITile tile, final EnumFacing facing1) {
+    public void RemoveTile(EnergyType type, ITile tile, final EnumFacing facing1) {
         if (!this.parent.getWorld().isRemote) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<ITile>> iter = validReceivers.iterator();
@@ -311,9 +307,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
         }
     }
 
-    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
-
-
     public List<InfoTile<ITile>> getValidReceivers() {
         return validReceivers;
     }
@@ -325,6 +318,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
         }
     }
+
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
     }
@@ -361,15 +355,14 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public void setSourceTier(int tier) {
         this.sourceTier = tier;
     }
+
     public long getIdNetwork() {
         return this.id;
     }
 
-
     public void setId(final long id) {
         this.id = id;
     }
-    private long id;
 
     public void setEnabled(boolean enabled) {
         this.receivingDisabled = this.sendingSidabled = !enabled;
@@ -448,7 +441,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     private class EnergyNetDelegateDual extends ComponentBaseEnergy.EnergyNetDelegate implements IDual {
+
         List<ISource> systemTicks = new LinkedList<>();
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        private int hashCode;
+
         private EnergyNetDelegateDual() {
             super();
         }
@@ -513,7 +511,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
             ComponentBaseEnergy.this.perenergy1 += setEnergy;
         }
 
-
         @Override
         public void addTick1(final double tick) {
             ComponentBaseEnergy.this.tick1 = tick;
@@ -529,7 +526,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
             ComponentBaseEnergy.this.useEnergy(amount);
         }
-
 
         @Override
         public double getPerEnergy() {
@@ -579,17 +575,16 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public long getIdNetwork() {
             return ComponentBaseEnergy.this.getIdNetwork();
         }
-        int hashCodeSource;
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
-        }
 
         @Override
         public int getHashCodeSource() {
             return hashCodeSource;
         }
 
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
 
         public void setId(final long id) {
             ComponentBaseEnergy.this.setId(id);
@@ -597,12 +592,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
         @Override
         public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
-            ComponentBaseEnergy.this.AddTile(type,tile, dir);
+            ComponentBaseEnergy.this.AddTile(type, tile, dir);
         }
 
         @Override
-        public void RemoveTile(EnergyType type,final ITile tile, final EnumFacing dir) {
-            ComponentBaseEnergy.this.RemoveTile(type,tile, dir);
+        public void RemoveTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type, tile, dir);
         }
 
         @Override
@@ -610,26 +605,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
             return ComponentBaseEnergy.this.energyConductorMap;
         }
 
-
         @Override
         public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
             return validReceivers;
         }
 
-        private int hashCode;
-        boolean hasHashCode = false;
 
-
-        @Override
-        public int hashCode() {
-            if (!hasHashCode) {
-                hasHashCode = true;
-                this.hashCode = ComponentBaseEnergy.this.parent.hashCode();
-                return hashCode;
-            } else {
-                return hashCode;
-            }
-        }
 
         @Override
         public TileEntity getTile() {
@@ -639,6 +620,11 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     private class EnergyNetDelegateSink extends ComponentBaseEnergy.EnergyNetDelegate implements ISink {
+
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        List<ISource> systemTicks = new LinkedList<>();
+        private int hashCode;
 
         private EnergyNetDelegateSink() {
             super();
@@ -651,13 +637,9 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public boolean acceptsFrom(IEmitter emitter, EnumFacing dir) {
             return ComponentBaseEnergy.this.sinkDirections.contains(dir);
         }
+
         public long getIdNetwork() {
             return ComponentBaseEnergy.this.getIdNetwork();
-        }
-        int hashCodeSource;
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -666,10 +648,14 @@ public class ComponentBaseEnergy extends AbstractComponent {
         }
 
         @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        @Override
         public List<ISource> getEnergyTickList() {
             return systemTicks;
         }
-
 
         public void setId(final long id) {
             ComponentBaseEnergy.this.setId(id);
@@ -677,12 +663,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
         @Override
         public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
-            ComponentBaseEnergy.this.AddTile(type,tile, dir);
+            ComponentBaseEnergy.this.AddTile(type, tile, dir);
         }
 
         @Override
-        public void RemoveTile(EnergyType type,final ITile tile, final EnumFacing dir) {
-            ComponentBaseEnergy.this.RemoveTile(type,tile, dir);
+        public void RemoveTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type, tile, dir);
         }
 
         @Override
@@ -690,26 +676,13 @@ public class ComponentBaseEnergy extends AbstractComponent {
             return ComponentBaseEnergy.this.energyConductorMap;
         }
 
-
         @Override
         public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
             return validReceivers;
         }
 
-        private int hashCode;
-        boolean hasHashCode = false;
 
 
-        @Override
-        public int hashCode() {
-            if (!hasHashCode) {
-                hasHashCode = true;
-                this.hashCode = ComponentBaseEnergy.this.parent.hashCode();
-                return hashCode;
-            } else {
-                return hashCode;
-            }
-        }
         @Override
         public @NotNull BlockPos getBlockPos() {
             return ComponentBaseEnergy.this.parent.getPos();
@@ -766,11 +739,14 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public boolean isSink() {
             return true;
         }
-        List<ISource> systemTicks = new LinkedList<>();
 
     }
 
     private class EnergyNetDelegateSource extends ComponentBaseEnergy.EnergyNetDelegate implements ISource {
+
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        private int hashCode;
 
         private EnergyNetDelegateSource() {
             super();
@@ -783,13 +759,9 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public boolean emitsTo(IAcceptor receiver, EnumFacing dir) {
             return ComponentBaseEnergy.this.sourceDirections.contains(dir);
         }
+
         public long getIdNetwork() {
             return ComponentBaseEnergy.this.getIdNetwork();
-        }
-        int hashCodeSource;
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -797,8 +769,10 @@ public class ComponentBaseEnergy extends AbstractComponent {
             return hashCodeSource;
         }
 
-
-
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
 
         public void setId(final long id) {
             ComponentBaseEnergy.this.setId(id);
@@ -806,12 +780,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
         @Override
         public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
-            ComponentBaseEnergy.this.AddTile(type,tile, dir);
+            ComponentBaseEnergy.this.AddTile(type, tile, dir);
         }
 
         @Override
-        public void RemoveTile(EnergyType type,final ITile tile, final EnumFacing dir) {
-            ComponentBaseEnergy.this.RemoveTile(type,tile, dir);
+        public void RemoveTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type, tile, dir);
         }
 
         @Override
@@ -819,26 +793,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
             return ComponentBaseEnergy.this.energyConductorMap;
         }
 
-
         @Override
         public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
             return validReceivers;
         }
 
-        private int hashCode;
-        boolean hasHashCode = false;
 
-
-        @Override
-        public int hashCode() {
-            if (!hasHashCode) {
-                hasHashCode = true;
-                this.hashCode = ComponentBaseEnergy.this.parent.hashCode();
-                return hashCode;
-            } else {
-                return hashCode;
-            }
-        }
 
         @Override
         public @NotNull BlockPos getBlockPos() {

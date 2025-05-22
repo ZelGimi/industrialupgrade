@@ -1,8 +1,6 @@
 package com.denfop.integration.jei.bee;
 
 
-import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.mechanism.BlockHive;
 import net.minecraft.item.ItemStack;
@@ -41,10 +39,10 @@ public class BeeHandler {
     }
 
     public static void initRecipes() {
-        for ( IMultiTileBlock container : BlockHive.values()) {
+        for (IMultiTileBlock container : BlockHive.values()) {
             addRecipe(
-                    container.getDummyTe().getPickBlock(null,null),
-                    container.getDummyTe().getSelfDrops(0,false).get(0)
+                    container.getDummyTe().getPickBlock(null, null),
+                    container.getDummyTe().getSelfDrops(0, false).get(0)
             );
 
 

@@ -231,7 +231,7 @@ public class TileEntitySteamPressureConverter extends TileElectricMachine implem
         if (this.getWorld().getWorldTime() % 400 == 0) {
             if (this.fluidTank.getFluid() != null && this.fluidTank.getFluid().amount >= maxpressure) {
                 this.fluidTank.drain(maxpressure, true);
-            }else{
+            } else {
                 this.pressure.useEnergy(1);
             }
         }

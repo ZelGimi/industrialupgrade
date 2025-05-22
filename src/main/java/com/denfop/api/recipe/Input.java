@@ -53,7 +53,7 @@ public class Input implements IInput {
     @Override
     public List<ItemStack> getStackInputs() {
         List<ItemStack> stacks = new LinkedList<>();
-        for (IInputItemStack itemStack : list){
+        for (IInputItemStack itemStack : list) {
             stacks.add(itemStack.getInputs().get(0));
         }
         return new ArrayList<>(stacks);

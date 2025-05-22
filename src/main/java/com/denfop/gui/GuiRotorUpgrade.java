@@ -15,7 +15,7 @@ import java.io.IOException;
 public class GuiRotorUpgrade extends GuiIU<ContainerRotorUpgrade> {
 
     public final ContainerRotorUpgrade container;
-    public final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotorupgrade.png");
+    public final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotorsupgrade_jei.png");
     public final ResourceLocation rotors_gui = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotors.png");
 
     public GuiRotorUpgrade(ContainerRotorUpgrade guiContainer) {
@@ -67,22 +67,10 @@ public class GuiRotorUpgrade extends GuiIU<ContainerRotorUpgrade> {
             drawTexturedModalRect(j + 85, k + 43, 55 * (this.container.base.getRotor().getIndex() % 4),
                     112 + 33 * (this.container.base.getRotor().getIndex() / 4), 54, 32
             );
+
+            slots.drawBackground(guiLeft,guiTop);
             setTexture(background);
-            drawTexturedModalRect(j + 77, k + 6, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(j + 34, k + 49, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(j + 77, k + 49, 212,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(j + 120, k + 49, 230,
-                    33, 18, 18
-            );
-            drawTexturedModalRect(j + 77, k + 92, 230,
-                    33, 18, 18
-            );
+
 
         }
 

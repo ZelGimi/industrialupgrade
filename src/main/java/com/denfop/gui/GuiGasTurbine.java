@@ -8,9 +8,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentButton;
-import com.denfop.container.ContainerChemicalController;
 import com.denfop.container.ContainerGasTurbineController;
-import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantController;
 import com.denfop.tiles.gasturbine.TileEntityGasTurbineController;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -63,7 +61,7 @@ public class GuiGasTurbine extends GuiIU<ContainerGasTurbineController> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-120, mouseY, text);
+            this.drawTooltip(mouseX - 120, mouseY, text);
         }
     }
 

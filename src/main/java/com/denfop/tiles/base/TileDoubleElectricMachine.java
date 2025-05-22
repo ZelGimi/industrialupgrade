@@ -11,8 +11,13 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.*;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
+import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
+import com.denfop.componets.HeatComponent;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
@@ -202,7 +207,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     public EnumTypeAudio getTypeAudio() {

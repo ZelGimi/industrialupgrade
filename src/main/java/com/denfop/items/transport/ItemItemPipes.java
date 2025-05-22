@@ -104,7 +104,7 @@ public class ItemItemPipes extends Item implements ISubItem<ItemType>, IModelReg
             final ITooltipFlag flagIn
     ) {
         final ItemType type = ItemType.values()[stack.getItemDamage()];
-        tooltip.add("Maximum: " +type.getMax() + (type.isItem() ? " item/t" : " mb/t"));
+        tooltip.add("Maximum: " + type.getMax() + (type.isItem() ? " item/t" : " mb/t"));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 

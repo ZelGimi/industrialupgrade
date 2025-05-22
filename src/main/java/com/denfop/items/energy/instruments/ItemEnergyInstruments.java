@@ -595,8 +595,8 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
         final int level = this.getLevel(par1ItemStack);
         final int maxLevel = this.getMaxLevel(par1ItemStack);
         final int experience = this.getExperience(par1ItemStack);
-        par3List.add(Localization.translate("iu.tier")+" "+  level);
-        par3List.add(Localization.translate("iu.space_colony_experience")+  experience + "/" + maxLevel);
+        par3List.add(Localization.translate("iu.tier") + " " + level);
+        par3List.add(Localization.translate("iu.space_colony_experience") + experience + "/" + maxLevel);
         super.addInformation(par1ItemStack, worldIn, par3List, flagIn);
     }
 

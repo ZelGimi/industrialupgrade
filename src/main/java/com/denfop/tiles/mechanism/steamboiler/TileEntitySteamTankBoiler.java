@@ -4,7 +4,6 @@ import com.denfop.IUItem;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockSteamBoiler;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
@@ -70,7 +69,7 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
 
         CustomPacketBuffer customPacketBuffer = super.writePacket();
         try {
-            EncoderHandler.encode(customPacketBuffer,tank);
+            EncoderHandler.encode(customPacketBuffer, tank);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -23,6 +23,22 @@ public class ColonyEntertainment extends Building implements IEntertainment {
         }
     }
 
+    public ColonyEntertainment(CustomPacketBuffer packetBuffer, Colony colonies) {
+        super(colonies);
+        int id = packetBuffer.readByte();
+        this.type = EnumEntertainment.getID(id);
+        this.people = packetBuffer.readByte();
+        this.getColony().addBuilding(this);
+    }
+
+    public ColonyEntertainment(final NBTTagCompound tag, IColony colonies) {
+        super(colonies);
+        int id = tag.getByte("id");
+        this.type = EnumEntertainment.getID(id);
+        this.people = tag.getByte("people");
+        this.getColony().addBuilding(this);
+    }
+
     @Override
     public boolean isIgnore() {
         return true;
@@ -43,12 +59,12 @@ public class ColonyEntertainment extends Building implements IEntertainment {
 
     }
 
-    public ColonyEntertainment(CustomPacketBuffer packetBuffer, Colony colonies) {
-        super(colonies);
-        int id = packetBuffer.readByte();
-        this.type = EnumEntertainment.getID(id);
-        this.people = packetBuffer.readByte();
-        this.getColony().addBuilding(this);
+    @Override
+    public NBTTagCompound writeTag(final NBTTagCompound tag) {
+        NBTTagCompound nbtTagCompound = super.writeTag(tag);
+        nbtTagCompound.setByte("people", people);
+        nbtTagCompound.setByte("id", (byte) this.type.ordinal());
+        return nbtTagCompound;
     }
 
     @Override
@@ -62,14 +78,6 @@ public class ColonyEntertainment extends Building implements IEntertainment {
     @Override
     public int getMinLevelColony() {
         return type.getLevel();
-    }
-
-    public ColonyEntertainment(final NBTTagCompound tag, IColony colonies) {
-        super(colonies);
-        int id = tag.getByte("id");
-        this.type = EnumEntertainment.getID(id);
-        this.people = tag.getByte("people");
-        this.getColony().addBuilding(this);
     }
 
     @Override

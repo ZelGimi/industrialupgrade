@@ -20,7 +20,7 @@ public class TileEntityPerCasing extends TileEntityMultiBlockElement implements 
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 3;
     }
 

@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityBioGenerator;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamBioGenerator;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamSqueezer;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerElectricBioGenerator extends ContainerFullInv<TileEntityBioGenerator> {

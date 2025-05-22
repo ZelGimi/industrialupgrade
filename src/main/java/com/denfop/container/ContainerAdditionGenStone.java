@@ -2,7 +2,6 @@ package com.denfop.container;
 
 
 import com.denfop.tiles.mechanism.TileBaseAdditionGenStone;
-import com.denfop.tiles.mechanism.TileBaseGenStone;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerAdditionGenStone extends ContainerFullInv<TileBaseAdditionGenStone> {

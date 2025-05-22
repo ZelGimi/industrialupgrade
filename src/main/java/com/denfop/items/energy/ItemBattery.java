@@ -196,7 +196,7 @@ public class ItemBattery extends BaseEnergyItem implements IModelRegister {
                 }
 
             } else if (mode == 3) {
-                if (!p_77663_2_.isRemote&& entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
+                if (!p_77663_2_.isRemote && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.armorInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.armorInventory.get(i);

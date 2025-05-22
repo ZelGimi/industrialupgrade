@@ -5,7 +5,6 @@ import com.denfop.IUCore;
 import com.denfop.IUPotion;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IHazmatLike;
-import com.denfop.damagesource.IUDamageSource;
 import com.denfop.items.block.ItemBlockIU;
 import com.denfop.register.Register;
 import net.minecraft.block.Block;

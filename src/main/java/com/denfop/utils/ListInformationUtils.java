@@ -2,14 +2,11 @@ package com.denfop.utils;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockMoreMachine;
 import com.denfop.blocks.mechanism.BlockMoreMachine1;
 import com.denfop.blocks.mechanism.BlockMoreMachine2;
 import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.recipes.BaseRecipes;
 import com.denfop.tiles.base.EnumMultiMachine;
 import net.minecraft.item.ItemStack;
 

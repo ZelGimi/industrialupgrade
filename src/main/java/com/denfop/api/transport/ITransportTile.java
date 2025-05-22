@@ -1,6 +1,5 @@
 package com.denfop.api.transport;
 
-import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.sytem.InfoTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -18,6 +17,7 @@ public interface ITransportTile<T, E> {
     List<InfoTile<ITransportTile>> getValidReceivers();
 
     TileEntity getTileEntity();
+
     long getIdNetwork();
 
     void setId(long id);
@@ -28,9 +28,10 @@ public interface ITransportTile<T, E> {
 
     Map<EnumFacing, ITransportTile> getTiles();
 
-    int hashCode();
+
+
+    int getHashCodeSource();
 
     void setHashCodeSource(int hashCode);
 
-    int getHashCodeSource();
 }

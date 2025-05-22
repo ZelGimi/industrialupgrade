@@ -3,15 +3,14 @@ package com.denfop.tiles.mechanism.generator.energy.fluid;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.componets.Energy;
 import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerPetrolGenerator;
@@ -75,7 +74,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
         this.energy = this.addComponent(Energy.asBasicSource(
                 this,
                 (double) 5000000,
-               3
+                3
         ).addManagedSlot(chargeSlot));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(
                 FluidName.fluidbenz.getInstance(), FluidName.fluidpetrol90.getInstance(), FluidName.fluidpetrol95.getInstance()

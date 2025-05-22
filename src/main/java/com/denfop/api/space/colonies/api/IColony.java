@@ -26,10 +26,12 @@ public interface IColony {
 
     boolean isAuto();
 
+    void setAuto(boolean auto);
+
     List<ItemStack> getStacksFromStorage();
 
     List<FluidStack> getFluidsFromStorage();
-    void setAuto(boolean auto);
+
     int getProtection();
 
     int getLevel();
@@ -63,6 +65,7 @@ public interface IColony {
     int getMaxOxygen();
 
     byte getTick();
+
     List<IBuildingHouse> getBuildingHouseList();
 
     List<IColonyMiningFactory> getBuildingMiningList();

@@ -4,15 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerApothecaryBee;
-import com.denfop.container.ContainerChickenFarm;
-import com.denfop.container.ContainerCowFarm;
-import com.denfop.container.ContainerPigFarm;
-import com.denfop.container.ContainerPlantFertilizer;
-import com.denfop.container.ContainerWeeder;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiApothecaryBee extends GuiIU<ContainerApothecaryBee> {
@@ -24,6 +16,7 @@ public class GuiApothecaryBee extends GuiIU<ContainerApothecaryBee> {
                 new Component<>(this.container.base.energy)
         ));
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);

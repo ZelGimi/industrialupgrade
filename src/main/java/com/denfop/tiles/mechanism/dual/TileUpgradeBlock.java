@@ -108,12 +108,12 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                         ItemStack stack = this.outputSlot.get();
                         stack.setTagCompound(nbt1);
                         NBTTagCompound nbt = ModUtils.nbt(stack);
-                       final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack);
+                        final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack);
                         NBTTagList modesTagList = nbt.getTagList("modes", 10);
                         NBTTagCompound upgrade = new NBTTagCompound();
-                        upgrade.setInteger("index",module.getItemDamage());
+                        upgrade.setInteger("index", module.getItemDamage());
                         modesTagList.appendTag(upgrade);
-                        nbt.setTag("modes",modesTagList);
+                        nbt.setTag("modes", modesTagList);
                         stack.setItemDamage(Damage);
                         ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
                         ElectricItem.manager.use(stack, 1, null);
@@ -137,7 +137,7 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                             NBTTagString nbtTagString = new NBTTagString(temp);
                             tagList.appendTag(nbtTagString);
                         }
-                        nbt.setTag("blacklist",tagList);
+                        nbt.setTag("blacklist", tagList);
                         stack.setItemDamage(Damage);
                         ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
                         ElectricItem.manager.use(stack, 1, null);

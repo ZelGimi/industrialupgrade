@@ -90,10 +90,12 @@ public class RadiationSystem {
     public void update(EntityPlayer player) {
         new PacketRadiation(this.radiationList, player);
     }
-    public  void clear(){
+
+    public void clear() {
         this.map.clear();
         this.radiationList.clear();
     }
+
     public void addRadiationWihoutUpdate(Radiation radiation) {
         if (!this.map.containsKey(radiation.getPos())) {
             this.map.put(radiation.getPos(), radiation);

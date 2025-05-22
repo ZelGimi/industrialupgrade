@@ -19,7 +19,7 @@ public class TileEntityAdvOutputPort extends TileEntityOutputFluid implements IO
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 1;
     }
 

@@ -100,8 +100,9 @@ public class TileAdvSteamQuarry extends TileEntityInventory {
             preCancelEvent = true;
         }
         IBlockState state = world.getBlockState(pos);
-        if (state.getMaterial() != Material.AIR && state.getBlock().getHarvestLevel(state) < 0)
+        if (state.getMaterial() != Material.AIR && state.getBlock().getHarvestLevel(state) < 0) {
             return -1;
+        }
         if (gameType.hasLimitedInteractions()) {
             if (gameType == GameType.SPECTATOR) {
                 preCancelEvent = true;

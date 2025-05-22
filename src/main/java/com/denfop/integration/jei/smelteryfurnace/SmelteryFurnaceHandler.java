@@ -47,8 +47,9 @@ public class SmelteryFurnaceHandler {
             ItemStack input = ItemStack.EMPTY;
             try {
                 input = baseMachineRecipe.input.getInputs().get(0).getInputs().get(0);
-            }catch (Exception e){
-                e.printStackTrace();;
+            } catch (Exception e) {
+                e.printStackTrace();
+                ;
             }
             FluidStack outputFluid = baseFluidMachineRecipe.output_fluid.get(0);
 

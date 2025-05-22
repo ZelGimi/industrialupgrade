@@ -1,8 +1,6 @@
 package com.denfop.tiles.mechanism.steamturbine.pressure;
 
-import com.denfop.container.ContainerCompressor;
 import com.denfop.container.ContainerSteamTurbinePressure;
-import com.denfop.gui.GuiCompressor;
 import com.denfop.gui.GuiSteamTurbinePressure;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -26,7 +24,7 @@ public class TileEntityBaseSteamTurbinePressure extends TileEntityMultiBlockElem
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
 

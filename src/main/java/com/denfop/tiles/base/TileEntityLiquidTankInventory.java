@@ -7,8 +7,6 @@ import com.denfop.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
             }
         }
 
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

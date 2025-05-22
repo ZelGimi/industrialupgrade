@@ -1,8 +1,6 @@
 package com.denfop.integration.jei.upgraderover;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.integration.jei.JEICompat;
 import mezz.jei.api.IGuiHelper;
@@ -14,7 +12,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;

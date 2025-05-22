@@ -1,8 +1,6 @@
 package com.denfop.events.client;
 
-import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.gui.GuiIU;
-import com.denfop.items.relocator.RelocatorNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,7 +15,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -25,11 +22,25 @@ import java.util.function.Function;
 
 public class GlobalRenderManager {
 
+    public static long tick = 0;
+    public static Map<Integer, Map<BlockPos, Function>> globalRenders = new HashMap<>();
+
     public GlobalRenderManager() {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static long tick = 0;
+    public static void addRender(World world, BlockPos pos, Function globalRender) {
+        Map<BlockPos, Function> map = globalRenders.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
+        if (!map.containsKey(pos)) {
+            map.put(pos, globalRender);
+        }
+    }
+
+    public static void removeRender(World world, BlockPos pos) {
+        Map<BlockPos, Function> map = globalRenders.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
+        map.remove(pos);
+    }
+
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         if ((event.getWorld()).isRemote) {
@@ -37,6 +48,7 @@ public class GlobalRenderManager {
         }
         globalRenders.getOrDefault(event.getWorld().provider.getDimension(), new HashMap<>()).clear();
     }
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onWorldTick(TickEvent.PlayerTickEvent event) {
@@ -63,7 +75,7 @@ public class GlobalRenderManager {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.player;
 
-        if (player == null || mc.world == null ) {
+        if (player == null || mc.world == null) {
             return;
         }
         try {
@@ -76,8 +88,9 @@ public class GlobalRenderManager {
 
                         GlStateManager.pushMatrix();
                         GlStateManager.translate(-x, -y, -z);
-                        if (mc.world.getWorldTime() % 24000 > 13000)
+                        if (mc.world.getWorldTime() % 24000 > 13000) {
                             GlStateManager.enableLighting();
+                        }
                         GlStateManager.enableDepth();
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -92,20 +105,6 @@ public class GlobalRenderManager {
             System.out.println(e.getMessage());
         }
         ;
-    }
-
-    public static Map<Integer, Map<BlockPos, Function>> globalRenders = new HashMap<>();
-
-    public static void addRender(World world, BlockPos pos, Function globalRender) {
-        Map<BlockPos, Function> map = globalRenders.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
-        if (!map.containsKey(pos)) {
-            map.put(pos, globalRender);
-        }
-    }
-
-    public static void removeRender(World world, BlockPos pos) {
-        Map<BlockPos, Function> map = globalRenders.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
-        map.remove(pos);
     }
 
 }

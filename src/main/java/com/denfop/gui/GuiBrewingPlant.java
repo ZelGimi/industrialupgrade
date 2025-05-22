@@ -5,7 +5,6 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerBrewingPlant;
-import com.denfop.container.ContainerLaserPolisher;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiBrewingPlant extends GuiIU<ContainerBrewingPlant> {

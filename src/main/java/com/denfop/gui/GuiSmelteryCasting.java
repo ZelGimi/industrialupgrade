@@ -1,10 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.FluidItem;
-import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerSmelteryCasting;
 import com.denfop.tiles.smeltery.TileEntitySmelteryController;
 import com.denfop.utils.ModUtils;
@@ -22,7 +19,9 @@ public class GuiSmelteryCasting extends GuiIU<ContainerSmelteryCasting> {
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
-        new AdvArea(this,69,34,100,52).withTooltip(ModUtils.getString(this.getContainer().base.progress.getBar()*100)+"%").drawForeground(par1, par2);
+        new AdvArea(this, 69, 34, 100, 52)
+                .withTooltip(ModUtils.getString(this.getContainer().base.progress.getBar() * 100) + "%")
+                .drawForeground(par1, par2);
         if (container.base.getMain() != null) {
             TileEntitySmelteryController controller = (TileEntitySmelteryController) container.base.getMain();
             if (controller.getFirstTank() != null) {
@@ -42,8 +41,15 @@ public class GuiSmelteryCasting extends GuiIU<ContainerSmelteryCasting> {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         this.bindTexture();
         GlStateManager.color(1, 1, 1, 1);
-        drawTexturedModalRect(this.guiLeft + 69, guiTop + 34, 177, 1, (int) (this.getContainer().base.progress.getBar() * 32), 20);
-         if (container.base.getMain() != null) {
+        drawTexturedModalRect(
+                this.guiLeft + 69,
+                guiTop + 34,
+                177,
+                1,
+                (int) (this.getContainer().base.progress.getBar() * 32),
+                20
+        );
+        if (container.base.getMain() != null) {
             TileEntitySmelteryController controller = (TileEntitySmelteryController) container.base.getMain();
             if (controller.getFirstTank() != null) {
                 new FluidItem(this, 49, 34, controller.getFirstTank().getFluid()).drawBackground(

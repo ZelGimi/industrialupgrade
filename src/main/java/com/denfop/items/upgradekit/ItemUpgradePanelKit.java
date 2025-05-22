@@ -6,33 +6,10 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.integration.avaritia.TileInfinitySolarPanel;
-import com.denfop.integration.avaritia.TileNeutronSolarPanel;
-import com.denfop.integration.botania.TileElementumSolarPanel;
-import com.denfop.integration.botania.TileManasteelSolarPanel;
-import com.denfop.integration.botania.TileTerrasteelSolarPanel;
-import com.denfop.integration.de.TileAwakenedSolarPanel;
-import com.denfop.integration.de.TileChaoticSolarPanel;
-import com.denfop.integration.de.TileDraconianSolarPanel;
-import com.denfop.integration.thaumcraft.TileThaumSolarPanel;
-import com.denfop.integration.thaumcraft.TileVoidSolarPanel;
 import com.denfop.items.resource.ItemSubTypes;
 import com.denfop.register.Register;
-import com.denfop.tiles.mechanism.generator.energy.TileEntitySolarGenerator;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import com.denfop.tiles.panels.overtime.TileBarionSolarPanel;
-import com.denfop.tiles.panels.overtime.TileDiffractionSolarPanel;
-import com.denfop.tiles.panels.overtime.TileGravitonSolarPanel;
-import com.denfop.tiles.panels.overtime.TileHadronSolarPanel;
-import com.denfop.tiles.panels.overtime.TileHybridSolarPanel;
-import com.denfop.tiles.panels.overtime.TilePhotonicSolarPanel;
-import com.denfop.tiles.panels.overtime.TileProtonSolarPanel;
-import com.denfop.tiles.panels.overtime.TileQuantumSolarPanel;
-import com.denfop.tiles.panels.overtime.TileQuarkSolarPanel;
-import com.denfop.tiles.panels.overtime.TileSingularSolarPanel;
-import com.denfop.tiles.panels.overtime.TileSpectralSolarPanel;
-import com.denfop.tiles.panels.overtime.TileUltimateSolarPanel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -120,7 +97,7 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
                     return EnumActionResult.PASS;
                 }
                 EnumSolarPanels oldpanel = tile.getPanels();
-                EnumSolarPanels kit = EnumSolarPanels.getFromID(meta+1);
+                EnumSolarPanels kit = EnumSolarPanels.getFromID(meta + 1);
                 if (kit.solarold != null && !kit.solarold.equals(oldpanel)) {
                     return EnumActionResult.PASS;
                 }
@@ -138,8 +115,9 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
                                 pos.getZ() + 1
                         )
                 );
-                for (EntityItem item : items)
+                for (EntityItem item : items) {
                     item.setDead();
+                }
                 ItemStack stack1 = new ItemStack(kit1.solarpanel_new.block, 1, kit1.solarpanel_new.meta);
 
                 EntityItem item = new EntityItem(world);

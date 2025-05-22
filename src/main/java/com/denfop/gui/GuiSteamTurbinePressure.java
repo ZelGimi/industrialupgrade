@@ -25,7 +25,7 @@ public class GuiSteamTurbinePressure extends GuiIU<ContainerSteamTurbinePressure
                     }
                 })
         ));
-        this.addComponent(new GuiComponent(this, 83, 54 ,  EnumTypeComponent.MINUS_BUTTON,
+        this.addComponent(new GuiComponent(this, 83, 54, EnumTypeComponent.MINUS_BUTTON,
                 new Component<>(new ComponentButton(this.container.base, 1) {
                     @Override
                     public String getText() {

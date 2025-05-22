@@ -375,7 +375,7 @@ public class EncoderHandler {
                 os.writeBytes(radiation.writePacket());
                 break;
             case FAKE_PLANET:
-                encode(os,((FakePlanet)o).writeNBTTagCompound(new NBTTagCompound()));
+                encode(os, ((FakePlanet) o).writeNBTTagCompound(new NBTTagCompound()));
                 break;
 
 

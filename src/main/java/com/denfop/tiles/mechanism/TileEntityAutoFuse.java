@@ -118,6 +118,7 @@ public class TileEntityAutoFuse extends TileEntityInventory {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.fuse && !this.slotBomb.isEmpty()) {

@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class TileSteamMultiMachine extends TileEntityInventory implements
-        IAudioFixer, IUpdatableTileEvent, IHasRecipe,ISteamMechanism {
+        IAudioFixer, IUpdatableTileEvent, IHasRecipe, ISteamMechanism {
 
 
     public final int type;
@@ -115,7 +115,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_length") + this.multi_process.operationLength);
         }
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
 
@@ -146,7 +146,14 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
                 this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
             } else if (soundEvent == 1) {
                 new PacketStopSound(getWorld(), this.pos);
-                this.getWorld().playSound(null, this.pos, EnumSound.interruptone_steam.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+                this.getWorld().playSound(
+                        null,
+                        this.pos,
+                        EnumSound.interruptone_steam.getSoundEvent(),
+                        SoundCategory.BLOCKS,
+                        1F,
+                        1
+                );
             } else {
                 new PacketStopSound(getWorld(), this.pos);
             }
@@ -302,9 +309,6 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
 
 
     }
-
-
-
 
 
     public int getMode() {

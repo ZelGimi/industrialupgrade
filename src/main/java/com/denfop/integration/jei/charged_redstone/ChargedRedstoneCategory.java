@@ -2,12 +2,9 @@ package com.denfop.integration.jei.charged_redstone;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.integration.jei.JEICompat;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
@@ -70,7 +67,6 @@ public class ChargedRedstoneCategory extends Gui implements IRecipeCategory<Char
             final ChargedRedstoneWrapper recipes,
             @Nonnull final IIngredients ingredients
     ) {
-
 
 
     }

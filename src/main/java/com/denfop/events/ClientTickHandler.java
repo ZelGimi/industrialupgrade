@@ -159,7 +159,7 @@ public class ClientTickHandler {
                         ));
                     }
                     if (entityClientPlayer.getEntityWorld().getWorldTime() % 20 == 0) {
-                        entityClientPlayer.playSound(EnumSound.low_radiation.getSoundEvent(), 10, 1);
+                        entityClientPlayer.playSound(EnumSound.low_radiation.getSoundEvent(), 1, 1);
                     }
                     mc.ingameGUI.drawTexturedModalRect(0, 10, 0, 0, 256, 256);
                 } else {
@@ -188,7 +188,7 @@ public class ClientTickHandler {
                             ));
                         }
                         if (entityClientPlayer.getEntityWorld().getWorldTime() % 20 == 0) {
-                            entityClientPlayer.playSound(EnumSound.low_radiation.getSoundEvent(), 10, 1);
+                            entityClientPlayer.playSound(EnumSound.low_radiation.getSoundEvent(), 1, 1);
                         }
                         mc.ingameGUI.drawTexturedModalRect(0, 10, 0, 0, 256, 256);
                     } else if (radiation.getLevel() == EnumLevelRadiation.DEFAULT) {
@@ -215,7 +215,7 @@ public class ClientTickHandler {
                             ));
                         }
                         if (entityClientPlayer.getEntityWorld().getWorldTime() % 20 == 0) {
-                            entityClientPlayer.playSound(EnumSound.default_radiation.getSoundEvent(), 10, 1);
+                            entityClientPlayer.playSound(EnumSound.default_radiation.getSoundEvent(), 1, 1);
                         }
                         mc.ingameGUI.drawTexturedModalRect(0, 10, 0, 0, 256, 256);
                     } else if (radiation.getLevel() == EnumLevelRadiation.MEDIUM) {
@@ -243,7 +243,7 @@ public class ClientTickHandler {
                             ));
                         }
                         if (entityClientPlayer.getEntityWorld().getWorldTime() % 20 == 0) {
-                            entityClientPlayer.playSound(EnumSound.medium_radiation.getSoundEvent(), 10, 1);
+                            entityClientPlayer.playSound(EnumSound.medium_radiation.getSoundEvent(), 1, 1);
                         }
                         mc.ingameGUI.drawTexturedModalRect(0, 10, 0, 0, 256, 256);
                     } else if (radiation.getLevel() == EnumLevelRadiation.HIGH) {
@@ -270,7 +270,7 @@ public class ClientTickHandler {
                             ));
                         }
                         if (entityClientPlayer.getEntityWorld().getWorldTime() % 30 == 0) {
-                            entityClientPlayer.playSound(EnumSound.high_radiation.getSoundEvent(), 10, 1);
+                            entityClientPlayer.playSound(EnumSound.high_radiation.getSoundEvent(), 1, 1);
                         }
                         mc.ingameGUI.drawTexturedModalRect(0, 10, 0, 0, 256, 256);
                     } else if (radiation.getLevel() == EnumLevelRadiation.VERY_HIGH) {
@@ -298,7 +298,7 @@ public class ClientTickHandler {
                             ));
                         }
                         if (entityClientPlayer.getEntityWorld().getWorldTime() % 30 == 0) {
-                            entityClientPlayer.playSound(EnumSound.very_high_radiation.getSoundEvent(), 10, 1);
+                            entityClientPlayer.playSound(EnumSound.very_high_radiation.getSoundEvent(), 1, 1);
                         }
                         mc.ingameGUI.drawTexturedModalRect(0, 10, 0, 0, 256, 256);
                     }

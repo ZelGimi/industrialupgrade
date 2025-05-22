@@ -54,21 +54,22 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
     public int progress;
     public MachineRecipe output;
     public int durability = 96;
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.MACERATOR);
+    public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.MACERATOR);
 
     public TileEntityMacerator() {
 
         this.inputSlotA = new InvSlotRecipes(this, "macerator", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
-                if (index == 4){
-                   int[] ids = OreDictionary.getOreIDs(itemStack);
-                   for (int i : ids){
-                       String name = OreDictionary.getOreName(i);
-                       if (name.startsWith("ore") || name.startsWith("raw"))
-                           return false;
-                   }
-                    return super.accepts(itemStack,0);
+                if (index == 4) {
+                    int[] ids = OreDictionary.getOreIDs(itemStack);
+                    for (int i : ids) {
+                        String name = OreDictionary.getOreName(i);
+                        if (name.startsWith("ore") || name.startsWith("raw")) {
+                            return false;
+                        }
+                    }
+                    return super.accepts(itemStack, 0);
                 }
                 return false;
             }
@@ -261,7 +262,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
         ItemStack stack = player.getHeldItem(hand);
         if (!this.getWorld().isRemote) {
             if (stack.isEmpty() && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output) && durability > 0) {
-                progress += (int) (4 + (data.getOrDefault(player.getUniqueID(),0.0)/10d));
+                progress += (int) (4 + (data.getOrDefault(player.getUniqueID(), 0.0) / 10d));
                 this.getCooldownTracker().setTick(10);
                 this.setActive(!this.getActive());
                 if (!this.getWorld().isRemote) {
@@ -270,8 +271,9 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
                 if (progress >= 100) {
                     this.progress = 0;
                     this.setActive(false);
-                    if (!this.getWorld().isRemote)
-                    PrimitiveHandler.addExperience(EnumPrimitive.MACERATOR,0.75,player.getUniqueID());
+                    if (!this.getWorld().isRemote) {
+                        PrimitiveHandler.addExperience(EnumPrimitive.MACERATOR, 0.75, player.getUniqueID());
+                    }
                     durability--;
                     this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                     this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());

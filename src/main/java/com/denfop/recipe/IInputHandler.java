@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.Fluid;
 public interface IInputHandler {
 
     IInputItemStack getInput(ItemStack var1);
+
     IInputItemStack getInput(ItemStack[] var1);
 
     IInputItemStack getInput(Object var1);

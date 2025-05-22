@@ -41,7 +41,6 @@ public class RoverAssemblerHandler {
     }
 
 
-
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("roverassembler")) {
             addRecipe(
@@ -62,7 +61,6 @@ public class RoverAssemblerHandler {
     public ItemStack getOutput() {
         return output.copy();
     }
-
 
 
 }

@@ -41,9 +41,11 @@ public class ItemToolCrafting extends Item implements IModelRegister {
     public String getItemStackDisplayName(ItemStack stack) {
         return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu."));
     }
+
     public String getItemStackDisplayName() {
         return I18n.translateToLocal(this.getUnlocalizedName().replace("item.", "iu."));
     }
+
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> tooltip, @NotNull ITooltipFlag advanced) {
         tooltip.add(Localization.translate("item.itemTool.tooltip.UsesLeft", getRemainingUses(stack)));

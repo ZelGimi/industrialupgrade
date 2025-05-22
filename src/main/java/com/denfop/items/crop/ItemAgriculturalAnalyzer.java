@@ -40,6 +40,16 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
         IUCore.proxy.addIModelRegister(this);
         Register.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
     }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name) {
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "tools" + "/" + name;
+
+        return new ModelResourceLocation(loc, null);
+    }
+
     public void save(ItemStack stack, EntityPlayer player) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         nbt.setBoolean("open", true);
@@ -57,6 +67,7 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
 
         return true;
     }
+
     @Override
     public void onUpdate(
             @Nonnull final ItemStack stack,
@@ -85,6 +96,7 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
             }
         }
     }
+
     @Nonnull
     public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 
@@ -102,14 +114,7 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
     public IAdvInventory getInventory(EntityPlayer player, ItemStack stack) {
         return new ItemStackAgriculturalAnalyzer(player, stack, 1);
     }
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "tools" + "/" + name;
 
-        return new ModelResourceLocation(loc, null);
-    }
     @Nonnull
     public String getUnlocalizedName() {
         return "item." + this.internalName + ".name";
@@ -133,4 +138,5 @@ public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventor
             var3.add(var4);
         }
     }
+
 }

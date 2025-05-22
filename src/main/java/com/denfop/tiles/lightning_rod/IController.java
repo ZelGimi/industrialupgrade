@@ -12,4 +12,5 @@ public interface IController extends IMainMultiBlock {
     BlockPos getBlockAntennaPos();
 
     ComponentTimer getTimer();
+
 }

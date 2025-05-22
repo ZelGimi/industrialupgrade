@@ -1,7 +1,6 @@
 package com.denfop.componets;
 
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.EnergyTick;
 import com.denfop.api.energy.IDual;
 import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.IEnergyEmitter;
@@ -71,7 +70,10 @@ public class Energy extends AbstractComponent {
     protected double pastEnergy1;
     protected double perenergy1;
     Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
     private ChunkPos chunkPos;
+    private long id;
 
     public Energy(TileEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
@@ -168,7 +170,6 @@ public class Energy extends AbstractComponent {
 
     }
 
-
     @Override
     public void updateEntityServer() {
 
@@ -221,8 +222,6 @@ public class Energy extends AbstractComponent {
         return energyConductorMap;
     }
 
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
-
     public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.parent.getWorld().isRemote) {
             this.energyConductorMap.remove(facing1);
@@ -237,16 +236,13 @@ public class Energy extends AbstractComponent {
         }
     }
 
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
-
-
     public List<InfoTile<IEnergyTile>> getValidReceivers() {
         return validReceivers;
     }
 
     public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.parent.getWorld().isRemote) {
-            if(!this.energyConductorMap.containsKey(facing1)) {
+            if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);
                 validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
             }
@@ -337,7 +333,7 @@ public class Energy extends AbstractComponent {
         return buffer;
     }
 
-    public void onNetworkUpdate(CustomPacketBuffer is)throws IOException  {
+    public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
 
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
@@ -484,7 +480,6 @@ public class Energy extends AbstractComponent {
         return this;
     }
 
-
     public void setPacketOutput(int number) {
         if (this.multiSource) {
             this.sourcePackets = number;
@@ -523,11 +518,9 @@ public class Energy extends AbstractComponent {
         return this.id;
     }
 
-
     public void setId(final long id) {
         this.id = id;
     }
-    private long id;
 
     public void setDirections(List<EnumFacing> sinkDirections, List<EnumFacing> sourceDirections) {
         if (this.delegate != null) {
@@ -590,6 +583,11 @@ public class Energy extends AbstractComponent {
     private class EnergyNetDelegateDual extends Energy.EnergyNetDelegate implements IDual {
 
 
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        List<Integer> energyTicks = new LinkedList<>();
+        private int hashCode;
+
         private EnergyNetDelegateDual() {
             super();
         }
@@ -602,13 +600,9 @@ public class Energy extends AbstractComponent {
             }
             return false;
         }
+
         public long getIdNetwork() {
             return Energy.this.getIdNetwork();
-        }
-        int hashCodeSource;
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -616,27 +610,20 @@ public class Energy extends AbstractComponent {
             return hashCodeSource;
         }
 
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
 
         public void setId(final long id) {
             Energy.this.setId(id);
         }
-        private int hashCode;
-        boolean hasHashCode = false;
 
         public List<InfoTile<IEnergyTile>> getValidReceivers() {
             return validReceivers;
         }
 
-        @Override
-        public int hashCode() {
-            if (!hasHashCode) {
-                hasHashCode = true;
-                this.hashCode = Energy.this.parent.hashCode();
-                return hashCode;
-            } else {
-                return hashCode;
-            }
-        }
+
 
         public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing dir) {
             for (EnumFacing facing1 : Energy.this.sourceDirections) {
@@ -696,8 +683,6 @@ public class Energy extends AbstractComponent {
         public void receiveEnergy(double amount) {
             Energy.this.storage = Energy.this.storage + amount;
         }
-
-        List<Integer> energyTicks = new LinkedList<>();
 
         @Override
         public List<Integer> getEnergyTickList() {
@@ -779,6 +764,11 @@ public class Energy extends AbstractComponent {
     private class EnergyNetDelegateMultiDual extends Energy.EnergyNetDelegate implements IMultiDual {
 
 
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        List<Integer> energyTicks = new ArrayList<>();
+        private int hashCode;
+
         private EnergyNetDelegateMultiDual() {
             super();
         }
@@ -791,42 +781,29 @@ public class Energy extends AbstractComponent {
             }
             return false;
         }
-        int hashCodeSource;
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
-        }
 
         @Override
         public int getHashCodeSource() {
             return hashCodeSource;
         }
 
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
         public long getIdNetwork() {
             return Energy.this.getIdNetwork();
         }
 
-
         public void setId(final long id) {
             Energy.this.setId(id);
         }
+
         public List<InfoTile<IEnergyTile>> getValidReceivers() {
             return validReceivers;
         }
 
-        private int hashCode;
-        boolean hasHashCode = false;
-
-        @Override
-        public int hashCode() {
-            if (!hasHashCode) {
-                hasHashCode = true;
-                this.hashCode = Energy.this.parent.hashCode();
-                return hashCode;
-            } else {
-                return hashCode;
-            }
-        }
 
         @Override
         public void AddTile(final IEnergyTile tile, final EnumFacing dir) {
@@ -892,8 +869,6 @@ public class Energy extends AbstractComponent {
 
             Energy.this.storage = Energy.this.storage - amount;
         }
-
-        List<Integer> energyTicks = new ArrayList<>();
 
         @Override
         public List<Integer> getEnergyTickList() {
@@ -967,6 +942,12 @@ public class Energy extends AbstractComponent {
 
     private class EnergyNetDelegateSink extends Energy.EnergyNetDelegate implements IEnergySink {
 
+        boolean hasHashCode = false;
+        int hashCodeSource;
+        List<Integer> energyTicks = new LinkedList<>();
+        private int hashCode;
+
+
         private EnergyNetDelegateSink() {
             super();
         }
@@ -983,24 +964,17 @@ public class Energy extends AbstractComponent {
             }
             return false;
         }
+
         public long getIdNetwork() {
             return Energy.this.getIdNetwork();
         }
 
-
         public void setId(final long id) {
             Energy.this.setId(id);
         }
+
         public List<InfoTile<IEnergyTile>> getValidReceivers() {
             return validReceivers;
-        }
-
-        private int hashCode;
-        boolean hasHashCode = false;
-        int hashCodeSource;
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -1009,15 +983,10 @@ public class Energy extends AbstractComponent {
         }
 
         @Override
-        public int hashCode() {
-            if (!hasHashCode) {
-                hasHashCode = true;
-                this.hashCode = Energy.this.parent.hashCode();
-                return hashCode;
-            } else {
-                return hashCode;
-            }
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
         }
+
 
 
 
@@ -1043,8 +1012,6 @@ public class Energy extends AbstractComponent {
         public void receiveEnergy(double amount) {
             Energy.this.storage += amount;
         }
-
-        List<Integer> energyTicks = new LinkedList<>();
 
         @Override
         public List<Integer> getEnergyTickList() {
@@ -1101,14 +1068,13 @@ public class Energy extends AbstractComponent {
     private class EnergyNetDelegateSource extends Energy.EnergyNetDelegate implements IEnergySource {
 
 
+        int hashCodeSource;
+        boolean hasHashCode = false;
+        private int hashCode;
+
         private EnergyNetDelegateSource() {
             super();
 
-        }
-        int hashCodeSource;
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -1116,22 +1082,17 @@ public class Energy extends AbstractComponent {
             return hashCodeSource;
         }
 
-        private int hashCode;
-        boolean hasHashCode = false;
-
         @Override
-        public int hashCode() {
-            if (!hasHashCode) {
-                hasHashCode = true;
-                this.hashCode = Energy.this.parent.hashCode();
-                return hashCode;
-            } else {
-                return hashCode;
-            }
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
         }
+
+
+
         public List<InfoTile<IEnergyTile>> getValidReceivers() {
             return validReceivers;
         }
+
         @Override
         public void AddTile(final IEnergyTile tile, final EnumFacing dir) {
             Energy.this.AddTile(tile, dir);
@@ -1164,6 +1125,7 @@ public class Energy extends AbstractComponent {
             }
             return false;
         }
+
         public long getIdNetwork() {
             return Energy.this.getIdNetwork();
         }

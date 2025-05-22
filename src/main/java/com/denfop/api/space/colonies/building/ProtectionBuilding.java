@@ -14,11 +14,13 @@ public class ProtectionBuilding extends Building implements IProtectionBuilding 
 
     private final EnumProtectionLevel protection;
     byte people = 0;
+
     public ProtectionBuilding(EnumProtectionLevel enums, final IColony colonie, boolean simulate) {
         super(colonie);
         this.protection = enums;
-        if (!simulate)
+        if (!simulate) {
             this.getColony().addBuilding(this);
+        }
     }
 
     public ProtectionBuilding(final NBTTagCompound tag, final IColony colonie) {
@@ -37,6 +39,7 @@ public class ProtectionBuilding extends Building implements IProtectionBuilding 
 
         this.getColony().addBuilding(this);
     }
+
     @Override
     public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
         super.writePacket(customPacketBuffer);
@@ -44,6 +47,7 @@ public class ProtectionBuilding extends Building implements IProtectionBuilding 
         customPacketBuffer.writeByte(people);
         return customPacketBuffer;
     }
+
     public EnumProtectionLevel getProtectionBuilding() {
         return this.protection;
     }
@@ -66,13 +70,14 @@ public class ProtectionBuilding extends Building implements IProtectionBuilding 
     public byte getId() {
         return 6;
     }
+
     @Override
     public void work() {
-        if(this.getColony().getEnergy() >= this.protection.getEnergy()){
+        if (this.getColony().getEnergy() >= this.protection.getEnergy()) {
             this.getColony().useEnergy(this.protection.getEnergy());
             this.getColony().addProtection(this.protection.getProtection());
-        }else{
-            if (!(this.getColony().getProblems().contains(EnumProblems.ENERGY))){
+        } else {
+            if (!(this.getColony().getProblems().contains(EnumProblems.ENERGY))) {
                 this.getColony().getProblems().add(EnumProblems.ENERGY);
             }
         }
@@ -105,7 +110,7 @@ public class ProtectionBuilding extends Building implements IProtectionBuilding 
 
     @Override
     public void addWorkers(final int addWorkers) {
-        people+=addWorkers;
+        people += addWorkers;
     }
 
     @Override

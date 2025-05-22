@@ -86,6 +86,7 @@ public class TileEntityBrewingPlant extends TileElectricMachine implements
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
@@ -148,7 +149,6 @@ public class TileEntityBrewingPlant extends TileElectricMachine implements
     public ContainerBrewingPlant getGuiContainer(final EntityPlayer var1) {
         return new ContainerBrewingPlant(var1, this);
     }
-
 
 
     @Override

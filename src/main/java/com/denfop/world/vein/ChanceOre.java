@@ -14,13 +14,14 @@ public class ChanceOre {
         this.block = block;
         this.chance = chance;
         this.meta = meta;
-        this.withoutRadiation=block;
+        this.withoutRadiation = block;
     }
-    public ChanceOre(IBlockState block, int chance, int meta,IBlockState withoutRadiation) {
+
+    public ChanceOre(IBlockState block, int chance, int meta, IBlockState withoutRadiation) {
         this.block = block;
         this.chance = chance;
         this.meta = meta;
-        this.withoutRadiation=withoutRadiation;
+        this.withoutRadiation = withoutRadiation;
     }
 
     public IBlockState getWithoutRadiation() {

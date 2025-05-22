@@ -190,7 +190,7 @@ public class ItemRecipeSchedule extends Item implements IModelRegister {
                     }
                 }
             }
-            HashMap<Integer, RecipeArrayList<IRecipeInputStack>>   map = new HashMap<>();
+            HashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new HashMap<>();
             for (BaseMachineRecipe baseMachineRecipe : recipeArrayList) {
                 final IInput input = baseMachineRecipe.input;
                 for (int i = 0; i < input.getInputs().size(); i++) {
@@ -207,7 +207,7 @@ public class ItemRecipeSchedule extends Item implements IModelRegister {
             return map;
         } else {
             if (items.isEmpty()) {
-                HashMap<Integer, RecipeArrayList<IRecipeInputStack>>   map = new HashMap<>();
+                HashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new HashMap<>();
                 for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
                     final IInput input = baseMachineRecipe.input;
                     for (int i = 0; i < input.getInputs().size(); i++) {
@@ -223,7 +223,7 @@ public class ItemRecipeSchedule extends Item implements IModelRegister {
                 }
                 return map;
             }
-            HashMap<Integer, RecipeArrayList<IRecipeInputStack>>   map = new HashMap<>();
+            HashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new HashMap<>();
             List<BaseMachineRecipe> recipeArrayList = new LinkedList<>();
 
             for (BaseMachineRecipe baseMachineRecipe : recipe_list) {

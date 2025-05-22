@@ -10,11 +10,6 @@ import com.denfop.tiles.mechanism.steamboiler.TileEntitySteamControllerBoiler;
 import com.denfop.tiles.mechanism.steamboiler.TileEntitySteamExchangerBoiler;
 import com.denfop.tiles.mechanism.steamboiler.TileEntitySteamHeaterBoiler;
 import com.denfop.tiles.mechanism.steamboiler.TileEntitySteamTankBoiler;
-import com.denfop.tiles.smeltery.TileEntitySmelteryCasing;
-import com.denfop.tiles.smeltery.TileEntitySmelteryController;
-import com.denfop.tiles.smeltery.TileEntitySmelteryFluidTank;
-import com.denfop.tiles.smeltery.TileEntitySmelteryFuelTank;
-import com.denfop.tiles.smeltery.TileEntitySmelteryFurnace;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
@@ -42,21 +37,14 @@ public enum BlockSteamBoiler implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockSteamBoiler(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
-        idBlock = id;
-    };
     BlockSteamBoiler(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
@@ -65,6 +53,18 @@ public enum BlockSteamBoiler implements IMultiTileBlock {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
     }
 
     @Override

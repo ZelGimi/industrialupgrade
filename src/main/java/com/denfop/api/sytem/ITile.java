@@ -25,9 +25,11 @@ public interface ITile {
     Map<EnumFacing, ITile> getTiles(EnergyType energyType);
 
     List<InfoTile<ITile>> getValidReceivers(EnergyType energyType);
-    int hashCode();
+
+
+
+    int getHashCodeSource();
 
     void setHashCodeSource(int hashCode);
 
-    int getHashCodeSource();
 }

@@ -25,13 +25,14 @@ import java.util.Random;
 public class AlgorithmVein {
 
     static Random random = new Random();
+    private static Map<ChunkPos, Chunk> chunkPosChunkMap = new HashMap<>();
 
     public static void generate(World world, VeinType veinType, BlockPos pos, Chunk chunk, int meta1) {
         if (random.nextInt(3) > 0) {
             return;
         }
         Biome biome = chunk.getBiome(pos, world.provider.getBiomeProvider());
-        final int value = random.nextInt(101+ ((biome instanceof BiomeHills) ? 20 : 0) );
+        final int value = random.nextInt(101 + ((biome instanceof BiomeHills) ? 20 : 0));
         if (value <= 55) {
             veinType.setVein(TypeVein.SMALL);
         } else if (value < 86) {
@@ -41,7 +42,7 @@ public class AlgorithmVein {
         }
         boolean isRadiation = veinType.isRadiation();
         boolean withRadiation = false;
-        if (isRadiation){
+        if (isRadiation) {
             withRadiation = WorldBaseGen.random.nextInt(4) == 0;
         }
         final int chance_type = random.nextInt(101);
@@ -56,7 +57,7 @@ public class AlgorithmVein {
             } else if (veinType.getVein() == TypeVein.BIG) {
                 radius = world.rand.nextInt(7) + 5;
             }
-            pos = new BlockPos(pos.getX(), height - radius * 0.9 -  random.nextInt(15), pos.getZ());
+            pos = new BlockPos(pos.getX(), height - radius * 0.9 - random.nextInt(15), pos.getZ());
             ChunkPos chunkPos = null;
             Chunk chunk1 = null;
             for (int x = -radius; x <= radius; x++) {
@@ -77,7 +78,7 @@ public class AlgorithmVein {
                                 }
                                 if (canGenerateSphere(world, pos1, chunk1)) {
                                     blockPosList.add(pos1);
-                                    setBlockState1(world,pos1,
+                                    setBlockState1(world, pos1,
                                             (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                     );
                                 }
@@ -87,7 +88,7 @@ public class AlgorithmVein {
                             if (veinType.getHeavyOre() != null) {
                                 if (random.nextInt(100) > 40 && canGenerateSphere(world, pos1, chunk1)) {
                                     blockPosList.add(pos1);
-                                    setBlockState1(world,pos1,
+                                    setBlockState1(world, pos1,
                                             veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2
                                     );
                                 }
@@ -104,7 +105,7 @@ public class AlgorithmVein {
                                     }
                                     if (canGenerateSphere(world, pos1, chunk1)) {
                                         blockPosList.add(pos1);
-                                        setBlockState1(world,pos1,
+                                        setBlockState1(world, pos1,
                                                 ore.getBlock(), 2
                                         );
                                     }
@@ -112,7 +113,7 @@ public class AlgorithmVein {
                             }
                         } else if (distance <= radius && distance < radius * 0.35) {
                             final BlockPos pos1 = pos.add(x, y, z);
-                            setBlockState1(world,pos1,
+                            setBlockState1(world, pos1,
                                     Blocks.AIR.getDefaultState(), 2
                             );
                         }
@@ -165,12 +166,12 @@ public class AlgorithmVein {
                     continue;
                 } else {
                     if (meta1 < 16) {
-                        setBlockState1(world,pos2, IUItem.blockdeposits.getStateMeta(meta1), 3);
+                        setBlockState1(world, pos2, IUItem.blockdeposits.getStateMeta(meta1), 3);
                     } else {
                         if (meta1 < 32) {
-                            setBlockState1(world,pos2, IUItem.blockdeposits1.getStateMeta(meta1 - 16), 3);
+                            setBlockState1(world, pos2, IUItem.blockdeposits1.getStateMeta(meta1 - 16), 3);
                         } else {
-                            setBlockState1(world,pos2, IUItem.blockdeposits2.getStateMeta(meta1 - 32), 3);
+                            setBlockState1(world, pos2, IUItem.blockdeposits2.getStateMeta(meta1 - 32), 3);
                         }
                     }
 
@@ -233,7 +234,7 @@ public class AlgorithmVein {
                                 maxZ = z;
                             }
                             blockPosList.add(pos1);
-                            setBlockState1(world,pos1,
+                            setBlockState1(world, pos1,
                                     (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                             );
                         } else {
@@ -243,7 +244,7 @@ public class AlgorithmVein {
                                         .getVein()
                                         .getNeed(), 90)) > 50 && canGenerate(world, pos1, chunk1)) {
                                     blockPosList.add(pos1);
-                                    setBlockState1(world,pos1,
+                                    setBlockState1(world, pos1,
                                             veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2
                                     );
                                     if (x < minX) {
@@ -302,7 +303,7 @@ public class AlgorithmVein {
                                     }
                                     if (canGenerate(world, pos1, chunk1)) {
                                         blockPosList.add(pos1);
-                                        setBlockState1(world,pos1,
+                                        setBlockState1(world, pos1,
                                                 (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                         );
                                     }
@@ -329,7 +330,7 @@ public class AlgorithmVein {
                                     }
                                     if (canGenerate(world, pos1, chunk1)) {
                                         blockPosList.add(pos1);
-                                        setBlockState1(world,pos1,
+                                        setBlockState1(world, pos1,
                                                 (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                         );
                                     }
@@ -396,12 +397,12 @@ public class AlgorithmVein {
                     continue;
                 } else {
                     if (meta1 < 16) {
-                        setBlockState1(world,pos2, IUItem.blockdeposits.getStateMeta(meta1), 3);
+                        setBlockState1(world, pos2, IUItem.blockdeposits.getStateMeta(meta1), 3);
                     } else {
                         if (meta1 < 32) {
-                            setBlockState1(world,pos2, IUItem.blockdeposits1.getStateMeta(meta1 - 16), 3);
+                            setBlockState1(world, pos2, IUItem.blockdeposits1.getStateMeta(meta1 - 16), 3);
                         } else {
-                            setBlockState1(world,pos2, IUItem.blockdeposits2.getStateMeta(meta1 - 32), 3);
+                            setBlockState1(world, pos2, IUItem.blockdeposits2.getStateMeta(meta1 - 32), 3);
                         }
                     }
 
@@ -452,7 +453,7 @@ public class AlgorithmVein {
                                 }
                                 if (canGenerate(world, pos1, chunk1)) {
                                     blockPosList.add(pos1);
-                                    setBlockState1(world,pos1,
+                                    setBlockState1(world, pos1,
                                             (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                     );
                                 }
@@ -471,7 +472,7 @@ public class AlgorithmVein {
                             if (veinType.getHeavyOre() != null) {
                                 if (random.nextInt(100) > 40 && canGenerate(world, pos1, chunk1)) {
                                     blockPosList.add(pos1);
-                                    setBlockState1(world,pos1,
+                                    setBlockState1(world, pos1,
                                             veinType.getHeavyOre().getStateMeta(veinType.getMeta()), 2
                                     );
                                 }
@@ -488,7 +489,7 @@ public class AlgorithmVein {
                                     }
                                     if (canGenerate(world, pos1, chunk1)) {
                                         blockPosList.add(pos1);
-                                        setBlockState1(world,pos1,
+                                        setBlockState1(world, pos1,
                                                 (withRadiation) ? ore.getBlock() : ore.getWithoutRadiation(), 2
                                         );
                                     }
@@ -545,10 +546,10 @@ public class AlgorithmVein {
                     continue;
                 } else {
                     if (meta1 < 16) {
-                        setBlockState1(world,pos2, IUItem.blockdeposits.getStateMeta(meta1), 3);
+                        setBlockState1(world, pos2, IUItem.blockdeposits.getStateMeta(meta1), 3);
                     } else {
                         if (meta1 < 32) {
-                            setBlockState1(world,pos2, IUItem.blockdeposits1.getStateMeta(meta1 - 16), 3);
+                            setBlockState1(world, pos2, IUItem.blockdeposits1.getStateMeta(meta1 - 16), 3);
                         } else {
                             setBlockState1(world, pos2, IUItem.blockdeposits2.getStateMeta(meta1 - 32), 3);
                         }
@@ -575,6 +576,7 @@ public class AlgorithmVein {
         return false;
 
     }
+
     public static IBlockState setBlockState(World world, Chunk chunk, BlockPos pos, IBlockState state) {
         int i = pos.getX() & 15;
         int j = pos.getY();
@@ -594,7 +596,7 @@ public class AlgorithmVein {
             Block block = state.getBlock();
             Block block1 = iblockstate.getBlock();
             int k1 = iblockstate.getLightOpacity(
-                   world,
+                    world,
                     pos
             ); // Relocate old light value lookup here, so that it is called before TE is removed.
             ExtendedBlockStorage extendedblockstorage = chunk.storageArrays[j >> 4];
@@ -657,11 +659,12 @@ public class AlgorithmVein {
             }
         }
     }
+
     private static boolean canGenerate(World world, BlockPos pos, final Chunk chunk) {
 
         IBlockState state = world.getBlockState(pos);
 
-        if (state.getMaterial() == Material.AIR || pos.getY() >= chunk.getHeight(pos) - 4)  {
+        if (state.getMaterial() == Material.AIR || pos.getY() >= chunk.getHeight(pos) - 4) {
             return false;
         }
         if (pos.getY() >= 60) {
@@ -674,7 +677,7 @@ public class AlgorithmVein {
         }
         return state.getMaterial() == Material.AIR || state.getBlock().blockHardness != -1;
     }
-    private static Map<ChunkPos, Chunk> chunkPosChunkMap = new HashMap<>();
+
     public static boolean setBlockState1(World world, BlockPos pos, IBlockState newState, int flags) {
         if (world.isOutsideBuildHeight(pos)) {
             return false;
@@ -713,6 +716,7 @@ public class AlgorithmVein {
             }
         }
     }
+
     private static boolean canGenerateSphere(World world, BlockPos pos, final Chunk chunk) {
 
         IBlockState state = world.getBlockState(pos);

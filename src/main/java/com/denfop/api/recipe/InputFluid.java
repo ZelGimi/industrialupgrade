@@ -22,14 +22,17 @@ public class InputFluid implements IInputFluid {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Collections.emptyList();
     }
+
     public InputFluid(String stack) {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Collections.emptyList();
     }
+
     public InputFluid(String stack, FluidStack... inputs) {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Arrays.asList(inputs);
     }
+
     public InputFluid(ItemStack stack, FluidStack... inputs) {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Arrays.asList(inputs);

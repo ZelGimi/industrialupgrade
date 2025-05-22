@@ -44,7 +44,6 @@ import net.minecraft.client.particle.ParticleFlame;
 import net.minecraft.client.particle.ParticleLava;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -114,6 +113,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void updateEntityClient() {
@@ -151,9 +151,9 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                     for (int i = 0; i < sparkCount; i++) {
                         Minecraft.getMinecraft().effectRenderer.addEffect(new SparkParticle(
                                 this.getWorld(),
-                                this.getPos().getX() + 0.5 + dx + offsetX  * -1 + rand.nextDouble() * 0.2 - 0.1,
+                                this.getPos().getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.2 - 0.1,
                                 this.getPos().getY() + 1.2 + rand.nextDouble() * 0.2,
-                                this.getPos().getZ() + 0.5 + dz + offsetZ  * -1 + rand.nextDouble() * 0.2 - 0.1
+                                this.getPos().getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.2 - 0.1
                         ));
                     }
 
@@ -162,9 +162,9 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                     for (int j = 0; j < smokeCount; j++) {
                         Minecraft.getMinecraft().effectRenderer.addEffect(new SmokeParticle(
                                 this.getWorld(),
-                                this.getPos().getX() + 0.5 + dx + offsetX  * -1 + rand.nextDouble() * 0.3 - 0.15,
+                                this.getPos().getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.3 - 0.15,
                                 this.getPos().getY() + 1.5 + rand.nextDouble() * 0.2,
-                                this.getPos().getZ() + 0.5 + dz + offsetZ  * -1+ rand.nextDouble() * 0.3 - 0.15
+                                this.getPos().getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.3 - 0.15
                         ));
                     }
 
@@ -172,9 +172,9 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                         Minecraft.getMinecraft().effectRenderer.addEffect(
                                 new ParticleFlame.Factory().createParticle(
                                         0, this.getWorld(),
-                                        this.getPos().getX() + 0.5 + dx + offsetX  * -1 + rand.nextDouble() * 0.2 - 0.1,
+                                        this.getPos().getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.2 - 0.1,
                                         this.getPos().getY() + 1.3 + rand.nextDouble() * 0.3,
-                                        this.getPos().getZ() + 0.5 + dz + offsetZ  * -1 + rand.nextDouble() * 0.2 - 0.1,
+                                        this.getPos().getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.2 - 0.1,
                                         0, 0.05, 0
                                 )
                         );
@@ -210,12 +210,11 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     }
 
 
-
-
     @SideOnly(Side.CLIENT)
     public void renderUniqueMultiBlock() {
-        if (this.dataBlock.getBlockState().getBlock() == IUItem.invalid)
+        if (this.dataBlock.getBlockState().getBlock() == IUItem.invalid) {
             return;
+        }
         IBakedModel model2 = this.dataBlock.getState();
         Class<?> clazz = model2.getClass();
         Class<?> clazz1 = null;
@@ -227,7 +226,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
             }
             clazz = clazz.getSuperclass();
         }
-        if (clazz1 != null){
+        if (clazz1 != null) {
             IBlockState blockState1 = this.block
                     .getDefaultState()
                     .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global"))
@@ -277,7 +276,6 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 
-
         if (!this.getActive()) {
 
             final IBakedModel model = dataBlock.getState();
@@ -287,7 +285,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
             }
 
             render(model, state, null);
-        }else{
+        } else {
             final IBakedModel model = dataBlock_active.getState();
             final IBlockState state = dataBlock_active.getBlockState();
             for (EnumFacing enumfacing : EnumFacing.values()) {
@@ -454,7 +452,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                     .getBlockRendererDispatcher()
                     .getModelForState(blockState1);
             this.dataBlock.setState(model);
-            IBlockState  blockState2 = this.block
+            IBlockState blockState2 = this.block
                     .getDefaultState()
                     .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global_active"))
                     .withProperty(
@@ -579,10 +577,10 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
         this.blastInputFluid = blastInputFluid;
         if (this.blastInputFluid == null) {
             this.tank1 = new FluidTank(12000);
-            new PacketUpdateFieldTile(this,"fluidtank1",false);
+            new PacketUpdateFieldTile(this, "fluidtank1", false);
         } else {
             this.tank1 = this.blastInputFluid.getFluidTank();
-            new PacketUpdateFieldTile(this,"fluidtank2",tank1);
+            new PacketUpdateFieldTile(this, "fluidtank2", tank1);
         }
     }
 
@@ -663,7 +661,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                                 .getFluid()
                                 .getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
                 );
-            }else {
+            } else {
                 return super.onActivated(player, hand, side, hitX, hitY, hitZ);
             }
         }

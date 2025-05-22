@@ -21,4 +21,5 @@ public interface IRoversItem {
     double getAddProgress();
 
     List<EnumTypeUpgrade> getUpgradeModules();
+
 }

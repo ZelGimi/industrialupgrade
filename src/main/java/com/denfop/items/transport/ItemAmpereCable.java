@@ -10,7 +10,6 @@ import com.denfop.items.block.ISubItem;
 import com.denfop.items.block.ItemBlockTileEntity;
 import com.denfop.register.Register;
 import com.denfop.tiles.transport.tiles.TileEntityAmpereCable;
-import com.denfop.tiles.transport.tiles.TileEntityQCable;
 import com.denfop.tiles.transport.types.AmpereType;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.Block;

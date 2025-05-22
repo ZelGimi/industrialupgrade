@@ -2,16 +2,11 @@ package com.denfop.componets;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.cool.CoolTick;
-import com.denfop.api.cool.ICoolSource;
-import com.denfop.api.cool.ICoolTile;
-import com.denfop.api.heat.HeatTick;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.IHeatSink;
 import com.denfop.api.heat.IHeatSource;
 import com.denfop.api.heat.IHeatTile;
-import com.denfop.api.heat.Path;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.api.sytem.InfoTile;
@@ -63,6 +58,8 @@ public class HeatComponent extends AbstractComponent {
     public boolean auto;
     public boolean allow;
     Random rand = new Random();
+    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
+    List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
     private double coef;
 
     public HeatComponent(TileEntityInventory parent, double capacity) {
@@ -123,7 +120,7 @@ public class HeatComponent extends AbstractComponent {
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        tooltip.add(Localization.translate("iu.reactor_info.heat")+ " "+  (int)this.storage + "/"+(int)this.capacity);
+        tooltip.add(Localization.translate("iu.reactor_info.heat") + " " + (int) this.storage + "/" + (int) this.capacity);
     }
 
     @Override
@@ -140,10 +137,6 @@ public class HeatComponent extends AbstractComponent {
 
 
     }
-    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
-
-    List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
-
 
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer packet = super.updateComponent();
@@ -445,6 +438,10 @@ public class HeatComponent extends AbstractComponent {
 
     private class EnergyNetDelegateSink extends HeatComponent.EnergyNetDelegate implements IHeatSink {
 
+        List<IHeatSource> list = new LinkedList<>();
+        int hashCodeSource;
+        private long id;
+
         private EnergyNetDelegateSink() {
             super();
         }
@@ -456,7 +453,7 @@ public class HeatComponent extends AbstractComponent {
         public boolean acceptsHeatFrom(IHeatEmitter emitter, EnumFacing dir) {
             return HeatComponent.this.sinkDirections.contains(dir);
         }
-        List<IHeatSource> list = new LinkedList<>();
+
         @Override
         public List<IHeatSource> getEnergyTickList() {
             return list;
@@ -471,16 +468,9 @@ public class HeatComponent extends AbstractComponent {
 
             return HeatComponent.this.capacity;
         }
-        private long id;
+
         public long getIdNetwork() {
             return this.id;
-        }
-
-        int hashCodeSource;
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -488,6 +478,10 @@ public class HeatComponent extends AbstractComponent {
             return hashCodeSource;
         }
 
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
 
         public void setId(final long id) {
             this.id = id;
@@ -497,7 +491,7 @@ public class HeatComponent extends AbstractComponent {
         public void AddHeatTile(final IHeatTile tile, final EnumFacing dir) {
             if (!this.getWorld().isRemote) {
                 energyHeatConductorMap.put(dir, tile);
-                validHeatReceivers.add(new InfoTile<>(tile,dir.getOpposite()));
+                validHeatReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
             }
         }
 
@@ -506,7 +500,7 @@ public class HeatComponent extends AbstractComponent {
             if (!this.getWorld().isRemote) {
                 energyHeatConductorMap.remove(dir);
                 final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
-                while (iter.hasNext()){
+                while (iter.hasNext()) {
                     InfoTile<IHeatTile> tileInfoTile = iter.next();
                     if (tileInfoTile.tileEntity == tile) {
                         iter.remove();
@@ -520,10 +514,12 @@ public class HeatComponent extends AbstractComponent {
         public Map<EnumFacing, IHeatTile> getHeatTiles() {
             return energyHeatConductorMap;
         }
+
         @Override
         public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
             return validHeatReceivers;
         }
+
         public void receivedHeat(double amount) {
             this.setHeatStored(amount);
 
@@ -549,6 +545,9 @@ public class HeatComponent extends AbstractComponent {
 
     private class EnergyNetDelegateSource extends HeatComponent.EnergyNetDelegate implements IHeatSource {
 
+        int hashCodeSource;
+        private long id;
+
         private EnergyNetDelegateSource() {
             super();
         }
@@ -573,16 +572,9 @@ public class HeatComponent extends AbstractComponent {
 
         public void drawHeat(double amount) {
         }
-        private long id;
+
         public long getIdNetwork() {
             return this.id;
-        }
-
-        int hashCodeSource;
-
-        @Override
-        public void setHashCodeSource(final int hashCode) {
-            hashCodeSource = hashCode;
         }
 
         @Override
@@ -590,6 +582,10 @@ public class HeatComponent extends AbstractComponent {
             return hashCodeSource;
         }
 
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
 
         public void setId(final long id) {
             this.id = id;
@@ -599,7 +595,7 @@ public class HeatComponent extends AbstractComponent {
         public void AddHeatTile(final IHeatTile tile, final EnumFacing dir) {
             if (!this.getWorld().isRemote) {
                 energyHeatConductorMap.put(dir, tile);
-                validHeatReceivers.add(new InfoTile<>(tile,dir.getOpposite()));
+                validHeatReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
             }
         }
 
@@ -608,7 +604,7 @@ public class HeatComponent extends AbstractComponent {
             if (!this.getWorld().isRemote) {
                 energyHeatConductorMap.remove(dir);
                 final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
-                while (iter.hasNext()){
+                while (iter.hasNext()) {
                     InfoTile<IHeatTile> tileInfoTile = iter.next();
                     if (tileInfoTile.tileEntity == tile) {
                         iter.remove();
@@ -622,10 +618,12 @@ public class HeatComponent extends AbstractComponent {
         public Map<EnumFacing, IHeatTile> getHeatTiles() {
             return energyHeatConductorMap;
         }
+
         @Override
         public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
             return validHeatReceivers;
         }
+
         @Override
         public boolean isAllowed() {
             return HeatComponent.this.allow;

@@ -35,13 +35,13 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
                 final int itemDamage = stack.getItemDamage();
                 switch (itemDamage) {
                     case 276:
-                        return ((TileEntityBasePump) this.base).getLevel() >= 0;
+                        return ((TileEntityBasePump) this.base).getBlockLevel() >= 0;
                     case 20:
-                        return ((TileEntityBasePump) this.base).getLevel() >= 1;
+                        return ((TileEntityBasePump) this.base).getBlockLevel() >= 1;
                     case 96:
-                        return ((TileEntityBasePump) this.base).getLevel() >= 2;
+                        return ((TileEntityBasePump) this.base).getBlockLevel() >= 2;
                     case 120:
-                        return ((TileEntityBasePump) this.base).getLevel() >= 3;
+                        return ((TileEntityBasePump) this.base).getBlockLevel() >= 3;
                 }
                 return false;
             }
@@ -126,7 +126,7 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return level;
     }
 

@@ -14,13 +14,14 @@ import java.util.List;
 public class SpaceBodyHandler {
 
     private static final List<SpaceBodyHandler> recipes = new ArrayList<>();
-    private final List<ItemStack> input;
     final IBody body;
-    List<FluidStack>  output;
+    private final List<ItemStack> input;
+    List<FluidStack> output;
 
-    public SpaceBodyHandler(IBody body,
+    public SpaceBodyHandler(
+            IBody body,
             List<ItemStack> input,
-                            List<FluidStack> output
+            List<FluidStack> output
     ) {
         this.body = body;
         this.input = input;
@@ -34,10 +35,11 @@ public class SpaceBodyHandler {
         return recipes;
     }
 
-    public static SpaceBodyHandler addRecipe(IBody body,
-            List<ItemStack> input,  List<FluidStack> output
+    public static SpaceBodyHandler addRecipe(
+            IBody body,
+            List<ItemStack> input, List<FluidStack> output
     ) {
-        SpaceBodyHandler recipe = new SpaceBodyHandler(body,input, output);
+        SpaceBodyHandler recipe = new SpaceBodyHandler(body, input, output);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -52,8 +54,9 @@ public class SpaceBodyHandler {
             List<ItemStack> stacks = new LinkedList<>();
             List<FluidStack> fluidStacks = new LinkedList<>();
             final List<IBaseResource> resource = body.getResources();
-            if (resource == null || resource.isEmpty())
+            if (resource == null || resource.isEmpty()) {
                 continue;
+            }
             cycle:
             for (IBaseResource baseResource : resource) {
                 if (baseResource.getItemStack() != null) {

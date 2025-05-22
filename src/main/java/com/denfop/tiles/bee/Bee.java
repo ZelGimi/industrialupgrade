@@ -8,9 +8,9 @@ import java.util.Objects;
 
 public class Bee {
 
+    final long id;
     private final int maxLife;
     private final int birthTick;
-    final long id;
     private double jelly;
     private double food;
     private boolean ill;
@@ -18,7 +18,7 @@ public class Bee {
     private EnumTypeBee typeBee;
     private EnumTypeLife type;
     private boolean isDead;
-    private  boolean wasBirth = false;
+    private boolean wasBirth = false;
 
     public Bee(EnumTypeBee typeBee, IBee bee, EnumTypeLife type, double food, final int tick) {
         this.maxLife = bee.getTickLifecycles();
@@ -36,7 +36,7 @@ public class Bee {
     public Bee(NBTTagCompound tagCompound) {
         this.maxLife = tagCompound.getShort("maxLife");
         this.ill = tagCompound.getBoolean("ill");
-        this.typeBee =  EnumTypeBee.values()[tagCompound.getByte("typeBee")];
+        this.typeBee = EnumTypeBee.values()[tagCompound.getByte("typeBee")];
         this.type = EnumTypeLife.values()[tagCompound.getByte("type")];
         this.id = WorldBaseGen.random.nextLong();
         this.birthTick = tagCompound.getShort("birthTick");
@@ -47,8 +47,12 @@ public class Bee {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Bee bee = (Bee) o;
         return id == bee.id;
     }
@@ -56,14 +60,6 @@ public class Bee {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public void setTypeBee(final EnumTypeBee typeBee) {
-        this.typeBee = typeBee;
-    }
-
-    public void setType(final EnumTypeLife type) {
-        this.type = type;
     }
 
     public NBTTagCompound writeToNBT() {
@@ -86,8 +82,9 @@ public class Bee {
 
     public void addTick(int tick, double lifeGenome) {
         this.tick += tick;
-        if (!this.isDead)
-        this.isDead = this.tick > this.maxLife * lifeGenome;
+        if (!this.isDead) {
+            this.isDead = this.tick > this.maxLife * lifeGenome;
+        }
     }
 
     public void addFood(double food) {
@@ -122,16 +119,20 @@ public class Bee {
         return food;
     }
 
-    public void setIll(final boolean ill) {
-        this.ill = ill;
-    }
-
     public boolean isDead() {
         return isDead;
     }
 
+    public void setDead(boolean b) {
+        this.isDead = b;
+    }
+
     public boolean isIll() {
         return ill;
+    }
+
+    public void setIll(final boolean ill) {
+        this.ill = ill;
     }
 
     public int getTick() {
@@ -146,12 +147,16 @@ public class Bee {
         return type;
     }
 
+    public void setType(final EnumTypeLife type) {
+        this.type = type;
+    }
+
     public EnumTypeBee getTypeBee() {
         return typeBee;
     }
 
-    public void setDead(boolean b) {
-        this.isDead = b;
+    public void setTypeBee(final EnumTypeBee typeBee) {
+        this.typeBee = typeBee;
     }
 
 }

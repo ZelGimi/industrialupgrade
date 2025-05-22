@@ -50,16 +50,16 @@ public class ItemTomeResearchSpace extends Item implements IModelRegister {
             if (playerIn.isSneaking()) {
 
                 nbt.setUniqueId("uuid", playerIn.getUniqueID());
-            }else{
+            } else {
                 final UUID uuid = nbt.getUniqueId("uuid");
                 final Map<IBody, Data> data = SpaceNet.instance
                         .getFakeSpaceSystem()
                         .getDataFromUUID(uuid);
-                if (data != null && !data.isEmpty()){
-                    SpaceNet.instance.getFakeSpaceSystem().copyData(data,playerIn.getUniqueID());
+                if (data != null && !data.isEmpty()) {
+                    SpaceNet.instance.getFakeSpaceSystem().copyData(data, playerIn.getUniqueID());
                 }
             }
-            return  ActionResult.newResult(EnumActionResult.SUCCESS,playerIn.getHeldItem(handIn));
+            return ActionResult.newResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }

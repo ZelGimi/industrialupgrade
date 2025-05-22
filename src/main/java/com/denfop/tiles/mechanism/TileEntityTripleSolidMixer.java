@@ -296,7 +296,7 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
                 UpgradableProperty.ItemInput,
-                UpgradableProperty.FluidExtract
+                UpgradableProperty.ItemExtract
         );
     }
 

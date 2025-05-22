@@ -90,6 +90,7 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
@@ -300,7 +301,7 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
         for (int i = 25; i < 40; i++) {
             Recipes.recipes.addRecipe("laser", new BaseMachineRecipe(
                     new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, i))),
-                    new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, i+3))
+                    new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, i + 3))
             ));
         }
     }

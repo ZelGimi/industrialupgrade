@@ -8,7 +8,6 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
@@ -34,7 +33,7 @@ public class MultiBlockWrapper implements IRecipeWrapper {
         ingredients.setInputs(VanillaTypes.ITEM, this.structure.itemStackList);
     }
 
-    public void renderTextCentered(@Nonnull Minecraft minecraft,String text, int xCenter, int y, int maxWidth, int color) {
+    public void renderTextCentered(@Nonnull Minecraft minecraft, String text, int xCenter, int y, int maxWidth, int color) {
         FontRenderer fontRenderer = minecraft.fontRenderer;
 
 
@@ -57,6 +56,7 @@ public class MultiBlockWrapper implements IRecipeWrapper {
             fontRenderer.drawString(line, x, startY + i * lineHeight, color);
         }
     }
+
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         String name1 = Localization.translate("multiblock.jei1");
         int xCenter = recipeWidth / 2;
@@ -67,10 +67,12 @@ public class MultiBlockWrapper implements IRecipeWrapper {
         int y = 2;
 
         renderTextCentered(minecraft, Localization.translate("multiblock.jei2"), xCenter, (57 + y * 25), maxWidth,
-                color);
+                color
+        );
 
         renderTextCentered(minecraft, Localization.translate("multiblock.jei3"), xCenter, (10 + y * 25) + 90, maxWidth,
-                color);
+                color
+        );
 
     }
 

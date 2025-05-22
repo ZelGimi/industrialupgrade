@@ -1,7 +1,5 @@
 package com.denfop.api.heat;
 
-import com.denfop.api.sytem.IConductor;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -9,15 +7,15 @@ import java.util.Objects;
 public class HeatTick<T, E> {
 
     private final T source;
-    private List<E> energyPaths;
-
     LinkedList<IHeatConductor> conductors = new LinkedList<>();
+    private List<E> energyPaths;
 
     public HeatTick(T source, List<E> list) {
         this.source = source;
         this.energyPaths = list;
 
     }
+
     public LinkedList<IHeatConductor> getConductors() {
         return conductors;
     }
@@ -25,6 +23,7 @@ public class HeatTick<T, E> {
     public void setConductors(final LinkedList<IHeatConductor> conductors) {
         this.conductors = conductors;
     }
+
     public T getSource() {
         return source;
     }

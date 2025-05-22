@@ -7538,3 +7538,5 @@ iu.heavy_oil=Heavy
 deposists_molot.jei=Mining ores with a hammer
 deposists.jei2=Use a hammer with ferromanganese to mine this ore. You only need to break the stones above the vein. The chance of getting ore is the same as in a mineral separator. can be mined in a vein:
 industrialupgrade.basemachine3.steam_generator=Electric Steam Generator
+
+iu.rover.info_temperature=Without modules, it can withstand temperatures from -125 to 150 degrees.

@@ -1,12 +1,9 @@
 package com.denfop.integration.jei.crops;
 
 
-import com.denfop.api.agriculture.CropInit;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.ICrop;
-import com.denfop.blocks.FluidName;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +48,13 @@ public class CropHandler {
     public static void initRecipes() {
 
         CropNetwork.instance.getCropMap().forEach((integer, crop) -> {
-            if (crop.getId() != 3)
+            if (crop.getId() != 3) {
                 addRecipe(crop);
+            }
         });
 
 
     }
-
-
 
 
 }

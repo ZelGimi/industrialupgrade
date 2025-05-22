@@ -1,9 +1,9 @@
 package com.denfop.api.space.colonies.enums;
 
 public enum EnumTypeFactory {
-    LOW(10, 15,0),
-    MEDIUM(20, 20,8),
-    HIGH(35, 35,21);
+    LOW(10, 15, 0),
+    MEDIUM(20, 20, 8),
+    HIGH(35, 35, 21);
 
     private final byte energy;
     private final byte people;

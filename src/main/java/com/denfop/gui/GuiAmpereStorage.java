@@ -3,15 +3,9 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
-import com.denfop.componets.EnumTypeStyle;
-import com.denfop.container.ContainerAmpereGenerator;
 import com.denfop.container.ContainerAmpereStorage;
-import com.denfop.container.ContainerSteamAmpereGenerator;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -52,7 +46,6 @@ public class GuiAmpereStorage extends GuiIU<ContainerAmpereStorage> {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(getTexture());
-
 
 
     }

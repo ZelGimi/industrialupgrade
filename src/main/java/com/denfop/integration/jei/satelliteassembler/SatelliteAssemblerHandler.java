@@ -41,7 +41,6 @@ public class SatelliteAssemblerHandler {
     }
 
 
-
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("satelliteassembler")) {
             addRecipe(
@@ -62,7 +61,6 @@ public class SatelliteAssemblerHandler {
     public ItemStack getOutput() {
         return output.copy();
     }
-
 
 
 }

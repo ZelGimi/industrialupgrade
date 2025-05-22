@@ -7,6 +7,7 @@ public class System implements ISystem {
 
     private final String name;
     List<IStar> stars = new ArrayList<>();
+
     public System(String name) {
         this.name = name;
         SpaceNet.instance.addSystem(this);

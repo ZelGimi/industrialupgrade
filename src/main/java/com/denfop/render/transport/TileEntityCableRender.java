@@ -28,7 +28,7 @@ public class TileEntityCableRender<T extends TileEntityMultiCable> extends TileE
 
         DataCable data = te.dataCable;
         if (data == null) {
-            data = new DataCable(te.connectivity,  ItemStack.EMPTY, null);
+            data = new DataCable(te.connectivity, ItemStack.EMPTY, null);
             te.dataCable = data;
         }
 

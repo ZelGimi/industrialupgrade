@@ -1,14 +1,12 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.ItemImage;
-import com.denfop.api.gui.ItemStackImage;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerCable;
@@ -51,9 +49,9 @@ public class GuiCable1 extends GuiIU<ContainerCable> {
         super.drawForegroundLayer(par1, par2);
         new AdvArea(this, 111, 15, 171, 74).withTooltip(Localization.translate("iu.blacklist_tube")).drawForeground(par1, par2);
         new AdvArea(this, 4, 15, 63, 74).withTooltip(Localization.translate("iu.whitelist_tube")).drawForeground(par1, par2);
-        new Area(this, 79, 63, 20, 20).withTooltip(   ((TileEntityItemPipes) container.base).redstoneSignal ? Localization.translate(
+        new Area(this, 79, 63, 20, 20).withTooltip(((TileEntityItemPipes) container.base).redstoneSignal ? Localization.translate(
                 "Transformer.gui" +
-                ".switch.mode1") : Localization.translate("EUStorage.gui.mod.redstone0")).drawForeground(par1, par2);
+                        ".switch.mode1") : Localization.translate("EUStorage.gui.mod.redstone0")).drawForeground(par1, par2);
 
 
     }
@@ -62,7 +60,7 @@ public class GuiCable1 extends GuiIU<ContainerCable> {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
-        new ItemImage(this,81,65, () -> new ItemStack(Items.REDSTONE)).drawBackground(this.guiLeft,this.guiTop);
+        new ItemImage(this, 81, 65, () -> new ItemStack(Items.REDSTONE)).drawBackground(this.guiLeft, this.guiTop);
 
     }
 

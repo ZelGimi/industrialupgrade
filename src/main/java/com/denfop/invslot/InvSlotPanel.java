@@ -89,8 +89,9 @@ public class InvSlotPanel extends InvSlot {
                 }
             }
         }
-        if (tile.tier < 1)
+        if (tile.tier < 1) {
             tile.tier = 1;
+        }
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemModuleTypePanel) {
                 int g = this.get(i).getItemDamage();

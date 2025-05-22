@@ -97,8 +97,9 @@ public class ChunkLevel implements INetworkObject {
         boolean removed;
 
         if (this.levelPollution == LevelPollution.VERY_LOW) {
-            if (this.pollution == 0)
+            if (this.pollution == 0) {
                 return false;
+            }
             if (this.pollution == 124 && pollution == 125) {
                 this.pollution = 0;
                 return true;

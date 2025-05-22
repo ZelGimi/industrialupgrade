@@ -2,11 +2,6 @@ package com.denfop.api.sytem;
 
 import net.minecraft.util.EnumFacing;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 public class Path {
 
 
@@ -28,8 +23,6 @@ public class Path {
             this.target.addPerEnergy(adding);
         }
     }
-
-
 
 
 }

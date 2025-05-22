@@ -24,10 +24,11 @@ import java.util.Map;
 public class TransportNetLocal {
 
     final TransportTickList<TransportTick<ITransportSource, Path>> senderPath = new TransportTickList<>();
-    List<ITransportSource> sourceToUpdateList = new LinkedList<>();
     private final World world;
     private final Map<BlockPos, ITransportTile> chunkCoordinatesITransportTileMap;
+    List<ITransportSource> sourceToUpdateList = new LinkedList<>();
     byte tick;
+    List<ITransportSource> delete = new ArrayList<>();
 
     TransportNetLocal(World world) {
         this.world = world;
@@ -53,13 +54,15 @@ public class TransportNetLocal {
 
     public void remove(final ITransportSource par1) {
         final TransportTick<ITransportSource, Path> energyTick = this.senderPath.removeSource(par1);
-        if (energyTick.getList() != null) {
-            for (Path path : energyTick.getList()) {
-                path.target.getEnergyTickList().remove((Integer) energyTick.getSource().hashCode());
+        if (energyTick != null) {
+            if (energyTick.getList() != null) {
+                for (Path path : energyTick.getList()) {
+                    path.target.getEnergyTickList().remove((Integer) energyTick.getSource().hashCode());
+                }
             }
+            energyTick.setFluidList(null);
+            energyTick.setItemList(null);
         }
-        energyTick.setFluidList(null);
-        energyTick.setItemList(null);
     }
 
     public void removeAll(final List<TransportTick<ITransportSource, Path>> par1) {
@@ -323,7 +326,11 @@ public class TransportNetLocal {
                         continue;
                     }
 
-                    if (!canInsertOrExtract(path.first, currentItem, path.firstSide.getOpposite()) || !canInsertOrExtract(path.end,
+                    if (!canInsertOrExtract(
+                            path.first,
+                            currentItem,
+                            path.firstSide.getOpposite()
+                    ) || !canInsertOrExtract(path.end,
                             currentItem, path.targetDirection.getOpposite()
                     )) {
                         continue;
@@ -358,7 +365,6 @@ public class TransportNetLocal {
         }
     }
 
-
     public TileEntity getTileFromITransport(ITransportTile tile) {
         if (tile == null) {
             return null;
@@ -388,7 +394,7 @@ public class TransportNetLocal {
                 cable = ((ITransportConductor) currentTileEntity).getCable();
             }
             for (final InfoTile<ITransportTile> validReceiver : validReceivers) {
-                if (currentTileEntity == emitter){
+                if (currentTileEntity == emitter) {
                     if (validReceiver.tileEntity != emitter && validReceiver.tileEntity.getIdNetwork() != id) {
                         if (validReceiver.tileEntity instanceof ITransportConductor && ((ITransportConductor<?, ?>) validReceiver.tileEntity).isOutput()) {
                             ITransportConductor conductor = (ITransportConductor) validReceiver.tileEntity;
@@ -398,8 +404,7 @@ public class TransportNetLocal {
 
                         }
                     }
-                }
-                else if (validReceiver.tileEntity != emitter && validReceiver.tileEntity.getIdNetwork() != id) {
+                } else if (validReceiver.tileEntity != emitter && validReceiver.tileEntity.getIdNetwork() != id) {
                     if (validReceiver.tileEntity instanceof ITransportSink && currentTileEntity instanceof ITransportConductor && ((ITransportConductor<?, ?>) currentTileEntity).isInput()) {
                         validReceiver.tileEntity.setId(id);
                         energyPaths.add(new Path((ITransportSink) validReceiver.tileEntity, validReceiver.direction));
@@ -455,7 +460,6 @@ public class TransportNetLocal {
         return new Tuple<>(energyPaths, set);
     }
 
-
     private List<InfoTile<ITransportTile>> getValidReceivers(ITransportTile emitter) {
 
         return emitter.getValidReceivers();
@@ -468,8 +472,21 @@ public class TransportNetLocal {
             }
             sourceToUpdateList.clear();
         }
+        if (!delete.isEmpty()) {
+            for (ITransportSource source : delete) {
+                removeTile(source);
+            }
+            delete.clear();
+        }
         try {
             for (TransportTick<ITransportSource, Path> tick : this.senderPath) {
+                if (tick.getSource().getValidReceivers().isEmpty() || tick.getSource().getTiles().isEmpty() || tick
+                        .getSource()
+                        .getTileEntity()
+                        .isInvalid()) {
+                    delete.add(tick.getSource());
+                    continue;
+                }
                 if (this.world.getWorldTime() % 2L == 0L) {
                     if (tick.getSource().isItem()) {
                         ITransportSource<ItemStack, IItemHandler> entry = (ITransportSource<ItemStack, IItemHandler>) tick.getSource();
@@ -512,8 +529,6 @@ public class TransportNetLocal {
                                 list.removeAll(removePath);
                                 tick.setItemList(list);
                                 tick.setConductors(tuple.getSecond());
-
-
 
 
                             }

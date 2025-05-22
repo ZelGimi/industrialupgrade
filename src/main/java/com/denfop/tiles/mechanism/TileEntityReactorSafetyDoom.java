@@ -89,7 +89,8 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
         if (getWorld().provider.getWorldTime() % 100 == 0) {
             boolean work = false;
             this.full = false;
-            if (this.rad.getEnergy() < this.rad.getCapacity()) {
+            if (this.rad.getEnergy() < this.rad.getCapacity() && this.energy.canUseEnergy(10)) {
+                this.energy.useEnergy(10);
                 for (List<IAdvReactor> reactors : this.iAdvReactorList) {
                     for (IAdvReactor reactor : reactors) {
                         this.full = true;

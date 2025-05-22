@@ -57,8 +57,8 @@ public class PacketChangeSolarPanel implements IPacket {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeByte(this.getId());
         try {
-            EncoderHandler.encode(buffer,pos);
-            EncoderHandler.encode(buffer,tagCompound);
+            EncoderHandler.encode(buffer, pos);
+            EncoderHandler.encode(buffer, tagCompound);
             buffer.writeBytes(tileSolarPanel.pollution.updateComponent());
         } catch (IOException e) {
             throw new RuntimeException(e);

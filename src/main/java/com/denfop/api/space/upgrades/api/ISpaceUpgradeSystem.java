@@ -1,7 +1,7 @@
 package com.denfop.api.space.upgrades.api;
 
-import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.rovers.api.IRoversItem;
+import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.info.SpaceUpgradeItemInform;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,8 +10,6 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public interface ISpaceUpgradeSystem {
-
-
 
 
     int getRemaining(ItemStack item);
@@ -24,9 +22,8 @@ public interface ISpaceUpgradeSystem {
     SpaceUpgradeItemInform getModules(EnumTypeUpgrade module, ItemStack item);
 
     boolean hasModules(EnumTypeUpgrade module, ItemStack item);
+
     void updateListFromNBT(final IRoversItem item, ItemStack stack);
-
-
 
 
     void setInformation(final IRoversItem item, List<EnumTypeUpgrade> lst, ItemStack stack);
@@ -37,7 +34,7 @@ public interface ISpaceUpgradeSystem {
 
     List<ItemStack> getListStack(ItemStack stack);
 
-    void addRecipe(Item stack,EnumTypeUpgrade... lst);
+    void addRecipe(Item stack, EnumTypeUpgrade... lst);
 
     boolean shouldUpdate(final EnumTypeUpgrade type, final ItemStack stack1);
 

@@ -1,7 +1,6 @@
 package com.denfop.api.cool;
 
 
-
 import java.util.List;
 
 public interface ICoolSink extends ICoolAcceptor {
@@ -13,4 +12,5 @@ public interface ICoolSink extends ICoolAcceptor {
     boolean needCooling();
 
     List<ICoolSource> getEnergyTickList();
+
 }

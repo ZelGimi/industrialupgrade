@@ -4,7 +4,6 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.ICropItem;
-import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -14,13 +13,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.container.ContainerPigFarm;
-import com.denfop.container.ContainerPlantCollector;
-import com.denfop.container.ContainerPlantFertilizer;
 import com.denfop.container.ContainerPlantGardener;
-import com.denfop.gui.GuiPigFarm;
-import com.denfop.gui.GuiPlantCollector;
-import com.denfop.gui.GuiPlantFertilizer;
 import com.denfop.gui.GuiPlantGardener;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -41,19 +34,23 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityPlantGardener extends TileEntityInventory  implements IUpgradableBlock {
+public class TileEntityPlantGardener extends TileEntityInventory implements IUpgradableBlock {
 
 
     private static final int RADIUS = 8;
     public final Energy energy;
     public final InvSlot output;
+    public final InvSlotUpgrade upgradeSlot;
+    private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
             pos.add(RADIUS, RADIUS, RADIUS)
     );
+    List<List<TileEntityCrop>> list = new ArrayList<>();
+    List<Chunk> chunks;
 
     public TileEntityPlantGardener() {
-        this.output = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9){
+        this.output = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() instanceof ICropItem;
@@ -65,12 +62,12 @@ public class TileEntityPlantGardener extends TileEntityInventory  implements IUp
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
+
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemInput
         );
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
@@ -95,8 +92,6 @@ public class TileEntityPlantGardener extends TileEntityInventory  implements IUp
         }
     }
 
-    List<List<TileEntityCrop>> list = new ArrayList<>();
-    List<Chunk> chunks;
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -148,7 +143,7 @@ public class TileEntityPlantGardener extends TileEntityInventory  implements IUp
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0){
+        if (this.getWorld().getWorldTime() % 100 == 0) {
             updateCrop();
         }
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(10)) {
@@ -157,7 +152,7 @@ public class TileEntityPlantGardener extends TileEntityInventory  implements IUp
                 for (TileEntityCrop crop : crops) {
                     if (this.energy.getEnergy() > 10) {
                         if (this.contains(crop.getPos())) {
-                            for (ItemStack stack : this.output.gets()) {
+                            for (ItemStack stack : this.output) {
                                 if (!stack.isEmpty() && crop.getCrop() == null && !crop.isHasDouble() && CropNetwork.instance.canPlantCrop(
                                         stack,
                                         world,

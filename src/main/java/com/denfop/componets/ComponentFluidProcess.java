@@ -70,7 +70,7 @@ public class ComponentFluidProcess extends AbstractComponent {
                 inputSlotA.load();
                 this.fluid_handler.load(this.inputSlotA.get());
                 this.updateTick.setRecipeOutput(getOutput());
-            }else{
+            } else {
                 this.fluid_handler.load();
             }
         }

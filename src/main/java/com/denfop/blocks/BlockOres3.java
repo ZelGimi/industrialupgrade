@@ -117,7 +117,7 @@ public class BlockOres3 extends BlockCore implements IModelRegister {
             drops.add(new ItemStack(IUItem.iudust, rand.nextInt(2) + 1 + rand.nextInt(fortune + 1), 31));
             return;
         } else {
-            drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), getMetaFromState(state)+25));
+            drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), getMetaFromState(state) + 25));
             return;
         }
 

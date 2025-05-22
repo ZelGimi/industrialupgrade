@@ -1,11 +1,8 @@
 package com.denfop.render.base;
 
-import com.denfop.events.client.SolarSystemRenderer;
 import com.denfop.tiles.bee.TileEntityApiary;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -16,7 +13,6 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class TileEntitySolarSystemRender extends TileEntitySpecialRenderer<TileEntityApiary> {
 

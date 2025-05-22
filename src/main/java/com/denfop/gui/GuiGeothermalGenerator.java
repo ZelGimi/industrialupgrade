@@ -6,9 +6,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.FluidItem;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerGeothermalgenerator;
-import com.denfop.tiles.geothermalpump.TileEntityGeothermalExchanger;
 import com.denfop.tiles.geothermalpump.TileEntityGeothermalGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,7 +25,8 @@ public class GuiGeothermalGenerator extends GuiIU<ContainerGeothermalgenerator> 
                 new Component<>(this.container.base.getEnergy())
         ));
         this.addElement((new FluidItem(this, this.xSize / 2 - 10, 20,
-                ((TileEntityGeothermalGenerator) guiContainer.base).getFluidTank().getFluid()) {
+                ((TileEntityGeothermalGenerator) guiContainer.base).getFluidTank().getFluid()
+        ) {
             @Override
             public void drawBackground(final int mouseX, final int mouseY) {
                 bindCommonTexture();
@@ -76,11 +75,12 @@ public class GuiGeothermalGenerator extends GuiIU<ContainerGeothermalgenerator> 
             }
         }));
     }
+
     @Override
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         bindTexture();
-        GlStateManager.color(1,1,1,1);
+        GlStateManager.color(1, 1, 1, 1);
         drawTexturedModalRect(this.guiLeft + this.xSize / 2 - 10 - 4, guiTop + 20 - 4, 235,
                 98, 20, 55
         );
@@ -88,6 +88,7 @@ public class GuiGeothermalGenerator extends GuiIU<ContainerGeothermalgenerator> 
             element.drawBackground(mouseX, mouseY);
         }
     }
+
     @Override
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigeothermalpump.png");

@@ -5,7 +5,6 @@ import com.denfop.Localization;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockAdvCokeOven;
-import com.denfop.blocks.mechanism.BlockCokeOven;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;

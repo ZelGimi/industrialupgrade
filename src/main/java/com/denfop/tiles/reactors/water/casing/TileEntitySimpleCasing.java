@@ -23,7 +23,7 @@ public class TileEntitySimpleCasing extends TileEntityMultiBlockElement implemen
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 0;
     }
 

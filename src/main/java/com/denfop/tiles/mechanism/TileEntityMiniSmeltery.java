@@ -11,11 +11,8 @@ import com.denfop.api.recipe.InputFluid;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.upgrades.IUpgradableBlock;
-import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
-import com.denfop.blocks.mechanism.BlockDryer;
 import com.denfop.blocks.mechanism.BlockMiniSmeltery;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerOilPurifier;
@@ -39,19 +36,16 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
-public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHasRecipe {
+public class TileEntityMiniSmeltery extends TileEntityInventory implements IHasRecipe {
 
     public final FluidHandlerRecipe fluid_handler;
     public final Fluids.InternalFluidTank fluidTank1;
@@ -73,16 +67,19 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
 
     }
+
+    public static int applyModifier(int base, int extra, double multiplier) {
+        double ret = Math.round((base + extra) * multiplier);
+        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
+    }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         for (int i = 1; i < 4; i++) {
             tooltip.add(Localization.translate("mini_smeltery.info" + i));
         }
     }
-    public static int applyModifier(int base, int extra, double multiplier) {
-        double ret = Math.round((base + extra) * multiplier);
-        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
-    }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -96,6 +93,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
     public boolean isNormalCube() {
         return false;
     }
+
     public List<AxisAlignedBB> getAabbs(boolean forCollision) {
         return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1D, 1.0D));
 
@@ -285,15 +283,16 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
             new PacketUpdateFieldTile(this, "slot", outputSlot);
             new PacketUpdateFieldTile(this, "fluidtank", fluidTank1);
         }
-        if (this.getWorld().isRemote){
-            GlobalRenderManager.addRender(world,pos,createFunction(this));
+        if (this.getWorld().isRemote) {
+            GlobalRenderManager.addRender(world, pos, createFunction(this));
         }
     }
+
     @SideOnly(Side.CLIENT)
-    public Function createFunction(TileEntityMiniSmeltery te){
-        Function function= o -> {
+    public Function createFunction(TileEntityMiniSmeltery te) {
+        Function function = o -> {
             GlStateManager.pushMatrix();
-            GlStateManager.translate(te.getPos().getX(), te.getPos().getY() ,
+            GlStateManager.translate(te.getPos().getX(), te.getPos().getY(),
                     te.getPos().getZ());
             RenderMiniSmeltery.render(te);
 
@@ -302,6 +301,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
         };
         return function;
     }
+
     @Override
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer customPacketBuffer = super.writePacket();
@@ -370,8 +370,8 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
 
     public void onUnloaded() {
         super.onUnloaded();
-        if (this.getWorld().isRemote){
-            GlobalRenderManager.removeRender(world,pos);
+        if (this.getWorld().isRemote) {
+            GlobalRenderManager.removeRender(world, pos);
         }
     }
 
@@ -390,10 +390,9 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
         }
 
 
-        if (this.fluid_handler.output() != null&& this.outputSlot.isEmpty() && this.outputSlot.canAdd(this.fluid_handler
+        if (this.fluid_handler.output() != null && this.outputSlot.isEmpty() && this.outputSlot.canAdd(this.fluid_handler
                 .output()
                 .getOutput().items) && this.fluid_handler.canOperate()) {
-
 
 
             this.progress = (short) (this.progress + 1);
@@ -478,8 +477,6 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
     public GuiOilPurifier getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return null;
     }
-
-
 
 
 }

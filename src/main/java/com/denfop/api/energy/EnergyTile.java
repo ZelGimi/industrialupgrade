@@ -51,13 +51,13 @@ public class EnergyTile implements IEnergyTile {
     }
 
     @Override
-    public void setHashCodeSource(final int hashCode) {
-
+    public int getHashCodeSource() {
+        return 0;
     }
 
     @Override
-    public int getHashCodeSource() {
-        return 0;
+    public void setHashCodeSource(final int hashCode) {
+
     }
 
 }

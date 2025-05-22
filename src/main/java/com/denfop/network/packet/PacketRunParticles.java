@@ -92,7 +92,7 @@ public class PacketRunParticles implements IPacket {
         int z = (int) ((packedCoordinates >> 4) & 0xFFFFF);
         int packedSpeeds = is.readInt();
         double xSpeed = ((packedSpeeds >> 16) & 65565) / 1024D;
-        double zSpeed = (packedSpeeds & 65565) /1024D;
+        double zSpeed = (packedSpeeds & 65565) / 1024D;
 
         TileEntityBlock block = (TileEntityBlock) entityPlayer.getEntityWorld().getTileEntity(pos);
         if (block != null) {
@@ -100,9 +100,9 @@ public class PacketRunParticles implements IPacket {
                 IBlockState state = block.getBlockState();
                 ParticleDigging particle = new ParticleBaseBlockDust(
                         entityPlayer.getEntityWorld(),
-                        x/10D,
-                        y/10D,
-                        z/10D,
+                        x / 10D,
+                        y / 10D,
+                        z / 10D,
                         xSpeed,
                         0,
                         zSpeed,

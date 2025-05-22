@@ -20,7 +20,6 @@ import com.denfop.render.anvil.RenderItemAnvil;
 import com.denfop.render.anvil.RenderItemStrongAnvil;
 import com.denfop.render.base.IUModelLoader;
 import com.denfop.render.base.RenderCoreProcess;
-import com.denfop.render.base.TileEntitySolarSystemRender;
 import com.denfop.render.compressor.TileEntityRenderCompressor;
 import com.denfop.render.crop.CropRender;
 import com.denfop.render.crop.TileEntityDoubleCropRender;
@@ -61,7 +60,6 @@ import com.denfop.tiles.base.TileMolecularTransformer;
 import com.denfop.tiles.base.TileQuantumMolecular;
 import com.denfop.tiles.base.TileQuarryVein;
 import com.denfop.tiles.base.TileSintezator;
-import com.denfop.tiles.bee.TileEntityApiary;
 import com.denfop.tiles.crop.TileEntityCrop;
 import com.denfop.tiles.mechanism.TileAdvOilRefiner;
 import com.denfop.tiles.mechanism.TileEntityCompressor;
@@ -133,6 +131,7 @@ public class ClientProxy extends CommonProxy {
     public static final List<IModelRegister> modelList = new LinkedList<>();
 
     public static final List<ICableItem> cableItemTextureAspire = new LinkedList<>();
+    public static CropRender cropRender;
     private final Minecraft mc = Minecraft.getMinecraft();
     public GuiScreen gui;
     public ItemStackInventory invent;
@@ -200,7 +199,10 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPrimalGasChamber.class, new TileEntityRenderGasChamber());
         ClientRegistry.bindTileEntitySpecialRenderer(TileSteamStorage.class, new TileEntityRenderSteamStorage());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySteamTankBoiler.class, new TileEntityRenderSteamTankBoiler());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBaseSteamTurbineTank.class, new TileEntityRenderSteamTurbineTank());
+        ClientRegistry.bindTileEntitySpecialRenderer(
+                TileEntityBaseSteamTurbineTank.class,
+                new TileEntityRenderSteamTurbineTank()
+        );
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrop.class, new TileEntityDoubleCropRender());
 
 
@@ -243,8 +245,6 @@ public class ClientProxy extends CommonProxy {
         ModelLoaderRegistry.registerLoader(loader);
     }
 
-    public static CropRender cropRender;
-
     public void requestTick(boolean simulating, Runnable runnable) {
         if (simulating) {
             super.requestTick(simulating, runnable);
@@ -262,8 +262,8 @@ public class ClientProxy extends CommonProxy {
         if (this.isSimulating()) {
             return super.getWorld(dimId);
         } else {
-            World world = this.mc.world;
-            return world.provider.getDimension() == dimId ? world : null;
+
+            return getPlayerWorld();
         }
     }
 

@@ -63,64 +63,76 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
     ) {
         IColonyBuilding building = getBuilding(null, stack, true);
         if (building != null) {
-            if (building instanceof IBuildingHouse){
+            if (building instanceof IBuildingHouse) {
                 IBuildingHouse buildingHouse = (IBuildingHouse) building;
-                tooltip.add(Localization.translate("iu.colony_building.houses")+" " + buildingHouse.getMaxPeople());
-                tooltip.add(Localization.translate("iu.colony_building.houses_oxygen")+" " + (int)(buildingHouse.getMaxPeople()*buildingHouse.getHouses().getConsumeOxygen()));
-                tooltip.add(Localization.translate("iu.colony_building.houses_food")+" " + (int)(buildingHouse.getMaxPeople()));
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy")+" " + (int)(buildingHouse.getHouses().getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.houses") + " " + buildingHouse.getMaxPeople());
+                tooltip.add(Localization.translate("iu.colony_building.houses_oxygen") + " " + (int) (buildingHouse.getMaxPeople() * buildingHouse
+                        .getHouses()
+                        .getConsumeOxygen()));
+                tooltip.add(Localization.translate("iu.colony_building.houses_food") + " " + (int) (buildingHouse.getMaxPeople()));
+                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse
+                        .getHouses()
+                        .getEnergy()));
 
             }
-            if (building instanceof IFactory){
+            if (building instanceof IFactory) {
                 IFactory buildingHouse = (IFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers")+" " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.generate_food")+" " + (int)(buildingHouse.needWorkers()*2));
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy")+" " + (int)(buildingHouse.getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
+                tooltip.add(Localization.translate("iu.colony_building.generate_food") + " " + (int) (buildingHouse.needWorkers() * 2));
+                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
 
             }
-            if (building instanceof ColonyPanelFactory){
+            if (building instanceof ColonyPanelFactory) {
                 ColonyPanelFactory buildingHouse = (ColonyPanelFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers")+" " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.generate_energy")+" " + (int)(buildingHouse.getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
+                tooltip.add(Localization.translate("iu.colony_building.generate_energy") + " " + (int) (buildingHouse.getEnergy()));
 
             }
-            if (building instanceof OxygenFactory){
+            if (building instanceof OxygenFactory) {
                 OxygenFactory buildingHouse = (OxygenFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers")+" " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy")+" " + (int)(buildingHouse.getEnergy()));
-                tooltip.add(Localization.translate("iu.colony_building.generate_oxygen")+" " + (int)(buildingHouse.getGeneration()));
+                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
+                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.generate_oxygen") + " " + (int) (buildingHouse.getGeneration()));
 
             }
-            if (building instanceof ProtectionBuilding){
+            if (building instanceof ProtectionBuilding) {
                 ProtectionBuilding buildingHouse = (ProtectionBuilding) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers")+" " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.protection")+" " + (int)(buildingHouse.getProtectionBuilding().getProtection()));
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy")+" " + (int)(buildingHouse.getProtectionBuilding().getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
+                tooltip.add(Localization.translate("iu.colony_building.protection") + " " + (int) (buildingHouse
+                        .getProtectionBuilding()
+                        .getProtection()));
+                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse
+                        .getProtectionBuilding()
+                        .getEnergy()));
 
             }
-            if (building instanceof ItemFactory){
+            if (building instanceof ItemFactory) {
                 ItemFactory buildingHouse = (ItemFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers")+" " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy")+" " + (int)(buildingHouse.getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
+                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
 
             }
-            if (building instanceof FluidFactory){
+            if (building instanceof FluidFactory) {
                 FluidFactory buildingHouse = (FluidFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers")+" " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy")+" " + (int)(buildingHouse.getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
+                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
 
             }
-            if (building instanceof StorageBuilding){
+            if (building instanceof StorageBuilding) {
                 StorageBuilding buildingHouse = (StorageBuilding) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers")+" " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy")+" " + (int)(buildingHouse.getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
+                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
 
             }
-            if (building instanceof ColonyEntertainment){
+            if (building instanceof ColonyEntertainment) {
                 ColonyEntertainment buildingHouse = (ColonyEntertainment) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers")+" " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy")+" " + (int)(buildingHouse.getType().getEnergy()));
-                tooltip.add(Localization.translate("iu.colony_building.entertainment")+" " + (int)(buildingHouse.getType().getEntertainment()));
+                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
+                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse
+                        .getType()
+                        .getEnergy()));
+                tooltip.add(Localization.translate("iu.colony_building.entertainment") + " " + (int) (buildingHouse
+                        .getType()
+                        .getEntertainment()));
 
             }
             tooltip.add(Localization.translate("iu.colonial_building.info") + building.getMinLevelColony());

@@ -55,9 +55,11 @@ public class GeneticPolymizerWrapper implements IRecipeWrapper {
     public ItemStack getInput4() {
         return inputstack4;
     }
+
     public ItemStack getInput5() {
         return inputstack4;
     }
+
     public List<List<ItemStack>> getInputs() {
         ItemStack inputs = this.inputstack;
         List<ItemStack> stack = new ArrayList<>();

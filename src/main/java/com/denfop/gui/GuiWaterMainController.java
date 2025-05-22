@@ -124,9 +124,11 @@ public class GuiWaterMainController extends GuiIU<ContainerWaterMainController> 
         );
 
         if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
-            new Area(this, 201, 10, 15, 76).withTooltip(Localization.translate("iu.reactor_info.energy") +": " + ModUtils.getString(this.container.base.energy.getEnergy()) +
-                    "/" + ModUtils.getString(this.container.base.energy.getCapacity())).drawForeground(par1, par2);
-        }else {
+            new Area(this, 201, 10, 15, 76)
+                    .withTooltip(Localization.translate("iu.reactor_info.energy") + ": " + ModUtils.getString(this.container.base.energy.getEnergy()) +
+                            "/" + ModUtils.getString(this.container.base.energy.getCapacity()))
+                    .drawForeground(par1, par2);
+        } else {
             new Area(this, 201, 10, 15, 76)
                     .withTooltip(Localization.translate("iu.reactor_info.upgrade1"))
                     .drawForeground(
@@ -135,8 +137,9 @@ public class GuiWaterMainController extends GuiIU<ContainerWaterMainController> 
                     );
         }
         new Area(this, 26, 143, 120, 18)
-                .withTooltip(Localization.translate("iu.reactor_info.heat")+": " + ModUtils.getString(this.container.base.getHeat()) +
-                        "/" + ModUtils.getString(this.container.base.getMaxHeat()) + "°C" + "\n" + Localization.translate("iu.reactor_info.stable_heat")+": " + this.container.base.getStableMaxHeat() + "°C")
+                .withTooltip(Localization.translate("iu.reactor_info.heat") + ": " + ModUtils.getString(this.container.base.getHeat()) +
+                        "/" + ModUtils.getString(this.container.base.getMaxHeat()) + "°C" + "\n" + Localization.translate(
+                        "iu.reactor_info.stable_heat") + ": " + this.container.base.getStableMaxHeat() + "°C")
                 .drawForeground(
                         par1,
                         par2

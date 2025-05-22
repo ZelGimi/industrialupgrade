@@ -5,15 +5,12 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.gaswell.TileEntityGasWellAnalyzer;
-import com.denfop.tiles.gaswell.TileEntityGasWellCasing;
-import com.denfop.tiles.gaswell.TileEntityGasWellController;
-import com.denfop.tiles.gaswell.TileEntityGasWellDrill;
-import com.denfop.tiles.gaswell.TileEntityGasWellEnergy;
-import com.denfop.tiles.gaswell.TileEntityGasWellTank;
-import com.denfop.tiles.gaswell.TileEntityGasWellTransport;
+import com.denfop.tiles.lightning_rod.TileEntityLightningRodAntennaMast;
 import com.denfop.tiles.lightning_rod.TileEntityLightningRodCasing;
-import com.denfop.tiles.lightning_rod.*;
+import com.denfop.tiles.lightning_rod.TileEntityLightningRodController;
+import com.denfop.tiles.lightning_rod.TileEntityLightningRodGrounding;
+import com.denfop.tiles.lightning_rod.TileEntityLightningRodPoles;
+import com.denfop.tiles.lightning_rod.TileEntityLightningRodReceiver;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
@@ -33,8 +30,7 @@ public enum BlockLightningRod implements IMultiTileBlock {
     lightning_rod_grounding(TileEntityLightningRodGrounding.class, 2),
     lightning_rod_poles(TileEntityLightningRodPoles.class, 3),
     lightning_rod_antenna_mast(TileEntityLightningRodAntennaMast.class, 4),
-    lightning_rod_receiver(TileEntityLightningRodReceiver.class, 5)
-    ;
+    lightning_rod_receiver(TileEntityLightningRodReceiver.class, 5);
 
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("lightning_rod");
@@ -42,8 +38,8 @@ public enum BlockLightningRod implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockLightningRod(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -59,14 +55,19 @@ public enum BlockLightningRod implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     @Override
     public Material getMaterial() {
         return Material.IRON;

@@ -1,6 +1,5 @@
 package com.denfop.componets;
 
-import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IMultiUpdateTick;
@@ -8,7 +7,10 @@ import com.denfop.api.recipe.InvSlotBioMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.tiles.base.*;
+import com.denfop.tiles.base.EnumMultiMachine;
+import com.denfop.tiles.base.IBioMachine;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,6 +24,8 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
 
     public final InvSlotBioMultiRecipes inputSlots;
     public final InvSlotOutput outputSlot;
+    public final HeatComponent heat;
+    public final boolean isCentrifuge;
     private final ComponentBioFuelEnergy bioFuel;
     private final IBioMachine multimachine;
     private final EnumMultiMachine enumMultiMachine;
@@ -32,8 +36,6 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
     private final int defaultOperationLength;
     private final int operationChange;
     private final MachineRecipe[] output;
-    public final HeatComponent heat;
-    public final boolean isCentrifuge;
     public double energyConsume;
     public int operationLength;
     private int mode;
@@ -63,11 +65,12 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
         this.defaultOperationLength = this.operationChange = this.operationLength =
                 Math.max((int) (enumMultiMachine.lenghtOperation * 1D / speed), 1);
         this.output = new MachineRecipe[sizeWorkingSlot];
-        this.bioFuel = ((TileEntityBlock)parent).getComp(ComponentBioFuelEnergy.class);
-        this.heat = ((TileEntityBlock)parent).getComp(HeatComponent.class);
+        this.bioFuel = ((TileEntityBlock) parent).getComp(ComponentBioFuelEnergy.class);
+        this.heat = ((TileEntityBlock) parent).getComp(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
 
     }
+
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -76,6 +79,7 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
             this.getsOutputs();
         }
     }
+
     @Override
     public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
         return false;
@@ -171,7 +175,7 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
                     this.guiProgress[i] = 0;
                     this.progress[i] = 0;
                     operate(i, output);
-                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.VALUES[2 %  EnumTypeAudio.VALUES.length])) {
+                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.VALUES[2 % EnumTypeAudio.VALUES.length])) {
                         if (type == -1) {
                             this.multimachine.initiate(2);
                             type = 2;
@@ -180,7 +184,7 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
                 }
             } else {
                 if (this.progress[i] != 0 && this.parent.getActive()) {
-                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.VALUES[1 %  EnumTypeAudio.VALUES.length])) {
+                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.VALUES[1 % EnumTypeAudio.VALUES.length])) {
                         if (type == -1) {
                             this.multimachine.initiate(1);
                             type = 1;

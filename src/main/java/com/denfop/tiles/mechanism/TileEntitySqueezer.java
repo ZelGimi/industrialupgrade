@@ -42,7 +42,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -68,8 +67,9 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
     public final InvSlotFluidByList fluidSlot1;
     public final FluidHandlerRecipe fluid_handler;
     public short progress;
+    public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.SQUEEZER);
     private MachineRecipe output;
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.SQUEEZER);
+
     public TileEntitySqueezer() {
 
         this.inputSlotA = new InvSlotRecipes(this, "squeezer", this) {
@@ -91,12 +91,7 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
         this.inputSlotA.setStackSizeLimit(1);
         Recipes.recipes.addInitRecipes(this);
     }
-    @Override
-    public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        for (int i = 1; i < 5; i++) {
-            tooltip.add(Localization.translate("squeezer.info" + i));
-        }
-    }
+
     public static void addRecipe(ItemStack container, FluidStack fluidStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
@@ -111,6 +106,13 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
                 container), Collections.singletonList(
                 fluidStack)));
 
+    }
+
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        for (int i = 1; i < 5; i++) {
+            tooltip.add(Localization.translate("squeezer.info" + i));
+        }
     }
 
     @Override
@@ -277,14 +279,15 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
         if (stack
                 .getItem()
                 .equals(IUItem.treetap) && !inputSlotA.isEmpty() && this.output != null && this.fluid_handler.output() != null && this.fluid_handler.canFillFluid()) {
-            progress += (short) (10 + (short) (data.getOrDefault(player.getUniqueID(),0.0) / 2.5d));
+            progress += (short) (10 + (short) (data.getOrDefault(player.getUniqueID(), 0.0) / 2.5d));
             this.getCooldownTracker().setTick(8);
             this.setActive(String.valueOf(progress / 10));
             if (progress >= 150) {
                 this.progress = 0;
                 this.setActive("");
-                if (!this.getWorld().isRemote)
-                PrimitiveHandler.addExperience(EnumPrimitive.SQUEEZER,0.5,player.getUniqueID());
+                if (!this.getWorld().isRemote) {
+                    PrimitiveHandler.addExperience(EnumPrimitive.SQUEEZER, 0.5, player.getUniqueID());
+                }
                 this.fluid_handler.fillFluid();
                 this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
                 if (!world.isRemote) {

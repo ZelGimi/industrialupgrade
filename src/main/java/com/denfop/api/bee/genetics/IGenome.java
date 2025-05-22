@@ -1,6 +1,5 @@
 package com.denfop.api.bee.genetics;
 
-import com.denfop.api.agriculture.ICrop;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface IGenome {
@@ -14,4 +13,5 @@ public interface IGenome {
     Genome copy();
 
     NBTTagCompound writeNBT(NBTTagCompound nbtTagCompound);
+
 }

@@ -1,6 +1,5 @@
 package com.denfop.integration.jei.upgraderover;
 
-import com.denfop.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;

@@ -4,13 +4,13 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
-import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.adv_cokeoven.TileCokeOvenMain;
 import com.denfop.tiles.adv_cokeoven.TileEntityCokeOvenInputFluid;
 import com.denfop.tiles.adv_cokeoven.TileEntityCokeOvenInputItem;
 import com.denfop.tiles.adv_cokeoven.TileEntityCokeOvenOutputFluid;
 import com.denfop.tiles.adv_cokeoven.TileEntityHeatBlock;
 import com.denfop.tiles.adv_cokeoven.TileEntityOtherPart;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
@@ -39,8 +39,8 @@ public enum BlockAdvCokeOven implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockAdvCokeOven(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -56,14 +56,19 @@ public enum BlockAdvCokeOven implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     @Override
     public Material getMaterial() {
         return Material.IRON;

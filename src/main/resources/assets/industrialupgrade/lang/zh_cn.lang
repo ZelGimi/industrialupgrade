@@ -285,12 +285,12 @@ iu.modulestype.module94=能源模块:§8夸克太阳能板
 iu.additionmodule.personality=模块:私有
 iu.additionmodule.tier_in=太阳能模块:升压
 iu.additionmodule.tier_de=太阳能模块:降压
-iu.additionmodule.charger=太阳能模块:物品充电
+iu.additionmodule.charger=太阳能模块:物品充能
 iu.additionmodule.rf=能源模块:RF-能量
-iu.additionmodule.mov_charge_eu=储能仓模块:装甲无线充电
-iu.additionmodule.mov_charge_eu_item=储能仓模块:工具无线充电
-iu.additionmodule.mov_charge_rf=储能仓模块:装甲无线充电(RF)
-iu.additionmodule.mov_charge_rf_item=储能仓模块:工具无线充电(RF)
+iu.additionmodule.mov_charge_eu=储能仓模块:装甲无线充能
+iu.additionmodule.mov_charge_eu_item=储能仓模块:工具无线充能
+iu.additionmodule.mov_charge_rf=储能仓模块:装甲无线充能(RF)
+iu.additionmodule.mov_charge_rf_item=储能仓模块:工具无线充能(RF)
 iu.additionmodule.purifier=模块:净化
 iu.additionmodule.wireless=无线模块
 
@@ -341,52 +341,52 @@ iu.upgrade_speed_creation.name=模块:性能
 
 iu.moduletype=模块类型: 普通
 
-iu.upgrademodules.upgrademodule=改装模块:白天产能
-iu.upgrademodules.upgrademodule1=改装模块:夜晚产能
-iu.upgrademodules.upgrademodule2=改装模块:保护
+iu.upgrademodules.upgrademodule=改装模块:白昼充能
+iu.upgrademodules.upgrademodule1=改装模块:月夜充能
+iu.upgrademodules.upgrademodule2=改装模块:防御强化
 iu.upgrademodules.upgrademodule3=改装模块:挖矿速度
-iu.upgrademodules.upgrademodule4=改装模块:能量效率 (弓)
-iu.upgrademodules.upgrademodule5=改装模块:能量效率 (剑)
+iu.upgrademodules.upgrademodule4=改装模块:能耗效率 (弓)
+iu.upgrademodules.upgrademodule5=改装模块:能耗效率 (剑)
 iu.upgrademodules.upgrademodule6=改装模块:挖掘深度
 iu.upgrademodules.upgrademodule7=改装模块:火焰保护
 iu.upgrademodules.upgrademodule8=改装模块:水下呼吸
 iu.upgrademodules.upgrademodule9=改装模块:速度
 iu.upgrademodules.upgrademodule10=改装模块:跳跃提升
-iu.upgrademodules.upgrademodule11=改装模块:伤害 (弓)
-iu.upgrademodules.upgrademodule12=改装模块:伤害 (剑)
-iu.upgrademodules.upgrademodule13=改装模块:挖掘面积
+iu.upgrademodules.upgrademodule11=改装模块:伤害提升 (弓)
+iu.upgrademodules.upgrademodule12=改装模块:伤害提升 (剑)
+iu.upgrademodules.upgrademodule13=改装模块:挖掘范围
 iu.upgrademodules.upgrademodule14=改装模块:飞行速度
-iu.upgrademodules.upgrademodule15=改装模块:储存
-iu.upgrademodules.upgrademodule16=改装模块:能源效率 (工具)
+iu.upgrademodules.upgrademodule15=改装模块:存储扩容
+iu.upgrademodules.upgrademodule16=改装模块:能耗效率 (工具)
 iu.upgrademodules.upgrademodule17=改装模块:吸血
-iu.upgrademodules.upgrademodule18=改装模块:抗性
-iu.upgrademodules.upgrademodule19=改装模块:毒性
-iu.upgrademodules.upgrademodule20=改装模块:凋零
+iu.upgrademodules.upgrademodule18=改装模块:抗性提升
+iu.upgrademodules.upgrademodule19=改装模块:淬毒
+iu.upgrademodules.upgrademodule20=改装模块:淬毒-凋零
 iu.upgrademodules.upgrademodule21=改装模块:精准采集
 iu.upgrademodules.upgrademodule22=改装模块:隐身
 iu.upgrademodules.upgrademodule23=改装模块:抢夺
-iu.upgrademodules.upgrademodule24=改装模块:点火
-iu.upgrademodules.upgrademodule25=改装模块:电荷蓄能
+iu.upgrademodules.upgrademodule24=改装模块:点燃
+iu.upgrademodules.upgrademodule25=改装模块:蓄能
 iu.upgrademodules.upgrademodule26=改装模块:幸运
 iu.upgrademodules.upgrademodule27=改装模块:效率
 iu.upgrademodules.upgrademodule28=改装模块:冶炼
 iu.upgrademodules.upgrademodule29=改装模块:夜视
 iu.upgrademodules.upgrademodule30=改装模块:荆棘
-iu.upgrademodules.upgrademodule31=改装模块:更多经验
-iu.upgrademodules.upgrademodule32=改装模块:失明
-iu.upgrademodules.upgrademodule33=改装模块:弓箭保护
+iu.upgrademodules.upgrademodule31=改装模块:经验增幅
+iu.upgrademodules.upgrademodule32=改装模块:致盲
+iu.upgrademodules.upgrademodule33=改装模块:弹射保护
 iu.upgrademodules.upgrademodule34=改装模块:摔落保护
-iu.upgrademodules.upgrademodule35=改装模块:粉碎
-iu.upgrademodules.upgrademodule36=改装模块:矿石粉碎
+iu.upgrademodules.upgrademodule35=改装模块:粉碎Ⅰ
+iu.upgrademodules.upgrademodule36=改装模块:粉碎Ⅱ
 iu.upgrademodules.upgrademodule37=改装模块:宝藏
-iu.upgrademodules.upgrademodule38=改装模块:饥饿
-iu.upgrademodules.upgrademodule39=改装模块:发电
+iu.upgrademodules.upgrademodule38=改装模块:饥饿抗性
+iu.upgrademodules.upgrademodule39=改装模块:能量生成
 iu.upgrademodules.upgrademodule40=改装模块:自动收集
-iu.upgrademodules.upgrademodule41=改装模块:创造飞行模式
-iu.upgrademodules.upgrademodule42=改装模块:磁能
-iu.upgrademodules.upgrademodule43=改装模块:节能充电
+iu.upgrademodules.upgrademodule41=改装模块:创造飞行
+iu.upgrademodules.upgrademodule42=改装模块:磁力吸附
+iu.upgrademodules.upgrademodule43=改装模块:节能充能
 iu.upgrademodules.upgrademodule44=改装模块:净化
-iu.upgrademodules.upgrademodule45=改装模块:树脂提取
+iu.upgrademodules.upgrademodule45=改装模块:流体操控
 iu.upgrademodules.upgrademodule46=改装模块:扳手
 
 iu.entitymodules.module_player=猎人模块:玩家
@@ -499,13 +499,13 @@ iu.radiationresources.rad_toriy=光辉钍
 iu.thorium_ore.name=钍矿石
 
 # Rotor Cores
-iu.corewind.core_wind=木制转子核心
+iu.corewind.core_wind=木质转子核心
 iu.corewind.core_wind1=青铜转子核心
-iu.corewind.core_wind2=铁转子核心
-iu.corewind.core_wind3=钢转子核心
-iu.corewind.core_wind4=碳转子核心
-iu.corewind.core_wind5=铱转子核心
-iu.corewind.core_wind6=压缩铱转子核心
+iu.corewind.core_wind2=铁质转子核心
+iu.corewind.core_wind3=钢质转子核心
+iu.corewind.core_wind4=碳质转子核心
+iu.corewind.core_wind5=铱质转子核心
+iu.corewind.core_wind6=压缩铱转子核心   
 iu.corewind.core_wind7=光谱转子核心
 iu.corewind.core_wind8=神话转子核心
 iu.corewind.core_wind9=中子转子核心
@@ -515,12 +515,12 @@ iu.corewind.core_wind12=强子转子核心
 iu.corewind.core_wind13=以太转子核心
 
 # Rotor Blades
-iu.windrod.oak_rotor_model=木制转子叶片
+iu.windrod.oak_rotor_model=木质转子叶片
 iu.windrod.bronze_rotor_model=青铜转子叶片
-iu.windrod.iron_rotor_model=铁转子叶片
-iu.windrod.steel_rotor_model=钢转子叶片
-iu.windrod.carbon_rotor_model=碳转子叶片
-iu.windrod.carbon_rotor_model1=铱转子叶片
+iu.windrod.iron_rotor_model=铁质转子叶片
+iu.windrod.steel_rotor_model=钢质转子叶片
+iu.windrod.carbon_rotor_model=碳质转子叶片
+iu.windrod.carbon_rotor_model1=铱质转子叶片
 iu.windrod.carbon_rotor_model2=压缩铱转子叶片
 iu.windrod.carbon_rotor_model3=光谱转子叶片
 iu.windrod.carbon_rotor_model4=神话转子叶片
@@ -534,7 +534,7 @@ iu.windrod.carbon_rotor_model9=以太转子叶片
 iu.rotor_wood=木质转子
 iu.rotor_bronze=青铜转子
 iu.rotor_iron=铁转子
-iu.rotor_steel=钢制转子
+iu.rotor_steel=钢质转子
 iu.rotor_carbon=碳纤转子
 iu.compressiridium=§7压缩铱转子
 iu.iridium=§f铱转子
@@ -577,7 +577,7 @@ iu.error=§c报错! 模块提醒: 已触发隐私安全. 您不是太阳能板�
 iu.miny=最小高度:
 iu.maxy=最大高度:
 iu.storage.helmet=太阳能电池容量: 
-successfully.charged=充电完成
+successfully.charged=充能完成
 iu.sendenergy=. 能耗: 
 
 itemGroup.IUTab=IU:方块/机械
@@ -867,7 +867,7 @@ item.forge.bucketFilled.iufluidindustrialoil=工业油桶
 item.forge.bucketFilled.iufluidfluor=氟桶
 item.forge.bucketFilled.iufluidcreosote=煤焦油桶
 item.forge.bucketFilled.iufluidazurebrilliant=辉钻蓝桶
-item.forge.bucketFilled.iufluidrawlatex=液态橡胶桶
+item.forge.bucketFilled.iufluidrawlatex=液态乳胶桶
 item.forge.bucketFilled.iufluidglowstone=液态荧石桶
 item.forge.bucketFilled.iufluidsweet_medium_oil=甜轻质原油桶
 item.forge.bucketFilled.iufluidsweet_heavy_oil=甜重质原油桶
@@ -1779,103 +1779,6 @@ iu.purifiedcrushed.thallium=纯净碎铊矿石
 iu.purifiedcrushed.zirconium=纯净碎锆矿石
 
 
-##Ex Nihilo Integration
-#Broken Metal矿石s粉碎金属矿石
-mikhail_gravelcrushed.name=粉碎米哈洛夫矿石
-aluminium_gravelcrushed.name=粉碎铝矿石
-vanady_gravelcrushed.name=粉碎钒矿石
-wolfram_gravelcrushed.name=粉碎钨矿石
-cobalt_gravelcrushed.name=粉碎钴矿石
-magnesium_gravelcrushed.name=粉碎镁矿石
-nickel_gravelcrushed.name=粉碎镍矿石
-platium_gravelcrushed.name=粉碎铂矿石
-titanium_gravelcrushed.name=粉碎钛矿石
-chromium_gravelcrushed.name=粉碎铬矿石
-spinel_gravelcrushed.name=粉碎尖晶石矿石
-silver_gravelcrushed.name=粉碎粉碎银矿石
-zinc_gravelcrushed.name=粉碎粉碎锌矿石
-manganese_gravelcrushed.name=粉碎锰矿石
-
-#Metal矿石s Gravel金属矿砂砾
-mikhail_gravelore.name=米哈洛夫矿砂砾
-aluminium_gravelore.name=铝矿砂砾
-vanady_gravelore.name=钒矿砂砾
-wolfram_gravelore.name=钨矿砂砾
-cobalt_gravelore.name=钴矿砂砾
-magnesium_gravelore.name=镁矿砂砾
-nickel_gravelore.name=镍矿砂砾
-platium_gravelore.name=铂矿砂砾
-titanium_gravelore.name=钛矿砂砾
-chromium_gravelore.name=铬矿砂砾
-spinel_gravelore.name=尖晶石矿砂砾
-silver_gravelore.name=银矿砂砾
-zinc_gravelore.name=锌矿砂砾
-manganese_gravelore.name=锰矿砂砾
-
-#碎Metal矿石s
-mikhail_sandcrushed.name=碎米哈洛夫沙石
-aluminium_sandcrushed.name=碎铝沙石
-vanady_sandcrushed.name=碎钒沙石
-wolfram_sandcrushed.name=碎钨沙石
-cobalt_sandcrushed.name=碎钴沙石
-magnesium_sandcrushed.name=碎镁沙石
-nickel_sandcrushed.name=碎镍沙石
-platium_sandcrushed.name=碎铂沙石
-titanium_sandcrushed.name=碎钛沙石
-chromium_sandcrushed.name=碎铬沙石
-spinel_sandcrushed.name=碎尖晶石沙石
-silver_sandcrushed.name=碎银沙石
-zinc_sandcrushed.name=碎锌沙石
-manganese_sandcrushed.name=碎锰沙石
-
-#Metal矿石s Sand
-mikhail_sandore.name=米哈洛夫矿石沙子
-aluminium_sandore.name=铝矿石沙子
-vanady_sandore.name=钒矿石沙子
-wolfram_sandore.name=钨矿石沙子
-cobalt_sandore.name=钴矿石沙子
-magnesium_sandore.name=镁矿石沙子
-nickel_sandore.name=镍矿石沙子
-platium_sandore.name=铂矿石沙子
-titanium_sandore.name=钛矿石沙子
-chromium_sandore.name=铬矿石沙子
-spinel_sandore.name=尖晶石矿石沙子
-silver_sandore.name=银矿石沙子
-zinc_sandore.name=锌矿石沙子
-manganese_sandore.name=锰矿石沙子
-
-#Powdered Metal矿石s
-mikhail_dustcrushed.name=米哈洛夫矿石粉末
-aluminium_dustcrushed.name=铝矿石粉末
-vanady_dustcrushed.name=钒矿石粉末
-wolfram_dustcrushed.name=钨矿石粉末
-cobalt_dustcrushed.name=钴矿石粉末
-magnesium_dustcrushed.name=镁矿石粉末
-nickel_dustcrushed.name=镍矿石粉末
-platium_dustcrushed.name=铂矿石粉末
-titanium_dustcrushed.name=钛矿石粉末
-chromium_dustcrushed.name=铬矿石粉末
-spinel_dustcrushed.name=尖晶石矿石粉末
-silver_dustcrushed.name=银矿石粉末
-zinc_dustcrushed.name=锌矿石粉末
-manganese_dustcrushed.name=锰矿石粉末
-
-#Metal矿石s Dust矿石粉尘
-mikhail_dustore.name=米哈洛夫矿石粉
-aluminium_dustore.name=铝矿石粉
-vanady_dustore.name=钒矿石粉
-wolfram_dustore.name=钨矿石粉
-cobalt_dustore.name=钴矿石粉
-magnesium_dustore.name=镁矿石粉
-nickel_dustore.name=镍矿石粉
-platium_dustore.name=铂矿石粉
-titanium_dustore.name=钛矿石粉
-chromium_dustore.name=铬矿石粉
-spinel_dustore.name=尖晶石矿石粉
-silver_dustore.name=银矿石粉
-zinc_dustore.name=锌矿石粉
-manganese_dustore.name=锰矿石粉
-
 industrialupgrade.transformer_iu.lv=低压变压器
 industrialupgrade.transformer_iu.mv=中压变压器
 industrialupgrade.transformer_iu.hv=高压变压器
@@ -2235,7 +2138,7 @@ iu.panelinformation4=使用模块来提升太阳能。
 iu.panelinformation5=请阅读模块详细信息。
 iu.panelinformation6=太阳能现在需要用扳手拆卸。
 iu.panelinformation7=模式切换按钮只对“RF”模块起作用。
-iu.panelinformation8=要在太阳能版上的充电，你需要“充电物品”模块
+iu.panelinformation8=要在太阳能版上的充电，你需要“物品充能”模块
 iu.panelinformation9=手动太阳能清洗可替换为“净化器”模块。
 
 updatemod4=[IU]
@@ -3438,13 +3341,13 @@ iu.crafting_elements.crafting_333_element=高温反应堆加速器
 iu.crafting_elements.crafting_334_element=石墨水冷堆加速器
 iu.crafting_elements.crafting_335_element=气冷堆核心加速器
 iu.crafting_elements.crafting_336_element=液态反应堆加速器
-iu.crafting_elements.crafting_337_element=铁制插套
-iu.crafting_elements.crafting_338_element=铁制插头
+iu.crafting_elements.crafting_337_element=铁质插套
+iu.crafting_elements.crafting_338_element=铁质插头
 iu.crafting_elements.crafting_339_element=金质插套
 iu.crafting_elements.crafting_340_element=绝热套
 iu.crafting_elements.crafting_341_element=绿宝石插套
 iu.crafting_elements.crafting_342_element=核反应堆控制面板
-iu.crafting_elements.crafting_343_element=铱制插头
+iu.crafting_elements.crafting_343_element=铱质插头
 iu.crafting_elements.crafting_344_element=碳化硅
 iu.crafting_elements.crafting_345_element=量子安装螺丝
 iu.crafting_elements.crafting_346_element=量子密封垫
@@ -3487,7 +3390,7 @@ iu.crafting_elements.crafting_382_element=质子密封垫
 iu.crafting_elements.crafting_383_element=质子插座部件
 iu.crafting_elements.crafting_384_element=质子活性物质
 iu.crafting_elements.crafting_385_element=反应堆调温器
-iu.crafting_elements.crafting_386_element=亚原子元素钅瓦97
+iu.crafting_elements.crafting_386_element=亚原子元素瓦97
 iu.crafting_elements.crafting_387_element=超导线圈
 iu.crafting_elements.crafting_388_element=奇异活性物质
 iu.crafting_elements.crafting_389_element=奇异密封垫
@@ -3512,7 +3415,7 @@ iu.crafting_elements.crafting_407_element=光谱密封垫
 iu.crafting_elements.crafting_408_element=光谱插座部件
 iu.crafting_elements.crafting_409_element=光谱活性物质
 iu.crafting_elements.crafting_410_element=标准功率石墨棒
-iu.crafting_elements.crafting_411_element=钢制插头
+iu.crafting_elements.crafting_411_element=钢质插头
 iu.crafting_elements.crafting_412_element=交换器冲压模板
 iu.crafting_elements.crafting_413_element=散热器冲压模板
 iu.crafting_elements.crafting_414_element=晶体管
@@ -3551,9 +3454,9 @@ iu.crafting_elements.crafting_446_element=富钚青金石晶体
 iu.crafting_elements.crafting_447_element=锂锭
 iu.crafting_elements.crafting_448_element=硼晶体
 iu.crafting_elements.crafting_449_element=铍碎块
-iu.crafting_elements.crafting_450_element=锂制板
-iu.crafting_elements.crafting_451_element=硼制板
-iu.crafting_elements.crafting_452_element=铍制板
+iu.crafting_elements.crafting_450_element=锂质板
+iu.crafting_elements.crafting_451_element=硼质板
+iu.crafting_elements.crafting_452_element=铍质板
 iu.crafting_elements.crafting_453_element=高级光辉合金板
 iu.transport.heat=传递热量: 
 iu.transport.cold=制冷量: 
@@ -3609,38 +3512,38 @@ industrialupgrade.basemachine3.autocrafter=自动工作台
 
 iu.gear.mikhail=米哈伊尔齿轮
 iu.gear.aluminium=铝合金齿轮
-iu.gear.vanady=钒制齿轮
-iu.gear.wolfram=钨制齿轮
+iu.gear.vanady=钒质齿轮
+iu.gear.wolfram=钨质齿轮
 iu.gear.invar=殷钢齿轮
 iu.gear.caravky=查瓦卡齿轮
-iu.gear.cobalt=钴制齿轮
-iu.gear.magnesium=镁制齿轮
-iu.gear.nickel=镍制齿轮
-iu.gear.platium=铂制齿轮
-iu.gear.titanium=钛制齿轮
-iu.gear.chromium=铬制齿轮
+iu.gear.cobalt=钴质齿轮
+iu.gear.magnesium=镁质齿轮
+iu.gear.nickel=镍质齿轮
+iu.gear.platium=铂质齿轮
+iu.gear.titanium=钛质齿轮
+iu.gear.chromium=铬质齿轮
 iu.gear.spinel=尖晶石齿轮
 iu.gear.electrium=琥珀金齿轮
-iu.gear.silver=银制齿轮
-iu.gear.zinc=锌制齿轮
-iu.gear.manganese=锰制齿轮
-iu.gear.iridium=铱制齿轮
-iu.gear.germanium=锗制齿轮
-iu.gear.arsenic=砷齿轮
-iu.gear.barium=钡齿轮
-iu.gear.bismuth=铋齿轮
-iu.gear.gadolinium=钆齿轮
-iu.gear.gallium=镓齿轮
-iu.gear.hafnium=铪齿轮
-iu.gear.yttrium=钇齿轮
-iu.gear.molybdenum=钼齿轮
-iu.gear.neodymium=钕齿轮
-iu.gear.niobium=铌齿轮
-iu.gear.palladium=钯齿轮
-iu.gear.polonium=钋齿轮
-iu.gear.strontium=锶齿轮
-iu.gear.thallium=铊齿轮
-iu.gear.zirconium=锆齿轮
+iu.gear.silver=银质齿轮
+iu.gear.zinc=锌质齿轮
+iu.gear.manganese=锰质齿轮
+iu.gear.iridium=铱质齿轮
+iu.gear.germanium=锗质齿轮
+iu.gear.arsenic=砷质齿轮
+iu.gear.barium=钡质齿轮
+iu.gear.bismuth=铋质齿轮
+iu.gear.gadolinium=钆质齿轮
+iu.gear.gallium=镓质齿轮
+iu.gear.hafnium=铪质齿轮
+iu.gear.yttrium=钇质齿轮
+iu.gear.molybdenum=钼质齿轮
+iu.gear.neodymium=钕质齿轮
+iu.gear.niobium=铌质齿轮
+iu.gear.palladium=钯质齿轮
+iu.gear.polonium=钋质齿轮
+iu.gear.strontium=锶质齿轮
+iu.gear.thallium=铊质齿轮
+iu.gear.zirconium=锆质齿轮
 iu.alloysgear.aluminum_bronze=铝青铜齿轮
 iu.alloysgear.alumel=铝钛齿轮
 iu.alloysgear.red_brass=红铜齿轮
@@ -3659,8 +3562,8 @@ iu.alloysgear.inconel=因科镍合金齿轮
 iu.alloysgear.nitenol=镍钛诺合金齿轮
 iu.alloysgear.stellite=司太立合金齿轮
 iu.alloysgear.hafnium_boride_alloy=铪-硼化物合金齿轮
-iu.alloysgear.woods=Woods齿轮
-iu.alloysgear.nimoni=尼莫尼克合金齿轮
+iu.alloysgear.woods=伍德合金齿轮
+iu.alloysgear.nimonic=尼莫尼克合金齿轮
 iu.alloysgear.tantalum_tungsten_hafnium=钽钨铪合金齿轮
 iu.alloysgear.permalloy=坡莫合金齿轮
 iu.alloysgear.aluminium_lithium_alloy=铝锂合金齿轮
@@ -3710,12 +3613,12 @@ iu.universal_cable.itemuniversalcironcableiiii=§6通用寰宇线缆
 iu.universal_cable.itemuniversalcglasscable=§c通用衍射线缆
 iu.universal_cable.itemuniversalcglasscablei=§7通用无限线缆
 
-iu.water_rotor_wood=木制水轮
+iu.water_rotor_wood=木质水轮
 iu.water_rotor_bronze=青铜水轮
-iu.water_rotor_iron=铁水轮
+iu.water_rotor_iron=铁质水轮
 iu.water_rotor_steel=钢制水轮
 iu.water_rotor_carbon=碳纤水轮
-iu.water_iridium=铱水轮
+iu.water_iridium=铱质水轮
 iu.water_compressiridium=§8压缩铱水轮
 iu.water_spectral=§e光谱水轮
 iu.water_myphical=§d神话水轮
@@ -3725,13 +3628,13 @@ iu.water_barionrotor=§5重子水轮
 iu.water_adronrotor=§3强子水轮
 iu.water_ultramarinerotor=§b以太水轮
 
-iu.waterrod.oak_rotor_model=木制水轮叶片
+iu.waterrod.oak_rotor_model=木质水轮叶片
 iu.waterrod.bronze_rotor_model=青铜水轮叶片
-iu.waterrod.iron_rotor_model=铁制水轮叶片
-iu.waterrod.steel_rotor_model=钢制水轮叶片
+iu.waterrod.iron_rotor_model=铁质水轮叶片
+iu.waterrod.steel_rotor_model=钢质水轮叶片
 iu.waterrod.carbon_rotor_model=碳纤水轮叶片
-iu.waterrod.carbon_rotor_model1=铱制水轮叶片
-iu.waterrod.carbon_rotor_model2=压缩铱制水轮叶片
+iu.waterrod.carbon_rotor_model1=铱质水轮叶片
+iu.waterrod.carbon_rotor_model2=压缩铱水轮叶片
 iu.waterrod.carbon_rotor_model3=光谱水轮叶片
 iu.waterrod.carbon_rotor_model4=神话水轮叶片
 iu.waterrod.carbon_rotor_model5=光子水轮叶片
@@ -3740,13 +3643,13 @@ iu.waterrod.carbon_rotor_model7=重子水轮叶片
 iu.waterrod.carbon_rotor_model8=强子水轮叶片
 iu.waterrod.carbon_rotor_model9=以太水轮叶片
 
-iu.corewater.core_wind=木制水轮核心
+iu.corewater.core_wind=木质水轮核心
 iu.corewater.core_wind1=青铜水轮核心
-iu.corewater.core_wind2=铁制水轮核心
-iu.corewater.core_wind3=钢制水轮核心
+iu.corewater.core_wind2=铁质水轮核心
+iu.corewater.core_wind3=钢质水轮核心
 iu.corewater.core_wind4=碳纤水轮核心
-iu.corewater.core_wind5=铱制水轮核心
-iu.corewater.core_wind6=压缩铱制水轮核心
+iu.corewater.core_wind5=铱质水轮核心
+iu.corewater.core_wind6=压缩铱水轮核心
 iu.corewater.core_wind7=光谱水轮核心
 iu.corewater.core_wind8=神话水轮核心
 iu.corewater.core_wind9=光子水轮核心
@@ -3838,8 +3741,8 @@ iu.upgrades.adv_storageupgrade=改良青金石储能升级
 iu.upgrades.imp_storageupgrade=高级青金石储能升级
 iu.upgrades.per_storageupgrade=完美青金石储能升级
 
-iu.itemcoppercable=铜制导线
-iu.itemcoppercable1=绝缘铜制导线
+iu.itemcoppercable=铜质导线
+iu.itemcoppercable1=绝缘铜质导线
 iu.itemglasscable1=玻璃纤维导线
 iu.itemgold_cable=金导线
 iu.itemgold_cable1=绝缘金导线
@@ -3848,8 +3751,8 @@ iu.itemiron_cable=高压导线
 iu.itemiron_cable1=绝缘高压导线
 iu.itemiron_cable2=2x绝缘高压导线
 iu.itemiron_cable3=3x绝缘高压导线
-iu.itemtin_cable=锡制导线
-iu.itemtin1_cable=绝缘锡制导线
+iu.itemtin_cable=锡质导线
+iu.itemtin1_cable=绝缘锡质导线
 
 find.gas_vein=地下大量产生天然气
 find.oil_vein=沙漠中产生了大量的石油
@@ -4162,13 +4065,13 @@ iu.doubleplate.obsidian_doubleplate=致密黑曜石板
 iu.doubleplate.lapis_doubleplate=致密青金石板
 
 #Item Casings
-iu.casing.copper=铜制外壳
-iu.casing.tin=锡制外壳
+iu.casing.copper=铜质外壳
+iu.casing.tin=锡质外壳
 iu.casing.bronze=青铜外壳
 iu.casing.gold=金质外壳
 iu.casing.iron=铁质外壳
-iu.casing.steel=钢制外壳
-iu.casing.lead=铅制外壳
+iu.casing.steel=钢质外壳
+iu.casing.lead=铅质外壳
 
 #Ingots
 iu.ingot.steel_ingot=钢锭
@@ -4218,10 +4121,10 @@ iu.dust.slaked_lime=熟石灰
 iu.smalldust.copper=小捧铜粉
 iu.smalldust.diamond=小捧金刚石粉
 iu.smalldust.emerald=小捧绿宝石粉末
-iu.smalldust.gold=小捧金质粉末
-iu.smalldust.tin=小捧锡质粉末
-iu.smalldust.silver=小捧银质粉末
-iu.smalldust.lead=小捧铅质粉末
+iu.smalldust.gold=小捧金粉末
+iu.smalldust.tin=小捧锡粉末
+iu.smalldust.silver=小捧银粉末
+iu.smalldust.lead=小捧铅粉末
 iu.smalldust.sulfur=小捧硫粉末
 iu.smalldust.lithium=小捧锂粉末
 iu.smalldust.iron=小捧铁粉末
@@ -4335,7 +4238,7 @@ iu.potion.radiation=辐射
 death.attack.current=%1$s 死于触电
 death.attack.radiation=%1$s 死于辐射
 death.attack.frostbite=%1$s 死于冻伤
-death.attack.cropEating=%1$s 被吃植物吃掉了
+death.attack.cropEating=%1$s 被植物吃掉了
 death.attack.bee=%1$s 捅了马蜂窝
 
 iu.painter=刷子
@@ -4571,8 +4474,8 @@ iu.imp_heat_exchange=石墨热交换器
 iu.per_heat_exchange=螺旋式热交换器
 iu.reactor_plate=通用规格板
 iu.adv_reactor_plate=复合板
-iu.imp_reactor_plate=铜制复合板
-iu.per_reactor_plate=钢制复合板
+iu.imp_reactor_plate=铜质复合板
+iu.per_reactor_plate=钢质复合板
 iu.capacitor=陶瓷电容器
 iu.adv_capacitor=铝质电解电容器
 iu.imp_capacitor=聚合物电容
@@ -5047,8 +4950,8 @@ industrialupgrade.geothermalpump.geothermal_waste=地热泵废液
 item.recipe_schedule.name=机械接收器
 
 industrialupgrade.compressor.compressor=挤压原型机
-industrialupgrade.block_squeezer.squeezer=液态乳胶提取器原型机
-industrialupgrade.dryer.dryer=液态乳胶干燥机
+industrialupgrade.block_squeezer.squeezer=提取原型机
+industrialupgrade.dryer.dryer=干燥原型机
 industrialupgrade.macerator.macerator=粉碎原型机
 industrialupgrade.primal_silicon_crystal_handler.primal_silicon_crystal_handler=原型晶体生长室
 industrialupgrade.primal_soldering_mechanism.primal_soldering_mechanism=电子工作台
@@ -5077,7 +4980,7 @@ industrialupgrade.basemachine3.energy_trash=废热桶
 industrialupgrade.basemachine3.fluid_trash=废液桶
 industrialupgrade.basemachine3.item_trash=垃圾桶
 industrialupgrade.basemachine3.recipe_tuner=机械感受器调谐器
-industrialupgrade.basemachine3.exp_chargepad=经验充电垫
+industrialupgrade.basemachine3.exp_chargepad=经验充值垫
 industrialupgrade.basemachine3.auto_open_box=开箱机
 industrialupgrade.basemachine3.autofuse=§e聚变室
 industrialupgrade.basemachine3.vending=自动售货机
@@ -5104,7 +5007,7 @@ industrialupgrade.basemachine3.fluid_integrator=流式腐蚀釜
 industrialupgrade.basemachine3.solid_state_electrolyzer=固态电解槽
 industrialupgrade.basemachine3.oil_purifier=原油脱硫釜
 industrialupgrade.basemachine3.purifier_soil=土壤净化器
-industrialupgrade.basemachine3.electric_dryer=电动乳胶干燥机
+industrialupgrade.basemachine3.electric_dryer=电力干燥机
 industrialupgrade.basemachine3.electric_squeezer=电动乳胶提取器
 industrialupgrade.basemachine3.fluid_cooling=流体制冷机
 industrialupgrade.basemachine3.solid_cooling=固体制冷器
@@ -5422,7 +5325,7 @@ iu.graphene.name=石墨烯
 iu.vanadiumaluminummesh=铝钴钒合金格栅
 iu.voltage_sensor_for_mechanism.name=机械电压传感器
 iu.imp_motors_with_improved_bearings_.name=改进轴承高级电机
-iu.polonium_palladium_composite.name=钯钌合金复合材料
+iu.polonium_palladium_composite.name=钯钋合金复合材料
 iu.cooling_mixture.name=冷却混合物
 iu.ironmesh=铁格栅
 iu.boridehafniummesh=铪-硼化物合金格栅
@@ -5500,11 +5403,11 @@ industrialupgrade.basemachine3.steampressureconverter=蒸汽压力调节器
 industrialupgrade.basemachine3.steamdryer=蒸汽干燥机
 industrialupgrade.basemachine3.steam_macerator=蒸汽粉碎机
 industrialupgrade.basemachine3.steam_compressor=蒸汽挤压机
-industrialupgrade.basemachine3.steam_extractor=蒸汽提取器
+industrialupgrade.basemachine3.steam_extractor=蒸汽提取机
 industrialupgrade.basemachine3.steam_extruder=蒸汽挤出机
 industrialupgrade.basemachine3.steam_cutting=蒸汽切割机
 industrialupgrade.basemachine3.steam_converter=高压蒸汽锅炉
-industrialupgrade.basemachine3.steam_squeezer=蒸汽乳胶提取器
+industrialupgrade.basemachine3.steam_squeezer=蒸汽乳胶提取机
 industrialupgrade.basemachine3.peat_generator=泥炭发电机
 industrialupgrade.basemachine3.steam_peat_generator=泥炭蒸汽锅炉
 industrialupgrade.basemachine3.steam_handler_ore=蒸汽矿物分离器
@@ -5566,7 +5469,7 @@ fluid.fluidsteel=熔融钢
 fluid.fluidtitaniumsteel=熔融钛钢
 fluid.fluidgold=熔融黄金
 fluid.fluidsilver=熔融银
-fluid.fluidelectrum=熔融琥珀金桶
+fluid.fluidelectrum=熔融琥珀金
 fluid.fluidinvar=熔融殷钢
 fluid.fluidcopper=熔融铜
 fluid.fluidtin=熔融锡
@@ -5592,7 +5495,7 @@ item.forge.bucketFilled.iufluidsteel=熔融钢桶
 item.forge.bucketFilled.iufluidtitaniumsteel=熔融钛钢桶
 item.forge.bucketFilled.iufluidgold=熔融黄金桶
 item.forge.bucketFilled.iufluidsilver=熔融银桶
-item.forge.bucketFilled.iufluidelectrum=熔融琥珀金桶桶
+item.forge.bucketFilled.iufluidelectrum=熔融琥珀金桶
 item.forge.bucketFilled.iufluidinvar=熔融殷钢桶
 item.forge.bucketFilled.iufluidcopper=熔融铜桶
 item.forge.bucketFilled.iufluidtin=熔融锡桶
@@ -5628,15 +5531,15 @@ iu.fluidbutadiene_nitrile=丁二烯腈
 iu.fluidacrylonitrile=丙烯腈
 iu.fluidbutadiene=丁二烯
 iu.fluidethene=乙烯
-iu.fluidaaa_diesel=AAA柴油
+iu.fluidaaa_diesel=国三柴油
 iu.fluidmethylcyclohexane=甲基环己烷
-iu.fluidaa_diesel=AA柴油
+iu.fluidaa_diesel=国二柴油
 iu.fluidpetrol95=95号汽油
 iu.fluidcyclohexane=环己烷
 iu.fluidhydrogenchloride=氢氯酸
 iu.fluidmethylcyclohexylnitrate=甲基环己基硝酸酯
 iu.fluidisobutylene=异丁烯
-iu.fluidaaaa_diesel=AAAA柴油
+iu.fluidaaaa_diesel=国四柴油
 iu.fluidpetrol90=90号汽油
 iu.fluidchloroethane=氯乙烷
 iu.fluidcarbonmonoxide=一氧化碳
@@ -5647,7 +5550,7 @@ iu.fluidtertbutylalcohol=叔丁醇
 iu.fluidethylhexylnitrate=乙基己基硝酸酯
 iu.fluidtertbutylmethylether=叔丁基甲醚
 iu.fluidtetraethyllead=四乙基铅
-iu.fluida_diesel=A柴油
+iu.fluida_diesel=国一柴油
 iu.fluidpetrol105=105号汽油
 iu.fluidmethylpentane=甲基戊烷
 iu.fluidbutene=丁烯
@@ -5670,15 +5573,15 @@ fluid.fluidbutadiene_nitrile=丁二烯腈
 fluid.fluidacrylonitrile=丙烯腈
 fluid.fluidbutadiene=丁二烯
 fluid.fluidethene=乙烯
-fluid.fluidaaa_diesel=AAA柴油
+fluid.fluidaaa_diesel=国三柴油
 fluid.fluidmethylcyclohexane=甲基环己烷
-fluid.fluidaa_diesel=AA柴油
+fluid.fluidaa_diesel=国二柴油
 fluid.fluidpetrol95=95号汽油
 fluid.fluidcyclohexane=环己烷
 fluid.fluidhydrogenchloride=氢氯酸
 fluid.fluidmethylcyclohexylnitrate=甲基环己基硝酸酯
 fluid.fluidisobutylene=异丁烯
-fluid.fluidaaaa_diesel=AAAA柴油
+fluid.fluidaaaa_diesel=国四柴油
 fluid.fluidpetrol90=90号汽油
 fluid.fluidchloroethane=氯乙烷
 fluid.fluidcarbonmonoxide=一氧化碳
@@ -5689,7 +5592,7 @@ fluid.fluidtertbutylalcohol=叔丁醇
 fluid.fluidethylhexylnitrate=乙基己基硝酸酯
 fluid.fluidtertbutylmethylether=叔丁基甲醚
 fluid.fluidtetraethyllead=四乙基铅
-fluid.fluida_diesel=A柴油
+fluid.fluida_diesel=国一柴油
 fluid.fluidpetrol105=105号汽油
 fluid.fluidmethylpentane=甲基戊烷
 fluid.fluidbutene=丁烯
@@ -6130,38 +6033,38 @@ iu.raw_ingot.zirconium=粗制锆锭
 
 iu.ingot.adamantite=精金锭
 iu.ingot.bloodstone=血石锭
-iu.ingot.draconid=龙类锭
+iu.ingot.draconid=龙晶锭
 iu.ingot.meteoric_iron=陨铁锭
 iu.ingot.mythril=秘银锭
-iu.ingot.orichalcum=山铜锭
+iu.ingot.orichalcum=奥利哈刚锭
 
 iu.casing.adamantite=精金外壳
 iu.casing.bloodstone=血石外壳
-iu.casing.draconid=龙类外壳
+iu.casing.draconid=龙晶外壳
 iu.casing.meteoric_iron=陨铁外壳
 iu.casing.mythril=秘银外壳
-iu.casing.orichalcum=山铜外壳
+iu.casing.orichalcum=奥利哈刚外壳
 
 iu.plate.adamantite=精金板
 iu.plate.bloodstone=血石板
-iu.plate.draconid=龙类板
+iu.plate.draconid=龙晶板
 iu.plate.meteoric_iron=陨铁板
 iu.plate.mythril=秘银板
-iu.plate.orichalcum=山铜板
+iu.plate.orichalcum=奥利哈刚板
 
 iu.doubleplate.adamantite=致密精金板
 iu.doubleplate.bloodstone=致密血石板
-iu.doubleplate.draconid=致密龙类板
+iu.doubleplate.draconid=致密龙晶板
 iu.doubleplate.meteoric_iron=致密陨铁板
 iu.doubleplate.mythril=致密秘银板
-iu.doubleplate.orichalcum=致密山铜板
+iu.doubleplate.orichalcum=致密奥利哈刚板
 
 iu.adamantite_block.name=精金块
 iu.bloodstone_block.name=血石块
-iu.draconid_block.name=龙类块
+iu.draconid_block.name=龙晶块
 iu.meteoric_iron_block.name=陨铁块
 iu.mythril_block.name=秘银块
-iu.orichalcum_block.name=山铜块
+iu.orichalcum_block.name=奥利哈刚块
 
 iu.dust.ender=末影粉尘
 iu.dust.quartz=石英粉尘
@@ -6312,7 +6215,7 @@ iu.colonial_building.high_oxygen=殖民建筑：氧气舱 III
 
 iu.crafting_elements.crafting_650_element=镍铬灯
 iu.crafting_elements.crafting_651_element=黑钨矿灯
-iu.crafting_elements.crafting_652_element=山铜灯
+iu.crafting_elements.crafting_652_element=奥利哈刚灯
 iu.crafting_elements.crafting_653_element=镍合金灯
 iu.crafting_elements.crafting_654_element=精金灯
 iu.crafting_elements.crafting_655_element=黑钨矿板
@@ -6372,7 +6275,7 @@ iu.crafting_elements.crafting_707_element=铝钛合金外壳
 iu.crafting_elements.crafting_708_element=铍钢热防护层
 iu.crafting_elements.crafting_709_element=钨履带
 iu.crafting_elements.crafting_710_element=液压稳定器
-iu.crafting_elements.crafting_711_element=龙类外壳
+iu.crafting_elements.crafting_711_element=龙晶外壳
 iu.crafting_elements.crafting_712_element=碳化铪电动驱动
 iu.crafting_elements.crafting_713_element=自主供能模块
 iu.crafting_elements.crafting_714_element=钼热防护层
@@ -6382,11 +6285,11 @@ iu.crafting_elements.crafting_717_element=不锈钢履带
 iu.crafting_elements.crafting_718_element=镍合金电动驱动
 iu.crafting_elements.crafting_719_element=铌钛电动驱动
 iu.crafting_elements.crafting_720_element=蒙茨合金履带
-iu.crafting_elements.crafting_721_element=山铜热防护层
+iu.crafting_elements.crafting_721_element=奥利哈刚热防护层
 iu.crafting_elements.crafting_722_element=防尘过滤器
 iu.crafting_elements.crafting_723_element=近程雷达
 iu.crafting_elements.crafting_724_element=扫描模块
-iu.crafting_elements.crafting_725_element=钢制覆层
+iu.crafting_elements.crafting_725_element=钢质覆层
 iu.crafting_elements.crafting_726_element=钛外壳
 iu.crafting_elements.crafting_727_element=钛合金外壳
 iu.crafting_elements.crafting_728_element=包铝高频天线
@@ -6548,7 +6451,7 @@ iu.research3.info7=资源列表随研究进度更新。
 iu.research3.info8=若航天器已装载，点击“发射”。
 iu.research3.info9=可实时追踪航天器位置与剩余时间。
 iu.research3.info10=点击“召回”可提前返回。
-iu.research3.info11=点击“自动化：启用”可自动执行任务。
+iu.research3.info11=点击“启用自动化”可自动执行任务。
 iu.research3.info12=自动模式会自动补充燃料与能量。
 iu.research3.info13=研究达100%后显示“建立殖民地”按钮。
 iu.research3.info14=卫星界面功能相同。
@@ -6627,7 +6530,7 @@ guide.geothermalpump3=有一定几率可以得到石油块和硝酸盐
 primitive_rcm.info=通过鼠标右键点击放置或拾取物品
 primitive_use.info=开始合成配方时需使用：
 moon_spotter.info=仅在夜间生效
-veins_ores.info1=在石块上寻找矿石标记——它们指向矿脉。
+veins_ores.info1=在地表寻找裸露的矿石簇——它们预示着矿脉类型。
 veins_ores.info=仅可通过以下矿脉开采：
 
 
@@ -6808,8 +6711,8 @@ quarry.guide.gas_well5=所有气体开采概率相同。
 quarry.guide.gas_well6=探测到气脉的概率为15%。
 quarry.guide.gas_well7=使用“气体钻井”多方块结构探测和开采溴、碘、氯、氟。
 
-iu.space.auto_false=自动化：启用
-iu.space.auto_true=自动化：禁用
+iu.space.auto_false=启用自动化
+iu.space.auto_true=禁用自动化
 iu.space.createcolony=创建殖民地
 iu.space.open_colony=打开殖民地
 iu.space.return=返回
@@ -6960,7 +6863,7 @@ iu.wireless_reactor_controller.info4=数据写入后放入插槽
 iu.wireless_reactor_controller.info5=随后可控制反应堆
 iu.wireless_reactor_controller.info6=点击控制器以打开界面
 
-iu.analyzer.jei=开采矿物脉需使用分析仪、无线矿场、Simply Quarries矿场或量子采石场。使用分析仪时，在其旁放置存储箱，安装“矿场”模块，分析完成后点击“开采”。无线矿场操作详见其界面。量子矿场自动向下挖掘。普通矿场需在界面中选择“矿脉模式”以启动。
+iu.analyzer.jei=开采矿物脉需使用分析仪、无线矿场、简易采石场或量子采石场。使用分析仪时，在其旁放置存储箱，安装“矿场”模块，分析完成后点击“开采”。无线矿场操作详见其界面。量子矿场自动向下挖掘。普通矿场需在界面中选择“矿脉模式”以启动。
 
 iu.rolling.jei=对轧机右键输入物品
 iu.rolling.jei1=输入后不可取回
@@ -7019,7 +6922,7 @@ iu.fluidduralumin=硬铝
 iu.fluidsodiumhydroxide=氢氧化钠
 iu.fluidsodium_hypochlorite=次氯酸钠
 iu.fluidtungsten=钨
-iu.fluidwolframite=黑钨矿
+iu.fluidwolframite=黑钨合金
 iu.fluidtemperedglass=钢化玻璃
 iu.fluidethane=乙烷
 iu.fluidmethylchloride=氯甲烷
@@ -7330,7 +7233,7 @@ iu.ceres_copper_ore.name=铜矿石
 iu.ceres_iron_ore.name=铁矿石
 iu.charon_arsenic.name=砷矿石
 iu.charon_zinc.name=锌矿石
-iu.deimos_orichalcum_ore.name=山铜矿石
+iu.deimos_orichalcum_ore.name=奥利哈刚矿石
 iu.dione_lead_ore.name=铅矿石
 iu.dione_platinum_ore.name=铂矿石
 iu.enceladus_magnesium_ore.name=镁矿石
@@ -7458,14 +7361,14 @@ iu.polisher=激光抛光机合成
 
 crop.weed_seed=杂草
 crop.tulip_pink=粉红郁金香
-crop.haustonia_gray=灰色豪斯顿草
+crop.haustonia_gray=茜草花
 crop.poppy=罂粟
 crop.onion=洋葱
 crop.tulip_orange=橙色郁金香
 crop.chamomile=洋甘菊
 crop.tulip_white=白色郁金香
 crop.tulip_red=红色郁金香
-crop.blue_orchid=蓝兰花
+crop.blue_orchid=兰花
 crop.corn=玉米
 crop.rubber_reed=橡胶芦苇
 crop.beet=甜菜
@@ -7473,61 +7376,61 @@ crop.carrot=胡萝卜
 crop.raspberry=树莓
 crop.tomato=番茄
 crop.copper_heart=铜之心
-crop.iron_crimson=绯红铁
-crop.gold_astral=星耀金
+crop.iron_crimson=绯铁草
+crop.gold_astral=耀金花
 crop.diamond_island=钻石岛
 crop.emerald_heart=翡翠之心
-crop.quartz_storm=石英风暴
+crop.quartz_storm=石英岚花
 crop.lead_stream=铅溪
 crop.tin_ghost=锡幽灵
-crop.red_fury=赤红狂怒
-crop.silicon_avalanche=硅雪崩
-crop.mikhailovskaya_lavra=米哈伊洛夫斯卡娅修道院
-crop.aluminum_plutonka=铝质冥卫
-crop.vanadium_dawn=钒之黎明
+crop.red_fury=赤红怒焰火花
+crop.silicon_avalanche=硅与雪
+crop.mikhailovskaya_lavra=米哈伊洛夫修道草
+crop.aluminum_plutonka=铝冥卫
+crop.vanadium_dawn=钒色黎明草
 crop.tungsten_moon_flower=钨月花
-crop.silver_melody=银之旋律
-crop.nickel_firework=镍烟火
-crop.invar_crystal=因瓦晶体
+crop.silver_melody=银律花
+crop.nickel_firework=镍焰花
+crop.invar_crystal=殷钢晶
 crop.cobalt_grapefruit=钴葡萄柚
 crop.magnesium_diamond=镁钻石
-crop.platinum_turner=铂车工
-crop.spinel_zenith=尖晶石顶点
+crop.platinum_turner=铂旋花
+crop.spinel_zenith=尖晶天顶草
 crop.iridium_snowflake=铱雪花
-crop.karav_green=卡拉夫绿
+crop.karav_green=查瓦之茵
 crop.titanium_fantasy=钛幻想
-crop.chromium_gentleness=铬之温婉
-crop.electrum_symphony=金银合金交响曲
-crop.zinc_storm=锌风暴
+crop.chromium_gentleness=铬温花
+crop.electrum_symphony=金银交响曲
+crop.zinc_storm=锌兰
 crop.manganese_lotus=锰莲花
 crop.germanite_wonders=锗石奇迹
-crop.uranium_fairy=铀精灵
+crop.uranium_fairy=铀精灵种
 crop.arsenite_flower=砷石花
 crop.barium_star=钡星
 crop.bismuth_garden=铋花园
-crop.gadolinium_lotus=钆莲花
+crop.gadolinium_lotus=钆莲
 crop.gallium_song=镓之歌
 crop.hafnium_leaf=铪叶
-crop.ytterbium_bright=镱光辉
-crop.molybdenum_whirlwind=钼旋风
-crop.neodymium_glow=钕辉光
-crop.niobium_obelisk=铌方尖碑
-crop.palladium_gentleness=钯之温婉
-crop.polonium_crystal=钋晶体
-crop.strontium_storm=锶风暴
-crop.thallium_sunlight=铊日光
-crop.zirconium_dragon=锆龙
-crop.osmium_silk=锇丝绸
-crop.tantalum_moon=钽月
-crop.cadmium_gentleness=镉之温婉
+crop.ytterbium_bright=镱辉叶
+crop.molybdenum_whirlwind=钼风花
+crop.neodymium_glow=钕辉枝
+crop.niobium_obelisk=铌碑坟草
+crop.palladium_gentleness=钯钯大柔棒
+crop.polonium_crystal=钋晶
+crop.strontium_storm=锶岚燕花
+crop.thallium_sunlight=铊日光花
+crop.zirconium_dragon=锆龙草
+crop.osmium_silk=锇丝蕤
+crop.tantalum_moon=钽月种
+crop.cadmium_gentleness=镉温花
 crop.ender_lily=末影百合
 crop.blaze_storm=烈焰风暴
 crop.ghast_dew=恶魂露珠
 crop.bone_leaf=骨叶
 crop.americium_moss=镅苔藓
-crop.neptunium_wisdom=镎智慧
+crop.neptunium_wisdom=镎智种
 crop.curie_berry=居里莓
-crop.thorium_fist=钍之拳
+crop.thorium_fist=钍雷兰
 
 
 iu.body.sun=太阳
@@ -7720,11 +7623,141 @@ iu.bee_negative=敌对蜂种：
 iu.remove_genome=移除基因组  
 iu.terra_wart.name=地疣  
 
-industrialupgrade.basemachine3.gen_bio=生物质发电机  
-industrialupgrade.basemachine3.ampere_storage=电流存储器
-industrialupgrade.basemachine3.bio_generator=电动生物质生成器 
+industrialupgrade.basemachine3.bio_generator=电动生物质生成器
+iu.tome_research=太空研究卷
+iu.tome_research1=使用 Shift + 右键点击记录数据
+iu.tome_research2=使用 右键点击 分析数据
+iu.pollution_device=污染扫描仪
+message.pollution.air.very_low=空气污染程度：极低
+message.pollution.air.low=空气污染程度：低
+message.pollution.air.medium=空气污染程度：中等
+message.pollution.air.high=空气污染程度：高
+message.pollution.air.very_high=空气污染程度：极高
 
-iu.acable=电流线缆
+message.pollution.soil.very_low=土壤污染程度：极低
+message.pollution.soil.low=土壤污染程度：低
+message.pollution.soil.medium=土壤污染程度：中等
+message.pollution.soil.high=土壤污染程度：高
+message.pollution.soil.very_high=土壤污染程度：极高
+
+industrialupgrade.basemachine3.gen_bio=生物质发电机
+
+iu.acable=电流导线
+
+iu.fluidsteam_oil=蒸汽润滑油
+fluid.fluidsteam_oil=蒸汽润滑油
+item.ruby_pickaxe.name=红宝石镐
+item.sapphire_pickaxe.name=蓝宝石镐
+item.topaz_pickaxe.name=黄玉镐
+item.ruby_axe.name=红宝石斧
+item.sapphire_axe.name=蓝宝石斧
+item.topaz_axe.name=黄玉斧
+item.ruby_shovel.name=红宝石铲
+item.sapphire_shovel.name=蓝宝石铲
+item.topaz_shovel.name=黄玉铲
+iu.iron_hammer=铁锤
+industrialupgrade.basemachine3.ampere_storage=电流存储器
+iu.coal_concentration=煤尘浓度：
+iu.space_colony_problem=空间殖民地问题：
+
+iu.speed_canister.info1=使用蒸汽润滑油罐减少发热并加速机械装置运行40秒
+
+iu.sweet_oil=甜质油
+iu.sour_oil=酸质油
+iu.light_oil=轻质油
+iu.medium_oil=中质油
+iu.heavy_oil=重质油
+
+deposists_molot.jei=通过锤子开采矿石
+deposists.jei2=需使用合金锤开采此类矿石,仅需破坏矿脉上方的矿簇。获得矿石的概率与矿物分离器相同。可从此类矿脉中获取:
+
+industrialupgrade.basemachine3.steam_generator=电动蒸汽发生器
+
+iu.rover.info_temperature=在不安装模块的情况下，可耐受温度范围为 -125 至 150 摄氏度。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #附属mod的翻译
 
@@ -7767,9 +7800,110 @@ industrialupgrade.cool_pipes_iu.cool_pipes_iu=冷却管控制面板
 industrialupgrade.scable.scable=阳光能量导管控制面板
 industrialupgrade.qcable.qcable=量子能量缆线控制面板
 
+#一些被删除的内容以后可能会恢复
+industrialupgrade.basemachine3.gen_bio=生物质发电机  
+industrialupgrade.basemachine3.ampere_storage=电流存储器
 
 
+##Ex Nihilo Integration
+#Broken Metal矿石s粉碎金属矿石
+mikhail_gravelcrushed.name=粉碎米哈洛夫矿石
+aluminium_gravelcrushed.name=粉碎铝矿石
+vanady_gravelcrushed.name=粉碎钒矿石
+wolfram_gravelcrushed.name=粉碎钨矿石
+cobalt_gravelcrushed.name=粉碎钴矿石
+magnesium_gravelcrushed.name=粉碎镁矿石
+nickel_gravelcrushed.name=粉碎镍矿石
+platium_gravelcrushed.name=粉碎铂矿石
+titanium_gravelcrushed.name=粉碎钛矿石
+chromium_gravelcrushed.name=粉碎铬矿石
+spinel_gravelcrushed.name=粉碎尖晶石矿石
+silver_gravelcrushed.name=粉碎粉碎银矿石
+zinc_gravelcrushed.name=粉碎粉碎锌矿石
+manganese_gravelcrushed.name=粉碎锰矿石
 
+#Metal矿石s Gravel金属矿砂砾
+mikhail_gravelore.name=米哈洛夫矿砂砾
+aluminium_gravelore.name=铝矿砂砾
+vanady_gravelore.name=钒矿砂砾
+wolfram_gravelore.name=钨矿砂砾
+cobalt_gravelore.name=钴矿砂砾
+magnesium_gravelore.name=镁矿砂砾
+nickel_gravelore.name=镍矿砂砾
+platium_gravelore.name=铂矿砂砾
+titanium_gravelore.name=钛矿砂砾
+chromium_gravelore.name=铬矿砂砾
+spinel_gravelore.name=尖晶石矿砂砾
+silver_gravelore.name=银矿砂砾
+zinc_gravelore.name=锌矿砂砾
+manganese_gravelore.name=锰矿砂砾
+
+#碎Metal矿石s
+mikhail_sandcrushed.name=碎米哈洛夫沙石
+aluminium_sandcrushed.name=碎铝沙石
+vanady_sandcrushed.name=碎钒沙石
+wolfram_sandcrushed.name=碎钨沙石
+cobalt_sandcrushed.name=碎钴沙石
+magnesium_sandcrushed.name=碎镁沙石
+nickel_sandcrushed.name=碎镍沙石
+platium_sandcrushed.name=碎铂沙石
+titanium_sandcrushed.name=碎钛沙石
+chromium_sandcrushed.name=碎铬沙石
+spinel_sandcrushed.name=碎尖晶石沙石
+silver_sandcrushed.name=碎银沙石
+zinc_sandcrushed.name=碎锌沙石
+manganese_sandcrushed.name=碎锰沙石
+
+#Metal矿石s Sand
+mikhail_sandore.name=米哈洛夫矿石沙子
+aluminium_sandore.name=铝矿石沙子
+vanady_sandore.name=钒矿石沙子
+wolfram_sandore.name=钨矿石沙子
+cobalt_sandore.name=钴矿石沙子
+magnesium_sandore.name=镁矿石沙子
+nickel_sandore.name=镍矿石沙子
+platium_sandore.name=铂矿石沙子
+titanium_sandore.name=钛矿石沙子
+chromium_sandore.name=铬矿石沙子
+spinel_sandore.name=尖晶石矿石沙子
+silver_sandore.name=银矿石沙子
+zinc_sandore.name=锌矿石沙子
+manganese_sandore.name=锰矿石沙子
+
+#Powdered Metal矿石s
+mikhail_dustcrushed.name=米哈洛夫矿石粉末
+aluminium_dustcrushed.name=铝矿石粉末
+vanady_dustcrushed.name=钒矿石粉末
+wolfram_dustcrushed.name=钨矿石粉末
+cobalt_dustcrushed.name=钴矿石粉末
+magnesium_dustcrushed.name=镁矿石粉末
+nickel_dustcrushed.name=镍矿石粉末
+platium_dustcrushed.name=铂矿石粉末
+titanium_dustcrushed.name=钛矿石粉末
+chromium_dustcrushed.name=铬矿石粉末
+spinel_dustcrushed.name=尖晶石矿石粉末
+silver_dustcrushed.name=银矿石粉末
+zinc_dustcrushed.name=锌矿石粉末
+manganese_dustcrushed.name=锰矿石粉末
+
+#Metal矿石s Dust矿石粉尘
+mikhail_dustore.name=米哈洛夫矿石粉
+aluminium_dustore.name=铝矿石粉
+vanady_dustore.name=钒矿石粉
+wolfram_dustore.name=钨矿石粉
+cobalt_dustore.name=钴矿石粉
+magnesium_dustore.name=镁矿石粉
+nickel_dustore.name=镍矿石粉
+platium_dustore.name=铂矿石粉
+titanium_dustore.name=钛矿石粉
+chromium_dustore.name=铬矿石粉
+spinel_dustore.name=尖晶石矿石粉
+silver_dustore.name=银矿石粉
+zinc_dustore.name=锌矿石粉
+manganese_dustore.name=锰矿石粉
+
+
+iu.acable=电流线缆
 
 
 #露天矿脉补录
@@ -7787,3 +7921,4 @@ iu.deposits_vanadium.name=露天钒矿矿脉
 iu.deposits_osmium.name=露天锇矿矿脉
 iu.deposits_tantalum.name=露天钽矿矿脉
 iu.deposits_cadmium.name=露天镉矿矿脉
+

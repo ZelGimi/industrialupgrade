@@ -39,21 +39,14 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockBlastFurnace(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
-        idBlock = id;
-    };
     BlockBlastFurnace(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
@@ -62,6 +55,18 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
     }
 
     @Override
@@ -121,7 +126,7 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return  ModUtils.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -153,8 +158,9 @@ public enum BlockBlastFurnace implements IMultiTileBlock {
 
     @Override
     public String[] getMultiModels(final IMultiTileBlock teBlock) {
-        if (this == blast_furnace_main)
-            return  new String[]{"global","global_active"};
+        if (this == blast_furnace_main) {
+            return new String[]{"global", "global_active"};
+        }
         return IMultiTileBlock.super.getMultiModels(teBlock);
     }
 }

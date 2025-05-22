@@ -7,11 +7,13 @@ import net.minecraft.nbt.NBTTagCompound;
 public interface IColonyBuilding {
 
     CustomPacketBuffer writePacket(CustomPacketBuffer customPacketBuffer);
+
     NBTTagCompound writeTag(NBTTagCompound tag);
 
     IColony getColony();
 
     int getMinLevelColony();
+
     boolean isIgnore();
 
     void work();

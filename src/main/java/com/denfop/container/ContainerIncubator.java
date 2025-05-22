@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityIncubator;
-import com.denfop.tiles.mechanism.TileEntitySingleFluidAdapter;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerIncubator extends ContainerFullInv<TileEntityIncubator> {

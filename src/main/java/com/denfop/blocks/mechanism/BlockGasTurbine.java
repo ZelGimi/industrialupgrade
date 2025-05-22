@@ -12,7 +12,6 @@ import com.denfop.tiles.gasturbine.TileEntityGasTurbineController;
 import com.denfop.tiles.gasturbine.TileEntityGasTurbineRecuperator;
 import com.denfop.tiles.gasturbine.TileEntityGasTurbineSocket;
 import com.denfop.tiles.gasturbine.TileEntityGasTurbineTank;
-import com.denfop.tiles.hydroturbine.*;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
@@ -42,8 +41,8 @@ public enum BlockGasTurbine implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockGasTurbine(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -59,14 +58,19 @@ public enum BlockGasTurbine implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     @Override
     public Material getMaterial() {
         return Material.IRON;

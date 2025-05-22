@@ -1,9 +1,9 @@
 package com.denfop.api.space.colonies.enums;
 
 public enum EnumEntertainment {
-    LOW(10, 0,40,7),
-    MEDIUM(20,  5,100,13),
-    HIGH(40, 10,200,22);
+    LOW(10, 0, 40, 7),
+    MEDIUM(20, 5, 100, 13),
+    HIGH(40, 10, 200, 22);
     private final byte energy;
     private final byte needPeople;
     private final short entertainment;
@@ -16,12 +16,12 @@ public enum EnumEntertainment {
         this.level = (byte) level;
     }
 
-    public byte getLevel() {
-        return level;
-    }
-
     public static EnumEntertainment getID(int id) {
         return values()[id % values().length];
+    }
+
+    public byte getLevel() {
+        return level;
     }
 
     public int getEnergy() {

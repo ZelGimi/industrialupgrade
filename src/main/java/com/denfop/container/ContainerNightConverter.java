@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityMoonSpotter;
 import com.denfop.tiles.mechanism.TileEntityNightConverter;
 import net.minecraft.entity.player.EntityPlayer;
 

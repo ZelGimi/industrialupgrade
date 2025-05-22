@@ -3,11 +3,9 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerGeothermalController;
-import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantController;
 import com.denfop.tiles.geothermalpump.TileEntityGeothermalController;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GuiGeothermalController extends GuiIU<ContainerGeothermalController> {
+
     private boolean hover = false;
+
     public GuiGeothermalController(ContainerGeothermalController guiContainer) {
         super(guiContainer);
         this.componentList.clear();
@@ -75,7 +75,7 @@ public class GuiGeothermalController extends GuiIU<ContainerGeothermalController
 
         handleUpgradeTooltip(par1, par2);
         if (!this.container.base.work) {
-            this.hover = par1 >= 70 && par1 <= 70+24 && par2 >= 35 && par2 <= 35+24;
+            this.hover = par1 >= 70 && par1 <= 70 + 24 && par2 >= 35 && par2 <= 35 + 24;
         } else {
             this.hover = false;
         }

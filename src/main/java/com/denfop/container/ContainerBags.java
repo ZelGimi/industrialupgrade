@@ -33,32 +33,32 @@ public class ContainerBags extends ContainerHandHeldInventory<ItemStackBags> {
         if (item == IUItem.bags) {
             for (col = 0; col < slots; ++col) {
                 for (int col1 = 0; col1 < 9; ++col1) {
-                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 30 + col * 18){
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 30 + col * 18) {
                         @Override
                         public boolean isItemValid(final ItemStack stack) {
-                            return Toolbox1.isItemValidForSlot(getSlotIndex(),stack);
+                            return Toolbox1.isItemValidForSlot(getSlotIndex(), stack);
                         }
                     });
                 }
             }
-        }else if (item == IUItem.adv_bags){
+        } else if (item == IUItem.adv_bags) {
             for (col = 0; col < slots; ++col) {
                 for (int col1 = 0; col1 < 9; ++col1) {
-                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 19 + col * 18){
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 19 + col * 18) {
                         @Override
                         public boolean isItemValid(final ItemStack stack) {
-                            return Toolbox1.isItemValidForSlot(getSlotIndex(),stack);
+                            return Toolbox1.isItemValidForSlot(getSlotIndex(), stack);
                         }
                     });
                 }
             }
-        }else{
+        } else {
             for (col = 0; col < slots; ++col) {
                 for (int col1 = 0; col1 < 9; ++col1) {
-                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 19 + col * 18){
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 19 + col * 18) {
                         @Override
                         public boolean isItemValid(final ItemStack stack) {
-                            return Toolbox1.isItemValidForSlot(getSlotIndex(),stack);
+                            return Toolbox1.isItemValidForSlot(getSlotIndex(), stack);
                         }
                     });
                 }
@@ -81,9 +81,9 @@ public class ContainerBags extends ContainerHandHeldInventory<ItemStackBags> {
         int y;
         if (item == IUItem.bags) {
             y = 177;
-        }else if (item == IUItem.adv_bags){
+        } else if (item == IUItem.adv_bags) {
             y = 202;
-        }else{
+        } else {
             y = 238;
         }
         addPlayerInventorySlots(player, y);

@@ -36,18 +36,19 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((TileEntityExchanger) this.base).getLevel();
+                return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((TileEntityExchanger) this.base).getBlockLevel();
             }
 
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (!world.isRemote)
+                if (!world.isRemote) {
                     if (content.isEmpty()) {
-                    ((TileEntityExchanger) this.base).percent = 1;
-                } else {
-                    ((TileEntityExchanger) this.base).percent = 1 - ((IExchangerItem) content.getItem()).getPercent();
-                    item = (IExchangerItem) content.getItem();
+                        ((TileEntityExchanger) this.base).percent = 1;
+                    } else {
+                        ((TileEntityExchanger) this.base).percent = 1 - ((IExchangerItem) content.getItem()).getPercent();
+                        item = (IExchangerItem) content.getItem();
+                    }
                 }
             }
         };
@@ -114,7 +115,7 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
 

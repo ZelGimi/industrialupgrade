@@ -13,6 +13,8 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerVeinSensor;
 import com.denfop.items.DataOres;
+import com.denfop.network.packet.PacketItemStackEvent;
+import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.ChanceOre;
@@ -25,6 +27,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -35,10 +38,12 @@ import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.denfop.items.ItemVeinSensor.getOreColor;
 
@@ -49,6 +54,10 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
     private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png");
     private final String name;
     int[][] colors;
+    List<ItemStack> itemStackList;
+    boolean update = false;
+    List<Integer> integerList = new ArrayList<>();
+    int tick = 0;
     private GuiVerticalSliderList slider;
     private int value;
 
@@ -63,32 +72,10 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.DEFAULT))
         );
         colors = new int[9 * 16][9 * 16];
-        final List<Map<Vector2, DataOres>> list = new ArrayList<>(container.base.getMap().values());
-        for (Map<Vector2, DataOres> map : list) {
-            for (Map.Entry<Vector2, DataOres> entry : map.entrySet()) {
-                colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
-                        .getVector()
-                        .getZ()] = entry.getValue().getColor();
-                int meta = entry.getValue().getBlockState().getBlock().getMetaFromState(entry.getValue().getBlockState());
-                ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1, meta);
-
-                if (entry.getValue().getColor() != 0xFFFFFFFF) {
-                    this.addElement(new Area(
-                            this,
-                            20 + entry.getKey().getX() - container.base.getVector().getX(),
-                            10 + entry.getKey().getZ() - container.base
-                                    .getVector()
-                                    .getZ(),
-                            1,
-                            1
-                    ).withTooltip(() -> stack.getDisplayName() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
-                            .getKey()
-                            .getZ()));
-                }
-            }
-        }
-        componentList.add(slots);
-        this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
+        final NBTTagCompound nbt = ModUtils.nbt(itemStack1);
+        integerList = Arrays.stream(nbt.getIntArray("list"))
+                .boxed()
+                .collect(Collectors.toList());
         itemStackList = new LinkedList<>();
         final List<VeinType> veins = WorldBaseGen.veinTypes;
         for (VeinType veinType : veins) {
@@ -109,6 +96,60 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                 }
             }
         }
+        final List<Map<Vector2, DataOres>> list = new ArrayList<>(container.base.getMap().values());
+        for (Map<Vector2, DataOres> map : list) {
+            for (Map.Entry<Vector2, DataOres> entry : map.entrySet()) {
+                colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
+                        .getVector()
+                        .getZ()] = entry.getValue().getColor();
+                int meta = entry.getValue().getBlockState().getBlock().getMetaFromState(entry.getValue().getBlockState());
+                ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1, meta);
+                if (!integerList.isEmpty()) {
+                    boolean find = false;
+                    for (Integer integer : integerList) {
+                        if (itemStackList.get(integer).isItemEqual(stack)) {
+                            find = true;
+                            this.addElement(new Area(
+                                    this,
+                                    20 + entry.getKey().getX() - container.base.getVector().getX(),
+                                    10 + entry.getKey().getZ() - container.base
+                                            .getVector()
+                                            .getZ(),
+                                    1,
+                                    1
+                            ).withTooltip(() -> stack.getDisplayName() + "\n" + "X: " + entry
+                                    .getKey()
+                                    .getX() + "\n" + "Z: " + entry
+                                    .getKey()
+                                    .getZ()));
+                            break;
+                        }
+                    }
+                    if (!find) {
+                        colors[entry.getKey().getX() - container.base.getVector().getX()][entry
+                                .getKey()
+                                .getZ() - container.base
+                                .getVector()
+                                .getZ()] = MapColor.STONE.colorValue | -16777216;
+                    }
+                } else if (entry.getValue().getColor() != 0xFFFFFFFF) {
+                    this.addElement(new Area(
+                            this,
+                            20 + entry.getKey().getX() - container.base.getVector().getX(),
+                            10 + entry.getKey().getZ() - container.base
+                                    .getVector()
+                                    .getZ(),
+                            1,
+                            1
+                    ).withTooltip(() -> stack.getDisplayName() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
+                            .getKey()
+                            .getZ()));
+                }
+            }
+        }
+        componentList.add(slots);
+        this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
+
 
     }
 
@@ -133,14 +174,12 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
 
     }
 
-    List<ItemStack> itemStackList;
-
     public void initGui() {
         super.initGui();
 
 
         slider = new GuiVerticalSliderList(this, 2, (this.width - this.xSize) / 2 + 201,
-                (this.height - this.ySize) / 2 + 8+10,
+                (this.height - this.ySize) / 2 + 8 + 10,
                 "",
                 0, 0, 0,
                 this, 210
@@ -155,12 +194,9 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                 value + 12
         ); i++, j++) {
             final int finalI = i;
-            new ItemStackImage(this, 175, 5+10 + 18 * j, () -> itemStackList.get(finalI)).drawForeground(par1, par2);
+            new ItemStackImage(this, 175, 5 + 10 + 18 * j, () -> itemStackList.get(finalI)).drawForeground(par1, par2);
         }
     }
-
-    boolean update = false;
-    List<Integer> integerList = new ArrayList<>();
 
     @Override
     protected void mouseClicked(final int i, final int j, final int k) throws IOException {
@@ -173,18 +209,19 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                 itemStackList.size(),
                 value + 12
         ); ii++, jj++) {
-            if (x >= 175 && x <= 175 + 18 && y >= 5+10 + 18 * jj && y < 5+10 + 18 * jj + 18) {
+            if (x >= 175 && x <= 175 + 18 && y >= 5 + 10 + 18 * jj && y < 5 + 10 + 18 * jj + 18) {
                 if (!integerList.contains(ii)) {
                     integerList.add(ii);
                 } else {
                     integerList.remove((Object) ii);
                 }
+                new PacketItemStackEvent(ii, mc.player);
+                final NBTTagCompound nbt = ModUtils.nbt(this.container.base.itemStack1);
+                nbt.setIntArray("list", integerList.stream().mapToInt(Integer::intValue).toArray());
                 update = true;
             }
         }
     }
-
-    int tick = 0;
 
     @Override
     public void updateScreen() {
@@ -339,66 +376,75 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                 );
             }
         }
-        int centerX =  20 + (9 * 16) / 2;
+        int centerX = 20 + (9 * 16) / 2;
         int centerY = 10 + (9 * 16) / 2;
 
-        // Настроим OpenGL для рисования
+
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.glLineWidth(1.0F); // Устанавливаем толщину линии
+        GlStateManager.glLineWidth(1.0F);
 
-        // Рисуем вертикальную линию по оси X
+
         buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(this.guiLeft + centerX, this.guiTop +10, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(this.guiLeft +centerX, this.guiTop +10 + (9 * 16), 0).color(1.0F, 0.0F, 0.0F,  1.0F).endVertex();
+        buffer.pos(this.guiLeft + centerX, this.guiTop + 10, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(this.guiLeft + centerX, this.guiTop + 10 + (9 * 16), 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
         tessellator.draw();
 
-        // Рисуем горизонтальную линию по оси Y
+
         buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(this.guiLeft +20, this.guiTop +centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(this.guiLeft +20 + (9 * 16), this.guiTop +centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(this.guiLeft + 20, this.guiTop + centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(this.guiLeft + 20 + (9 * 16), this.guiTop + centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
         tessellator.draw();
 
-        // Восстанавливаем OpenGL
+
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
+        GlStateManager.pushMatrix();
         GlStateManager.glLineWidth(4.0F);
-        int chunkSize = 16; // Размер чанка (в пикселях)
-        int numChunks = 9; // Количество чанков по одной оси (например, 9x9)
+        int chunkSize = 16;
+        int numChunks = 9;
 
         for (int x = 0; x < numChunks; x++) {
             for (int y = 0; y < numChunks; y++) {
                 int offsetX = 20 + (x * chunkSize);
                 int offsetY = 10 + (y * chunkSize);
 
-                // Рисуем обводку каждого чанка
+
                 buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
-                buffer.pos(this.guiLeft + offsetX, this.guiTop + offsetY, 0).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex(); // Нижний левый угол
-                buffer.pos(this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY, 0).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex(); // Нижний правый угол
-                buffer.pos(this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY + chunkSize, 0).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex(); // Верхний правый угол
-                buffer.pos(this.guiLeft + offsetX, this.guiTop + offsetY + chunkSize, 0).color(0.0F, 1.0F, 0.0F, 1.0F).endVertex(); // Верхний левый угол
+                buffer
+                        .pos(this.guiLeft + offsetX, this.guiTop + offsetY, 0)
+                        .color(0.0F, 1.0F, 0.0F, 1.0F)
+                        .endVertex(); // Нижний левый угол
+                buffer
+                        .pos(this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY, 0)
+                        .color(0.0F, 1.0F, 0.0F, 1.0F)
+                        .endVertex(); // Нижний правый угол
+                buffer
+                        .pos(this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY + chunkSize, 0)
+                        .color(0.0F, 1.0F, 0.0F, 1.0F)
+                        .endVertex(); // Верхний правый угол
+                buffer
+                        .pos(this.guiLeft + offsetX, this.guiTop + offsetY + chunkSize, 0)
+                        .color(0.0F, 1.0F, 0.0F, 1.0F)
+                        .endVertex(); // Верхний левый угол
                 tessellator.draw();
             }
         }
 
-// Восстанавливаем OpenGL
-        GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
-        new ImageResearchTableInterface(this, 171, 11, 40, (int)(18*12.4)).drawBackground(this.guiLeft, guiTop);
+        new ImageResearchTableInterface(this, 171, 11, 40, (int) (18 * 12.4)).drawBackground(this.guiLeft, guiTop);
 
         for (int i = value, j = 0; i < Math.min(
                 itemStackList.size(),
                 value + 12
         ); i++, j++) {
             final int finalI = i;
-            if (integerList.contains(i)){
-                new ImageResearchTableInterface(this, 175, 5+10 + 18 * j, 16, 16).drawBackground(this.guiLeft, guiTop);
+            if (integerList.contains(i)) {
+                new ImageResearchTableInterface(this, 175, 5 + 10 + 18 * j, 16, 16).drawBackground(this.guiLeft, guiTop);
             }
-            new ItemStackImage(this, 175, 5+10 + 18 * j, () -> itemStackList.get(finalI)).drawBackground(this.guiLeft, guiTop);
+            new ItemStackImage(this, 175, 5 + 10 + 18 * j, () -> itemStackList.get(finalI)).drawBackground(this.guiLeft, guiTop);
 
         }
 

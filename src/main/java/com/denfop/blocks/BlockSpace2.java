@@ -3,9 +3,7 @@ package com.denfop.blocks;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
-import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -14,7 +12,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -75,7 +72,7 @@ public class BlockSpace2 extends BlockCore implements IModelRegister {
         if (meta >= (Type.values()).length) {
             meta = 0;
         }
-        return "iu." + Type.values()[meta].getName()  + ".name";
+        return "iu." + Type.values()[meta].getName() + ".name";
     }
 
     public EnumRarity getRarity(ItemStack stack) {
@@ -134,11 +131,12 @@ public class BlockSpace2 extends BlockCore implements IModelRegister {
             stack = stack.copy();
             stack.setCount(1 + getDrop(fortune));
             ret.add(stack);
-        }else {
-            ret.add(new ItemStack(this,1,type.ordinal()));
+        } else {
+            ret.add(new ItemStack(this, 1, type.ordinal()));
         }
         return ret;
     }
+
     private int getDrop(int fortune) {
         switch (fortune) {
             case 0:
@@ -173,6 +171,8 @@ public class BlockSpace2 extends BlockCore implements IModelRegister {
 
         private final int metadata;
         private final String name;
+        ItemStack stack;
+        private String raw;
 
         Type(int metadata) {
             this.metadata = metadata;
@@ -199,15 +199,15 @@ public class BlockSpace2 extends BlockCore implements IModelRegister {
         public EnumRarity getRarity() {
             return EnumRarity.COMMON;
         }
-        private String raw;
-        public void setRaw(String name){
-            this.raw = "raw"+name;
-        }
 
         public String getRaw() {
             return raw;
         }
-        ItemStack stack;
+
+        public void setRaw(String name) {
+            this.raw = "raw" + name;
+        }
+
         public ItemStack getStack() {
             return stack;
         }

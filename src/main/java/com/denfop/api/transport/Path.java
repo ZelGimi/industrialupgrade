@@ -1,17 +1,8 @@
 package com.denfop.api.transport;
 
-import com.denfop.api.transport.ITransportConductor;
-import com.denfop.api.transport.ITransportSink;
-import com.denfop.api.transport.ItemFluidHandler;
-import com.denfop.api.transport.TransportNetLocal;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class Path {
 
@@ -20,7 +11,7 @@ public class Path {
 
     final EnumFacing targetDirection;
     private final Object handler;
-    EnumFacing  firstSide;
+    EnumFacing firstSide;
 
     ITransportConductor first = null;
 
@@ -34,12 +25,12 @@ public class Path {
     }
 
     public IItemHandler getHandler() {
-        return ( handler instanceof IItemHandler) ? (IItemHandler) handler : null;
+        return (handler instanceof IItemHandler) ? (IItemHandler) handler : null;
     }
 
 
     public IFluidHandler getFluidHandler() {
-        return ( handler instanceof IFluidHandler) ? (IFluidHandler) handler : null;
+        return (handler instanceof IFluidHandler) ? (IFluidHandler) handler : null;
     }
 
 }

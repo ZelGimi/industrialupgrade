@@ -46,6 +46,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
     public int x = 11;
     public int y = 11;
     public int z = 11;
+    List<Chunk> list = Lists.newArrayList();
     private AxisAlignedBB axisalignedbb;
 
     public TileMagnet() {
@@ -190,7 +191,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         super.onLoaded();
         updateData();
     }
-    List<Chunk> list = Lists.newArrayList();
+
     public void updateData() {
         this.axisalignedbb = new AxisAlignedBB(
                 this.pos.getX() - this.x,
@@ -216,11 +217,12 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
             }
         }
     }
-    public List<EntityItem> getEntitiesWithinAABB()
-    {
+
+    public List<EntityItem> getEntitiesWithinAABB() {
         List<EntityItem> list = Lists.newArrayList();
-        this.list.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(EntityItem.class,axisalignedbb,list,
-                EntitySelectors.NOT_SPECTATING));
+        this.list.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(EntityItem.class, axisalignedbb, list,
+                EntitySelectors.NOT_SPECTATING
+        ));
 
         return list;
     }

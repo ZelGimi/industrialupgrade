@@ -7,22 +7,16 @@ import com.denfop.api.IModelRegister;
 import com.denfop.api.pollution.ChunkLevel;
 import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.pollution.PollutionManager;
-import com.denfop.api.space.IBody;
-import com.denfop.api.space.SpaceNet;
-import com.denfop.api.space.fakebody.Data;
 import com.denfop.register.Register;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -31,8 +25,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class ItemPollutionDevice extends Item implements IModelRegister {
 

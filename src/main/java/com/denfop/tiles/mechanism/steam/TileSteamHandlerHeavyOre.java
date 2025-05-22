@@ -169,8 +169,6 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
     }
 
 
-
-
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
@@ -211,7 +209,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
             if (this.pos.down().distanceSq(neighborPos) == 0) {
                 IBlockState blockState = world.getBlockState(this.pos.down());
                 if (blockState.getMaterial() != Material.AIR) {
-                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA|| blockState.getBlock() == FluidName.fluidpahoehoe_lava
+                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
                             .getInstance()
                             .getBlock();
                 } else {
@@ -222,7 +220,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
             if (this.pos.down().distanceSq(neighborPos) == 0) {
                 IBlockState blockState = world.getBlockState(this.pos.down());
                 if (blockState.getMaterial() != Material.AIR) {
-                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA|| blockState.getBlock() == FluidName.fluidpahoehoe_lava
+                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
                             .getInstance()
                             .getBlock();
                 } else {

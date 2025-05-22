@@ -29,7 +29,6 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleItemPickup;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -151,7 +150,8 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     @Override
     public void onLoaded() {
         super.onLoaded();
-        this.data = PrimitiveHandler.getPlayersData(EnumPrimitive.ANVIL);;
+        this.data = PrimitiveHandler.getPlayersData(EnumPrimitive.ANVIL);
+        ;
         if (!this.getWorld().isRemote) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
@@ -200,7 +200,7 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
         if (name.equals("slot2")) {
             outputSlot.put(0, ItemStack.EMPTY);
         }
-        if (name.equals("effect")){
+        if (name.equals("effect")) {
 
             spawnItemParticles(world, pos, this.inputSlotA.get(0));
         }
@@ -269,22 +269,26 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
         }
         return super.onSneakingActivated(player, hand, side, hitX, hitY, hitZ);
     }
+
+    @SideOnly(Side.CLIENT)
     private void spawnItemParticles(World world, BlockPos pos, ItemStack stack) {
         Random rand = new Random();
 
         for (int i = 0; i < 1; i++) {
-            double offsetX =-0.05;
-            double offsetY =0.05;
+            double offsetX = -0.05;
+            double offsetY = 0.05;
             double offsetZ = -0.05;
 
             Minecraft.getMinecraft().effectRenderer.addEffect(
                     new ParticleItemCustom(world,
                             pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5,
                             offsetX, offsetY, offsetZ,
-                            stack)
+                            stack
+                    )
             );
         }
     }
+
     @Override
     public boolean onActivated(
             final EntityPlayer player,

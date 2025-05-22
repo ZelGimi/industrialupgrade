@@ -152,6 +152,7 @@ public class BlockBasalts extends BlockCore implements IModelRegister {
         p_180633_3_ = p_180633_3_.withProperty(BOOL_PROPERTY, false);
         p_180633_1_.setBlockState(p_180633_2_, p_180633_3_);
     }
+
     public ItemStack getItemStack(IBlockState state) {
         if (state.getBlock() != this) {
             return null;

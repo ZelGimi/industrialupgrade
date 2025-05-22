@@ -1,7 +1,6 @@
 package com.denfop.tiles.panels.entity;
 
 
-import com.denfop.Config;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.Localization;
@@ -106,8 +105,14 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public boolean hasSky;
     public double deptPercent;
     public double deptGenerate = 0;
+    public boolean addedToEnergyNet = false;
+    public boolean twoContainer = false;
     protected double pastEnergy;
     protected double perenergy;
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
+    int hashCodeSource;
+    private long id;
 
     public TileSolarPanel(
             final int tier, final double gDay,
@@ -162,13 +167,11 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         };
     }
 
+
     public TileSolarPanel(EnumSolarPanels solarpanels) {
         this(solarpanels.tier, solarpanels.genday, solarpanels.producing, solarpanels.maxstorage, solarpanels);
 
     }
-
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
 
     @Override
     public List<InfoTile<IEnergyTile>> getValidReceivers() {
@@ -193,22 +196,18 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         return this.id;
     }
 
-
     public void setId(final long id) {
         this.id = id;
-    }
-
-    private long id;
-    int hashCodeSource;
-
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
     public int getHashCodeSource() {
         return hashCodeSource;
+    }
+
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
     }
 
     public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
@@ -319,18 +318,15 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         return packet;
     }
 
-
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
         this.inputslot.wirelessmodule();
     }
 
-
     @Override
     public int getInventoryStackLimit() {
         return 1;
     }
-
 
     public List<ItemStack> getDrop() {
         List<ItemStack> list = new ArrayList<>();
@@ -346,32 +342,29 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public void addInformation(final ItemStack itemStack, final List<String> info) {
 
 
-
-            if (this.getWorld() == null) {
+        if (this.getWorld() == null) {
+            info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
+                    + ModUtils.getString(this.genDay) + " EF/t ");
+            info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
+                    + ModUtils.getString(this.genNight) + " EF/t ");
+        } else {
+            if (this.world.isDaytime()) {
                 info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
-                        + ModUtils.getString(this.genDay) + " EF/t ");
+                        + ModUtils.getString(this.generating) + " EF/t ");
                 info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
                         + ModUtils.getString(this.genNight) + " EF/t ");
             } else {
-                if (this.world.isDaytime()) {
-                    info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
-                            + ModUtils.getString(this.generating) + " EF/t ");
-                    info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
-                            + ModUtils.getString(this.genNight) + " EF/t ");
-                } else {
-                    info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
-                            + ModUtils.getString(this.genDay) + " EF/t ");
-                    info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
-                            + ModUtils.getString(this.generating) + " EF/t ");
-                }
+                info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
+                        + ModUtils.getString(this.genDay) + " EF/t ");
+                info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
+                        + ModUtils.getString(this.generating) + " EF/t ");
             }
-            info.add(Localization.translate("iu.item.tooltip.Output") + " "
-                    + ModUtils.getString(this.output) + " EF/t ");
-            info.add(Localization.translate("iu.item.tooltip.Capacity") + " "
-                    + ModUtils.getString(this.maxStorage) + " EF ");
-            info.add(Localization.translate("iu.tier") + ModUtils.getString(this.tier));
-
-
+        }
+        info.add(Localization.translate("iu.item.tooltip.Output") + " "
+                + ModUtils.getString(this.output) + " EF/t ");
+        info.add(Localization.translate("iu.item.tooltip.Capacity") + " "
+                + ModUtils.getString(this.maxStorage) + " EF ");
+        info.add(Localization.translate("iu.tier") + ModUtils.getString(this.tier));
 
 
     }
@@ -430,7 +423,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         this.generating *= coefpollution * coefficient_phase * coef;
     }
 
-
     public List<ItemStack> getSelfDrops(int fortune, boolean wrench) {
         List<ItemStack> drop = super.getSelfDrops(fortune, wrench);
         drop = Collections.singletonList(this.adjustDrop(drop.get(0), wrench, fortune));
@@ -457,7 +449,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         }
 
     }
-    public boolean addedToEnergyNet = false;
 
     public void onLoaded() {
         super.onLoaded();
@@ -471,7 +462,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             this.solarType = this.inputslot.solartype();
             IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
             this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
-            if(!addedToEnergyNet) {
+            if (!addedToEnergyNet) {
                 this.energyConductorMap.clear();
                 this.addedToEnergyNet = true;
                 validReceivers.clear();
@@ -492,7 +483,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
 
     }
 
-
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
 
@@ -509,7 +499,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         nbttagcompound.setDouble("deptPercent", this.deptPercent);
         return nbttagcompound;
     }
-
 
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -557,9 +546,9 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
                 this.generating = tempGenerate;
                 if (debt < debtMax) {
                     this.storage += generating;
-                }else{
-                    if (solarpanels != null && solarpanels.solarold != null)  {
-                        new PacketChangeSolarPanel(solarpanels,this);
+                } else {
+                    if (solarpanels != null && solarpanels.solarold != null) {
+                        new PacketChangeSolarPanel(solarpanels, this);
                     }
                 }
             } else {
@@ -620,7 +609,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
         return this.tier;
     }
 
-
     @Override
     public List<ItemStack> getWrenchDrops(
             World world,
@@ -630,7 +618,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             EntityPlayer entityPlayer,
             int i
     ) {
-        return Arrays.asList(inputslot.gets());
+        return inputslot;
     }
 
     @Override
@@ -657,7 +645,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
         return getComponentPrivate().wrenchCanRemove(entityPlayer) && debt == 0;
     }
-
 
     public ContainerBase<TileSolarPanel> getGuiContainer(EntityPlayer player) {
         if (twoContainer) {
@@ -691,8 +678,6 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
 
 
     }
-
-    public boolean twoContainer = false;
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();

@@ -36,7 +36,8 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.fertilizer;
             }
-            public EnumTypeSlot getTypeSlot(){
+
+            public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.FERTILIZER;
             }
         };

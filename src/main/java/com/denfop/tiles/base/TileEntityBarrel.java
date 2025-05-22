@@ -77,7 +77,7 @@ public class TileEntityBarrel extends TileEntityInventory {
             tooltip.add(Localization.translate("iu.beer.recipe1") + " " + hops);
             tooltip.add(Localization.translate("iu.beer.recipe2") + " " + wheat);
             tooltip.add(Localization.translate("iu.beer.recipe3") + " " + tank.getFluidAmount() / 1000);
-            tooltip.add(Localization.translate("iu.beer.recipe4") + " " + new Timer(time/20).getDisplay());
+            tooltip.add(Localization.translate("iu.beer.recipe4") + " " + new Timer(time / 20).getDisplay());
             if (this.waterVariety != null && this.timeVariety != null && this.beerVariety != null) {
                 tooltip.add(Localization.translate("iu.beer.recipe5") + " " + waterVariety.name() + " " + beerVariety.name() + " " + timeVariety.name());
             }

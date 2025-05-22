@@ -3,7 +3,6 @@ package com.denfop.tiles.base;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;

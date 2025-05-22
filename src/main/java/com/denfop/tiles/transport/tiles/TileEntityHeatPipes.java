@@ -41,14 +41,20 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
 
     public boolean addedToEnergyNet;
     protected HeatType cableType;
+    int hashCodeSource;
+    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
+    boolean updateConnect = false;
+    List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
     private boolean needUpdate;
     private long id;
+    private InfoCable typeColdCable;
 
     public TileEntityHeatPipes(HeatType cableType) {
         super(cableType);
         this.cableType = cableType;
         this.addedToEnergyNet = false;
     }
+
 
     public TileEntityHeatPipes() {
         super(HeatType.pipes);
@@ -72,16 +78,8 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         return cableType;
     }
 
-
     public long getIdNetwork() {
         return this.id;
-    }
-
-    int hashCodeSource;
-
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
@@ -89,12 +87,15 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         return hashCodeSource;
     }
 
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
 
     public void setId(final long id) {
         this.id = id;
     }
 
-    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
     @Override
     public void AddHeatTile(final IHeatTile tile, final EnumFacing dir) {
         if (!this.getWorld().isRemote) {
@@ -105,7 +106,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
             updateConnect = true;
         }
     }
-    private InfoCable typeColdCable;
+
     @Override
     public InfoCable getHeatCable() {
         return typeColdCable;
@@ -116,14 +117,12 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         typeColdCable = cable;
     }
 
-
-    boolean updateConnect = false;
     @Override
     public void RemoveHeatTile(final IHeatTile tile, final EnumFacing dir) {
         if (!this.getWorld().isRemote) {
             this.energyHeatConductorMap.remove(dir);
             final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<IHeatTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -138,7 +137,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     public Map<EnumFacing, IHeatTile> getHeatTiles() {
         return energyHeatConductorMap;
     }
-    List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
+
     @Override
     public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
         return validHeatReceivers;
@@ -191,7 +190,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
             this.needUpdate = false;
             this.updateConnectivity();
         }
-        if (updateConnect){
+        if (updateConnect) {
             updateConnect = false;
             this.updateConnectivity();
         }
@@ -211,8 +210,6 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
         return new ItemStack(IUItem.pipes, 1, this.cableType.ordinal());
     }
-
-
 
 
     public void updateConnectivity() {

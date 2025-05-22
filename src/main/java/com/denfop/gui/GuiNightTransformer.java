@@ -6,7 +6,6 @@ import com.denfop.api.gui.ComponentEmpty;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerNightTransformer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiNightTransformer extends GuiIU<ContainerNightTransformer> {
@@ -26,6 +25,7 @@ public class GuiNightTransformer extends GuiIU<ContainerNightTransformer> {
                 new Component<>(this.container.base.ne)
         ));
     }
+
     @Override
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");

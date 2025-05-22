@@ -9,11 +9,9 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.container.ContainerBags;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
-import com.denfop.items.bags.ItemStackBags;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.utils.KeyboardClient;
@@ -178,14 +176,14 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
         EntityPlayer player = (EntityPlayer) p_77663_3_;
         if (nbt.getBoolean("open")) {
             int slot_id = nbt.getInteger("slot_inventory");
-            if (slot_id != p_77663_4_ && !player.getEntityWorld().isRemote && !ModUtils.isEmpty(itemStack) && player.openContainer instanceof ContainerBags) {
-                ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
+            if (slot_id != p_77663_4_ && !player.getEntityWorld().isRemote && !ModUtils.isEmpty(itemStack) && player.openContainer instanceof com.denfop.items.energy.ContainerMagnet) {
+                ItemStackMagnet toolbox = ((com.denfop.items.energy.ContainerMagnet) player.openContainer).base;
                 if (toolbox.isThisContainer(itemStack)) {
                     toolbox.saveAsThrown(itemStack);
                     player.closeScreen();
                     nbt.setBoolean("open", false);
                 }
-            } else if (!(player.openContainer instanceof ContainerBags)) {
+            } else if (!(player.openContainer instanceof com.denfop.items.energy.ContainerMagnet)) {
                 nbt.setBoolean("open", false);
             }
         }
@@ -288,8 +286,8 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
     }
 
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
-            ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
+        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof com.denfop.items.energy.ContainerMagnet) {
+            ItemStackMagnet toolbox = ((com.denfop.items.energy.ContainerMagnet) player.openContainer).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAsThrown(stack);
                 player.closeScreen();

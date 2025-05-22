@@ -1,6 +1,5 @@
 package com.denfop.integration.jei;
 
-import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.integration.jei.analyzer.AnalyzerCategory;
 import com.simplequarries.BlockQuarry;
 import mezz.jei.api.IModRegistry;

@@ -4,7 +4,6 @@ import com.denfop.api.inv.IAdvInventory;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.network.packet.IUpdatableItemStack;
 import com.denfop.network.packet.PacketUpdateFieldContainerItemStack;
 import com.denfop.network.packet.PacketUpdateFieldContainerTile;
 import com.denfop.tiles.base.TileEntityBlock;
@@ -262,7 +261,6 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         amount = Math.min(amount, ModUtils.getSize(stack));
         return amount;
     }
-
 
 
 }

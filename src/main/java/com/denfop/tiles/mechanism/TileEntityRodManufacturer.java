@@ -18,8 +18,8 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.Energy;
 import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRodManufacturer;
 import com.denfop.gui.GuiRodManufacturer;
@@ -56,9 +56,9 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
     public final int defaultTier;
     public final double defaultEnergyStorage;
     public final InvSlotOutput outputSlot;
+    public final InvSlot input_slot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
-    public final InvSlot input_slot;
     public MachineRecipe output;
     public short progress;
     public double guiProgress;
@@ -96,6 +96,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
@@ -157,6 +158,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 new RecipeOutput(null, output)
         ));
     }
+
     public static void addRecipe2(String input, String input1, ItemStack output) {
         final IInputHandler recipeInputFactory = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("rod_assembler", new BaseMachineRecipe(
@@ -173,6 +175,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 new RecipeOutput(null, output)
         ));
     }
+
     public static void addRecipe(ItemStack stack1, String input, String input1, ItemStack output) {
         final IInputHandler recipeInputFactory = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("rod_assembler", new BaseMachineRecipe(
@@ -189,6 +192,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 new RecipeOutput(null, output)
         ));
     }
+
     public static void addRecipe1(ItemStack stack1, String input, String input1, ItemStack output) {
         final IInputHandler recipeInputFactory = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("rod_assembler", new BaseMachineRecipe(
@@ -205,6 +209,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 new RecipeOutput(null, stack1)
         ));
     }
+
     public static void addRecipe(ItemStack stack1, ItemStack input, String input1, ItemStack output) {
         final IInputHandler recipeInputFactory = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("rod_assembler", new BaseMachineRecipe(
@@ -221,6 +226,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 new RecipeOutput(null, output)
         ));
     }
+
     public static void addRecipe1(ItemStack stack1, ItemStack input, String input1, ItemStack output) {
         final IInputHandler recipeInputFactory = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("rod_assembler", new BaseMachineRecipe(
@@ -237,6 +243,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 new RecipeOutput(null, output)
         ));
     }
+
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
@@ -329,10 +336,30 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
 
 
         addRecipe2("logWood", "plankWood", new ItemStack(IUItem.wood_steam_blade));
-        addRecipe1(new ItemStack(IUItem.bronze_steam_blade, 1), "plateBronze", "casingBronze", new ItemStack(IUItem.wood_steam_blade));
-        addRecipe1(new ItemStack(IUItem.iron_steam_blade, 1), "plateIron", "casingIron", new ItemStack(IUItem.bronze_steam_blade));
-        addRecipe1(new ItemStack(IUItem.steel_steam_blade, 1), "plateSteel", "casingSteel", new ItemStack(IUItem.iron_steam_blade));
-        addRecipe1(new ItemStack(IUItem.carbon_steam_blade, 1), "plateCarbon", "plateCarbon", new ItemStack(IUItem.steel_steam_blade));
+        addRecipe1(
+                new ItemStack(IUItem.bronze_steam_blade, 1),
+                "plateBronze",
+                "casingBronze",
+                new ItemStack(IUItem.wood_steam_blade)
+        );
+        addRecipe1(
+                new ItemStack(IUItem.iron_steam_blade, 1),
+                "plateIron",
+                "casingIron",
+                new ItemStack(IUItem.bronze_steam_blade)
+        );
+        addRecipe1(
+                new ItemStack(IUItem.steel_steam_blade, 1),
+                "plateSteel",
+                "casingSteel",
+                new ItemStack(IUItem.iron_steam_blade)
+        );
+        addRecipe1(
+                new ItemStack(IUItem.carbon_steam_blade, 1),
+                "plateCarbon",
+                "plateCarbon",
+                new ItemStack(IUItem.steel_steam_blade)
+        );
         addRecipe1(IUItem.iridium_steam_blade, "plateIridium", "casingIridium", new ItemStack(IUItem.carbon_steam_blade));
         addRecipe1(
                 IUItem.iridium_steam_blade,
@@ -347,8 +374,8 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 IUItem.compressiridium_steam_blade
         );
 
-        addRecipe1(  IUItem.myphical_steam_blade, "crystalProton", "crystalPhoton",  IUItem.spectral_steam_blade);
-        addRecipe1(IUItem.photon_steam_blade, "crystalPhoton", "crystalingotPhoton",IUItem.myphical_steam_blade);
+        addRecipe1(IUItem.myphical_steam_blade, "crystalProton", "crystalPhoton", IUItem.spectral_steam_blade);
+        addRecipe1(IUItem.photon_steam_blade, "crystalPhoton", "crystalingotPhoton", IUItem.myphical_steam_blade);
         addRecipe1(
                 IUItem.neutron_steam_blade,
                 "nuggetNeutron",
@@ -356,7 +383,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 IUItem.photon_steam_blade
         );
         addRecipe1(IUItem.barion_steam_blade, "plateSpinel", "casingSpinel", IUItem.neutron_steam_blade);
-        addRecipe1(IUItem.hadron_steam_blade, "plateCobalt", "casingCobalt",IUItem.barion_steam_blade);
+        addRecipe1(IUItem.hadron_steam_blade, "plateCobalt", "casingCobalt", IUItem.barion_steam_blade);
         addRecipe1(
                 IUItem.ultramarine_steam_blade,
                 "plateMikhail",
@@ -468,7 +495,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
             }
         }
 
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     public void updateEntityServer() {

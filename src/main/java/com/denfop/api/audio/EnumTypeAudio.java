@@ -4,5 +4,5 @@ public enum EnumTypeAudio {
     ON,
     INTERRUPTION,
     OFF;
-   public static EnumTypeAudio[] VALUES = EnumTypeAudio.values();
+    public static EnumTypeAudio[] VALUES = EnumTypeAudio.values();
 }

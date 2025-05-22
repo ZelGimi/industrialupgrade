@@ -16,10 +16,10 @@ public class GuiVerticalSliderList extends GuiButton {
     protected static final ResourceLocation TEXTURES = new ResourceLocation(Constants.MOD_ID, "textures/gui/slider.png");
     private final int def;
     private final String name;
-    private int min;
     public boolean isMouseDown;
     public GuiPageButtonList.GuiResponder responder;
     public FormatHelper formatHelper;
+    private int min;
     private int sizeRender;
     private String displayString1;
     private float sliderPosition = 1.0F;
@@ -80,6 +80,7 @@ public class GuiVerticalSliderList extends GuiButton {
             this.sliderPosition = (float) (def * ((this.height - 8) / ((this.max - this.min) * 1D)));
         }
     }
+
     public float getSliderPosition() {
         return this.sliderPosition;
     }
@@ -126,7 +127,7 @@ public class GuiVerticalSliderList extends GuiButton {
 
 
             this.drawTexturedModalRect(this.x - 1,
-                  this.y - 1 + ((this.height) - this.sizeRender) * this.sliderPosition, 12, 13
+                    this.y - 1 + ((this.height) - this.sizeRender) * this.sliderPosition, 12, 13
                     , 3, this.sizeRender
             );
             int j = 14737632;
@@ -182,7 +183,7 @@ public class GuiVerticalSliderList extends GuiButton {
             float step = 1.0F / (this.max - this.min);
 
 
-            this.sliderPosition += direction == ScrollDirection.down  ? step : -step;
+            this.sliderPosition += direction == ScrollDirection.down ? step : -step;
 
 
             if (this.sliderPosition < 0.0F) {

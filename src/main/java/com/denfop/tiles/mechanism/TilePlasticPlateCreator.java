@@ -67,6 +67,7 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
@@ -100,7 +101,7 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
                         new FluidStack(FluidName.fluidglucose.getInstance(), 200),
                         input.getInput(Items.GLOWSTONE_DUST)
                 ),
-                new RecipeOutput(null, new ItemStack(Items.SUGAR,2))
+                new RecipeOutput(null, new ItemStack(Items.SUGAR, 2))
         ));
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
                 new FluidStack(FluidName.fluidco2.getInstance(), 500),
@@ -122,18 +123,18 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
                 new FluidStack(FluidName.fluidglowstone.getInstance(), 125),
-                input.getInput(new ItemStack(IUItem.iudust,1,75))
+                input.getInput(new ItemStack(IUItem.iudust, 1, 75))
         ), new RecipeOutput(null, new ItemStack(Items.ENDER_PEARL))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
                 new FluidStack(FluidName.fluidglowstone.getInstance(), 125),
-                input.getInput(new ItemStack(IUItem.iudust,1,77))
+                input.getInput(new ItemStack(IUItem.iudust, 1, 77))
         ), new RecipeOutput(null, new ItemStack(Items.GHAST_TEAR))));
 
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
                 new FluidStack(FluidName.fluidchlorum.getInstance(), 180),
-                input.getInput(  new ItemStack(IUItem.iudust, 2, 26))
+                input.getInput(new ItemStack(IUItem.iudust, 2, 26))
         ), new RecipeOutput(null, new ItemStack(IUItem.iudust, 1, 79))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(

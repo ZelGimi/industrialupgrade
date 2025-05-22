@@ -2,7 +2,7 @@ package com.denfop.items.energy;
 
 import java.util.HashSet;
 
-public class ItemNet extends ItemToolIU{
+public class ItemNet extends ItemToolIU {
 
     public ItemNet() {
         super("net", 0, 0, new HashSet<>());

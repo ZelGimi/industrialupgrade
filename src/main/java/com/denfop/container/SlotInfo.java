@@ -18,9 +18,9 @@ import java.util.List;
 public class SlotInfo extends InvSlot implements VirtualSlot {
 
 
+    List<FluidStack> fluidStackList;
     private List<ItemStack> listBlack;
     private List<ItemStack> listWhite;
-    List<FluidStack> fluidStackList;
     private boolean fluid;
 
     public SlotInfo(TileEntityInventory multiCable, int size, boolean fluid) {
@@ -111,8 +111,8 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
             }
         }
 
-        this.listBlack =new ArrayList<>(listBlack);
-        this.listWhite =new ArrayList<>(listWhite);
+        this.listBlack = new ArrayList<>(listBlack);
+        this.listWhite = new ArrayList<>(listWhite);
         this.onChanged();
     }
 

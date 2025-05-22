@@ -43,7 +43,8 @@ public class AnvilWrapper implements IRecipeWrapper {
         minecraft.fontRenderer.drawSplitString("->", 47, 31,
                 recipeWidth - 5, 4210752
         );
-        minecraft.fontRenderer.drawSplitString(Localization.translate("iu.anvil.jei1")+"."+Localization.translate("iu.anvil.jei2"), 5, 50,
+        minecraft.fontRenderer.drawSplitString(Localization.translate("iu.anvil.jei1") + "." + Localization.translate(
+                        "iu.anvil.jei2"), 5, 50,
                 recipeWidth - 5, 4210752
         );
     }

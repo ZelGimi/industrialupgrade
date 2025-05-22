@@ -37,6 +37,7 @@ public interface IMultiTileBlock extends ISubEnum {
         {
             setImmovableMobility();
         }
+
         @Override
         public boolean isSolid() {
             return false;
@@ -92,4 +93,5 @@ public interface IMultiTileBlock extends ISubEnum {
     int getIDBlock();
 
     void setIdBlock(int id);
+
 }

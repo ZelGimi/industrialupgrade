@@ -71,8 +71,9 @@ public class TileCombMacerator extends TileMultiMachine {
 
             if (name.startsWith("crushed") && !name.startsWith("purifiedcrushed")) {
                 String name1 = name.substring("crushed".length());
-                if (name1.startsWith("Uranium"))
+                if (name1.startsWith("Uranium")) {
                     continue;
+                }
                 name1 = "ore" + name1;
                 final String name2 = "raw" + name.substring("crushed".length());
                 if (!OreDictionary
@@ -85,7 +86,7 @@ public class TileCombMacerator extends TileMultiMachine {
                             addrecipe(name2, name);
                             ores.add(name);
                         }
-                    }else{
+                    } else {
                         if (!ores.contains(name)) {
                             addrecipe(name1, name);
                             ores.add(name);

@@ -5,7 +5,12 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.hydroturbine.*;
+import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineCasing;
+import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineCasing1;
+import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineCasing2;
+import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineController;
+import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineSocket;
+import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineStabilizer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
@@ -25,8 +30,7 @@ public enum BlockHydroTurbine implements IMultiTileBlock {
     hydro_turbine_stabilizer(TileEntityHydroTurbineStabilizer.class, 2),
     hydro_turbine_casing_1(TileEntityHydroTurbineCasing.class, 3),
     hydro_turbine_casing_2(TileEntityHydroTurbineCasing1.class, 4),
-    hydro_turbine_casing_3(TileEntityHydroTurbineCasing2.class, 5)
-    ;
+    hydro_turbine_casing_3(TileEntityHydroTurbineCasing2.class, 5);
 
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("hydro_turbine");
@@ -34,8 +38,8 @@ public enum BlockHydroTurbine implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockHydroTurbine(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -51,14 +55,19 @@ public enum BlockHydroTurbine implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     @Override
     public Material getMaterial() {
         return Material.IRON;

@@ -25,7 +25,6 @@ import java.util.Objects;
 public class CTMatterRecipe {
 
 
-
     @ZenMethod
     public static void addRecipe(
             IItemStack output,

@@ -107,8 +107,9 @@ public class ItemUpgradeMachinesKit extends ItemSubTypes<ItemUpgradeMachinesKit.
                                         pos.getZ() + 1
                                 )
                         );
-                        for (EntityItem item : items)
+                        for (EntityItem item : items) {
                             item.setDead();
+                        }
                         IBlockState iblockstate1 = itemBlockTileEntity.getBlock().getStateForPlacement(world, pos,
                                 side, hitX,
                                 hitY,

@@ -253,206 +253,206 @@ public class TileHandlerHeavyOre extends TileBaseHandlerHeavyOre implements IHas
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 0),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,0), new ItemStack(IUItem.spaceItem, 2, 30),
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 0), new ItemStack(IUItem.spaceItem, 2, 30),
                         new ItemStack(IUItem.spaceItem, 1, 30)},
                 (short) 4000, 10, 50, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 1),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,1),
-                        new ItemStack(IUItem.space_ore,1,2), new ItemStack(IUItem.spaceItem, 2, 30),
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 1),
+                        new ItemStack(IUItem.space_ore, 1, 2), new ItemStack(IUItem.spaceItem, 2, 30),
                         new ItemStack(IUItem.spaceItem, 1, 30)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 2),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,3),
-                        new ItemStack(IUItem.space_ore,1,4),   new ItemStack(IUItem.space_ore,1,5)},
-                (short) 4000, 35,35, 30
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 3),
+                        new ItemStack(IUItem.space_ore, 1, 4), new ItemStack(IUItem.space_ore, 1, 5)},
+                (short) 4000, 35, 35, 30
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 3),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,6),
-                        new ItemStack(IUItem.space_ore,1,7), new ItemStack(IUItem.spaceItem, 2, 33),
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 6),
+                        new ItemStack(IUItem.space_ore, 1, 7), new ItemStack(IUItem.spaceItem, 2, 33),
                         new ItemStack(IUItem.spaceItem, 1, 33)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 4),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,8),
-                        new ItemStack(IUItem.space_ore,1,9), new ItemStack(IUItem.spaceItem, 2, 34),
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 8),
+                        new ItemStack(IUItem.space_ore, 1, 9), new ItemStack(IUItem.spaceItem, 2, 34),
                         new ItemStack(IUItem.spaceItem, 1, 34)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 5),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,10), new ItemStack(IUItem.spaceItem, 2, 35),
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 10), new ItemStack(IUItem.spaceItem, 2, 35),
                         new ItemStack(IUItem.spaceItem, 1, 35)},
                 (short) 4000, 10, 50, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 6),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,11),
-                        new ItemStack(IUItem.space_ore,1,12), new ItemStack(IUItem.spaceItem, 2, 36),
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 11),
+                        new ItemStack(IUItem.space_ore, 1, 12), new ItemStack(IUItem.spaceItem, 2, 36),
                         new ItemStack(IUItem.spaceItem, 1, 36)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 7),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,13), new ItemStack(IUItem.spaceItem, 2, 37),
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 13), new ItemStack(IUItem.spaceItem, 2, 37),
                         new ItemStack(IUItem.spaceItem, 1, 37)},
                 (short) 4000, 25, 50, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 8),
-                new ItemStack[]{new ItemStack(IUItem.space_ore,1,14),
-                        new ItemStack(IUItem.space_ore,1,15), new ItemStack(IUItem.spaceItem, 2, 38),
+                new ItemStack[]{new ItemStack(IUItem.space_ore, 1, 14),
+                        new ItemStack(IUItem.space_ore, 1, 15), new ItemStack(IUItem.spaceItem, 2, 38),
                         new ItemStack(IUItem.spaceItem, 1, 38)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 9),
-                new ItemStack[]{new ItemStack(IUItem.space_ore1,1,0),
-                        new ItemStack(IUItem.space_ore1,1,1),   new ItemStack(IUItem.space_ore1,1,2)},
-                (short) 4000, 35,35, 30
+                new ItemStack[]{new ItemStack(IUItem.space_ore1, 1, 0),
+                        new ItemStack(IUItem.space_ore1, 1, 1), new ItemStack(IUItem.space_ore1, 1, 4)},
+                (short) 4000, 35, 35, 30
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 10),
-                new ItemStack[]{new ItemStack(IUItem.space_ore1,1,4),
-                        new ItemStack(IUItem.space_ore1,1,3), new ItemStack(IUItem.spaceItem, 2, 40),
+                new ItemStack[]{new ItemStack(IUItem.space_ore1, 1, 2),
+                        new ItemStack(IUItem.space_ore1, 1, 3), new ItemStack(IUItem.spaceItem, 2, 40),
                         new ItemStack(IUItem.spaceItem, 1, 40)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 11),
-                new ItemStack[]{new ItemStack(IUItem.space_ore1,1,5),
-                        new ItemStack(IUItem.space_ore1,1,6),  new ItemStack(IUItem.space_ore1,1,7),
-                        new ItemStack(IUItem.space_ore1,1,8)},
-                (short) 4000, 25,25, 25, 25
+                new ItemStack[]{new ItemStack(IUItem.space_ore1, 1, 5),
+                        new ItemStack(IUItem.space_ore1, 1, 6), new ItemStack(IUItem.space_ore1, 1, 7),
+                        new ItemStack(IUItem.space_ore1, 1, 8)},
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 12),
-                new ItemStack[]{new ItemStack(IUItem.space_ore1,1,10),
-                        new ItemStack(IUItem.space_ore1,1,11), new ItemStack(IUItem.spaceItem, 2, 42),
+                new ItemStack[]{new ItemStack(IUItem.space_ore1, 1, 10),
+                        new ItemStack(IUItem.space_ore1, 1, 11), new ItemStack(IUItem.spaceItem, 2, 42),
                         new ItemStack(IUItem.spaceItem, 1, 42)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 13),
-                new ItemStack[]{new ItemStack(IUItem.space_ore1,1,12),
-                        new ItemStack(IUItem.space_ore1,1,13),   new ItemStack(IUItem.space_ore1,1,14)},
-                (short) 4000, 35,35, 30
+                new ItemStack[]{new ItemStack(IUItem.space_ore1, 1, 12),
+                        new ItemStack(IUItem.space_ore1, 1, 13), new ItemStack(IUItem.space_ore1, 1, 14)},
+                (short) 4000, 35, 35, 30
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 14),
-                new ItemStack[]{new ItemStack(IUItem.space_ore1,1,15),new ItemStack(IUItem.space_ore2,1,0),
+                new ItemStack[]{new ItemStack(IUItem.space_ore1, 1, 15), new ItemStack(IUItem.space_ore2, 1, 0),
                         new ItemStack(IUItem.spaceItem, 2, 44),
                         new ItemStack(IUItem.spaceItem, 1, 44)},
-                (short) 4000, 10, 25,25, 25
+                (short) 4000, 10, 25, 25, 25
         );
 
         addhandlerore(
                 new ItemStack(IUItem.space_stone, 1, 15),
-                new ItemStack[]{new ItemStack(IUItem.space_ore2,1,1),
-                        new ItemStack(IUItem.space_ore2,1,2), new ItemStack(IUItem.spaceItem, 2, 45),
+                new ItemStack[]{new ItemStack(IUItem.space_ore2, 1, 1),
+                        new ItemStack(IUItem.space_ore2, 1, 2), new ItemStack(IUItem.spaceItem, 2, 45),
                         new ItemStack(IUItem.spaceItem, 1, 45)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 0),
-                new ItemStack[]{new ItemStack(IUItem.space_ore2,1,3),
+                new ItemStack[]{new ItemStack(IUItem.space_ore2, 1, 3),
                         new ItemStack(IUItem.spaceItem, 2, 46),
                         new ItemStack(IUItem.spaceItem, 1, 46)},
                 (short) 4000, 10, 50, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 1),
-                new ItemStack[]{new ItemStack(IUItem.space_ore2,1,4),
-                        new ItemStack(IUItem.space_ore2,1,5), new ItemStack(IUItem.spaceItem, 2, 47),
+                new ItemStack[]{new ItemStack(IUItem.space_ore2, 1, 4),
+                        new ItemStack(IUItem.space_ore2, 1, 5), new ItemStack(IUItem.spaceItem, 2, 47),
                         new ItemStack(IUItem.spaceItem, 1, 47)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 2),
-                new ItemStack[]{new ItemStack(IUItem.space_ore2,1,6),
-                        new ItemStack(IUItem.space_ore2,1,7), new ItemStack(IUItem.spaceItem, 2, 48),
+                new ItemStack[]{new ItemStack(IUItem.space_ore2, 1, 6),
+                        new ItemStack(IUItem.space_ore2, 1, 7), new ItemStack(IUItem.spaceItem, 2, 48),
                         new ItemStack(IUItem.spaceItem, 1, 48)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 3),
-                new ItemStack[]{new ItemStack(IUItem.space_ore2,1,8),
-                        new ItemStack(IUItem.space_ore2,1,9), new ItemStack(IUItem.spaceItem, 2, 49),
+                new ItemStack[]{new ItemStack(IUItem.space_ore2, 1, 8),
+                        new ItemStack(IUItem.space_ore2, 1, 9), new ItemStack(IUItem.spaceItem, 2, 49),
                         new ItemStack(IUItem.spaceItem, 1, 49)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 4),
-                new ItemStack[]{new ItemStack(IUItem.space_ore2,1,10),
-                        new ItemStack(IUItem.space_ore2,1,11), new ItemStack(IUItem.spaceItem, 2, 50),
+                new ItemStack[]{new ItemStack(IUItem.space_ore2, 1, 10),
+                        new ItemStack(IUItem.space_ore2, 1, 11), new ItemStack(IUItem.spaceItem, 2, 50),
                         new ItemStack(IUItem.spaceItem, 1, 50)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 5),
-                new ItemStack[]{new ItemStack(IUItem.space_ore2,1,12),
-                        new ItemStack(IUItem.space_ore2,1,13), new ItemStack(IUItem.spaceItem, 2, 51),
+                new ItemStack[]{new ItemStack(IUItem.space_ore2, 1, 12),
+                        new ItemStack(IUItem.space_ore2, 1, 13), new ItemStack(IUItem.spaceItem, 2, 51),
                         new ItemStack(IUItem.spaceItem, 1, 51)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 6),
-                new ItemStack[]{new ItemStack(IUItem.space_ore2,1,14),
-                        new ItemStack(IUItem.space_ore2,1,15), new ItemStack(IUItem.spaceItem, 2, 52),
+                new ItemStack[]{new ItemStack(IUItem.space_ore2, 1, 14),
+                        new ItemStack(IUItem.space_ore2, 1, 15), new ItemStack(IUItem.spaceItem, 2, 52),
                         new ItemStack(IUItem.spaceItem, 1, 52)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
 
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 7),
-                new ItemStack[]{new ItemStack(IUItem.space_ore3,1,0),
-                        new ItemStack(IUItem.space_ore3,1,1),   new ItemStack(IUItem.space_ore1,1,2)},
-                (short) 4000, 35,35, 30
+                new ItemStack[]{new ItemStack(IUItem.space_ore3, 1, 0),
+                        new ItemStack(IUItem.space_ore3, 1, 1), new ItemStack(IUItem.space_ore1, 1, 2)},
+                (short) 4000, 35, 35, 30
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 8),
-                new ItemStack[]{new ItemStack(IUItem.space_ore3,1,3),
-                        new ItemStack(IUItem.space_ore3,1,4), new ItemStack(IUItem.spaceItem, 2, 54),
+                new ItemStack[]{new ItemStack(IUItem.space_ore3, 1, 3),
+                        new ItemStack(IUItem.space_ore3, 1, 4), new ItemStack(IUItem.spaceItem, 2, 54),
                         new ItemStack(IUItem.spaceItem, 1, 54)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 9),
-                new ItemStack[]{new ItemStack(IUItem.space_ore3,1,5),
-                        new ItemStack(IUItem.space_ore3,1,6), new ItemStack(IUItem.spaceItem, 2, 55),
+                new ItemStack[]{new ItemStack(IUItem.space_ore3, 1, 5),
+                        new ItemStack(IUItem.space_ore3, 1, 6), new ItemStack(IUItem.spaceItem, 2, 55),
                         new ItemStack(IUItem.spaceItem, 1, 55)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 10),
-                new ItemStack[]{new ItemStack(IUItem.space_ore3,1,7),
-                        new ItemStack(IUItem.space_ore3,1,8), new ItemStack(IUItem.spaceItem, 2, 56),
+                new ItemStack[]{new ItemStack(IUItem.space_ore3, 1, 7),
+                        new ItemStack(IUItem.space_ore3, 1, 8), new ItemStack(IUItem.spaceItem, 2, 56),
                         new ItemStack(IUItem.spaceItem, 1, 56)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 11),
-                new ItemStack[]{new ItemStack(IUItem.space_ore3,1,9),
-                        new ItemStack(IUItem.space_ore3,1,10), new ItemStack(IUItem.spaceItem, 2, 57),
+                new ItemStack[]{new ItemStack(IUItem.space_ore3, 1, 9),
+                        new ItemStack(IUItem.space_ore3, 1, 10), new ItemStack(IUItem.spaceItem, 2, 57),
                         new ItemStack(IUItem.spaceItem, 1, 57)},
-                (short) 4000, 25,25, 25, 25
+                (short) 4000, 25, 25, 25, 25
         );
 
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 12),
-                new ItemStack[]{new ItemStack(IUItem.space_ore3,1,11),
+                new ItemStack[]{new ItemStack(IUItem.space_ore3, 1, 11),
                         new ItemStack(IUItem.spaceItem, 2, 58),
                         new ItemStack(IUItem.spaceItem, 1, 58)},
                 (short) 4000, 30, 50, 25
         );
         addhandlerore(
                 new ItemStack(IUItem.space_stone1, 1, 13),
-                new ItemStack[]{new ItemStack(IUItem.space_ore3,1,12),
+                new ItemStack[]{new ItemStack(IUItem.space_ore3, 1, 12),
                         new ItemStack(IUItem.spaceItem, 2, 59),
                         new ItemStack(IUItem.spaceItem, 1, 59)},
                 (short) 4000, 30, 50, 25

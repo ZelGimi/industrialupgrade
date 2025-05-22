@@ -9,7 +9,6 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.container.ContainerSteamBoiler;
 import com.denfop.container.ContainerSteamFluidHeater;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -61,9 +60,10 @@ public class GuiSteamFluidHeater extends GuiIU<ContainerSteamFluidHeater> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-160, mouseY, text);
+            this.drawTooltip(mouseX - 160, mouseY, text);
         }
     }
+
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
 

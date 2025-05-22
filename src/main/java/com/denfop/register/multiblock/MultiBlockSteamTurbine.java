@@ -112,8 +112,9 @@ public class MultiBlockSteamTurbine {
         }
         for (int y = 0; y < 5; y++) {
             for (int x = -2; x < 3; x++) {
-                if (x > -2 && x < 2)
+                if (x > -2 && x < 2) {
                     continue;
+                }
                 SteamTurbineMultiBlock.add(SteamTurbineMultiBlock.getPos().add(x, y, 0), ICasing.class,
                         new ItemStack(IUItem.steam_turbine, 1, 0),
                         EnumFacing.NORTH
@@ -122,8 +123,9 @@ public class MultiBlockSteamTurbine {
         }
         for (int y = 0; y < 5; y++) {
             for (int x = -2; x < 3; x++) {
-                if (x > -2 && x < 2)
+                if (x > -2 && x < 2) {
                     continue;
+                }
                 SteamTurbineMultiBlock.add(SteamTurbineMultiBlock.getPos().add(x, y, 11), ICasing.class,
                         new ItemStack(IUItem.steam_turbine, 1, 0),
                         EnumFacing.NORTH

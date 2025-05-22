@@ -40,11 +40,12 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     public int progress;
     public MachineRecipe output;
     public int tick = 0;
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.ROLLING);
+    public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.ROLLING);
 
     public TileEntityRollingMachine() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "cutting", this){};
+        this.inputSlotA = new InvSlotRecipes(this, "cutting", this) {
+        };
         this.progress = 0;
         this.outputSlot = new InvSlotOutput(this, 1);
     }
@@ -166,15 +167,21 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     ) {
         ItemStack stack = player.getHeldItem(hand);
 
-        if (stack.getItem() == IUItem.cutter && this.output != null&&this.inputSlotA.get().getCount() >= this.output.getRecipe().input.getInputs().get(0).getAmount() && this.outputSlot.canAdd(this.output.getRecipe().output.items.get(
+        if (stack.getItem() == IUItem.cutter && this.output != null && this.inputSlotA
+                .get()
+                .getCount() >= this.output.getRecipe().input
+                .getInputs()
+                .get(0)
+                .getAmount() && this.outputSlot.canAdd(this.output.getRecipe().output.items.get(
                 0))) {
-            progress += (short) (10 + (short) (data.getOrDefault(player.getUniqueID(),0.0) / 5d));
+            progress += (short) (10 + (short) (data.getOrDefault(player.getUniqueID(), 0.0) / 5d));
             this.getCooldownTracker().setTick(10);
             if (progress >= 100) {
                 this.progress = 0;
                 player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-                if (!this.getWorld().isRemote)
-                PrimitiveHandler.addExperience(EnumPrimitive.ROLLING,0.5,player.getUniqueID());
+                if (!this.getWorld().isRemote) {
+                    PrimitiveHandler.addExperience(EnumPrimitive.ROLLING, 0.5, player.getUniqueID());
+                }
                 this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                 this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
                 if (this.inputSlotA.isEmpty() || this.outputSlot.get().getCount() >= 64) {

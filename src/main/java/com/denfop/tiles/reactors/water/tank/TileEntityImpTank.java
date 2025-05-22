@@ -22,7 +22,7 @@ public class TileEntityImpTank extends TileEntityMainTank {
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 2;
     }
 

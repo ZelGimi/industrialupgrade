@@ -5,7 +5,6 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.TileEntityRefractoryFurnace;
-import com.denfop.tiles.mechanism.TileEntitySqueezer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
@@ -27,8 +26,8 @@ public enum BlockRefractoryFurnace implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockRefractoryFurnace(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -43,14 +42,19 @@ public enum BlockRefractoryFurnace implements IMultiTileBlock {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
-    }   int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
+    }
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
 
     public void buildDummies() {
         for (final BlockRefractoryFurnace block : values()) {

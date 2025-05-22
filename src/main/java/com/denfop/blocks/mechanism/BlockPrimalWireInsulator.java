@@ -4,7 +4,6 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.TileEntityPrimalSiliconCrystalHandler;
 import com.denfop.tiles.mechanism.TileEntityPrimalWireInsulator;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
@@ -27,8 +26,8 @@ public enum BlockPrimalWireInsulator implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockPrimalWireInsulator(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -48,14 +47,19 @@ public enum BlockPrimalWireInsulator implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         for (final BlockPrimalWireInsulator block : values()) {
             if (block.teClass != null) {
@@ -117,7 +121,7 @@ public enum BlockPrimalWireInsulator implements IMultiTileBlock {
 
     @Override
     public String[] getMultiModels(final IMultiTileBlock teBlock) {
-        return new String[]{"iron", "iron_final", "gold", "gold_final",  "tin", "tin_final",  "copper", "copper_final"};
+        return new String[]{"iron", "iron_final", "gold", "gold_final", "tin", "tin_final", "copper", "copper_final"};
     }
 
     @Override

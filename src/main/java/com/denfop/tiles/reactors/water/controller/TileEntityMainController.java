@@ -17,8 +17,8 @@ import com.denfop.api.reactors.LogicReactor;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
-import com.denfop.componets.Energy;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerWaterMainController;
 import com.denfop.gui.GuiWaterMainController;
@@ -85,13 +85,13 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
     public int level = 0;
     public boolean heat_sensor;
     public boolean stable_sensor;
+    @SideOnly(Side.CLIENT)
+    public DataBlock dataBlock;
     List<Fluids.InternalFluidTank> fluidTankInputList = new ArrayList<>();
     List<Fluids.InternalFluidTank> fluidTankOutputList = new ArrayList<>();
     List<Fluids.InternalFluidTank> fluidTankCoolantList = new ArrayList<>();
     List<Fluids.InternalFluidTank> fluidTankHotCoolantList = new ArrayList<>();
     List<ISecurity> securities = new ArrayList<>();
-    @SideOnly(Side.CLIENT)
-    public DataBlock dataBlock;
 
     public TileEntityMainController(final MultiBlockStructure multiBlockStructure, EnumFluidReactors enumFluidReactors) {
         super(multiBlockStructure);
@@ -252,11 +252,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         } else {
             if (this.typeWork == EnumTypeWork.WORK && this.getLevelReactor() < this.getMaxLevelReactor()) {
                 this.typeWork = EnumTypeWork.LEVEL_INCREASE;
-                this.energy.onUnloaded();
-                this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
-                this.energy.delegate = null;
-                this.energy.createDelegate();
-                this.energy.onLoaded();
+                this.energy.receivingDisabled = false;
+                this.energy.sendingSidabled = true;
                 switch (this.level) {
                     case 0:
                         this.energy.setCapacity(4000000);
@@ -274,11 +271,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                 }
             } else if (this.typeWork == EnumTypeWork.LEVEL_INCREASE && this.getLevelReactor() < this.getMaxLevelReactor()) {
                 this.typeWork = EnumTypeWork.WORK;
-                this.energy.onUnloaded();
-                this.energy.setDirections(ModUtils.noFacings, ModUtils.allFacings);
-                this.energy.delegate = null;
-                this.energy.createDelegate();
-                this.energy.onLoaded();
+                this.energy.receivingDisabled = true;
+                this.energy.sendingSidabled = false;
                 this.energy.setCapacity(this.energy.defaultCapacity);
                 this.energy.storage = 0;
             }
@@ -293,11 +287,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             this.reactorsModules.load();
             try {
                 if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
-                    this.energy.onUnloaded();
-                    this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
-                    this.energy.delegate = null;
-                    this.energy.createDelegate();
-                    this.energy.onLoaded();
+                    this.energy.receivingDisabled = true;
+                    this.energy.sendingSidabled = false;
                     switch (this.level) {
                         case 0:
                             this.energy.setCapacity(4000000);
@@ -343,6 +334,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             this.setActive(isActive);
         }
     }
+
     @SideOnly(Side.CLIENT)
     public void renderUniqueMultiBlock() {
         GlStateManager.popMatrix();
@@ -356,6 +348,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         render(model, state, null);
         GlStateManager.pushMatrix();
     }
+
     @Override
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
@@ -409,7 +402,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
 
                         }
                         if (this.work && this.reactor != null) {
-                            this.energy.setSourceTier(EnergyNetGlobal.initialize().getTierFromPower(output));
+                            this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(output));
                             this.energy.addEnergy(this.output);
                         }
                     }
@@ -417,12 +410,9 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                     if (this.energy.getEnergy() >= this.energy.getCapacity()) {
                         this.level++;
                         this.typeWork = EnumTypeWork.WORK;
-                        this.energy.onUnloaded();
+                        this.energy.receivingDisabled = true;
+                        this.energy.sendingSidabled = false;
                         this.energy.setCapacity(this.energy.defaultCapacity);
-                        this.energy.setDirections(ModUtils.noFacings, ModUtils.allFacings);
-                        this.energy.delegate = null;
-                        this.energy.createDelegate();
-                        this.energy.onLoaded();
                         this.energy.storage = 0;
                     }
                 }
@@ -465,7 +455,16 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         this.level = customPacketBuffer.readInt();
 
         this.typeWork = EnumTypeWork.values()[customPacketBuffer.readInt()];
-
+        try {
+            this.red_timer.readBuffer(customPacketBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            this.yellow_timer.readBuffer(customPacketBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankCoolantList) {
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
@@ -506,16 +505,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                 throw new RuntimeException(e);
             }
         }
-        try {
-            this.red_timer.readBuffer(customPacketBuffer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            this.yellow_timer.readBuffer(customPacketBuffer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     @Override
@@ -539,36 +529,37 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         this.timer.writeBuffer(customPacketBuffer);
         customPacketBuffer.writeInt(this.level);
         customPacketBuffer.writeInt(this.typeWork.ordinal());
+        this.red_timer.writeBuffer(customPacketBuffer);
+        this.yellow_timer.writeBuffer(customPacketBuffer);
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankCoolantList) {
             try {
-                EncoderHandler.encode(customPacketBuffer, (FluidTank) fluidTank);
+                EncoderHandler.encode(customPacketBuffer, fluidTank);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankInputList) {
             try {
-                EncoderHandler.encode(customPacketBuffer, (FluidTank) fluidTank);
+                EncoderHandler.encode(customPacketBuffer, fluidTank);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankOutputList) {
             try {
-                EncoderHandler.encode(customPacketBuffer, (FluidTank) fluidTank);
+                EncoderHandler.encode(customPacketBuffer, fluidTank);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankHotCoolantList) {
             try {
-                EncoderHandler.encode(customPacketBuffer, (FluidTank) fluidTank);
+                EncoderHandler.encode(customPacketBuffer, fluidTank);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        this.red_timer.writeBuffer(customPacketBuffer);
-        this.yellow_timer.writeBuffer(customPacketBuffer);
+
         return customPacketBuffer;
     }
 
@@ -737,15 +728,13 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             levelFuel.setMainMultiElement(this);
 
         }
-        if (!this.getWorld().isRemote)
-        this.reactorsModules.load();
+        if (!this.getWorld().isRemote) {
+            this.reactorsModules.load();
+        }
         if (this.isFull()) {
             if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
-                this.energy.onUnloaded();
-                this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
-                this.energy.delegate = null;
-                this.energy.createDelegate();
-                this.energy.onLoaded();
+                this.energy.receivingDisabled = false;
+                this.energy.sendingSidabled = true;
                 switch (this.level) {
                     case 0:
                         this.energy.setCapacity(4000000);
@@ -818,7 +807,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return enumFluidReactors.ordinal();
     }
 

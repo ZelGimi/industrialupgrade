@@ -2,6 +2,7 @@ package com.denfop.tiles.windturbine;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.windsystem.EnumLevelGenerators;
@@ -67,9 +68,9 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         IUpdatableTileEvent {
 
 
-    public ISocket energy;
     public final InvSlotTurbineRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
+    public ISocket energy;
     public InvSlotWindTurbineRotor slot;
     public double generation = 0;
     public boolean need_repair;
@@ -399,6 +400,8 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
                 ) * (coefficient_power / 100D);
             }
             this.energy.getEnergy().addEnergy(generation);
+            this.energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
+
             if (this.world.getWorldTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
             }
@@ -499,7 +502,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         if (coefficient_power == 100) {
             return 1;
         }
-        return (int) ((int) (this.getRotor().getLevel() * this.coefficient_power / 100D) * Math.pow(
+        return (int) ((int) (1 * this.coefficient_power / 100D) * Math.pow(
                 this.coefficient_power / 100D,
                 this.getRotor().getLevel() - 1
         )) * getCoefDamage();

@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class SparkParticle extends Particle {
+
     public SparkParticle(World world, double x, double y, double z) {
         super(world, x, y, z);
 
@@ -39,4 +40,5 @@ public class SparkParticle extends Particle {
             this.particleBlue *= 0.5f;
         }
     }
+
 }

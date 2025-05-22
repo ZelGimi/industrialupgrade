@@ -2,15 +2,7 @@ package com.denfop.register.multiblock;
 
 import com.denfop.IUItem;
 import com.denfop.api.reactors.IFluidReactor;
-import com.denfop.tiles.reactors.water.ICasing;
-import com.denfop.tiles.reactors.water.IChamber;
-import com.denfop.tiles.reactors.water.IInput;
-import com.denfop.tiles.reactors.water.ILevelFuel;
-import com.denfop.tiles.reactors.water.IOutput;
-import com.denfop.tiles.reactors.water.IReactor;
-import com.denfop.tiles.reactors.water.ISecurity;
-import com.denfop.tiles.reactors.water.ISocket;
-import com.denfop.tiles.reactors.water.ITank;
+import com.denfop.tiles.reactors.water.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
