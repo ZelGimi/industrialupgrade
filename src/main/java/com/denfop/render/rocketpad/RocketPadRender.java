@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Iterator;
 
@@ -91,7 +90,7 @@ public class RocketPadRender {
                     te.getWorld().spawnParticle(
                             EnumParticleTypes.SMOKE_LARGE,
                             pos.getX() + 0.5 + offsetX,
-                           y,
+                            y,
                             pos.getZ() + 0.5 + offsetZ,
                             0, -0.1, 0
                     );
@@ -145,11 +144,11 @@ public class RocketPadRender {
                             1.0F + (float) (Math.random() * 0.2 - 0.1)
                     );
                 }
-              
-                rocket.setPos(rocket.getPos()+0.1);
+
+                rocket.setPos(rocket.getPos() + 0.1);
 
 
-                if (rocket.getPos() + 0.25 > 255) {
+                if (rocket.getPos() + 0.7 > 255) {
                     iterator.remove();
 
                 }

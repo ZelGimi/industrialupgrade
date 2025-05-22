@@ -10,11 +10,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.io.IOException;
 import java.util.UUID;
 
-public class PacketCreateAutoSends implements IPacket{
-    public PacketCreateAutoSends(){
+public class PacketCreateAutoSends implements IPacket {
+
+    public PacketCreateAutoSends() {
 
     }
-    public PacketCreateAutoSends(EntityPlayer player, IBody iBody){
+
+    public PacketCreateAutoSends(EntityPlayer player, IBody iBody) {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
         customPacketBuffer.writeByte(getId());
         try {
@@ -35,10 +37,10 @@ public class PacketCreateAutoSends implements IPacket{
     public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
         try {
             UUID uuid = (UUID) DecoderHandler.decode(customPacketBuffer);
-            if (entityPlayer.getUniqueID().equals(uuid)){
+            if (entityPlayer.getUniqueID().equals(uuid)) {
                 String body = customPacketBuffer.readString();
                 IBody body1 = SpaceNet.instance.getBodyFromName(body);
-                SpaceNet.instance.getColonieNet().setAutoSends(entityPlayer.getUniqueID(),body1);
+                SpaceNet.instance.getColonieNet().setAutoSends(entityPlayer.getUniqueID(), body1);
 
             }
         } catch (IOException e) {

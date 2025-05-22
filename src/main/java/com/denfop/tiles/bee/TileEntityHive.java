@@ -1,7 +1,6 @@
 package com.denfop.tiles.bee;
 
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.api.bee.IBee;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -22,23 +21,23 @@ public class TileEntityHive extends TileEntityBlock {
 
     private final IBee bee;
 
-    public TileEntityHive(IBee bee){
+    public TileEntityHive(IBee bee) {
         this.bee = bee;
     }
 
 
     @Override
     public boolean canEntityDestroy(final Entity entity) {
-       if ((entity instanceof  EntityPlayer)){
-           EntityPlayer player = (EntityPlayer) entity;
-           return player.getHeldItemMainhand().getItem() instanceof ItemNet;
-       }
-       return false;
+        if ((entity instanceof EntityPlayer)) {
+            EntityPlayer player = (EntityPlayer) entity;
+            return player.getHeldItemMainhand().getItem() instanceof ItemNet;
+        }
+        return false;
     }
 
     @Override
     public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
-       ItemStack stack = new ItemStack(IUItem.jarBees);
+        ItemStack stack = new ItemStack(IUItem.jarBees);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         nbt.setInteger("bee_id", bee.getId());
         nbt.setInteger("swarm", WorldBaseGen.random.nextInt(bee.getMaxSwarm() / 2) + 15);
@@ -53,6 +52,7 @@ public class TileEntityHive extends TileEntityBlock {
     public void onClicked(EntityPlayer player) {
         player.attackEntityFrom(IUDamageSource.bee, 5);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return null;

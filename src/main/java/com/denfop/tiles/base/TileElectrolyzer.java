@@ -317,6 +317,7 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
                 return this.fluidTank1;
         }
     }
+
     @Override
     public boolean onActivated(
             final EntityPlayer player,

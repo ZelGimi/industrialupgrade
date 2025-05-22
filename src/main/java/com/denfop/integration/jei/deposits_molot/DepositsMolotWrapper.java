@@ -3,7 +3,6 @@ package com.denfop.integration.jei.deposits_molot;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -36,7 +35,7 @@ public class DepositsMolotWrapper implements IRecipeWrapper {
 
     public List<ItemStack> getInputs() {
 
-        return new ArrayList<>( machineRecipe.getRecipe().output.items);
+        return new ArrayList<>(machineRecipe.getRecipe().output.items);
     }
 
 
@@ -49,7 +48,7 @@ public class DepositsMolotWrapper implements IRecipeWrapper {
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         int y = 20;
         int x = 25;
-        minecraft.fontRenderer.drawSplitString(Localization.translate("deposists.jei2")+" " + (this.vein.getHeavyOre() != null ?
+        minecraft.fontRenderer.drawSplitString(Localization.translate("deposists.jei2") + " " + (this.vein.getHeavyOre() != null ?
                         new ItemStack(vein.getHeavyOre().getBlock(), 1, vein.getMeta()).getDisplayName() :
                         new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1,
                                 vein.getOres().get(0).getMeta()

@@ -19,16 +19,18 @@ public interface ICoolTile {
 
     void setId(long id);
 
-    void AddCoolTile( ICoolTile tile, final EnumFacing dir);
+    void AddCoolTile(ICoolTile tile, final EnumFacing dir);
 
     void RemoveCoolTile(ICoolTile tile, final EnumFacing dir);
 
     Map<EnumFacing, ICoolTile> getCoolTiles();
 
     List<InfoTile<ICoolTile>> getCoolValidReceivers();
-    int hashCode();
+
+
+
+    int getHashCodeSource();
 
     void setHashCodeSource(int hashCode);
 
-    int getHashCodeSource();
 }

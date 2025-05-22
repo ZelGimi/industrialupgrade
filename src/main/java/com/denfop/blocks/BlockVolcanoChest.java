@@ -25,8 +25,8 @@ public enum BlockVolcanoChest implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockVolcanoChest(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -42,14 +42,19 @@ public enum BlockVolcanoChest implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         for (final BlockVolcanoChest block : values()) {
             if (block.teClass != null) {

@@ -1,6 +1,12 @@
 package com.denfop.tiles.hadroncollider;
 
-import com.denfop.api.hadroncollider.*;
+import com.denfop.api.hadroncollider.EnumLevelCollider;
+import com.denfop.api.hadroncollider.IExtractBlock;
+import com.denfop.api.hadroncollider.IMainController;
+import com.denfop.api.hadroncollider.IOverclockingBlock;
+import com.denfop.api.hadroncollider.IPurifierBlock;
+import com.denfop.api.hadroncollider.Protons;
+import com.denfop.api.hadroncollider.Structures;
 import com.denfop.componets.Energy;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.entity.EntityLivingBase;

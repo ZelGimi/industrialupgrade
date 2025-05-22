@@ -10,7 +10,6 @@ import com.denfop.api.gui.TankGauge;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
-import com.denfop.container.ContainerGasCombiner;
 import com.denfop.container.ContainerMutatron;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,8 +29,8 @@ public class GuiMutatron extends GuiIU<ContainerMutatron> {
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
         this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
-        this.addElement(TankGauge.createNormal(this, 43-8, 21, container.base.fluidTank1));
-        this.addElement(TankGauge.createNormal(this, 66-8, 21, container.base.fluidTank2));
+        this.addElement(TankGauge.createNormal(this, 43 - 8, 21, container.base.fluidTank1));
+        this.addElement(TankGauge.createNormal(this, 66 - 8, 21, container.base.fluidTank2));
         this.addElement(TankGauge.createNormal(this, 120, 21, container.base.fluidTank3));
         this.addComponent(new GuiComponent(this, 7, 64, EnumTypeComponent.ENERGY,
                 new Component<>(this.container.base.energy)
@@ -39,7 +38,7 @@ public class GuiMutatron extends GuiIU<ContainerMutatron> {
         this.addComponent(new GuiComponent(this, 77, 80, EnumTypeComponent.QUANTUM_ENERGY_WEIGHT,
                 new Component<>(this.container.base.qe)
         ));
-        this.addComponent(new GuiComponent(this, 92-3, 45, EnumTypeComponent.PROCESS,
+        this.addComponent(new GuiComponent(this, 92 - 3, 45, EnumTypeComponent.PROCESS,
                 new Component<>(new ComponentProgress(this.container.base, 1,
                         (short) 0
                 ) {

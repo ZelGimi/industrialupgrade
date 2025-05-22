@@ -1,9 +1,6 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerSmelteryFurnace;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,7 +17,9 @@ public class GuiSmelteryFurnace extends GuiIU<ContainerSmelteryFurnace> {
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
-        new AdvArea(this,40,58,129,65).withTooltip(ModUtils.getString(this.getContainer().base.progress.getBar()*100)+"%").drawForeground(par1, par2);
+        new AdvArea(this, 40, 58, 129, 65)
+                .withTooltip(ModUtils.getString(this.getContainer().base.progress.getBar() * 100) + "%")
+                .drawForeground(par1, par2);
     }
 
     @Override
@@ -35,7 +34,8 @@ public class GuiSmelteryFurnace extends GuiIU<ContainerSmelteryFurnace> {
         this.bindTexture();
         GlStateManager.color(1, 1, 1, 1);
         drawTexturedModalRect(this.guiLeft + 45, guiTop + 63, 176, 0, (int) (this.getContainer().base.progress.getBar() * 80),
-                20);
+                20
+        );
 
     }
 

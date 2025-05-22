@@ -27,6 +27,8 @@ public class TileEntityWaterMill extends TileEntityInventory {
     public final Energy energy;
     @SideOnly(Side.CLIENT)
     public DataBlock dataBlock;
+    public boolean water = false;
+    public boolean space = false;
     @SideOnly(Side.CLIENT)
     private RendererWaterMill render;
 
@@ -44,8 +46,6 @@ public class TileEntityWaterMill extends TileEntityInventory {
         return IUItem.watermill;
     }
 
-    public boolean water = false;
-
     @Override
     public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
@@ -59,8 +59,6 @@ public class TileEntityWaterMill extends TileEntityInventory {
             }
         }
     }
-
-    public boolean space = false;
 
     @Override
     public void onLoaded() {
@@ -106,11 +104,12 @@ public class TileEntityWaterMill extends TileEntityInventory {
                 for (int x = -1; x < 2; x++) {
                     for (int y = -1; y < 1; y++) {
                         IBlockState blockState = this.getWorld().getBlockState(pos.add(x, y, 0));
-                        if (pos.add(x, y, 0).distanceSq(pos) != 0)
-                        if (!(blockState.getMaterial() == Material.AIR || blockState.getMaterial().isLiquid())) {
-                            this.space = false;
-                            find = false;
-                            break cycle;
+                        if (pos.add(x, y, 0).distanceSq(pos) != 0) {
+                            if (!(blockState.getMaterial() == Material.AIR || blockState.getMaterial().isLiquid())) {
+                                this.space = false;
+                                find = false;
+                                break cycle;
+                            }
                         }
                     }
                 }
@@ -124,11 +123,12 @@ public class TileEntityWaterMill extends TileEntityInventory {
                 for (int z = -1; z < 2; z++) {
                     for (int y = -1; y < 1; y++) {
                         IBlockState blockState = this.getWorld().getBlockState(pos.add(0, y, z));
-                        if (pos.add(0, y, z).distanceSq(pos) != 0)
-                        if (!(blockState.getMaterial() == Material.AIR || blockState.getMaterial().isLiquid())) {
-                            this.space = false;
-                            find = false;
-                            break cycle;
+                        if (pos.add(0, y, z).distanceSq(pos) != 0) {
+                            if (!(blockState.getMaterial() == Material.AIR || blockState.getMaterial().isLiquid())) {
+                                this.space = false;
+                                find = false;
+                                break cycle;
+                            }
                         }
                     }
                 }
@@ -137,7 +137,7 @@ public class TileEntityWaterMill extends TileEntityInventory {
                 }
             }
         }
-        if (this.space && water){
+        if (this.space && water) {
             this.energy.addEnergy(0.1);
         }
     }

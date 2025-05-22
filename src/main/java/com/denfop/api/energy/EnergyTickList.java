@@ -32,6 +32,7 @@ public class EnergyTickList<T extends EnergyTick> extends ArrayList<T> {
         }
         return false;
     }
+
     public EnergyTick removeSource(final Object o) {
         if (o instanceof IEnergySource) {
             for (int i = 0; i < this.size(); i++) {
@@ -45,4 +46,5 @@ public class EnergyTickList<T extends EnergyTick> extends ArrayList<T> {
         }
         return null;
     }
+
 }

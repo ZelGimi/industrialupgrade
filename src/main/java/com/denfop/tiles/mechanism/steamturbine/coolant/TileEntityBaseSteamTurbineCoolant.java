@@ -3,9 +3,7 @@ package com.denfop.tiles.mechanism.steamturbine.coolant;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamTurbineCoolant;
-import com.denfop.container.ContainerSteamTurbineTank;
 import com.denfop.gui.GuiSteamTurbineCoolant;
-import com.denfop.gui.GuiSteamTurbineTank;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
@@ -18,7 +16,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,7 +41,7 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
 
     private void getFluidsFromLevel() {
         List<Fluid> fluidList = new ArrayList<>();
-        switch (level){
+        switch (level) {
             default:
                 fluidList.add(FluidName.fluidhyd.getInstance());
                 break;
@@ -71,6 +68,7 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
         }
         this.tank.setAcceptedFluids(Fluids.fluidPredicate(fluidList));
     }
+
     @Override
     public boolean onActivated(
             final EntityPlayer player,
@@ -91,6 +89,7 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
             return super.onActivated(player, hand, side, hitX, hitY, hitZ);
         }
     }
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
@@ -105,6 +104,7 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
         this.x = customPacketBuffer.readInt();
         this.power = customPacketBuffer.readDouble();
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
@@ -112,11 +112,11 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
     }
 
 
-
     @Override
     public ContainerSteamTurbineCoolant getGuiContainer(final EntityPlayer var1) {
         return new ContainerSteamTurbineCoolant(this, var1);
     }
+
     @Override
     public boolean hasOwnInventory() {
         return this.getMain() != null;
@@ -134,6 +134,7 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
         nbtTagCompound.setInteger("coolant_x", x);
         return nbtTagCompound;
     }
+
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
         if (this.getMain() == null) {
@@ -194,7 +195,7 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
 

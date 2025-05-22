@@ -1,10 +1,7 @@
 package com.denfop.integration.jei.analyzer;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.integration.jei.JEICompat;
 import mezz.jei.api.IGuiHelper;
@@ -16,7 +13,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -74,7 +70,6 @@ public class AnalyzerCategory extends Gui implements IRecipeCategory<AnalyzerWra
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-
 
 
     }

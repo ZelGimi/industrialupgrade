@@ -17,7 +17,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ItemStackRelocator extends ItemStackInventory {
@@ -30,8 +29,8 @@ public class ItemStackRelocator extends ItemStackInventory {
         super(player, stack, 0);
         this.itemStack1 = stack;
         this.sneaking = player.isSneaking();
-        if (!player.getEntityWorld().isRemote){
-            points =   new ArrayList<>(RelocatorNetwork.instance.getPoints(player));
+        if (!player.getEntityWorld().isRemote) {
+            points = new ArrayList<>(RelocatorNetwork.instance.getPoints(player));
         }
     }
 
@@ -53,7 +52,7 @@ public class ItemStackRelocator extends ItemStackInventory {
     }
 
     public ContainerBase<ItemStackRelocator> getGuiContainer(EntityPlayer player) {
-        if(sneaking){
+        if (sneaking) {
             return new ContainerRelocatorAddPoint(this);
         }
         return new ContainerRelocator(this);
@@ -61,7 +60,7 @@ public class ItemStackRelocator extends ItemStackInventory {
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        if (sneaking){
+        if (sneaking) {
             return new GuiRelocatorAddPoint(getGuiContainer(player));
         }
         return new GuiRelocator(getGuiContainer(player));

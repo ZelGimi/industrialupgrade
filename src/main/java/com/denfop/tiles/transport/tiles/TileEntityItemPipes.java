@@ -10,6 +10,7 @@ import com.denfop.api.transport.ITransportConductor;
 import com.denfop.api.transport.ITransportEmitter;
 import com.denfop.api.transport.ITransportTile;
 import com.denfop.api.transport.InfoCable;
+import com.denfop.api.transport.TransportFluidItemSinkSource;
 import com.denfop.api.transport.event.TransportTileLoadEvent;
 import com.denfop.api.transport.event.TransportTileUnLoadEvent;
 import com.denfop.blocks.BlockTileEntity;
@@ -24,6 +25,7 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.tiles.transport.types.ItemType;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -39,9 +41,11 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -59,23 +63,31 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
 
     private final Redstone redstone;
+    public SlotInfo list;
+    public boolean addedToEnergyNet = false;
+    public ItemType cableType;
+    public boolean redstoneSignal = false;
+    Map<EnumFacing, ITransportTile> energyConductorMap = new HashMap<>();
+    boolean hasHashCode = false;
+    int hashCodeSource;
+    List<InfoTile<ITransportTile>> validReceivers = new LinkedList<>();
+    InfoCable cable;
+    List<FluidStack> blackList = new ArrayList<>();
+    List<FluidStack> whiteList = new ArrayList<>();
     private SlotInfo listDown;
     private SlotInfo listUp;
     private SlotInfo listWest;
     private SlotInfo listEast;
     private SlotInfo listNorth;
     private SlotInfo listSouth;
-    public SlotInfo list;
-    public boolean addedToEnergyNet = false;
-    public ItemType cableType;
     private boolean needUpdate;
     private long id;
     private boolean update;
     private boolean work = false;
-    public boolean redstoneSignal = false;
     private EnumFacing facingSide;
     private byte tick;
     private int max;
+    private int hashCode;
 
     public TileEntityItemPipes() {
         super(ItemType.itemcable);
@@ -115,6 +127,10 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         );
     }
 
+    public static TileEntityItemPipes delegate(ItemType cableType) {
+        return new TileEntityItemPipes(cableType);
+    }
+
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
@@ -130,10 +146,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
     public boolean isWork() {
         return work;
-    }
-
-    public static TileEntityItemPipes delegate(ItemType cableType) {
-        return new TileEntityItemPipes(cableType);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -173,12 +185,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         return id;
     }
 
-
     public void setId(final long id) {
         this.id = id;
     }
-
-    Map<EnumFacing, ITransportTile> energyConductorMap = new HashMap<>();
 
     public void RemoveTile(ITransportTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
@@ -196,9 +205,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         }
     }
 
-    private int hashCode;
-    boolean hasHashCode = false;
-
     @Override
     public int hashCode() {
         if (!hasHashCode) {
@@ -210,7 +216,10 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         }
     }
 
-    int hashCodeSource;
+    @Override
+    public int getHashCodeSource() {
+        return hashCodeSource;
+    }
 
     @Override
     public void setHashCodeSource(final int hashCode) {
@@ -218,17 +227,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
     }
 
     @Override
-    public int getHashCodeSource() {
-        return hashCodeSource;
-    }
-
-    @Override
     public Map<EnumFacing, ITransportTile> getTiles() {
         return energyConductorMap;
     }
-
-    List<InfoTile<ITransportTile>> validReceivers = new LinkedList<>();
-
 
     public List<InfoTile<ITransportTile>> getValidReceivers() {
         return validReceivers;
@@ -249,6 +250,59 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         }
     }
 
+    @Override
+    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+        super.onNeighborChange(neighbor, neighborPos);
+
+        TileEntity tile = getWorld().getTileEntity(neighborPos);
+        if (tile != null && !(tile instanceof ITransportConductor)) {
+            if (!tile.isInvalid()) {
+                for (EnumFacing enumFacing : EnumFacing.VALUES) {
+                    if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, enumFacing) && tile.hasCapability(
+                            CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+                            enumFacing
+                    )) {
+                        final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
+                                tile,
+                                neighborPos
+                        );
+
+                        MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                getWorld(), transport
+
+                        ));
+                        break;
+                    } else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, enumFacing)) {
+                        final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, neighborPos
+                        );
+
+                        MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                getWorld(), transport
+
+                        ));
+                        break;
+                    } else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, enumFacing)) {
+                        final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, neighborPos
+                        );
+
+                        MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                getWorld(), transport
+
+                        ));
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void loadBeforeFirstUpdate() {
+        super.loadBeforeFirstUpdate();
+
+    }
+
     public void onLoaded() {
         super.onLoaded();
         if (!(getWorld()).isRemote && !addedToEnergyNet) {
@@ -260,6 +314,53 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
             }
             this.addedToEnergyNet = true;
             updateConnectivity();
+
+            for (EnumFacing facing1 : EnumFacing.values()) {
+                BlockPos neighborPos = this.pos.offset(facing1);
+                TileEntity tile = getWorld().getTileEntity(neighborPos);
+                if (tile != null && !(tile instanceof ITransportConductor)) {
+                    if (!tile.isInvalid()) {
+                        for (EnumFacing enumFacing : EnumFacing.VALUES) {
+                            if (tile.hasCapability(
+                                    CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+                                    enumFacing
+                            ) && tile.hasCapability(
+                                    CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+                                    enumFacing
+                            )) {
+                                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
+                                        tile,
+                                        neighborPos
+                                );
+
+                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                        getWorld(), transport
+
+                                ));
+                                break;
+                            } else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, enumFacing)) {
+                                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, neighborPos
+                                );
+
+                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                        getWorld(), transport
+
+                                ));
+                                break;
+                            } else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, enumFacing)) {
+                                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, neighborPos
+                                );
+
+                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                        getWorld(), transport
+
+                                ));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -312,11 +413,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         super.onUnloaded();
     }
 
-
     public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
         return new ItemStack(IUItem.item_pipes, 1, this.cableType.ordinal());
     }
-
 
     @Override
     public boolean onActivated(
@@ -391,7 +490,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         this.cableItem = cableType;
     }
 
-
     public boolean wrenchCanRemove(EntityPlayer player) {
         return false;
     }
@@ -410,13 +508,10 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         return cable;
     }
 
-    InfoCable cable;
-
     @Override
     public void setCable(final InfoCable cable) {
         this.cable = cable;
     }
-
 
     public boolean isItem() {
         return this.cableType.isItem();
@@ -434,9 +529,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         return this.list.getListWhite();
 
     }
-
-    List<FluidStack> blackList = new ArrayList<>();
-    List<FluidStack> whiteList = new ArrayList<>();
 
     @Override
     public List<FluidStack> getBlackListFluids(EnumFacing facing) {
@@ -476,6 +568,11 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
     }
 
     @Override
+    public void setMax(final int value) {
+        this.max -= value;
+    }
+
+    @Override
     public int getMax(final byte tick) {
         if (this.tick != tick) {
             this.tick = tick;
@@ -484,12 +581,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         }
         return this.max;
     }
-
-    @Override
-    public void setMax(final int value) {
-        this.max -= value;
-    }
-
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();

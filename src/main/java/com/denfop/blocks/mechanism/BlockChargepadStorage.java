@@ -55,8 +55,8 @@ public enum BlockChargepadStorage implements IMultiTileBlock, IElectricBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockChargepadStorage(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -72,14 +72,19 @@ public enum BlockChargepadStorage implements IMultiTileBlock, IElectricBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {

@@ -41,6 +41,7 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
         handleUpgradeTooltip(par1, par2);
         hover = par1 >= 7 && par2 >= 62 && par1 <= 18 && par2 <= 73;
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -56,9 +57,10 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     @Override
     protected void mouseClicked(final int i, final int j, final int k) throws IOException {
         super.mouseClicked(i, j, k);
@@ -109,7 +111,6 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
             }
 
 
-
             if (prevPointer == 0) {
                 pointer++;
             } else {
@@ -129,7 +130,7 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
         this.mc.getTextureManager().bindTexture(getTexture());
         int progress = (int) (34.0F * this.container.base.componentProgress.getBar());
         this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 24, 177, 1, progress, 20);
-        if (hover){
+        if (hover) {
             this.drawTexturedModalRect(this.guiLeft + 7, this.guiTop + 62, 177, 32, 12, 12);
         }
 

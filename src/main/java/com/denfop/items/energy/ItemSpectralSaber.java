@@ -48,7 +48,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -143,6 +142,7 @@ public class ItemSpectralSaber extends ItemTool implements IEnergyItem, IUpgrade
                 1.0
         );
     }
+
     private void areaAttack(ItemStack stack, EntityLivingBase target, EntityLivingBase source, int radius, double damage) {
         List<EntityLivingBase> entities = source.world.getEntitiesWithinAABB(
                 EntityLivingBase.class,
@@ -154,6 +154,7 @@ public class ItemSpectralSaber extends ItemTool implements IEnergyItem, IUpgrade
             }
         }
     }
+
     public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {
         return false;
     }
@@ -355,6 +356,7 @@ public class ItemSpectralSaber extends ItemTool implements IEnergyItem, IUpgrade
     public boolean isFull3D() {
         return true;
     }
+
     @Override
     public void addInformation(
             final ItemStack stack,
@@ -373,6 +375,7 @@ public class ItemSpectralSaber extends ItemTool implements IEnergyItem, IUpgrade
         }
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
+
     @Nonnull
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {

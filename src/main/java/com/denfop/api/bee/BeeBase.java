@@ -14,10 +14,6 @@ public class BeeBase implements IBee {
     private final int weatherResistance;
     private final int maxSwarm;
     private final ICrop cropFlower;
-    private List<IBee> unCompatibleBees;
-    private boolean sun;
-    private boolean night;
-    private int chance;
     private final int id;
     private final List<Biome> biomes = new ArrayList<>();
     private final int offspring;
@@ -27,18 +23,22 @@ public class BeeBase implements IBee {
     private final int tickBirthRate;
     private final List<Product> products = new ArrayList<>();
     private final String name;
+    private List<IBee> unCompatibleBees;
+    private boolean sun;
+    private boolean night;
+    private int chance;
 
     public BeeBase(
             String name, int id, int maxSwarm,
             int tickBirthRate, int tickLifecycles, AxisAlignedBB sizeTerritory, int offspring,
-            int chance,  boolean sun, boolean night, ICrop cropFlower,
+            int chance, boolean sun, boolean night, ICrop cropFlower,
             List<IBee> unCompatibleBees, int defaultWeatherResistance, double maxMortalityRate
     ) {
         this.name = name;
         this.maxSwarm = maxSwarm;
         this.chance = chance;
         this.id = id;
-        this.maxMortalityRate=maxMortalityRate;
+        this.maxMortalityRate = maxMortalityRate;
         this.weatherResistance = defaultWeatherResistance;
         this.tickBirthRate = tickBirthRate;
         this.tickLifecycles = tickLifecycles;
@@ -55,7 +55,6 @@ public class BeeBase implements IBee {
     public int getMaxSwarm() {
         return maxSwarm;
     }
-
 
 
     @Override
@@ -76,8 +75,9 @@ public class BeeBase implements IBee {
                 weatherResistance,
                 maxMortalityRate
         );
-        for (Biome biome : biomes)
-        bee.addBiome(biome);
+        for (Biome biome : biomes) {
+            bee.addBiome(biome);
+        }
         return bee;
     }
 
@@ -88,11 +88,14 @@ public class BeeBase implements IBee {
     }
 
 
-
-
     @Override
     public List<IBee> getUnCompatibleBees() {
         return unCompatibleBees;
+    }
+
+    @Override
+    public void setUnCompatibleBees(final List<IBee> bees) {
+        this.unCompatibleBees = bees;
     }
 
     @Override
@@ -100,23 +103,15 @@ public class BeeBase implements IBee {
         return sun;
     }
 
-
     @Override
     public boolean isNight() {
         return night;
     }
 
-
     @Override
     public int getWeatherResistance() {
         return weatherResistance;
     }
-    @Override
-    public void setUnCompatibleBees(final List<IBee> bees) {
-        this.unCompatibleBees = bees;
-    }
-
-
 
     @Override
     public int getChance() {
@@ -141,7 +136,6 @@ public class BeeBase implements IBee {
     }
 
 
-
     @Override
     public boolean canWorkInBiome(Biome biomeName) {
         return biomes.contains(biomeName);
@@ -151,7 +145,6 @@ public class BeeBase implements IBee {
     public void addBiome(Biome biomeName) {
         biomes.add(biomeName);
     }
-
 
 
     @Override
@@ -177,7 +170,7 @@ public class BeeBase implements IBee {
         return maxMortalityRate;
     }
 
-     @Override
+    @Override
     public int getTickBirthRate() {
         return tickBirthRate;
     }
@@ -211,8 +204,9 @@ public class BeeBase implements IBee {
                     break;
                 }
             }
-            if (product1 != null && products.size() == 1)
+            if (product1 != null && products.size() == 1) {
                 return;
+            }
             products.sort((p1, p2) -> Double.compare(p2.getChance(), p1.getChance()));
             final Iterator<Product> iter = products.iterator();
             if (find) {
@@ -266,7 +260,6 @@ public class BeeBase implements IBee {
     public String getName() {
         return name;
     }
-
 
 
     @Override

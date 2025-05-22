@@ -5,10 +5,8 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InputFluid;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.RecipeOutput;
@@ -33,7 +31,6 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -155,17 +152,17 @@ public class TileEntitySolidFluidIntegrator extends TileElectricMachine implemen
 
         addRecipe(
 
-                        new FluidStack(FluidName.fluidoxy.getInstance(), 100),
-                        new FluidStack(FluidName.fluidpolyprop.getInstance(),250),
+                new FluidStack(FluidName.fluidoxy.getInstance(), 100),
+                new FluidStack(FluidName.fluidpolyprop.getInstance(), 250),
 
-        new ItemStack(IUItem.crafting_elements, 1, 484),     new FluidStack(FluidName.fluidcarbonmonoxide.getInstance(), 50)
+                new ItemStack(IUItem.crafting_elements, 1, 484), new FluidStack(FluidName.fluidcarbonmonoxide.getInstance(), 50)
         );
         addRecipe(
 
                 new FluidStack(FluidName.fluidoxy.getInstance(), 100),
-                new FluidStack(FluidName.fluidpolyeth.getInstance(),250),
+                new FluidStack(FluidName.fluidpolyeth.getInstance(), 250),
 
-                new ItemStack(IUItem.crafting_elements, 1, 483),     new FluidStack(FluidName.fluidcarbonmonoxide.getInstance()
+                new ItemStack(IUItem.crafting_elements, 1, 483), new FluidStack(FluidName.fluidcarbonmonoxide.getInstance()
                         , 50)
         );
     }

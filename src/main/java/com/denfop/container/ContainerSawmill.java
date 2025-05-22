@@ -1,7 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityBrewingPlant;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
 import com.denfop.tiles.mechanism.TileEntitySawmill;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -18,7 +16,6 @@ public class ContainerSawmill extends ContainerFullInv<TileEntitySawmill> {
                 0, -20, 84
         ));
     }
-
 
 
 }

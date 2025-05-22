@@ -5,11 +5,12 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
 
-public class TileEntityAdvSteamTurbineCoolant extends TileEntityBaseSteamTurbineCoolant{
+public class TileEntityAdvSteamTurbineCoolant extends TileEntityBaseSteamTurbineCoolant {
 
     public TileEntityAdvSteamTurbineCoolant() {
         super(1);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockSteamTurbine.steam_turbine_adv_coolant;
@@ -19,4 +20,5 @@ public class TileEntityAdvSteamTurbineCoolant extends TileEntityBaseSteamTurbine
     public BlockTileEntity getBlock() {
         return IUItem.steam_turbine;
     }
+
 }

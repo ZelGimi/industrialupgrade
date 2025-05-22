@@ -1,7 +1,6 @@
 package com.denfop.api.heat;
 
 
-
 import java.util.ArrayList;
 
 public class HeatTickList<T extends HeatTick<IHeatSource, Path>> extends ArrayList<T> {
@@ -34,6 +33,7 @@ public class HeatTickList<T extends HeatTick<IHeatSource, Path>> extends ArrayLi
         }
         return false;
     }
+
     public HeatTick<IHeatSource, Path> removeSource(final Object o) {
         if (o instanceof IHeatSource) {
             for (int i = 0; i < this.size(); i++) {
@@ -47,4 +47,5 @@ public class HeatTickList<T extends HeatTick<IHeatSource, Path>> extends ArrayLi
         }
         return null;
     }
+
 }

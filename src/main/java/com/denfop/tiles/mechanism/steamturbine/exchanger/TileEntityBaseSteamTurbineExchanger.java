@@ -33,7 +33,7 @@ public class TileEntityBaseSteamTurbineExchanger extends TileEntityMultiBlockEle
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((IController) getMain()).getLevel();
+                return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((IController) getMain()).getBlockLevel();
             }
 
             @Override
@@ -96,7 +96,7 @@ public class TileEntityBaseSteamTurbineExchanger extends TileEntityMultiBlockEle
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
 

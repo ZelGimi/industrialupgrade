@@ -8,7 +8,6 @@ import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.space.fakebody.FakePlanet;
-import com.denfop.api.space.fakebody.FakePlayer;
 import com.denfop.api.tesseract.Channel;
 import com.denfop.api.vein.Vein;
 import com.denfop.invslot.InvSlot;

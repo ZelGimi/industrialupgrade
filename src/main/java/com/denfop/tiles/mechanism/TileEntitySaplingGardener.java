@@ -17,7 +17,6 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSapling;
 import net.minecraft.block.IGrowable;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,18 +33,23 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntitySaplingGardener extends TileEntityInventory  implements IUpgradableBlock {
+public class TileEntitySaplingGardener extends TileEntityInventory implements IUpgradableBlock {
 
+    private static final int RADIUS = 4;
     public final InvSlot slot;
     public final Energy energy;
+    public final InvSlotUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
+    private final ComponentUpgradeSlots componentUpgrade;
 
     public TileEntitySaplingGardener() {
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() instanceof IPlantable && ((IPlantable) ((ItemBlock) stack.getItem()).getBlock()) .getPlantType(null,null) == EnumPlantType.Plains;
+                return stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() instanceof IPlantable && ((IPlantable) ((ItemBlock) stack.getItem()).getBlock()).getPlantType(
+                        world,
+                        getBlockPos()) == EnumPlantType.Plains;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
@@ -55,20 +59,22 @@ public class TileEntitySaplingGardener extends TileEntityInventory  implements I
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
+
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemInput
         );
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.sapling_gardener;
     }
+
     @Override
     public ContainerSaplingGardener getGuiContainer(final EntityPlayer var1) {
         return new ContainerSaplingGardener(this, var1);
@@ -80,10 +86,6 @@ public class TileEntitySaplingGardener extends TileEntityInventory  implements I
         return new GuiSaplingGardener(getGuiContainer(var1));
     }
 
-
-
-    private static final int RADIUS = 4;
-
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -91,6 +93,7 @@ public class TileEntitySaplingGardener extends TileEntityInventory  implements I
             plantSaplingsInRadius();
         }
     }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -104,6 +107,7 @@ public class TileEntitySaplingGardener extends TileEntityInventory  implements I
             }
         }
     }
+
     private void plantSaplingsInRadius() {
         for (int x = -RADIUS; x <= RADIUS; x += 2) {
             for (int z = -RADIUS; z <= RADIUS; z += 2) {
@@ -126,8 +130,9 @@ public class TileEntitySaplingGardener extends TileEntityInventory  implements I
     private boolean canPlantSaplingAt(BlockPos pos) {
 
         Block blockAt = world.getBlockState(pos).getBlock();
-        if (blockAt != Blocks.AIR)
+        if (blockAt != Blocks.AIR) {
             return false;
+        }
         Block blockBelow = world.getBlockState(pos.down()).getBlock();
 
 

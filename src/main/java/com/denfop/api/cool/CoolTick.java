@@ -1,7 +1,5 @@
 package com.denfop.api.cool;
 
-import com.denfop.api.sytem.IConductor;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -9,15 +7,15 @@ import java.util.Objects;
 public class CoolTick<T, E> {
 
     private final T source;
-    private List<E> energyPaths;
-
     LinkedList<ICoolConductor> conductors = new LinkedList<>();
+    private List<E> energyPaths;
 
     public CoolTick(T source, List<E> list) {
         this.source = source;
         this.energyPaths = list;
 
     }
+
     public LinkedList<ICoolConductor> getConductors() {
         return conductors;
     }
@@ -25,6 +23,7 @@ public class CoolTick<T, E> {
     public void setConductors(final LinkedList<ICoolConductor> conductors) {
         this.conductors = conductors;
     }
+
     public T getSource() {
         return source;
     }

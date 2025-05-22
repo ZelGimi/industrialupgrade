@@ -304,6 +304,7 @@ public class TileConverterSolidMatter extends TileElectricMachine
         this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
         this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
 
+        this.energyConsume = (int) this.upgradeSlot.getEnergyDemand(2);
 
     }
 

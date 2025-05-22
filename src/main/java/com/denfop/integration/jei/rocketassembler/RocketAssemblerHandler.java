@@ -41,7 +41,6 @@ public class RocketAssemblerHandler {
     }
 
 
-
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("rocketassembler")) {
             addRecipe(
@@ -62,7 +61,6 @@ public class RocketAssemblerHandler {
     public ItemStack getOutput() {
         return output.copy();
     }
-
 
 
 }

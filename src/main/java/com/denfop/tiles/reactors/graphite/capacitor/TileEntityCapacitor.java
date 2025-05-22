@@ -37,18 +37,19 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ICapacitorItem && ((ICapacitorItem) stack.getItem()).getLevel() <= ((TileEntityCapacitor) this.base).getLevel();
+                return stack.getItem() instanceof ICapacitorItem && ((ICapacitorItem) stack.getItem()).getLevel() <= ((TileEntityCapacitor) this.base).getBlockLevel();
             }
 
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (!world.isRemote)
+                if (!world.isRemote) {
                     if (content.isEmpty()) {
-                    ((TileEntityCapacitor) this.base).percent = 1;
-                } else {
-                    ((TileEntityCapacitor) this.base).percent = 1 - ((ICapacitorItem) content.getItem()).getPercent();
-                    item = (ICapacitorItem) content.getItem();
+                        ((TileEntityCapacitor) this.base).percent = 1;
+                    } else {
+                        ((TileEntityCapacitor) this.base).percent = 1 - ((ICapacitorItem) content.getItem()).getPercent();
+                        item = (ICapacitorItem) content.getItem();
+                    }
                 }
             }
         };
@@ -115,7 +116,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return level;
     }
 

@@ -1,9 +1,6 @@
 package com.denfop.integration.jei.gas_turbine;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.blocks.mechanism.BlockGasTurbine;
 import com.denfop.integration.jei.JEICompat;
 import mezz.jei.api.IGuiHelper;
@@ -15,7 +12,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -77,7 +73,7 @@ public class GasTurbineCategory extends Gui implements IRecipeCategory<GasTurbin
 
         IGuiFluidStackGroup fff = layout.getFluidStacks();
 
-        fff.init(0, false, 95, 21, 12, 47, 10000, true, null);
+        fff.init(0, true, 95, 21, 12, 47, 10000, true, null);
         fff.set(0, recipes.getInput2());
 
 

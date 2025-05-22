@@ -1,9 +1,7 @@
 package com.denfop.integration.jei.genaddstone;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.integration.jei.JEICompat;
 import mezz.jei.api.IGuiHelper;

@@ -2,8 +2,6 @@ package com.denfop.api.transport;
 
 import net.minecraft.util.EnumFacing;
 
-import java.util.List;
-
 public interface ITransportSource<T, E> extends ITransportEmitter<T, E> {
 
     TransportItem<T> getOffered(int type, EnumFacing facing);

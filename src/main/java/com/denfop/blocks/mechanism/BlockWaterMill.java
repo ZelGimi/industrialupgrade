@@ -4,7 +4,6 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.TileEntitySqueezer;
 import com.denfop.tiles.mechanism.TileEntityWaterMill;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
@@ -27,8 +26,8 @@ public enum BlockWaterMill implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockWaterMill(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -44,14 +43,19 @@ public enum BlockWaterMill implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         for (final BlockWaterMill block : values()) {
             if (block.teClass != null) {
@@ -135,6 +139,6 @@ public enum BlockWaterMill implements IMultiTileBlock {
 
     @Override
     public String[] getMultiModels(final IMultiTileBlock teBlock) {
-        return new String[]{"global","active"};
+        return new String[]{"global", "active"};
     }
 }

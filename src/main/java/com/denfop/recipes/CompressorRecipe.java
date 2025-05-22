@@ -34,11 +34,12 @@ public class CompressorRecipe {
         addcompressor(IUItem.coal_chunk, 9, new ItemStack(IUItem.coal_chunk1)
 
         );
-        addcompressor(new ItemStack(IUItem.smalldust, 1,49),9,new ItemStack(IUItem.iudust, 1,75));
-        addcompressor(new ItemStack(IUItem.smalldust, 1,50),9,new ItemStack(IUItem.iudust, 1,77));
-        addcompressor(new ItemStack(IUItem.smalldust, 1, 47),9,new ItemStack(IUItem.iudust, 1, 74));
-        addcompressor(new ItemStack(IUItem.smalldust, 1, 24),9,new ItemStack(IUItem.iudust, 1, 28) );
-        addcompressor(new ItemStack(IUItem.smalldust, 1, 48),9,new ItemStack(IUItem.iudust, 1, 76) );
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 49), 9, new ItemStack(IUItem.iudust, 1, 75));
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 50), 9, new ItemStack(IUItem.iudust, 1, 77));
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 47), 9, new ItemStack(IUItem.iudust, 1, 74));
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 24), 9, new ItemStack(IUItem.iudust, 1, 28));
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 28), 9, new ItemStack(IUItem.iudust, 1, 23));
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 48), 9, new ItemStack(IUItem.iudust, 1, 76));
 
         for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
 
@@ -184,7 +185,7 @@ public class CompressorRecipe {
             }
         }
 
-        addcompressor( new ItemStack(IUItem.iudust, 1, 78), 1, new ItemStack(IUItem.itemiu, 2, 2));
+        addcompressor(new ItemStack(IUItem.iudust, 1, 78), 1, new ItemStack(IUItem.itemiu, 2, 2));
         addcompressor(IUItem.crushedUraniumOre, 1, new ItemStack(IUItem.itemiu, 1, 2));
         addcompressor(
                 "plateCopper",

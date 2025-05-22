@@ -10,7 +10,6 @@ import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockGasTurbine;
 import com.denfop.container.ContainerGasTurbineController;
 import com.denfop.gui.GuiGasTurbine;
-import com.denfop.items.reactors.ItemExchanger;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -37,12 +36,12 @@ import java.util.Map;
 public class TileEntityGasTurbineController extends TileMultiBlockBase implements IUpdatableTileEvent, IController, IHasRecipe {
 
     public static Map<Fluid, Integer> gasMapValue = new HashMap<>();
-    Fluid momentGas;
     public ISocket energy;
     public ITank tank;
+    public boolean work;
+    Fluid momentGas;
     List<IRecuperator> recuperators = new ArrayList<>();
     int generate = 0;
-    public boolean work;
 
     public TileEntityGasTurbineController() {
         super(InitMultiBlockSystem.GasTurbineMultiBlock);
@@ -75,10 +74,12 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                     energy.getEnergy().addEnergy(generate * coef);
                     if (this.getWorld().getWorldTime() % 20 == 0) {
                         for (IRecuperator recuperator : recuperators) {
-                            ((IExchangerItem)recuperator.getExchanger().get().getItem()).damageItem(recuperator.getExchanger().get(),-1);
+                            ((IExchangerItem) recuperator.getExchanger().get().getItem()).damageItem(recuperator
+                                    .getExchanger()
+                                    .get(), -1);
                         }
                     }
-                    energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generate*coef)+1);
+                    energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generate * coef) + 1);
                 }
             }
         }

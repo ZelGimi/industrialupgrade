@@ -23,21 +23,21 @@ public enum EnumTypeSlot {
     EXP_MODULE(239, 175, 16, 16),
     FISHING_ROD(239, 191, 16, 16),
     PLASM(239, 223, 16, 16),
-    RECIPE_SCHEDULE(0, 0, 16, 16,true),
-    FERTILIZER(16, 0, 16, 16,true),
-    BATTERY(33, 0, 16, 16,true),
-    CROP(48, 0, 16, 16,true),
+    RECIPE_SCHEDULE(0, 0, 16, 16, true),
+    FERTILIZER(16, 0, 16, 16, true),
+    BATTERY(33, 0, 16, 16, true),
+    CROP(48, 0, 16, 16, true),
 
-    TUBE(48+16, 0, 16, 16,true),
-    BIT(48+32, 0, 16, 16,true),
-    EXCHANGE(48+48, 0, 16, 16,true),
-    CAPACITOR(96+16, 0, 16, 16,true),
+    TUBE(48 + 16, 0, 16, 16, true),
+    BIT(48 + 32, 0, 16, 16, true),
+    EXCHANGE(48 + 48, 0, 16, 16, true),
+    CAPACITOR(96 + 16, 0, 16, 16, true),
     ;
+    final boolean next;
     private final int x;
     private final int y;
     private final int weight;
     private final int height;
-    final boolean next;
 
     EnumTypeSlot(int x, int y, int weight, int height) {
         this.x = x;
@@ -46,6 +46,7 @@ public enum EnumTypeSlot {
         this.height = height;
         this.next = false;
     }
+
     EnumTypeSlot(int x, int y, int weight, int height, boolean next) {
         this.x = x;
         this.y = y;
@@ -53,6 +54,7 @@ public enum EnumTypeSlot {
         this.height = height;
         this.next = next;
     }
+
     public int getY() {
         return y;
     }

@@ -17,25 +17,34 @@ public class BaseResource implements IBaseResource {
 
     public BaseResource(ItemStack stack, int minchance, int maxchance, int percentplanet, IBody body, EnumTypeRovers typeRovers) {
         this.stack = stack;
-        this.fluidStack=null;
+        this.fluidStack = null;
         this.max = maxchance;
-        this.typeRovers=typeRovers;
+        this.typeRovers = typeRovers;
         this.min = minchance;
         this.body = body;
         this.percentplanet = percentplanet;
         SpaceNet.instance.addResource(this);
     }
-    public BaseResource(FluidStack fluidStack, int minchance, int maxchance, int percentplanet, IBody body, EnumTypeRovers typeRovers) {
+
+    public BaseResource(
+            FluidStack fluidStack,
+            int minchance,
+            int maxchance,
+            int percentplanet,
+            IBody body,
+            EnumTypeRovers typeRovers
+    ) {
         this.stack = null;
         this.fluidStack = fluidStack;
         this.max = maxchance;
         this.min = minchance;
         this.body = body;
-        this.typeRovers=typeRovers;
+        this.typeRovers = typeRovers;
         this.percentplanet = percentplanet;
         SpaceNet.instance.addResource(this);
     }
-    public BaseResource(NBTTagCompound tagCompound){
+
+    public BaseResource(NBTTagCompound tagCompound) {
         percentplanet = tagCompound.getByte("percentplanet");
         min = tagCompound.getByte("min");
         max = tagCompound.getByte("max");
@@ -51,7 +60,6 @@ public class BaseResource implements IBaseResource {
         }
         typeRovers = EnumTypeRovers.values()[tagCompound.getByte("rovers")];
     }
-
 
 
     @Override
@@ -95,13 +103,13 @@ public class BaseResource implements IBaseResource {
         tagCompound.setByte("min", (byte) min);
         tagCompound.setByte("max", (byte) max);
         tagCompound.setByte("rovers", (byte) typeRovers.ordinal());
-        tagCompound.setBoolean("hasItem",stack != null);
-        if (stack != null){
-            tagCompound.setTag("stack",stack.writeToNBT(new NBTTagCompound()));
+        tagCompound.setBoolean("hasItem", stack != null);
+        if (stack != null) {
+            tagCompound.setTag("stack", stack.writeToNBT(new NBTTagCompound()));
         }
-        tagCompound.setBoolean("hasFluid",fluidStack != null);
-        if (fluidStack != null){
-            tagCompound.setTag("fluidStack",fluidStack.writeToNBT(new NBTTagCompound()));
+        tagCompound.setBoolean("hasFluid", fluidStack != null);
+        if (fluidStack != null) {
+            tagCompound.setTag("fluidStack", fluidStack.writeToNBT(new NBTTagCompound()));
         }
         return tagCompound;
     }

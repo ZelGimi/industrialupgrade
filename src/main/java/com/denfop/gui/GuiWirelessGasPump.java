@@ -12,7 +12,6 @@ import com.denfop.api.gui.TankGauge;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
 import com.denfop.container.ContainerWirelessGasPump;
-import com.denfop.utils.ListInformationUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -33,6 +32,7 @@ public class GuiWirelessGasPump extends GuiIU<ContainerWirelessGasPump> {
                 new Component<>((this.container.base).energy)
         ));
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
@@ -48,9 +48,10 @@ public class GuiWirelessGasPump extends GuiIU<ContainerWirelessGasPump> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-120, mouseY, text);
+            this.drawTooltip(mouseX - 120, mouseY, text);
         }
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);

@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityInsulator;
-import com.denfop.tiles.mechanism.TileEntityOilPurifier;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerInsulator extends ContainerFullInv<TileEntityInsulator> {

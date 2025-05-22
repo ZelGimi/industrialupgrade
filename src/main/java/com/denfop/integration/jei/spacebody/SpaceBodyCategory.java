@@ -77,9 +77,19 @@ public class SpaceBodyCategory extends Gui implements IRecipeCategory<SpaceBodyR
             if (i < recipes.getInputs1().size()) {
                 isg.init(i, true, x, y);
                 isg.set(i, recipes.getInputs1().get(i));
-            }else{
-                fff.init(i-recipes.getInputs1().size(), true, x, y, 16, 16, recipes.getOutputs().get(i-recipes.getInputs1().size()).amount, true, null);
-                fff.set(i-recipes.getInputs1().size(), recipes.getOutputs().get(i-recipes.getInputs1().size()));
+            } else {
+                fff.init(
+                        i - recipes.getInputs1().size(),
+                        true,
+                        x,
+                        y,
+                        16,
+                        16,
+                        recipes.getOutputs().get(i - recipes.getInputs1().size()).amount,
+                        true,
+                        null
+                );
+                fff.set(i - recipes.getInputs1().size(), recipes.getOutputs().get(i - recipes.getInputs1().size()));
             }
 
         }

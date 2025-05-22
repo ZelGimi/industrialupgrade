@@ -13,7 +13,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -176,9 +175,11 @@ public class PollutionManager {
     public ChunkLevel getChunkLevelSoil(ChunkPos chunkPos) {
         return pollutionSoil.get(chunkPos);
     }
-    public void addChunkLevelSoil(ChunkLevel level){
-        pollutionSoil.put(level.getPos(),level);
+
+    public void addChunkLevelSoil(ChunkLevel level) {
+        pollutionSoil.put(level.getPos(), level);
     }
+
     public Vec2f getVector(EnumWindSide windSide) {
         switch (windSide) {
             case E:
@@ -229,10 +230,12 @@ public class PollutionManager {
                 ChunkLevel chunkLevel = entry.getValue();
                 if (chunkLevel != null) {
                     chunkLevel.setPollution(chunkLevel.getPollution() / 2);
-                    if (chunkLevel.getPollution() < 2 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW){
+                    if (chunkLevel.getPollution() < 2 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW) {
                         chunkLevel.setPollution(10);
-                        chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(0,
-                                chunkLevel.getLevelPollution().ordinal()-1)]);
+                        chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(
+                                0,
+                                chunkLevel.getLevelPollution().ordinal() - 1
+                        )]);
                     }
                 }
             }
@@ -242,10 +245,12 @@ public class PollutionManager {
                 ChunkLevel chunkLevel = entry.getValue();
                 if (chunkLevel != null) {
                     chunkLevel.setPollution(chunkLevel.getPollution() / 2);
-                    if (chunkLevel.getPollution() < 2 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW){
+                    if (chunkLevel.getPollution() < 2 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW) {
                         chunkLevel.setPollution(10);
-                        chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(0,
-                                chunkLevel.getLevelPollution().ordinal()-1)]);
+                        chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(
+                                0,
+                                chunkLevel.getLevelPollution().ordinal() - 1
+                        )]);
                     }
                 }
             }

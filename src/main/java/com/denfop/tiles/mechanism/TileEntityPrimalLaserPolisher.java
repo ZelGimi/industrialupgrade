@@ -49,7 +49,7 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
     public int progress;
     public MachineRecipe output;
     public int tick = 0;
-    public Map<UUID,Double> data;
+    public Map<UUID, Double> data;
 
     public TileEntityPrimalLaserPolisher() {
 
@@ -177,13 +177,14 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
         ItemStack stack = player.getHeldItem(hand);
 
         if (stack.getItem() == IUItem.laser && this.output != null && this.outputSlot.isEmpty() && this.getWorld().isDaytime()) {
-            progress += (short) (5 + (short) (data.getOrDefault(player.getUniqueID(),0.0) / 10d));
+            progress += (short) (5 + (short) (data.getOrDefault(player.getUniqueID(), 0.0) / 10d));
             this.getCooldownTracker().setTick(10);
             if (progress >= 100) {
                 this.progress = 0;
                 player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-                if (!this.getWorld().isRemote)
-                PrimitiveHandler.addExperience(EnumPrimitive.LASER,0.5,player.getUniqueID());
+                if (!this.getWorld().isRemote) {
+                    PrimitiveHandler.addExperience(EnumPrimitive.LASER, 0.5, player.getUniqueID());
+                }
                 this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                 this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
                 if (this.inputSlotA.isEmpty() || this.outputSlot.get().getCount() >= 64) {
@@ -389,7 +390,7 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
         for (int i = 25; i < 40; i++) {
             Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
                     new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, i))),
-                    new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, i+3))
+                    new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, i + 3))
             ));
         }
     }

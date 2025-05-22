@@ -12,4 +12,5 @@ public interface ITank extends IMultiElement {
     void setSteamTank();
 
     void clear(boolean steam);
+
 }

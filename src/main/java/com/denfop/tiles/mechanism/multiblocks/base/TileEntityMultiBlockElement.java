@@ -4,14 +4,10 @@ import com.denfop.IUItem;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.items.energy.ItemToolWrench;
-import com.denfop.render.oilquarry.DataBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityMultiBlockElement extends TileEntityInventory implements IMultiElement {
 
@@ -56,9 +52,10 @@ public class TileEntityMultiBlockElement extends TileEntityInventory implements 
                 return true;
             }
         } else {
-            if (this.getMain() == null && !this.hasOwnInventory())
-                    return false;
-            return  super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            if (this.getMain() == null && !this.hasOwnInventory()) {
+                return false;
+            }
+            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
         }
     }
 

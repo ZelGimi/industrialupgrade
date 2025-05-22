@@ -24,7 +24,7 @@ public class TileEntityBaseCompressor extends TileEntityMultiBlockElement implem
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return this.level;
     }
 

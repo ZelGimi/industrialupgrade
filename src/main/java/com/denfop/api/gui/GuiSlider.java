@@ -178,6 +178,7 @@ public class GuiSlider extends GuiButton {
     public void mouseReleased(int p_146118_1_, int p_146118_2_) {
         this.isMouseDown = false;
     }
+
     private boolean isMouseOver(int mouseX, int mouseY) {
         return mouseX >= this.x - 4 && mouseX < this.x + 4 &&
                 mouseY >= this.y && mouseY < this.y + this.height;
@@ -189,7 +190,7 @@ public class GuiSlider extends GuiButton {
             float step = 1.0F / (this.max - this.min);
 
 
-            this.sliderPosition += direction == ScrollDirection.down  ? step : -step;
+            this.sliderPosition += direction == ScrollDirection.down ? step : -step;
 
 
             if (this.sliderPosition < 0.0F) {

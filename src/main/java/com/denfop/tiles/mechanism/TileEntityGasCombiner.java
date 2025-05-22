@@ -139,11 +139,11 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
                 )
         ), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidhyd.getInstance(), 1000),
                 new FluidStack(
                         FluidName.fluidfluor.getInstance(),
                         200
-                )
+                ),
+                new FluidStack(FluidName.fluidhyd.getInstance(), 1000)
         ), Collections.singletonList(new FluidStack(FluidName.fluidfluorhyd.getInstance(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
@@ -157,7 +157,7 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(FluidName.fluidbiomass.getInstance(), 500),
                 new FluidStack(
-                     FluidRegistry.WATER,
+                        FluidRegistry.WATER,
                         500
                 )
         ), Collections.singletonList(new FluidStack(FluidName.fluidglucose.getInstance(), 1000))));
@@ -245,11 +245,10 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
                 200
         )), Collections.singletonList(new FluidStack(FluidName.fluidchloroethane.getInstance(), 200))));
 
-        Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidhyd.getInstance(), 200), new FluidStack(
+        Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(new FluidStack(
                 FluidName.fluidchlorum.getInstance(),
                 200
-        )), Collections.singletonList(new FluidStack(FluidName.fluidhydrogenchloride.getInstance(), 400))));
+        ),   new FluidStack(FluidName.fluidhyd.getInstance(), 200)), Collections.singletonList(new FluidStack(FluidName.fluidhydrogenchloride.getInstance(), 400))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(FluidName.fluidbenz.getInstance(), 500), new FluidStack(

@@ -12,7 +12,7 @@ public class TileEntitySimpleFuelTank extends TileEntityMainTank {
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 0;
     }
 

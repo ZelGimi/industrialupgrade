@@ -42,7 +42,7 @@ public class ColonyNet implements IColonyNet {
     Map<IBody, List<DataItem<ItemStack>>> bodyItemStackList = new HashMap<>();
     Map<IBody, List<DataItem<FluidStack>>> bodyFluidStackList = new HashMap<>();
     Map<UUID, List<Sends>> sends = new HashMap<>();
-
+    List<IColony> deleteList = new LinkedList<>();
 
     public ColonyNet() {
         this.fakePlayerListMap = new HashMap<>();
@@ -187,21 +187,21 @@ public class ColonyNet implements IColonyNet {
         colonyList.remove(colony);
         this.colonyList.remove(colony);
     }
+
     @Override
     public void removeColony(final IBody body, final UUID player) {
         List<IColony> colonyList = fakePlayerListMap.get(player);
         IColony colony = null;
-        for (IColony colony1 : colonyList){
-            if (colony1.getBody() == body){
+        for (IColony colony1 : colonyList) {
+            if (colony1.getBody() == body) {
                 colony = colony1;
             }
         }
         colonyList.remove(colony);
         this.colonyList.remove(colony);
     }
-    List<IColony> deleteList = new LinkedList<>();
 
-    public List<Sends> getSendsFromUUID(UUID uuid){
+    public List<Sends> getSendsFromUUID(UUID uuid) {
         return sends.getOrDefault(uuid, Collections.emptyList());
     }
 
@@ -285,7 +285,7 @@ public class ColonyNet implements IColonyNet {
         list = new LinkedList<>();
         List<Sends> list1 = new LinkedList<>();
         for (int i = 0; i < nbt1.tagCount(); i++) {
-            NBTTagCompound nbt2 = nbt.getCompoundTagAt(i);
+            NBTTagCompound nbt2 = nbt1.getCompoundTagAt(i);
             Sends sends1 = new Sends(nbt2);
             list1.add(sends1);
         }
@@ -324,13 +324,15 @@ public class ColonyNet implements IColonyNet {
                     List<IStorage> storages = colony.getStorageList();
                     for (IStorage storage : storages) {
                         for (ItemStack stack : storage.getStacks()) {
-                            if (sends1.stacks.size() == 27)
+                            if (sends1.stacks.size() == 27) {
                                 break;
+                            }
                             sends1.addStack(stack.copy());
                         }
                         for (FluidStack fluidStack : storage.getFluidStacks()) {
-                            if (sends1.fluidStacks.size() == 9)
+                            if (sends1.fluidStacks.size() == 9) {
                                 break;
+                            }
                             sends1.addStack(fluidStack.copy());
                         }
                         storage.getStacks().clear();

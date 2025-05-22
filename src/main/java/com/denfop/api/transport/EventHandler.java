@@ -5,22 +5,12 @@ import com.denfop.api.energy.event.TileUnLoadEvent;
 import com.denfop.api.energy.event.TilesUpdateEvent;
 import com.denfop.api.transport.event.TransportTileLoadEvent;
 import com.denfop.api.transport.event.TransportTileUnLoadEvent;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-
-import java.util.ArrayList;
 
 public class EventHandler {
 
@@ -31,152 +21,19 @@ public class EventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void load(TileLoadEvent event) {
-        TileEntity tile = event.tileentity;
-        final BlockPos pos = tile.getPos();
-        if (!tile.isInvalid()) {
-            for (EnumFacing enumFacing : EnumFacing.VALUES) {
-                if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, enumFacing) && tile.hasCapability(
-                        CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-                        enumFacing
-                )) {
-                    final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
-                            tile,
-                            pos
-                    );
 
-                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                            event.getWorld(), transport
-
-                    ));
-                    break;
-                } else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, enumFacing)) {
-                    final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos
-                    );
-
-                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                            event.getWorld(), transport
-
-                    ));
-                    break;
-                } else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, enumFacing)) {
-                    final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos
-                    );
-
-                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                            event.getWorld(), transport
-
-                    ));
-                    break;
-                }
-            }
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void unLoad(TileUnLoadEvent event) {
         TileEntity tile = event.tileentity;
-        final BlockPos pos = tile.getPos();
-        if (tile != null && tile.getPos() != null) {
-            if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null) && tile.hasCapability(
-                    CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-                    null
-            )) {
-                final ITransportTile iEnergyTile = TransportNetGlobal.instance.getSubTile(event.getWorld(), pos);
-                if (iEnergyTile != null) {
-                    MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
-                            event.getWorld(),
-                            iEnergyTile
-                    ));
-                }
-            } else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
 
-                final ITransportTile iEnergyTile = TransportNetGlobal.instance.getSubTile(event.getWorld(), pos);
-                if (iEnergyTile != null) {
-                    MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent<ItemStack, IItemHandler>(
-                            event.getWorld(),
-                            iEnergyTile
-                    ));
-                }
-
-
-            } else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                final ITransportTile iEnergyTile = TransportNetGlobal.instance.getSubTile(event.getWorld(), pos);
-                if (iEnergyTile != null) {
-                    MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent<FluidStack, IFluidHandler>(
-                            event.getWorld(),
-                            iEnergyTile
-                    ));
-                }
-            }
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void update(TilesUpdateEvent event) {
 
-        for (TileEntity tile : new ArrayList<>(event.tiles)) {
-            final BlockPos pos = tile.getPos();
-            if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null) && tile.hasCapability(
-                    CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-                    null
-            )) {
-                IItemHandler item_storage = tile.getCapability(
-                        CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                        null
-                );
-                IFluidHandler fluid_storage = tile.getCapability(
-                        CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-                        null
-                );
-                boolean isSink = true;
-                boolean isSource = true;
-                boolean isSinkFluid = true;
-                boolean isSourceFluid = true;
 
-                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
-                        tile,
-                        pos
-                );
-
-
-                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                        event.getWorld(), transport
-
-                ));
-            } else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
-                IItemHandler item_storage = tile.getCapability(
-                        CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                        null
-                );
-
-                if (item_storage == null) {
-                    return;
-                }
-
-
-                boolean isSink = true;
-                boolean isSource = true;
-                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos
-                );
-
-                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                        event.getWorld(), transport
-
-
-                ));
-            } else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                boolean isSink = true;
-                boolean isSource = true;
-                IFluidHandler item_storage = null;
-                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos
-                );
-                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                        event.getWorld(), transport
-
-                ));
-            }
-
-        }
     }
 
 

@@ -28,8 +28,8 @@ public enum BlockAdminPanel implements IMultiTileBlock, IMultiBlockItem {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockAdminPanel(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -55,14 +55,18 @@ public enum BlockAdminPanel implements IMultiTileBlock, IMultiBlockItem {
             }
         }
     }
-    int idBlock;
-    public  int getIDBlock(){
-       return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
 
 
     @Override

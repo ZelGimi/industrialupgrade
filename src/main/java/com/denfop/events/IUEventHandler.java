@@ -12,8 +12,8 @@ import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.space.rovers.api.IRoversItem;
-import com.denfop.api.space.upgrades.info.SpaceUpgradeItemInform;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
+import com.denfop.api.space.upgrades.info.SpaceUpgradeItemInform;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
@@ -38,9 +38,7 @@ import com.denfop.network.WorldData;
 import com.denfop.network.packet.PacketColorPickerAllLoggIn;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.lightning_rod.IBase;
 import com.denfop.tiles.lightning_rod.IController;
-import com.denfop.tiles.lightning_rod.TileEntityLightningRodController;
 import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
 import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
 import com.denfop.utils.CapturedMobUtils;
@@ -94,11 +92,16 @@ import static com.denfop.tiles.lightning_rod.TileEntityLightningRodController.co
 
 public class IUEventHandler {
 
+    public static List<EntityItem> entityItemList = new LinkedList<>();
     final TextFormatting[] name = {TextFormatting.DARK_PURPLE, TextFormatting.YELLOW, TextFormatting.BLUE,
             TextFormatting.RED, TextFormatting.GRAY, TextFormatting.GREEN, TextFormatting.DARK_AQUA, TextFormatting.AQUA};
     final String[] mattertype = {"matter.name", "sun_matter.name", "aqua_matter.name", "nether_matter.name", "night_matter.name", "earth_matter.name", "end_matter.name", "aer_matter.name"};
     Tuple<ItemStack, BaseMachineRecipe> tupleRecipe;
     Tuple<ItemStack, BaseMachineRecipe> tupleReplicatorRecipe;
+    private ItemStack dust1;
+    private boolean reg;
+    private ItemStack ingot1;
+
     public IUEventHandler() {
 
     }
@@ -108,7 +111,6 @@ public class IUEventHandler {
         return item instanceof IUpgradeItem;
 
     }
-
 
     @SubscribeEvent
     public void onWorldTick1(TickEvent.WorldTickEvent event) {
@@ -150,32 +152,44 @@ public class IUEventHandler {
         }
     }
 
-    public static List<EntityItem> entityItemList = new LinkedList<>();
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             World world = event.world;
-            for (Entity entity : (new  ArrayList<>(world.loadedEntityList))) {
+            if (world.getWorldTime() % 20 != 0) {
+                return;
+            }
+            if (!reg) {
+                dust1 = new ItemStack(IUItem.iudust, 1, 55);
+                reg = true;
+                ingot1 = new ItemStack(IUItem.iuingot, 1, 13);
+            }
+            for (Entity entity : (new ArrayList<>(world.loadedEntityList))) {
                 if (entity instanceof EntityItem) {
                     EntityItem itemEntity = (EntityItem) entity;
-                    if (itemEntity.isDead)
+                    if (itemEntity.isDead) {
                         continue;
+                    }
                     ItemStack stack = itemEntity.getItem();
-
                     if (world.getBlockState(itemEntity.getPosition()).getBlock() == Blocks.WATER) {
                         EntityItem entityItem = (checkAndTransform(world, itemEntity));
-                        if (entityItem != null)
+                        if (entityItem != null) {
                             entityItemList.add(entityItem);
+                        }
                     }
                 }
             }
             entityItemList.forEach(world::spawnEntity);
         }
     }
+
     private EntityItem checkAndTransform(World world, EntityItem entityItem) {
-        List<EntityItem> nearbyItems = world.getEntitiesWithinAABB(EntityItem.class,
+        List<EntityItem> nearbyItems = world.getEntitiesWithinAABB(
+                EntityItem.class,
                 new AxisAlignedBB(entityItem.posX - 1, entityItem.posY - 1, entityItem.posZ - 1,
-                        entityItem.posX + 1, entityItem.posY + 1, entityItem.posZ + 1));
+                        entityItem.posX + 1, entityItem.posY + 1, entityItem.posZ + 1
+                )
+        );
 
         int redstoneNeeded = 4;
         int poloniumNeeded = 1;
@@ -187,17 +201,18 @@ public class IUEventHandler {
 
 
         for (EntityItem item : nearbyItems) {
-            if (item.isDead)
+            if (item.isDead) {
                 continue;
+            }
             ItemStack stack = item.getItem();
 
             if (stack.getItem() == Items.REDSTONE && redstoneNeeded > 0) {
                 redstoneItems.add(item);
                 redstoneNeeded -= stack.getCount();
-            } else if (stack.isItemEqual(new ItemStack(IUItem.iudust, 1, 55)) && poloniumNeeded > 0) {
+            } else if (stack.isItemEqual(dust1) && poloniumNeeded > 0) {
                 poloniumItems.add(item);
                 poloniumNeeded -= stack.getCount();
-            } else if (stack.isItemEqual(new ItemStack(IUItem.iuingot, 1, 13)) && electrumNeeded > 0) {
+            } else if (stack.isItemEqual(ingot1) && electrumNeeded > 0) {
                 electrumItems.add(item);
                 electrumNeeded -= stack.getCount();
             }
@@ -255,30 +270,39 @@ public class IUEventHandler {
     public void onBlockHarvested(BlockEvent.HarvestDropsEvent event) {
 
         if (event.getState().getBlock() == Blocks.GOLD_ORE) {
-            if(event.getHarvester() != null && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH,
-                    event.getHarvester().getHeldItem(EnumHand.MAIN_HAND)) > 0){
+            if (event.getHarvester() != null && EnchantmentHelper.getEnchantmentLevel(
+                    Enchantments.SILK_TOUCH,
+                    event.getHarvester().getHeldItem(EnumHand.MAIN_HAND)
+            ) > 0) {
 
-            }else {
+            } else {
                 event.getDrops().clear();
 
-                event.getDrops().add(new ItemStack(IUItem.rawMetals, Math.min(4,
-                        1 + event.getWorld().rand.nextInt(Math.min(4,Math.max(1, event.getFortuneLevel()))))
+                event.getDrops().add(new ItemStack(IUItem.rawMetals, Math.min(
+                        4,
+                        1 + event.getWorld().rand.nextInt(Math.min(4, Math.max(1, event.getFortuneLevel())))
+                )
                         , 17));
                 event.setDropChance(1 + event.getFortuneLevel());
             }
         } else if (event.getState().getBlock() == Blocks.IRON_ORE) {
-            if(event.getHarvester() != null && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH,
-                    event.getHarvester().getHeldItem(EnumHand.MAIN_HAND)) > 0){
+            if (event.getHarvester() != null && EnchantmentHelper.getEnchantmentLevel(
+                    Enchantments.SILK_TOUCH,
+                    event.getHarvester().getHeldItem(EnumHand.MAIN_HAND)
+            ) > 0) {
 
-            }else {
+            } else {
                 event.getDrops().clear();
-                event.getDrops().add(new ItemStack(IUItem.rawMetals, Math.min(4,
-                        1 + event.getWorld().rand.nextInt(Math.min(4,Math.max(1, event.getFortuneLevel()))))
+                event.getDrops().add(new ItemStack(IUItem.rawMetals, Math.min(
+                        4,
+                        1 + event.getWorld().rand.nextInt(Math.min(4, Math.max(1, event.getFortuneLevel())))
+                )
                         , 18));
-                event.setDropChance( 1 + event.getFortuneLevel());
+                event.setDropChance(1 + event.getFortuneLevel());
             }
         }
     }
+
     @SubscribeEvent
     public void onCropGrowPre1(BlockEvent.CropGrowEvent.Pre event) {
         World world = event.getWorld();
@@ -554,7 +578,7 @@ public class IUEventHandler {
             event.getToolTip().add(Localization.translate("charged_redstone.info"));
         }
 
-        if (event.getItemStack().getItem() instanceof ItemBlock){
+        if (event.getItemStack().getItem() instanceof ItemBlock) {
             ItemBlock block = (ItemBlock) event.getItemStack().getItem();
             final IBlockState state = block.getBlock().getStateFromMeta(event.getItemStack().getItemDamage());
             List<String> list = ModUtils.getInformationFromOre(state);
@@ -690,7 +714,9 @@ public class IUEventHandler {
                 IUItem.upgrade_speed_creation)) {
             event.getToolTip().add(Localization.translate("using_kit"));
             if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                event.getToolTip().add(new ArrayList<>(ListInformationUtils.mechanism_info1.values()).get(ListInformationUtils.index1));
+                event
+                        .getToolTip()
+                        .add(new ArrayList<>(ListInformationUtils.mechanism_info1.values()).get(ListInformationUtils.index1));
             } else {
                 for (String name : ListInformationUtils.mechanism_info1.values()) {
                     event.getToolTip().add(name);
@@ -765,7 +791,7 @@ public class IUEventHandler {
             if (col != 0) {
                 event.getToolTip().add(Localization.translate("free_slot") + col + Localization.translate(
                         "free_slot1"));
-             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     event.getToolTip().add(Localization.translate("iu.can_upgrade_item"));
                     IRoversItem iUpgradeItem = (IRoversItem) stack.getItem();
                     final List<String> list = SpaceUpgradeSystem.system.getAvailableUpgrade(iUpgradeItem, stack);
@@ -789,7 +815,7 @@ public class IUEventHandler {
         if (tupleRecipe == null) {
             for (Map.Entry<ItemStack, BaseMachineRecipe> entry : IUItem.machineRecipe) {
                 if (entry.getKey().isItemEqual(stack)) {
-                    tupleRecipe = new Tuple<>(stack,entry.getValue());
+                    tupleRecipe = new Tuple<>(stack, entry.getValue());
                     if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                         event.getToolTip().add(Localization.translate("press.lshift"));
                     }
@@ -809,11 +835,11 @@ public class IUEventHandler {
                     break;
                 }
             }
-            if (tupleRecipe == null){
-                tupleRecipe = new Tuple<>(stack,null);
+            if (tupleRecipe == null) {
+                tupleRecipe = new Tuple<>(stack, null);
             }
-        }else{
-            if (tupleRecipe.getFirst().isItemEqual(stack)){
+        } else {
+            if (tupleRecipe.getFirst().isItemEqual(stack)) {
                 if (tupleRecipe.getSecond() != null) {
                     if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                         event.getToolTip().add(Localization.translate("press.lshift"));
@@ -832,11 +858,11 @@ public class IUEventHandler {
                         }
                     }
                 }
-            }else{
+            } else {
                 boolean find = false;
                 for (Map.Entry<ItemStack, BaseMachineRecipe> entry : IUItem.machineRecipe) {
                     if (entry.getKey().isItemEqual(stack)) {
-                        tupleRecipe = new Tuple<>(stack,entry.getValue());
+                        tupleRecipe = new Tuple<>(stack, entry.getValue());
                         find = true;
                         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                             event.getToolTip().add(Localization.translate("press.lshift"));
@@ -857,8 +883,8 @@ public class IUEventHandler {
                         break;
                     }
                 }
-                if (!find){
-                    tupleRecipe = new Tuple<>(stack,null);
+                if (!find) {
+                    tupleRecipe = new Tuple<>(stack, null);
                 }
             }
         }
@@ -870,7 +896,7 @@ public class IUEventHandler {
                             event.getToolTip().add(Localization.translate("press.lshift"));
                         }
                     }
-                    tupleReplicatorRecipe = new Tuple<>(stack,entry.getValue());
+                    tupleReplicatorRecipe = new Tuple<>(stack, entry.getValue());
                     if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 
                         final RecipeOutput output1 = entry.getValue().output;
@@ -885,10 +911,10 @@ public class IUEventHandler {
                     break;
                 }
             }
-            if (tupleReplicatorRecipe == null){
-                tupleReplicatorRecipe = new Tuple<>(stack,null);
+            if (tupleReplicatorRecipe == null) {
+                tupleReplicatorRecipe = new Tuple<>(stack, null);
             }
-        }else{
+        } else {
             if (tupleReplicatorRecipe.getFirst().isItemEqual(stack)) {
                 if (tupleReplicatorRecipe.getSecond() != null) {
                     if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
@@ -908,7 +934,7 @@ public class IUEventHandler {
 
                     }
                 }
-            }else{
+            } else {
                 tupleReplicatorRecipe = null;
                 for (Map.Entry<ItemStack, BaseMachineRecipe> entry : IUItem.fluidMatterRecipe) {
                     if (entry.getKey().isItemEqual(stack)) {
@@ -917,7 +943,7 @@ public class IUEventHandler {
                                 event.getToolTip().add(Localization.translate("press.lshift"));
                             }
                         }
-                        tupleReplicatorRecipe = new Tuple<>(stack,entry.getValue());
+                        tupleReplicatorRecipe = new Tuple<>(stack, entry.getValue());
                         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 
                             final RecipeOutput output1 = entry.getValue().output;
@@ -932,8 +958,8 @@ public class IUEventHandler {
                         break;
                     }
                 }
-                if (tupleReplicatorRecipe == null){
-                    tupleReplicatorRecipe = new Tuple<>(stack,null);
+                if (tupleReplicatorRecipe == null) {
+                    tupleReplicatorRecipe = new Tuple<>(stack, null);
                 }
             }
         }

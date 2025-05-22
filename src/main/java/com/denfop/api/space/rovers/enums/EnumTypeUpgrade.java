@@ -5,7 +5,7 @@ import com.denfop.IUItem;
 public enum EnumTypeUpgrade {
     SOLAR(3),
     HEATER(4),
-    COOLER(3),
+    COOLER(4),
     PRESSURE(1),
     PROTECTION(4),
     ENGINE(4),

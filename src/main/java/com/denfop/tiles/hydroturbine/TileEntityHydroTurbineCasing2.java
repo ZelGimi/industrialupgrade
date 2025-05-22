@@ -3,9 +3,7 @@ package com.denfop.tiles.hydroturbine;
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.mechanism.BlockCyclotron;
 import com.denfop.blocks.mechanism.BlockHydroTurbine;
-import com.denfop.blocks.mechanism.BlockWindTurbine;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +21,7 @@ public class TileEntityHydroTurbineCasing2 extends TileEntityMultiBlockElement i
     public BlockTileEntity getBlock() {
         return IUItem.hydroTurbine;
     }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -36,4 +35,5 @@ public class TileEntityHydroTurbineCasing2 extends TileEntityMultiBlockElement i
     public boolean isNormalCube() {
         return false;
     }
+
 }

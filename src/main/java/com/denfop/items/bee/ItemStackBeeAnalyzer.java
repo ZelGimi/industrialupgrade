@@ -1,25 +1,17 @@
 package com.denfop.items.bee;
 
 
-
 import com.denfop.api.bee.IBee;
 import com.denfop.api.bee.genetics.EnumGenetic;
 import com.denfop.api.bee.genetics.Genome;
 import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
-import com.denfop.container.ContainerAgriculturalAnalyzer;
-import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBeeAnalyzer;
-import com.denfop.container.ContainerLeadBox;
-import com.denfop.gui.GuiAgriculturalAnalyzer;
 import com.denfop.gui.GuiBeeAnalyzer;
-import com.denfop.gui.GuiLeadBox;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.items.energy.ItemMagnet;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,10 +56,12 @@ public class ItemStackBeeAnalyzer extends ItemStackInventory {
         this.inventorySize = inventorySize;
         this.itemStack1 = stack;
     }
+
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 
         return itemstack.getItem() instanceof ItemJarBees;
     }
+
     public void set() {
         reset();
         if (genome == null) {
@@ -156,6 +150,7 @@ public class ItemStackBeeAnalyzer extends ItemStackInventory {
         this.soilPollution = LevelPollution.LOW;
         this.radiationPollution = EnumLevelRadiation.LOW;
     }
+
     public void save() {
         super.save();
     }

@@ -20,12 +20,8 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerElectricRefractoryFurnace;
-import com.denfop.container.ContainerPlasticPlateCreator;
 import com.denfop.gui.GuiElectricRefractoryFurnace;
-import com.denfop.gui.GuiPlasticPlateCreator;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.resource.ItemCrushed;
-import com.denfop.items.resource.ItemRawMetals;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileBasePlasticPlateCreator;
 import net.minecraft.client.gui.GuiScreen;
@@ -33,7 +29,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,13 +44,13 @@ import static com.denfop.register.RegisterOreDictionary.standardList;
 public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCreator implements IUpdateTick, IHasRecipe {
 
     public final InvSlot input_slot;
+    public final HeatComponent heat;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
-    public final HeatComponent heat;
 
     public TileEntityElectricRefractoryFurnace() {
         super(1, 200, 1);
-        this.heat = this.addComponent(HeatComponent.asBasicSink(this,1000));
+        this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
         this.inputSlotA = new InvSlotRecipes(this, "elec_refractory_furnace", this, this.fluidTank);
         fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
@@ -76,6 +71,7 @@ public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCre
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
@@ -100,50 +96,53 @@ public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCre
     public void init() {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         for (String s : list_string) {
-            if (OreDictionary.getOres("rawIngot" + s).isEmpty())
+            if (OreDictionary.getOres("rawIngot" + s).isEmpty()) {
                 continue;
+            }
             final NBTTagCompound nbt = new NBTTagCompound();
             nbt.setInteger("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 3),
                     input.getInput("crushed" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 3),
                     input.getInput("dust" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
         }
         final NBTTagCompound nbt1 = new NBTTagCompound();
         nbt1.setInteger("temperature", 1000);
         Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
+                new FluidStack(FluidName.fluidfluorhyd.getInstance(), 3),
                 input.getInput(new ItemStack(IUItem.crafting_elements, 1, 502))
         ), new RecipeOutput(nbt1, IUItem.advIronIngot)));
         for (String s : list_baseore1) {
-            if (OreDictionary.getOres("rawIngot" + s).isEmpty())
+            if (OreDictionary.getOres("rawIngot" + s).isEmpty()) {
                 continue;
+            }
             final NBTTagCompound nbt = new NBTTagCompound();
             nbt.setInteger("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 3),
                     input.getInput("crushed" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 3),
                     input.getInput("dust" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
         }
         for (String s : standardList) {
-            if (OreDictionary.getOres("rawIngot" + s).isEmpty())
+            if (OreDictionary.getOres("rawIngot" + s).isEmpty()) {
                 continue;
+            }
             final NBTTagCompound nbt = new NBTTagCompound();
             nbt.setInteger("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 3),
                     input.getInput("crushed" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 3),
                     input.getInput("dust" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
         }

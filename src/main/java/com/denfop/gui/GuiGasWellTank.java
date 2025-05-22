@@ -3,7 +3,6 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerGasWellTank;
-import com.denfop.container.ContainerGeothermalExchanger;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiGasWellTank extends GuiIU<ContainerGasWellTank> {

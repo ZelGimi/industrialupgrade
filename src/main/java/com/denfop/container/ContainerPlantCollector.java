@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityPlantCollector;
-import com.denfop.tiles.mechanism.TileEntityTreeBreaker;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerPlantCollector extends ContainerFullInv<TileEntityPlantCollector> {

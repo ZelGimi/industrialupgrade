@@ -5,13 +5,8 @@ import com.denfop.Localization;
 import com.denfop.api.pollution.IPollutionMechanism;
 import com.denfop.api.pollution.PollutionAirLoadEvent;
 import com.denfop.api.pollution.PollutionAirUnLoadEvent;
-import com.denfop.api.windsystem.WindSystem;
-import com.denfop.effects.CustomPollutionParticle;
-import com.denfop.effects.SteamParticle;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -19,8 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -44,8 +37,11 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        if (this.parent != null && this.parent.getWorld() == null){
-            tooltip.add(Localization.translate("iu.pollution.air.info")+ " " + String.format("%.2f", default_pollution)+ Localization.translate("iu" +
+        if (this.parent != null && this.parent.getWorld() == null) {
+            tooltip.add(Localization.translate("iu.pollution.air.info") + " " + String.format(
+                    "%.2f",
+                    default_pollution
+            ) + Localization.translate("iu" +
                     ".pollution.air.info1"));
         }
     }

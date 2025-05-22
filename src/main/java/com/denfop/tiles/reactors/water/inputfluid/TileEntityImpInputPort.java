@@ -18,7 +18,7 @@ public class TileEntityImpInputPort extends TileEntityInputFluid {
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 2;
     }
 

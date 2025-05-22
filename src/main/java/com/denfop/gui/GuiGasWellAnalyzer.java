@@ -2,29 +2,18 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gasvein.GasVeinSystem;
 import com.denfop.api.gasvein.TypeGas;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentButton;
-import com.denfop.container.ContainerEarthAnalyzer;
 import com.denfop.container.ContainerGasWellAnalyzer;
 import com.denfop.tiles.gaswell.TileEntityGasWellAnalyzer;
-import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryAnalyzer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.io.IOException;
-
-import static com.denfop.api.gui.GuiElement.bindBlockTexture;
-import static com.denfop.api.gui.GuiElement.getBlockTextureMap;
 
 public class GuiGasWellAnalyzer extends GuiIU<ContainerGasWellAnalyzer> {
 
@@ -72,18 +61,18 @@ public class GuiGasWellAnalyzer extends GuiIU<ContainerGasWellAnalyzer> {
 
 
             }
-        }else if (this.container.base.vein != null &&container.base.vein.isFind() && container.base.vein.getType() == TypeGas.NONE){
+        } else if (this.container.base.vein != null && container.base.vein.isFind() && container.base.vein.getType() == TypeGas.NONE) {
             this.fontRenderer.drawString(
                     Localization.translate("earth_quarry.error"),
                     69,
                     34,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-        }else if (this.container.base.vein != null && container.base.vein.isFind() && container.base.vein.getType() != TypeGas.NONE){
+        } else if (this.container.base.vein != null && container.base.vein.isFind() && container.base.vein.getType() != TypeGas.NONE) {
             this.fontRenderer.drawSplitString(
                     Localization.translate("earth_quarry.send_work"),
                     69,
-                    34,this.xSize - 69 - 5,
+                    34, this.xSize - 69 - 5,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
         }

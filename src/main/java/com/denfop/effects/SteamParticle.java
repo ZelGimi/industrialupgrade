@@ -1,7 +1,6 @@
 package com.denfop.effects;
 
 import com.denfop.api.windsystem.WindSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
@@ -23,16 +22,27 @@ public class SteamParticle extends Particle {
         this.particleScale *= 0.75F;
         this.smokeParticleScale = this.particleScale;
     }
+
     public int getFXLayer() {
         return 0;
     }
-    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
-    {
-        float f = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge * 32.0F;
+
+    public void renderParticle(
+            BufferBuilder buffer,
+            Entity entityIn,
+            float partialTicks,
+            float rotationX,
+            float rotationZ,
+            float rotationYZ,
+            float rotationXY,
+            float rotationXZ
+    ) {
+        float f = ((float) this.particleAge + partialTicks) / (float) this.particleMaxAge * 32.0F;
         f = MathHelper.clamp(f, 0.0F, 1.0F);
         this.particleScale = this.smokeParticleScale * f;
         super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
     }
+
     @Override
     public void onUpdate() {
 
@@ -46,4 +56,5 @@ public class SteamParticle extends Particle {
         this.motionZ += windDirectionZ * windSpeed;
         super.onUpdate();
     }
+
 }

@@ -8,9 +8,7 @@ import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerSteamBoiler;
 import com.denfop.container.ContainerSteamFluidHeater;
-import com.denfop.gui.GuiSteamBoiler;
 import com.denfop.gui.GuiSteamFluidHeater;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -31,7 +29,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -45,8 +42,8 @@ public class TileEntitySteamFluidHeater extends TileElectricMachine implements I
 
 
     public final Fluids.InternalFluidTank fluidTank1;
-    private final ComponentSteamEnergy steam;
     public final Fluids.InternalFluidTank fluidTank;
+    private final ComponentSteamEnergy steam;
     public Fluids fluids;
     public boolean work = true;
 
@@ -56,7 +53,7 @@ public class TileEntitySteamFluidHeater extends TileElectricMachine implements I
 
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 4000, InvSlot.TypeItemSlot.OUTPUT, Fluids.fluidPredicate(
-              FluidName.fluidsuperheated_steam.getInstance()
+                FluidName.fluidsuperheated_steam.getInstance()
         ));
         this.fluidTank1 = this.fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()

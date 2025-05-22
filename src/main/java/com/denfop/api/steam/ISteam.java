@@ -6,15 +6,15 @@ import com.denfop.tiles.mechanism.steamturbine.ISocket;
 import net.minecraftforge.fluids.FluidTank;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ISteam extends IMainMultiBlock {
 
 
     ISocket getEnergy();
-    List< com.denfop.tiles.mechanism.steamturbine.ICoolant> getCoolant();
 
-    List< com.denfop.tiles.mechanism.steamturbine.IExchanger> getExchanger();
+    List<com.denfop.tiles.mechanism.steamturbine.ICoolant> getCoolant();
+
+    List<com.denfop.tiles.mechanism.steamturbine.IExchanger> getExchanger();
 
     FluidTank getSteamFluid();
 
@@ -47,4 +47,5 @@ public interface ISteam extends IMainMultiBlock {
     double getMaxHeat();
 
     EnumSteamPhase getStableSteamPhase();
+
 }

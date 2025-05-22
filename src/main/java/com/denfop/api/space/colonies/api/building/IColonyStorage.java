@@ -13,6 +13,7 @@ public interface IColonyStorage {
     void setWork(boolean setWork);
 
     int getWorkers();
+
     int needWorkers();
 
     void addWorkers(int workers);

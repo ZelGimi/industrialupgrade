@@ -120,17 +120,17 @@ public class GuiBags extends GuiIU<ContainerBags> {
         }
         NBTTagCompound tagCompound = ModUtils.nbt(this.container.base.itemStack1);
         boolean white = tagCompound.getBoolean("white");
-        if (white){
+        if (white) {
             if (item == IUItem.bags) {
-                new Area(this,143,4,24,7).withTooltip(Localization.translate("iu.whitelist")).drawForeground(par1, par2);
-            }else{
-                new Area(this,176,4,24,7).withTooltip(Localization.translate("iu.whitelist")).drawForeground(par1, par2);
+                new Area(this, 143, 4, 24, 7).withTooltip(Localization.translate("iu.whitelist")).drawForeground(par1, par2);
+            } else {
+                new Area(this, 176, 4, 24, 7).withTooltip(Localization.translate("iu.whitelist")).drawForeground(par1, par2);
             }
-        }else{
+        } else {
             if (item == IUItem.bags) {
-                new Area(this,143,4,24,7).withTooltip(Localization.translate("iu.blacklist")).drawForeground(par1, par2);
-            }else{
-                new Area(this,176,4,24,7).withTooltip(Localization.translate("iu.blacklist")).drawForeground(par1, par2);
+                new Area(this, 143, 4, 24, 7).withTooltip(Localization.translate("iu.blacklist")).drawForeground(par1, par2);
+            } else {
+                new Area(this, 176, 4, 24, 7).withTooltip(Localization.translate("iu.blacklist")).drawForeground(par1, par2);
             }
         }
     }
@@ -144,16 +144,16 @@ public class GuiBags extends GuiIU<ContainerBags> {
         boolean white = tagCompound.getBoolean("white");
         Item item = container.base.itemStack1.getItem();
         if (white) {
-            if (item == IUItem.bags){
+            if (item == IUItem.bags) {
                 this.drawTexturedModalRect(this.guiLeft + 155, this.guiTop + 4, 217, 0, 12, 7);
-            }else{
+            } else {
                 this.drawTexturedModalRect(this.guiLeft + 188, this.guiTop + 4, 217, 0, 12, 7);
 
             }
         } else {
-            if (item == IUItem.bags){
+            if (item == IUItem.bags) {
                 this.drawTexturedModalRect(this.guiLeft + 143, this.guiTop + 4, 205, 0, 12, 7);
-            }else{
+            } else {
                 this.drawTexturedModalRect(this.guiLeft + 176, this.guiTop + 4, 205, 0, 12, 7);
 
             }

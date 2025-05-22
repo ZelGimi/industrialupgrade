@@ -11,7 +11,6 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerIncubator;
-import com.denfop.container.ContainerSingleFluidAdapter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

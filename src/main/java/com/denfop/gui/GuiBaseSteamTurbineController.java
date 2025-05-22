@@ -10,11 +10,7 @@ import com.denfop.api.gui.ImageInterface;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerBaseSteamTurbineController;
-import com.denfop.container.ContainerGasTank;
-import com.denfop.container.ContainerSteamTurbineTank;
 import com.denfop.tiles.mechanism.steamturbine.controller.TileEntityBaseSteamTurbineController;
-import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
-import com.denfop.tiles.reactors.water.controller.TileEntityMainController;
 import com.denfop.utils.ModUtils;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,24 +22,26 @@ public class GuiBaseSteamTurbineController extends GuiIU<ContainerBaseSteamTurbi
 
     public GuiBaseSteamTurbineController(ContainerBaseSteamTurbineController guiContainer) {
         super(guiContainer);
-        this.xSize+=40;
-        this.ySize+=20;
+        this.xSize += 40;
+        this.ySize += 20;
         this.inventory.addY(20);
-        this.inventory.setX(this.inventory.getX()+20);
-        this.addElement(new ImageInterface(this,0,0,this.xSize,this.ySize));
+        this.inventory.setX(this.inventory.getX() + 20);
+        this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
         elements.add(TankGauge.createNormal(this, 10, 5, guiContainer.base.getWaterFluid()));
         elements.add(TankGauge.createNormal(this, 40, 5, guiContainer.base.getSteamFluid()));
 
-        for (int i = 0; i < 2;i++){
-            elements.add(TankGauge.createNormal(this, 155+30*i, 5, guiContainer.base.listCoolant.get(i).getCoolant()));
+        for (int i = 0; i < 2; i++) {
+            elements.add(TankGauge.createNormal(this, 155 + 30 * i, 5, guiContainer.base.listCoolant.get(i).getCoolant()));
         }
         this.addComponent(new GuiComponent(this, 88, 15, EnumTypeComponent.ENERGY_WEIGHT,
-                new Component<>(this.container.base.energy.getEnergy())));
+                new Component<>(this.container.base.energy.getEnergy())
+        ));
         this.componentList.add(new GuiComponent(this, 98, 80, EnumTypeComponent.WORK_BUTTON,
                 new Component<>(new ComponentButton(this.container.base, 0, "") {
                     @Override
                     public String getText() {
-                        return ((TileEntityBaseSteamTurbineController) this.getEntityBlock()).work ? Localization.translate("turn_off") :
+                        return ((TileEntityBaseSteamTurbineController) this.getEntityBlock()).work ? Localization.translate(
+                                "turn_off") :
                                 Localization.translate("turn_on");
                     }
 
@@ -61,7 +59,7 @@ public class GuiBaseSteamTurbineController extends GuiIU<ContainerBaseSteamTurbi
                     }
                 })
         ));
-        this.addComponent(new GuiComponent(this, 193, 65 ,  EnumTypeComponent.MINUS_BUTTON,
+        this.addComponent(new GuiComponent(this, 193, 65, EnumTypeComponent.MINUS_BUTTON,
                 new Component<>(new ComponentButton(this.container.base, 2) {
                     @Override
                     public String getText() {
@@ -69,10 +67,16 @@ public class GuiBaseSteamTurbineController extends GuiIU<ContainerBaseSteamTurbi
                     }
                 })
         ));
-        this.addElement(new Area(this,70,6,13,74).withTooltip(() -> "Phase: " + String.valueOf(this.container.base.phase) + "\n" + "Stage: " + String.valueOf(this.container.base.enumSteamPhase.name())+
-                "\n" + "Generate: " + ModUtils.getString(this.container.base.generation) + " EF/t"+ "\n" +
+        this.addElement(new Area(this,
+                70,
+                6,
+                13,
+                74).withTooltip(() -> "Phase: " + String.valueOf(this.container.base.phase) + "\n" + "Stage: " + String.valueOf(
+                this.container.base.enumSteamPhase.name()) +
+                "\n" + "Generate: " + ModUtils.getString(this.container.base.generation) + " EF/t" + "\n" +
                 "Heat: " + ModUtils.getString(this.container.base.heat)));
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -88,9 +92,10 @@ public class GuiBaseSteamTurbineController extends GuiIU<ContainerBaseSteamTurbi
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-147, mouseY-20, text);
+            this.drawTooltip(mouseX - 147, mouseY - 20, text);
         }
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -98,7 +103,8 @@ public class GuiBaseSteamTurbineController extends GuiIU<ContainerBaseSteamTurbi
         this.fontRenderer.drawString(String.valueOf(this.container.base.stableenumSteamPhase.name()), 170, 80,
                 ModUtils.convertRGBcolorToInt(15,
                         125, 205
-                ));
+                )
+        );
 
     }
 
@@ -111,7 +117,7 @@ public class GuiBaseSteamTurbineController extends GuiIU<ContainerBaseSteamTurbi
         bar = Math.min(1, bar);
         drawTexturedModalRect(this.guiLeft + 70, (int) (this.guiTop + 6)
                 , 202, 11, 13, 74);
-        drawTexturedModalRect(this.guiLeft + 72, (int) (this.guiTop + 73+6 - (bar * 71))
+        drawTexturedModalRect(this.guiLeft + 72, (int) (this.guiTop + 73 + 6 - (bar * 71))
                 , 228, (int) (72 - (bar * 71)), 9, (int) (bar * 71));
         this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);

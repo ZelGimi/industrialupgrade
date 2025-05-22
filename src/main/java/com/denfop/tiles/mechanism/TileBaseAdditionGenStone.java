@@ -63,9 +63,9 @@ public abstract class TileBaseAdditionGenStone extends TileElectricMachine imple
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.output = null;
         this.mode = Mode.GRANITE;
-        this.granite = new ItemStack(Blocks.STONE, 8,1);
-        this.diorite = new ItemStack(Blocks.STONE, 8,3);
-        this.andesite = new ItemStack(Blocks.STONE, 8,5);
+        this.granite = new ItemStack(Blocks.STONE, 8, 1);
+        this.diorite = new ItemStack(Blocks.STONE, 8, 3);
+        this.andesite = new ItemStack(Blocks.STONE, 8, 5);
 
     }
 

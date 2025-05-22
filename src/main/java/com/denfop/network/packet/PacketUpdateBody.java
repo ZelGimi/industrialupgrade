@@ -1,10 +1,7 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import com.denfop.api.space.IAsteroid;
 import com.denfop.api.space.IBody;
-import com.denfop.api.space.IPlanet;
-import com.denfop.api.space.ISatellite;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -55,8 +52,10 @@ public class PacketUpdateBody implements IPacket {
                 boolean hasBody = customPacketBuffer.readBoolean();
                 if (hasBody) {
                     tileEntityResearchTableSpace.body = SpaceNet.instance.getBodyFromName(customPacketBuffer.readString());
-                    if (  tileEntityResearchTableSpace.fakeBody != null && !tileEntityResearchTableSpace.fakeBody.matched(tileEntityResearchTableSpace.body))
+                    if (tileEntityResearchTableSpace.fakeBody != null && !tileEntityResearchTableSpace.fakeBody.matched(
+                            tileEntityResearchTableSpace.body)) {
                         tileEntityResearchTableSpace.fakeBody = null;
+                    }
 
                 } else {
                     tileEntityResearchTableSpace.fakeBody = null;

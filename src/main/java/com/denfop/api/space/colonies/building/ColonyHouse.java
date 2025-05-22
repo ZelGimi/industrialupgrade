@@ -2,12 +2,12 @@ package com.denfop.api.space.colonies.building;
 
 import com.denfop.api.space.colonies.Building;
 import com.denfop.api.space.colonies.Colony;
+import com.denfop.api.space.colonies.api.IColony;
+import com.denfop.api.space.colonies.api.building.IBuildingHouse;
 import com.denfop.api.space.colonies.enums.EnumHouses;
 import com.denfop.api.space.colonies.enums.EnumHousesLevel;
 import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
-import com.denfop.api.space.colonies.api.IColony;
-import com.denfop.api.space.colonies.api.building.IBuildingHouse;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,13 +24,14 @@ public class ColonyHouse extends Building implements IBuildingHouse {
     public ColonyHouse(EnumHouses houses, IColony colonie, boolean simulate) {
         super(colonie);
         this.houses = houses;
-        this.peoples = (byte) ((byte)houses.getMax() / 2 +  WorldBaseGen.random.nextInt(houses.getMax() / 2 + 1));
+        this.peoples = (byte) ((byte) houses.getMax() / 2 + WorldBaseGen.random.nextInt(houses.getMax() / 2 + 1));
         this.timeToDecrease = 3;
         this.timeToIncrease = 20;
         this.freeWorkers = peoples;
         this.workers = 0;
-        if (!simulate)
+        if (!simulate) {
             this.getColony().addBuilding(this);
+        }
     }
 
     public ColonyHouse(final NBTTagCompound tag, IColony colonie) {
@@ -88,12 +89,13 @@ public class ColonyHouse extends Building implements IBuildingHouse {
         if (peoples > 0) {
             int prev = this.peoples;
             this.peoples += (byte) peoples;
-            if (this.peoples > this.getMaxPeople())
+            if (this.peoples > this.getMaxPeople()) {
                 this.peoples = (byte) this.getMaxPeople();
+            }
             prev = this.peoples - prev;
             this.freeWorkers += (byte) (prev);
             this.getColony().addFreeWorkers(prev);
-        }else {
+        } else {
             peoples = Math.abs(peoples);
             this.peoples -= (byte) peoples;
             while (peoples > 0) {
@@ -104,7 +106,7 @@ public class ColonyHouse extends Building implements IBuildingHouse {
                 } else {
                     this.workers -= 1;
                 }
-                peoples-=1;
+                peoples -= 1;
             }
         }
     }
@@ -122,18 +124,18 @@ public class ColonyHouse extends Building implements IBuildingHouse {
     @Override
     public void removeFreeWorkers(final int workers) {
         this.freeWorkers -= (byte) workers;
-        this.workers+= (byte) workers;
+        this.workers += (byte) workers;
     }
 
     @Override
     public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
         super.writePacket(customPacketBuffer);
-        customPacketBuffer.writeByte( this.houses.ordinal());
-        customPacketBuffer.writeByte( this.peoples);
-        customPacketBuffer.writeByte( this.freeWorkers);
-        customPacketBuffer.writeByte( this.workers);
-        customPacketBuffer.writeByte( this.timeToDecrease);
-        customPacketBuffer.writeByte( this.timeToIncrease);
+        customPacketBuffer.writeByte(this.houses.ordinal());
+        customPacketBuffer.writeByte(this.peoples);
+        customPacketBuffer.writeByte(this.freeWorkers);
+        customPacketBuffer.writeByte(this.workers);
+        customPacketBuffer.writeByte(this.timeToDecrease);
+        customPacketBuffer.writeByte(this.timeToIncrease);
         return customPacketBuffer;
     }
 
@@ -167,14 +169,14 @@ public class ColonyHouse extends Building implements IBuildingHouse {
             problem = true;
 
         }
-        if (this.houses.getConsumeOxygen()*this.peoples > this.getColony().getOxygen()) {
+        if (this.houses.getConsumeOxygen() * this.peoples > this.getColony().getOxygen()) {
             if (!this.getColony().getProblems().contains(EnumProblems.OXYGEN)) {
                 this.getColony().getProblems().add(EnumProblems.OXYGEN);
             }
             this.getColony().useOxygen(this.getColony().getOxygen());
             problem = true;
         } else {
-            this.getColony().useOxygen((int) (this.houses.getConsumeOxygen()*this.peoples));
+            this.getColony().useOxygen((int) (this.houses.getConsumeOxygen() * this.peoples));
         }
         if (this.peoples > this.getColony().getFood()) {
             if (!this.getColony().getProblems().contains(EnumProblems.FOOD)) {
@@ -187,15 +189,17 @@ public class ColonyHouse extends Building implements IBuildingHouse {
         }
         if (!problem) {
             this.timeToDecrease = 3;
-            if (this.getPeople() < this.getMaxPeople() &&this.getColony().canUseFood(this.houses) && this.getColony().canUseOxygen(this.houses) ) {
-               if (timeToIncrease == 0) {
-                   this.addPeople(1);
-                   this.timeToIncrease = 20;
-               }else{
-                   timeToIncrease--;
-               }
+            if (this.getPeople() < this.getMaxPeople() && this.getColony().canUseFood(this.houses) && this
+                    .getColony()
+                    .canUseOxygen(this.houses)) {
+                if (timeToIncrease == 0) {
+                    this.addPeople(1);
+                    this.timeToIncrease = 20;
+                } else {
+                    timeToIncrease--;
+                }
             }
-        }else{
+        } else {
             this.timeToDecrease--;
             timeToIncrease = 20;
             if (this.timeToDecrease == 0 && this.getPeople() > 0) {

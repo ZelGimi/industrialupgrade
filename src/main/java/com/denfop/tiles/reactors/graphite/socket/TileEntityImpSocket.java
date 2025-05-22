@@ -22,7 +22,7 @@ public class TileEntityImpSocket extends TileEntityMainSocket {
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 2;
     }
 

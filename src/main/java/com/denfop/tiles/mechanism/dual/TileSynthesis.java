@@ -3,11 +3,7 @@ package com.denfop.tiles.mechanism.dual;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
@@ -110,6 +106,7 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;

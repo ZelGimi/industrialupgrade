@@ -31,37 +31,8 @@ import com.denfop.tiles.mechanism.steamturbine.tank.TileEntityAdvSteamTurbineTan
 import com.denfop.tiles.mechanism.steamturbine.tank.TileEntityImpSteamTurbineTank;
 import com.denfop.tiles.mechanism.steamturbine.tank.TileEntityPerSteamTurbineTank;
 import com.denfop.tiles.mechanism.steamturbine.tank.TileEntitySimpleSteamTurbineTank;
-import com.denfop.tiles.reactors.water.inputfluid.TileEntityAdvInputPort;
-import com.denfop.tiles.reactors.water.inputfluid.TileEntityImpInputPort;
-import com.denfop.tiles.reactors.water.inputfluid.TileEntityPerInputPort;
-import com.denfop.tiles.reactors.water.inputfluid.TileEntitySimpleInputPort;
-import com.denfop.tiles.reactors.water.levelfuel.TileEntityAdvLevelFuel;
-import com.denfop.tiles.reactors.water.levelfuel.TileEntityImpLevelFuel;
-import com.denfop.tiles.reactors.water.levelfuel.TileEntityPerLevelFuel;
-import com.denfop.tiles.reactors.water.levelfuel.TileEntitySimpleLevelFuel;
-import com.denfop.tiles.reactors.water.outputfluid.TileEntityAdvOutputPort;
-import com.denfop.tiles.reactors.water.outputfluid.TileEntityImpOutputPort;
-import com.denfop.tiles.reactors.water.outputfluid.TileEntityPerOutputPort;
-import com.denfop.tiles.reactors.water.outputfluid.TileEntitySimpleOutputPort;
-import com.denfop.tiles.reactors.water.reactor.TileEntityAdvReactor;
-import com.denfop.tiles.reactors.water.reactor.TileEntityImpReactor;
-import com.denfop.tiles.reactors.water.reactor.TileEntityPerReactor;
-import com.denfop.tiles.reactors.water.reactor.TileEntitySimpleReactor;
-import com.denfop.tiles.reactors.water.security.TileEntityAdvSecurity;
-import com.denfop.tiles.reactors.water.security.TileEntityImpSecurity;
-import com.denfop.tiles.reactors.water.security.TileEntityPerSecurity;
-import com.denfop.tiles.reactors.water.security.TileEntitySimpleSecurity;
-import com.denfop.tiles.reactors.water.socket.TileEntityAdvSocket;
-import com.denfop.tiles.reactors.water.socket.TileEntityImpSocket;
-import com.denfop.tiles.reactors.water.socket.TileEntityPerSocket;
-import com.denfop.tiles.reactors.water.socket.TileEntitySimpleSocket;
-import com.denfop.tiles.reactors.water.tank.TileEntityAdvTank;
-import com.denfop.tiles.reactors.water.tank.TileEntityImpTank;
-import com.denfop.tiles.reactors.water.tank.TileEntityPerTank;
-import com.denfop.tiles.reactors.water.tank.TileEntitySimpleTank;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -114,21 +85,14 @@ public enum BlockSteamTurbine implements IMultiTileBlock, IMultiBlockItem {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockSteamTurbine(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
-        idBlock = id;
-    };
     BlockSteamTurbine(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
@@ -136,6 +100,18 @@ public enum BlockSteamTurbine implements IMultiTileBlock, IMultiBlockItem {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
     }
 
     public void buildDummies() {
@@ -160,7 +136,7 @@ public enum BlockSteamTurbine implements IMultiTileBlock, IMultiBlockItem {
     public String[] getMultiModels(final IMultiTileBlock teBlock) {
 
 
-                    return IMultiTileBlock.super.getMultiModels(teBlock);
+        return IMultiTileBlock.super.getMultiModels(teBlock);
     }
 
     @Override

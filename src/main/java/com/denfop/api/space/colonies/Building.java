@@ -13,6 +13,7 @@ public abstract class Building implements IColonyBuilding {
     public Building(IColony colonie) {
         this.colonie = colonie;
     }
+
     @Override
     public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
         customPacketBuffer.writeByte(this.getId());

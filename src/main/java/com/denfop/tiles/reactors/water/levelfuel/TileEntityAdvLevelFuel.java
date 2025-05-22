@@ -19,7 +19,7 @@ public class TileEntityAdvLevelFuel extends TileEntityMainLevelFuel implements I
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 1;
     }
 

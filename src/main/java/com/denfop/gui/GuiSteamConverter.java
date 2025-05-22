@@ -35,6 +35,7 @@ public class GuiSteamConverter extends GuiIU<ContainerSteamConverter> {
         this.addElement(TankGauge.createNormal(this, 96, 22, (container.base).fluidTank1));
 
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -50,9 +51,10 @@ public class GuiSteamConverter extends GuiIU<ContainerSteamConverter> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     protected void mouseClicked(int i, int j, int k) throws IOException {
         super.mouseClicked(i, j, k);
         int xMin = (this.width - this.xSize) / 2;

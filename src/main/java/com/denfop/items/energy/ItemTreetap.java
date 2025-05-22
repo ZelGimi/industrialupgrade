@@ -60,26 +60,6 @@ public class ItemTreetap extends Item implements IModelRegister {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
-
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu."));
-    }
-
-    @Override
-    public void registerModels() {
-        this.registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
-    }
     public static boolean attemptExtract(
             EntityPlayer player,
             World world,
@@ -91,8 +71,9 @@ public class ItemTreetap extends Item implements IModelRegister {
         assert state.getBlock() == IUItem.rubWood;
         boolean max = false;
         final ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
-        if (stack.getItem() instanceof ItemGraviTool)
-            max =  UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
+        if (stack.getItem() instanceof ItemGraviTool) {
+            max = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
+        }
 
         BlockRubWood.RubberWoodState rwState = state.getValue(BlockRubWood.stateProperty);
         if (!rwState.isPlain() && rwState.facing == side) {
@@ -102,7 +83,7 @@ public class ItemTreetap extends Item implements IModelRegister {
                     if (stacks != null) {
 
                     } else {
-                        ejectResin(world, pos, side,!max ? world.rand.nextInt(3) + 1 : 4);
+                        ejectResin(world, pos, side, !max ? world.rand.nextInt(3) + 1 : 4);
                     }
 
 
@@ -153,8 +134,9 @@ public class ItemTreetap extends Item implements IModelRegister {
         BlockSwampRubWood.RubberWoodState rwState = state.getValue(BlockSwampRubWood.stateProperty);
         boolean max = false;
         final ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
-        if (stack.getItem() instanceof ItemGraviTool)
-            max =  UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
+        if (stack.getItem() instanceof ItemGraviTool) {
+            max = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
+        }
 
         if (!rwState.isPlain() && rwState.facing == side) {
             if (rwState.wet) {
@@ -163,7 +145,7 @@ public class ItemTreetap extends Item implements IModelRegister {
                     if (stacks != null) {
 
                     } else {
-                        ejectResin(world, pos, side,!max ? world.rand.nextInt(3) + 1 : 4);
+                        ejectResin(world, pos, side, !max ? world.rand.nextInt(3) + 1 : 4);
                     }
 
 
@@ -212,8 +194,9 @@ public class ItemTreetap extends Item implements IModelRegister {
         assert state.getBlock() == IUItem.tropicalRubWood;
         boolean max = false;
         final ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
-        if (stack.getItem() instanceof ItemGraviTool)
-            max =  UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
+        if (stack.getItem() instanceof ItemGraviTool) {
+            max = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
+        }
 
         BlockTropicalRubWood.RubberWoodState rwState = state.getValue(BlockTropicalRubWood.stateProperty);
         if (!rwState.isPlain() && rwState.facing == side) {
@@ -223,7 +206,7 @@ public class ItemTreetap extends Item implements IModelRegister {
                     if (stacks != null) {
 
                     } else {
-                        ejectResin(world, pos, side,!max ? world.rand.nextInt(3) + 1 : 4);
+                        ejectResin(world, pos, side, !max ? world.rand.nextInt(3) + 1 : 4);
                     }
 
 
@@ -278,6 +261,26 @@ public class ItemTreetap extends Item implements IModelRegister {
         world.spawnEntity(entityitem);
 
     }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu."));
+    }
+
+    @Override
+    public void registerModels() {
+        this.registerModels(this.name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(String name) {
+        this.registerModel(0, name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name) {
+        registerModel(this, meta, name);
+    }
+
     public EnumActionResult onItemUse(
             EntityPlayer player,
             World world,

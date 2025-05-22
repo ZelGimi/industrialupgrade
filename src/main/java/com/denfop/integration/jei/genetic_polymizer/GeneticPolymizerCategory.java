@@ -1,7 +1,6 @@
 package com.denfop.integration.jei.genetic_polymizer;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
@@ -10,7 +9,6 @@ import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
@@ -75,7 +73,7 @@ public class GeneticPolymizerCategory extends GuiIU implements IRecipeCategory<G
     @Nonnull
     @Override
     public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack( BlockBaseMachine3.genetic_polymerizer).getUnlocalizedName());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.genetic_polymerizer).getUnlocalizedName());
     }
 
     @Nonnull

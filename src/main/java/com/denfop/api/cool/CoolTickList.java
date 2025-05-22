@@ -1,7 +1,6 @@
 package com.denfop.api.cool;
 
 
-
 import java.util.ArrayList;
 
 public class CoolTickList<T extends CoolTick<ICoolSource, Path>> extends ArrayList<T> {
@@ -34,6 +33,7 @@ public class CoolTickList<T extends CoolTick<ICoolSource, Path>> extends ArrayLi
         }
         return false;
     }
+
     public CoolTick<ICoolSource, Path> removeSource(final Object o) {
         if (o instanceof ICoolSource) {
             for (int i = 0; i < this.size(); i++) {
@@ -47,4 +47,5 @@ public class CoolTickList<T extends CoolTick<ICoolSource, Path>> extends ArrayLi
         }
         return null;
     }
+
 }

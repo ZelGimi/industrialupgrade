@@ -9,7 +9,6 @@ import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerAdvCokeOven;
-import com.denfop.container.ContainerCokeOven;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;

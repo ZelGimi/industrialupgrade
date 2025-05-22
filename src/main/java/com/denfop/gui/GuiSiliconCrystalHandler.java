@@ -24,13 +24,15 @@ public class GuiSiliconCrystalHandler extends GuiIU<ContainerSiliconCrystalHandl
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
-        GlStateManager.scale(0.7,0.7,0.7);
+        GlStateManager.scale(0.7, 0.7, 0.7);
         this.fontRenderer.drawString(
-                Localization.translate("iu.coal_concentration") +" " + (int) ((this.container.base.col / 90D) * 100) + "%", 10, 30,
+                Localization.translate("iu.coal_concentration") + " " + (int) ((this.container.base.col / 90D) * 100) + "%",
+                10,
+                30,
                 4210752
         );
 
-        GlStateManager.scale(1/0.7,1/0.7,1/0.7);
+        GlStateManager.scale(1 / 0.7, 1 / 0.7, 1 / 0.7);
     }
 
     @Override

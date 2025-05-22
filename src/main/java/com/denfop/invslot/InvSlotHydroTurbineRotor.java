@@ -5,7 +5,6 @@ import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.items.ItemWaterRotor;
 import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineController;
-import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import com.denfop.utils.DamageHandler;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
@@ -50,7 +49,7 @@ public class InvSlotHydroTurbineRotor extends InvSlot implements ITypeSlot {
     @Override
     public boolean accepts(final ItemStack stack, final int index) {
 
-        return stack.getItem() instanceof ItemWaterRotor && ((IWindRotor) stack.getItem()).getLevel() >= 1 && ((IWindRotor) stack.getItem()).getLevel() <=14;
+        return stack.getItem() instanceof ItemWaterRotor && ((IWindRotor) stack.getItem()).getLevel() >= 1 && ((IWindRotor) stack.getItem()).getLevel() <= 14;
     }
 
     @Override

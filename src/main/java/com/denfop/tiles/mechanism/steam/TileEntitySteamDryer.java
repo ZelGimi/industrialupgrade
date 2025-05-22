@@ -7,7 +7,6 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;

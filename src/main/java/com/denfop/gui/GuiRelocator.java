@@ -2,28 +2,22 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.ElectricItem;
-import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiVerticalSliderList;
 import com.denfop.api.gui.ImageInterface;
 import com.denfop.api.gui.ImageScreen;
-import com.denfop.api.gui.MouseButton;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerBase;
 import com.denfop.items.relocator.ItemStackRelocator;
 import com.denfop.items.relocator.Point;
 import com.denfop.items.relocator.RelocatorNetwork;
-import com.denfop.network.packet.PacketAddRelocatorPoint;
 import com.denfop.network.packet.PacketRelocatorTeleportPlayer;
 import com.denfop.network.packet.PacketRemoveRelocatorPoint;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -43,13 +37,13 @@ public class GuiRelocator extends GuiIU<ContainerBase<ItemStackRelocator>> {
         this.xSize = 138;
         this.ySize = 220;
         this.componentList.clear();
-        if (guiContainer.base.player.getEntityWorld().isRemote){
-            container.base.points =   new ArrayList<>(RelocatorNetwork.instance.getPoints(guiContainer.base.player));
-            value =   0;
+        if (guiContainer.base.player.getEntityWorld().isRemote) {
+            container.base.points = new ArrayList<>(RelocatorNetwork.instance.getPoints(guiContainer.base.player));
+            value = 0;
         }
         this.addElement(new ImageInterface(this, 0, 0, this.xSize, ySize));
         this.componentList.add(new GuiComponent(this, 117, 10, EnumTypeComponent.SCROLL_UP,
-                new Component<>(new ComponentButton(null, 0, ""){
+                new Component<>(new ComponentButton(null, 0, "") {
                     @Override
                     public void ClickEvent() {
                         mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
@@ -57,11 +51,12 @@ public class GuiRelocator extends GuiIU<ContainerBase<ItemStackRelocator>> {
                                 1.0F
                         ));
                         value--;
-                        value = Math.max(value,0);
+                        value = Math.max(value, 0);
                     }
-                })));
+                })
+        ));
         this.componentList.add(new GuiComponent(this, 117, 190, EnumTypeComponent.SCROLL_DOWN,
-                new Component<>(new ComponentButton(null, 0, ""){
+                new Component<>(new ComponentButton(null, 0, "") {
                     @Override
                     public void ClickEvent() {
                         mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
@@ -69,10 +64,11 @@ public class GuiRelocator extends GuiIU<ContainerBase<ItemStackRelocator>> {
                                 1.0F
                         ));
                         value++;
-                        value = Math.min(value,container.base.points.size() / 10);
+                        value = Math.min(value, container.base.points.size() / 10);
 
                     }
-                })));
+                })
+        ));
     }
 
     @Override
@@ -95,13 +91,12 @@ public class GuiRelocator extends GuiIU<ContainerBase<ItemStackRelocator>> {
                     mc.player.closeScreen();
                 }
             }
-            if (x >= x1+20 && x <= x2+20 && y >= y1 && y <= y2) {
+            if (x >= x1 + 20 && x <= x2 + 20 && y >= y1 && y <= y2) {
                 new PacketRemoveRelocatorPoint(mc.player, pointList.get(index));
                 mc.player.closeScreen();
             }
         }
     }
-
 
 
     @Override

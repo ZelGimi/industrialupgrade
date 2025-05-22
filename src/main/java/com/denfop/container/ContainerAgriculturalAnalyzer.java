@@ -3,9 +3,7 @@ package com.denfop.container;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.ICropItem;
 import com.denfop.api.agriculture.genetics.Genome;
-import com.denfop.items.bags.ItemStackLeadBox;
 import com.denfop.items.crop.ItemStackAgriculturalAnalyzer;
-import com.denfop.items.reactors.IRadioactiveItemType;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,7 +25,7 @@ public class ContainerAgriculturalAnalyzer extends ContainerHandHeldInventory<It
 
         inventorySize = Toolbox1.inventorySize;
         int slots = Toolbox1.inventorySize;
-        this.addSlotToContainer(new Slot(Toolbox1, 0, 12 , 24) {
+        this.addSlotToContainer(new Slot(Toolbox1, 0, 12, 24) {
             @Override
             public boolean isItemValid(final ItemStack stack) {
                 return stack.getItem() instanceof ICropItem;
@@ -45,7 +43,7 @@ public class ContainerAgriculturalAnalyzer extends ContainerHandHeldInventory<It
                     Toolbox1.crop = null;
                     Toolbox1.genome = null;
                 } else {
-                    ModUtils.nbt(stack).setBoolean("analyzed",true);
+                    ModUtils.nbt(stack).setBoolean("analyzed", true);
                     Toolbox1.genome = new Genome(stack);
                     Toolbox1.crop = CropNetwork.instance.getCropFromStack(stack).copy();
                     Toolbox1.genome.loadCrop(Toolbox1.crop);

@@ -14,14 +14,12 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerGeneticTransposer;
-import com.denfop.container.ContainerPlasticCreator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 

@@ -17,6 +17,8 @@ import com.denfop.blocks.BlockPreciousOre;
 import com.denfop.blocks.BlocksRadiationOre;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
@@ -43,12 +45,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class ItemVeinSensor extends ItemSubTypes<ItemVeinSensor.Types> implements IModelRegister, IItemStackInventory {
+public class ItemVeinSensor extends ItemSubTypes<ItemVeinSensor.Types> implements IModelRegister, IUpdatableItemStackEvent,
+        IItemStackInventory {
 
     protected static final String NAME = "sensor";
 
@@ -436,6 +441,25 @@ public class ItemVeinSensor extends ItemSubTypes<ItemVeinSensor.Types> implement
             }
         }
         return map;
+    }
+
+    @Override
+    public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
+
+    }
+
+    @Override
+    public void updateEvent(final int event, final ItemStack stack) {
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final List<Integer> list1 = Arrays.stream(nbt.getIntArray("list"))
+                .boxed()
+                .collect(Collectors.toList());
+        if (list1.contains(event)) {
+            list1.remove((Object) event);
+        } else {
+            list1.add(event);
+        }
+        nbt.setIntArray("list", list1.stream().mapToInt(Integer::intValue).toArray());
     }
 
     public enum Types implements ISubEnum {

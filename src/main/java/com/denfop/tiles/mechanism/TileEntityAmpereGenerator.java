@@ -5,8 +5,8 @@ import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.Energy;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerAmpereGenerator;
 import com.denfop.gui.GuiAmpereGenerator;
 import com.denfop.network.IUpdatableTileEvent;
@@ -31,11 +31,12 @@ public class TileEntityAmpereGenerator extends TileElectricMachine implements IU
     public final ComponentBaseEnergy pressure;
     public final Energy energy;
     public int level;
+
     public TileEntityAmpereGenerator() {
         super(0, 0, 1);
 
 
-        this.energy = this.addComponent(Energy.asBasicSink(this, 4000,14));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 4000, 14));
         this.pressure = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.AMPERE, this, 2000));
 
 
@@ -55,6 +56,7 @@ public class TileEntityAmpereGenerator extends TileElectricMachine implements IU
     public void removeLevel(final int level) {
         this.level -= level;
     }
+
     @Override
     public boolean onActivated(
             final EntityPlayer player,
@@ -129,28 +131,22 @@ public class TileEntityAmpereGenerator extends TileElectricMachine implements IU
     }
 
 
-
-
-
     public void updateEntityServer() {
         super.updateEntityServer();
 
 
-            if (this.energy.getEnergy() >= 2 && this.pressure.getEnergy() + 1 <= this.pressure.getCapacity()) {
-                int max = (int) Math.min(level+1, energy.getEnergy()/((level+1)*2));
-                max = (int) Math.min(max, (this.pressure.getCapacity()-pressure.getEnergy())/((level+1)));
-                this.pressure.addEnergy(max);
-                this.energy.useEnergy(max*2);
-                this.setActive(true);
-            } else {
-                setActive(false);
-            }
-
+        if (this.energy.getEnergy() >= 2 && this.pressure.getEnergy() + 1 <= this.pressure.getCapacity()) {
+            int max = (int) Math.min(level + 1, energy.getEnergy() / ((level + 1) * 2));
+            max = (int) Math.min(max, (this.pressure.getCapacity() - pressure.getEnergy()) / ((level + 1)));
+            this.pressure.addEnergy(max);
+            this.energy.useEnergy(max * 2);
+            this.setActive(true);
+        } else {
+            setActive(false);
+        }
 
 
     }
-
-
 
 
     @Override

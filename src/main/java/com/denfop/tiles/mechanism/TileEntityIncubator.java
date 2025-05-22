@@ -4,7 +4,17 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseFluidMachineRecipe;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.FluidHandlerRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InputFluid;
+import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -102,8 +112,10 @@ public class TileEntityIncubator extends TileElectricMachine implements
                         new RecipeOutput(null, container)
                 )
         );
-        Recipes.recipes.getRecipeFluid().addRecipe("incubator", new BaseFluidMachineRecipe(new InputFluid(container,
-                fluidStack), Collections.singletonList(
+        Recipes.recipes.getRecipeFluid().addRecipe("incubator", new BaseFluidMachineRecipe(new InputFluid(
+                container,
+                fluidStack
+        ), Collections.singletonList(
                 outputfluidStack)));
 
     }
@@ -135,7 +147,8 @@ public class TileEntityIncubator extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(Blocks.BROWN_MUSHROOM),
+        addRecipe(
+                new ItemStack(Blocks.BROWN_MUSHROOM),
                 new FluidStack(FluidName.fluidapianroyaljelly.getInstance(), 250),
                 new FluidStack(FluidName.fluidbacteria.getInstance()
                         , 250)
@@ -147,7 +160,6 @@ public class TileEntityIncubator extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidplantmixture.getInstance()
                         , 250)
         );
-
 
 
     }

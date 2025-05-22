@@ -39,6 +39,7 @@ public class GuiSteamMultiMachine extends GuiIU<ContainerSteamMultiMachine> {
         ));
         xSize = 176 + 16;
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -54,9 +55,10 @@ public class GuiSteamMultiMachine extends GuiIU<ContainerSteamMultiMachine> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-100, mouseY, text);
+            this.drawTooltip(mouseX - 100, mouseY, text);
         }
     }
+
     @Override
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);

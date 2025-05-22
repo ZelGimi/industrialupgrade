@@ -12,9 +12,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.container.ContainerChickenFarm;
 import com.denfop.container.ContainerCowFarm;
-import com.denfop.gui.GuiChickenFarm;
 import com.denfop.gui.GuiCowFarm;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -37,25 +35,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
-public class TileEntityCowFarm extends TileEntityInventory  implements IUpgradableBlock {
+public class TileEntityCowFarm extends TileEntityInventory implements IUpgradableBlock {
 
+    private static final int RADIUS = 4;
+    private static final int MAX_COWS = 20;
     public final InvSlot slotSeeds;
     public final InvSlotOutput output;
-    private static final int RADIUS = 4;
     public final Energy energy;
     public final InvSlotOutput output1;
+    public final InvSlotUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
+    private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
             pos.add(RADIUS, RADIUS, RADIUS)
     );
+    List<Chunk> chunks = new ArrayList<>();
 
     public TileEntityCowFarm() {
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
@@ -73,12 +72,16 @@ public class TileEntityCowFarm extends TileEntityInventory  implements IUpgradab
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
+
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
+        return EnumSet.of(
+                UpgradableProperty.Transformer,
+                UpgradableProperty.EnergyStorage,
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
@@ -88,38 +91,41 @@ public class TileEntityCowFarm extends TileEntityInventory  implements IUpgradab
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.cow_farm;
     }
-    public <T extends Entity> List<T> getEntitiesWithinAABB(Class <? extends T > clazz, AxisAlignedBB aabb, @Nullable Predicate<? super T > filter)
-    {
+
+    public <T extends Entity> List<T> getEntitiesWithinAABB(
+            Class<? extends T> clazz,
+            AxisAlignedBB aabb,
+            @Nullable Predicate<? super T> filter
+    ) {
         List<T> list = Lists.newArrayList();
         this.chunks.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(clazz, aabb, list, filter));
         return list;
     }
-    List<Chunk> chunks = new ArrayList<>();
+
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote){
+        if (!this.getWorld().isRemote) {
             final AxisAlignedBB aabb = searchArea.offset(pos);
             searchArea = aabb;
             int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
             int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
             int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
             int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
-            for (int j3 = j2; j3 < k2; ++j3)
-            {
-                for (int k3 = l2; k3 < i3; ++k3)
-                {
+            for (int j3 = j2; j3 < k2; ++j3) {
+                for (int k3 = l2; k3 < i3; ++k3) {
                     final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
-                    if (!chunks.contains(chunk)){
+                    if (!chunks.contains(chunk)) {
                         chunks.add(chunk);
                     }
                 }
             }
         }
     }
+
     @Override
     public ContainerCowFarm getGuiContainer(final EntityPlayer var1) {
-        return new ContainerCowFarm(this,var1);
+        return new ContainerCowFarm(this, var1);
     }
 
     @Override
@@ -128,20 +134,12 @@ public class TileEntityCowFarm extends TileEntityInventory  implements IUpgradab
         return new GuiCowFarm(getGuiContainer(var1));
     }
 
-    private static final int MAX_COWS = 20;
-
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
             this.energy.useEnergy(50);
             List<EntityCow> cows = getEntitiesWithinAABB(EntityCow.class, searchArea, EntitySelectors.NOT_SPECTATING);
-
-
-
-
-
-
 
 
             if (cows.size() < MAX_COWS) {
@@ -168,15 +166,15 @@ public class TileEntityCowFarm extends TileEntityInventory  implements IUpgradab
     }
 
 
-
-
     private void breedCows(List<EntityCow> cows) {
         for (int i = 0; i < cows.size(); i++) {
             for (int j = i + 1; j < cows.size(); j++) {
                 EntityCow cow1 = cows.get(i);
                 EntityCow cow2 = cows.get(j);
 
-                if (cow1.getGrowingAge() == 0 && this.slotSeeds.get().getCount() >= 2 && !cow1.isInLove() && !cow2.isInLove() && cow2.getGrowingAge() == 0 && cow1.getLoveCause() == null && cow2.getLoveCause() == null) {
+                if (cow1.getGrowingAge() == 0 && this.slotSeeds
+                        .get()
+                        .getCount() >= 2 && !cow1.isInLove() && !cow2.isInLove() && cow2.getGrowingAge() == 0 && cow1.getLoveCause() == null && cow2.getLoveCause() == null) {
                     cow1.setInLove(null);
                     cow2.setInLove(null);
                     slotSeeds.get().shrink(2);

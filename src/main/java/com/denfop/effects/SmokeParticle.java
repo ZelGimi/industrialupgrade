@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class SmokeParticle extends Particle {
+
     public SmokeParticle(World world, double x, double y, double z) {
         super(world, x, y, z);
 
@@ -33,4 +34,5 @@ public class SmokeParticle extends Particle {
             this.particleAlpha -= 0.01f;
         }
     }
+
 }

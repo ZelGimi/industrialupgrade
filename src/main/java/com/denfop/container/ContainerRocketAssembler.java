@@ -10,34 +10,34 @@ public class ContainerRocketAssembler extends ContainerFullInv<TileEntityRocketA
         this.addSlotToContainer(new SlotInvSlot(
                 tileEntityBatteryFactory.inputSlotA,
                 0,
-                48-4 + 0 * 18,
-                17 - 10+3
+                48 - 4 + 0 * 18,
+                17 - 10 + 3
         ));
         for (int i = 1; i < 4; i++) {
             this.addSlotToContainer(new SlotInvSlot(
                     tileEntityBatteryFactory.inputSlotA,
                     i,
-                    48 - 18-4 + (i - 1) * 18,
-                    17+3 + 18 - 10
+                    48 - 18 - 4 + (i - 1) * 18,
+                    17 + 3 + 18 - 10
             ));
         }
         for (int j = 1; j < 7; j++) {
-            for (int i = 4+5*(j-1); i < 9+5*(j-1); i++) {
+            for (int i = 4 + 5 * (j - 1); i < 9 + 5 * (j - 1); i++) {
                 this.addSlotToContainer(new SlotInvSlot(
                         tileEntityBatteryFactory.inputSlotA,
                         i,
-                        48-4 - 18 - 18 + (i - (4 + 5 * (j - 1))) * 18,
-                        17+3 + 18 - 10 + 18 * j
+                        48 - 4 - 18 - 18 + (i - (4 + 5 * (j - 1))) * 18,
+                        17 + 3 + 18 - 10 + 18 * j
                 ));
             }
         }
         for (int j = 7; j < 8; j++) {
-            for (int i = 4+5*(j-1); i < 7+5*(j-1); i++) {
+            for (int i = 4 + 5 * (j - 1); i < 7 + 5 * (j - 1); i++) {
                 this.addSlotToContainer(new SlotInvSlot(
                         tileEntityBatteryFactory.inputSlotA,
                         i,
-                        48 - 18-4 + (i - (4 + 5 * (j - 1))) * 18,
-                        17+3 + 18 - 10 + 18 * j
+                        48 - 18 - 4 + (i - (4 + 5 * (j - 1))) * 18,
+                        17 + 3 + 18 - 10 + 18 * j
                 ));
             }
         }
@@ -45,11 +45,11 @@ public class ContainerRocketAssembler extends ContainerFullInv<TileEntityRocketA
         this.addSlotToContainer(new SlotInvSlot(
                 tileEntityBatteryFactory.outputSlot,
                 0,
-                142 , 91
+                142, 91
         ));
 
         for (int i = 0; i < 4; i++) {
-            addSlotToContainer(new SlotInvSlot(tileEntityBatteryFactory.upgradeSlot, i, 98+ i * 18, 155 ));
+            addSlotToContainer(new SlotInvSlot(tileEntityBatteryFactory.upgradeSlot, i, 98 + i * 18, 155));
         }
     }
 

@@ -110,8 +110,9 @@ public class ItemUpgradeKit extends ItemSubTypes<ItemUpgradeKit.Types> implement
                                     pos.getZ() + 1
                             )
                     );
-                    for (EntityItem item : items)
+                    for (EntityItem item : items) {
                         item.setDead();
+                    }
 
                     EntityItem item = new EntityItem(world);
                     item.setItem(stack1);

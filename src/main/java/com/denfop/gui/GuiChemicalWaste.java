@@ -3,9 +3,7 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.api.gui.FluidItem;
 import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerDefaultMultiElement;
-import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantSeparate;
 import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantWaste;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,7 +19,12 @@ public class GuiChemicalWaste extends GuiIU<ContainerDefaultMultiElement> {
     public GuiChemicalWaste(ContainerDefaultMultiElement guiContainer) {
         super(guiContainer);
         this.componentList.clear();
-        this.addElement((new FluidItem(this, this.xSize / 2 - 10, 20, ((TileEntityChemicalPlantWaste) guiContainer.base).getFluidTank().getFluid()) {
+        this.addElement((new FluidItem(
+                this,
+                this.xSize / 2 - 10,
+                20,
+                ((TileEntityChemicalPlantWaste) guiContainer.base).getFluidTank().getFluid()
+        ) {
             @Override
             public void drawBackground(final int mouseX, final int mouseY) {
                 bindCommonTexture();
@@ -75,7 +78,7 @@ public class GuiChemicalWaste extends GuiIU<ContainerDefaultMultiElement> {
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         bindTexture();
-        GlStateManager.color(1,1,1,1);
+        GlStateManager.color(1, 1, 1, 1);
         drawTexturedModalRect(this.guiLeft + this.xSize / 2 - 10 - 4, guiTop + 20 - 4, 235,
                 76, 20, 55
         );
@@ -83,6 +86,7 @@ public class GuiChemicalWaste extends GuiIU<ContainerDefaultMultiElement> {
             element.drawBackground(mouseX, mouseY);
         }
     }
+
     @Override
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guichemicalplant.png");

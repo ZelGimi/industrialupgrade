@@ -121,7 +121,7 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
             damage1 = 0;
         }
         this.setCustomDamage(stack, damage1);
-        return  getMaxCustomDamage(stack) - damage1 == 0;
+        return getMaxCustomDamage(stack) - damage1 == 0;
     }
 
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {

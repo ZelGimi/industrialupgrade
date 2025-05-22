@@ -3,7 +3,6 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerChemicalController;
@@ -17,6 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GuiChemicalController extends GuiIU<ContainerChemicalController> {
+
+    private boolean visible;
 
     public GuiChemicalController(ContainerChemicalController guiContainer) {
         super(guiContainer);
@@ -39,7 +40,7 @@ public class GuiChemicalController extends GuiIU<ContainerChemicalController> {
         ));
 
     }
-    private boolean visible;
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
@@ -75,7 +76,7 @@ public class GuiChemicalController extends GuiIU<ContainerChemicalController> {
 
         handleUpgradeTooltip(par1, par2);
         if (!this.container.base.work) {
-            this.visible = par1 >= 70 && par1 <= 70+24 && par2 >= 35 && par2 <= 35+24;
+            this.visible = par1 >= 70 && par1 <= 70 + 24 && par2 >= 35 && par2 <= 35 + 24;
         } else {
             this.visible = false;
         }

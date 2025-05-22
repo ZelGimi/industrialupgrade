@@ -19,7 +19,8 @@ public class GuiWirelessMatterCollector extends GuiIU<ContainerWirelessMatterCol
         ));
         this.addComponent(new GuiComponent(this, 36, 34, EnumTypeComponent.CIRCLE_BAR,
                 new Component<>(new ComponentValue<Integer>().setValue(() -> guiContainer.base.getFilled(32))
-        )));
+                )
+        ));
     }
 
     @Override

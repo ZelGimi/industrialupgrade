@@ -22,16 +22,12 @@ import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
-import com.denfop.container.ContainerBattery;
 import com.denfop.container.ContainerRoverAssembler;
-import com.denfop.gui.GuiBattery;
 import com.denfop.gui.GuiRoverAssembler;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -61,6 +57,7 @@ public class TileEntityRoverAssembler extends TileElectricMachine implements
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
+
     public TileEntityRoverAssembler() {
         super(800, 1, 1);
         Recipes.recipes.addInitRecipes(this);
@@ -69,7 +66,7 @@ public class TileEntityRoverAssembler extends TileElectricMachine implements
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 800
         ));
-        this.inputSlotA = new InvSlotRecipes(this, "roverassembler", this){
+        this.inputSlotA = new InvSlotRecipes(this, "roverassembler", this) {
             @Override
             public int getStackSizeLimit() {
                 return 1;
@@ -84,22 +81,8 @@ public class TileEntityRoverAssembler extends TileElectricMachine implements
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    @Override
-    public void onUpdate() {
 
-    }
-    @Override
-    public ContainerRoverAssembler getGuiContainer(final EntityPlayer var1) {
-        return new ContainerRoverAssembler(this, var1);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiRoverAssembler(getGuiContainer(var1));
-    }
-
-    public static void addRecipe(ItemStack container, ItemStack fill1, ItemStack fill2,ItemStack fill3,ItemStack output) {
+    public static void addRecipe(ItemStack container, ItemStack fill1, ItemStack fill2, ItemStack fill3, ItemStack output) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "roverassembler",
@@ -119,11 +102,11 @@ public class TileEntityRoverAssembler extends TileElectricMachine implements
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(fill1),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,710)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,724)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,723)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,713)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,722)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 710)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 724)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 723)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 713)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 722)),
                                 input.getInput(fill1),
                                 input.getInput(container),
                                 input.getInput(container),
@@ -150,6 +133,23 @@ public class TileEntityRoverAssembler extends TileElectricMachine implements
                 )
         );
     }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public ContainerRoverAssembler getGuiContainer(final EntityPlayer var1) {
+        return new ContainerRoverAssembler(this, var1);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+        return new GuiRoverAssembler(getGuiContainer(var1));
+    }
+
     public void onLoaded() {
         super.onLoaded();
         if (IUCore.proxy.isSimulating()) {
@@ -185,24 +185,31 @@ public class TileEntityRoverAssembler extends TileElectricMachine implements
                 UpgradableProperty.ItemInput
         );
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.rover_assembler;
     }
+
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,726),new ItemStack(IUItem.crafting_elements,1,714),
-                new ItemStack(IUItem.crafting_elements,1,716),new ItemStack(IUItem.crafting_elements,1,709),
-                new ItemStack(IUItem.rover));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,707),new ItemStack(IUItem.crafting_elements,1,725),
-                new ItemStack(IUItem.crafting_elements,1,719),new ItemStack(IUItem.crafting_elements,1,720),
-                new ItemStack(IUItem.adv_rover));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,727),new ItemStack(IUItem.crafting_elements,1,708),
-                new ItemStack(IUItem.crafting_elements,1,712),new ItemStack(IUItem.crafting_elements,1,715),
-                new ItemStack(IUItem.imp_rover));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,711),new ItemStack(IUItem.crafting_elements,1,721),
-                new ItemStack(IUItem.crafting_elements,1,718),new ItemStack(IUItem.crafting_elements,1,717),
-                new ItemStack(IUItem.per_rover));
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 726), new ItemStack(IUItem.crafting_elements, 1, 714),
+                new ItemStack(IUItem.crafting_elements, 1, 716), new ItemStack(IUItem.crafting_elements, 1, 709),
+                new ItemStack(IUItem.rover)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 707), new ItemStack(IUItem.crafting_elements, 1, 725),
+                new ItemStack(IUItem.crafting_elements, 1, 719), new ItemStack(IUItem.crafting_elements, 1, 720),
+                new ItemStack(IUItem.adv_rover)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 727), new ItemStack(IUItem.crafting_elements, 1, 708),
+                new ItemStack(IUItem.crafting_elements, 1, 712), new ItemStack(IUItem.crafting_elements, 1, 715),
+                new ItemStack(IUItem.imp_rover)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 711), new ItemStack(IUItem.crafting_elements, 1, 721),
+                new ItemStack(IUItem.crafting_elements, 1, 718), new ItemStack(IUItem.crafting_elements, 1, 717),
+                new ItemStack(IUItem.per_rover)
+        );
     }
+
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
     }

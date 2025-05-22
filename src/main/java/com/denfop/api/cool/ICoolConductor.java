@@ -1,8 +1,6 @@
 package com.denfop.api.cool;
 
 
-import com.denfop.api.sytem.EnergyType;
-
 public interface ICoolConductor extends ICoolAcceptor, ICoolEmitter {
 
 
@@ -16,5 +14,6 @@ public interface ICoolConductor extends ICoolAcceptor, ICoolEmitter {
     InfoCable getCoolCable();
 
     void setCoolCable(InfoCable cable);
+
 }
 

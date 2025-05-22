@@ -111,6 +111,7 @@ public class BlockOres2 extends BlockCore implements IModelRegister {
         }
         return Type.values()[meta].getRarity();
     }
+
     @Override
     public void getDrops(
             @Nonnull final NonNullList<ItemStack> drops,
@@ -122,12 +123,12 @@ public class BlockOres2 extends BlockCore implements IModelRegister {
         Random rand = WorldBaseGen.random;
 
         final int meta = this.getMetaFromState(state);
-        if (meta >= 3&& meta <= 5) {
+        if (meta >= 3 && meta <= 5) {
 
-            drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), getMetaFromState(state)-3+22));
+            drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), getMetaFromState(state) - 3 + 22));
             return;
         }
-        super.getDrops(drops,world,pos,state,fortune);
+        super.getDrops(drops, world, pos, state, fortune);
     }
 
 

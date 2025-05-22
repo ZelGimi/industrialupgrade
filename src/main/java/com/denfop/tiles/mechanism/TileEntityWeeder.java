@@ -12,11 +12,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.container.ContainerPigFarm;
-import com.denfop.container.ContainerPlantFertilizer;
 import com.denfop.container.ContainerWeeder;
-import com.denfop.gui.GuiPigFarm;
-import com.denfop.gui.GuiPlantFertilizer;
 import com.denfop.gui.GuiWeeder;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -39,15 +35,19 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityWeeder extends TileEntityInventory  implements IUpgradableBlock {
+public class TileEntityWeeder extends TileEntityInventory implements IUpgradableBlock {
 
-    public final InvSlot slot;
     private static final int RADIUS = 8;
+    public final InvSlot slot;
     public final Energy energy;
+    public final InvSlotUpgrade upgradeSlot;
+    private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
             pos.add(RADIUS, RADIUS, RADIUS)
     );
+    List<List<TileEntityCrop>> list = new ArrayList<>();
+    List<Chunk> chunks;
     private FakePlayerSpawner player;
 
     public TileEntityWeeder() {
@@ -63,12 +63,12 @@ public class TileEntityWeeder extends TileEntityInventory  implements IUpgradabl
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
+
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage,  UpgradableProperty.ItemInput
+        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemInput
         );
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
@@ -92,8 +92,7 @@ public class TileEntityWeeder extends TileEntityInventory  implements IUpgradabl
             }
         }
     }
-    List<List<TileEntityCrop>> list = new ArrayList<>();
-    List<Chunk> chunks;
+
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -146,7 +145,7 @@ public class TileEntityWeeder extends TileEntityInventory  implements IUpgradabl
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0){
+        if (this.getWorld().getWorldTime() % 100 == 0) {
             updateCrop();
         }
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(5)) {
@@ -154,7 +153,7 @@ public class TileEntityWeeder extends TileEntityInventory  implements IUpgradabl
             for (List<TileEntityCrop> crops : list) {
                 for (TileEntityCrop crop : crops) {
                     if (this.energy.getEnergy() > 5 && !this.slot.get().isEmpty() && crop.isLoaded) {
-                        if(this.contains(crop.getPos()) && crop.getCrop() != null && crop.getCrop().getId() ==  3) {
+                        if (this.contains(crop.getPos()) && crop.getCrop() != null && crop.getCrop().getId() == 3) {
                             this.slot.get().damageItem(1, player);
                             crop.resetCrop();
                             crop.sendUpdatePacket("cropItem1", "");

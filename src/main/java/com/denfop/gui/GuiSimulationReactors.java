@@ -14,7 +14,6 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerSimulationReactors;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.base.TileEntitySimulatorReactor;
-import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantController;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -35,7 +34,7 @@ public class GuiSimulationReactors extends GuiIU<ContainerSimulationReactors> {
         this.xSize = 255;
         this.ySize = 254;
         componentList.clear();
-        this.addElement(new ImageInterface(this,0,0,xSize,ySize));
+        this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
         inventory = new GuiComponent(this, 7, 171, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
         );
@@ -84,7 +83,7 @@ public class GuiSimulationReactors extends GuiIU<ContainerSimulationReactors> {
                     @Override
                     public void ClickEvent() {
                         new PacketUpdateServerTile(this.getEntityBlock(), 0);
-                        ((TileEntitySimulatorReactor)this.getEntityBlock()).updateTileServer(Minecraft.getMinecraft().player, 0);
+                        ((TileEntitySimulatorReactor) this.getEntityBlock()).updateTileServer(Minecraft.getMinecraft().player, 0);
                     }
 
                     @Override
@@ -175,16 +174,16 @@ public class GuiSimulationReactors extends GuiIU<ContainerSimulationReactors> {
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         this.bindTexture();
-         if (this.container.base.level != -1) {
-             new GuiComponent(this, 178 + 12 * (this.container.base.level - 1), 184, EnumTypeComponent.CHECK_MARK,
-                     new Component<>(new ComponentEmpty())
-             ).drawBackground(guiLeft,guiTop);
+        if (this.container.base.level != -1) {
+            new GuiComponent(this, 178 + 12 * (this.container.base.level - 1), 184, EnumTypeComponent.CHECK_MARK,
+                    new Component<>(new ComponentEmpty())
+            ).drawBackground(guiLeft, guiTop);
 
         }
         if (this.container.base.type != -1) {
             new GuiComponent(this, 178 + 12 * (this.container.base.type - 1), 195, EnumTypeComponent.CHECK_MARK,
                     new Component<>(new ComponentEmpty())
-            ).drawBackground(guiLeft,guiTop);
+            ).drawBackground(guiLeft, guiTop);
         }
         String name = Localization.translate(this.container.base.getName());
         if (!this.isBlack) {

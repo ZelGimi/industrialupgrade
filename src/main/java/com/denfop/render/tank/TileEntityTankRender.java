@@ -45,7 +45,7 @@ public class TileEntityTankRender extends TileEntitySpecialRenderer<TileEntityLi
             if (tile.getFluidTank().getFluid().getFluid().isGaseous()) {
                 dopY = 0.9f - tile.fluidTank.getFluidAmount() * 1F / tile.fluidTank.getCapacity();
             }
-            GL11.glTranslated(x + 0.1, y+0.01  + dopY, z + 0.1);
+            GL11.glTranslated(x + 0.1, y + 0.01 + dopY, z + 0.1);
             final float scale = tile.fluidTank.getFluidAmount() * 1F / tile.fluidTank.getCapacity();
             GlStateManager.enableLighting();
             GlStateManager.enableColorMaterial();

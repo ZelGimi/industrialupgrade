@@ -2,7 +2,6 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.agriculture.ICrop;
 import com.denfop.api.bee.IBee;
 import com.denfop.api.bee.genetics.Genome;
 import com.denfop.api.gui.Component;
@@ -11,25 +10,18 @@ import com.denfop.api.gui.ImageInterface;
 import com.denfop.api.gui.ImageScreen;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerAgriculturalAnalyzer;
 import com.denfop.container.ContainerBeeAnalyzer;
-import com.denfop.container.ContainerLeadBox;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SideOnly(Side.CLIENT)
 public class GuiBeeAnalyzer extends GuiIU<ContainerBeeAnalyzer> {
@@ -56,7 +48,6 @@ public class GuiBeeAnalyzer extends GuiIU<ContainerBeeAnalyzer> {
     }
 
 
-
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -72,7 +63,7 @@ public class GuiBeeAnalyzer extends GuiIU<ContainerBeeAnalyzer> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-160, mouseY-10, text);
+            this.drawTooltip(mouseX - 160, mouseY - 10, text);
         }
     }
 
@@ -106,7 +97,7 @@ public class GuiBeeAnalyzer extends GuiIU<ContainerBeeAnalyzer> {
                 textIndex = text.length();
             }
             String visibleText = text.substring(0, textIndex);
-            drawTextInCanvas(visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale*1f);
+            drawTextInCanvas(visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale * 1f);
         }
     }
 
@@ -115,25 +106,39 @@ public class GuiBeeAnalyzer extends GuiIU<ContainerBeeAnalyzer> {
         Genome genome = container.base.genome;
         return
                 Localization.translate("iu.bee_analyzer.name") + " " + Localization.translate("bee_" + queen.getName()) + "\n"
-                        + Localization.translate("iu.bee_analyzer.time_life") + " " + (new Timer((int) ((queen.getTickLifecycles() * container.base.populationGenome)/ 20))).getDisplay() + "\n"
-                        + Localization.translate("iu.bee_analyzer.main_crop") + " " + Localization.translate("crop."+queen.getCropFlower().getName()) + "\n"
-                        + Localization.translate("iu.bee_analyzer.birth_rate") + " " +  ModUtils.getString(queen.getOffspring() * container.base.birthRateGenome)+ "\n"
-                        + Localization.translate("iu.bee_analyzer.pest_crop") + " " + ModUtils.getString(Math.abs(container.base.pestGenome-1)*100)+"%" + "\n"
-                        + Localization.translate("iu.bee_analyzer.daytime") + " " + ((queen.isSun()||container.base.sunGenome) ? Localization.translate("iu.space_yes") : Localization.translate("iu.space_no")) + "\n"
-                        + Localization.translate("iu.bee_analyzer.nighttime") + " " + ((queen.isNight()||container.base.nightGenome) ? Localization.translate("iu.space_yes") : Localization.translate("iu.space_no")) + "\n"
-                        + Localization.translate("iu.bee_analyzer.radius") + " " + ModUtils.getString(queen.getSizeTerritory().maxX*container.base.radiusGenome)+ "x" + ModUtils.getString(queen.getSizeTerritory().maxY*container.base.radiusGenome)+ "x" + ModUtils.getString(queen.getSizeTerritory().maxZ*container.base.radiusGenome) + "\n"
-                        + Localization.translate("iu.bee_analyzer.increase_food") + " " + ModUtils.getString(Math.abs(container.base.foodGenome-1)*100)+"%" + "\n"
-                        + Localization.translate("iu.bee_analyzer.increase_jelly") + " " + ModUtils.getString(Math.abs(container.base.jellyGenome-1)*100)+"%" + "\n"
-                        + Localization.translate("iu.bee_analyzer.increase_getting_crop_percent") + " " + ModUtils.getString(Math.abs(container.base.productGenome-1)*100)+"%" + "\n"
-                        + Localization.translate("iu.bee_analyzer.decrease_sicken") + " " + ModUtils.getString(Math.abs(container.base.hardeningGenome-1)*100)+"%" + "\n"
+                        + Localization.translate("iu.bee_analyzer.time_life") + " " + (new Timer((int) ((queen.getTickLifecycles() * container.base.populationGenome) / 20))).getDisplay() + "\n"
+                        + Localization.translate("iu.bee_analyzer.main_crop") + " " + Localization.translate("crop." + queen
+                        .getCropFlower()
+                        .getName()) + "\n"
+                        + Localization.translate("iu.bee_analyzer.birth_rate") + " " + ModUtils.getString(queen.getOffspring() * container.base.birthRateGenome) + "\n"
+                        + Localization.translate("iu.bee_analyzer.pest_crop") + " " + ModUtils.getString(Math.abs(container.base.pestGenome - 1) * 100) + "%" + "\n"
+                        + Localization.translate("iu.bee_analyzer.daytime") + " " + ((queen.isSun() || container.base.sunGenome)
+                        ? Localization.translate("iu.space_yes")
+                        : Localization.translate("iu.space_no")) + "\n"
+                        + Localization.translate("iu.bee_analyzer.nighttime") + " " + ((queen.isNight() || container.base.nightGenome)
+                        ? Localization.translate("iu.space_yes")
+                        : Localization.translate("iu.space_no")) + "\n"
+                        + Localization.translate("iu.bee_analyzer.radius") + " " + ModUtils.getString(queen.getSizeTerritory().maxX * container.base.radiusGenome) + "x" + ModUtils.getString(
+                        queen.getSizeTerritory().maxY * container.base.radiusGenome) + "x" + ModUtils.getString(queen.getSizeTerritory().maxZ * container.base.radiusGenome) + "\n"
+                        + Localization.translate("iu.bee_analyzer.increase_food") + " " + ModUtils.getString(Math.abs(container.base.foodGenome - 1) * 100) + "%" + "\n"
+                        + Localization.translate("iu.bee_analyzer.increase_jelly") + " " + ModUtils.getString(Math.abs(container.base.jellyGenome - 1) * 100) + "%" + "\n"
+                        + Localization.translate("iu.bee_analyzer.increase_getting_crop_percent") + " " + ModUtils.getString(Math.abs(
+                        container.base.productGenome - 1) * 100) + "%" + "\n"
+                        + Localization.translate("iu.bee_analyzer.decrease_sicken") + " " + ModUtils.getString(Math.abs(container.base.hardeningGenome - 1) * 100) + "%" + "\n"
                         + Localization.translate("iu.bee_analyzer.max_population") + " " + ModUtils.getString(queen.getMaxSwarm() * container.base.swarmGenome) + "\n"
-                        + Localization.translate("iu.bee_analyzer.mortality_rate") + " " + ModUtils.getString(queen.getMaxMortalityRate() * container.base.mortalityGenome*100) + "%" + "\n"
-                        + Localization.translate("iu.bee_analyzer.weather_resistance") + " " + (container.base.weatherGenome == 0 ? Localization.translate("iu.space_no") :
-                        (container.base.weatherGenome == 1 ? Localization.translate("iu.space_rain") : Localization.translate("iu.space_thunder"))) + "\n"
-                        + Localization.translate("iu.bee_analyzer.percent_genome_adaptive") + " " + Math.max(5, container.base.genomeAdaptive) + "%" + "\n"
-                        + Localization.translate("iu.bee_analyzer.percent_genome_resistance") + " " + Math.max(5,container.base.genomeResistance) + "%";
-
-
+                        + Localization.translate("iu.bee_analyzer.mortality_rate") + " " + ModUtils.getString(queen.getMaxMortalityRate() * container.base.mortalityGenome * 100) + "%" + "\n"
+                        + Localization.translate("iu.bee_analyzer.weather_resistance") + " " + (container.base.weatherGenome == 0
+                        ? Localization.translate("iu.space_no")
+                        :
+                                (container.base.weatherGenome == 1
+                                        ? Localization.translate("iu.space_rain")
+                                        : Localization.translate("iu.space_thunder"))) + "\n"
+                        + Localization.translate("iu.bee_analyzer.percent_genome_adaptive") + " " + Math.max(
+                        5,
+                        container.base.genomeAdaptive
+                ) + "%" + "\n"
+                        + Localization.translate("iu.bee_analyzer.percent_genome_resistance") + " " + Math.max(5,
+                        container.base.genomeResistance) + "%";
 
 
     }

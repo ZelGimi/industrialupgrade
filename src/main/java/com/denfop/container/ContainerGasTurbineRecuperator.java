@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.cyclotron.TileEntityCyclotronChamber;
 import com.denfop.tiles.gasturbine.TileEntityGasTurbineRecuperator;
 import net.minecraft.entity.player.EntityPlayer;
 

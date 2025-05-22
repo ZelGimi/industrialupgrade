@@ -53,6 +53,7 @@ public class TileEntitySolarPanelRender<T extends TileSolarPanel> extends TileEn
                     te.timer.getIndexWork()
             ));
         }
+
         dataPollution.getModel().render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
         GlStateManager.popMatrix();
 

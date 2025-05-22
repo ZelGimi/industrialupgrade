@@ -5,7 +5,6 @@ import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.componets.BioProcessMultiComponent;
-import com.denfop.componets.SteamProcessMultiComponent;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemRecipeSchedule;
 import com.denfop.tiles.base.TileEntityInventory;

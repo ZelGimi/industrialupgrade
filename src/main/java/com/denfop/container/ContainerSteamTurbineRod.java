@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityWaterRotorAssembler;
 import com.denfop.tiles.mechanism.steamturbine.TileEntitySteamTurbineRod;
 import net.minecraft.entity.player.EntityPlayer;
 

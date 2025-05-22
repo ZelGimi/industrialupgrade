@@ -7,11 +7,9 @@ import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
@@ -63,26 +61,6 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         super(type, parent, capacity, sinkDirections, sourceDirections, sinkTier, sourceTier, fullEnergy);
     }
 
-    @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
-        super.onPlaced(stack, placer, facing);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        final NBTTagCompound nbt1 = nbt.getCompoundTag("steam");
-        this.addEnergy(nbt1.getDouble("energy"));
-    }
-
-    @Override
-    public List<ItemStack> getAuxDrops(List<ItemStack> ret)  {
-        if (ret.get(0).isItemEqual(this.getParent().getPickBlock(null,null))){
-            final NBTTagCompound nbt = ModUtils.nbt(ret.get(0));
-            final NBTTagCompound nbt1 = new NBTTagCompound();
-            nbt1.setDouble("energy",this.storage);
-            nbt.setTag("steam",nbt1);
-        }
-        return ret;
-
-    }
-
     public static ComponentSteamEnergy asBasicSink(TileEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
@@ -97,6 +75,26 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
 
     public static ComponentSteamEnergy asBasicSource(TileEntityInventory parent, double capacity, int tier) {
         return new ComponentSteamEnergy(EnergyType.STEAM, parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
+    }
+
+    @Override
+    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+        super.onPlaced(stack, placer, facing);
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final NBTTagCompound nbt1 = nbt.getCompoundTag("steam");
+        this.addEnergy(nbt1.getDouble("energy"));
+    }
+
+    @Override
+    public List<ItemStack> getAuxDrops(List<ItemStack> ret) {
+        if (ret.get(0).isItemEqual(this.getParent().getPickBlock(null, null))) {
+            final NBTTagCompound nbt = ModUtils.nbt(ret.get(0));
+            final NBTTagCompound nbt1 = new NBTTagCompound();
+            nbt1.setDouble("energy", this.storage);
+            nbt.setTag("steam", nbt1);
+        }
+        return ret;
+
     }
 
     public void setFluidTank(final FluidTank fluidTank) {
@@ -123,9 +121,14 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     @SideOnly(Side.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
-        if (this.parent.getActive() && this.parent.getWorld().getWorldTime() % 4 == 0)
-            Minecraft.getMinecraft().effectRenderer.addEffect(new SteamParticle( this.parent.getWorld(), this.parent.getPos().getX(),
-                    this.parent.getPos().getY()+1, this.parent.getPos().getZ()));
+        if (this.parent.getActive() && this.parent.getWorld().getWorldTime() % 4 == 0) {
+            Minecraft.getMinecraft().effectRenderer.addEffect(new SteamParticle(
+                    this.parent.getWorld(),
+                    this.parent.getPos().getX(),
+                    this.parent.getPos().getY() + 1,
+                    this.parent.getPos().getZ()
+            ));
+        }
     }
 
     @Override

@@ -53,10 +53,10 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
     public MachineRecipe output;
     public boolean start;
     public int[] data;
+    public Map<UUID, Double> data1 = PrimitiveHandler.getPlayersData(EnumPrimitive.PCB);
     private int RED_PERCENT = 35;
     private int GREEN_PERCENT = 80;
     private int YELLOW_PERCENT = 100 - RED_PERCENT - GREEN_PERCENT;
-    public Map<UUID,Double> data1 = PrimitiveHandler.getPlayersData(EnumPrimitive.PCB);
 
     public TileEntityPrimalProgrammingTable() {
         super(0, 0, 1);
@@ -199,11 +199,12 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
 
     public void updateTileServer(EntityPlayer var1, double var2) {
         if (start && var2 == 0) {
-            this.componentProgress.addProgress(0, (short) ((short) 60*(1+data1.getOrDefault(var1.getUniqueID(),0.0)/66D)));
+            this.componentProgress.addProgress(0, (short) ((short) 60 * (1 + data1.getOrDefault(var1.getUniqueID(), 0.0) / 66D)));
             if (componentProgress.getProgress(0) >= 300) {
                 componentProgress.setProgress((short) 300);
-                if (!this.getWorld().isRemote)
-                PrimitiveHandler.addExperience(EnumPrimitive.PCB,0.75,var1.getUniqueID());
+                if (!this.getWorld().isRemote) {
+                    PrimitiveHandler.addExperience(EnumPrimitive.PCB, 0.75, var1.getUniqueID());
+                }
             }
             GREEN_PERCENT = (int) (80 * (1 - 0.75 * componentProgress.getBar()));
             RED_PERCENT = (int) (35 * (1 + 0.5 * componentProgress.getBar()));
@@ -218,8 +219,9 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
             this.data = generateColorStrip();
         } else if (start && var2 == 2) {
             this.componentProgress.setProgress(0, (short) 300);
-            if (!this.getWorld().isRemote)
-            PrimitiveHandler.addExperience(EnumPrimitive.PCB,0.5,var1.getUniqueID());
+            if (!this.getWorld().isRemote) {
+                PrimitiveHandler.addExperience(EnumPrimitive.PCB, 0.5, var1.getUniqueID());
+            }
         }
     }
 

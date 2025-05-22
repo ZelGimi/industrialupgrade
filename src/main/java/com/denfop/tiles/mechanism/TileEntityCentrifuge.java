@@ -57,33 +57,36 @@ public class TileEntityCentrifuge extends TileElectricMachine implements
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
     public short rpm = 0;
+
     public TileEntityCentrifuge() {
         super(200, 1, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot){
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
             public void onLoaded() {
                 super.onLoaded();
-                this.componentProcess = ((TileEntityCentrifuge)this.parent).componentProcess;
+                this.componentProcess = ((TileEntityCentrifuge) this.parent).componentProcess;
             }
         });
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 100
         ));
         this.inputSlotA = new InvSlotRecipes(this, "genetic_centrifuge", this);
-        this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1){
+        this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1) {
             @Override
             public boolean checkRecipe() {
-                if(rpm < 120)
+                if (rpm < 120) {
                     rpm++;
+                }
                 return rpm == 120;
             }
 
             @Override
             public void onFailedProcess() {
                 super.onFailedProcess();
-                if(rpm > 0 && output == null)
+                if (rpm > 0 && output == null) {
                     rpm--;
+                }
             }
         });
         this.componentProcess.setHasAudio(false);
@@ -107,25 +110,13 @@ public class TileEntityCentrifuge extends TileElectricMachine implements
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
         Recipes.recipes.addInitRecipes(this);
-    }
-
-    @Override
-    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
-        super.readContainerPacket(customPacketBuffer);
-        this.rpm = customPacketBuffer.readShort();
-    }
-
-    @Override
-    public CustomPacketBuffer writeContainerPacket() {
-        CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
-        customPacketBuffer.writeShort(rpm);
-        return customPacketBuffer;
     }
 
     public static void addRecipe(int container, ItemStack output) {
@@ -164,6 +155,18 @@ public class TileEntityCentrifuge extends TileElectricMachine implements
         );
     }
 
+    @Override
+    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        this.rpm = customPacketBuffer.readShort();
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
+        customPacketBuffer.writeShort(rpm);
+        return customPacketBuffer;
+    }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {

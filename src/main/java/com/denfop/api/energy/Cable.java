@@ -7,7 +7,7 @@ public class Cable {
     private final double limit;
     private final BlockPos pos;
 
-    public Cable(BlockPos pos, double limit){
+    public Cable(BlockPos pos, double limit) {
         this.limit = limit;
         this.pos = pos;
     }

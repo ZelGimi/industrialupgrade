@@ -1,13 +1,15 @@
 package com.denfop.api.space.colonies.api.building;
 
+import com.denfop.api.space.colonies.api.IColonyBuilding;
 import com.denfop.api.space.colonies.enums.EnumHouses;
 import com.denfop.api.space.colonies.enums.EnumHousesLevel;
-import com.denfop.api.space.colonies.api.IColonyBuilding;
 
 public interface IBuildingHouse extends IColonyBuilding {
 
     EnumHousesLevel getLevel();
+
     EnumHouses getHouses();
+
     int getPeople();
 
     int getEnergy();
@@ -23,4 +25,5 @@ public interface IBuildingHouse extends IColonyBuilding {
 
 
     void removeFreeWorkers(int workers);
+
 }

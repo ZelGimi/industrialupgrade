@@ -423,7 +423,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 0;
     }
 

@@ -55,7 +55,7 @@ public class BlockResource extends BlockCore implements IModelRegister {
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.bronze_block));
         setHarvestLevel("pickaxe", 1);
         setHarvestLevel("shovel", 1, this.blockState.getBaseState().withProperty(VARIANT, Type.peat));
-            setHarvestLevel("shovel", 1, this.blockState.getBaseState().withProperty(VARIANT, Type.untreated_peat));
+        setHarvestLevel("shovel", 1, this.blockState.getBaseState().withProperty(VARIANT, Type.untreated_peat));
 
     }
 
@@ -175,6 +175,7 @@ public class BlockResource extends BlockCore implements IModelRegister {
     public int getLightValue(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
         return state.getValue(VARIANT).getLight();
     }
+
     public int quantityDropped(Random random) {
         return 1;
     }
@@ -185,7 +186,7 @@ public class BlockResource extends BlockCore implements IModelRegister {
     }
 
     public boolean isFullBlock(IBlockState state) {
-        return    state.getValue(VARIANT) == tempered_glass;
+        return state.getValue(VARIANT) == tempered_glass;
     }
 
     public boolean isFullCube(IBlockState state) {
@@ -198,13 +199,14 @@ public class BlockResource extends BlockCore implements IModelRegister {
 
 
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        if ((state.getValue(VARIANT) != tempered_glass))
+        if ((state.getValue(VARIANT) != tempered_glass)) {
             return super.shouldSideBeRendered(
                     state,
                     world,
                     pos,
                     side
             );
+        }
         return world.getBlockState(pos.offset(side)).getBlock() != this && super.shouldSideBeRendered(
                 state,
                 world,
@@ -271,9 +273,9 @@ public class BlockResource extends BlockCore implements IModelRegister {
         peat(1.0F, 1.0F, false),
         untreated_peat(1.0F, 1.0F, false),
         steam_machine(8.0F, 10.0F, true),
-        tempered_glass(0.1F,7,false),
-        bio_machine(8.1F,7,true),
-        asphalt(0.1F,1,false),
+        tempered_glass(0.1F, 7, false),
+        bio_machine(8.1F, 7, true),
+        asphalt(0.1F, 1, false),
         ;
         private final float hardness;
         private final float explosionResistance;

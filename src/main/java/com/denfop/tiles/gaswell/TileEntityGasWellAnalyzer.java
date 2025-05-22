@@ -4,34 +4,20 @@ import com.denfop.IUItem;
 import com.denfop.api.gasvein.GasVein;
 import com.denfop.api.gasvein.GasVeinSystem;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.vein.IVein;
-import com.denfop.api.vein.VeinSystem;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.mechanism.BlockEarthQuarry;
 import com.denfop.blocks.mechanism.BlockGasWell;
-import com.denfop.container.ContainerEarthAnalyzer;
 import com.denfop.container.ContainerGasWellAnalyzer;
-import com.denfop.gui.GuiEarthAnalyzer;
 import com.denfop.gui.GuiGasWellAnalyzer;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class TileEntityGasWellAnalyzer extends TileEntityMultiBlockElement implements IAnalyzer, IUpdatableTileEvent {
 
@@ -86,7 +72,7 @@ public class TileEntityGasWellAnalyzer extends TileEntityMultiBlockElement imple
         work = customPacketBuffer.readBoolean();
         progress = customPacketBuffer.readInt();
         final boolean hasVein = customPacketBuffer.readBoolean();
-        if (hasVein){
+        if (hasVein) {
             vein = new GasVein(customPacketBuffer);
         }
     }
@@ -139,10 +125,9 @@ public class TileEntityGasWellAnalyzer extends TileEntityMultiBlockElement imple
         }
 
 
-
-        if (work && this.progress < 1200 && ((IController)this.getMain()).getEnergy().getEnergy() >= 5 && !this.vein.isFind()) {
+        if (work && this.progress < 1200 && ((IController) this.getMain()).getEnergy().getEnergy() >= 5 && !this.vein.isFind()) {
             progress++;
-            ((IController)this.getMain()).getEnergy().useEnergy(5);
+            ((IController) this.getMain()).getEnergy().useEnergy(5);
             if (progress >= 1200) {
                 this.progress = 1200;
                 this.vein.setFind(true);

@@ -6,7 +6,6 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerNightTransformer;
 import com.denfop.gui.GuiNightTransformer;
 import com.denfop.tiles.base.IManufacturerBlock;
@@ -22,19 +21,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class TileEntityNightTransformer extends TileEntityInventory implements IManufacturerBlock
-{
+public class TileEntityNightTransformer extends TileEntityInventory implements IManufacturerBlock {
 
     public final ComponentBaseEnergy ne;
     public final ComponentBaseEnergy se;
     public final ComponentBaseEnergy qe;
     public int level;
 
-    public TileEntityNightTransformer(){
-        this.ne = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.NIGHT,this,10000));
-        this.se = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.SOLARIUM,this,20000));
-        this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM,this,1000));
+    public TileEntityNightTransformer() {
+        this.ne = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.NIGHT, this, 10000));
+        this.se = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.SOLARIUM, this, 20000));
+        this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
     }
+
     @Override
     public int getLevel() {
         return this.level;
@@ -49,6 +48,7 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
     public void removeLevel(final int level) {
         this.level -= level;
     }
+
     @Override
     public boolean onActivated(
             final EntityPlayer player,
@@ -94,6 +94,7 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
         nbttagcompound.setInteger("level", this.level);
         return nbttagcompound;
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
@@ -102,18 +103,18 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
 
     @Override
     public ContainerNightTransformer getGuiContainer(final EntityPlayer var1) {
-        return new ContainerNightTransformer(this,var1);
+        return new ContainerNightTransformer(this, var1);
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.qe.getEnergy() >= 5 && this.se.getEnergy() >= 2 && this.ne.getEnergy() + 1 <= this.ne.getCapacity()){
-            int max = (int) Math.min(level+1, qe.getEnergy()/((level+1)*5));
-            max = (int) Math.min(max, se.getEnergy()/((level+1)*2));
-            max = (int) Math.min(max, (this.ne.getCapacity()-ne.getEnergy())/((level+1)));
-            this.qe.useEnergy(max*5);
-            this.se.useEnergy(max*2);
+        if (this.qe.getEnergy() >= 5 && this.se.getEnergy() >= 2 && this.ne.getEnergy() + 1 <= this.ne.getCapacity()) {
+            int max = (int) Math.min((level + 1)*5, qe.getEnergy() / ((level + 1) * 5));
+            max = (int) Math.min(max, se.getEnergy() / ((level + 1) * 2));
+            max = (int) Math.min(max, (this.ne.getCapacity() - ne.getEnergy()) / ((level + 1)));
+            this.qe.useEnergy(max * 5);
+            this.se.useEnergy(max * 2);
             this.ne.addEnergy(max);
         }
     }

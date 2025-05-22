@@ -135,7 +135,7 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                             .get(table.getPlayer());
                     rocketLaunchPad.getSlotOutput().add(rovers.getItemStack());
                 }
-                }
+            }
             IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(table.getPlayer());
             rocketLaunchPad.consumeRover();
         }

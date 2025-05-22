@@ -18,11 +18,9 @@ public class TypeProperty implements IProperty<State> {
 
 
     public static State invalid = new StatesBlocks(MultiTileBlock.invalid, "", null).statesBlocks.get(0);
-
-
-    public List<State> allowedValues;
     public final String resourceLocationName;
     private final HashMap<IMultiTileBlock, StatesBlocks> mapStates;
+    public List<State> allowedValues;
     List<StatesBlocks> locationBlocks;
 
     public TypeProperty(final ResourceLocation identifier, final TileBlockCreator.InfoAboutTile<?> value) {

@@ -3,14 +3,10 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.api.pollution.ChunkLevel;
 import com.denfop.api.pollution.PollutionManager;
-import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.Energy;
-import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -37,6 +33,7 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
         energy = this.addComponent(Energy.asBasicSink(this, 10000));
         this.chunkLevel = null;
     }
+
     @Override
     public boolean onActivated(
             final EntityPlayer player,
@@ -82,6 +79,7 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
         nbttagcompound.setInteger("level", this.level);
         return nbttagcompound;
     }
+
     @Override
     public int getLevel() {
         return this.level;
@@ -143,8 +141,8 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
             this.chunkLevel = PollutionManager.pollutionManager.getChunkLevelSoil(this.chunkPos);
             if (this.chunkLevel != null) {
                 final ChunkLevel chunkLevel1 = PollutionManager.pollutionManager.getChunkLevelAir(this.chunkPos);
-                if (this.chunkLevel.removePollution(10+level*50)) {
-                    chunkLevel1.addPollution(25+level*25);
+                if (this.chunkLevel.removePollution(10 + level * 50)) {
+                    chunkLevel1.addPollution(25 + level * 25);
                     this.energy.useEnergy(100);
                     this.setActive(true);
                 } else {

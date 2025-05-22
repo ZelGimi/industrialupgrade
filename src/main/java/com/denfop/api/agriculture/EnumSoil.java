@@ -67,6 +67,7 @@ public enum EnumSoil {
     CADMIUM(IUItem.ore2, IUItem.ore2.getStateFromMeta(5), false),
     ;
 
+    static List<IInputItemStack> lst;
     private final Block block;
     private final IBlockState state;
     private final boolean ignore;
@@ -83,12 +84,6 @@ public enum EnumSoil {
         this.ignore = ignore;
     }
 
-    public Block getBlock() {
-        return this.block;
-    }
-
-    static List<IInputItemStack> lst;
-
     public static List<IInputItemStack> getBlocks() {
         if (lst == null) {
             lst = new LinkedList<>();
@@ -100,20 +95,29 @@ public enum EnumSoil {
         }
         return lst;
     }
-    public static boolean contain(ItemStack stack){
-        for (IInputItemStack iInputItemStack : getBlocks()){
-            if (iInputItemStack.matches(stack))
+
+    public static boolean contain(ItemStack stack) {
+        for (IInputItemStack iInputItemStack : getBlocks()) {
+            if (iInputItemStack.matches(stack)) {
                 return true;
+            }
         }
         return false;
     }
-    public static EnumSoil get(ItemStack stack){
-        for (int i = 0; i < EnumSoil.values().length;i++){
-            if ( getBlocks().get(i).matches(stack))
+
+    public static EnumSoil get(ItemStack stack) {
+        for (int i = 0; i < EnumSoil.values().length; i++) {
+            if (getBlocks().get(i).matches(stack)) {
                 return EnumSoil.values()[i];
+            }
         }
         return null;
     }
+
+    public Block getBlock() {
+        return this.block;
+    }
+
     public ItemStack getStack() {
         int meta = block.getMetaFromState(state);
         return new ItemStack(block, 1, meta);

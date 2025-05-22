@@ -41,10 +41,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,12 +73,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
         this.inputSlotA.setStackSizeLimit(1);
         Recipes.recipes.addInitRecipes(this);
     }
-    @Override
-    public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        for (int i = 1; i < 5; i++) {
-            tooltip.add(Localization.translate("refractory_furnace.info" + i));
-        }
-    }
+
     public static void addRecipe(ItemStack container, FluidStack fluidStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
@@ -96,6 +88,13 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
                 container), Collections.singletonList(
                 fluidStack)));
 
+    }
+
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        for (int i = 1; i < 5; i++) {
+            tooltip.add(Localization.translate("refractory_furnace.info" + i));
+        }
     }
 
     @Override
@@ -484,7 +483,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
             }
         }
         if (work) {
-            if ( !inputSlotA.isEmpty() && this.output != null && this.fluid_handler.output() != null && this.fluid_handler.canFillFluid()) {
+            if (!inputSlotA.isEmpty() && this.output != null && this.fluid_handler.output() != null && this.fluid_handler.canFillFluid()) {
                 progress += 1;
                 this.setActive(true);
                 if (progress >= 150) {
@@ -498,10 +497,10 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
                         new PacketUpdateFieldTile(this, "fluidtank", this.fluidTank1);
                     }
                 }
-            }else{
+            } else {
                 this.setActive(false);
             }
-        }else{
+        } else {
             this.setActive(false);
         }
     }

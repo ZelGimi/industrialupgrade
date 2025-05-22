@@ -26,14 +26,31 @@ public class Planet implements IPlanet {
     private final EnumRing ring;
     List<IBaseResource> baseResourceList;
     List<ISatellite> satelliteList;
+
     public Planet(
             String name, ISystem system, ResourceLocation textureLocation, EnumLevels levels, IStar star, int temperature
             , boolean pressure, double distance, EnumType type, boolean oxygen, boolean colonies, int angle, double time,
             double size, double rotation
     ) {
-        this(name, system,textureLocation,levels,star,temperature,pressure,distance,type,oxygen,colonies,angle,time,size,
-                rotation, null);
+        this(name,
+                system,
+                textureLocation,
+                levels,
+                star,
+                temperature,
+                pressure,
+                distance,
+                type,
+                oxygen,
+                colonies,
+                angle,
+                time,
+                size,
+                rotation,
+                null
+        );
     }
+
     public Planet(
             String name, ISystem system, ResourceLocation textureLocation, EnumLevels levels, IStar star, int temperature
             , boolean pressure, double distance, EnumType type, boolean oxygen, boolean colonies, int angle, double time,
@@ -54,8 +71,8 @@ public class Planet implements IPlanet {
         this.oxygen = oxygen;
         this.colonies = colonies;
         this.size = size;
-        this.angle=angle;
-        this.rotation=rotation;
+        this.angle = angle;
+        this.rotation = rotation;
         this.time = time;
         SpaceNet.instance.addPlanet(this);
     }
@@ -94,7 +111,7 @@ public class Planet implements IPlanet {
 
     @Override
     public double getRotationTimeX(final double time) {
-        return getDistance() *  Math.cos(time * this.time);
+        return getDistance() * Math.cos(time * this.time);
     }
 
     @Override
@@ -104,7 +121,7 @@ public class Planet implements IPlanet {
 
     @Override
     public double getRotationTimeZ(final double time) {
-        return getDistance() *  Math.sin(time * this.time);
+        return getDistance() * Math.sin(time * this.time);
     }
 
     @Override

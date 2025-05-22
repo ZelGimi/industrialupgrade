@@ -4,20 +4,16 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
-import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamTurbineControllerRod;
 import com.denfop.gui.GuiSteamTurbineControllerRod;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +48,7 @@ public class TileEntitySteamTurbineControllerRod extends TileEntityMultiBlockEle
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
 
@@ -75,16 +71,20 @@ public class TileEntitySteamTurbineControllerRod extends TileEntityMultiBlockEle
 
         TileEntityMultiBlockElement tileMultiBlockBase =
                 (TileEntityMultiBlockElement) this.getWorld().getTileEntity(list.get((int) var2).getBlockPos());
-        if (tileMultiBlockBase != null && tileMultiBlockBase.getMain() != null && tileMultiBlockBase.getMain().isFull() && !tileMultiBlockBase.isInvalid()) {
+        if (tileMultiBlockBase != null && tileMultiBlockBase.getMain() != null && tileMultiBlockBase
+                .getMain()
+                .isFull() && !tileMultiBlockBase.isInvalid()) {
             tileMultiBlockBase.onActivated(var1, var1.getActiveHand(), EnumFacing.NORTH, 0, 0, 0);
 
         }
 
     }
+
     @Override
     public ContainerSteamTurbineControllerRod getGuiContainer(final EntityPlayer var1) {
         return new ContainerSteamTurbineControllerRod(this, var1);
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiSteamTurbineControllerRod getGui(final EntityPlayer var1, final boolean var2) {

@@ -14,8 +14,8 @@ import java.util.List;
 public class SpaceColonyHandler {
 
     private static final List<SpaceColonyHandler> recipes = new ArrayList<>();
-    private final List<ItemStack> input;
     final IBody body;
+    private final List<ItemStack> input;
     List<FluidStack> output;
 
     public SpaceColonyHandler(

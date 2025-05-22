@@ -13,8 +13,6 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.upgrades.IUpgradableBlock;
-import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
@@ -42,9 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 public class TileSteamCrystalCharge extends TileElectricMachine implements
         IUpdateTick, IUpdatableTileEvent, IHasRecipe {
@@ -56,9 +52,9 @@ public class TileSteamCrystalCharge extends TileElectricMachine implements
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
+    public final ComponentBaseEnergy ampere;
     private final Fluids fluids;
     private final Fluids.InternalFluidTank fluidTank;
-    public final ComponentBaseEnergy ampere;
     public MachineRecipe output;
     public double energyConsume;
     public int operationLength;
@@ -79,7 +75,7 @@ public class TileSteamCrystalCharge extends TileElectricMachine implements
         this.inputSlotA = new InvSlotRecipes(this, "charger", this);
         this.ampere = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.AMPERE, this, 4000));
 
-     
+
         this.fluidTank = fluids.addTank("fluidTank6", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
                 FluidName.fluidsteam.getInstance()
         ));
@@ -217,7 +213,8 @@ public class TileSteamCrystalCharge extends TileElectricMachine implements
 
         if (this.output != null && !this.inputSlotA.isEmpty() && this.outputSlot.canAdd(this.output
                 .getRecipe()
-                .getOutput().items)&&ampere.canUseEnergy(20) && this.inputSlotA.continue_process(this.output) && this.steam.canUseEnergy(energyConsume) ) {
+                .getOutput().items) && ampere.canUseEnergy(20) && this.inputSlotA.continue_process(this.output) && this.steam.canUseEnergy(
+                energyConsume)) {
             if (!this.getActive()) {
                 setActive(true);
             }
@@ -268,7 +265,6 @@ public class TileSteamCrystalCharge extends TileElectricMachine implements
         this.inputSlotA.consume();
         this.outputSlot.add(this.output.getRecipe().getOutput().items);
     }
-
 
 
     public double getProgress() {

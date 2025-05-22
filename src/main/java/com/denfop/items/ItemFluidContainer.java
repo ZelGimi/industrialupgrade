@@ -50,7 +50,8 @@ public abstract class ItemFluidContainer extends Item implements ISubItem<FluidN
             }
 
             public boolean canDrainFluidType(FluidStack fluid) {
-                return fluid != null && ItemFluidContainer.this.canfill(fluid.getFluid()) && ItemFluidContainer.this.canDrain(fluid);
+                return fluid != null && ItemFluidContainer.this.canfill(fluid.getFluid()) && ItemFluidContainer.this.canDrain(
+                        fluid);
             }
         };
     }
@@ -76,7 +77,8 @@ public abstract class ItemFluidContainer extends Item implements ISubItem<FluidN
             }
         }
     }
-    public ItemStack getItemStack(ItemStack ret,Fluid fluid) {
+
+    public ItemStack getItemStack(ItemStack ret, Fluid fluid) {
         if (fluid == null) {
             return ret;
         } else {
@@ -88,6 +90,7 @@ public abstract class ItemFluidContainer extends Item implements ISubItem<FluidN
             }
         }
     }
+
     public ItemStack getItemStack(String variant) {
         if (variant != null && !variant.isEmpty()) {
             Fluid fluid = FluidRegistry.getFluid(variant);

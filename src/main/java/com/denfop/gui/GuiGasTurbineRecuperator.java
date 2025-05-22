@@ -1,10 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.container.ContainerCyclotronChamber;
-import com.denfop.container.ContainerGasTurbineController;
 import com.denfop.container.ContainerGasTurbineRecuperator;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiGasTurbineRecuperator extends GuiIU<ContainerGasTurbineRecuperator> {

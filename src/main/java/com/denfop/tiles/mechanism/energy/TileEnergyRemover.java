@@ -21,6 +21,7 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.FakePlayerSpawner;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -46,20 +47,22 @@ public class TileEnergyRemover extends TileEntityInventory implements
     public final InvSlot slot;
     public Set<IEnergyConductor> conductorList = new HashSet<>();
     FakePlayerSpawner fakePlayer;
+    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    int hashCodeSource;
+    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
     private boolean work;
+    private long id;
 
     public TileEnergyRemover() {
         slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 16);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
-
     public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<IEnergyTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -69,16 +72,17 @@ public class TileEnergyRemover extends TileEntityInventory implements
         }
     }
 
-
     public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             this.energyConductorMap.put(facing1, tile);
             validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
         }
     }
+
     public Map<EnumFacing, IEnergyTile> getTiles() {
         return energyConductorMap;
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.energy_remover;
     }
@@ -96,19 +100,13 @@ public class TileEnergyRemover extends TileEntityInventory implements
     public void addInformation(ItemStack stack, List<String> tooltip) {
 
     }
+
     public long getIdNetwork() {
         return this.id;
     }
 
-
     public void setId(final long id) {
         this.id = id;
-    }
-    private long id;
-    int hashCodeSource;
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
@@ -116,8 +114,10 @@ public class TileEnergyRemover extends TileEntityInventory implements
         return hashCodeSource;
     }
 
-    List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
-
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
 
     public List<InfoTile<IEnergyTile>> getValidReceivers() {
         return validReceivers;
@@ -186,26 +186,21 @@ public class TileEnergyRemover extends TileEntityInventory implements
 
     public void discover() {
         conductorList.clear();
-        final List<IEnergyConductor> reachedTileEntities = new ArrayList<>();
-        final List<IEnergyTile> tileEntitiesToCheck = new ArrayList<>();
-        tileEntitiesToCheck.add(this.getComp(Energy.class).delegate);
-        EnergyNetLocal energyNetLocal = EnergyNetGlobal.getForWorld(this.getWorld());
+        final LinkedList<IEnergyTile> tileEntitiesToCheck = new LinkedList<>();
+        final LinkedList<IEnergyConductor> reachedTileEntities = new LinkedList<>();
+        IEnergyTile tile = this.getComp(Energy.class).delegate;
+        tileEntitiesToCheck.add(tile);
+        long id = WorldBaseGen.random.nextLong();
         while (!tileEntitiesToCheck.isEmpty()) {
-            final IEnergyTile currentTileEntity = tileEntitiesToCheck.remove(0);
-            final List<InfoTile<IEnergyTile>> validReceivers = energyNetLocal.getValidReceiversSubstitute(currentTileEntity);
-
+            final IEnergyTile currentTileEntity = tileEntitiesToCheck.pop();
+            final List<InfoTile<IEnergyTile>> validReceivers = currentTileEntity.getValidReceivers();
             for (final InfoTile<IEnergyTile> validReceiver : validReceivers) {
-                if (validReceiver.tileEntity != this && validReceiver.tileEntity instanceof IEnergyConductor) {
-                    if (reachedTileEntities.contains((IEnergyConductor) validReceiver.tileEntity)) {
-                        continue;
-                    }
-
+                if (validReceiver.tileEntity != tile && validReceiver.tileEntity.getIdNetwork() != id && validReceiver.tileEntity instanceof IEnergyConductor) {
+                    validReceiver.tileEntity.setId(id);
+                    tileEntitiesToCheck.push(validReceiver.tileEntity);
                     reachedTileEntities.add((IEnergyConductor) validReceiver.tileEntity);
-                    tileEntitiesToCheck.add(validReceiver.tileEntity);
                 }
             }
-
-
         }
         conductorList.addAll(reachedTileEntities);
     }
@@ -217,6 +212,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
             for (IEnergyConductor conductor : this.conductorList) {
                 TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
                         conductor);
+                tile.onUnloaded();
                 final List<ItemStack> drops = tile.getBlockType().getDrops(
                         world,
                         tile.getPos(),

@@ -5,7 +5,6 @@ import com.denfop.api.transport.ITransportTile;
 import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.api.transport.event.TransportTileUnLoadEvent;
 import com.denfop.network.packet.PacketExplosion;
-import com.denfop.utils.Triple;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +16,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +27,7 @@ import java.util.Map;
 public class EnergyNetLocal {
 
 
+    private static final int numThreads = Runtime.getRuntime().availableProcessors();
     public static EnergyNetLocal EMPTY = new EnergyNetLocal();
     final EnergyTickList<EnergyTick> energyTickList = new EnergyTickList<>();
     final List<IEnergySource> sourceToUpdateList = new LinkedList<>();
@@ -41,6 +40,7 @@ public class EnergyNetLocal {
     private final boolean explosing;
     private final boolean ignoring;
     private final boolean losing;
+    List<IEnergySink> explodeTiles = new ArrayList<>();
     private World world;
     private SunCoef suncoef;
     private int tick;
@@ -72,8 +72,6 @@ public class EnergyNetLocal {
     public void setWorld(final World world) {
         this.world = world;
     }
-
-    List<IEnergySink> explodeTiles = new ArrayList<>();
 
     public void explodeTiles(IEnergySink sink) {
 
@@ -232,14 +230,12 @@ public class EnergyNetLocal {
         }
     }
 
-
     public void removeTile(IEnergyTile tile1) {
         if (tile1 != EnergyNetGlobal.EMPTY) {
             this.removeTileEntity(tile1);
         }
 
     }
-
 
     public void removeTileEntity(IEnergyTile tile) {
         if (tile.getBlockPos() != null) {
@@ -533,7 +529,7 @@ public class EnergyNetLocal {
             energyPath.target.getEnergyTickList().add(tick.getSource().hashCode());
             EnumFacing energyBlockLink = energyPath.targetDirection;
             tileEntity = tileEntity.getTiles().get(energyBlockLink);
-             if (!(tileEntity instanceof IEnergyConductor)) {
+            if (!(tileEntity instanceof IEnergyConductor)) {
                 continue;
             }
             InfoCable cable = ((IEnergyConductor) tileEntity).getCable();
@@ -625,14 +621,13 @@ public class EnergyNetLocal {
         return Collections.emptyList();
     }
 
-
     public void remove1(final IEnergySource par1) {
 
         for (EnergyTick ticks : this.energyTickList) {
             if (ticks.getSource() == par1) {
                 if (ticks.getList() != null) {
                     for (Path path : ticks.getList()) {
-                        path.target.getEnergyTickList().remove((Integer)ticks.getSource().hashCode());
+                        path.target.getEnergyTickList().remove((Integer) ticks.getSource().hashCode());
                     }
                 }
                 ticks.setList(null);
@@ -646,13 +641,12 @@ public class EnergyNetLocal {
         final EnergyTick energyTick = this.energyTickList.removeSource(par1);
         if (energyTick != null && energyTick.getList() != null) {
             for (Path path : energyTick.getList()) {
-                path.target.getEnergyTickList().remove((Object)energyTick.hashCode());
+                path.target.getEnergyTickList().remove((Object) energyTick.hashCode());
             }
 
 
         }
     }
-
 
     public void removeAll(final List<EnergyTick> par1) {
         if (par1 == null) {
@@ -662,7 +656,7 @@ public class EnergyNetLocal {
         for (EnergyTick IEnergySource : par1) {
             if (IEnergySource.getList() != null) {
                 for (Path path : IEnergySource.getList()) {
-                    path.target.getEnergyTickList().remove((Object)IEnergySource.hashCode());
+                    path.target.getEnergyTickList().remove((Object) IEnergySource.hashCode());
                 }
                 IEnergySource.conductors.clear();
             }
@@ -670,20 +664,21 @@ public class EnergyNetLocal {
         }
     }
 
-
     public List<Path> getPaths(final IEnergyAcceptor par1) {
         final List<Path> paths = new ArrayList<>();
         if (par1 instanceof IEnergyConductor) {
             for (EnergyTick tick : energyTickList) {
                 final List<Path> paths1 = tick.getList();
-                for (Path path : paths1) {
+                if (paths1 != null) {
+                    for (Path path : paths1) {
 
-                    if (path.getConductorList().contains(par1)) {
-                        paths.add(path);
-                        break;
+                        if (path.getConductorList().contains(par1)) {
+                            paths.add(path);
+                            break;
+                        }
+
+
                     }
-
-
                 }
             }
             return paths;
@@ -721,11 +716,9 @@ public class EnergyNetLocal {
         }
     }
 
-
     public void clear() {
         this.energyTickList.clear();
     }
-
 
     public List<InfoTile<IEnergyTile>> getValidReceiversSubstitute(final IEnergyTile emitter) {
         final BlockPos tile1;
@@ -765,9 +758,6 @@ public class EnergyNetLocal {
 
         return Collections.emptyList();
     }
-
-    private static final int numThreads = Runtime.getRuntime().availableProcessors();
-
 
     public void onTickEnd() {
         for (IEnergySource source : energySourceList) {

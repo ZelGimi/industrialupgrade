@@ -301,26 +301,29 @@ public class Fluids extends AbstractComponent {
             }
 
         }
-        public CustomPacketBuffer writePacket(){
+
+        public CustomPacketBuffer writePacket() {
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
             packetBuffer.writeBoolean(fluid != null);
-            if (fluid != null){
+            if (fluid != null) {
                 packetBuffer.writeString(fluid.getFluid().getName());
                 packetBuffer.writeInt(fluid.amount);
             }
             return packetBuffer;
         }
-        public void readPacket(CustomPacketBuffer packetBuffer){
+
+        public void readPacket(CustomPacketBuffer packetBuffer) {
             boolean hasFluid = packetBuffer.readBoolean();
-            if (hasFluid){
+            if (hasFluid) {
                 String name = packetBuffer.readString();
                 int amount = packetBuffer.readInt();
-                Fluid fluid =   FluidRegistry.getFluid(name);
-                this.fluid = new FluidStack(fluid,amount);
-            }else{
+                Fluid fluid = FluidRegistry.getFluid(name);
+                this.fluid = new FluidStack(fluid, amount);
+            } else {
                 fluid = null;
             }
         }
+
         public List<String> getFluidList() {
             return fluidList;
         }

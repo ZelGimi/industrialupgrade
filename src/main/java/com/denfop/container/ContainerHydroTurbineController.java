@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineController;
-import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerHydroTurbineController extends ContainerFullInv<TileEntityHydroTurbineController> {

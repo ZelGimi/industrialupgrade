@@ -34,9 +34,6 @@ public class ItemRelocator extends BaseEnergyItem implements IModelRegister, IIt
 
         IUCore.proxy.addIModelRegister(this);
     }
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(5);
-    }
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(String name) {
@@ -46,12 +43,18 @@ public class ItemRelocator extends BaseEnergyItem implements IModelRegister, IIt
 
         return new ModelResourceLocation(loc, null);
     }
-    public String getUnlocalizedName(ItemStack itemStack) {
-        return this.getUnlocalizedName();
-    }
+
     @SideOnly(Side.CLIENT)
     public static void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    }
+
+    public String getUnlocalizedName() {
+        return "iu." + super.getUnlocalizedName().substring(5);
+    }
+
+    public String getUnlocalizedName(ItemStack itemStack) {
+        return this.getUnlocalizedName();
     }
 
     public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {

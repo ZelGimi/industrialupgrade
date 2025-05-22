@@ -81,297 +81,297 @@ import java.util.Map;
 )
 public class AddonIndustrialUpgrade extends AddonBlank {
 
-    public static void euBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("EF")
-                        .filledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
-                        .numberFormat(NumberFormat.COMPACT)
-        );
-    }
+                public static void euBar(IProbeInfo probeInfo, int energy, int capacity) {
+                    probeInfo.progress(
+                            energy,
+                            capacity,
+                            probeInfo
+                                    .defaultProgressStyle()
+                                    .suffix("EF")
+                                    .filledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
+                                    .alternateFilledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
+                                    .numberFormat(NumberFormat.COMPACT)
+                    );
+                }
 
-    public static void qeBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("QE")
-                        .filledColor(ModUtils.convertRGBcolorToInt(91, 94, 98))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(91, 94, 98))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
+                public static void qeBar(IProbeInfo probeInfo, int energy, int capacity) {
+                    probeInfo.progress(
+                            energy,
+                            capacity,
+                            probeInfo
+                                    .defaultProgressStyle()
+                                    .suffix("QE")
+                                    .filledColor(ModUtils.convertRGBcolorToInt(91, 94, 98))
+                                    .alternateFilledColor(ModUtils.convertRGBcolorToInt(91, 94, 98))
+                                    .borderColor(Config.rfbarBorderColor)
+                                    .numberFormat(
+                                            NumberFormat.COMPACT)
+                    );
+                }
 
-    public static void radBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("☢")
-                        .filledColor(ModUtils.convertRGBcolorToInt(42, 196, 45))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(42, 196, 45))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
+                public static void radBar(IProbeInfo probeInfo, int energy, int capacity) {
+                    probeInfo.progress(
+                            energy,
+                            capacity,
+                            probeInfo
+                                    .defaultProgressStyle()
+                                    .suffix("☢")
+                                    .filledColor(ModUtils.convertRGBcolorToInt(42, 196, 45))
+                                    .alternateFilledColor(ModUtils.convertRGBcolorToInt(42, 196, 45))
+                                    .borderColor(Config.rfbarBorderColor)
+                                    .numberFormat(
+                                            NumberFormat.COMPACT)
+                    );
+                }
 
-    public static void posBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("e⁺")
-                        .filledColor(ModUtils.convertRGBcolorToInt(192, 0, 218))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(192, 0, 218))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
+                public static void posBar(IProbeInfo probeInfo, int energy, int capacity) {
+                    probeInfo.progress(
+                            energy,
+                            capacity,
+                            probeInfo
+                                    .defaultProgressStyle()
+                                    .suffix("e⁺")
+                                    .filledColor(ModUtils.convertRGBcolorToInt(192, 0, 218))
+                                    .alternateFilledColor(ModUtils.convertRGBcolorToInt(192, 0, 218))
+                                    .borderColor(Config.rfbarBorderColor)
+                                    .numberFormat(
+                                            NumberFormat.COMPACT)
+                    );
+                }
 
-    public static void seBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("SE")
-                        .filledColor(ModUtils.convertRGBcolorToInt(224, 212, 18))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(224, 212, 18))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
+                public static void seBar(IProbeInfo probeInfo, int energy, int capacity) {
+                    probeInfo.progress(
+                            energy,
+                            capacity,
+                            probeInfo
+                                    .defaultProgressStyle()
+                                    .suffix("SE")
+                                    .filledColor(ModUtils.convertRGBcolorToInt(224, 212, 18))
+                                    .alternateFilledColor(ModUtils.convertRGBcolorToInt(224, 212, 18))
+                                    .borderColor(Config.rfbarBorderColor)
+                                    .numberFormat(
+                                            NumberFormat.COMPACT)
+                    );
+                }
 
-    public static void eeBar(IProbeInfo probeInfo, int energy, int capacity) {
-        probeInfo.progress(
-                energy,
-                capacity,
-                probeInfo
-                        .defaultProgressStyle()
-                        .suffix("EE")
-                        .filledColor(ModUtils.convertRGBcolorToInt(76, 172, 32))
-                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(76, 172, 32))
-                        .borderColor(Config.rfbarBorderColor)
-                        .numberFormat(
-                                NumberFormat.COMPACT)
-        );
-    }
+                public static void eeBar(IProbeInfo probeInfo, int energy, int capacity) {
+                    probeInfo.progress(
+                            energy,
+                            capacity,
+                            probeInfo
+                                    .defaultProgressStyle()
+                                    .suffix("EE")
+                                    .filledColor(ModUtils.convertRGBcolorToInt(76, 172, 32))
+                                    .alternateFilledColor(ModUtils.convertRGBcolorToInt(76, 172, 32))
+                                    .borderColor(Config.rfbarBorderColor)
+                                    .numberFormat(
+                                            NumberFormat.COMPACT)
+                    );
+                }
 
-    public void addFluidColors() {
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidiodine", ModUtils.convertRGBcolorToInt(41, 5, 59));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluiddizel", ModUtils.convertRGBcolorToInt(149, 142, 0));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidgas", ModUtils.convertRGBcolorToInt(62, 180, 241));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidhelium", ModUtils.convertRGBcolorToInt(203, 203, 203));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidpolyprop", ModUtils.convertRGBcolorToInt(178, 178, 178));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidpolyeth", ModUtils.convertRGBcolorToInt(178, 178, 178));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidneutron", ModUtils.convertRGBcolorToInt(5, 24, 59));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidoxy", ModUtils.convertRGBcolorToInt(200, 173, 127));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidco2", ModUtils.convertRGBcolorToInt(235, 235, 175));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidchlorum", ModUtils.convertRGBcolorToInt(5, 59, 18));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidhyd", ModUtils.convertRGBcolorToInt(127, 204, 174));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidbromine", ModUtils.convertRGBcolorToInt(53, 5, 9));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidbenz", ModUtils.convertRGBcolorToInt(197, 194, 127));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidazot", ModUtils.convertRGBcolorToInt(173, 235, 231));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidneft", ModUtils.convertRGBcolorToInt(1, 1, 1));
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluiduu_matter", -12909261);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidconstruction_foam", -14671840);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidcoolant", -15443350);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidhot_coolant", -4904908);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidpahoehoe_lava", -8686484);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidbiomass", -13144283);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidbiogas", -5793716);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluiddistilled_water", -12364043);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidsuperheated_steam", -3485231);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidsteam", -4408132);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidhot_water", -12132609);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidweed_ex", -16298220);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidair", -2302756);
-        Colors.FLUID_NAME_COLOR_MAP.put("iufluidheavy_water", -12364043);
-    }
+                public void addFluidColors() {
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidiodine", ModUtils.convertRGBcolorToInt(41, 5, 59));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluiddizel", ModUtils.convertRGBcolorToInt(149, 142, 0));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidgas", ModUtils.convertRGBcolorToInt(62, 180, 241));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidhelium", ModUtils.convertRGBcolorToInt(203, 203, 203));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidpolyprop", ModUtils.convertRGBcolorToInt(178, 178, 178));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidpolyeth", ModUtils.convertRGBcolorToInt(178, 178, 178));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidneutron", ModUtils.convertRGBcolorToInt(5, 24, 59));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidoxy", ModUtils.convertRGBcolorToInt(200, 173, 127));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidco2", ModUtils.convertRGBcolorToInt(235, 235, 175));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidchlorum", ModUtils.convertRGBcolorToInt(5, 59, 18));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidhyd", ModUtils.convertRGBcolorToInt(127, 204, 174));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidbromine", ModUtils.convertRGBcolorToInt(53, 5, 9));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidbenz", ModUtils.convertRGBcolorToInt(197, 194, 127));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidazot", ModUtils.convertRGBcolorToInt(173, 235, 231));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidneft", ModUtils.convertRGBcolorToInt(1, 1, 1));
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluiduu_matter", -12909261);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidconstruction_foam", -14671840);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidcoolant", -15443350);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidhot_coolant", -4904908);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidpahoehoe_lava", -8686484);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidbiomass", -13144283);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidbiogas", -5793716);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluiddistilled_water", -12364043);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidsuperheated_steam", -3485231);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidsteam", -4408132);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidhot_water", -12132609);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidweed_ex", -16298220);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidair", -2302756);
+                    Colors.FLUID_NAME_COLOR_MAP.put("iufluidheavy_water", -12364043);
+                }
 
-    public void addTankNames() {
-        Names.tankNamesMap.put(TileObsidianGenerator.class, new String[]{"Water", "Lava"});
-        Names.tankNamesMap.put(TileEntityLiquedTank.class, new String[]{"Buffer"});
-        Names.tankNamesMap.put(TilePlasticCreator.class, new String[]{"Input"});
-        Names.tankNamesMap.put(TilePlasticPlateCreator.class, new String[]{"Input"});
-        Names.tankNamesMap.put(TilePump.class, new String[]{"Buffer"});
-        Names.tankNamesMap.put(TileMultiMatter.class, new String[]{"Matter"});
-    }
+                public void addTankNames() {
+                    Names.tankNamesMap.put(TileObsidianGenerator.class, new String[]{"Water", "Lava"});
+                    Names.tankNamesMap.put(TileEntityLiquedTank.class, new String[]{"Buffer"});
+                    Names.tankNamesMap.put(TilePlasticCreator.class, new String[]{"Input"});
+                    Names.tankNamesMap.put(TilePlasticPlateCreator.class, new String[]{"Input"});
+                    Names.tankNamesMap.put(TilePump.class, new String[]{"Buffer"});
+                    Names.tankNamesMap.put(TileMultiMatter.class, new String[]{"Matter"});
+                }
 
-    public Map<Class<? extends ItemArmor>, EnumChip> getSpecialHelmets() {
-        Map<Class<? extends ItemArmor>, EnumChip> map = new HashMap<>();
-        map.put(ItemSpecialArmor.class, EnumChip.STANDARD);
-        map.put(ItemArmorAdvHazmat.class, EnumChip.IC2);
-        map.put(ItemAdvJetpack.class, EnumChip.IC2);
-        map.put(ItemSolarPanelHelmet.class, EnumChip.IC2);
-        return map;
-    }
+                public Map<Class<? extends ItemArmor>, EnumChip> getSpecialHelmets() {
+                    Map<Class<? extends ItemArmor>, EnumChip> map = new HashMap<>();
+                    map.put(ItemSpecialArmor.class, EnumChip.STANDARD);
+                    map.put(ItemArmorAdvHazmat.class, EnumChip.IC2);
+                    map.put(ItemAdvJetpack.class, EnumChip.IC2);
+                    map.put(ItemSolarPanelHelmet.class, EnumChip.IC2);
+                    return map;
+                }
 
-    @Override
-    public void addProbeInfo(
-            final ProbeMode probeMode,
-            final IProbeInfo probeInfo,
-            final EntityPlayer entityPlayer,
-            final World world,
-            final IBlockState iBlockState,
-            final IProbeHitData data
+                @Override
+                public void addProbeInfo(
+                final ProbeMode probeMode,
+                final IProbeInfo probeInfo,
+                final EntityPlayer entityPlayer,
+                final World world,
+                final IBlockState iBlockState,
+                final IProbeHitData data
     ) {
-        if (!com.denfop.Config.enableProbe) {
-            return;
-        }
+                    if (!com.denfop.Config.enableProbe) {
+                        return;
+                    }
 
-        TileEntity tile = world.getTileEntity(data.getPos());
-        if (tile instanceof TileEntityBlock) {
-            TileEntityBlock te = (TileEntityBlock) tile;
-            if (te.wrenchCanRemove(entityPlayer)) {
-                probeInfo.text(Localization.translate("iu.wrench.info"));
-            }
-            final ComponentProgress component = te.getComp(ComponentProgress.class);
-            final ComponentProcess component1 = te.getComp(ComponentProcess.class);
+                    TileEntity tile = world.getTileEntity(data.getPos());
+                    if (tile instanceof TileEntityBlock) {
+                        TileEntityBlock te = (TileEntityBlock) tile;
+                        if (te.wrenchCanRemove(entityPlayer)) {
+                            probeInfo.text(Localization.translate("iu.wrench.info"));
+                        }
+                        final ComponentProgress component = te.getComp(ComponentProgress.class);
+                        final ComponentProcess component1 = te.getComp(ComponentProcess.class);
 
-            ProcessMultiComponent component2 = te.getComp(ProcessMultiComponent.class);
-            if (te instanceof TileEntityAnvil) {
-                TileEntityAnvil anvil = (TileEntityAnvil) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
-                cropInfo.progress(anvil.progress, 100,
-                        probeInfo.defaultProgressStyle()
-                                .suffix(" / " + 100)
-                                .showText(true)
-                                .filledColor(0xFFFFA500)
-                );
+                        ProcessMultiComponent component2 = te.getComp(ProcessMultiComponent.class);
+                        if (te instanceof TileEntityAnvil) {
+                            TileEntityAnvil anvil = (TileEntityAnvil) te;
+                            final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                            final String percentString = String.format("%.1f", percent);
+                            IProbeInfo cropInfo = probeInfo.vertical();
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
+                            cropInfo.progress(anvil.progress, 100,
+                                    probeInfo.defaultProgressStyle()
+                                            .suffix(" / " + 100)
+                                            .showText(true)
+                                            .filledColor(0xFFFFA500)
+                            );
 
-            }
-            if (te instanceof TileEntityStrongAnvil) {
-                TileEntityStrongAnvil anvil = (TileEntityStrongAnvil) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo.progress(anvil.progress, 100,
-                        probeInfo.defaultProgressStyle()
-                                .suffix(" / " + 100)
-                                .showText(true)
-                                .filledColor(0xFFFFA500)
-                );
+                        }
+                        if (te instanceof TileEntityStrongAnvil) {
+                            TileEntityStrongAnvil anvil = (TileEntityStrongAnvil) te;
+                            final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                            final String percentString = String.format("%.1f", percent);
+                            IProbeInfo cropInfo = probeInfo.vertical();
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                            cropInfo.progress(anvil.progress, 100,
+                                    probeInfo.defaultProgressStyle()
+                                            .suffix(" / " + 100)
+                                            .showText(true)
+                                            .filledColor(0xFFFFA500)
+                            );
 
-            }
-            if (te instanceof TileEntityCompressor) {
-                TileEntityCompressor anvil = (TileEntityCompressor) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
-                cropInfo.progress(anvil.progress, 100,
-                        probeInfo.defaultProgressStyle()
-                                .suffix(" / " + 100)
-                                .showText(true)
-                                .filledColor(0xFFFFA500)
-                );
+                        }
+                        if (te instanceof TileEntityCompressor) {
+                            TileEntityCompressor anvil = (TileEntityCompressor) te;
+                            final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                            final String percentString = String.format("%.1f", percent);
+                            IProbeInfo cropInfo = probeInfo.vertical();
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
+                            cropInfo.progress(anvil.progress, 100,
+                                    probeInfo.defaultProgressStyle()
+                                            .suffix(" / " + 100)
+                                            .showText(true)
+                                            .filledColor(0xFFFFA500)
+                            );
 
-            }
-            if (te instanceof TileEntityMacerator) {
-                TileEntityMacerator anvil = (TileEntityMacerator) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
-                cropInfo.progress(anvil.progress, 100,
-                        probeInfo.defaultProgressStyle()
-                                .suffix(" / " + 100)
-                                .showText(true)
-                                .filledColor(0xFFFFA500)
-                );
+                        }
+                        if (te instanceof TileEntityMacerator) {
+                            TileEntityMacerator anvil = (TileEntityMacerator) te;
+                            final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                            final String percentString = String.format("%.1f", percent);
+                            IProbeInfo cropInfo = probeInfo.vertical();
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
+                            cropInfo.progress(anvil.progress, 100,
+                                    probeInfo.defaultProgressStyle()
+                                            .suffix(" / " + 100)
+                                            .showText(true)
+                                            .filledColor(0xFFFFA500)
+                            );
 
-            }
-            if (te instanceof TileEntityPrimalWireInsulator) {
-                TileEntityPrimalWireInsulator anvil = (TileEntityPrimalWireInsulator) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo.progress(anvil.progress, 100,
-                        probeInfo.defaultProgressStyle()
-                                .suffix(" / " + 100)
-                                .showText(true)
-                                .filledColor(0xFFFFA500)
-                );
+                        }
+                        if (te instanceof TileEntityPrimalWireInsulator) {
+                            TileEntityPrimalWireInsulator anvil = (TileEntityPrimalWireInsulator) te;
+                            final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                            final String percentString = String.format("%.1f", percent);
+                            IProbeInfo cropInfo = probeInfo.vertical();
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                            cropInfo.progress(anvil.progress, 100,
+                                    probeInfo.defaultProgressStyle()
+                                            .suffix(" / " + 100)
+                                            .showText(true)
+                                            .filledColor(0xFFFFA500)
+                            );
 
-            }
-            if (te instanceof TileEntityRollingMachine) {
-                TileEntityRollingMachine anvil = (TileEntityRollingMachine) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo.progress(anvil.progress, 100,
-                        probeInfo.defaultProgressStyle()
-                                .suffix(" / " + 100)
-                                .showText(true)
-                                .filledColor(0xFFFFA500)
-                );
+                        }
+                        if (te instanceof TileEntityRollingMachine) {
+                            TileEntityRollingMachine anvil = (TileEntityRollingMachine) te;
+                            final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                            final String percentString = String.format("%.1f", percent);
+                            IProbeInfo cropInfo = probeInfo.vertical();
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                            cropInfo.progress(anvil.progress, 100,
+                                    probeInfo.defaultProgressStyle()
+                                            .suffix(" / " + 100)
+                                            .showText(true)
+                                            .filledColor(0xFFFFA500)
+                            );
 
-            }
-            if (te instanceof TileEntityPrimalLaserPolisher) {
-                TileEntityPrimalLaserPolisher anvil = (TileEntityPrimalLaserPolisher) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo.progress(anvil.progress, 100,
-                        probeInfo.defaultProgressStyle()
-                                .suffix(" / " + 100)
-                                .showText(true)
-                                .filledColor(0xFFFFA500)
-                );
+                        }
+                        if (te instanceof TileEntityPrimalLaserPolisher) {
+                            TileEntityPrimalLaserPolisher anvil = (TileEntityPrimalLaserPolisher) te;
+                            final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                            final String percentString = String.format("%.1f", percent);
+                            IProbeInfo cropInfo = probeInfo.vertical();
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                            cropInfo.progress(anvil.progress, 100,
+                                    probeInfo.defaultProgressStyle()
+                                            .suffix(" / " + 100)
+                                            .showText(true)
+                                            .filledColor(0xFFFFA500)
+                            );
 
-            }
-            if (te instanceof TileEntitySqueezer) {
-                TileEntitySqueezer anvil = (TileEntitySqueezer) te;
-                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
-                final String percentString = String.format("%.1f", percent);
-                IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo
-                        .horizontal()
-                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
-                cropInfo.progress(anvil.progress, 150,
+                        }
+                        if (te instanceof TileEntitySqueezer) {
+                            TileEntitySqueezer anvil = (TileEntitySqueezer) te;
+                            final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                            final String percentString = String.format("%.1f", percent);
+                            IProbeInfo cropInfo = probeInfo.vertical();
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                            cropInfo.progress(anvil.progress, 150,
                         probeInfo.defaultProgressStyle()
                                 .suffix(" / " + 150)
                                 .showText(true)
@@ -506,7 +506,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
                     framesInfo.text(TextFormatting.GOLD + Localization.translate("iu.crop.oneprobe.frames"));
 
                     boolean hasFrames = false;
-                    for (ItemStack stack : apiary.frameSlot.gets()) {
+                    for (ItemStack stack : apiary.frameSlot) {
                         if (!stack.isEmpty()) {
                             framesInfo.item(stack);
                             hasFrames = true;

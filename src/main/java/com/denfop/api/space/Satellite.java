@@ -42,10 +42,10 @@ public class Satellite implements ISatellite {
         this.temperature = temperature;
         this.type = type;
         this.oxygen = oxygen;
-        this.angle=angle;
+        this.angle = angle;
         this.size = size;
         this.colonies = colonies;
-        this.rotation=rotation;
+        this.rotation = rotation;
         SpaceNet.instance.addSatellite(this);
     }
 
@@ -85,9 +85,10 @@ public class Satellite implements ISatellite {
     public ResourceLocation getLocation() {
         return textureLocation;
     }
+
     @Override
     public double getRotationTimeX(final double time) {
-        return planet.getRotationTimeX(time) + getDistance() *  Math.cos(time * this.time);
+        return planet.getRotationTimeX(time) + getDistance() * Math.cos(time * this.time);
     }
 
     @Override
@@ -97,8 +98,9 @@ public class Satellite implements ISatellite {
 
     @Override
     public double getRotationTimeZ(final double time) {
-        return  planet.getRotationTimeZ(time) + getDistance() *  Math.sin(time * this.time);
+        return planet.getRotationTimeZ(time) + getDistance() * Math.sin(time * this.time);
     }
+
     @Override
     public String getName() {
         return this.name;

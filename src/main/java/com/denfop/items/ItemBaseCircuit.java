@@ -39,7 +39,7 @@ public class ItemBaseCircuit extends ItemSubTypes<ItemBaseCircuit.Types> impleme
             ModelLoader.setCustomMeshDefinition(this, stack -> {
                 final NBTTagCompound nbt = ModUtils.nbt(stack);
                 int level = nbt.getInteger("level");
-                switch (stack.getItemDamage()){
+                switch (stack.getItemDamage()) {
                     case 9:
                         level = level - 5;
                         break;
@@ -53,15 +53,23 @@ public class ItemBaseCircuit extends ItemSubTypes<ItemBaseCircuit.Types> impleme
                         level = level - 11;
                         break;
                 }
-                return new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(stack.getItemDamage()).getName() + (level == 1 ? "_1" : ""),
-                        null);
+                return new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(stack.getItemDamage()).getName() + (level == 1
+                                ? "_1"
+                                : ""),
+                        null
+                );
 
             });
             String[] mode = {"", "_1"};
             for (final String s : mode) {
-                ModelBakery.registerItemVariants(this,
-                        new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName()+s,
-                                null));
+                ModelBakery.registerItemVariants(
+                        this,
+                        new ModelResourceLocation(
+                                Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName() + s,
+                                null
+                        )
+                );
 
             }
         } else {

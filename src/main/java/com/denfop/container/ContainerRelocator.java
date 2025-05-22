@@ -1,8 +1,6 @@
 package com.denfop.container;
 
-import com.denfop.items.energy.ItemStackUpgradeItem;
 import com.denfop.items.relocator.ItemStackRelocator;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class ContainerRelocator extends ContainerHandHeldInventory<ItemStackRelocator> {

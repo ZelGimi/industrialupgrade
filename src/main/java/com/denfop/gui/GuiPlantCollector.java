@@ -4,12 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerChickenFarm;
-import com.denfop.container.ContainerCowFarm;
 import com.denfop.container.ContainerPlantCollector;
-import com.denfop.container.ContainerSaplingGardener;
-import com.denfop.container.ContainerTreeBreaker;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiPlantCollector extends GuiIU<ContainerPlantCollector> {
@@ -20,6 +15,7 @@ public class GuiPlantCollector extends GuiIU<ContainerPlantCollector> {
                 new Component<>(this.container.base.energy)
         ));
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);

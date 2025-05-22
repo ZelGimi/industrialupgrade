@@ -23,14 +23,11 @@ import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerProbeAssembler;
-import com.denfop.container.ContainerRoverAssembler;
 import com.denfop.gui.GuiProbeAssembler;
-import com.denfop.gui.GuiRoverAssembler;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -60,6 +57,7 @@ public class TileEntityProbeAssembler extends TileElectricMachine implements
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
+
     public TileEntityProbeAssembler() {
         super(800, 1, 1);
         Recipes.recipes.addInitRecipes(this);
@@ -68,7 +66,7 @@ public class TileEntityProbeAssembler extends TileElectricMachine implements
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 800
         ));
-        this.inputSlotA = new InvSlotRecipes(this, "probeassembler", this){
+        this.inputSlotA = new InvSlotRecipes(this, "probeassembler", this) {
             @Override
             public int getStackSizeLimit() {
                 return 1;
@@ -83,18 +81,15 @@ public class TileEntityProbeAssembler extends TileElectricMachine implements
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    @Override
-    public void onUpdate() {
 
-    }
     public static void addRecipe(ItemStack container, ItemStack fill1, ItemStack fill2, ItemStack fill3, ItemStack output) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "probeassembler",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,691)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,701)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 691)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 701)),
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(container),
@@ -102,16 +97,16 @@ public class TileEntityProbeAssembler extends TileElectricMachine implements
                                 input.getInput(fill1),
                                 input.getInput(container),
                                 input.getInput(fill2),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,694)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,698)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 694)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 698)),
                                 input.getInput(fill2),
                                 input.getInput(container),
                                 input.getInput(fill1),
                                 input.getInput(fill1),
                                 input.getInput(container),
                                 input.getInput(fill2),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,690)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,705)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 690)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 705)),
                                 input.getInput(fill2),
                                 input.getInput(container),
                                 input.getInput(fill1),
@@ -134,6 +129,12 @@ public class TileEntityProbeAssembler extends TileElectricMachine implements
                 )
         );
     }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
     public void onLoaded() {
         super.onLoaded();
         if (IUCore.proxy.isSimulating()) {
@@ -143,6 +144,7 @@ public class TileEntityProbeAssembler extends TileElectricMachine implements
 
 
     }
+
     @Override
     public ContainerProbeAssembler getGuiContainer(final EntityPlayer var1) {
         return new ContainerProbeAssembler(this, var1);
@@ -179,6 +181,7 @@ public class TileEntityProbeAssembler extends TileElectricMachine implements
                 UpgradableProperty.ItemInput
         );
     }
+
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.probe_assembler;
     }
@@ -218,18 +221,22 @@ public class TileEntityProbeAssembler extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,726),new ItemStack(IUItem.crafting_elements,1,704),
-                new ItemStack(IUItem.crafting_elements,1,706),new ItemStack(IUItem.crafting_elements,1,695),
-                new ItemStack(IUItem.probe));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,707),new ItemStack(IUItem.crafting_elements,1,697),
-                new ItemStack(IUItem.crafting_elements,1,693),new ItemStack(IUItem.crafting_elements,1,702),
-                new ItemStack(IUItem.adv_probe));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,727),new ItemStack(IUItem.crafting_elements,1,697),
-                new ItemStack(IUItem.crafting_elements,1,703),new ItemStack(IUItem.crafting_elements,1,692),
-                new ItemStack(IUItem.imp_probe));
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,711),new ItemStack(IUItem.crafting_elements,1,696),
-                new ItemStack(IUItem.crafting_elements,1,700),new ItemStack(IUItem.crafting_elements,1,699),
-                new ItemStack(IUItem.per_probe));
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 726), new ItemStack(IUItem.crafting_elements, 1, 704),
+                new ItemStack(IUItem.crafting_elements, 1, 706), new ItemStack(IUItem.crafting_elements, 1, 695),
+                new ItemStack(IUItem.probe)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 707), new ItemStack(IUItem.crafting_elements, 1, 697),
+                new ItemStack(IUItem.crafting_elements, 1, 693), new ItemStack(IUItem.crafting_elements, 1, 702),
+                new ItemStack(IUItem.adv_probe)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 727), new ItemStack(IUItem.crafting_elements, 1, 697),
+                new ItemStack(IUItem.crafting_elements, 1, 703), new ItemStack(IUItem.crafting_elements, 1, 692),
+                new ItemStack(IUItem.imp_probe)
+        );
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 711), new ItemStack(IUItem.crafting_elements, 1, 696),
+                new ItemStack(IUItem.crafting_elements, 1, 700), new ItemStack(IUItem.crafting_elements, 1, 699),
+                new ItemStack(IUItem.per_probe)
+        );
     }
 
 }

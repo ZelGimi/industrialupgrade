@@ -104,7 +104,7 @@ public class FluidMixerCategory extends GuiIU implements IRecipeCategory<FluidMi
         fff.init(0, true, 16, 24, 12, 47, 10000, true, null);
         fff.set(0, recipes.getInput());
 
-        fff.init(1, false, 54, 24, 12, 47, 10000, true, null);
+        fff.init(1, true, 54, 24, 12, 47, 10000, true, null);
         fff.set(1, recipes.getInputs().get(1));
 
 

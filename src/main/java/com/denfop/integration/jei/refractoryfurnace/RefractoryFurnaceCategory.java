@@ -1,7 +1,6 @@
 package com.denfop.integration.jei.refractoryfurnace;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
@@ -132,7 +131,6 @@ public class RefractoryFurnaceCategory extends GuiIU implements IRecipeCategory<
             isg.set(i, inputs.get(i));
 
         }
-
 
 
         fff.init(1, false, 104, 8, 12, 47, 1000, true, null);

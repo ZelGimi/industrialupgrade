@@ -25,8 +25,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -42,7 +40,8 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
     private final ComponentUpgrade componentUpgrades;
     public MachineRecipe output;
     public InvSlotRecipes inputSlotA;
-
+    private ItemStack WITHER_SKELETON_SKULL;
+    private ItemStack  SOUL_SAND;
     public TileBaseWitherMaker(int energyPerTick, int length, int outputSlots) {
         this(energyPerTick, length, outputSlots, 1);
     }
@@ -90,6 +89,8 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
         inputSlotA.load();
         if (IUCore.proxy.isSimulating()) {
             this.output = this.getOutput();
+            WITHER_SKELETON_SKULL = new ItemStack(Items.SKULL,1,1);
+            SOUL_SAND = new ItemStack(Blocks.SOUL_SAND);
         }
 
     }
@@ -99,44 +100,34 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
         super.updateEntityServer();
         if (this.getWorld().provider.getWorldTime() % 20 == 0) {
             if (!this.inputSlotA.isEmpty()) {
-                for (int i = 0; i < 3; i++) {
-
-
-                    if (!this.inputSlotA.get(i).isEmpty() && this.inputSlotA.get(i).getCount() > 1 && this.inputSlotA
-                            .get(i)
-                            .getItem() == Items.SKULL && this.inputSlotA.get(i).getItemDamage() == 1) {
-                        for (int j = 0; j < 3; j++) {
-                            if (this.inputSlotA.get(j).isEmpty() && !this.inputSlotA.get(i).isEmpty() && this.inputSlotA
-                                    .get(i)
-                                    .getCount() > 1) {
-                                this.inputSlotA.consume(i, 1);
-                                ItemStack stack = new ItemStack(Items.SKULL, 1, 1);
-                                this.inputSlotA.put(j, stack);
-                            }
-                        }
-
-                    }
-                }
-                for (int i = 3; i < 7; i++) {
-                    for (int j = 3; j < 7; j++) {
-                        if (i != j) {
-                            if (!this.inputSlotA.get(i).isEmpty() && this.inputSlotA.get(i).getCount() > 1 && (this.inputSlotA
-                                    .get(i)
-                                    .getItem() == Item.getItemFromBlock(Blocks.SOUL_SAND))) {
-                                if (this.inputSlotA.get(j).isEmpty()) {
-                                    this.inputSlotA.consume(i, 1);
-
-                                    ItemStack stack = new ItemStack(Blocks.SOUL_SAND, 1);
-                                    this.inputSlotA.put(j, stack);
-                                }
-                            }
-                        }
-                    }
-                }
+                balanceSlots(this.inputSlotA.subList(0, 3), WITHER_SKELETON_SKULL);
+                balanceSlots(this.inputSlotA.subList(3, 7), SOUL_SAND);
             }
         }
     }
+    public void balanceSlots(List<ItemStack> slots, ItemStack targetItem) {
+        int total = 0;
+        for (ItemStack stack : slots) {
+            if (!stack.isEmpty() && stack.isItemEqual(targetItem)) {
+                total += stack.getCount();
+            }
+        }
 
+        if (total == 0) return;
+
+        int perSlot = total / slots.size();
+        int remainder = total % slots.size();
+
+
+        for (int i = 0; i < slots.size(); i++) {
+            if (perSlot > 0 || (i < remainder)) {
+                int count = perSlot + (i < remainder ? 1 : 0);
+                slots.set(i, new ItemStack(targetItem.getItem(), count,targetItem.getItemDamage()));
+            } else {
+                slots.set(i, ItemStack.EMPTY);
+            }
+        }
+    }
     public MachineRecipe getOutput() {
 
         this.output = this.inputSlotA.process();

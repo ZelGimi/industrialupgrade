@@ -4,10 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerChickenFarm;
-import com.denfop.container.ContainerCowFarm;
 import com.denfop.container.ContainerSheepFarm;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiSheepFarm extends GuiIU<ContainerSheepFarm> {
@@ -18,6 +15,7 @@ public class GuiSheepFarm extends GuiIU<ContainerSheepFarm> {
                 new Component<>(this.container.base.energy)
         ));
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);

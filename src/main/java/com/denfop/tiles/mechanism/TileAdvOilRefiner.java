@@ -35,6 +35,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -100,7 +101,37 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
     }
+    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
+        if (this.level != 0) {
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation, this.level));
+            this.level = 0;
+        }
+        return ret;
+    }
+    @Override
+    public boolean onActivated(
+            final EntityPlayer player,
+            final EnumHand hand,
+            final EnumFacing side,
+            final float hitX,
+            final float hitY,
+            final float hitZ
+    ) {
+        if (level < 10) {
+            ItemStack stack = player.getHeldItem(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
+                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            } else {
+                stack.shrink(1);
+                this.level++;
+                return true;
+            }
+        } else {
 
+            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        }
+    }
     @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);

@@ -55,6 +55,7 @@ public class TileWeldingMachine extends TileDoubleElectricMachine implements IHa
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;

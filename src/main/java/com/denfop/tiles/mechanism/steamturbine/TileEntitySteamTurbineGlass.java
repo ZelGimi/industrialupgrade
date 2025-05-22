@@ -5,19 +5,21 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntitySteamTurbineGlass  extends TileEntityMultiBlockElement implements IGlass{
+public class TileEntitySteamTurbineGlass extends TileEntityMultiBlockElement implements IGlass {
 
-    public TileEntitySteamTurbineGlass(){}
+    public TileEntitySteamTurbineGlass() {
+    }
+
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockSteamTurbine.steam_turbine_casing_glass;
@@ -42,4 +44,5 @@ public class TileEntitySteamTurbineGlass  extends TileEntityMultiBlockElement im
     public boolean isNormalCube() {
         return false;
     }
+
 }

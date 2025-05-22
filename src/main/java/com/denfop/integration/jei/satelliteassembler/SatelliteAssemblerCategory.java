@@ -10,12 +10,10 @@ import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerLaserPolisher;
 import com.denfop.container.ContainerSatelliteAssembler;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.JEICompat;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
 import com.denfop.tiles.mechanism.TileEntitySatelliteAssembler;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -31,7 +29,6 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SatelliteAssemblerCategory extends GuiIU implements IRecipeCategory<SatelliteAssemblerRecipeWrapper> {

@@ -3,13 +3,10 @@ package com.denfop.network.packet;
 import com.denfop.IUCore;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
-import com.denfop.api.space.rovers.Rovers;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.tiles.mechanism.TileEntityResearchTableSpace;
-import crazypants.enderio.base.scheduler.Space;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -51,17 +48,17 @@ public class PacketReturnRoversToPlanet implements IPacket {
             World world = (World) DecoderHandler.decode(customPacketBuffer);
             BlockPos pos = (BlockPos) DecoderHandler.decode(customPacketBuffer);
             UUID uuid = (UUID) DecoderHandler.decode(customPacketBuffer);
-            if (entityPlayer.getUniqueID().equals(uuid)){
+            if (entityPlayer.getUniqueID().equals(uuid)) {
                 boolean hasBody = customPacketBuffer.readBoolean();
-                if (hasBody){
+                if (hasBody) {
                     String body = customPacketBuffer.readString();
                     IBody body1 = SpaceNet.instance.getBodyFromName(body);
                     TileEntity tile = world.getTileEntity(pos);
-                    if (tile instanceof  TileEntityResearchTableSpace){
+                    if (tile instanceof TileEntityResearchTableSpace) {
                         TileEntityResearchTableSpace tileEntityResearchTableSpace = (TileEntityResearchTableSpace) tile;
-                        if (tileEntityResearchTableSpace.getPlayer().equals(uuid) ){
-                            SpaceNet.instance.getResearchSystem().returnOperation(body1,tileEntityResearchTableSpace);
-                       }
+                        if (tileEntityResearchTableSpace.getPlayer().equals(uuid)) {
+                            SpaceNet.instance.getResearchSystem().returnOperation(body1, tileEntityResearchTableSpace);
+                        }
                     }
                 }
             }

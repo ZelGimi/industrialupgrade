@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.model.ModelLoader;
@@ -17,7 +16,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -44,7 +42,7 @@ public class ItemSubTypes<T extends Enum<T> & ISubEnum> extends Item implements 
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         for (T element : this.typeProperty.getAllowedValues()) {
-            this.registerModel(this,  element.getId(), element.getName());
+            this.registerModel(this, element.getId(), element.getName());
         }
 
 
@@ -95,9 +93,10 @@ public class ItemSubTypes<T extends Enum<T> & ISubEnum> extends Item implements 
 
     public final T getType(ItemStack stack) {
 
-        for (T element : this.typeProperty.getAllowedValues()){
-            if (element.getId() == stack.getMetadata())
+        for (T element : this.typeProperty.getAllowedValues()) {
+            if (element.getId() == stack.getMetadata()) {
                 return element;
+            }
         }
         return null;
     }

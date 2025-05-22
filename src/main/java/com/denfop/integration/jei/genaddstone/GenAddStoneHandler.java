@@ -59,12 +59,12 @@ public class GenAddStoneHandler {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
-                    new ItemStack(Blocks.STONE, 8,3)
+                    new ItemStack(Blocks.STONE, 8, 3)
             );
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
-                    new ItemStack(Blocks.STONE, 8,5)
+                    new ItemStack(Blocks.STONE, 8, 5)
             );
         }
 

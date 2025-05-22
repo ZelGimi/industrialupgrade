@@ -56,7 +56,7 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
     public TileEntityPrimalSiliconCrystalHandler() {
         super(0, 0, 1);
         Recipes.recipes.addInitRecipes(this);
-        inputSlotA = new InvSlotRecipes(this, "silicon_recipe", this){
+        inputSlotA = new InvSlotRecipes(this, "silicon_recipe", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
                 return false;

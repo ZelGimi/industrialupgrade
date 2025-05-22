@@ -18,12 +18,12 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.Energy;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRadioactiveOreHandler;
 import com.denfop.gui.GuiRadioactiveOreHandler;
@@ -204,7 +204,6 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
 
     @Override
     public void init() {
-
 
 
         addRecipe(new ItemStack(IUItem.classic_ore, 1, 3), new ItemStack(IUItem.nuclear_res, 2, 21), 5,

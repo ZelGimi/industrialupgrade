@@ -206,7 +206,7 @@ public class GuiQuantumTransformer extends GuiCore<ContainerQuantumMolecular> {
         if (x >= 22 && x <= 57 && y >= 30 && y <= 40) {
             new PacketUpdateServerTile(this.container.base, 1);
         }
-        if (x >= 152 && x <= 163  && y >= 25 && y <= 45) {
+        if (x >= 152 && x <= 163 && y >= 25 && y <= 45) {
             new PacketUpdateServerTile(this.container.base, -1);
         }
         if (x >= 22 && x <= 57 && y >= 30 && y <= 40) {

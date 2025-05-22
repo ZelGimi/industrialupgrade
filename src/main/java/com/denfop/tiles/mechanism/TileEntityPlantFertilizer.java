@@ -12,9 +12,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.container.ContainerPigFarm;
 import com.denfop.container.ContainerPlantFertilizer;
-import com.denfop.gui.GuiPigFarm;
 import com.denfop.gui.GuiPlantFertilizer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -35,17 +33,21 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityPlantFertilizer extends TileEntityInventory  implements IUpgradableBlock {
+public class TileEntityPlantFertilizer extends TileEntityInventory implements IUpgradableBlock {
 
-    public final InvSlot slot;
     private static final int RADIUS = 8;
+    public final InvSlot slot;
     public final Energy energy;
+    public final InvSlotUpgrade upgradeSlot;
     private final AirPollutionComponent pollutionAir;
     private final SoilPollutionComponent pollutionSoil;
+    private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
             pos.add(RADIUS, RADIUS, RADIUS)
     );
+    List<List<TileEntityCrop>> list = new ArrayList<>();
+    List<Chunk> chunks;
 
     public TileEntityPlantFertilizer() {
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
@@ -60,12 +62,12 @@ public class TileEntityPlantFertilizer extends TileEntityInventory  implements I
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
+
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage,  UpgradableProperty.ItemInput
+        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemInput
         );
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
@@ -89,8 +91,7 @@ public class TileEntityPlantFertilizer extends TileEntityInventory  implements I
             }
         }
     }
-    List<List<TileEntityCrop>> list = new ArrayList<>();
-    List<Chunk> chunks;
+
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -101,7 +102,7 @@ public class TileEntityPlantFertilizer extends TileEntityInventory  implements I
             int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
             int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
             int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
-          chunks = new ArrayList<>();
+            chunks = new ArrayList<>();
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
                     final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
@@ -138,16 +139,18 @@ public class TileEntityPlantFertilizer extends TileEntityInventory  implements I
             return false;
         }
     }
+
     private void updateCrop() {
         list.clear();
         for (Chunk chunk : chunks) {
             this.list.add(CropNetwork.instance.getCropsFromChunk(world, chunk.getPos()));
         }
     }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0){
+        if (this.getWorld().getWorldTime() % 100 == 0) {
             updateCrop();
         }
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(5)) {
@@ -155,7 +158,9 @@ public class TileEntityPlantFertilizer extends TileEntityInventory  implements I
             for (List<TileEntityCrop> crops : list) {
                 for (TileEntityCrop crop : crops) {
                     if (this.energy.getEnergy() > 5 && !this.slot.get().isEmpty()) {
-                        if (crop.getPestUse() < 40 && this.contains(crop.getPos()) && crop.getCrop() != null && crop.getCrop().getId() != 3 && crop.getCrop().getStage() != crop.getCrop().getMaxStage()) {
+                        if (crop.getPestUse() < 40 && this.contains(crop.getPos()) && crop.getCrop() != null && crop
+                                .getCrop()
+                                .getId() != 3 && crop.getCrop().getStage() != crop.getCrop().getMaxStage()) {
                             crop.fertilizeCrop(this.slot.get());
                             crop.addPestUse();
                             this.energy.useEnergy(5);

@@ -80,7 +80,7 @@ public class MultiBlockCategory extends Gui implements IRecipeCategory<MultiBloc
         }
         double y = 2;
         isg.init(structure.itemStackList.size(), true, (int) (61),
-                (int) (45+27 + y * 23)
+                (int) (45 + 27 + y * 23)
         );
         isg.set(structure.itemStackList.size(), structure.itemStackList.get(0));
 

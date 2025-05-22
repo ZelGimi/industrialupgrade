@@ -1847,7 +1847,7 @@ public class BasicRecipeTwo {
                 ('A'), new ItemStack(IUItem.crafting_elements, 1, 11),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 72),'E',"platePermalloy"
+                new ItemStack(IUItem.crafting_elements, 1, 72), 'E', "platePermalloy"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 12), " D ", "BAC", "E H",
 
@@ -3077,7 +3077,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addShapelessRecipe(
                 getBlockStack(BlockBaseMachine3.redstone_generator),
-                new ItemStack(IUItem.crafting_elements, 1, 258),    getBlockStack(BlockBaseMachine3.generator_iu)
+                new ItemStack(IUItem.crafting_elements, 1, 258), getBlockStack(BlockBaseMachine3.generator_iu)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 206), "ABA", "ACA", "ABA",
 
@@ -3400,7 +3400,7 @@ public class BasicRecipeTwo {
 
                 ('C'), "casingAluminiumLithium",
 
-                ('D'), new ItemStack(IUItem.charged_redstone),'E', new ItemStack(IUItem.charged_quartz)
+                ('D'), new ItemStack(IUItem.charged_redstone), 'E', new ItemStack(IUItem.charged_quartz)
         );
         Recipes.recipe.addRecipe(IUItem.advBattery
                 , "AEA", "CDC", "CBC",
@@ -3412,7 +3412,7 @@ public class BasicRecipeTwo {
                 ('D'), new ItemStack(IUItem.crafting_elements, 1, 476),
 
                 ('B'),
-                "dustLead",'E', new ItemStack(IUItem.charged_redstone, 1)
+                "dustLead", 'E', new ItemStack(IUItem.charged_redstone, 1)
         );
 
         Recipes.recipe.addRecipe(IUItem.energyStorageUpgrade, "FEF", "BDB", "ACA",
@@ -3646,8 +3646,6 @@ public class BasicRecipeTwo {
         );
 
 
-
-
         Recipes.recipe.addRecipe(IUItem.nightvision
                 , " E ", "CDC", "ABA",
 
@@ -3781,7 +3779,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
                 ('A'), "treeSapling"
         );
-        Recipes.recipe.addRecipe(ModUtils.setSize(IUItem.fluidCell,3), " A ", "ABA", " A ",
+        Recipes.recipe.addRecipe(ModUtils.setSize(IUItem.fluidCell, 3), " A ", "ABA", " A ",
 
                 ('A'), "casingTin",
 

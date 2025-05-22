@@ -81,6 +81,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
 
     }
+
     @Override
     public void onBlockBreak(boolean wrench) {
         for (int i = this.pos.getX() - 5; i <= this.pos.getX() + 5; i++) {

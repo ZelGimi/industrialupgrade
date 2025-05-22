@@ -48,6 +48,7 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
         );
         this.fluid = TankGauge.createNormal(this, 150, 35, container.base.getTank());
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -63,9 +64,10 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -193,7 +195,8 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
                         ModUtils.convertRGBcolorToInt(13, 229, 34),
                         false
                 );
-                this.drawXCenteredString(this.xSize / 2,
+                this.drawXCenteredString(
+                        this.xSize / 2,
                         95,
                         Localization.translate("tesseract.public_channel"),
                         ModUtils.convertRGBcolorToInt(13, 229, 34),

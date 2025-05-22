@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import com.denfop.tiles.windturbine.TileEntityWindTurbineController;
 import net.minecraft.entity.player.EntityPlayer;
 

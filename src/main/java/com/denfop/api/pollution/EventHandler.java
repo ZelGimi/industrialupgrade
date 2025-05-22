@@ -1,6 +1,5 @@
 package com.denfop.api.pollution;
 
-import com.denfop.api.radiationsystem.RadiationSystem;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 

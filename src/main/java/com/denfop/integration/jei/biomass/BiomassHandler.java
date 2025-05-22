@@ -3,7 +3,6 @@ package com.denfop.integration.jei.biomass;
 
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 

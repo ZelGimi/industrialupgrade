@@ -3,9 +3,7 @@ package com.denfop.tiles.transport.tiles;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.transport.ITransportAcceptor;
 import com.denfop.api.transport.ITransportConductor;
-import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.state.TileEntityBlockStateContainer;
 import com.denfop.blocks.state.UnlistedProperty;
@@ -316,7 +314,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
             return super.onActivated(player, hand, side, hitX, hitY, hitZ);
         }
         if (this instanceof ITransportConductor) {
-            boolean can = ((ITransportConductor)this).isInput() || ((ITransportConductor)this).isOutput();
+            boolean can = ((ITransportConductor) this).isInput() || ((ITransportConductor) this).isOutput();
             if (can) {
                 return super.onActivated(player, hand, side, hitX, hitY, hitZ);
             } else {

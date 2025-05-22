@@ -298,7 +298,6 @@ public class TileEntityGeneticReplicator extends TileElectricMachine implements 
     }
 
 
-
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.genetic_replicator;
     }

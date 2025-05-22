@@ -28,8 +28,8 @@ public class CoolNetLocal {
 
 
     final CoolTickList<CoolTick<ICoolSource, Path>> senderPath = new CoolTickList<>();
-    List<ICoolSource> sourceToUpdateList = new ArrayList<>();
     private final Map<BlockPos, ICoolTile> chunkCoordinatesICoolTileMap;
+    List<ICoolSource> sourceToUpdateList = new ArrayList<>();
 
     CoolNetLocal() {
         this.chunkCoordinatesICoolTileMap = new HashMap<>();
@@ -426,7 +426,6 @@ public class CoolNetLocal {
             }
         }
     }
-
 
 
     public void removeAll(final List<CoolTick<ICoolSource, Path>> par1) {

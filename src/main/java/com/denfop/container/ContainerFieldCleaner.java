@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityFieldCleaner;
-import com.denfop.tiles.mechanism.TileEntityPlantGardener;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerFieldCleaner extends ContainerFullInv<TileEntityFieldCleaner> {

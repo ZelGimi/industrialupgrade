@@ -13,7 +13,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,8 +26,9 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
         super(colonie);
         this.type = type;
         this.people = 0;
-        if (!simulate)
+        if (!simulate) {
             this.getColony().addBuilding(this);
+        }
     }
 
     public ItemFactory(CustomPacketBuffer packetBuffer, Colony colonie) {
@@ -37,17 +37,7 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
         this.people = packetBuffer.readByte();
         this.getColony().addBuilding(this);
     }
-    @Override
-    public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
-        super.writePacket(customPacketBuffer);
-        customPacketBuffer.writeByte(type.ordinal());
-        customPacketBuffer.writeByte(people);
-        return customPacketBuffer;
-    }
-    @Override
-    public byte getId() {
-        return 4;
-    }
+
     public ItemFactory(final NBTTagCompound tag, final IColony colonie) {
         super(colonie);
         this.type = EnumMiningFactory.getID(tag.getByte("id"));
@@ -56,26 +46,47 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
     }
 
     @Override
+    public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
+        super.writePacket(customPacketBuffer);
+        customPacketBuffer.writeByte(type.ordinal());
+        customPacketBuffer.writeByte(people);
+        return customPacketBuffer;
+    }
+
+    @Override
+    public byte getId() {
+        return 4;
+    }
+
+    @Override
     public void work() {
         List<IStorage> storageList = this.getColony().getStorageList();
         if (storageList.isEmpty() || this.getColony().getEnergy() < this.getEnergy()) {
             return;
         }
-        if (this.getColony().getTick() % 5 != 0)
+        if (this.getColony().getTick() % 5 != 0) {
             return;
-        if (WorldBaseGen.random.nextInt(100) < this.type.getChance() ) {
+        }
+        if (WorldBaseGen.random.nextInt(100) < this.type.getChance()) {
             for (IStorage storage : storageList) {
                 if (storage.work()) {
-                    List<DataItem<ItemStack>> itemStacks = SpaceNet.instance.getColonieNet().getItemsFromBody(getColony().getBody());
+                    List<DataItem<ItemStack>> itemStacks = SpaceNet.instance
+                            .getColonieNet()
+                            .getItemsFromBody(getColony().getBody());
                     if (itemStacks.isEmpty()) {
                         return;
                     }
-                    itemStacks = itemStacks.stream().filter(fluidStackDataItem -> fluidStackDataItem.getLevel() <= this.getColony().getLevel()).collect(
+                    itemStacks = itemStacks.stream().filter(fluidStackDataItem -> fluidStackDataItem.getLevel() <= this
+                            .getColony()
+                            .getLevel()).collect(
                             Collectors.toList());
-                    if (itemStacks.isEmpty())
+                    if (itemStacks.isEmpty()) {
                         return;
+                    }
                     ItemStack itemStack = itemStacks.get(WorldBaseGen.random.nextInt(itemStacks.size())).getElement().copy();
-                    itemStack.setCount((int) ((WorldBaseGen.random.nextInt(this.type.getMaxItemValue())+1) * this.getColony().getPercentEntertainment()));
+                    itemStack.setCount((int) ((WorldBaseGen.random.nextInt(this.type.getMaxItemValue()) + 1) * this
+                            .getColony()
+                            .getPercentEntertainment()));
                     if (storage.canAddItemStack(itemStack)) {
                         this.getColony().useEnergy(this.getEnergy());
                         return;

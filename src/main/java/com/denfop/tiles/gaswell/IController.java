@@ -6,4 +6,5 @@ import com.denfop.componets.Energy;
 public interface IController extends IMainMultiBlock {
 
     Energy getEnergy();
+
 }

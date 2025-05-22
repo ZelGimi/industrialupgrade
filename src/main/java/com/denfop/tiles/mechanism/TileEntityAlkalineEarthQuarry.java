@@ -108,7 +108,7 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
                 return (int) Math.max(1, 20 - ((TileEntityAlkalineEarthQuarry) this.parent).getLevel() * 1.1);
             }
         });
-        this.upgradeSlot = new InvSlotUpgrade(this,2);
+        this.upgradeSlot = new InvSlotUpgrade(this, 2);
         this.level = 0;
     }
 

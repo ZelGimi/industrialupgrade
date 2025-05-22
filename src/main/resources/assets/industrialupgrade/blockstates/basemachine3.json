@@ -645,7 +645,7 @@
         "model" : "industrialupgrade:basemachine/wireless_oil_pump"
       },
 	   "wireless_oil_pump_active" : {
-        "model" : "industrialupgrade:basemachine/simulation_reactors_active"
+        "model" : "industrialupgrade:basemachine/wireless_oil_pump_active"
       },
 	   "wireless_mineral_quarry" : {
         "model" : "industrialupgrade:basemachine/wireless_mineral_quarry"

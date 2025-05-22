@@ -1,7 +1,6 @@
 package com.denfop.tiles.mechanism.multimechanism;
 
 import com.denfop.api.audio.EnumTypeAudio;
-import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -20,4 +19,5 @@ public interface IMultiMachine {
     void initiate(int soundEvent);
 
     EnumTypeAudio getTypeAudio();
+
 }

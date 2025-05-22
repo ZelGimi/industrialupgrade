@@ -8,21 +8,23 @@ public enum EnumTimeVariety {
     ALE(12),
     DRAGONBLOOD(24),
     BLACK_STUFF(25);
+    static EnumTimeVariety[] varieties = values();
     private final double time;
-  static EnumTimeVariety[]  varieties = values();
-    EnumTimeVariety(double time){
+
+    EnumTimeVariety(double time) {
         this.time = time;
+    }
+
+    public static EnumTimeVariety getVarietyFromTime(double time) {
+        for (int i = varieties.length - 1; i >= 0; i--) {
+            if (time >= varieties[i].time) {
+                return varieties[i];
+            }
+        }
+        return EnumTimeVariety.BREW;
     }
 
     public double getTime() {
         return time;
-    }
-
-    public static EnumTimeVariety getVarietyFromTime(double time){
-        for (int i = varieties.length - 1; i >= 0;i--){
-            if (time >= varieties[i].time)
-                return varieties[i];
-        }
-        return EnumTimeVariety.BREW;
     }
 }

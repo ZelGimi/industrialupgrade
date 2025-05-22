@@ -6,10 +6,8 @@ import com.denfop.api.windsystem.EnumLevelGenerators;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.SoilPollutionComponent;
 
 public class TilePerWaterGenerator extends TileBaseWaterGenerator {
-
 
 
     public TilePerWaterGenerator() {

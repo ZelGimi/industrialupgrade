@@ -13,13 +13,8 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.container.ContainerPigFarm;
 import com.denfop.container.ContainerPlantCollector;
-import com.denfop.container.ContainerPlantFertilizer;
-import com.denfop.gui.GuiPigFarm;
 import com.denfop.gui.GuiPlantCollector;
-import com.denfop.gui.GuiPlantFertilizer;
-import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.crop.TileEntityCrop;
@@ -40,18 +35,22 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityPlantCollector extends TileEntityInventory  implements IUpgradableBlock {
+public class TileEntityPlantCollector extends TileEntityInventory implements IUpgradableBlock {
 
 
     private static final int RADIUS = 8;
     public final Energy energy;
     public final InvSlotOutput output;
+    public final InvSlotUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
+    private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
             pos.add(RADIUS, RADIUS, RADIUS)
     );
+    List<List<TileEntityCrop>> list = new ArrayList<>();
+    List<Chunk> chunks;
 
     public TileEntityPlantCollector() {
         this.output = new InvSlotOutput(this, 18);
@@ -61,12 +60,12 @@ public class TileEntityPlantCollector extends TileEntityInventory  implements IU
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
+
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract
         );
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
@@ -90,8 +89,7 @@ public class TileEntityPlantCollector extends TileEntityInventory  implements IU
             }
         }
     }
-    List<List<TileEntityCrop>> list = new ArrayList<>();
-    List<Chunk> chunks;
+
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -143,7 +141,7 @@ public class TileEntityPlantCollector extends TileEntityInventory  implements IU
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0){
+        if (this.getWorld().getWorldTime() % 100 == 0) {
             updateCrop();
         }
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
@@ -152,12 +150,14 @@ public class TileEntityPlantCollector extends TileEntityInventory  implements IU
                 for (TileEntityCrop crop : crops) {
                     if (this.energy.getEnergy() > 50) {
                         if (this.contains(crop.getPos())) {
-                            if (crop.getCrop() != null &&crop.getCrop().getTick() == crop.getCrop().getMaxTick() &&crop.getCrop().getId() != 3) {
+                            if (crop.getCrop() != null && crop.getCrop().getTick() == crop.getCrop().getMaxTick() && crop
+                                    .getCrop()
+                                    .getId() != 3) {
                                 final List<ItemStack> listItems = crop.harvest(false);
                                 this.energy.useEnergy(50);
                                 this.output.add(listItems);
-                                if (WorldBaseGen.random.nextInt(100) <= 4){
-                                    this.output.add(ModUtils.setSize(crop.getCropItem(),crop.getCrop().getSizeSeed()));
+                                if (WorldBaseGen.random.nextInt(100) <= 4) {
+                                    this.output.add(ModUtils.setSize(crop.getCropItem(), crop.getCrop().getSizeSeed()));
                                 }
                             }
 
@@ -170,6 +170,7 @@ public class TileEntityPlantCollector extends TileEntityInventory  implements IU
         }
 
     }
+
     private void updateCrop() {
         list.clear();
         for (Chunk chunk : chunks) {

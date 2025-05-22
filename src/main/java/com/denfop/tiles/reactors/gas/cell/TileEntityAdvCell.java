@@ -23,7 +23,7 @@ public class TileEntityAdvCell extends TileEntityMainTank implements ICell {
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 1;
     }
 

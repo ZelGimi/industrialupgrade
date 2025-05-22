@@ -11,11 +11,9 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class DepositsMolotCategory extends Gui implements IRecipeCategory<DepositsMolotWrapper> {
 
@@ -69,8 +67,6 @@ public class DepositsMolotCategory extends Gui implements IRecipeCategory<Deposi
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-
-
 
 
     }

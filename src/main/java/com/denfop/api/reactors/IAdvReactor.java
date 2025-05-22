@@ -45,7 +45,7 @@ public interface IAdvReactor {
 
     void setSecurity(EnumTypeSecurity enumTypeSecurity);
 
-    int getLevel();
+    int getBlockLevel();
 
     int getWidth();
 

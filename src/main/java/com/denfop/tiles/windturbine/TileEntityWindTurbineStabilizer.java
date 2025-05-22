@@ -3,7 +3,6 @@ package com.denfop.tiles.windturbine;
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.mechanism.BlockCyclotron;
 import com.denfop.blocks.mechanism.BlockWindTurbine;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 

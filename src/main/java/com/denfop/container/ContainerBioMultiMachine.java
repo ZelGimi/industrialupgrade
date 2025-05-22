@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileBioMultiMachine;
-import com.denfop.tiles.base.TileSteamMultiMachine;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerBioMultiMachine extends ContainerFullInv<TileBioMultiMachine> {

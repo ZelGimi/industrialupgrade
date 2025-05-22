@@ -2,13 +2,8 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.componets.ComponentRenderInventory;
-import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerUpgrade;
 import com.denfop.network.packet.PacketItemStackEvent;
-import com.denfop.tiles.mechanism.dual.heat.TileAlloySmelter;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +11,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @SideOnly(Side.CLIENT)
 public class GUIUpgrade1 extends GuiIU<ContainerUpgrade> {
@@ -39,7 +33,7 @@ public class GUIUpgrade1 extends GuiIU<ContainerUpgrade> {
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2 , 12, 0);
+        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 12, 0);
         new AdvArea(this, 76, 26, 87, 37).withTooltip(Localization.translate("iu.dir.top")).drawForeground(
                 par1,
                 par2
@@ -59,10 +53,6 @@ public class GUIUpgrade1 extends GuiIU<ContainerUpgrade> {
         );
         new AdvArea(this, 76, 78, 87, 93).withTooltip(Localization.translate("iu.dir.south")).drawForeground(par1, par2);
         new AdvArea(this, 76, 98, 87, 109).withTooltip(Localization.translate("iu.dir.bottom")).drawForeground(par1, par2);
-
-
-
-
 
 
     }
@@ -139,8 +129,6 @@ public class GUIUpgrade1 extends GuiIU<ContainerUpgrade> {
             new PacketItemStackEvent(6, container.base.player);
             ModUtils.nbt(this.itemStack).setByte("dir", (byte) 6); // east
         }
-
-
 
 
     }

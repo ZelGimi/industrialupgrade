@@ -8,8 +8,8 @@ import java.io.IOException;
 
 public class Timer {
 
-    private int max;
     boolean canWork = true;
+    private int max;
     private int hour;
     private int minute;
     private int seconds;
@@ -31,6 +31,7 @@ public class Timer {
         this.seconds = seconds;
         this.max = hour * 3600 + minute * 60 + seconds;
     }
+
     public Timer(NBTTagCompound tagCompound) {
         this.hour = tagCompound.getInteger("hour");
         this.minute = tagCompound.getByte("minute");
@@ -38,19 +39,21 @@ public class Timer {
         this.canWork = tagCompound.getBoolean("canWork");
         this.max = tagCompound.getInteger("max");
     }
+
     public Timer(CustomPacketBuffer is) {
         this.hour = is.readInt();
         this.minute = is.readByte();
         this.seconds = is.readByte();
         this.canWork = is.readBoolean();
-        max= is.readInt();
+        max = is.readInt();
     }
+
     public void readBuffer(CustomPacketBuffer is) throws IOException {
         this.hour = is.readInt();
         this.minute = is.readByte();
         this.seconds = is.readByte();
         this.canWork = is.readBoolean();
-        max= is.readInt();
+        max = is.readInt();
     }
 
     public void writeBuffer(CustomPacketBuffer buffer) {
@@ -72,15 +75,15 @@ public class Timer {
 
 
     public String getDisplay() {
-        String time="";
-        if (hour > 0){
-            time+=this.hour + Localization.translate("iu.hour");
+        String time = "";
+        if (hour > 0) {
+            time += this.hour + Localization.translate("iu.hour");
         }
-        if (minute > 0){
-            time+=this.minute + Localization.translate("iu.minutes");
+        if (minute > 0) {
+            time += this.minute + Localization.translate("iu.minutes");
         }
-        if (seconds > 0){
-            time+=this.seconds + Localization.translate("iu.seconds");
+        if (seconds > 0) {
+            time += this.seconds + Localization.translate("iu.seconds");
         }
         return time;
     }
@@ -88,9 +91,11 @@ public class Timer {
     public int getMax() {
         return max;
     }
-    public double getProgressBar(){
-        return Math.min(1, (max - getBar())/ (max*1d));
+
+    public double getProgressBar() {
+        return Math.min(1, (max - getBar()) / (max * 1d));
     }
+
     public int getBar() {
         return (this.hour * 3600 + this.minute * 60 + this.seconds);
     }
@@ -181,9 +186,11 @@ public class Timer {
         this.hour = this.hour - timerTo.hour;
         this.minute = this.minute - timerTo.minute;
         this.seconds = this.seconds - timerTo.seconds;
-        if (this.seconds < 0)
+        if (this.seconds < 0) {
             this.seconds = Math.abs(seconds);
-        this.max =  hour * 3600 + minute * 60 + seconds;;
+        }
+        this.max = hour * 3600 + minute * 60 + seconds;
+        ;
     }
 
 }

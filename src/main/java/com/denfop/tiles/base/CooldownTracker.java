@@ -8,12 +8,6 @@ public class CooldownTracker {
         this.tick = 0;
     }
 
-    public void setTick(int tick) {
-
-        this.tick = tick;
-
-    }
-
     public void removeTick() {
         if (this.tick > 0) {
             this.tick -= 1;
@@ -22,6 +16,12 @@ public class CooldownTracker {
 
     public int getTick() {
         return tick;
+    }
+
+    public void setTick(int tick) {
+
+        this.tick = tick;
+
     }
 
 }

@@ -2,10 +2,10 @@ package com.denfop.api.space.colonies.building;
 
 import com.denfop.api.space.colonies.Building;
 import com.denfop.api.space.colonies.Colony;
-import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.api.IColony;
 import com.denfop.api.space.colonies.api.building.IColonyStorage;
 import com.denfop.api.space.colonies.api.building.IStorage;
+import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,18 +38,7 @@ public class StorageBuilding extends Building implements IColonyStorage {
         this.getColony().addStorage(this.storage);
         this.getColony().addBuilding(this);
     }
-    @Override
-    public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
-        super.writePacket(customPacketBuffer);
-        customPacketBuffer.writeByte(peoples);
-        customPacketBuffer.writeBoolean(work);
-        storage.writePacket(customPacketBuffer);
-        return customPacketBuffer;
-    }
-    @Override
-    public byte getId() {
-        return 7;
-    }
+
     public StorageBuilding(final NBTTagCompound tag, final IColony colonie) {
         super(colonie);
         this.peoples = tag.getByte("people");
@@ -58,6 +47,20 @@ public class StorageBuilding extends Building implements IColonyStorage {
         this.storage = new Storage(tag.getCompoundTag("storage"), this);
         this.getColony().addStorage(this.storage);
         this.getColony().addBuilding(this);
+    }
+
+    @Override
+    public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
+        super.writePacket(customPacketBuffer);
+        customPacketBuffer.writeByte(peoples);
+        customPacketBuffer.writeBoolean(work);
+        storage.writePacket(customPacketBuffer);
+        return customPacketBuffer;
+    }
+
+    @Override
+    public byte getId() {
+        return 7;
     }
 
     @Override
@@ -111,12 +114,12 @@ public class StorageBuilding extends Building implements IColonyStorage {
 
     @Override
     public void addWorkers(final int workers) {
-        peoples+=workers;
+        peoples += workers;
     }
 
     @Override
     public void removeWorkers(final int remove) {
-        peoples-=remove;
+        peoples -= remove;
     }
 
     @Override

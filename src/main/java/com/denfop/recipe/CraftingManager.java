@@ -5,7 +5,6 @@ import com.denfop.api.crafting.BaseRecipe;
 import com.denfop.api.crafting.BaseShapelessRecipe;
 import com.denfop.api.crafting.PartRecipe;
 import com.denfop.api.crafting.RecipeGrid;
-import com.denfop.utils.ModUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,6 +24,7 @@ public class CraftingManager {
     public BaseRecipe addRecipe(String output, Object... input) {
         return addRecipe(OreDictionary.getOres(output).get(0), input);
     }
+
     public BaseRecipe addRecipe(Item output, Object... input) {
         return addRecipe(new ItemStack(output), input);
     }

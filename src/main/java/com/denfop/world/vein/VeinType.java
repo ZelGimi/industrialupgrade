@@ -15,23 +15,26 @@ public class VeinType {
     private TypeVein vein;
 
     public VeinType(IMineral heavyOre, int meta, int deposits_meta, TypeVein vein, ChanceOre... ores) {
-       this(heavyOre,meta,deposits_meta,false,vein,ores);
+        this(heavyOre, meta, deposits_meta, false, vein, ores);
     }
 
-    public VeinType(IMineral heavyOre, int meta, int deposits_meta,boolean radiation, TypeVein vein, ChanceOre... ores) {
+    public VeinType(IMineral heavyOre, int meta, int deposits_meta, boolean radiation, TypeVein vein, ChanceOre... ores) {
         this.heavyOre = heavyOre;
         this.vein = vein;
         this.meta = meta;
         this.deposits_meta = deposits_meta;
         this.ores = Arrays.asList(ores);
-        this.radiation=radiation;
+        this.radiation = radiation;
     }
+
     public VeinType(IMineral heavyOre, int meta, TypeVein vein, ChanceOre... ores) {
-        this(heavyOre,meta,meta,false,vein,ores);
+        this(heavyOre, meta, meta, false, vein, ores);
     }
-    public VeinType(IMineral heavyOre, int meta,boolean radiation, TypeVein vein, ChanceOre... ores) {
-        this(heavyOre,meta,meta,radiation,vein,ores);
+
+    public VeinType(IMineral heavyOre, int meta, boolean radiation, TypeVein vein, ChanceOre... ores) {
+        this(heavyOre, meta, meta, radiation, vein, ores);
     }
+
     public boolean isRadiation() {
         return radiation;
     }

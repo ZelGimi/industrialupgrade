@@ -24,7 +24,7 @@ public class TileEntityBaseCirculationPump extends TileEntityMultiBlockElement i
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemsPumps && ((ItemsPumps) stack.getItem()).getLevel() <= ((TileEntityBaseCirculationPump) this.base).getLevel();
+                return stack.getItem() instanceof ItemsPumps && ((ItemsPumps) stack.getItem()).getLevel() <= ((TileEntityBaseCirculationPump) this.base).getBlockLevel();
             }
 
             @Override
@@ -87,7 +87,7 @@ public class TileEntityBaseCirculationPump extends TileEntityMultiBlockElement i
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return level;
     }
 

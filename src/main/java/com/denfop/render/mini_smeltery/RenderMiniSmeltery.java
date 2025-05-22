@@ -22,19 +22,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class RenderMiniSmeltery {
+
     @SideOnly(Side.CLIENT)
-    public static void render(TileEntityMiniSmeltery te){
+    public static void render(TileEntityMiniSmeltery te) {
         GlStateManager.pushMatrix();
-        if ( te.fluidTank1.getFluidAmount()  - 144 > 0) {
+        if (te.fluidTank1.getFluidAmount() - 144 > 0) {
             final float scale = (te.fluidTank1.getFluidAmount() - 144) * 1F / te.fluidTank1.getCapacity();
 
             GlStateManager.enableLighting();
             GlStateManager.enableColorMaterial();
             GlStateManager.enableRescaleNormal();
-            GlStateManager.translate(0.1,0,0.1);
+            GlStateManager.translate(0.1, 0, 0.1);
             GlStateManager.scale(0.82, 1.2 * scale, 0.82);
             Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             BlockRendererDispatcher blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
@@ -106,7 +106,7 @@ public class RenderMiniSmeltery {
             GlStateManager.enableLighting();
             GlStateManager.enableColorMaterial();
             GlStateManager.enableRescaleNormal();
-            GlStateManager.translate(0.04,0.86,0.04);
+            GlStateManager.translate(0.04, 0.86, 0.04);
             GlStateManager.scale(0.95, 0.15, 0.95);
             Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             BlockRendererDispatcher blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
@@ -181,9 +181,9 @@ public class RenderMiniSmeltery {
             GlStateManager.alphaFunc(516, 0.1F);
             GlStateManager.enableBlend();
             RenderHelper.enableStandardItemLighting();
-            GlStateManager.translate(0.5,0.93,0.25);
+            GlStateManager.translate(0.5, 0.93, 0.25);
             if (te.getFacing() == EnumFacing.EAST || te.getFacing() == EnumFacing.WEST) {
-                GlStateManager.translate(0.25,0,0.25);
+                GlStateManager.translate(0.25, 0, 0.25);
 
 
             }
@@ -191,15 +191,13 @@ public class RenderMiniSmeltery {
             if (te.getFacing() == EnumFacing.EAST || te.getFacing() == EnumFacing.WEST) {
                 GlStateManager.rotate(90, 0, 0, 1);
             }
-            GlStateManager.scale(2,2,2);
+            GlStateManager.scale(2, 2, 2);
             GlStateManager.tryBlendFuncSeparate(
                     GlStateManager.SourceFactor.SRC_ALPHA,
                     GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
                     GlStateManager.SourceFactor.ONE,
                     GlStateManager.DestFactor.ZERO
             );
-
-
 
 
             IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
@@ -224,4 +222,5 @@ public class RenderMiniSmeltery {
         }
         GlStateManager.popMatrix();
     }
+
 }

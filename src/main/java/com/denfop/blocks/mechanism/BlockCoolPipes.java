@@ -31,8 +31,8 @@ public enum BlockCoolPipes implements IMultiTileBlock {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockCoolPipes(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this.teClass = teClass;
@@ -58,14 +58,19 @@ public enum BlockCoolPipes implements IMultiTileBlock {
             }
         }
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public float getHardness() {
         return 0.5F;
     }

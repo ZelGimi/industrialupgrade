@@ -35,7 +35,7 @@ public class TileEntityCoolant extends TileEntityMultiBlockElement implements IC
 
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return level;
     }
 

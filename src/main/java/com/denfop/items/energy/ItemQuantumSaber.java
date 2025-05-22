@@ -336,6 +336,7 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
 
         return true;
     }
+
     private void areaAttack(ItemStack stack, EntityLivingBase target, EntityLivingBase source, int radius, double damage) {
         List<EntityLivingBase> entities = source.world.getEntitiesWithinAABB(
                 EntityLivingBase.class,
@@ -347,6 +348,7 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
             }
         }
     }
+
     public String getRandomSwingSound() {
         switch (IUCore.random.nextInt(3)) {
             default:
@@ -404,6 +406,7 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
             }
         }
     }
+
     @Override
     public void addInformation(
             final ItemStack stack,
@@ -422,6 +425,7 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
         }
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
+
     protected String getIdleSound() {
         return "NanosabreIdle";
     }

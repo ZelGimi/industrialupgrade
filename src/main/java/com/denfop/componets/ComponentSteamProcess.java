@@ -38,6 +38,8 @@ public class ComponentSteamProcess extends AbstractComponent {
     PressureComponent pressureComponent;
     private boolean audoFix;
     private Action action;
+    private Timer timer1 = new Timer(0, 0, 0);
+    private Timer timer = null;
 
     public ComponentSteamProcess(
             final TileEntityInventory parent,
@@ -51,7 +53,6 @@ public class ComponentSteamProcess extends AbstractComponent {
         this.operationsPerTick = 1;
 
     }
-
 
     public boolean checkHeatRecipe() {
         if (this.heatComponent == null) {
@@ -67,14 +68,13 @@ public class ComponentSteamProcess extends AbstractComponent {
         }
         return false;
     }
-    private Timer timer1 = new Timer(0, 0, 0);
-    private Timer timer = null;
+
     @Override
     public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (stack.getItem().equals(IUItem.canister)) {
             FluidStack fluid = FluidUtil.getFluidContained(stack);
-            if (fluid != null && fluid.getFluid() == FluidName.fluidsteam_oil.getInstance() &&fluid.amount >= 250 && (!timer1.canWork()  || timer1.getBar() == 0)&& (timer == null || !timer.canWork())) {
+            if (fluid != null && fluid.getFluid() == FluidName.fluidsteam_oil.getInstance() && fluid.amount >= 250 && (!timer1.canWork() || timer1.getBar() == 0) && (timer == null || !timer.canWork())) {
                 this.timer = new Timer(0, 0, 40);
                 final IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
                 handler.drain(250, true);
@@ -83,6 +83,7 @@ public class ComponentSteamProcess extends AbstractComponent {
         }
         return super.onBlockActivated(player, hand);
     }
+
     @Override
     public void onLoaded() {
         super.onLoaded();

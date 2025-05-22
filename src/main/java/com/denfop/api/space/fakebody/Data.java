@@ -2,7 +2,6 @@ package com.denfop.api.space.fakebody;
 
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
-import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Objects;
@@ -19,24 +18,23 @@ public class Data implements IData {
         this.body = body;
     }
 
+    public Data(NBTTagCompound nbtTagCompound) {
+        this.player = nbtTagCompound.getUniqueId("uuid");
+        this.body = SpaceNet.instance.getBodyFromName(nbtTagCompound.getString("nameBody"));
+        this.percent = nbtTagCompound.getDouble("percent");
+    }
+
     public IBody getBody() {
         return body;
     }
 
     public NBTTagCompound writeNBT() {
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        nbtTagCompound.setDouble("percent",percent);
-        nbtTagCompound.setUniqueId("uuid",player);
+        nbtTagCompound.setDouble("percent", percent);
+        nbtTagCompound.setUniqueId("uuid", player);
         nbtTagCompound.setString("nameBody", body.getName());
         return nbtTagCompound;
     }
-
-    public Data(NBTTagCompound nbtTagCompound) {
-        this.player =nbtTagCompound.getUniqueId("uuid");
-        this.body = SpaceNet.instance.getBodyFromName(nbtTagCompound.getString("nameBody"));
-        this.percent = nbtTagCompound.getDouble("percent");
-    }
-
 
     @Override
     public boolean equals(final Object o) {
@@ -58,23 +56,26 @@ public class Data implements IData {
 
     @Override
     public void addInformation() {
-        this.percent+=1;
-        if (percent > 100)
+        this.percent += 1;
+        if (percent > 100) {
             percent = 100;
+        }
     }
 
     @Override
     public void setInformation(final double information) {
-       this.percent=information;
-        if (percent > 100)
+        this.percent = information;
+        if (percent > 100) {
             percent = 100;
+        }
     }
 
     @Override
     public void addInformation(final double information) {
-        this.percent+=information;
-        if (percent > 100)
+        this.percent += information;
+        if (percent > 100) {
             percent = 100;
+        }
     }
 
 

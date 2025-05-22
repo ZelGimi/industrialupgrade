@@ -16,10 +16,10 @@ public class GuiVending extends GuiIU<ContainerVending> {
         super(guiContainer, guiContainer.base.style);
         this.contains = contains;
 
-        if (contains){
-            this.ySize=255;
+        if (contains) {
+            this.ySize = 255;
             this.inventory.addY(89);
-            this.addElement(new ImageInterface(this,0,0,this.xSize,this.ySize));
+            this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
         }
 
     }

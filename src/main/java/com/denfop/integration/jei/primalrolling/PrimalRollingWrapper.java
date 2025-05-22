@@ -43,7 +43,8 @@ public class PrimalRollingWrapper implements IRecipeWrapper {
         minecraft.fontRenderer.drawSplitString("->", 47, 31,
                 recipeWidth - 5, 4210752
         );
-        minecraft.fontRenderer.drawSplitString(Localization.translate("iu.rolling.jei1") + "."+Localization.translate("iu.rolling.jei2"), 5, 45,
+        minecraft.fontRenderer.drawSplitString(Localization.translate("iu.rolling.jei1") + "." + Localization.translate(
+                        "iu.rolling.jei2"), 5, 45,
                 recipeWidth - 5, 4210752
         );
     }

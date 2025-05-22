@@ -118,11 +118,12 @@ public class BlockDeposits1 extends BlockCore implements IModelRegister, IDeposi
             this.checkFallable(worldIn, pos);
         }
     }
+
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
+
     @Override
     public List<String> getInformationFromMeta(final int meta) {
         List<String> inf = mapInf.get(meta);
@@ -141,18 +142,22 @@ public class BlockDeposits1 extends BlockCore implements IModelRegister, IDeposi
                 for (int i = 0; i < vein.getOres().size(); i++) {
                     final ChanceOre chanceOre = vein.getOres().get(i);
                     String s2 =
-                            new ItemStack(chanceOre.getBlock().getBlock(),
+                            new ItemStack(
+                                    chanceOre.getBlock().getBlock(),
                                     1,
-                                    chanceOre.getMeta()).getDisplayName() + " " + chanceOre.getChance() + "%";
+                                    chanceOre.getMeta()
+                            ).getDisplayName() + " " + chanceOre.getChance() + "%";
                     stringList.add(s2);
                 }
             } else {
                 for (int i = 0; i < vein.getOres().size(); i++) {
                     final ChanceOre chanceOre = vein.getOres().get(i);
                     String s2 =
-                            new ItemStack(chanceOre.getBlock().getBlock(),
+                            new ItemStack(
+                                    chanceOre.getBlock().getBlock(),
                                     1,
-                                    chanceOre.getMeta()).getDisplayName() + " " + chanceOre.getChance() + "%";
+                                    chanceOre.getMeta()
+                            ).getDisplayName() + " " + chanceOre.getChance() + "%";
                     stringList.add(s2);
                 }
             }
@@ -351,7 +356,7 @@ public class BlockDeposits1 extends BlockCore implements IModelRegister, IDeposi
                     List<ItemStack> stacks = new ArrayList<>();
                     for (int i = 0; i < col.length; i++) {
                         final Random rand = player.getEntityWorld().rand;
-                        if ((rand.nextInt(100) < col[i])){
+                        if ((rand.nextInt(100) < col[i])) {
                             stacks.add(output.getRecipe().output.items.get(i));
                         }
                     }

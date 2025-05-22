@@ -125,7 +125,7 @@ public class TileEntityItemManipulator extends TileElectricMachine
                 if (countFill == 0) {
                     box.putWithoutSave(i, ItemStack.EMPTY);
                 } else {
-                    if(stack.getCount() != countFill) {
+                    if (stack.getCount() != countFill) {
                         stack.setCount(countFill);
                         box.putWithoutSave(i, stack);
                     }

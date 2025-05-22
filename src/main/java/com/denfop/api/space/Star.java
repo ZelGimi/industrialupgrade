@@ -15,13 +15,14 @@ public class Star implements IStar {
     private final double size;
     List<IPlanet> planetList;
     List<IAsteroid> asteroidList;
+
     public Star(String name, ISystem system, ResourceLocation location, int angle, double size) {
         this.name = name;
         this.system = system;
         this.location = location;
         this.planetList = new ArrayList<>();
         this.asteroidList = new ArrayList<>();
-        this.angle=angle;
+        this.angle = angle;
         this.size = size;
         SpaceNet.instance.addStar(this);
     }

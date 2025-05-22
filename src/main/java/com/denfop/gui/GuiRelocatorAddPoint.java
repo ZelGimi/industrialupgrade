@@ -10,9 +10,7 @@ import com.denfop.container.ContainerBase;
 import com.denfop.items.relocator.ItemStackRelocator;
 import com.denfop.items.relocator.Point;
 import com.denfop.network.packet.PacketAddRelocatorPoint;
-import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
@@ -28,9 +26,9 @@ public class GuiRelocatorAddPoint extends GuiIU<ContainerBase<ItemStackRelocator
         this.componentList.clear();
         this.xSize = 100;
         this.ySize = 50;
-        this.addElement(new ImageInterface(this,0,0,this.xSize,ySize));
+        this.addElement(new ImageInterface(this, 0, 0, this.xSize, ySize));
         this.addElement(new ImageScreen(this, 8, 6, 82, 14));
-        this.addElement(new CustomButton(this, 8, 26, 84, 14, null, 0, Localization.translate("button.write")){
+        this.addElement(new CustomButton(this, 8, 26, 84, 14, null, 0, Localization.translate("button.write")) {
             @Override
             protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
                 if (this.visible() && this.contains(mouseX, mouseY)) {
@@ -38,23 +36,26 @@ public class GuiRelocatorAddPoint extends GuiIU<ContainerBase<ItemStackRelocator
                             SoundEvents.UI_BUTTON_CLICK,
                             1.0F
                     ));
-                    new PacketAddRelocatorPoint(mc.player, new Point( textField.getText(),mc.player.getPosition()));
+                    new PacketAddRelocatorPoint(mc.player, new Point(textField.getText(), mc.player.getPosition()));
                 }
                 return true;
             }
         });
 
     }
+
     @Override
     public void initGui() {
         super.initGui();
         this.textField = new GuiTextField(0, this.fontRenderer, 14,
-                10, 76, 10);
+                10, 76, 10
+        );
         this.textField.setMaxStringLength(50);
         this.textField.setFocused(true);
         this.textField.setEnableBackgroundDrawing(false);
         textField.setCanLoseFocus(false);
     }
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -82,6 +83,7 @@ public class GuiRelocatorAddPoint extends GuiIU<ContainerBase<ItemStackRelocator
         this.textField.textboxKeyTyped(typedChar, keyCode);
 
     }
+
     public ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }

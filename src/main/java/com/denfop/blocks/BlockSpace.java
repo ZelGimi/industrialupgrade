@@ -3,10 +3,8 @@ package com.denfop.blocks;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -14,7 +12,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
@@ -22,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -78,7 +74,7 @@ public class BlockSpace extends BlockCore implements IModelRegister {
         if (meta >= (Type.values()).length) {
             meta = 0;
         }
-        return "iu." + Type.values()[meta].getName()  + ".name";
+        return "iu." + Type.values()[meta].getName() + ".name";
     }
 
     public EnumRarity getRarity(ItemStack stack) {
@@ -112,6 +108,7 @@ public class BlockSpace extends BlockCore implements IModelRegister {
             );
         }
     }
+
     @Override
     public List<ItemStack> getDrops(final IBlockAccess world, final BlockPos pos, final IBlockState state, final int fortune) {
         NonNullList<ItemStack> ret = NonNullList.create();
@@ -125,26 +122,26 @@ public class BlockSpace extends BlockCore implements IModelRegister {
             stack = stack.copy();
             stack.setCount(1 + getDrop(fortune));
             ret.add(stack);
-        }else if (type.ordinal() == 5) {
+        } else if (type.ordinal() == 5) {
             final int i = quantityRedstoneDroppedWithBonus(fortune, WorldBaseGen.random);
-            ret.add(new ItemStack(Items.REDSTONE,i));
-        }else if (type.ordinal() == 3){
+            ret.add(new ItemStack(Items.REDSTONE, i));
+        } else if (type.ordinal() == 3) {
             final int i = WorldBaseGen.random.nextInt(fortune + 2) + 1;
-            ret.add(new ItemStack(Items.DYE,i,4));
-        }else {
-            ret.add(new ItemStack(this,1,type.ordinal()));
+            ret.add(new ItemStack(Items.DYE, i, 4));
+        } else {
+            ret.add(new ItemStack(this, 1, type.ordinal()));
         }
         return ret;
     }
-    public int quantityRedstoneDroppedWithBonus(int fortune, Random random)
-    {
+
+    public int quantityRedstoneDroppedWithBonus(int fortune, Random random) {
         return this.quantityRedstoneDropped(random) + random.nextInt(fortune + 1);
     }
 
-    public int quantityRedstoneDropped(Random random)
-    {
+    public int quantityRedstoneDropped(Random random) {
         return 4 + random.nextInt(2);
     }
+
     private int getDrop(int fortune) {
         switch (fortune) {
             case 0:
@@ -157,6 +154,7 @@ public class BlockSpace extends BlockCore implements IModelRegister {
                 return WorldBaseGen.random.nextDouble() < 0.75 ? 1 : 0;
         }
     }
+
     public boolean preInit() {
         setRegistryName("blockspace");
         ForgeRegistries.BLOCKS.register(this);
@@ -190,7 +188,8 @@ public class BlockSpace extends BlockCore implements IModelRegister {
 
         private final int metadata;
         private final String name;
-
+        ItemStack stack;
+        private String raw;
 
         Type(int metadata) {
             this.metadata = metadata;
@@ -204,13 +203,13 @@ public class BlockSpace extends BlockCore implements IModelRegister {
         public int getMetadata() {
             return this.metadata;
         }
-        private String raw;
-        public void setRaw(String name){
-            this.raw = "raw"+name;
-        }
 
         public String getRaw() {
             return raw;
+        }
+
+        public void setRaw(String name) {
+            this.raw = "raw" + name;
         }
 
         @Nonnull
@@ -226,9 +225,8 @@ public class BlockSpace extends BlockCore implements IModelRegister {
             return EnumRarity.COMMON;
         }
 
-        ItemStack stack;
         public ItemStack getStack() {
-          return stack;
+            return stack;
         }
 
         public void setStack(ItemStack stack) {

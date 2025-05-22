@@ -1,7 +1,6 @@
 package com.denfop.api.recipe;
 
 import com.denfop.recipe.IInputItemStack;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;

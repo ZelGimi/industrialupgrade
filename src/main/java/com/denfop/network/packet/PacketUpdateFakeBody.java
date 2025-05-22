@@ -12,7 +12,6 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.tiles.mechanism.TileEntityResearchTableSpace;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -66,6 +65,7 @@ public class PacketUpdateFakeBody implements IPacket {
             World world = (World) DecoderHandler.decode(customPacketBuffer);
             BlockPos pos = (BlockPos) DecoderHandler.decode(customPacketBuffer);
             byte id = customPacketBuffer.readByte();
+            assert world != null;
             if (entityPlayer.getEntityWorld().provider.getDimension() == world.provider.getDimension()) {
                 TileEntity tile = world.getTileEntity(pos);
                 if (tile instanceof TileEntityResearchTableSpace) {
@@ -85,7 +85,7 @@ public class PacketUpdateFakeBody implements IPacket {
                         FakeAsteroid fakePlanet = new FakeAsteroid(nbt);
                         ((TileEntityResearchTableSpace) tile).fakeBody = fakePlanet;
                     }
-                    if (id == 3){
+                    if (id == 3) {
                         ((TileEntityResearchTableSpace) tile).fakeBody = null;
                     }
                 }

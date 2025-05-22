@@ -1,12 +1,10 @@
 package com.denfop.api.gasvein;
 
-import com.denfop.api.gasvein.TypeGas;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.ChunkPos;
 
 public interface IGasVein {
-
 
 
     TypeGas getType();

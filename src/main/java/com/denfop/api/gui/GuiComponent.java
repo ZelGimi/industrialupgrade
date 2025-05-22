@@ -402,7 +402,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
             return;
         }
 
-        if (!(this.component.getComponent() instanceof ComponentRenderInventory) && !(this.component.getComponent() instanceof ComponentProcessRender) && !(this.component.getComponent() instanceof ComponentValue) && !(this.component.getComponent() instanceof ComponentSteamProcessRender)&& !(this.component.getComponent() instanceof ComponentBioProcessRender) && !(this.component.getComponent() instanceof ComponentTimer) && !(this.component.getComponent() instanceof ComponentProgress) && !(this.component.getComponent() instanceof Vein)) {
+        if (!(this.component.getComponent() instanceof ComponentRenderInventory) && !(this.component.getComponent() instanceof ComponentProcessRender) && !(this.component.getComponent() instanceof ComponentValue) && !(this.component.getComponent() instanceof ComponentSteamProcessRender) && !(this.component.getComponent() instanceof ComponentBioProcessRender) && !(this.component.getComponent() instanceof ComponentTimer) && !(this.component.getComponent() instanceof ComponentProgress) && !(this.component.getComponent() instanceof Vein)) {
             this.gui.drawTexturedModalRect(
                     mouseX + this.x,
                     mouseY + this.y,
@@ -766,7 +766,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                     );
                 }
             }
-        }else if (this.component.getComponent() instanceof ComponentBioProcessRender) {
+        } else if (this.component.getComponent() instanceof ComponentBioProcessRender) {
             ComponentBioProcessRender component = (ComponentBioProcessRender) this.component.getComponent();
             BioProcessMultiComponent processMultiComponent = component.getProcess();
             final EnumTypeMachines type_machines = component.getTypeMachines();
@@ -809,7 +809,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                     down = 87 + 24;
                     yy += 4;
                     xx1 += 1;
-                    yy1 -=1;
+                    yy1 -= 1;
                     break;
                 case RECYCLER:
                 case COMBRECYCLER:
@@ -833,24 +833,24 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                 case OreWashing:
                     down = 87 + 24 + 20;
                     yy += 0;
-                    xx-=1;
-                    xx1+=1;
-                    xx2-=1;
+                    xx -= 1;
+                    xx1 += 1;
+                    xx2 -= 1;
                     break;
                 case Centrifuge:
                     down = 87 + 24 + 44;
                     yy += 1;
-                    xx-=1;
-                    xx1+=1;
-                    xx2-=1;
+                    xx -= 1;
+                    xx1 += 1;
+                    xx2 -= 1;
                     break;
                 case Gearing:
-                    down = 87 + 24 + 44+27;
+                    down = 87 + 24 + 44 + 27;
                     yy += 1;
-                    xx-=1;
-                    xx1+=2;
-                    xx2+=1;
-                    weight+=1;
+                    xx -= 1;
+                    xx1 += 2;
+                    xx2 += 1;
+                    weight += 1;
                     break;
                 default:
                     down = 0;
@@ -883,15 +883,16 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                             mouseY + this.y + yy,
                             type.getX() + 16 + x + xx1,
                             type.getY() + down,
-                            type.getWeight() + 1 +weight,
+                            type.getWeight() + 1 + weight,
                             progress
                     );
                 }
             }
         } else if (this.component.getComponent() instanceof ComponentValue) {
-            ComponentValue componentValue  = (ComponentValue) this.component.getComponent();
-            if (this.type.isNextBar())
+            ComponentValue componentValue = (ComponentValue) this.component.getComponent();
+            if (this.type.isNextBar()) {
                 bindCommonTexture2();
+            }
             if (this.getType() == EnumTypeComponent.CIRCLE_BAR) {
                 this.gui.drawTexturedModalRect(
                         mouseX + this.x,
@@ -902,129 +903,243 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                         type.getHeight()
                 );
                 // 51 34   0 0       213 2 0 0
-                for (int i = 0; i <= (Integer)componentValue.getValue(); i++) {
+                for (int i = 0; i <= (Integer) componentValue.getValue(); i++) {
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     switch (i) {
                         case 1:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 16,mouseY + this.y,  type.getX1() + 16,
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 16, mouseY + this.y, type.getX1() + 16,
                                     type.getY1()
-                                    , 2, 6);
+                                    , 2, 6
+                            );
                             break;
                         case 2:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 17+1, mouseY + this.y, type.getX1() + 17+1,
-                                    type.getY1(), 2, 6);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 17 + 1, mouseY + this.y, type.getX1() + 17 + 1,
+                                    type.getY1(), 2, 6
+                            );
                             break;
                         case 3:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 19+1, mouseY + this.y + 1, type.getX1() + 19+1,
-                                    type.getY1()+1, 2, 6);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 19 + 1, mouseY + this.y + 1, type.getX1() + 19 + 1,
+                                    type.getY1() + 1, 2, 6
+                            );
                             break;
                         case 4:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 21+1,mouseY + this.y + 2, type.getX1() + 21+1,
-                                    type.getY1()+2, 2, 7);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 21 + 1, mouseY + this.y + 2, type.getX1() + 21 + 1,
+                                    type.getY1() + 2, 2, 7
+                            );
                             break;
                         case 5:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 15 + 8+1,mouseY + this.y +3, type.getX1() + 15 +8+1,
-                                    type.getY1()+3, 4, 4);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 15 + 8 + 1,
+                                    mouseY + this.y + 3,
+                                    type.getX1() + 15 + 8 + 1,
+                                    type.getY1() + 3,
+                                    4,
+                                    4
+                            );
                             break;
                         case 6:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 59-51+15+1, mouseY + this.y + 41 - 34,
-                                    type.getX1() +221 - 213 + 15+1, type.getY1()-2+9, 6, 2);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 59 - 51 + 15 + 1, mouseY + this.y + 41 - 34,
+                                    type.getX1() + 221 - 213 + 15 + 1, type.getY1() - 2 + 9, 6, 2
+                            );
                             break;
                         case 7:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 59-51+15+1, mouseY + this.y + 43- 34, type.getX1() +221- 213 + 15+1, type.getY1()-2+11, 7, 2);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 59 - 51 + 15 + 1,
+                                    mouseY + this.y + 43 - 34,
+                                    type.getX1() + 221 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 11,
+                                    7,
+                                    2
+                            );
                             break;
                         case 8:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 60-51+15+1, mouseY + this.y + 45- 34, type.getX1() +222- 213 + 15+1, type.getY1()-2+13, 6, 2);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 60 - 51 + 15 + 1,
+                                    mouseY + this.y + 45 - 34,
+                                    type.getX1() + 222 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 13,
+                                    6,
+                                    2
+                            );
                             break;
                         case 9:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 61-51+15+1, mouseY + this.y + 47- 34, type.getX1() +223- 213 + 15+1, type.getY1()-2+15, 6, 2);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 61 - 51 + 15 + 1,
+                                    mouseY + this.y + 47 - 34,
+                                    type.getX1() + 223 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 15,
+                                    6,
+                                    2
+                            );
                             break;
                         case 10:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 61-51+15+1, mouseY + this.y + 49- 34, type.getX1() +223- 213 + 15+1, type.getY1()-2+17, 6, 2);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 61 - 51 + 15 + 1,
+                                    mouseY + this.y + 49 - 34,
+                                    type.getX1() + 223 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 17,
+                                    6,
+                                    2
+                            );
                             break;
                         case 11:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 61-51+15+1, mouseY + this.y + 51- 34, type.getX1() +223- 213 + 15+1, type.getY1()-2+19, 6, 2);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 61 - 51 + 15 + 1,
+                                    mouseY + this.y + 51 - 34,
+                                    type.getX1() + 223 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 19,
+                                    6,
+                                    2
+                            );
                             break;
                         case 12:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 60-51+15+1, mouseY + this.y + 53- 34, type.getX1() +222- 213 + 15+1, type.getY1()-2+21, 6, 2);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 60 - 51 + 15 + 1,
+                                    mouseY + this.y + 53 - 34,
+                                    type.getX1() + 222 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 21,
+                                    6,
+                                    2
+                            );
                             break;
                         case 13:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 58-51+15+1, mouseY + this.y + 55- 34, type.getX1() +220- 213 + 15+1, type.getY1()-2+23, 7, 2);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 58 - 51 + 15 + 1,
+                                    mouseY + this.y + 55 - 34,
+                                    type.getX1() + 220 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 23,
+                                    7,
+                                    2
+                            );
                             break;
                         case 14:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 57-51+15+1, mouseY + this.y + 57- 34, type.getX1() +219- 213 + 15+1, type.getY1()-2+25, 7, 2);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 57 - 51 + 15 + 1,
+                                    mouseY + this.y + 57 - 34,
+                                    type.getX1() + 219 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 25,
+                                    7,
+                                    2
+                            );
                             break;
                         case 15:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 57-51+15+1, mouseY + this.y + 59- 34, type.getX1() +219- 213 + 15+1, type.getY1()-2+27, 5, 4);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 57 - 51 + 15 + 1,
+                                    mouseY + this.y + 59 - 34,
+                                    type.getX1() + 219 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 27,
+                                    5,
+                                    4
+                            );
                             break;
                         case 16:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 55-51+15+1, mouseY + this.y + 58- 34, type.getX1() +217- 213 + 15+1, type.getY1()-2+26, 2, 6);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 55 - 51 + 15 + 1,
+                                    mouseY + this.y + 58 - 34,
+                                    type.getX1() + 217 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 26,
+                                    2,
+                                    6
+                            );
                             break;
                         case 17:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 53-51+15+1, mouseY + this.y + 59- 34,
-                                    type.getX1() +215- 213 + 15+1, type.getY1()-2+27, 2, 6);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 53 - 51 + 15 + 1, mouseY + this.y + 59 - 34,
+                                    type.getX1() + 215 - 213 + 15 + 1, type.getY1() - 2 + 27, 2, 6
+                            );
                             break;
                         case 18:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 51-51+15+1, mouseY + this.y + 59- 34,
-                                    type.getX1() +213- 213 + 15+1, type.getY1()-2+27, 2, 6);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 51 - 51 + 15 + 1, mouseY + this.y + 59 - 34,
+                                    type.getX1() + 213 - 213 + 15 + 1, type.getY1() - 2 + 27, 2, 6
+                            );
                             break;
                         case 19:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 49-51+15+1, mouseY + this.y + 59- 34,
-                                    type.getX1() +211- 213 + 15+1, type.getY1()-2+27, 2, 6);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 49 - 51 + 15 + 1, mouseY + this.y + 59 - 34,
+                                    type.getX1() + 211 - 213 + 15 + 1, type.getY1() - 2 + 27, 2, 6
+                            );
                             break;
                         case 20:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 47-51+15+1, mouseY + this.y + 59- 34,
-                                    type.getX1() +209- 213 + 15+1, type.getY1()-2+27, 2, 6);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 47 - 51 + 15 + 1, mouseY + this.y + 59 - 34,
+                                    type.getX1() + 209 - 213 + 15 + 1, type.getY1() - 2 + 27, 2, 6
+                            );
                             break;
                         case 21:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 45-51+15+1, mouseY + this.y + 57- 34,
-                                    type.getX1() +207- 213 + 15+1, type.getY1()-2+25, 2, 7);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 45 - 51 + 15 + 1, mouseY + this.y + 57 - 34,
+                                    type.getX1() + 207 - 213 + 15 + 1, type.getY1() - 2 + 25, 2, 7
+                            );
                             break;
                         case 22:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 43-51+15+1, mouseY + this.y + 55- 34,
-                                    type.getX1() +205- 213 + 15+1, type.getY1()-2+23, 2, 8);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 43 - 51 + 15 + 1, mouseY + this.y + 55 - 34,
+                                    type.getX1() + 205 - 213 + 15 + 1, type.getY1() - 2 + 23, 2, 8
+                            );
                             break;
                         case 23:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 38-51+15+1, mouseY + this.y + 54- 34,
-                                    type.getX1() +200- 213 + 15+1, type.getY1()-2+22, 5, 8);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 38 - 51 + 15 + 1, mouseY + this.y + 54 - 34,
+                                    type.getX1() + 200 - 213 + 15 + 1, type.getY1() - 2 + 22, 5, 8
+                            );
                             break;
                         case 24:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 37-51+15+1, mouseY + this.y + 52- 34,
-                                    type.getX1() +199- 213 + 15+1, type.getY1()-2+20, 6, 4);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 37 - 51 + 15 + 1, mouseY + this.y + 52 - 34,
+                                    type.getX1() + 199 - 213 + 15 + 1, type.getY1() - 2 + 20, 6, 4
+                            );
                             break;
                         case 25:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 37-51+15+1, mouseY + this.y + 49- 34,
-                                    type.getX1() +199- 213 + 15+1, type.getY1()-2+17, 6, 4);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 37 - 51 + 15 + 1, mouseY + this.y + 49 - 34,
+                                    type.getX1() + 199 - 213 + 15 + 1, type.getY1() - 2 + 17, 6, 4
+                            );
                             break;
                         case 26:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 37-51+15+1, mouseY + this.y + 46- 34,
-                                    type.getX1() +199- 213 + 15+1, type.getY1()-2+14, 6, 4);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 37 - 51 + 15 + 1, mouseY + this.y + 46 - 34,
+                                    type.getX1() + 199 - 213 + 15 + 1, type.getY1() - 2 + 14, 6, 4
+                            );
                             break;
                         case 27:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 37-51+15+1, mouseY + this.y + 43- 34,
-                                    type.getX1() +199- 213 + 15+1, type.getY1()-2+11, 7, 4);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 37 - 51 + 15 + 1, mouseY + this.y + 43 - 34,
+                                    type.getX1() + 199 - 213 + 15 + 1, type.getY1() - 2 + 11, 7, 4
+                            );
                             break;
                         case 28:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 38-51+15+1, mouseY + this.y + 40- 34,
-                                    type.getX1() +200- 213 + 15+1, type.getY1()-2+8, 8, 4);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 38 - 51 + 15 + 1, mouseY + this.y + 40 - 34,
+                                    type.getX1() + 200 - 213 + 15 + 1, type.getY1() - 2 + 8, 8, 4
+                            );
                             break;
                         case 29:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 41-51+15+1, mouseY + this.y + 36- 34, type.getX1() +203- 213 + 15+1, type.getY1()-2+4, 4, 4);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 41 - 51 + 15 + 1,
+                                    mouseY + this.y + 36 - 34,
+                                    type.getX1() + 203 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 4,
+                                    4,
+                                    4
+                            );
                             break;
                         case 30:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 45-51+15+1, mouseY + this.y + 35- 34, type.getX1() +207- 213 + 15+1, type.getY1()-2+3, 2, 5);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 45 - 51 + 15 + 1,
+                                    mouseY + this.y + 35 - 34,
+                                    type.getX1() + 207 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 3,
+                                    2,
+                                    5
+                            );
                             break;
                         case 31:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 47-51+15+1, mouseY + this.y + 35- 34, type.getX1() +209- 213 + 15+1, type.getY1()-2+3, 2, 5);
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x + 47 - 51 + 15 + 1,
+                                    mouseY + this.y + 35 - 34,
+                                    type.getX1() + 209 - 213 + 15 + 1,
+                                    type.getY1() - 2 + 3,
+                                    2,
+                                    5
+                            );
                             break;
                         case 32:
-                            this.gui.drawTexturedModalRect(mouseX + this.x + 49-51+15+1, mouseY + this.y + 35- 34,
-                                    type.getX1() +211- 213 + 15+1, type.getY1()-2+3, 2, 5);
+                            this.gui.drawTexturedModalRect(mouseX + this.x + 49 - 51 + 15 + 1, mouseY + this.y + 35 - 34,
+                                    type.getX1() + 211 - 213 + 15 + 1, type.getY1() - 2 + 3, 2, 5
+                            );
                             break;
                     }
                 }
             }
-        }else if (this.component.getComponent() instanceof ComponentRenderInventory) {
+        } else if (this.component.getComponent() instanceof ComponentRenderInventory) {
             ComponentRenderInventory component = (ComponentRenderInventory) this.component.getComponent();
             switch (component.getTypeComponentSlot()) {
                 case SLOTS_UPGRADE:
@@ -1044,9 +1159,9 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                     bindCommonTexture2();
                                 } else if (this.type.isSteam()) {
                                     bindCommonTexture3();
-                                }else if (this.type.isBio()) {
+                                } else if (this.type.isBio()) {
                                     bindCommonTexture4();
-                                }else    if (this.type.isSpace()) {
+                                } else if (this.type.isSpace()) {
                                     bindCommonTexture5();
                                 } else {
 
@@ -1082,11 +1197,11 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                     bindCommonTexture2();
                                 } else if (this.type.isSteam()) {
                                     bindCommonTexture3();
-                                }else if (this.type.isBio()) {
+                                } else if (this.type.isBio()) {
                                     bindCommonTexture4();
-                                }else    if (this.type.isSpace()) {
+                                } else if (this.type.isSpace()) {
                                     bindCommonTexture5();
-                                }  else {
+                                } else {
                                     bindCommonTexture();
                                 }
                                 this.gui.drawTexturedModalRect(
@@ -1115,7 +1230,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                 }
 
                                 bindCommonTexture();
-                                if (type.next){
+                                if (type.next) {
                                     bindCommonTexture6();
                                 }
                                 this.gui.drawTexturedModalRect(
@@ -1651,9 +1766,9 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                         bindCommonTexture3();
                     } else if (this.type.isBio()) {
                         bindCommonTexture4();
-                    }else    if (this.type.isSpace()) {
+                    } else if (this.type.isSpace()) {
                         bindCommonTexture5();
-                    }else {
+                    } else {
                         bindCommonTexture();
                     }
                     for (int i = 0; i < 27; i++) {
@@ -1707,7 +1822,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                         bindCommonTexture3();
                     } else if (this.type.isBio()) {
                         bindCommonTexture4();
-                    }else    if (this.type.isSpace()) {
+                    } else if (this.type.isSpace()) {
                         bindCommonTexture5();
                     } else {
                         bindCommonTexture();

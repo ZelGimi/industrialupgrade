@@ -5,10 +5,6 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.api.agriculture.CropNetwork;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.agriculture.ICropItem;
-import com.denfop.api.agriculture.genetics.Genome;
 import com.denfop.api.bee.BeeNetwork;
 import com.denfop.api.bee.IBee;
 import com.denfop.blocks.ISubEnum;
@@ -46,6 +42,15 @@ public class ItemJarBees extends ItemSubTypes<ItemJarBees.Types> implements IMod
         IUCore.proxy.addIModelRegister(this);
     }
 
+    public static IBee getBee(final ItemStack stack) {
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        IBee bee = BeeNetwork.instance.getBee(nbt.getInteger("bee_id"));
+        if (bee == null) {
+            return null;
+        }
+        return bee.copy();
+    }
+
     @Override
     public void onUpdate(
             @Nonnull ItemStack itemStack,
@@ -72,14 +77,13 @@ public class ItemJarBees extends ItemSubTypes<ItemJarBees.Types> implements IMod
         super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
         p_77624_3_.add(Localization.translate("iu.bee_negative"));
         IBee bee = getBee(p_77624_1_);
-        if (bee != null){
-          List<IBee> unCompatibleBees =  bee.getUnCompatibleBees();
-          for (IBee bee1 : unCompatibleBees){
-              p_77624_3_.add(Localization.translate("bee_"+bee1.getName()));
-          }
+        if (bee != null) {
+            List<IBee> unCompatibleBees = bee.getUnCompatibleBees();
+            for (IBee bee1 : unCompatibleBees) {
+                p_77624_3_.add(Localization.translate("bee_" + bee1.getName()));
+            }
         }
     }
-
 
     @SideOnly(Side.CLIENT)
     public void registerModel(Item item, final int meta, final String extraName) {
@@ -87,35 +91,35 @@ public class ItemJarBees extends ItemSubTypes<ItemJarBees.Types> implements IMod
             final NBTTagCompound nbt = ModUtils.nbt(stack);
 
             int mode = nbt.getInteger("bee_id");
-            switch (mode){
+            switch (mode) {
                 case 1:
                     return new ModelResourceLocation(
-                            Constants.MOD_ID + ":" + NAME + "/" +  "winter_bee",
+                            Constants.MOD_ID + ":" + NAME + "/" + "winter_bee",
                             null
                     );
                 case 2:
                     return new ModelResourceLocation(
-                            Constants.MOD_ID + ":" + NAME + "/" +  "forest_bee",
+                            Constants.MOD_ID + ":" + NAME + "/" + "forest_bee",
                             null
                     );
                 case 3:
                     return new ModelResourceLocation(
-                            Constants.MOD_ID + ":" + NAME + "/" +  "tropical_bee",
+                            Constants.MOD_ID + ":" + NAME + "/" + "tropical_bee",
                             null
                     );
                 case 4:
                     return new ModelResourceLocation(
-                            Constants.MOD_ID + ":" + NAME + "/" +  "plains_bee",
+                            Constants.MOD_ID + ":" + NAME + "/" + "plains_bee",
                             null
                     );
                 case 5:
                     return new ModelResourceLocation(
-                            Constants.MOD_ID + ":" + NAME + "/" +  "swamp_bee",
+                            Constants.MOD_ID + ":" + NAME + "/" + "swamp_bee",
                             null
                     );
             }
             return new ModelResourceLocation(
-                    Constants.MOD_ID + ":" + NAME + "/" +  "forest_bee",
+                    Constants.MOD_ID + ":" + NAME + "/" + "forest_bee",
                     null
             );
         });
@@ -128,31 +132,24 @@ public class ItemJarBees extends ItemSubTypes<ItemJarBees.Types> implements IMod
         }
 
     }
-    public ItemStack getStackFromId(int id){
+
+    public ItemStack getStackFromId(int id) {
         ItemStack stack = new ItemStack(this);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setInteger("bee_id",id);
+        nbt.setInteger("bee_id", id);
         return stack;
     }
-    public  static  IBee getBee(final ItemStack stack){
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        IBee bee =  BeeNetwork.instance.getBee(nbt.getInteger("bee_id"));
-        if (bee == null)
-            return null;
-        return bee.copy();
-    }
+
     @Override
     public String getItemStackDisplayName(final ItemStack stack) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final IBee crop = BeeNetwork.instance.getBee(nbt.getInteger("bee_id"));
         if (nbt.hasKey("bee_id")) {
-            return super.getItemStackDisplayName(stack) + ": " +Localization.translate("bee_"+crop.getName());
+            return super.getItemStackDisplayName(stack) + ": " + Localization.translate("bee_" + crop.getName());
         } else {
             return super.getItemStackDisplayName(stack);
         }
     }
-
-
 
 
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {

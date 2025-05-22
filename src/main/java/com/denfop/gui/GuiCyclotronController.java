@@ -46,6 +46,7 @@ public class GuiCyclotronController extends GuiIU<ContainerCyclotronController> 
             new PacketUpdateServerTile(this.container.base, 0);
         }
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
@@ -61,7 +62,7 @@ public class GuiCyclotronController extends GuiIU<ContainerCyclotronController> 
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-120, mouseY, text);
+            this.drawTooltip(mouseX - 120, mouseY, text);
         }
     }
 

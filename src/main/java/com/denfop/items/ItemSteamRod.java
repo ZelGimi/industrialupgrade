@@ -7,7 +7,6 @@ import com.denfop.api.IModelRegister;
 import com.denfop.api.steam.ISteamBlade;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.register.Register;
-import com.denfop.tiles.reactors.graphite.ICapacitorItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -36,7 +35,7 @@ public class ItemSteamRod extends ItemDamage implements IModelRegister, ISteamBl
         this.setNoRepair();
         this.name = name;
         setMaxStackSize(1);
-        this.resourceLocation=resourceLocation;
+        this.resourceLocation = resourceLocation;
         this.setCreativeTab(IUCore.ItemTab);
         this.setUnlocalizedName("steam_blade_" + name);
         Register.registerItem(this, IUCore.getIdentifier("steam_blade_" + name));
@@ -64,7 +63,7 @@ public class ItemSteamRod extends ItemDamage implements IModelRegister, ISteamBl
 
     @Override
     public boolean damageBlade(final ItemStack stack) {
-     return applyCustomDamage(stack, -1, null);
+        return applyCustomDamage(stack, -1, null);
     }
 
     @Override

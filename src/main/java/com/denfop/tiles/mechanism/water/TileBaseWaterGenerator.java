@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.water;
 
 import com.denfop.Localization;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
 import com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.water.upgrade.IRotorUpgradeItem;
@@ -418,6 +419,8 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
                             this.getItemStack()
                     ) * this.biome * this.coefficient_power / 100D;
             this.energy.addEnergy(generation);
+            this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
+
             if (this.world.getWorldTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
             }
@@ -564,6 +567,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), false));
         super.onUnloaded();
     }
+
     @Override
     public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
         for (int i = pos.getX() - 4; i <= pos.getX() + 4; i++) {
@@ -578,6 +582,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         }
         return true;
     }
+
     @Override
     public void onBlockBreak(boolean w) {
         super.onBlockBreak(w);

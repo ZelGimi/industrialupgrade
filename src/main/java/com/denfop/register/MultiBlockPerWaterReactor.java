@@ -302,22 +302,22 @@ public class MultiBlockPerWaterReactor {
                 );
             }
         }
-        for (int x = 2; x > -4; x-=5) {
-            for (int z = 0; z < 6; z+=5) {
+        for (int x = 2; x > -4; x -= 5) {
+            for (int z = 0; z < 6; z += 5) {
                 PerWaterReactorMultiBlock.add(PerWaterReactorMultiBlock.getPos().add(x, -2, z), ICasing.class,
                         new ItemStack(IUItem.water_reactors_component, 1, 3),
                         EnumFacing.NORTH
                 );
             }
         }
-        for (int x = 2; x > -4; x-=5) {
-            for (int z = 0; z < 6; z+=5) {
-                for (int y = 0; y < 3; y+=1) {
-                PerWaterReactorMultiBlock.add(PerWaterReactorMultiBlock.getPos().add(x, y, z), ICasing.class,
-                        new ItemStack(IUItem.water_reactors_component, 1, 3),
-                        EnumFacing.NORTH
-                );
-            }
+        for (int x = 2; x > -4; x -= 5) {
+            for (int z = 0; z < 6; z += 5) {
+                for (int y = 0; y < 3; y += 1) {
+                    PerWaterReactorMultiBlock.add(PerWaterReactorMultiBlock.getPos().add(x, y, z), ICasing.class,
+                            new ItemStack(IUItem.water_reactors_component, 1, 3),
+                            EnumFacing.NORTH
+                    );
+                }
             }
         }
     }

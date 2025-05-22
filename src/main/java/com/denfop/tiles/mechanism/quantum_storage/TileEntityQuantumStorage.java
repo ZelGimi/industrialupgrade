@@ -43,6 +43,7 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
         )));
         this.enumTypeStyle = enumTypeStyle;
     }
+
     public void onLoaded() {
         super.onLoaded();
         if (IUCore.proxy.isSimulating()) {
@@ -66,19 +67,20 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
                     + " QE");
         }
     }
+
     public void setFacing(EnumFacing facing) {
         super.setFacing(facing);
         this.qe.setDirections(
 
-                new HashSet<>( Arrays
+                new HashSet<>(Arrays
                         .asList(EnumFacing.VALUES)
                         .stream()
                         .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
-                        .collect(Collectors.toList())),  new HashSet<>(Collections.singletonList(this.getFacing())));
-
+                        .collect(Collectors.toList())), new HashSet<>(Collections.singletonList(this.getFacing())));
 
 
     }
+
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
             switch (this.teBlock.getDefaultDrop()) {

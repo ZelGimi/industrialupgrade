@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityGasCombiner;
 import com.denfop.tiles.mechanism.TileEntityGeneticReplicator;
 import net.minecraft.entity.player.EntityPlayer;
 

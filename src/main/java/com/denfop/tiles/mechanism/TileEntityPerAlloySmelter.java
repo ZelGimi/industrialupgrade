@@ -19,7 +19,15 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.*;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
+import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.HeatComponent;
+import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerPerAlloySmelter;
 import com.denfop.gui.GuiPerAlloySmelter;
 import com.denfop.invslot.InvSlot;
@@ -95,6 +103,7 @@ public class TileEntityPerAlloySmelter extends TileElectricMachine implements IH
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
             }
+
             @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
@@ -134,7 +143,7 @@ public class TileEntityPerAlloySmelter extends TileElectricMachine implements IH
         }
 
 
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     @Override

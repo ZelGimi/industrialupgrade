@@ -12,16 +12,12 @@ import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.utils.Timer;
-import com.denfop.world.WorldBaseGen;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +25,10 @@ import java.util.Map;
 
 public class TileEntityLightningRodController extends TileMultiBlockBase implements IController, IUpdatableTileEvent {
 
+    public static Map<BlockPos, IController> controllerMap = new HashMap<>();
     private final Timer timer;
     private final ComponentTimer componentTimer;
     public Energy energy;
-    public static Map<BlockPos, IController> controllerMap = new HashMap<>();
     public BlockPos AntennaMasPos;
 
     public TileEntityLightningRodController() {

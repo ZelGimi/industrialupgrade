@@ -3,11 +3,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.container.ContainerHeliumGenerator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

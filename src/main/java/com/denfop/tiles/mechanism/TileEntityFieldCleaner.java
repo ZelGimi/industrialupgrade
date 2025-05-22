@@ -17,7 +17,6 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerFieldCleaner;
 import com.denfop.gui.GuiFieldCleaner;
 import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.crop.TileEntityCrop;
 import com.denfop.utils.ModUtils;
@@ -39,21 +38,25 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpgradableBlock {
+public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgradableBlock {
 
 
     private static final int RADIUS = 8;
     public final Energy energy;
-    private final Fluids fluids;
     public final Fluids.InternalFluidTank tank;
+    public final InvSlotUpgrade upgradeSlot;
+    private final Fluids fluids;
+    private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
             pos.add(RADIUS, RADIUS, RADIUS)
     );
+    List<List<TileEntityCrop>> list = new ArrayList<>();
+    List<Chunk> chunks;
 
     public TileEntityFieldCleaner() {
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank =   this.fluids.addTankInsert("tank",10000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance()));
+        this.tank = this.fluids.addTankInsert("tank", 10000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance()));
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -61,10 +64,9 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
+
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage,  UpgradableProperty.FluidInput
+        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.FluidInput
         );
     }
 
@@ -84,7 +86,7 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
                         null
                 )) {
 
-            return    ModUtils.interactWithFluidHandler(player, hand,
+            return ModUtils.interactWithFluidHandler(player, hand,
                     this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         }
@@ -100,6 +102,7 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.field_cleaner;
     }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -114,8 +117,6 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
         }
     }
 
-    List<List<TileEntityCrop>> list = new ArrayList<>();
-    List<Chunk> chunks;
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -163,16 +164,18 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
             return false;
         }
     }
+
     private void updateCrop() {
         list.clear();
         for (Chunk chunk : chunks) {
             this.list.add(CropNetwork.instance.getCropsFromChunk(world, chunk.getPos()));
         }
     }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0){
+        if (this.getWorld().getWorldTime() % 100 == 0) {
             updateCrop();
         }
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(10)) {
@@ -180,8 +183,10 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
             for (List<TileEntityCrop> crops : list) {
                 for (TileEntityCrop crop : crops) {
                     if (this.energy.getEnergy() > 10 && tank.getFluidAmount() > 1) {
-                        if (crop.getCrop() != null && crop.getTickPest()  == 0 && this.contains(crop.getPos()) && crop.getCrop().getId() != 3) {
-                            tank.drain(1,true);
+                        if (crop.getCrop() != null && crop.getTickPest() == 0 && this.contains(crop.getPos()) && crop
+                                .getCrop()
+                                .getId() != 3) {
+                            tank.drain(1, true);
                             crop.setTickPest();
                             this.energy.useEnergy(10);
                         }

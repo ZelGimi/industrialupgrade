@@ -1,7 +1,6 @@
 package com.denfop.blocks;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
@@ -219,8 +218,7 @@ public enum FluidName implements ISubEnum {
     fluidglucose(fluidbenzene),
     fluidsodiumhydroxide(fluidbenzene),
     fluidsodium_hypochlorite(fluidbenzene),
-    fluidsteam_oil(fluidindustrialoil)
-    ;
+    fluidsteam_oil(fluidindustrialoil);
     public static final FluidName[] values = values();
     private final boolean hasFlowTexture;
     private FluidName fluidname;
@@ -234,6 +232,7 @@ public enum FluidName implements ISubEnum {
         this(true);
         this.fluidname = fluidName;
     }
+
     FluidName(boolean hasFlowTexture) {
         this.hasFlowTexture = hasFlowTexture;
     }
@@ -265,7 +264,7 @@ public enum FluidName implements ISubEnum {
                 String type = flowing && this.hasFlowTexture ? "flow" : "still";
                 return new ResourceLocation(Constants.MOD_ID, "blocks/fluid/" + this.name().substring(5) + "_" + type);
             }
-        }else{
+        } else {
             if (fluidname.name().startsWith("fluidmolten")) {
                 return new ResourceLocation(Constants.MOD_ID, "blocks/fluid/molten_flow");
             } else {

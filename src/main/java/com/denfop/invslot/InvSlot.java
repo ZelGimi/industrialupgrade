@@ -3,26 +3,28 @@ package com.denfop.invslot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.utils.ModUtils;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class InvSlot implements ITypeSlot {
+public class InvSlot extends AbstractList<ItemStack> implements ITypeSlot {
 
     public IAdvInventory<?> base;
     protected TypeItemSlot typeItemSlot;
-    protected List<ItemStack> contents;
+    protected NonNullList<ItemStack> contents;
     protected int stackSizeLimit;
 
 
     public InvSlot(IAdvInventory<?> base, TypeItemSlot typeItemSlot, int count) {
 
-        this.contents = new ArrayList<>(Collections.nCopies(count, ItemStack.EMPTY));
-        this.base = base;
+        this.contents = NonNullList.withSize(count, ItemStack.EMPTY);  this.base = base;
         this.typeItemSlot = typeItemSlot;
         this.stackSizeLimit = 64;
         base.addInventorySlot(this);
@@ -30,14 +32,13 @@ public class InvSlot implements ITypeSlot {
     }
 
     public InvSlot(int count) {
-        this.contents = new ArrayList<>(Collections.nCopies(count, ItemStack.EMPTY));
-        this.base = null;
+        this.contents = NonNullList.withSize(count, ItemStack.EMPTY);   this.base = null;
         this.typeItemSlot = null;
     }
 
-    public void reset(int size) {
+    public void clear() {
 
-        this.contents = new ArrayList<>(Collections.nCopies(size, ItemStack.EMPTY));
+        this.contents =NonNullList.withSize(this.size(), ItemStack.EMPTY);
         this.stackSizeLimit = 64;
     }
 
@@ -49,15 +50,17 @@ public class InvSlot implements ITypeSlot {
         return typeItemSlot;
     }
 
-    public ItemStack[] gets() {
-        return this.contents.toArray(new ItemStack[0]);
+    public void setTypeItemSlot(final TypeItemSlot typeItemSlot) {
+        this.typeItemSlot = typeItemSlot;
     }
+
 
     public List<ItemStack> getContents() {
         return this.contents;
     }
 
     public void readFromNbt(NBTTagCompound nbt) {
+
         NBTTagList contentsTag = nbt.getTagList("Items", 10);
 
         for (int i = 0; i < contentsTag.tagCount(); ++i) {
@@ -132,7 +135,7 @@ public class InvSlot implements ITypeSlot {
                             if (maxFill == 0) {
                                 continue;
                             }
-                            maxFill = Math.max(count, maxFill);
+                            maxFill = Math.min(count, maxFill);
                             count -= maxFill;
                             stack1.grow(maxFill);
                         }
@@ -268,10 +271,6 @@ public class InvSlot implements ITypeSlot {
         this.onChanged();
     }
 
-    public void setTypeItemSlot(final TypeItemSlot typeItemSlot) {
-        this.typeItemSlot = typeItemSlot;
-    }
-
     public void clear(int index) {
         this.put(index, ItemStack.EMPTY);
     }
@@ -299,8 +298,9 @@ public class InvSlot implements ITypeSlot {
         this.stackSizeLimit = stackSizeLimit;
     }
 
-    public void set(int i, ItemStack empty) {
+    public ItemStack set(int i, ItemStack empty) {
         this.contents.set(i, empty);
+        return  empty;
     }
 
     public boolean canShift() {

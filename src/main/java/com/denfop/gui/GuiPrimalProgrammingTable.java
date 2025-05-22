@@ -24,6 +24,7 @@ public class GuiPrimalProgrammingTable extends GuiIU<ContainerPrimalProgrammingT
     int prevPointer;
 
     boolean hover;
+
     public GuiPrimalProgrammingTable(
             ContainerPrimalProgrammingTable container1
     ) {
@@ -39,6 +40,7 @@ public class GuiPrimalProgrammingTable extends GuiIU<ContainerPrimalProgrammingT
         hover = par1 >= 7 && par2 >= 62 && par1 <= 18 && par2 <= 73;
         handleUpgradeTooltip(par1, par2);
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -54,9 +56,10 @@ public class GuiPrimalProgrammingTable extends GuiIU<ContainerPrimalProgrammingT
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     @Override
     protected void mouseClicked(final int i, final int j, final int k) throws IOException {
         super.mouseClicked(i, j, k);
@@ -66,9 +69,9 @@ public class GuiPrimalProgrammingTable extends GuiIU<ContainerPrimalProgrammingT
         int y = j - yMin;
         if (container.base.start) {
             if (x >= 7 && y >= 62 && x <= 18 && y <= 73) {
-               final int pointer1 = pointer - 20;
+                final int pointer1 = pointer - 20;
                 if (pointer1 > 0) {
-                    int value = container.base.data[pointer1% container.base.data.length];
+                    int value = container.base.data[pointer1 % container.base.data.length];
                     if (value == 2) {
                         value = 0;
                     } else if (value == 0) {
@@ -95,7 +98,8 @@ public class GuiPrimalProgrammingTable extends GuiIU<ContainerPrimalProgrammingT
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
-    public void updateTickInterface(){
+
+    public void updateTickInterface() {
         if (pointer < 20) {
             pointer = 20;
             prevPointer = 0;
@@ -104,20 +108,23 @@ public class GuiPrimalProgrammingTable extends GuiIU<ContainerPrimalProgrammingT
             prevPointer = 1;
         }
 
-            if (pointer < 20) {
-                pointer = 20;
-                prevPointer = 0;
-            } else if (pointer >= 166) {
-                pointer = 165;
-                prevPointer = 1;
-            }
-            if (prevPointer == 0) {
-                pointer++;
-            } else {
-                pointer--;
-            }
+        if (pointer < 20) {
+            pointer = 20;
+            prevPointer = 0;
+        } else if (pointer >= 166) {
+            pointer = 165;
+            prevPointer = 1;
+        }
+        if (prevPointer == 0) {
+            pointer++;
+        } else {
+            pointer--;
+        }
 
-    };
+    }
+
+    ;
+
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         int xoffset = (this.width - this.xSize) / 2;
@@ -126,7 +133,7 @@ public class GuiPrimalProgrammingTable extends GuiIU<ContainerPrimalProgrammingT
         int progress = (int) (34.0F * this.container.base.componentProgress.getBar());
         this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 24, 177, 1, progress, 20);
 
-        if (hover){
+        if (hover) {
             this.drawTexturedModalRect(this.guiLeft + 7, this.guiTop + 62, 177, 32, 12, 12);
         }
         if (container.base.start) {

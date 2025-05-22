@@ -1,4 +1,3 @@
-
 package com.denfop.tiles.crop;
 
 
@@ -84,10 +83,12 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     @SideOnly(Side.CLIENT)
     public DataBlock upDataBlock;
     public Block downBlock = null;
+    public boolean hasDouble = false;
+    Map<BlockPos, TileEntityCrop> cropMap = new HashMap<>();
+    boolean added = false;
     private ICrop crop = null;
     private long BeeId = 0;
     private Genome genome = null;
-    public boolean hasDouble = false;
     private ItemStack cropItem = ItemStack.EMPTY;
     private CropRenderState cropRenderState;
     private Radiation radLevel;
@@ -96,7 +97,6 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     private Biome biome;
     private int tickPest = 0;
     private IBlockState downState;
-    Map<BlockPos, TileEntityCrop> cropMap = new HashMap<>();
     private ChunkLevel chunkLevel;
     private int pestUse;
     private AxisAlignedBB axisAlignedBB;
@@ -350,8 +350,6 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             GlobalRenderManager.removeRender(this.getWorld(), pos);
         }
     }
-
-    boolean added = false;
 
     public void onLoaded() {
         super.onLoaded();
@@ -1073,12 +1071,12 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         }
     }
 
-    public void setBeeId(final long beeId) {
-        BeeId = beeId;
-    }
-
     public long getBeeId() {
         return BeeId;
+    }
+
+    public void setBeeId(final long beeId) {
+        BeeId = beeId;
     }
 
     @Override

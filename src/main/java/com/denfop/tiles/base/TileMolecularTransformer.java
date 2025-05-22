@@ -61,18 +61,21 @@ public class TileMolecularTransformer extends TileElectricMachine implements
     public MachineRecipe[] output;
     public double perenergy;
     public double differenceenergy;
+    public ItemStack[] output_stack = new ItemStack[4];
+    public int maxAmount = 1;
+    public InvSlotOutput[] outputSlot;
+    public double[] energySlots;
+    public double[] maxEnergySlots;
     protected double[] guiProgress;
     protected double[] size_recipe;
-    public ItemStack[] output_stack = new ItemStack[4];
+    int index;
+    int indexModel = 0;
+    int tick = 0;
     private boolean need = false;
     @SideOnly(Side.CLIENT)
     private IBakedModel[] bakedModel;
     @SideOnly(Side.CLIENT)
     private IBakedModel[] transformedModel;
-    public int maxAmount = 1;
-    public InvSlotOutput[] outputSlot;
-    public double[] energySlots;
-    public double[] maxEnergySlots;
 
     public TileMolecularTransformer() {
         super(0, 14, 0);
@@ -209,10 +212,9 @@ public class TileMolecularTransformer extends TileElectricMachine implements
 
     }
 
-
     public List<Double> getTime(int i) {
         final double dif = this.energyShare[i];
-        return ModUtils.Time(((1-this.guiProgress[i])*this.maxEnergySlots[i]) / (dif * 20));
+        return ModUtils.Time(((1 - this.guiProgress[i]) * this.maxEnergySlots[i]) / (dif * 20));
     }
 
     public double getInput() {
@@ -303,7 +305,6 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
-
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
@@ -345,7 +346,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                             ItemCameraTransforms.TransformType.GROUND,
                             false
                     );
-                }else{
+                } else {
                     this.bakedModel[i] = null;
                     this.transformedModel[i] = null;
                 }
@@ -392,7 +393,6 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         return new GuiMolecularTransformer(new ContainerBaseMolecular(entityPlayer, this));
     }
 
-
     public void updateTileServer(EntityPlayer player, double event) {
         if (this.getWorld().isRemote) {
             return;
@@ -419,7 +419,6 @@ public class TileMolecularTransformer extends TileElectricMachine implements
             setOverclockRates();
         }
     }
-
 
     public void markDirty() {
         super.markDirty();
@@ -468,8 +467,6 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         return this.redstoneMode;
     }
 
-    int index;
-
     @Override
     public ItemStack getItemStack() {
         return this.output_stack[0];
@@ -479,8 +476,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
     public TileEntityBlock getEntityBlock() {
         return this;
     }
-    int indexModel = 0;
-    int tick = 0;
+
     @Override
     @SideOnly(Side.CLIENT)
     public IBakedModel getBakedModel() {
@@ -502,7 +498,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                     }
                 }
             }
-        }else{
+        } else {
             tick++;
         }
         return bakedModel[indexModel];
@@ -552,7 +548,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                                 ItemCameraTransforms.TransformType.GROUND,
                                 false
                         );
-                    }else{
+                    } else {
                         this.bakedModel[i] = null;
                         this.transformedModel[i] = null;
                     }
@@ -578,9 +574,9 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                 } else if (output != null) {
                     newStorage += output.getRecipe().output.metadata.getDouble("energy");
                     this.maxEnergySlots[i] = output.getRecipe().output.metadata.getDouble("energy");
-                    energySlots[i] = Math.max(0,energySlots[i]);
-                    energySlots[i] = Math.min(energySlots[i],maxEnergySlots[i]);
-                    newStorage-=energySlots[i];
+                    energySlots[i] = Math.max(0, energySlots[i]);
+                    energySlots[i] = Math.min(energySlots[i], maxEnergySlots[i]);
+                    newStorage -= energySlots[i];
                 } else {
                     this.maxEnergySlots[i] = 0;
                     this.energySlots[i] = 0;
@@ -605,9 +601,9 @@ public class TileMolecularTransformer extends TileElectricMachine implements
 
                     newStorage += output.getRecipe().output.metadata.getDouble("energy") * size;
                     this.maxEnergySlots[i] = output.getRecipe().output.metadata.getDouble("energy") * size;
-                    energySlots[i] = Math.max(0,energySlots[i]);
-                    energySlots[i] = Math.min(energySlots[i],maxEnergySlots[i]);
-                    newStorage-=energySlots[i];
+                    energySlots[i] = Math.max(0, energySlots[i]);
+                    energySlots[i] = Math.min(energySlots[i], maxEnergySlots[i]);
+                    newStorage -= energySlots[i];
                 } else {
                     this.maxEnergySlots[i] = 0;
                     this.energySlots[i] = 0;
@@ -623,7 +619,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         this.differenceenergy = this.energy.getEnergy() - this.perenergy;
         this.perenergy = this.energy.getEnergy();
         this.energy.useEnergy(perenergy);
-        this.energy.setCapacity(this.energy.getCapacity()-perenergy);
+        this.energy.setCapacity(this.energy.getCapacity() - perenergy);
         double prev = this.perenergy;
         distributeEnergy(prev);
         boolean active = false;
@@ -715,17 +711,19 @@ public class TileMolecularTransformer extends TileElectricMachine implements
     private void distributeEnergy(double inputEnergy) {
         int size = maxAmount;
         double totalNeed = 0;
-        for (int i = 0; i < 4;i++){
-            energySlots[i] = Math.max(energySlots[i],0);
+        for (int i = 0; i < 4; i++) {
+            energySlots[i] = Math.max(energySlots[i], 0);
         }
         int size1 = 0;
         for (int i = 0; i < size; i++) {
             totalNeed += Math.max(0, maxEnergySlots[i] - energySlots[i]);
-            if (maxEnergySlots[i] > 0 )
+            if (maxEnergySlots[i] > 0) {
                 size1++;
+            }
         }
-        if (totalNeed <= 0)
+        if (totalNeed <= 0) {
             return;
+        }
         double minEnergyPerSlot = inputEnergy * 0.1 / size1;
         if (inputEnergy >= totalNeed) {
             for (int i = 0; i < size; i++) {
@@ -735,7 +733,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
             for (int i = 0; i < size; i++) {
                 double need = maxEnergySlots[i] - energySlots[i];
                 if (need > 0) {
-                    energyShare[i] = Math.max(Math.min(minEnergyPerSlot,need), (inputEnergy * need / totalNeed));
+                    energyShare[i] = Math.max(Math.min(minEnergyPerSlot, need), (inputEnergy * need / totalNeed));
                     energySlots[i] += energyShare[i];
                     inputEnergy -= energyShare[i];
                 }
@@ -745,7 +743,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                 if (remainingCapacity > 0) {
                     double additionalEnergy = Math.min(inputEnergy, remainingCapacity);
                     energySlots[i] += additionalEnergy;
-                    energyShare[i]+=additionalEnergy;
+                    energyShare[i] += additionalEnergy;
                     inputEnergy -= additionalEnergy;
                 }
             }
@@ -797,13 +795,13 @@ public class TileMolecularTransformer extends TileElectricMachine implements
     }
 
     @Override
-    public MachineRecipe getRecipeOutput(int i) {
-        return this.output[i];
+    public void setRecipeOutput(final MachineRecipe output) {
+        setRecipeOutput(0, output);
     }
 
     @Override
-    public void setRecipeOutput(final MachineRecipe output) {
-        setRecipeOutput(0, output);
+    public MachineRecipe getRecipeOutput(int i) {
+        return this.output[i];
     }
 
     @Override

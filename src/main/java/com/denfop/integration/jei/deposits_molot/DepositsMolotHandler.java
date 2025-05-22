@@ -6,7 +6,6 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.world.WorldBaseGen;
-import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;
 import net.minecraft.item.ItemStack;
 
@@ -20,13 +19,9 @@ public class DepositsMolotHandler {
     private final VeinType veinType;
     private final MachineRecipe machineRecipe;
 
-    public DepositsMolotHandler(MachineRecipe machineRecipe,VeinType veinType) {
+    public DepositsMolotHandler(MachineRecipe machineRecipe, VeinType veinType) {
         this.veinType = veinType;
-        this.machineRecipe=machineRecipe;
-    }
-
-    public MachineRecipe getMachineRecipe() {
-        return machineRecipe;
+        this.machineRecipe = machineRecipe;
     }
 
     public static List<DepositsMolotHandler> getRecipes() {
@@ -36,7 +31,8 @@ public class DepositsMolotHandler {
         return recipes;
     }
 
-    public static DepositsMolotHandler addRecipe(MachineRecipe machineRecipe,
+    public static DepositsMolotHandler addRecipe(
+            MachineRecipe machineRecipe,
             VeinType veinType
     ) {
         DepositsMolotHandler recipe = new DepositsMolotHandler(machineRecipe, veinType);
@@ -64,6 +60,10 @@ public class DepositsMolotHandler {
 
             }
         }
+    }
+
+    public MachineRecipe getMachineRecipe() {
+        return machineRecipe;
     }
 
     public VeinType getVeinType() {

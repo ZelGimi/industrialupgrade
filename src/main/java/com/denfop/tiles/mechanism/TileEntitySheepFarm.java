@@ -12,9 +12,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.container.ContainerChickenFarm;
 import com.denfop.container.ContainerSheepFarm;
-import com.denfop.gui.GuiChickenFarm;
 import com.denfop.gui.GuiSheepFarm;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -41,18 +39,23 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntitySheepFarm  extends TileEntityInventory  implements IUpgradableBlock {
+public class TileEntitySheepFarm extends TileEntityInventory implements IUpgradableBlock {
+
+    private static final int RADIUS = 4;
+    private static final int MAX_SHEEP = 20;
     public final InvSlot slotSeeds;
     public final InvSlotOutput output;
-    private static final int RADIUS = 4;
     public final Energy energy;
+    public final InvSlotUpgrade upgradeSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
+    private final ComponentUpgradeSlots componentUpgrade;
     AxisAlignedBB searchArea = new AxisAlignedBB(
             pos.add(-RADIUS, -RADIUS, -RADIUS),
             pos.add(RADIUS, RADIUS, RADIUS)
     );
-    private static final int MAX_SHEEP = 20;
+    List<Chunk> chunks = new ArrayList<>();
+
     public TileEntitySheepFarm() {
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
@@ -61,28 +64,36 @@ public class TileEntitySheepFarm  extends TileEntityInventory  implements IUpgra
             }
         };
         this.output = new InvSlotOutput(this, 9);
-        this.energy = this.addComponent(Energy.asBasicSink(this,1024,4));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-    public final InvSlotUpgrade upgradeSlot;
-    private final ComponentUpgradeSlots componentUpgrade;
-    public <T extends Entity> List<T> getEntitiesWithinAABB(Class <? extends T > clazz, AxisAlignedBB aabb, @Nullable Predicate<? super T > filter)
-    {
+
+    public <T extends Entity> List<T> getEntitiesWithinAABB(
+            Class<? extends T> clazz,
+            AxisAlignedBB aabb,
+            @Nullable Predicate<? super T> filter
+    ) {
         List<T> list = Lists.newArrayList();
         this.chunks.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(clazz, aabb, list, filter));
         return list;
     }
+
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
+        return EnumSet.of(
+                UpgradableProperty.Transformer,
+                UpgradableProperty.EnergyStorage,
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
+
     @Override
     public ContainerSheepFarm getGuiContainer(final EntityPlayer var1) {
-        return new ContainerSheepFarm(this,var1);
+        return new ContainerSheepFarm(this, var1);
     }
 
     @Override
@@ -100,29 +111,28 @@ public class TileEntitySheepFarm  extends TileEntityInventory  implements IUpgra
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.sheep_farm;
     }
-    List<Chunk> chunks = new ArrayList<>();
+
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote){
+        if (!this.getWorld().isRemote) {
             final AxisAlignedBB aabb = searchArea.offset(pos);
             searchArea = aabb;
             int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
             int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
             int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
             int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
-            for (int j3 = j2; j3 < k2; ++j3)
-            {
-                for (int k3 = l2; k3 < i3; ++k3)
-                {
+            for (int j3 = j2; j3 < k2; ++j3) {
+                for (int k3 = l2; k3 < i3; ++k3) {
                     final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
-                    if (!chunks.contains(chunk)){
+                    if (!chunks.contains(chunk)) {
                         chunks.add(chunk);
                     }
                 }
             }
         }
     }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -136,6 +146,7 @@ public class TileEntitySheepFarm  extends TileEntityInventory  implements IUpgra
             }
         }
     }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -155,6 +166,7 @@ public class TileEntitySheepFarm  extends TileEntityInventory  implements IUpgra
             }
         }
     }
+
     private void killExcessSheep(List<EntitySheep> sheepList) {
         for (int i = sheepList.size() - 1; i >= MAX_SHEEP; i--) {
             EntitySheep sheep = sheepList.get(i);
@@ -162,13 +174,14 @@ public class TileEntitySheepFarm  extends TileEntityInventory  implements IUpgra
             this.output.add(new ItemStack(Items.MUTTON, 1));
         }
     }
+
     private void breedSheep(List<EntitySheep> sheepList) {
         for (int i = 0; i < sheepList.size(); i++) {
             for (int j = i + 1; j < sheepList.size(); j++) {
                 EntitySheep sheep1 = sheepList.get(i);
                 EntitySheep sheep2 = sheepList.get(j);
 
-                if (sheep1.getGrowingAge() == 0  && this.slotSeeds
+                if (sheep1.getGrowingAge() == 0 && this.slotSeeds
                         .get()
                         .getCount() >= 2 && !sheep1.isInLove() && !sheep2.isInLove() && sheep2.getGrowingAge() == 0 && sheep1.getLoveCause() == null && sheep2.getLoveCause() == null) {
                     sheep1.setInLove(null);
@@ -179,6 +192,7 @@ public class TileEntitySheepFarm  extends TileEntityInventory  implements IUpgra
             }
         }
     }
+
     private void shearSheep(List<EntitySheep> sheepList) {
         for (EntitySheep sheep : sheepList) {
             if (!sheep.getSheared() && sheep.isEntityAlive()) {

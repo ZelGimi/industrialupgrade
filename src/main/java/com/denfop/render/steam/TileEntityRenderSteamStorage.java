@@ -2,7 +2,6 @@ package com.denfop.render.steam;
 
 import com.denfop.blocks.FluidName;
 import com.denfop.render.tank.DataFluid;
-import com.denfop.tiles.mechanism.TileEntityPrimalGasChamber;
 import com.denfop.tiles.mechanism.steam.TileSteamStorage;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -24,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 
 public class TileEntityRenderSteamStorage extends TileEntitySpecialRenderer<TileSteamStorage> {
+
     public void render(
             TileSteamStorage tile,
             double x,
@@ -35,9 +35,10 @@ public class TileEntityRenderSteamStorage extends TileEntitySpecialRenderer<Tile
             float alpha
     ) {
         GlStateManager.pushMatrix();
-        renderTanks(tile,x,y,z);
+        renderTanks(tile, x, y, z);
         GlStateManager.popMatrix();
     }
+
     private void renderTanks(final TileSteamStorage tile, final double x, final double y, final double z) {
         if (tile.fluidTank.getFluid() != null && tile.fluidTank.getFluid().getFluid() != null & tile.fluidTank
                 .getFluid()
@@ -46,9 +47,9 @@ public class TileEntityRenderSteamStorage extends TileEntitySpecialRenderer<Tile
             GL11.glPushMatrix();
             float dopY = 0;
             if (tile.fluidTank.getFluid().getFluid().isGaseous()) {
-                dopY =1f - tile.fluidTank.getFluidAmount() * 1F / tile.fluidTank.getCapacity();
+                dopY = 1f - tile.fluidTank.getFluidAmount() * 1F / tile.fluidTank.getCapacity();
             }
-            GL11.glTranslated(x + 0.04, y  + dopY, z + 0.04);
+            GL11.glTranslated(x + 0.04, y + dopY, z + 0.04);
 
             final float scale = tile.fluidTank.getFluidAmount() * 1F / tile.fluidTank.getCapacity();
             GlStateManager.enableLighting();
@@ -96,6 +97,7 @@ public class TileEntityRenderSteamStorage extends TileEntitySpecialRenderer<Tile
         }
 
     }
+
     public void render(FluidStack fluidStack, IBakedModel model, IBlockState state, EnumFacing enumfacing) {
 
         Tessellator tessellator = Tessellator.getInstance();
@@ -123,4 +125,5 @@ public class TileEntityRenderSteamStorage extends TileEntitySpecialRenderer<Tile
         }
 
     }
+
 }

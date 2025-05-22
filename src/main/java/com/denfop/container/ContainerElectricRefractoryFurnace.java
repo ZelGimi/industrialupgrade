@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityElectricRefractoryFurnace;
-import com.denfop.tiles.mechanism.TilePlasticPlateCreator;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerElectricRefractoryFurnace extends ContainerFullInv<TileEntityElectricRefractoryFurnace> {

@@ -1,7 +1,5 @@
 package com.denfop.api.transport;
 
-import com.denfop.api.sytem.IConductor;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +7,7 @@ import java.util.Objects;
 public class TransportTick<T, E> {
 
     private final T source;
+    LinkedList<ITransportConductor> conductors = new LinkedList<>();
     private List<E> energyPaths;
     private List<E> energyPaths1;
 
@@ -18,14 +17,10 @@ public class TransportTick<T, E> {
 
     }
 
-    public void setList(final List<E> energyPaths) {
-        this.energyPaths = energyPaths;
-    }
-
     public T getSource() {
         return source;
     }
-    LinkedList<ITransportConductor> conductors = new LinkedList<>();
+
     public LinkedList<ITransportConductor> getConductors() {
         return conductors;
     }
@@ -46,7 +41,6 @@ public class TransportTick<T, E> {
         return source == that.source;
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(source);
@@ -54,6 +48,10 @@ public class TransportTick<T, E> {
 
     public List<E> getList() {
         return energyPaths;
+    }
+
+    public void setList(final List<E> energyPaths) {
+        this.energyPaths = energyPaths;
     }
 
     public void setItemList(final List<E> energyPaths) {

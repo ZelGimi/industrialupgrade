@@ -5,7 +5,9 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
+import com.denfop.api.space.research.event.ResearchTableReLoadEvent;
 import com.denfop.api.space.research.event.RocketPadLoadEvent;
+import com.denfop.api.space.research.event.RocketPadReLoadEvent;
 import com.denfop.api.space.research.event.RocketPadUnLoadEvent;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -16,7 +18,6 @@ import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerRocketLaunchPad;
 import com.denfop.events.client.GlobalRenderManager;
-import com.denfop.events.client.SolarSystemRenderer;
 import com.denfop.gui.GuiRocketLaunchPad;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.space.ItemRover;
@@ -51,14 +52,18 @@ import java.util.function.Function;
 
 public class TileEntityRocketLaunchPad extends TileEntityInventory implements IRocketLaunchPad {
 
+    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, -1, 2, 2.0D,
+            2
+    ));
     public final InvSlotOutput outputSlot;
     public final InvSlot roverSlot;
     public final Energy energy;
     public final Fluids fluids;
     public final Fluids.InternalFluidTank tank;
     public final Fluids.InternalFluidTank[] tanks;
+    public List<DataRocket> rocketList = new ArrayList<>();
+    boolean added = false;
     private UUID player;
-    public   List<DataRocket> rocketList = new ArrayList<>();
     @SideOnly(Side.CLIENT)
     private RocketPadRender render;
 
@@ -85,10 +90,6 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
         }
         this.energy = this.addComponent(Energy.asBasicSink(this, 5000000, 14));
     }
-
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, -1, 2, 2.0D,
-            2
-    ));
 
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.rocket_launch_pad;
@@ -130,6 +131,9 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getWorld().getWorldTime() % 80 == 0){
+            MinecraftForge.EVENT_BUS.post(new RocketPadReLoadEvent(this.getWorld(), this));
+        }
         if (!this.roverSlot.isEmpty()) {
             charge(roverSlot.get());
             refuel(roverSlot.get(), (IRoversItem) roverSlot.get().getItem());
@@ -143,6 +147,7 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
             this.player = placer.getUniqueID();
         }
     }
+
     @Override
     public void readFromNBT(final NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
@@ -152,33 +157,36 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     @Override
     public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
         NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setUniqueId("player",player);
+        nbtTagCompound.setUniqueId("player", player);
         return nbtTagCompound;
     }
-    boolean added = false;
+
     @Override
     public void onLoaded() {
         super.onLoaded();
 
         if (this.getWorld().isRemote) {
             GlobalRenderManager.addRender(world, pos, createFunction(this));
-        }else {
+        } else {
             if (!added) {
                 MinecraftForge.EVENT_BUS.post(new RocketPadLoadEvent(this.getWorld(), this));
                 added = true;
             }
         }
     }
+
     @SideOnly(Side.CLIENT)
     public Function createFunction(TileEntityRocketLaunchPad te) {
         Function function = o -> {
-            if (this.render == null)
+            if (this.render == null) {
                 this.render = new RocketPadRender();
+            }
             render.render(te);
             return 0;
         };
         return function;
     }
+
     @Override
     public void onUnloaded() {
         super.onUnloaded();
@@ -230,7 +238,7 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer packetBuffer = super.writePacket();
         packetBuffer.writeBoolean(roverSlot.isEmpty());
-        if (!roverSlot.isEmpty()){
+        if (!roverSlot.isEmpty()) {
             packetBuffer.writeItemStack(roverSlot.get());
         }
         return packetBuffer;
@@ -240,9 +248,9 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         boolean isNotEmpty = customPacketBuffer.readBoolean();
-        if (isNotEmpty){
+        if (!isNotEmpty) {
             try {
-                this.roverSlot.put(0,customPacketBuffer.readItemStack());
+                this.roverSlot.put(0, customPacketBuffer.readItemStack());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -252,11 +260,11 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);
-        if (name.equals("datarocket")){
+        if (name.equals("datarocket")) {
             try {
                 ItemStack stack = is.readItemStack();
-                this.rocketList.add(new DataRocket((IRoversItem) stack.getItem(),this.pos.getY()));
-                this.roverSlot.put(0,ItemStack.EMPTY);
+                this.rocketList.add(new DataRocket((IRoversItem) stack.getItem(), this.pos.getY()));
+                this.roverSlot.put(0, ItemStack.EMPTY);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -309,7 +317,9 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     ) {
         if (!this.getWorld().isRemote && player
                 .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && !(player.getHeldItem(hand).getItem() instanceof ItemRover))  {
+                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && !(player
+                .getHeldItem(hand)
+                .getItem() instanceof ItemRover)) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
                     this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)

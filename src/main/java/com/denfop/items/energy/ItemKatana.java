@@ -39,7 +39,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.CooldownTracker;
 import net.minecraft.util.EnumActionResult;
@@ -175,7 +174,7 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
                     nbt.setString("type", "");
                     break;
             }
-        }else{
+        } else {
             nbt.setBoolean("iaidoMode", !nbt.getBoolean("iaidoMode"));
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
@@ -256,7 +255,7 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
             if (iaidoActive) {
                 dmg *= 3;
             }
-            if (cooldown){
+            if (cooldown) {
                 dmg = 4;
             }
             HashMultimap<String, AttributeModifier> hashMultimap = HashMultimap.create();
@@ -374,7 +373,7 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
             nbt.setBoolean("hasID", false);
             MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
         }
-        if (entity instanceof EntityPlayer && !world.isRemote){
+        if (entity instanceof EntityPlayer && !world.isRemote) {
             CooldownTracker cooldownTracker = ((EntityPlayer) entity).getCooldownTracker();
             nbt.setBoolean("cooldown", cooldownTracker.hasCooldown(itemStack.getItem()));
         }

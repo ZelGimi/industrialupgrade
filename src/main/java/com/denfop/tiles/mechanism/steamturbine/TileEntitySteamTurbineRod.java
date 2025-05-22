@@ -35,7 +35,7 @@ public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement imple
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 4) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ISteamBlade && ((ISteamBlade) stack.getItem()).getLevel() <= getMain().getLevel();
+                return stack.getItem() instanceof ISteamBlade && ((ISteamBlade) stack.getItem()).getLevel() <= getMain().getBlockLevel();
             }
 
             @Override
@@ -105,7 +105,7 @@ public class TileEntitySteamTurbineRod extends TileEntityMultiBlockElement imple
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return -1;
     }
 

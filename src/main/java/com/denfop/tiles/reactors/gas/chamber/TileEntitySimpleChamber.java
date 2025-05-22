@@ -20,7 +20,7 @@ public class TileEntitySimpleChamber extends TileEntityMultiBlockElement impleme
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return 0;
     }
 

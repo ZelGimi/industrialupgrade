@@ -6,8 +6,6 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockSmeltery;
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerCyclotronCryogen;
-import com.denfop.container.ContainerSmelteryCasting;
 import com.denfop.container.ContainerSmelteryFuelTank;
 import com.denfop.gui.GuiSmelteryFuelTank;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
@@ -18,7 +16,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -75,7 +72,7 @@ public class TileEntitySmelteryFuelTank extends TileEntityMultiBlockElement impl
 
     @Override
     public ContainerSmelteryFuelTank getGuiContainer(final EntityPlayer var1) {
-        return new ContainerSmelteryFuelTank(this,var1);
+        return new ContainerSmelteryFuelTank(this, var1);
     }
 
     @Override

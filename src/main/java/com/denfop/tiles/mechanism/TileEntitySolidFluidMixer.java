@@ -37,7 +37,6 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -124,8 +123,10 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
                         new RecipeOutput(null, container)
                 )
         );
-        Recipes.recipes.getRecipeFluid().addRecipe("solid_fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(container,
-                fluidStack), Arrays.asList(
+        Recipes.recipes.getRecipeFluid().addRecipe("solid_fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
+                container,
+                fluidStack
+        ), Arrays.asList(
                 outputfluidStack, outputfluidStack1)));
 
     }
@@ -200,7 +201,7 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
                         , 250)
         );
 
-        addRecipe(new ItemStack(IUItem.crafting_elements,1,295),
+        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 295),
                 new FluidStack(FluidRegistry.WATER, 1000),
                 new FluidStack(FluidName.fluidsteam_oil.getInstance()
                         , 500), new FluidStack(FluidName.fluidoxy.getInstance()

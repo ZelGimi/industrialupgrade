@@ -82,6 +82,9 @@ public class TickHandler {
     double[][] z2 = new double[latitudeSegments][longitudeSegments];
     double[][] z3 = new double[latitudeSegments][longitudeSegments];
     double[][] z4 = new double[latitudeSegments][longitudeSegments];
+    Set<UpgradableProperty> set = EnumSet.of(UpgradableProperty.FluidExtract, UpgradableProperty.FluidInput,
+            UpgradableProperty.ItemInput, UpgradableProperty.ItemExtract
+    );
 
     public TickHandler() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -284,7 +287,7 @@ public class TickHandler {
                     return ModUtils.convertRGBcolorToInt(121, 229, 71);
                 case 14:
                     return ModUtils.convertRGBcolorToInt(255, 225, 136);
-                    case 15:
+                case 15:
                     return ModUtils.convertRGBcolorToInt(194, 189, 56);
             }
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
@@ -566,7 +569,6 @@ public class TickHandler {
         tessellator.draw();
     }
 
-
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
@@ -730,8 +732,7 @@ public class TickHandler {
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
     }
-    Set<UpgradableProperty> set = EnumSet.of(UpgradableProperty.FluidExtract, UpgradableProperty.FluidInput,
-            UpgradableProperty.ItemInput, UpgradableProperty.ItemExtract);
+
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onRenderTileSide(RenderWorldLastEvent event) {
@@ -746,8 +747,9 @@ public class TickHandler {
             return;
         }
         IUpgradeItem upgradeItem = (IUpgradeItem) player.getHeldItemMainhand().getItem();
-        if (!upgradeItem.isSuitableFor( player.getHeldItemMainhand(),set))
+        if (!upgradeItem.isSuitableFor(player.getHeldItemMainhand(), set)) {
             return;
+        }
 
         RayTraceResult ray = mc.objectMouseOver;
         if (ray == null || ray.typeOfHit != RayTraceResult.Type.BLOCK) {
@@ -755,8 +757,9 @@ public class TickHandler {
         }
         EnumFacing facing = getDirection(player.getHeldItemMainhand());
         TileEntity tile = player.getEntityWorld().getTileEntity(ray.getBlockPos());
-        if (!(tile instanceof IUpgradableBlock))
+        if (!(tile instanceof IUpgradableBlock)) {
             return;
+        }
         if (facing != null) {
             BlockPos pos = ray.getBlockPos().offset(facing);
             int xRange = 0;
@@ -784,7 +787,7 @@ public class TickHandler {
             buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
             Vec3d lookVec = player.getLook(1.0F);
             for (int xPos = (int) (x - xRange); xPos <= x + xRange; xPos++) {
-                for (int yPos = (int) (y - yRange); yPos <= y + yRange ; yPos++) {
+                for (int yPos = (int) (y - yRange); yPos <= y + yRange; yPos++) {
                     for (int zPos = (int) (z - zRange); zPos <= z + zRange; zPos++) {
                         BlockPos currentPos = new BlockPos(xPos, yPos, zPos);
                         Vec3d blockVec = new Vec3d(
@@ -834,7 +837,7 @@ public class TickHandler {
             GlStateManager.disableBlend();
             GlStateManager.enableTexture2D();
             GlStateManager.popMatrix();
-        }else {
+        } else {
             for (EnumFacing facing1 : EnumFacing.VALUES) {
                 BlockPos pos = ray.getBlockPos().offset(facing1);
                 int xRange = 0;

@@ -8,7 +8,6 @@ import com.denfop.container.ContainerSteamTurbineControllerRod;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.recipes.BaseRecipes;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -41,7 +40,9 @@ public class GuiSteamTurbineControllerRod extends GuiIU<ContainerSteamTurbineCon
                                     .getRods()
                                     .get(index)
                                     .getBlockPos());
-                    if (tileMultiBlockBase != null && tileMultiBlockBase.getMain() != null && tileMultiBlockBase.getMain().isFull() && !tileMultiBlockBase.isInvalid()) {
+                    if (tileMultiBlockBase != null && tileMultiBlockBase.getMain() != null && tileMultiBlockBase
+                            .getMain()
+                            .isFull() && !tileMultiBlockBase.isInvalid()) {
                         this.container.base.updateTileServer(Minecraft.getMinecraft().player, index);
                         new PacketUpdateServerTile(this.container.base, index);
                     }

@@ -18,8 +18,9 @@ public class Factory extends Building implements IFactory {
     public Factory(final IColony colonie, EnumTypeFactory typeFactory, boolean simulate) {
         super(colonie);
         this.typeFactory = typeFactory;
-        if (!simulate)
+        if (!simulate) {
             this.getColony().addBuilding(this);
+        }
     }
 
     public Factory(CustomPacketBuffer packetBuffer, Colony colonie) {
@@ -29,6 +30,15 @@ public class Factory extends Building implements IFactory {
         this.people = packetBuffer.readByte();
         this.getColony().addBuilding(this);
     }
+
+    public Factory(final NBTTagCompound tag, IColony colonie) {
+        super(colonie);
+        int id = tag.getByte("id");
+        this.typeFactory = EnumTypeFactory.getID(id);
+        this.people = tag.getByte("people");
+        this.getColony().addBuilding(this);
+    }
+
     @Override
     public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
         super.writePacket(customPacketBuffer);
@@ -36,16 +46,10 @@ public class Factory extends Building implements IFactory {
         customPacketBuffer.writeByte(people);
         return customPacketBuffer;
     }
+
     @Override
     public byte getId() {
         return 2;
-    }
-    public Factory(final NBTTagCompound tag, IColony colonie) {
-        super(colonie);
-        int id = tag.getByte("id");
-        this.typeFactory = EnumTypeFactory.getID(id);
-        this.people = tag.getByte("people");
-        this.getColony().addBuilding(this);
     }
 
     @Override

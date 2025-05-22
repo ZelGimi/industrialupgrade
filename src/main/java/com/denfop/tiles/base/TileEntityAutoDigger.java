@@ -60,7 +60,7 @@ public class TileEntityAutoDigger extends TileEntityInventory {
         tooltip.add(Localization.translate("iu.excavator.info"));
         tooltip.add(Localization.translate("iu.excavator.info1"));
 
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     public IMultiTileBlock getTeBlock() {

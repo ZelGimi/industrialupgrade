@@ -62,7 +62,7 @@ public class InvSlotSubstitute extends InvSlot {
                 this.tile.getCableItemList().clear();
                 this.tile.max_value = 0;
                 List<CableItem> cableItemList = new ArrayList<>();
-                for (ItemStack stack : this.gets()) {
+                for (ItemStack stack : this) {
                     if (stack.isEmpty()) {
                         continue;
                     }

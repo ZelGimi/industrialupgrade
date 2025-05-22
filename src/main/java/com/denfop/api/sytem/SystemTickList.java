@@ -34,6 +34,7 @@ public class SystemTickList<T extends SystemTick<ISource, Path>> extends ArrayLi
         }
         return false;
     }
+
     public SystemTick<ISource, Path> removeSource(final Object o) {
         if (o instanceof ISource) {
             for (int i = 0; i < this.size(); i++) {
@@ -47,4 +48,5 @@ public class SystemTickList<T extends SystemTick<ISource, Path>> extends ArrayLi
         }
         return null;
     }
+
 }

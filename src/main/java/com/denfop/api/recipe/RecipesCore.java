@@ -657,7 +657,7 @@ public class RecipesCore implements IRecipes {
 
     @Override
     public void optimize() {
-        for (Map.Entry<String,List<BaseMachineRecipe>> entry : map_recipes.entrySet()){
+        for (Map.Entry<String, List<BaseMachineRecipe>> entry : map_recipes.entrySet()) {
             entry.setValue(new ArrayList<>(entry.getValue()));
         }
     }

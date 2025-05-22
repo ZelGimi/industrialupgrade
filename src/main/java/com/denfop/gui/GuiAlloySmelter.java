@@ -9,12 +9,9 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.tiles.mechanism.dual.heat.TileAlloySmelter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Collections;
 
 @SideOnly(Side.CLIENT)
 public class GuiAlloySmelter extends GuiIU<ContainerDoubleElectricMachine> {

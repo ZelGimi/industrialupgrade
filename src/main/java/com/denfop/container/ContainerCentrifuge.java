@@ -1,9 +1,6 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityBrewingPlant;
 import com.denfop.tiles.mechanism.TileEntityCentrifuge;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
-import com.denfop.tiles.mechanism.TileEntitySawmill;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerCentrifuge extends ContainerFullInv<TileEntityCentrifuge> {
@@ -19,7 +16,6 @@ public class ContainerCentrifuge extends ContainerFullInv<TileEntityCentrifuge> 
                 0, -20, 84
         ));
     }
-
 
 
 }

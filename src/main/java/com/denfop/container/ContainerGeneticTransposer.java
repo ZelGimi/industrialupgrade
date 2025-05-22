@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityGeneticTransposer;
-import com.denfop.tiles.mechanism.TilePlasticCreator;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerGeneticTransposer extends ContainerFullInv<TileEntityGeneticTransposer> {
@@ -22,13 +21,13 @@ public class ContainerGeneticTransposer extends ContainerFullInv<TileEntityGenet
                     0, inputX - 18, inputY
             ));
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
-                    1, inputX , inputY
+                    1, inputX, inputY
             ));
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
                     2, inputX - 18, inputY + 18
             ));
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
-                    3, inputX , inputY  + 18
+                    3, inputX, inputY + 18
             ));
         }
         if (tileEntity1.outputSlot != null) {

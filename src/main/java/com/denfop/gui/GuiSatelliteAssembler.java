@@ -4,12 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageScreen;
-import com.denfop.api.gui.ImageSpaceInterface;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.container.ContainerBattery;
-import com.denfop.container.ContainerProbeAssembler;
-import com.denfop.container.ContainerRoverAssembler;
 import com.denfop.container.ContainerSatelliteAssembler;
 import net.minecraft.util.ResourceLocation;
 
@@ -17,8 +12,8 @@ public class GuiSatelliteAssembler extends GuiIU<ContainerSatelliteAssembler> {
 
     public GuiSatelliteAssembler(ContainerSatelliteAssembler guiContainer) {
         super(guiContainer, EnumTypeStyle.SPACE);
-        this.xSize=214;
-        this.ySize=226;
+        this.xSize = 214;
+        this.ySize = 226;
         this.componentList.clear();
         this.addComponent(new GuiComponent(this, 173, 63, EnumTypeComponent.ENERGY_WEIGHT_2,
                 new Component<>(this.container.base.energy)

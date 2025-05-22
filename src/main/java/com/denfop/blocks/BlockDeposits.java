@@ -34,7 +34,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
@@ -63,7 +62,7 @@ public class BlockDeposits extends BlockCore implements IModelRegister, IDeposit
 
     public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("type", Type.class);
     public static final AxisAlignedBB Deposits = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.2D, 1.0D);
-    public static   Map<Integer, List<String>> mapInf = new HashMap<>();
+    public static Map<Integer, List<String>> mapInf = new HashMap<>();
 
     public BlockDeposits() {
         super(Material.ROCK, Constants.MOD_ID);
@@ -109,11 +108,12 @@ public class BlockDeposits extends BlockCore implements IModelRegister, IDeposit
             this.checkFallable(worldIn, pos);
         }
     }
+
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
+
     private void checkFallable(World worldIn, BlockPos pos) {
         if ((worldIn.isAirBlock(pos.down()) || canFallThrough(worldIn.getBlockState(pos.down()))) && pos.getY() >= 0) {
 
@@ -400,18 +400,22 @@ public class BlockDeposits extends BlockCore implements IModelRegister, IDeposit
                 for (int i = 0; i < vein.getOres().size(); i++) {
                     final ChanceOre chanceOre = vein.getOres().get(i);
                     String s2 =
-                            new ItemStack(chanceOre.getBlock().getBlock(),
+                            new ItemStack(
+                                    chanceOre.getBlock().getBlock(),
                                     1,
-                                    chanceOre.getMeta()).getDisplayName() + " " + chanceOre.getChance() + "%";
+                                    chanceOre.getMeta()
+                            ).getDisplayName() + " " + chanceOre.getChance() + "%";
                     stringList.add(s2);
                 }
             } else {
                 for (int i = 0; i < vein.getOres().size(); i++) {
                     final ChanceOre chanceOre = vein.getOres().get(i);
                     String s2 =
-                            new ItemStack(chanceOre.getBlock().getBlock(),
+                            new ItemStack(
+                                    chanceOre.getBlock().getBlock(),
                                     1,
-                                    chanceOre.getMeta()).getDisplayName() + " " + chanceOre.getChance() + "%";
+                                    chanceOre.getMeta()
+                            ).getDisplayName() + " " + chanceOre.getChance() + "%";
                     stringList.add(s2);
                 }
             }

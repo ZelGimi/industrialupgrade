@@ -32,14 +32,19 @@ public class SoilPollutionComponent extends AbstractComponent implements IPollut
         this.pollution = pollution;
         this.default_pollution = pollution;
     }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        if (this.parent != null && this.parent.getWorld() == null){
-            tooltip.add(Localization.translate("iu.pollution.soil.info")+ " " + String.format("%.2f", default_pollution)+ Localization.translate("iu" +
+        if (this.parent != null && this.parent.getWorld() == null) {
+            tooltip.add(Localization.translate("iu.pollution.soil.info") + " " + String.format(
+                    "%.2f",
+                    default_pollution
+            ) + Localization.translate("iu" +
                     ".pollution.soil.info1"));
         }
     }
+
     @Override
     public NBTTagCompound writeToNbt() {
         NBTTagCompound tagCompound = super.writeToNbt();

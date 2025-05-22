@@ -17,7 +17,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class BaseRecipes {
@@ -973,14 +972,23 @@ public class BaseRecipes {
                 ('A'),
                 ("plateZinc")
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.module7, 1, 9), "DBD", "BCB", "ABA",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.module7, 1, 9),
+                "DBD",
+                "BCB",
+                "ABA",
 
-                ('C'), new ItemStack(IUItem.purifier, 1, 32767),
+                ('C'),
+                new ItemStack(IUItem.purifier, 1, 32767),
 
-                ('B'), new ItemStack(IUItem.nanoBox),
+                ('B'),
+                new ItemStack(IUItem.nanoBox),
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),'D',new ItemStack(IUItem.crafting_elements, 1,
-                        543)
+                ('A'),
+                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
+                'D',
+                new ItemStack(IUItem.crafting_elements, 1,
+                        543
+                )
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.module9, 1, 9), "ABA", "BCB", "ABA",
 
@@ -1114,7 +1122,7 @@ public class BaseRecipes {
         }
         for (j = 0; j < 14; j++) {
             ItemStack stack1 = new ItemStack(IUItem.module6, 1, j);
-            Recipes.recipe.addShapelessRecipe(stack1,new ItemStack(IUItem.blockpanel, 1, j));
+            Recipes.recipe.addShapelessRecipe(stack1, new ItemStack(IUItem.blockpanel, 1, j));
         }
 
         for (int i = 0; i < RegisterOreDictionary.list_string.size(); i++) {
@@ -2403,7 +2411,7 @@ public class BaseRecipes {
                 ('A'), Items.STICK,
 
                 ('B'),
-                ("plateIron"),'C',"plateDenseIron"
+                ("plateIron"), 'C', "plateDenseIron"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.anode), "B B", "BAB", "B B",
 
@@ -2537,7 +2545,7 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.imp_bags, 1), "BCB", "BAB", "B B",
 
-                ('C'),  new ItemStack(IUItem.reBattery, 1, 32767),
+                ('C'), new ItemStack(IUItem.reBattery, 1, 32767),
 
                 ('B'), new ItemStack(IUItem.compresscarbon),
 
@@ -2704,25 +2712,25 @@ public class BaseRecipes {
 
                 ('A'),
                 ModUtils.getCellFromFluid(FluidName.fluidazot.getInstance()),
-                ('B'), new ItemStack(IUItem.module_schedule),'C',"plateAdamantium",'D',"plateStellite"
+                ('B'), new ItemStack(IUItem.module_schedule), 'C', "plateAdamantium", 'D', "plateStellite"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.coolupgrade, 1, 1), "ACA", "DBD", "ACA",
 
                 ('A'),
                 ModUtils.getCellFromFluid(FluidName.fluidhyd.getInstance()),
-                ('B'), new ItemStack(IUItem.module_schedule),'C',"plateAdamantium",'D',"plateStellite"
+                ('B'), new ItemStack(IUItem.module_schedule), 'C', "plateAdamantium", 'D', "plateStellite"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.coolupgrade, 1, 2), "ACA", "DBD", "ACA",
 
                 ('A'),
                 ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
-                ('B'), new ItemStack(IUItem.module_schedule),'C',"plateAdamantium",'D',"plateStellite"
+                ('B'), new ItemStack(IUItem.module_schedule), 'C', "plateAdamantium", 'D', "plateStellite"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.autoheater), "CAC","DBD","C C",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.autoheater), "CAC", "DBD", "C C",
 
                 ('A'), new ItemStack(IUItem.basemachine2, 1, 5),
 
-                ('B'), new ItemStack(IUItem.module_schedule),'C',"plateInconel",'D',"plateMithril"
+                ('B'), new ItemStack(IUItem.module_schedule), 'C', "plateInconel", 'D', "plateMithril"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.scable), " C ", "ABA", " C ",
 
@@ -2732,7 +2740,7 @@ public class BaseRecipes {
 
                 ('C'), IUItem.rubber
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.qcable,2), " C ", "ABA", " C ",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.qcable, 2), " C ", "ABA", " C ",
 
                 ('B'), IUItem.glassFiberCableItem,
 
@@ -3067,7 +3075,7 @@ public class BaseRecipes {
     public static void recipe_machines() {
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 21), "CCC", "BAB", "DBD",
                 ('A'), new ItemStack(IUItem.crafting_elements, 1, 42), ('B'), "ingotGold", ('C'), "ingotIron",
-                'D',new ItemStack(IUItem.crafting_elements, 1, 650)
+                'D', new ItemStack(IUItem.crafting_elements, 1, 650)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 20), "ABA", "ECD", "  ",
 
@@ -3132,21 +3140,21 @@ public class BaseRecipes {
                 new ItemStack(IUItem.crafting_elements, 1, 21), ('C'), new ItemStack(
                         IUItem.nanoBox),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 16),'E',new ItemStack(IUItem.crafting_elements, 1, 651)
+                new ItemStack(IUItem.crafting_elements, 1, 16), 'E', new ItemStack(IUItem.crafting_elements, 1, 651)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 23), "CCC", "DAD", "EBE",
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8), ('A'),
                 new ItemStack(IUItem.crafting_elements, 1, 25), ('C'), new ItemStack(
                         IUItem.quantumtool),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 92),'E',  new ItemStack(IUItem.crafting_elements, 1, 652)
+                new ItemStack(IUItem.crafting_elements, 1, 92), 'E', new ItemStack(IUItem.crafting_elements, 1, 652)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 24), "CCC", "DAD", "EBE",
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10), ('A'),
                 new ItemStack(IUItem.crafting_elements, 1, 23), ('C'), new ItemStack(
                         IUItem.spectral_box),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 116),'E',new ItemStack(IUItem.crafting_elements, 1, 653)
+                new ItemStack(IUItem.crafting_elements, 1, 116), 'E', new ItemStack(IUItem.crafting_elements, 1, 653)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 42), "AAA", "CBC", "   ",
 
@@ -3235,10 +3243,10 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 139), "BA ", "CC ", "   ",
                 ('A'), new ItemStack(IUItem.crafting_elements, 1, 479), ('B'), new ItemStack(IUItem.crafting_elements, 1, 138),
-                'C',"casingBloodstone"
+                'C', "casingBloodstone"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 140), "BC ", "AA ", "   ",
-                ('A'), "casingDraconid", ('B'), new ItemStack(IUItem.crafting_elements, 1, 139),'C',"plateWoods"
+                ('A'), "casingDraconid", ('B'), new ItemStack(IUItem.crafting_elements, 1, 139), 'C', "plateWoods"
         );
         Recipes.recipe.addShapelessRecipe(Blocks.STICKY_PISTON, Blocks.PISTON, IUItem.latex);
         Recipes.recipe.addRecipe(IUItem.machine, "AA ", "AA ", "   ",
@@ -3906,7 +3914,7 @@ public class BaseRecipes {
                 new ItemStack(IUItem.cable, 1, 13),
                 'B',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
-                'D',  ModUtils.setSize(IUItem.overclockerUpgrade, 1),'E', IUItem.advnanobox
+                'D', ModUtils.setSize(IUItem.overclockerUpgrade, 1), 'E', IUItem.advnanobox
 
         );
         Recipes.recipe.addRecipe(
@@ -3920,7 +3928,7 @@ public class BaseRecipes {
                 new ItemStack(IUItem.cable, 1, 1),
                 'B',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
-                'D',   ModUtils.setSize(IUItem.overclockerUpgrade_1, 1),'E', IUItem.advQuantumtool
+                'D', ModUtils.setSize(IUItem.overclockerUpgrade_1, 1), 'E', IUItem.advQuantumtool
 
         );
 
@@ -4828,7 +4836,7 @@ public class BaseRecipes {
                 'B',
                 new ItemStack(Items.REDSTONE),
                 'C',
-              "casingOrichalcum"
+                "casingOrichalcum"
         );
         Recipes.recipe.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 2, 653),
@@ -5206,7 +5214,7 @@ public class BaseRecipes {
                 new ItemStack(IUItem.crafting_elements, 1, 140),
                 'F', new ItemStack(IUItem.crafting_elements, 1, 44),
                 'B',
-              "plateNimonic",
+                "plateNimonic",
                 'C',
                 "plateSuperalloyRene",
                 'D',
@@ -5260,7 +5268,7 @@ public class BaseRecipes {
                 'D',
                 new ItemStack(IUItem.crafting_elements, 1, 24),
                 'E',
-                new ItemStack(IUItem.crafting_elements, 1,654)
+                new ItemStack(IUItem.crafting_elements, 1, 654)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 132),
                 "CAC",
@@ -5324,7 +5332,7 @@ public class BaseRecipes {
                 'D',
                 new ItemStack(IUItem.crafting_elements, 1, 276),
                 'E',
-                new ItemStack(IUItem.crafting_elements, 1, 267),'H',
+                new ItemStack(IUItem.crafting_elements, 1, 267), 'H',
                 new ItemStack(IUItem.crafting_elements, 1, 265)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 470),
@@ -5838,7 +5846,7 @@ public class BaseRecipes {
                 new ItemStack(IUItem.crafting_elements, 1, 439),
                 "CEC ",
                 "EAE",
-                "DBD",
+                " B ",
                 'A',
                 DEFAULT_SENSOR,
                 'B',
@@ -6120,8 +6128,21 @@ public class BaseRecipes {
                 ('A'), PHOTON_SENSOR, ('B'), "doubleplateVitalium",
                 ('C'), "doubleplateInvar"
         );
-        Recipes.recipe.addShapelessRecipe(CropNetwork.instance.getCrop(0).getStack(), new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT_SEEDS));
-        Recipes.recipe.addShapelessRecipe(CropNetwork.instance.getCrop(1).getStack(), new ItemStack(Items.REEDS),new ItemStack(Items.REEDS));
+        Recipes.recipe.addShapelessRecipe(
+                CropNetwork.instance.getCrop(0).getStack(),
+                new ItemStack(Items.WHEAT_SEEDS),
+                new ItemStack(Items.WHEAT_SEEDS)
+        );
+        Recipes.recipe.addShapelessRecipe(
+                CropNetwork.instance.getCrop(17).getStack(),
+                CropNetwork.instance.getCrop(17).getDrop().get(0),
+                CropNetwork.instance.getCrop(17).getDrop().get(0)
+        );
+        Recipes.recipe.addShapelessRecipe(
+                CropNetwork.instance.getCrop(1).getStack(),
+                new ItemStack(Items.REEDS),
+                new ItemStack(Items.REEDS)
+        );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(4).getStack(),
                 CropNetwork.instance.getCrop(4).getDrop().get(0),
@@ -7138,12 +7159,12 @@ public class BaseRecipes {
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 32), "CBC", "BAB", "EDE", 'A', DEFAULT_SENSOR,
-                'B', "gearInvar", 'C', "gemSapphire", 'D', "gearFerromanganese",'E',"plateFerromanganese"
+                'B', "gearInvar", 'C', "gemSapphire", 'D', "gearFerromanganese", 'E', "plateFerromanganese"
 
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 123), "CBC", "BAB", "EDE", 'A', DEFAULT_SENSOR,
-                'B', "gearElectrum", 'C', "gemTopaz", 'D', "gearAluminumbronze",'E',"plateAluminumbronze"
+                'B', "gearElectrum", 'C', "gemTopaz", 'D', "gearAluminumbronze", 'E', "plateAluminumbronze"
 
         );
 
@@ -7318,8 +7339,20 @@ public class BaseRecipes {
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 143), "CBC", "BAB", "CBC", 'A',
                 new ItemStack(IUItem.module_schedule), 'B', "plateAluminiumLithium", 'C', "plateTantalumTungstenHafnium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 656), "EEE", "BAB", "CDC", 'A',
-               DEFAULT_SENSOR, 'B', "plateBeryllium", 'C', "plateTantalumTungstenHafnium",'D',"gearCobaltChrome",'E',"casingBismuth"
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 656),
+                "EEE",
+                "BAB",
+                "CDC",
+                'A',
+                DEFAULT_SENSOR,
+                'B',
+                "plateBeryllium",
+                'C',
+                "plateTantalumTungstenHafnium",
+                'D',
+                "gearCobaltChrome",
+                'E',
+                "casingBismuth"
         );
         BasicRecipeTwo.recipe();
     }

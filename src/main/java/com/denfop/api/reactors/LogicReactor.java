@@ -1,6 +1,5 @@
 package com.denfop.api.reactors;
 
-import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.item.ItemStack;
 
@@ -107,7 +106,6 @@ public class LogicReactor {
     public void setRadGeneration(final int rad_generation) {
         this.rad_generation = rad_generation;
     }
-
 
 
     public void calculateComponent() {
@@ -228,11 +226,11 @@ public class LogicReactor {
                                     lg.getStack()
                             );
                             lg.damage = (short) ((lg.heat / lg.getItem().getDamageCFromHeat(
-                                                                (int) lg.heat,
-                                                                this.reactor
-                                                        )) * reactor.getMulDamage(lg.getX(), lg.getY(), lg.getStack()) - lg
-                                                                .getItem()
-                                                                .getAutoRepair(this.reactor));
+                                    (int) lg.heat,
+                                    this.reactor
+                            )) * reactor.getMulDamage(lg.getX(), lg.getY(), lg.getStack()) - lg
+                                    .getItem()
+                                    .getAutoRepair(this.reactor));
 
                             if (lg.getItem().getType() == EnumTypeComponent.COOLANT_ROD) {
                                 lg.damage *= 10;

@@ -22,12 +22,14 @@ public class Sends {
 
     private final UUID uuid;
     private final Timer timerToPlanet;
+    private final IBody body;
     List<ItemStack> stacks = new LinkedList<>();
     List<FluidStack> fluidStacks = new LinkedList<>();
 
     public Sends(UUID uuid, IBody body, IColony colony) {
         this.uuid = uuid;
         int seconds = 0;
+        this.body = body;
         if (body instanceof IPlanet) {
             seconds = (int) ((Math.abs(body.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (16.66 * 60 * 0.8));
         } else if (body instanceof ISatellite) {
@@ -44,12 +46,17 @@ public class Sends {
             seconds =
                     (int) ((Math.abs(((((IAsteroid) body).getMaxDistance() - ((IAsteroid) body).getMinDistance()) / 2 + ((IAsteroid) body).getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (16.66 * 60 * 0.8));
         }
-        int dop = colony.getLevel() / 20;
-        this.timerToPlanet = new Timer(seconds / (4+dop));
+        int dop = colony.getLevel() / 10;
+        this.timerToPlanet = new Timer(seconds / (4 + dop));
+    }
+
+    public IBody getBody() {
+        return body;
     }
 
     public Sends(NBTTagCompound tagCompound) {
         this.uuid = tagCompound.getUniqueId("uuid");
+        this.body = SpaceNet.instance.getBodyFromName(tagCompound.getString("body"));
         this.timerToPlanet = new Timer(tagCompound.getCompoundTag("time"));
         NBTTagList nbtTagList = tagCompound.getTagList("items", 10);
         this.stacks.clear();
@@ -61,11 +68,13 @@ public class Sends {
         for (int i = 0; i < nbtTagList1.tagCount(); i++) {
             this.fluidStacks.add(FluidStack.loadFluidStackFromNBT(nbtTagList1.getCompoundTagAt(i)));
         }
+
     }
 
     public NBTTagCompound writeToNbt() {
         NBTTagCompound tagCompound = new NBTTagCompound();
         tagCompound.setUniqueId("uuid", uuid);
+        tagCompound.setString("body", body.getName());
         tagCompound.setTag("time", this.timerToPlanet.writeNBT(new NBTTagCompound()));
         NBTTagList nbtTagList = new NBTTagList();
         for (ItemStack stack : stacks) {

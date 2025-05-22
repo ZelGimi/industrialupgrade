@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 public class InvSlotRecipes extends InvSlot implements ITypeSlot {
 
     public final IUpdateTick tile;
-    private HashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new HashMap<>();
     private final RecipeArrayList<IRecipeInputStack> default_accepts;
-    private HashMap<Integer, RecipeArrayList<IRecipeInputStack>> default_map= new HashMap<>() ;
+    int index = 0;
+    private HashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new HashMap<>();
+    private HashMap<Integer, RecipeArrayList<IRecipeInputStack>> default_map = new HashMap<>();
     private IBaseRecipe recipe;
     private RecipeArrayList<IRecipeInputStack> accepts;
     private List<BaseMachineRecipe> recipe_list;
     private Fluids.InternalFluidTank tank;
-    int index = 0;
     private InvSlotFluidByList invSlotConsumableLiquidByList = null;
 
 
@@ -56,14 +56,6 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
         this.tank = null;
     }
 
-    public void setIndex(final int index) {
-        this.index = index;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
     public InvSlotRecipes(final TileEntityInventory base, String baseRecipe, IUpdateTick tile) {
         this(base, Recipes.recipes.getRecipe(baseRecipe), tile);
 
@@ -72,6 +64,14 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
     public InvSlotRecipes(final TileEntityInventory base, String baseRecipe, IUpdateTick tile, Fluids.InternalFluidTank tank) {
         this(base, Recipes.recipes.getRecipe(baseRecipe), tile);
         this.tank = tank;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(final int index) {
+        this.index = index;
     }
 
     public void changeAccepts(ItemStack stack) {
@@ -229,9 +229,17 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
         }
 
         if (this.tank == null) {
-            return Recipes.recipes.getRecipeConsume(this.recipe, this.tile.getRecipeOutput(this.index), this.recipe.consume(), list);
+            return Recipes.recipes.getRecipeConsume(
+                    this.recipe,
+                    this.tile.getRecipeOutput(this.index),
+                    this.recipe.consume(),
+                    list
+            );
         } else {
-            return Recipes.recipes.getRecipeOutputFluid(this.recipe, this.tile.getRecipeOutput(this.index), this.recipe.consume(), list,
+            return Recipes.recipes.getRecipeOutputFluid(this.recipe,
+                    this.tile.getRecipeOutput(this.index),
+                    this.recipe.consume(),
+                    list,
                     this.tank
             );
 

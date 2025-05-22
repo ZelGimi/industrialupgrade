@@ -7,7 +7,6 @@ import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -54,7 +53,7 @@ public class PacketUpdateTile implements IPacket {
                     return;
                 }
 
-                new PacketUpdateTe(world,pos);
+                new PacketUpdateTe(world, pos);
                 if (te.isInvalid() || te.getWorld() != world) {
                     return;
                 }
@@ -81,9 +80,12 @@ public class PacketUpdateTile implements IPacket {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        int firstPart =  is.readShort();
-        int secondPart =  is.readShort();
-        Class<? extends TileEntityBlock> teClass = TileBlockCreator.instance.get(firstPart).teInfo.getListBlock().get(secondPart).getTeClass();
+        int firstPart = is.readShort();
+        int secondPart = is.readShort();
+        Class<? extends TileEntityBlock> teClass = TileBlockCreator.instance.get(firstPart).teInfo
+                .getListBlock()
+                .get(secondPart)
+                .getTeClass();
         byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
         is.readBytes(bytes);
         if (!(is.readerIndex() < is.writerIndex())) {

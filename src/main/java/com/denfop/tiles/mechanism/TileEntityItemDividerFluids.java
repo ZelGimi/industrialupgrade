@@ -157,12 +157,12 @@ public class TileEntityItemDividerFluids extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidfluorhyd.getInstance(), 50)
         );
         addRecipe(
-                new ItemStack(IUItem.basalts,1,9),
+                new ItemStack(IUItem.basalts, 1, 9),
                 new FluidStack(FluidName.fluidpahoehoe_lava.getInstance(), 125),
                 new FluidStack(FluidName.fluidfluorhyd.getInstance(), 100)
         );
         addRecipe(
-                new ItemStack(IUItem.basalts,1,4),
+                new ItemStack(IUItem.basalts, 1, 4),
                 new FluidStack(FluidName.fluidpahoehoe_lava.getInstance(), 250),
                 new FluidStack(FluidName.fluidfluorhyd.getInstance(), 50)
         );
@@ -188,12 +188,12 @@ public class TileEntityItemDividerFluids extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidoxy.getInstance(), 10)
         );
         addRecipe(
-                new ItemStack(Blocks.GLASS,4),
+                new ItemStack(Blocks.GLASS, 4),
                 new FluidStack(FluidName.fluidquartz.getInstance(), 144),
                 new FluidStack(FluidName.fluidoxy.getInstance(), 10)
         );
         addRecipe(
-                new ItemStack(Blocks.MAGMA,1),
+                new ItemStack(Blocks.MAGMA, 1),
                 new FluidStack(FluidRegistry.LAVA, 250),
                 new FluidStack(FluidName.fluidoxy.getInstance(), 50)
         );

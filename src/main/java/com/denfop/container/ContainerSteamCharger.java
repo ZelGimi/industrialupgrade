@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.steam.TileSteamCrystalCharge;
-import com.denfop.tiles.mechanism.steam.TileSteamSharpener;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerSteamCharger extends ContainerFullInv<TileSteamCrystalCharge> {

@@ -9,7 +9,6 @@ import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockDryer;
 import com.denfop.blocks.mechanism.BlockMiniSmeltery;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentRenderInventory;

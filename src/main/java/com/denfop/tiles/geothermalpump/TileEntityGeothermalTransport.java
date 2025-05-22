@@ -7,7 +7,10 @@ import com.denfop.blocks.mechanism.BlockGeothermalPump;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 
 public class TileEntityGeothermalTransport extends TileEntityMultiBlockElement implements ITransport {
-    public TileEntityGeothermalTransport(){}
+
+    public TileEntityGeothermalTransport() {
+    }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockGeothermalPump.geothermal_transport;

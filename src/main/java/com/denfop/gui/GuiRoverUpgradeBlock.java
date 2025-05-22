@@ -72,9 +72,9 @@ public class GuiRoverUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> 
                 allow = false;
                 drawTexturedModalRect(xoffset + 36, yoffset + 38, 180, 32, 27, 16);
                 drawTexturedModalRect(xoffset + 81, yoffset + 38, 180, 48, 27, 16);
-            }else if (module.getItem() instanceof ItemSpaceUpgradeModule) {
+            } else if (module.getItem() instanceof ItemSpaceUpgradeModule) {
                 final EnumTypeUpgrade type = ItemSpaceUpgradeModule.getType(module.getItemDamage());
-                allow = SpaceUpgradeSystem.system.shouldUpdate(type,stack1);
+                allow = SpaceUpgradeSystem.system.shouldUpdate(type, stack1);
 
                 if (allow) {
                     if (progress > 0) {

@@ -16,7 +16,6 @@ import com.denfop.tiles.gaswell.TileEntityGasWellController;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -68,6 +67,7 @@ public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
         int y = j - yMin;
 
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
@@ -83,9 +83,10 @@ public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -102,19 +103,23 @@ public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
             }
 
             if (container.base.vein.getType() == TypeGas.CHLORINE) {
-                text =Localization.translate(FluidName.fluidchlorum.getInstance().getUnlocalizedName());
+                text = Localization.translate(FluidName.fluidchlorum.getInstance().getUnlocalizedName());
             }
             if (container.base.vein.getType() == TypeGas.FLORINE) {
                 text = Localization.translate(FluidName.fluidfluor.getInstance().getUnlocalizedName());
             }
 
-            new Area(this, 70, 32, 18, 18).withTooltip((text + " " + container.base.vein.getCol() + "/" + container.base.vein.getMaxCol() + "mb")).drawForeground(par1,
-                    par2);
+            new Area(this, 70, 32, 18, 18)
+                    .withTooltip((text + " " + container.base.vein.getCol() + "/" + container.base.vein.getMaxCol() + "mb"))
+                    .drawForeground(
+                            par1,
+                            par2
+                    );
 
+
+        }
 
     }
-
-}
 
     @Override
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {

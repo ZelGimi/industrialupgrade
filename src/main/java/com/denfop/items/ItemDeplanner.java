@@ -106,11 +106,12 @@ public class ItemDeplanner extends Item implements IModelRegister {
                 ((TileMultiBlockBase) mainMultiBlock).onUnloaded();
                 world.removeTileEntity(pos);
                 world.setBlockToAir(pos);
-                if (!world.isRemote)
-                for (ItemStack stack : itemStackList) {
-                    EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
-                    item.setPickupDelay(0);
-                    world.spawnEntity(item);
+                if (!world.isRemote) {
+                    for (ItemStack stack : itemStackList) {
+                        EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
+                        item.setPickupDelay(0);
+                        world.spawnEntity(item);
+                    }
                 }
                 return EnumActionResult.SUCCESS;
             }

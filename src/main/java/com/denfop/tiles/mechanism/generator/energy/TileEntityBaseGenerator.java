@@ -45,7 +45,7 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

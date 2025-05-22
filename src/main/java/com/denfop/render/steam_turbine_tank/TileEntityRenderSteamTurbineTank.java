@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 
 public class TileEntityRenderSteamTurbineTank extends TileEntitySpecialRenderer<TileEntityBaseSteamTurbineTank> {
+
     public void render(
             TileEntityBaseSteamTurbineTank tile,
             double x,
@@ -34,9 +35,10 @@ public class TileEntityRenderSteamTurbineTank extends TileEntitySpecialRenderer<
             float alpha
     ) {
         GlStateManager.pushMatrix();
-        renderTanks(tile,x,y,z);
+        renderTanks(tile, x, y, z);
         GlStateManager.popMatrix();
     }
+
     private void renderTanks(final TileEntityBaseSteamTurbineTank tile, final double x, final double y, final double z) {
         if (tile.getTank().getFluid() != null && tile.getTank().getFluid().getFluid() != null & tile.getTank()
                 .getFluid()
@@ -45,9 +47,9 @@ public class TileEntityRenderSteamTurbineTank extends TileEntitySpecialRenderer<
             GL11.glPushMatrix();
             float dopY = 0;
             if (tile.getTank().getFluid().getFluid().isGaseous()) {
-                dopY =1f - tile.getTank().getFluidAmount() * 1F / tile.getTank().getCapacity();
+                dopY = 1f - tile.getTank().getFluidAmount() * 1F / tile.getTank().getCapacity();
             }
-            GL11.glTranslated(x + 0.04, y  + dopY, z + 0.04);
+            GL11.glTranslated(x + 0.04, y + dopY, z + 0.04);
 
             final float scale = tile.getTank().getFluidAmount() * 1F / tile.getTank().getCapacity();
             GlStateManager.enableLighting();
@@ -95,6 +97,7 @@ public class TileEntityRenderSteamTurbineTank extends TileEntitySpecialRenderer<
         }
 
     }
+
     public void render(FluidStack fluidStack, IBakedModel model, IBlockState state, EnumFacing enumfacing) {
 
         Tessellator tessellator = Tessellator.getInstance();
@@ -122,4 +125,5 @@ public class TileEntityRenderSteamTurbineTank extends TileEntitySpecialRenderer<
         }
 
     }
+
 }

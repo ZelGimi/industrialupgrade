@@ -17,8 +17,8 @@ import com.denfop.api.reactors.LogicGraphiteReactor;
 import com.denfop.api.reactors.LogicReactor;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.blocks.FluidName;
-import com.denfop.componets.Energy;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGraphiteReactor;
 import com.denfop.gui.GuiGraphiteController;
@@ -360,7 +360,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
 
                     }
                     if (this.work && this.reactor != null) {
-                        this.energy.setSourceTier(EnergyNetGlobal.initialize().getTierFromPower(output));
+                        this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(output));
                         this.energy.addEnergy(this.output);
                     }
                 } else {
@@ -696,7 +696,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return enumFluidReactors.ordinal();
     }
 

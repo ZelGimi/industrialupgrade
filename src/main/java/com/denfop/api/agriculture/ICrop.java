@@ -5,7 +5,6 @@ import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.INetworkObject;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
@@ -23,7 +22,6 @@ public interface ICrop extends INetworkObject {
 
     void setSun(final boolean sun);
 
-    void setTick(int progress);
     boolean isNight();
 
     void setNight(final boolean night);
@@ -42,6 +40,7 @@ public interface ICrop extends INetworkObject {
 
     ItemStack getStack();
 
+    void setStack(ItemStack cropItem);
 
     boolean isIgnoreSoil();
 
@@ -53,11 +52,11 @@ public interface ICrop extends INetworkObject {
 
     int getGenomeAdaptive();
 
+    void setGenomeAdaptive(final int genomeAdaptive);
+
     int getDefaultPestResistance();
 
     int getDefaultWeatherResistance();
-
-    void setGenomeAdaptive(final int genomeAdaptive);
 
     int getGenomeResistance();
 
@@ -71,7 +70,7 @@ public interface ICrop extends INetworkObject {
 
     List<ICrop> getCropCombine();
 
-    ItemStack  getStackForDrop();
+    ItemStack getStackForDrop();
 
     int getDefaultWaterRequirement();
 
@@ -101,6 +100,8 @@ public interface ICrop extends INetworkObject {
     boolean isCombineWithCrops(List<ICrop> crops);
 
     int getTick();
+
+    void setTick(int progress);
 
     int getMaxTick();
 
@@ -132,7 +133,6 @@ public interface ICrop extends INetworkObject {
 
     boolean compatibilityWithCrop(ICrop crop);
 
-
     List<ItemStack> getDrop();
 
     void setDrop(List<ItemStack> drop);
@@ -151,16 +151,14 @@ public interface ICrop extends INetworkObject {
 
     int getStage();
 
+    void setStage(int i);
+
     int getMaxStage();
 
     void readPacket(CustomPacketBuffer buffer);
 
-    void setStack(ItemStack cropItem);
-
     int getRender();
 
     List<ResourceLocation> getTopTexture();
-
-    void setStage(int i);
 
 }

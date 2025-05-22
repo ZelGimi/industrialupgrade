@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityBrewingPlant;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerBrewingPlant extends ContainerFullInv<TileEntityBrewingPlant> {
@@ -18,7 +17,6 @@ public class ContainerBrewingPlant extends ContainerFullInv<TileEntityBrewingPla
                 0, -20, 84
         ));
     }
-
 
 
 }

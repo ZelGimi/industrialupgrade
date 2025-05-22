@@ -4,7 +4,6 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemWindRod;
 import com.denfop.items.ItemWindRotor;
-import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import com.denfop.tiles.windturbine.TileEntityWindTurbineController;
 import net.minecraft.item.ItemStack;
 

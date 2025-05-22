@@ -69,14 +69,14 @@ public class LogicCreativeGraphiteReactor extends LogicCreativeReactor {
     }
 
     private double workCoolant(double heat) {
-        for (int i = 0; i < coolant[this.reactor.getLevel() - 1]; i++) {
+        for (int i = 0; i < coolant[this.reactor.getBlockLevel() - 1]; i++) {
             heat = work(heat);
         }
         return heat;
     }
 
     private double work(double heat) {
-        return Math.max(1, heat - rand.nextInt(40 * (this.reactor.getLevel())));
+        return Math.max(1, heat - rand.nextInt(40 * (this.reactor.getBlockLevel())));
     }
 
     public double getTemp_heat() {

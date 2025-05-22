@@ -1,11 +1,6 @@
 package com.denfop.items.armour;
 
-import com.denfop.Config;
-import com.denfop.Constants;
-import com.denfop.ElectricItem;
-import com.denfop.IUCore;
-import com.denfop.IUPotion;
-import com.denfop.Localization;
+import com.denfop.*;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
@@ -45,11 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem, IModelRegister, ISpecialArmor,
         IUpgradeItem {

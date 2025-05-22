@@ -21,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -33,7 +32,6 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Random;
 
 public class BlockSpace1 extends BlockCore implements IModelRegister {
 
@@ -122,11 +120,12 @@ public class BlockSpace1 extends BlockCore implements IModelRegister {
 
         return true;
     }
+
     @Override
     public List<ItemStack> getDrops(final IBlockAccess world, final BlockPos pos, final IBlockState state, final int fortune) {
         NonNullList<ItemStack> ret = NonNullList.create();
         BlockSpace1.Type type = BlockSpace1.Type.values()[getMetaFromState(state)];
-        if (type.ordinal() == 0 || type.ordinal() == 1 || type.ordinal() == 4 || type.ordinal() == 7 || type.ordinal() == 12  || type.ordinal() == 13  || type.ordinal() == 14) {
+        if (type.ordinal() == 0 || type.ordinal() == 1 || type.ordinal() == 4 || type.ordinal() == 7 || type.ordinal() == 12 || type.ordinal() == 13 || type.ordinal() == 14) {
             ItemStack stack = type.getStack();
             if (stack == null) {
                 stack = OreDictionary.getOres(type.getRaw()).get(0);
@@ -135,28 +134,30 @@ public class BlockSpace1 extends BlockCore implements IModelRegister {
             stack = stack.copy();
             stack.setCount(1 + getDrop(fortune));
             ret.add(stack);
-        }else if (type.ordinal() == 6){
+        } else if (type.ordinal() == 6) {
             final int i = WorldBaseGen.random.nextInt(fortune + 1) + 1;
-            ret.add(new ItemStack(Items.DIAMOND,i));
-        }else if (type.ordinal() == 10){
+            ret.add(new ItemStack(Items.DIAMOND, i));
+        } else if (type.ordinal() == 10) {
             final int i = WorldBaseGen.random.nextInt(fortune + 1) + 1;
-            ret.add(new ItemStack(Items.EMERALD,i));
-        }else if (type.ordinal() == 11){
-            ret.add(ModUtils.setSize(IUItem.smallSulfurDust,4 +  WorldBaseGen.random.nextInt(fortune+1)));
-        }else if (type.ordinal() == 9){
+            ret.add(new ItemStack(Items.EMERALD, i));
+        } else if (type.ordinal() == 11) {
+            ret.add(ModUtils.setSize(IUItem.smallSulfurDust, 4 + WorldBaseGen.random.nextInt(fortune + 1)));
+        } else if (type.ordinal() == 9) {
             final int i = WorldBaseGen.random.nextInt(fortune + 2) + 1;
-            ret.add(new ItemStack(Items.QUARTZ,i));
-        }else if (type.ordinal() == 5){
-            if ( WorldBaseGen.random.nextDouble() < 0.5)
-            ret.add(new ItemStack(IUItem.apatite,1,1));
-            else
-                ret.add(new ItemStack(IUItem.apatite,1,0));
+            ret.add(new ItemStack(Items.QUARTZ, i));
+        } else if (type.ordinal() == 5) {
+            if (WorldBaseGen.random.nextDouble() < 0.5) {
+                ret.add(new ItemStack(IUItem.apatite, 1, 1));
+            } else {
+                ret.add(new ItemStack(IUItem.apatite, 1, 0));
+            }
 
-        }else {
-            ret.add(new ItemStack(this,1,type.ordinal()));
+        } else {
+            ret.add(new ItemStack(this, 1, type.ordinal()));
         }
         return ret;
     }
+
     private int getDrop(int fortune) {
         switch (fortune) {
             case 0:
@@ -191,6 +192,8 @@ public class BlockSpace1 extends BlockCore implements IModelRegister {
 
         private final int metadata;
         private final String name;
+        ItemStack stack;
+        private String raw;
 
         Type(int metadata) {
             this.metadata = metadata;
@@ -204,15 +207,15 @@ public class BlockSpace1 extends BlockCore implements IModelRegister {
         public int getMetadata() {
             return this.metadata;
         }
-        private String raw;
-        public void setRaw(String name){
-            this.raw = "raw"+name;
-        }
 
         public String getRaw() {
             return raw;
         }
-        ItemStack stack;
+
+        public void setRaw(String name) {
+            this.raw = "raw" + name;
+        }
+
         public ItemStack getStack() {
             return stack;
         }
@@ -220,6 +223,7 @@ public class BlockSpace1 extends BlockCore implements IModelRegister {
         public void setStack(ItemStack stack) {
             this.stack = stack;
         }
+
         @Nonnull
         public String getName() {
             return this.name;

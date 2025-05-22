@@ -4,25 +4,20 @@ import com.denfop.ElectricItem;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Energy;
-import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.container.ContainerBiomassGenerator;
 import com.denfop.container.ContainerSteamGenerator;
-import com.denfop.gui.GuiBiomassGenerator;
 import com.denfop.gui.GuiSteamGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotCharge;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -30,16 +25,13 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileEntityLiquidTankInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
 
@@ -50,11 +42,11 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
     public final double coef;
     public final Energy energy;
     public final int production = Math.round(4.0F * 1);
+    public final Fluids.InternalFluidTank fluidTank1;
+    public final ComponentSteamEnergy steam;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final Fluids fluids;
-    public final Fluids.InternalFluidTank fluidTank1;
-    public final ComponentSteamEnergy steam;
     public boolean addedToEnergyNet = false;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
@@ -73,7 +65,6 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
-
 
 
     @Override
@@ -215,7 +206,7 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
     }
 
     public boolean isConverting() {
-        return this.steam.canUseEnergy(4)  && this.energy.getEnergy() + (double) 8 <= this.energy.getCapacity();
+        return this.steam.canUseEnergy(4) && this.energy.getEnergy() + (double) 8 <= this.energy.getCapacity();
     }
 
 

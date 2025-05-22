@@ -148,20 +148,6 @@ public class ItemToolWrench extends Item implements IModelRegister {
         return te != null ? te.getClass().getSimpleName().replace("TileEntity", "") : "none";
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
-    }
-
-    public boolean canTakeDamage(ItemStack stack, int amount) {
-        return true;
-    }
-
     public @NotNull EnumActionResult onItemUseFirst(
             EntityPlayer player,
             World world,
@@ -191,6 +177,21 @@ public class ItemToolWrench extends Item implements IModelRegister {
             }
         }
     }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(String name) {
+        this.registerModel(0, name, null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name, String extraName) {
+        registerModel(this, meta, name);
+    }
+
+    public boolean canTakeDamage(ItemStack stack, int amount) {
+        return true;
+    }
+
 
     public void damage(ItemStack is, int damage, EntityPlayer player) {
         is.damageItem(damage, player);

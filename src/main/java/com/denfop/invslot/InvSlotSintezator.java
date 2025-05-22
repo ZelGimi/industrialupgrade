@@ -41,7 +41,7 @@ public class InvSlotSintezator extends InvSlot {
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
         if (this.type == 0) {
-            this.tile.update();
+            this.tile.inputslotA.update();
         } else {
             this.update();
         }

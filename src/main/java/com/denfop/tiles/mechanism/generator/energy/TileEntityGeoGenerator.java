@@ -59,7 +59,7 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
             tooltip.add(Localization.translate("iu.info_upgrade_energy") + this.coef);
         }
 
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
 
     }
 

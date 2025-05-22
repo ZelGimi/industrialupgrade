@@ -63,21 +63,39 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     public final InvSlotOutput outputSlot;
     public int progress;
     public MachineRecipe output;
-    public Map<UUID,Double> data;
+    public Map<UUID, Double> data;
 
     public TileEntityStrongAnvil() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "strong_anvil", this){
+        this.inputSlotA = new InvSlotRecipes(this, "strong_anvil", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
-                if (index == 4)
-                    return super.accepts(itemStack,0);
+                if (index == 4) {
+                    return super.accepts(itemStack, 0);
+                }
                 return false;
             }
         };
         this.progress = 0;
         this.outputSlot = new InvSlotOutput(this, 1);
         Recipes.recipes.addInitRecipes(this);
+    }
+
+    public static void addanvil(String input, String output) {
+        ItemStack stack = OreDictionary.getOres(output).get(0).copy();
+        stack.setCount(2);
+        final IInputHandler input1 = Recipes.inputFactory;
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "strong_anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.getInput(input, 1)
+                        ),
+                        new RecipeOutput(null, stack)
+                )
+        );
+
+
     }
 
     @Override
@@ -202,8 +220,6 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         return customPacketBuffer;
     }
 
-
-
     @Override
     public boolean onActivated(
             final EntityPlayer player,
@@ -218,24 +234,25 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         if ((stack.getItem() == IUItem.ObsidianForgeHammer) && this.output != null && this.outputSlot.canAdd(
                 this.output.getRecipe().output.items.get(
                         0))) {
-            progress += 2;
+            progress += 10;
             this.getCooldownTracker().setTick(10);
             if (!this.getWorld().isRemote) {
                 this.initiate(0);
             }
-            progress += (int) (data.getOrDefault(player.getUniqueID(),0.0)/5D);
+            progress += (int) (data.getOrDefault(player.getUniqueID(), 0.0) / 2.5D);
             if (progress >= 100) {
                 this.progress = 0;
                 player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-                if (!this.getWorld().isRemote)
-                PrimitiveHandler.addExperience(EnumPrimitive.STRONG_ANVIL,0.5,player.getUniqueID());
+                if (!this.getWorld().isRemote) {
+                    PrimitiveHandler.addExperience(EnumPrimitive.STRONG_ANVIL, 0.5, player.getUniqueID());
+                }
                 ItemStack stack1 = this.output.getRecipe().output.items.get(0).copy();
                 double chance = WorldBaseGen.random.nextDouble();
-                if (chance < 0.65){
+                if (chance < 0.65) {
                     stack1.setCount(1);
-                }else if(chance < 0.65+0.325){
+                } else if (chance < 0.65 + 0.325) {
                     stack1.setCount(2);
-                }else{
+                } else {
                     stack1.setCount(3);
                 }
                 this.outputSlot.add(stack1);
@@ -332,30 +349,17 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     public void init() {
         for (int i = 0; i < ItemRawMetals.Types.values().length; i++) {
             String s = ItemRawMetals.Types.values()[i].getName();
-            if (s.equals("uranium"))
+            if (s.equals("uranium")) {
                 continue;
+            }
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
             addanvil(
-                    "raw"+s,
-                    "crushed"+s
+                    "raw" + s,
+                    "crushed" + s
             );
         }
     }
-    public static void addanvil(String input, String output) {
-        ItemStack stack = OreDictionary.getOres(output).get(0).copy();
-        final IInputHandler input1 = Recipes.inputFactory;
-        com.denfop.api.Recipes.recipes.addRecipe(
-                "strong_anvil",
-                new BaseMachineRecipe(
-                        new Input(
-                                input1.getInput(input, 1)
-                        ),
-                        new RecipeOutput(null, stack)
-                )
-        );
 
-
-    }
     @Override
     public EnumTypeAudio getTypeAudio() {
         return EnumTypeAudio.ON;

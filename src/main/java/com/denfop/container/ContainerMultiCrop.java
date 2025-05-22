@@ -26,7 +26,7 @@ public class ContainerMultiCrop extends ContainerFullInv<TileEntityMultiCrop> {
             ));
         }
         addSlotToContainer(new SlotInvSlot(tileEntityMultiCrop.fertilizerSlot, 0,
-                xStart + 4 * 18 , 16 + 20 + 40 + 25
+                xStart + 4 * 18, 16 + 20 + 40 + 25
         ));
     }
 

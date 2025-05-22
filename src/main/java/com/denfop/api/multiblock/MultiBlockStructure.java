@@ -2,14 +2,12 @@ package com.denfop.api.multiblock;
 
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -77,6 +75,7 @@ public class MultiBlockStructure {
         this.ignoreMetadata = ignoreMetadata;
         return this;
     }
+
     public MultiBlockStructure setUniqueModel() {
         this.hasUniqueModels = true;
         return this;
@@ -312,7 +311,7 @@ public class MultiBlockStructure {
                 return false;
             } else {
                 IMultiElement element = (IMultiElement) tile;
-                if ((element.isMain() && element.getMain() != mainTile) || (element.getLevel() != mainTile.getLevel() && element.getLevel() != -1) || (!element.canCreateSystem(
+                if ((element.isMain() && element.getMain() != mainTile) || (element.getBlockLevel() != mainTile.getBlockLevel() && element.getBlockLevel() != -1) || (!element.canCreateSystem(
                         mainTile))) {
                     return false;
                 }
@@ -364,7 +363,7 @@ public class MultiBlockStructure {
                 return false;
             } else {
                 IMultiElement element = (IMultiElement) tile;
-                if ((element.getMain() != null && element.getMain() != mainTile) || (element.getLevel() != mainTile.getLevel() && element.getLevel() != -1) || !element.canCreateSystem(
+                if ((element.getMain() != null && element.getMain() != mainTile) || (element.getBlockLevel() != mainTile.getBlockLevel() && element.getBlockLevel() != -1) || !element.canCreateSystem(
                         mainTile)) {
                     return false;
                 } else if (element.getMain() == null) {

@@ -3,10 +3,8 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.api.gui.FluidItem;
 import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerDefaultMultiElement;
 import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantExchanger;
-import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantSeparate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -21,7 +19,12 @@ public class GuiChemicalExchanger extends GuiIU<ContainerDefaultMultiElement> {
     public GuiChemicalExchanger(ContainerDefaultMultiElement guiContainer) {
         super(guiContainer);
         this.componentList.clear();
-        this.addElement((new FluidItem(this, this.xSize / 2 - 10, 20, ((TileEntityChemicalPlantExchanger) guiContainer.base).getFluidTank().getFluid()) {
+        this.addElement((new FluidItem(
+                this,
+                this.xSize / 2 - 10,
+                20,
+                ((TileEntityChemicalPlantExchanger) guiContainer.base).getFluidTank().getFluid()
+        ) {
             @Override
             public void drawBackground(final int mouseX, final int mouseY) {
                 bindCommonTexture();
@@ -80,7 +83,7 @@ public class GuiChemicalExchanger extends GuiIU<ContainerDefaultMultiElement> {
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         bindTexture();
-        GlStateManager.color(1,1,1,1);
+        GlStateManager.color(1, 1, 1, 1);
         drawTexturedModalRect(this.guiLeft + this.xSize / 2 - 10 - 4, guiTop + 20 - 4, 235,
                 76, 20, 55
         );

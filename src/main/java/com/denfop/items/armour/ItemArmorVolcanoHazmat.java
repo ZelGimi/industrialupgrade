@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IVolcanoArmor;
-import com.denfop.damagesource.IUDamageSource;
 import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.BlockLiquid;
@@ -82,7 +81,7 @@ public class ItemArmorVolcanoHazmat extends ItemArmorUtility implements IVolcano
     }
 
     public static boolean hazmatAbsorbs(DamageSource source) {
-        return source == DamageSource.IN_FIRE || source == DamageSource.IN_WALL || source == DamageSource.LAVA || source == DamageSource.HOT_FLOOR || source == DamageSource.ON_FIRE || source == IUDamageSource.radiation;
+        return source == DamageSource.IN_FIRE || source == DamageSource.IN_WALL || source == DamageSource.LAVA || source == DamageSource.HOT_FLOOR || source == DamageSource.ON_FIRE;
     }
 
     @Override

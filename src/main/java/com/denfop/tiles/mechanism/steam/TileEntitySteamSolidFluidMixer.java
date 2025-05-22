@@ -197,7 +197,7 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
         super.onLoaded();
         if (IUCore.proxy.isSimulating()) {
             inputSlotA.load();
-            this.fluid_handler.load();
+            this.fluid_handler.load(inputSlotA.get());
             this.getOutput();
         }
 
@@ -260,7 +260,7 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
 
 
         if ((this.fluid_handler.output() == null && this.output != null && this.fluidTank1.getFluidAmount() > 0)) {
-            this.fluid_handler.getOutput();
+            this.fluid_handler.getOutput(inputSlotA.get());
         } else {
             if (this.fluid_handler.output() != null && this.output == null) {
                 this.fluid_handler.setOutput(null);

@@ -2,7 +2,6 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.cool.CoolNet;
 import com.denfop.api.cool.ICoolAcceptor;
 import com.denfop.api.cool.ICoolConductor;
 import com.denfop.api.cool.ICoolEmitter;
@@ -30,7 +29,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
@@ -46,8 +44,13 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
 
     public boolean addedToEnergyNet;
     protected CoolType cableType;
+    int hashCodeSource;
+    Map<EnumFacing, ICoolTile> energyCoolConductorMap = new HashMap<>();
+    List<InfoTile<ICoolTile>> validColdReceivers = new LinkedList<>();
+    boolean updateConnect = false;
     private boolean needUpdate;
     private long id;
+    private com.denfop.api.cool.InfoCable typeColdCable;
 
     public TileEntityCoolPipes(CoolType cableType) {
         super(cableType);
@@ -55,7 +58,6 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         this.connectivity = 0;
         this.addedToEnergyNet = false;
     }
-
 
     public TileEntityCoolPipes() {
         super(CoolType.cool);
@@ -90,15 +92,9 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         super.readFromNBT(nbt);
         this.cableType = CoolType.values[nbt.getByte("cableType") & 255];
     }
+
     public long getIdNetwork() {
         return this.id;
-    }
-
-    int hashCodeSource;
-
-    @Override
-    public void setHashCodeSource(final int hashCode) {
-        hashCodeSource = hashCode;
     }
 
     @Override
@@ -106,12 +102,15 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         return hashCodeSource;
     }
 
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
 
     public void setId(final long id) {
         this.id = id;
     }
 
-    Map<EnumFacing, ICoolTile> energyCoolConductorMap = new HashMap<>();
     @Override
     public void AddCoolTile(final ICoolTile tile, final EnumFacing dir) {
         if (!this.getWorld().isRemote) {
@@ -128,7 +127,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         if (!this.getWorld().isRemote) {
             this.energyCoolConductorMap.remove(dir);
             final Iterator<InfoTile<ICoolTile>> iter = validColdReceivers.iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 InfoTile<ICoolTile> tileInfoTile = iter.next();
                 if (tileInfoTile.tileEntity == tile) {
                     iter.remove();
@@ -143,7 +142,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
     public Map<EnumFacing, ICoolTile> getCoolTiles() {
         return energyCoolConductorMap;
     }
-    List<InfoTile<ICoolTile>> validColdReceivers = new LinkedList<>();
+
     @Override
     public List<InfoTile<ICoolTile>> getCoolValidReceivers() {
         return validColdReceivers;
@@ -174,7 +173,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
         this.needUpdate = true;
     }
-    boolean updateConnect = false;
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -185,7 +184,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
             this.needUpdate = false;
             this.updateConnectivity();
         }
-        if (updateConnect){
+        if (updateConnect) {
             updateConnect = false;
             this.updateConnectivity();
         }
@@ -220,7 +219,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         }
 
     }
-    private com.denfop.api.cool.InfoCable typeColdCable;
+
     @Override
     public com.denfop.api.cool.InfoCable getCoolCable() {
         return typeColdCable;

@@ -4,7 +4,6 @@ import com.denfop.IUCore;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.steamboiler.TileEntitySteamTankBoiler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;

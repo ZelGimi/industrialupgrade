@@ -32,6 +32,26 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileQua
     float rotation;
     float prevRotation;
 
+    public static void render(IBakedModel model, IBlockState state, EnumFacing enumfacing) {
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        int i = 0;
+        final List<BakedQuad> listQuads = model.getQuads(state, enumfacing, 0L);
+        for (int j = listQuads.size(); i < j; ++i) {
+            BakedQuad bakedquad = listQuads.get(i);
+
+
+            bufferbuilder.begin(7, DefaultVertexFormats.ITEM);
+            bufferbuilder.addVertexData(bakedquad.getVertexData());
+
+
+            Vec3i vec3i = bakedquad.getFace().getDirectionVec();
+            bufferbuilder.putNormal((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
+            tessellator.draw();
+        }
+
+    }
 
     public void render(
             TileQuarryVein tile,
@@ -100,7 +120,7 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileQua
             if (tile.vein.getType() == Type.VEIN) {
                 if (tile.vein.isOldMineral()) {
                     stack = new ItemStack(IUItem.heavyore, 1, tile.vein.getMeta());
-                }else{
+                } else {
                     stack = new ItemStack(IUItem.mineral, 1, tile.vein.getMeta());
                 }
 
@@ -124,7 +144,8 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileQua
                 if (isOil) {
                     if (tile.vein.getType() != Type.GAS) {
                         itextcomponent =
-                                new TextComponentString(Localization.translate(varietyString)+" " + Localization.translate(typeString) + stack.getDisplayName());
+                                new TextComponentString(Localization.translate(varietyString) + " " + Localization.translate(
+                                        typeString) + stack.getDisplayName());
                     } else {
                         itextcomponent =
                                 new TextComponentString(stack.getDisplayName());
@@ -152,27 +173,6 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileQua
                 }
             }
         }
-    }
-
-    public static void render(IBakedModel model, IBlockState state, EnumFacing enumfacing) {
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        int i = 0;
-        final List<BakedQuad> listQuads = model.getQuads(state, enumfacing, 0L);
-        for (int j = listQuads.size(); i < j; ++i) {
-            BakedQuad bakedquad = listQuads.get(i);
-
-
-            bufferbuilder.begin(7, DefaultVertexFormats.ITEM);
-            bufferbuilder.addVertexData(bakedquad.getVertexData());
-
-
-            Vec3i vec3i = bakedquad.getFace().getDirectionVec();
-            bufferbuilder.putNormal((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
-            tessellator.draw();
-        }
-
     }
 
 }

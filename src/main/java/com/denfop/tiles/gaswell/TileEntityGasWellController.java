@@ -7,23 +7,18 @@ import com.denfop.api.gasvein.TypeGas;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
-import com.denfop.blocks.mechanism.BlockEarthQuarry;
 import com.denfop.blocks.mechanism.BlockGasWell;
 import com.denfop.componets.Energy;
-import com.denfop.container.ContainerGasWellAnalyzer;
 import com.denfop.container.ContainerGasWellController;
-import com.denfop.gui.GuiGasWellAnalyzer;
 import com.denfop.gui.GuiGasWellController;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import com.denfop.tiles.quarry_earth.IAnalyzer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,14 +31,15 @@ import java.util.List;
 public class TileEntityGasWellController extends TileMultiBlockBase implements IController, IUpdatableTileEvent {
 
     public boolean work;
-    public  ITank tank;
-    public  ISocket socket;
+    public ITank tank;
+    public ISocket socket;
     public GasVein vein;
 
-    public TileEntityGasWellController(){
+    public TileEntityGasWellController() {
         super(InitMultiBlockSystem.GasWellMultiBlock);
 
     }
+
     @Override
     public ContainerGasWellController getGuiContainer(final EntityPlayer var1) {
         return new ContainerGasWellController(this, var1);
@@ -77,10 +73,10 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.full){
-            if (this.work && this.vein != null && vein.isFind() && this.getEnergy().canUseEnergy(2)){
+        if (this.full) {
+            if (this.work && this.vein != null && vein.isFind() && this.getEnergy().canUseEnergy(2)) {
                 int amount = vein.getCol();
-                amount =  Math.min(Math.min(1, amount), tank.getTank().getCapacity() - tank.getTank().getFluidAmount());
+                amount = Math.min(Math.min(1, amount), tank.getTank().getCapacity() - tank.getTank().getFluidAmount());
                 Fluid fluid = null;
                 if (vein.getType() == TypeGas.IODINE) {
                     fluid = FluidName.fluidiodine.getInstance();
@@ -98,11 +94,12 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
                     fluid = FluidName.fluidfluor.getInstance();
                 }
 
-                if (fluid == null)
+                if (fluid == null) {
                     return;
+                }
                 this.getEnergy().useEnergy(2);
                 vein.removeCol(amount);
-                tank.getTank().fill(new FluidStack(fluid,amount),true);
+                tank.getTank().fill(new FluidStack(fluid, amount), true);
             }
         }
     }
@@ -121,6 +118,7 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
     public void updateTileServer(final EntityPlayer var1, final double var2) {
         work = !work;
     }
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
@@ -131,7 +129,6 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
         customPacketBuffer.writeBoolean(work);
         return customPacketBuffer;
     }
-
 
 
     @Override
@@ -145,7 +142,7 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
         }
         tank.getTank().readPacket(customPacketBuffer);
         final boolean hasVein = customPacketBuffer.readBoolean();
-        if (hasVein){
+        if (hasVein) {
             vein = new GasVein(customPacketBuffer);
         }
         work = customPacketBuffer.readBoolean();
@@ -161,6 +158,7 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
 
 
     }
+
     @Override
     public Energy getEnergy() {
         return socket.getEnergy();

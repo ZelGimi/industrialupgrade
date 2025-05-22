@@ -11,7 +11,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -33,10 +32,12 @@ public class RegisterOreDictionary {
     public static final String[] string2 = {"heavyore", "baseore", "radiationore", "radiationresources", "preciousore", "preciousgem"};
 
     public static final List<String> list_baseore1 = itemNames7();
-    public static final List<String> standardList = Arrays.asList("Copper","Tin","Lead","Iron","Gold","Osmium","Tantalum",
-            "Cadmium");
-    public static final List<String> spaceElementList = Arrays.asList("Adamantium","Bloodstone",
-            "Draconid","Meteoric","Mithril","Orichalcum");
+    public static final List<String> standardList = Arrays.asList("Copper", "Tin", "Lead", "Iron", "Gold", "Osmium", "Tantalum",
+            "Cadmium"
+    );
+    public static final List<String> spaceElementList = Arrays.asList("Adamantium", "Bloodstone",
+            "Draconid", "Meteoric", "Mithril", "Orichalcum"
+    );
     public static final List<String> list_mineral = itemNames8();
     public static final List<Item> list_item2 = new ArrayList<>();
     public static final int[] meta_item = {29, 28, 31, 44, 28, 22, 31, 28, 32, 22, 0, 22};
@@ -158,6 +159,7 @@ public class RegisterOreDictionary {
         list.add("GalliumArsenic");//31
         return list;
     }
+
     public static List<String> itemNames4() {
         List<String> list = new ArrayList<>();
         list.add("Mikhail");//0
@@ -178,6 +180,7 @@ public class RegisterOreDictionary {
         list.add("Germanium");//18
         return list;
     }
+
     public static List<String> itemNames() {
         List<String> list = new ArrayList<>();
         list.add("Mikhail");//0
@@ -371,12 +374,12 @@ public class RegisterOreDictionary {
             String s = ItemRawMetals.Types.values()[i].getName();
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
             OreDictionary.registerOre(
-                    "raw"+s,
-                    new ItemStack(IUItem.rawMetals, 1,i)
+                    "raw" + s,
+                    new ItemStack(IUItem.rawMetals, 1, i)
             );
             OreDictionary.registerOre(
-                    "rawIngot"+s,
-                    new ItemStack(IUItem.rawIngot, 1,i)
+                    "rawIngot" + s,
+                    new ItemStack(IUItem.rawIngot, 1, i)
             );
         }
         for (int i = 0; i < list_baseore.size(); i++) {

@@ -48,6 +48,8 @@ public class ComponentProcess extends AbstractComponent {
     private ComponentBaseEnergy componentRad;
     private boolean exp;
     private ComponentBaseEnergy componentExp;
+    private Timer timer1 = new Timer(0, 0, 0);
+    private Timer timer = null;
 
     public ComponentProcess(
             final TileEntityInventory parent,
@@ -88,14 +90,13 @@ public class ComponentProcess extends AbstractComponent {
         this.audoFix = this.getParent() instanceof IAudioFixer;
         this.componentUpgrade = this.getParent().getComp(ComponentUpgrade.class);
     }
-    private Timer timer1 = new Timer(0, 0, 0);
-    private Timer timer = null;
+
     @Override
     public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (stack.getItem().equals(IUItem.canister)) {
             FluidStack fluid = FluidUtil.getFluidContained(stack);
-            if (fluid != null && fluid.getFluid() == FluidName.fluidmotoroil.getInstance() &&fluid.amount >= 125 && (!timer1.canWork() || timer1.getBar() == 0)&& (timer == null || !timer.canWork())) {
+            if (fluid != null && fluid.getFluid() == FluidName.fluidmotoroil.getInstance() && fluid.amount >= 125 && (!timer1.canWork() || timer1.getBar() == 0) && (timer == null || !timer.canWork())) {
                 this.timer = new Timer(0, 0, 35);
                 final IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
                 handler.drain(125, true);
@@ -225,6 +226,7 @@ public class ComponentProcess extends AbstractComponent {
     public void updateRecipe() {
 
     }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -232,6 +234,7 @@ public class ComponentProcess extends AbstractComponent {
             tooltip.add(Localization.translate("iu.speed_canister.info"));
         }
     }
+
     public boolean checkRecipe() {
         return true;
     }
@@ -417,7 +420,10 @@ public class ComponentProcess extends AbstractComponent {
                 this.updateTick
                         .getRecipeOutput()
                         .getRecipe()
-                        .getOutput().items) : outputSlot.addWithoutIgnoring(updateTick.getRecipeOutput().getRecipe().output.items, true);
+                        .getOutput().items) : outputSlot.addWithoutIgnoring(
+                updateTick.getRecipeOutput().getRecipe().output.items,
+                true
+        );
     }
 
     public void consumeEnergy() {

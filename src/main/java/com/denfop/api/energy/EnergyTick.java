@@ -1,19 +1,17 @@
 package com.denfop.api.energy;
 
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class EnergyTick {
 
     private final IEnergySource source;
     private final boolean isAdv;
     private final boolean isDual;
+    public boolean hasHash = false;
     List<Integer> conductors = new LinkedList<>();
     private IEnergySource advSource = null;
     private List<Path> energyPaths;
@@ -29,8 +27,6 @@ public class EnergyTick {
             this.advSource = source;
         }
     }
-
-
 
     public IEnergySource getSource() {
         return source;
@@ -81,8 +77,6 @@ public class EnergyTick {
         return advSource;
     }
 
-    public boolean hasHash = false;
-
     @Override
     public int hashCode() {
         if (source != null && !hasHash) {
@@ -101,8 +95,9 @@ public class EnergyTick {
 
     public void setList(final List<Path> energyPaths) {
         this.energyPaths = energyPaths;
-        if (this.energyPaths == null)
+        if (this.energyPaths == null) {
             this.conductors.clear();
+        }
     }
 
     public void rework() {

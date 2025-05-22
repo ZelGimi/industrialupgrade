@@ -2,8 +2,6 @@ package com.denfop.integration.jei.analyzer;
 
 
 import com.denfop.IUItem;
-import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.blocks.BlockHeavyOre;
 import com.denfop.blocks.BlockMineral;
 import net.minecraft.item.ItemStack;
@@ -41,13 +39,13 @@ public class AnalyzerHandler {
 
     public static void initRecipes() {
         for (BlockHeavyOre.Type type : BlockHeavyOre.Type.values()) {
-            addRecipe(new ItemStack(IUItem.heavyore,1,type.getMetadata())
-                   );
+            addRecipe(new ItemStack(IUItem.heavyore, 1, type.getMetadata())
+            );
 
 
         }
         for (BlockMineral.Type type : BlockMineral.Type.values()) {
-            addRecipe(new ItemStack(IUItem.mineral,1,type.getMetadata())
+            addRecipe(new ItemStack(IUItem.mineral, 1, type.getMetadata())
             );
 
 
@@ -57,8 +55,6 @@ public class AnalyzerHandler {
     public ItemStack getInput() {
         return input;
     }
-
-
 
 
 }

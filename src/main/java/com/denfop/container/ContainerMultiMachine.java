@@ -11,7 +11,7 @@ public class ContainerMultiMachine extends ContainerFullInv<TileMultiMachine> {
         if (tileEntity1 instanceof IFarmer) {
             if (tileEntity1.getMachine().sizeWorkingSlot != 8) {
                 addSlotToContainer(new SlotInvSlot(((IFarmer) tileEntity1).getFertilizerSlot(), 0,
-                        178, 50+15
+                        178, 50 + 15
                 ));
             } else {
                 addSlotToContainer(new SlotInvSlot(((IFarmer) tileEntity1).getFertilizerSlot(), 0,
@@ -47,7 +47,7 @@ public class ContainerMultiMachine extends ContainerFullInv<TileMultiMachine> {
             for (int i = 0; i < 4; i++) {
                 addSlotToContainer(new SlotInvSlot(tileEntity1.multi_process.upgradeSlot, i, 152, 8 + i * 18));
             }
-            this.addSlotToContainer(new SlotInvSlot(tileEntity1.input_slot, 0, 178, 84+10));
+            this.addSlotToContainer(new SlotInvSlot(tileEntity1.input_slot, 0, 178, 84 + 10));
 
         } else {
             for (int i = 0; i < sizeWorkingSlot; i++) {
@@ -77,7 +77,7 @@ public class ContainerMultiMachine extends ContainerFullInv<TileMultiMachine> {
             for (int i = 0; i < 4; i++) {
                 addSlotToContainer(new SlotInvSlot(tileEntity1.multi_process.upgradeSlot, i, 178, 84 + i * 18));
             }
-            this.addSlotToContainer(new SlotInvSlot(tileEntity1.input_slot, 0, 178 + 20, 84+10));
+            this.addSlotToContainer(new SlotInvSlot(tileEntity1.input_slot, 0, 178 + 20, 84 + 10));
 
         }
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.dischargeSlot, 0, 8, 63));

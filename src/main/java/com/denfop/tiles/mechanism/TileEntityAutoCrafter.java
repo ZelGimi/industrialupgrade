@@ -146,23 +146,38 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
         } else {
             canRecipe = false;
 
-            final List<IInputItemStack> input = recipe.input.getInputs();
-            final List<ItemStack> list = this.slot.getContents().stream().filter(itemStack -> !itemStack.isEmpty()).collect(
-                    Collectors.toList());
+            final List<ItemStack> list = this.slot.stream()
+                    .filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
 
-            check:
-            for (IInputItemStack itemStack : input) {
+
+            final List<IInputItemStack> input = recipe.input.getInputs();
+
+
+            for (IInputItemStack needed : input) {
+                int totalFound = 0;
+
+
                 for (ItemStack stack : list) {
-                    if (itemStack.matches(stack) && itemStack.getAmount() <= stack.getCount()) {
-                        continue check;
+                    if (needed.matches(stack)) {
+                        totalFound += stack.getCount();
+
+                        if (totalFound >= needed.getAmount()) {
+                            break;
+                        }
                     }
                 }
-                return;
+
+
+                if (totalFound < needed.getAmount()) {
+                    return;
+                }
             }
+
+
             canRecipe = true;
         }
-
     }
+
 
     @Override
     public void onLoaded() {
@@ -231,20 +246,38 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
 
     private void operateOnce(List<ItemStack> processResult) {
         final List<IInputItemStack> input = recipe.input.getInputs();
-        final List<ItemStack> list = this.slot.getContents().stream().filter(itemStack -> !itemStack.isEmpty()).collect(
-                Collectors.toList());
-        check:
-        for (IInputItemStack itemStack : input) {
+        final List<ItemStack> list = this.slot.stream()
+                .filter(itemStack -> !itemStack.isEmpty())
+                .collect(Collectors.toList());
+
+        for (IInputItemStack needed : input) {
+            int remaining = needed.getAmount();
+
             for (ItemStack stack : list) {
-                if (itemStack.matches(stack) && stack.getCount() >= itemStack.getAmount()) {
-                    stack.shrink(itemStack.getAmount());
-                    continue check;
+                if (needed.matches(stack) && remaining > 0) {
+                    int available = stack.getCount();
+                    if (available >= remaining) {
+
+                        stack.shrink(remaining);
+                        remaining = 0;
+                        break;
+                    } else {
+
+                        stack.shrink(available);
+                        remaining -= available;
+
+                    }
                 }
             }
+
+            if (remaining > 0) {
+
+                return;
+            }
         }
+
         this.outputSlot.add(processResult);
     }
-
     public InvSlotAutoCrafter getAutoCrafter() {
         return autoCrafter;
     }
@@ -274,7 +307,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
             if (recipe1.matches(this.crafingTable, world)) {
                 final ItemStack output = recipe1.getCraftingResult(this.crafingTable);
                 List<IInputItemStack> list = new ArrayList<>();
-                for (ItemStack stack : this.autoCrafter.gets()) {
+                for (ItemStack stack : this.autoCrafter) {
                     if (!stack.isEmpty()) {
 
                         boolean find = false;

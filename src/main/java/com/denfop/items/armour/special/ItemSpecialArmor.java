@@ -192,17 +192,17 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         return listCapability;
     }
 
-        @Override
-        public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
-            NBTTagCompound nbt = ModUtils.nbt(itemStack);
+    @Override
+    public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
+        NBTTagCompound nbt = ModUtils.nbt(itemStack);
 
-            if (!UpgradeSystem.system.hasInMap(itemStack)) {
-                nbt.setBoolean("hasID", false);
-                MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
-            }
-
-
+        if (!UpgradeSystem.system.hasInMap(itemStack)) {
+            nbt.setBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
         }
+
+
+    }
 
     @Override
     public void getSubItems(final CreativeTabs subs, final NonNullList<ItemStack> items) {

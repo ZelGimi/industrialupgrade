@@ -1,7 +1,6 @@
 package com.denfop.api.space.fakebody;
 
 import com.denfop.api.space.IBody;
-import com.denfop.api.space.SpaceNet;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class SpaceOperation {
@@ -15,11 +14,13 @@ public class SpaceOperation {
         this.operation = operation;
         this.auto = false;
     }
+
     public SpaceOperation(IBody fakeBody, EnumOperation operation, boolean auto) {
         this.body = fakeBody;
         this.operation = operation;
         this.auto = auto;
     }
+
     public SpaceOperation(IBody body, NBTTagCompound tag) {
         this.body = body;
         this.operation = EnumOperation.getID(tag.getByte("id"));

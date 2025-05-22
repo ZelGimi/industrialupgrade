@@ -86,7 +86,9 @@ public class TileWireInsulator extends TileElectricMachine implements
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.recipe_schedule;
-            } @Override
+            }
+
+            @Override
             public EnumTypeSlot getTypeSlot() {
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
@@ -95,19 +97,17 @@ public class TileWireInsulator extends TileElectricMachine implements
     }
 
 
-
-    public static void addRecipe(ItemStack container,ItemStack container1, ItemStack output) {
+    public static void addRecipe(ItemStack container, ItemStack container1, ItemStack output) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "wire_insulator",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(container),input.getInput(container1)),
+                                input.getInput(container), input.getInput(container1)),
                         new RecipeOutput(null, output)
                 )
         );
     }
-
 
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
@@ -140,10 +140,10 @@ public class TileWireInsulator extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.cable,1,11),IUItem.rubber,new ItemStack(IUItem.cable,1,12));
-        addRecipe(new ItemStack(IUItem.cable,1,14),IUItem.rubber,new ItemStack(IUItem.cable,1,15));
-        addRecipe(new ItemStack(IUItem.cable,1,16),IUItem.rubber,new ItemStack(IUItem.cable,1,17));
-        addRecipe(new ItemStack(IUItem.cable,1,18),IUItem.rubber,new ItemStack(IUItem.cable,1,19));
+        addRecipe(new ItemStack(IUItem.cable, 1, 11), IUItem.rubber, new ItemStack(IUItem.cable, 1, 12));
+        addRecipe(new ItemStack(IUItem.cable, 1, 14), IUItem.rubber, new ItemStack(IUItem.cable, 1, 15));
+        addRecipe(new ItemStack(IUItem.cable, 1, 16), IUItem.rubber, new ItemStack(IUItem.cable, 1, 17));
+        addRecipe(new ItemStack(IUItem.cable, 1, 18), IUItem.rubber, new ItemStack(IUItem.cable, 1, 19));
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.denfop.integration.jei.refractory_furnace;
 
 import com.denfop.Constants;
-import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
@@ -77,7 +76,9 @@ public class RefractoryFurnaceCategory extends GuiIU implements IRecipeCategory<
     @Nonnull
     @Override
     public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.electric_refractory_furnace).getUnlocalizedName());
+        return Localization.translate(JEICompat
+                .getBlockStack(BlockBaseMachine3.electric_refractory_furnace)
+                .getUnlocalizedName());
     }
 
     @Nonnull

@@ -4,15 +4,11 @@ import com.denfop.IUPotion;
 import com.denfop.api.item.IHazmatLike;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -20,10 +16,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.ISpecialArmor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -31,11 +24,14 @@ import java.util.Random;
 
 public class EntityNuclearBombPrimed extends Entity {
 
-    private static final DataParameter<Integer> FUSE = EntityDataManager.createKey(EntityNuclearBombPrimed.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> FUSE = EntityDataManager.createKey(
+            EntityNuclearBombPrimed.class,
+            DataSerializers.VARINT
+    );
+    private static final Random RANDOM = new Random();
     @Nullable
     private EntityLivingBase tntPlacedBy;
     private int fuse;
-    private static final Random RANDOM = new Random();
 
     public EntityNuclearBombPrimed(World worldIn) {
         super(worldIn);
@@ -94,7 +90,7 @@ public class EntityNuclearBombPrimed extends Entity {
             this.setDead();
             if (!this.world.isRemote) {
                 this.explode();
-            }else {
+            } else {
                 BlockPos explosionPos = new BlockPos(posX, posY, posZ);
                 final int explosionRadius = 10;
                 createRadiationParticles(explosionPos, (int) explosionRadius);
@@ -111,17 +107,26 @@ public class EntityNuclearBombPrimed extends Entity {
         boolean causeFire = true;
         this.world.createExplosion(this, this.posX, this.posY + (this.height / 16.0F), this.posZ, explosionRadius, causeFire);
 
-        this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, net.minecraft.util.SoundCategory.BLOCKS, 4.0F, 1.0F);
+        this.world.playSound(
+                null,
+                this.posX,
+                this.posY,
+                this.posZ,
+                SoundEvents.ENTITY_GENERIC_EXPLODE,
+                net.minecraft.util.SoundCategory.BLOCKS,
+                4.0F,
+                1.0F
+        );
 
-            BlockPos explosionPos = new BlockPos(posX, posY, posZ);
-           
+        BlockPos explosionPos = new BlockPos(posX, posY, posZ);
+
 
         if (!this.world.isRemote) {
             if (this.world.provider.getDimension() == 0) {
                 int radiationValue = 5000;
                 new PacketUpdateRadiationValue(this.world.getChunkFromBlockCoords(explosionPos).getPos(), radiationValue);
                 spreadRadiation(explosionPos, radiationValue);
-                affectNearbyPlayers(explosionPos, 30.0D); // Радиус воздействия радиации
+                affectNearbyPlayers(explosionPos, 30.0D);
             }
         }
     }
@@ -137,6 +142,7 @@ public class EntityNuclearBombPrimed extends Entity {
             this.world.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, x, y, z, 1.0D, 0.0D, 0.0D);
         }
     }
+
     private void createRadiationParticles(BlockPos center, int radius) {
         for (int i = 0; i < radius * 50; i++) {
             double x = center.getX() + RANDOM.nextDouble() * radius * 2 - radius;
@@ -159,10 +165,13 @@ public class EntityNuclearBombPrimed extends Entity {
     }
 
     private void affectNearbyPlayers(BlockPos explosionPos, double radius) {
-        List<EntityPlayer> players = this.world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(radius));
+        List<EntityPlayer> players = this.world.getEntitiesWithinAABB(
+                EntityPlayer.class,
+                this.getEntityBoundingBox().grow(radius)
+        );
         for (EntityPlayer player : players) {
             if (!hasRadiationSuit(player)) {
-              player.addPotionEffect(new PotionEffect(IUPotion.radiation,200,0));
+                player.addPotionEffect(new PotionEffect(IUPotion.radiation, 200, 0));
             }
         }
     }
@@ -207,4 +216,5 @@ public class EntityNuclearBombPrimed extends Entity {
         this.dataManager.set(FUSE, fuseIn);
         this.fuse = fuseIn;
     }
+
 }

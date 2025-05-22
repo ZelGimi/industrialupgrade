@@ -61,7 +61,6 @@ public class InvSlotWaterUpgrade extends InvSlot implements ITypeSlot {
         for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
             put(entry.getKey(), entry.getValue(), false);
         }
-        ((TileEntityWaterRotorModifier) this.base).updateTileServer(null, 1);
     }
 
     public void put(int index, ItemStack content, boolean updates) {
@@ -71,6 +70,7 @@ public class InvSlotWaterUpgrade extends InvSlot implements ITypeSlot {
     public void put(int index, ItemStack content) {
         super.put(index, content);
 
+        ((TileEntityWaterRotorModifier) this.base).updateTileServer(null, 0);
     }
 
 }

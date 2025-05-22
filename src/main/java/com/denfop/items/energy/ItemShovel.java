@@ -15,24 +15,27 @@ public class ItemShovel extends ItemSpade implements IModelRegister {
 
     private final String name;
 
-    public ItemShovel(String name)  {
+    public ItemShovel(String name) {
         super(ToolMaterial.DIAMOND);
         setUnlocalizedName(name);
-        this.name=name;
-        this.setMaxDamage((int) (ToolMaterial.IRON.getMaxUses()*2.5));
+        this.name = name;
+        this.setMaxDamage((int) (ToolMaterial.IRON.getMaxUses() * 2.5));
         setCreativeTab(IUCore.EnergyTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }
+
     @SideOnly(Side.CLIENT)
-    public  ModelResourceLocation getModelLocation(String name) {
+    public ModelResourceLocation getModelLocation(String name) {
         final String loc = Constants.MOD_ID +
-                ':'  + name;
+                ':' + name;
 
         return new ModelResourceLocation(loc, null);
     }
+
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         ModelLoader.setCustomModelResourceLocation(this, 0, getModelLocation(name));
     }
+
 }

@@ -59,7 +59,7 @@ public class GenStoneHandler {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
-                   new ItemStack(Blocks.GRAVEL, 8)
+                    new ItemStack(Blocks.GRAVEL, 8)
             );
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),

@@ -78,7 +78,7 @@ public class TileEntityMutatron extends TileElectricMachine implements IUpgradab
 
 
         this.fluidTank2 = fluids.addTankInsert("fluidTank2", 12 * 1000);
-        this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM,this,1000));
+        this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
 
         this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, InvSlot.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("mutatron", fluids);
@@ -101,7 +101,6 @@ public class TileEntityMutatron extends TileElectricMachine implements IUpgradab
         double ret = Math.round((base + extra) * multiplier);
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
-
 
 
     @Override
@@ -229,7 +228,7 @@ public class TileEntityMutatron extends TileElectricMachine implements IUpgradab
         }
 
 
-        if (this.fluid_handler.output() != null&& this.qe.getEnergy() >= 1 && this.fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.energy.canUseEnergy(
+        if (this.fluid_handler.output() != null && this.qe.getEnergy() >= 1 && this.fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.energy.canUseEnergy(
                 energyConsume)) {
             if (!this.getActive()) {
                 setActive(true);
@@ -297,7 +296,6 @@ public class TileEntityMutatron extends TileElectricMachine implements IUpgradab
     }
 
 
-
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.mutatron;
     }
@@ -316,7 +314,7 @@ public class TileEntityMutatron extends TileElectricMachine implements IUpgradab
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of( UpgradableProperty.Transformer,
+        return EnumSet.of(UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage, UpgradableProperty.FluidExtract,
                 UpgradableProperty.FluidInput
         );

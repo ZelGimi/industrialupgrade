@@ -258,7 +258,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
                 output1,
                 true
         ) && (output1.getValue() == null || this.output2.canAdd(output1.getValue()))) {
-            this.fluidSlot1.transferToTank(this.tank1, output1, false);
+            this.fluidSlot1.transferFromTank(this.tank1, output1, false);
             if (output1.getValue() != null) {
                 this.output2.add(output1.getValue());
             }

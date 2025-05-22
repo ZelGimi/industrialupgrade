@@ -9,7 +9,6 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerElectricRefractoryFurnace;
-import com.denfop.container.ContainerPlasticPlateCreator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

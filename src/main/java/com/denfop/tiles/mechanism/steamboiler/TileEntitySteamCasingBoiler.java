@@ -6,7 +6,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamBoiler;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 
-public class TileEntitySteamCasingBoiler extends TileEntityMultiBlockElement implements ICasing{
+public class TileEntitySteamCasingBoiler extends TileEntityMultiBlockElement implements ICasing {
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -17,4 +17,5 @@ public class TileEntitySteamCasingBoiler extends TileEntityMultiBlockElement imp
     public BlockTileEntity getBlock() {
         return IUItem.steam_boiler;
     }
+
 }

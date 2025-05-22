@@ -37,13 +37,13 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
                     final int itemDamage = stack.getItemDamage();
                     switch (itemDamage) {
                         case 357:
-                            return ((TileEntityGraphiteController) this.base).getLevel() >= 0;
+                            return ((TileEntityGraphiteController) this.base).getBlockLevel() >= 0;
                         case 410:
-                            return ((TileEntityGraphiteController) this.base).getLevel() >= 1;
+                            return ((TileEntityGraphiteController) this.base).getBlockLevel() >= 1;
                         case 310:
-                            return ((TileEntityGraphiteController) this.base).getLevel() >= 2;
+                            return ((TileEntityGraphiteController) this.base).getBlockLevel() >= 2;
                         case 368:
-                            return ((TileEntityGraphiteController) this.base).getLevel() >= 3;
+                            return ((TileEntityGraphiteController) this.base).getBlockLevel() >= 3;
                     }
                 }
                 return false;
@@ -52,9 +52,10 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (!world.isRemote)
+                if (!world.isRemote) {
                     if (content.isEmpty()) {
-                    ((TileEntityGraphiteController) this.base).fuel = 0;
+                        ((TileEntityGraphiteController) this.base).fuel = 0;
+                    }
                 }
             }
         };
@@ -126,7 +127,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return level;
     }
 

@@ -20,7 +20,8 @@ public class PacketUpdateRadiationValue implements IPacket {
     public PacketUpdateRadiationValue(ChunkPos pos, double radiation) {
         Radiation radiation1 = RadiationSystem.rad_system.getMap().get(pos);
         if (radiation1 == null) {
-            radiation1 = new Radiation(pos);;
+            radiation1 = new Radiation(pos);
+            ;
             RadiationSystem.rad_system.addRadiation(radiation1);
         }
         radiation1.addRadiation(radiation);

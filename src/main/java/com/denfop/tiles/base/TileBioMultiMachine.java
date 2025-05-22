@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class TileBioMultiMachine extends TileEntityInventory implements
-        IAudioFixer, IUpgradableBlock, IUpdatableTileEvent, IHasRecipe,IBioMachine {
+        IAudioFixer, IUpgradableBlock, IUpdatableTileEvent, IHasRecipe, IBioMachine {
 
 
     public final int type;
@@ -164,10 +164,24 @@ public abstract class TileBioMultiMachine extends TileEntityInventory implements
         }
         if (getEnable()) {
             if (soundEvent == 0) {
-                this.getWorld().playSound(null, this.pos, EnumSound.biomass_progress.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+                this.getWorld().playSound(
+                        null,
+                        this.pos,
+                        EnumSound.biomass_progress.getSoundEvent(),
+                        SoundCategory.BLOCKS,
+                        1F,
+                        1
+                );
             } else if (soundEvent == 1) {
                 new PacketStopSound(getWorld(), this.pos);
-                this.getWorld().playSound(null, this.pos, EnumSound.biomass_interrupt.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+                this.getWorld().playSound(
+                        null,
+                        this.pos,
+                        EnumSound.biomass_interrupt.getSoundEvent(),
+                        SoundCategory.BLOCKS,
+                        1F,
+                        1
+                );
             } else {
                 new PacketStopSound(getWorld(), this.pos);
             }

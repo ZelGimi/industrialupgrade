@@ -27,7 +27,8 @@ import java.util.Map;
 
 public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileSintezator> {
 
-   public static Map<IBlockState,IBakedModel > modelMap = new HashMap<>();
+    public static Map<IBlockState, IBakedModel> modelMap = new HashMap<>();
+
     public void render(
             @Nonnull TileSintezator tile,
             double x,
@@ -59,11 +60,11 @@ public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileSi
                         );
                         IBakedModel model = modelMap.get(state);
                         if (model == null) {
-                           model = Minecraft
+                            model = Minecraft
                                     .getMinecraft()
                                     .getBlockRendererDispatcher()
                                     .getModelForState(state);
-                            modelMap.put(state,model);
+                            modelMap.put(state, model);
                         }
                         for (EnumFacing enumfacing : EnumFacing.values()) {
                             render(model, state, enumfacing);
@@ -78,7 +79,7 @@ public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileSi
                                     .getMinecraft()
                                     .getBlockRendererDispatcher()
                                     .getModelForState(state);
-                            modelMap.put(state,model);
+                            modelMap.put(state, model);
                         }
                         for (EnumFacing enumfacing : EnumFacing.values()) {
                             render(model, state, enumfacing);

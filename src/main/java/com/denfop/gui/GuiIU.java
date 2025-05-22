@@ -9,7 +9,6 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerBase;
 import com.denfop.invslot.InvSlot;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
@@ -55,6 +54,21 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
         componentList.add(inventory);
         componentList.add(slots);
     }
+
+    public GuiIU(final T container, EnumTypeComponent style) {
+        super(container);
+        this.style = getStyle(style);
+        inventory = new GuiComponent(this, 7, 83, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
+        );
+        this.slots = new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE))
+        );
+
+        componentList.add(inventory);
+        componentList.add(slots);
+    }
+
     public float adjustTextScale(String text, int canvasWidth, int canvasHeight, float scale, float scaleStep) {
         FontRenderer fontRenderer = mc.fontRenderer;
         float newScale = scale;
@@ -97,6 +111,7 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
         }
         return newScale;
     }
+
     public boolean isTextTooLarge(
             List<String> lines,
             int canvasWidth,
@@ -114,6 +129,7 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
         }
         return totalHeight > canvasHeight;
     }
+
     public List<String> wrapTextWithNewlines(String text, int maxWidth) {
         List<String> lines = new ArrayList<>();
         String[] paragraphs = text.split("\n");
@@ -153,6 +169,7 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
 
         return lines;
     }
+
     public void drawTextInCanvas(String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale) {
         int maxWidth = (int) (canvasWidth / scale);
         int lineHeight = (int) (10 * scale);
@@ -175,8 +192,11 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
             y += lineHeight;
         }
     }
-    public void drawTextInCanvas(String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale,
-                                 int color) {
+
+    public void drawTextInCanvas(
+            String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale,
+            int color
+    ) {
         int maxWidth = (int) (canvasWidth / scale);
         int lineHeight = (int) (10 * scale);
         int x = canvasX;
@@ -198,6 +218,7 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
             y += lineHeight;
         }
     }
+
     public List<String> splitTextToLines(String text, int canvasWidth, float scale, FontRenderer fontRenderer) {
         List<String> lines = new LinkedList<>();
         String[] manualLines = text.split("\n");
@@ -223,20 +244,6 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
             }
         }
         return lines;
-    }
-
-    public GuiIU(final T container, EnumTypeComponent style) {
-        super(container);
-        this.style = getStyle(style);
-        inventory = new GuiComponent(this, 7, 83, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
-        );
-        this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE))
-        );
-
-        componentList.add(inventory);
-        componentList.add(slots);
     }
 
     public EnumTypeComponent getComponent() {
@@ -346,7 +353,7 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
 
         int centerX = this.guiLeft + this.xSize / 2;
         int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
-        int textY = (int) ((this.guiTop + 6)/scale);
+        int textY = (int) ((this.guiTop + 6) / scale);
 
 
         this.fontRenderer.drawString(name, textX, textY, 4210752);

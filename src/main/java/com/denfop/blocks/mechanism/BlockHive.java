@@ -4,7 +4,11 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.bee.*;
+import com.denfop.tiles.bee.TileEntityForestHive;
+import com.denfop.tiles.bee.TileEntityPlainsHive;
+import com.denfop.tiles.bee.TileEntitySwampHive;
+import com.denfop.tiles.bee.TileEntityTropicalHive;
+import com.denfop.tiles.bee.TileEntityWinterHive;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
@@ -30,8 +34,8 @@ public enum BlockHive implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumRarity rarity;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockHive(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -58,14 +62,19 @@ public enum BlockHive implements IMultiTileBlock {
             }
         }
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     @Override
     public String getName() {
         return this.name();

@@ -8,15 +8,11 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerAdditionGenStone;
-import com.denfop.container.ContainerGenStone;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.mechanism.TileBaseAdditionGenStone;
-import com.denfop.tiles.mechanism.TileBaseGenStone;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -64,7 +60,7 @@ public class GuiAdditionGenStone extends GuiIU<ContainerAdditionGenStone> {
                                 this.container.base.getMode() == TileBaseAdditionGenStone.Mode.ANDESITE
                                         ?
                                         this.container.base.andesite.getDisplayName()
-                                        :  this.container.base.granite.getDisplayName()
+                                        : this.container.base.granite.getDisplayName()
                         ))
                 .drawForeground(mouseX
                         , mouseY);

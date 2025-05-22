@@ -25,7 +25,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
@@ -56,9 +55,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,7 +63,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class ModUtils {
 
@@ -112,19 +107,23 @@ public class ModUtils {
 
         return EnumFacing.DOWN;
     }
-    public static boolean inChanceOre(VeinType veinType, IBlockState state){
-        for (ChanceOre chanceOre : veinType.getOres()){
-            if (chanceOre.getBlock() == state){
+
+    public static boolean inChanceOre(VeinType veinType, IBlockState state) {
+        for (ChanceOre chanceOre : veinType.getOres()) {
+            if (chanceOre.getBlock() == state) {
                 return true;
             }
         }
         return false;
     }
-    public static List<String> getInformationFromOre(IBlockState state){
+
+    public static List<String> getInformationFromOre(IBlockState state) {
         List<String> stringList = new ArrayList<>();
-        for(VeinType vein : WorldBaseGen.veinTypes) {
-            if ((vein.getHeavyOre() != null && vein.getHeavyOre().getStateMeta(vein.getMeta()) == state)|| inChanceOre(vein,
-                    state)){
+        for (VeinType vein : WorldBaseGen.veinTypes) {
+            if ((vein.getHeavyOre() != null && vein.getHeavyOre().getStateMeta(vein.getMeta()) == state) || inChanceOre(
+                    vein,
+                    state
+            )) {
                 final String s = (vein.getHeavyOre() != null ?
                         new ItemStack(vein.getHeavyOre().getBlock(), 1, vein.getMeta()).getDisplayName() :
                         new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1,
@@ -135,6 +134,7 @@ public class ModUtils {
         }
         return stringList;
     }
+
     public static double getEnergyValue(ItemStack stack) {
         if (ModUtils.isEmpty(stack)) {
             return 0.0;
@@ -183,7 +183,10 @@ public class ModUtils {
                     IFluidHandlerItem containerFluidHandler =
                             FluidUtil.getFluidHandler(ItemHandlerHelper.copyStackWithSize(heldItem, 1));
                     for (IFluidTankProperties fluidTankProperties : tanks) {
-                        if ((fluidTankProperties.getContents() == null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(containerFluidHandler.drain(Integer.MAX_VALUE,false))) || (fluidTankProperties.getContents() != null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(containerFluidHandler.drain(Integer.MAX_VALUE,false)))) {
+                        if ((fluidTankProperties.getContents() == null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(
+                                containerFluidHandler.drain(Integer.MAX_VALUE,
+                                        false))) || (fluidTankProperties.getContents() != null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(
+                                containerFluidHandler.drain(Integer.MAX_VALUE, false)))) {
                             capacity = fluidTankProperties.getCapacity() - (fluidTankProperties.getContents() == null ? 0 :
                                     fluidTankProperties.getContents().amount);
 

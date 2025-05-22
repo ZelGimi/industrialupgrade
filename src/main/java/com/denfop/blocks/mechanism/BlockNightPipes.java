@@ -5,9 +5,7 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.transport.tiles.TileEntityBioPipe;
 import com.denfop.tiles.transport.tiles.TileEntityNightPipe;
-import com.denfop.tiles.transport.tiles.TileEntitySteamPipe;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.EnumFacing;
@@ -29,8 +27,8 @@ public enum BlockNightPipes implements IMultiTileBlock {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockNightPipes(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this.teClass = teClass;
@@ -40,14 +38,19 @@ public enum BlockNightPipes implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {

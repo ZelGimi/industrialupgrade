@@ -13,7 +13,6 @@ import com.denfop.container.ContainerImpOilRefiner;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.tiles.mechanism.TileEntityPolymerizer;
-import com.denfop.tiles.mechanism.TileEntityReverseTransriptor;
 import com.denfop.tiles.mechanism.TileImpOilRefiner;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;

@@ -25,8 +25,8 @@ public enum MultiTileBlock implements IMultiTileBlock {
     private final HarvestTool harvestTool;
     private final DefaultDrop defaultDrop;
     private final float hardness;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     MultiTileBlock(
             Class<? extends TileEntityBlock> teClass
@@ -42,14 +42,19 @@ public enum MultiTileBlock implements IMultiTileBlock {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         ModContainer mc = Loader.instance().activeModContainer();
         if (mc != null && (Constants.MOD_ID).equals(mc.getModId())) {

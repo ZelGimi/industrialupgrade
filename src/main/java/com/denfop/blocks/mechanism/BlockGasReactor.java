@@ -107,15 +107,8 @@ public enum BlockGasReactor implements IMultiTileBlock {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
-    private TileEntityBlock dummyTe;
     int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
-
-    public void setIdBlock(int id){
-        idBlock = id;
-    };
+    private TileEntityBlock dummyTe;
 
     BlockGasReactor(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this.teClass = teClass;
@@ -124,6 +117,18 @@ public enum BlockGasReactor implements IMultiTileBlock {
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
+    }
+
+    ;
+
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
+        idBlock = id;
     }
 
     @Override

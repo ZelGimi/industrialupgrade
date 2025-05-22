@@ -24,19 +24,20 @@ public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement imple
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemsFan && ((ItemsFan) stack.getItem()).getLevel() <= ((TileEntityBaseInterCooler) this.base).getLevel();
+                return stack.getItem() instanceof ItemsFan && ((ItemsFan) stack.getItem()).getLevel() <= ((TileEntityBaseInterCooler) this.base).getBlockLevel();
             }
 
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (!world.isRemote)
+                if (!world.isRemote) {
                     if (content.isEmpty()) {
-                    ((TileEntityBaseInterCooler) this.base).setEnergy(0);
-                    ((TileEntityBaseInterCooler) this.base).setPower(0);
-                } else {
-                    ((TileEntityBaseInterCooler) this.base).setEnergy(((ItemsFan) content.getItem()).getEnergy());
-                    ((TileEntityBaseInterCooler) this.base).setPower(((ItemsFan) content.getItem()).getPower());
+                        ((TileEntityBaseInterCooler) this.base).setEnergy(0);
+                        ((TileEntityBaseInterCooler) this.base).setPower(0);
+                    } else {
+                        ((TileEntityBaseInterCooler) this.base).setEnergy(((ItemsFan) content.getItem()).getEnergy());
+                        ((TileEntityBaseInterCooler) this.base).setPower(((ItemsFan) content.getItem()).getPower());
+                    }
                 }
             }
         };
@@ -72,7 +73,7 @@ public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement imple
     }
 
     @Override
-    public int getLevel() {
+    public int getBlockLevel() {
         return level;
     }
 

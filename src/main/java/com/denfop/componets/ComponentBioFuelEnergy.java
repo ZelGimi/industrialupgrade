@@ -3,7 +3,6 @@ package com.denfop.componets;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.blocks.FluidName;
 import com.denfop.effects.BiomassParticle;
-import com.denfop.effects.SteamParticle;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.Minecraft;
@@ -64,7 +63,14 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     }
 
     public static ComponentBioFuelEnergy asBasicSink(TileEntityInventory parent, double capacity, int tier) {
-        return new ComponentBioFuelEnergy(EnergyType.BIOFUEL, parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
+        return new ComponentBioFuelEnergy(
+                EnergyType.BIOFUEL,
+                parent,
+                capacity,
+                ModUtils.allFacings,
+                Collections.emptySet(),
+                tier
+        );
     }
 
     public static ComponentBioFuelEnergy asBasicSource(TileEntityInventory parent, double capacity) {
@@ -72,7 +78,14 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     }
 
     public static ComponentBioFuelEnergy asBasicSource(TileEntityInventory parent, double capacity, int tier) {
-        return new ComponentBioFuelEnergy(EnergyType.BIOFUEL, parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
+        return new ComponentBioFuelEnergy(
+                EnergyType.BIOFUEL,
+                parent,
+                capacity,
+                Collections.emptySet(),
+                ModUtils.allFacings,
+                tier
+        );
     }
 
     public void setFluidTank(final FluidTank fluidTank) {
@@ -99,10 +112,12 @@ public class ComponentBioFuelEnergy extends ComponentBaseEnergy {
     @SideOnly(Side.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
-        if (this.parent.getActive() && this.parent.getWorld().getWorldTime() % 4 == 0)
-            Minecraft.getMinecraft().effectRenderer.addEffect(new BiomassParticle( this.parent.getWorld(),
+        if (this.parent.getActive() && this.parent.getWorld().getWorldTime() % 4 == 0) {
+            Minecraft.getMinecraft().effectRenderer.addEffect(new BiomassParticle(this.parent.getWorld(),
                     this.parent.getPos().getX() + 0.5,
-                    this.parent.getPos().getY()+1, this.parent.getPos().getZ() + 0.5));
+                    this.parent.getPos().getY() + 1, this.parent.getPos().getZ() + 0.5
+            ));
+        }
     }
 
     @Override

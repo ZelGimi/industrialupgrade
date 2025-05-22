@@ -111,8 +111,9 @@ public class TileSteamQuarry extends TileEntityInventory {
             preCancelEvent = true;
         }
         IBlockState state = world.getBlockState(pos);
-        if (state.getMaterial() != Material.AIR && state.getBlock().getHarvestLevel(state) < 0)
+        if (state.getMaterial() != Material.AIR && state.getBlock().getHarvestLevel(state) < 0) {
             return -1;
+        }
         if (gameType.hasLimitedInteractions()) {
             if (gameType == GameType.SPECTATOR) {
                 preCancelEvent = true;
@@ -219,7 +220,7 @@ public class TileSteamQuarry extends TileEntityInventory {
             Block block1 = state.getBlock();
             int meta = block1.getMetaFromState(state);
             steam.useEnergy(2);
-            if ( state.getMaterial() == Material.AIR && onBlockBreakEvent(world,
+            if (state.getMaterial() == Material.AIR && onBlockBreakEvent(world,
                     GameType.SURVIVAL,
                     entity, pos1
             ) != -1) {
@@ -248,7 +249,7 @@ public class TileSteamQuarry extends TileEntityInventory {
                 }
                 return;
             }
-            if (onBlockBreakEvent(world,GameType.SURVIVAL, entity, pos1) == -1) {
+            if (onBlockBreakEvent(world, GameType.SURVIVAL, entity, pos1) == -1) {
                 if (x == pos1.getX() && z == pos1.getZ()) {
                     work = false;
                 }

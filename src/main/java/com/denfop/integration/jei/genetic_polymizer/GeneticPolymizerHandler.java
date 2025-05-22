@@ -13,10 +13,10 @@ public class GeneticPolymizerHandler {
 
     private static final List<GeneticPolymizerHandler> recipes = new ArrayList<>();
     private final FluidStack input2;
-    private final ItemStack input, input1,input3,input4,input5, output;
+    private final ItemStack input, input1, input3, input4, input5, output;
 
     public GeneticPolymizerHandler(
-            ItemStack input, ItemStack input1, ItemStack input3, ItemStack input4,ItemStack input5, FluidStack input2,
+            ItemStack input, ItemStack input1, ItemStack input3, ItemStack input4, ItemStack input5, FluidStack input2,
             ItemStack output
     ) {
         this.input = input;
@@ -36,10 +36,10 @@ public class GeneticPolymizerHandler {
     }
 
     public static GeneticPolymizerHandler addRecipe(
-            ItemStack input, ItemStack input1,  ItemStack input3, ItemStack input4,ItemStack input5, FluidStack input2,
+            ItemStack input, ItemStack input1, ItemStack input3, ItemStack input4, ItemStack input5, FluidStack input2,
             ItemStack output
     ) {
-        GeneticPolymizerHandler recipe = new GeneticPolymizerHandler(input, input1,input3,input4,input5,  input2, output);
+        GeneticPolymizerHandler recipe = new GeneticPolymizerHandler(input, input1, input3, input4, input5, input2, output);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -100,9 +100,11 @@ public class GeneticPolymizerHandler {
     public ItemStack getInput4() {
         return input4;
     }
+
     public ItemStack getInput5() {
         return input5;
     }
+
     public boolean matchesInput(ItemStack is) {
         return is.isItemEqual(input) || is.isItemEqual(input1);
     }

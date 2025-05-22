@@ -6,7 +6,6 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.ItemBaseCircuit;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
@@ -113,7 +112,7 @@ public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Type
             ModelLoader.setCustomMeshDefinition(this, stack -> {
                 final NBTTagCompound nbt = ModUtils.nbt(stack);
                 int level = nbt.getInteger("level");
-                switch (stack.getItemDamage()){
+                switch (stack.getItemDamage()) {
                     case 272:
                         level = level - 1;
                         break;
@@ -121,16 +120,22 @@ public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Type
                         level = level - 3;
                         break;
                 }
-                return new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types
-                        .getFromID(stack.getItemDamage()).getName() + (level == 1 ? "_1" : ""),
-                        null);
+                return new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + Types
+                                .getFromID(stack.getItemDamage()).getName() + (level == 1 ? "_1" : ""),
+                        null
+                );
 
             });
             String[] mode = {"", "_1"};
             for (final String s : mode) {
-                ModelBakery.registerItemVariants(this,
-                        new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName()+s,
-                                null));
+                ModelBakery.registerItemVariants(
+                        this,
+                        new ModelResourceLocation(
+                                Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName() + s,
+                                null
+                        )
+                );
 
             }
         } else {

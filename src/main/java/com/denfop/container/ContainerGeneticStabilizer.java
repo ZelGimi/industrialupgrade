@@ -1,9 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityGeneticStabilize;
-import com.denfop.tiles.mechanism.TileEntityIncubator;
-import com.denfop.tiles.mechanism.TileEntityRNACollector;
-import com.denfop.tiles.mechanism.TileEntitySingleFluidAdapter;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerGeneticStabilizer extends ContainerFullInv<TileEntityGeneticStabilize> {

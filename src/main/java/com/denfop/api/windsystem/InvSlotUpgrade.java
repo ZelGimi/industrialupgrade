@@ -6,6 +6,7 @@ import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.mechanism.TileEntityRotorModifier;
 import net.minecraft.item.ItemStack;
 
@@ -61,13 +62,12 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
         for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
-        ((TileEntityRotorModifier) this.base).updateTileServer(null, 1);
     }
 
 
     public void put(int index, ItemStack content) {
         super.put(index, content);
-
+        ((IUpdatableTileEvent) this.base).updateTileServer(null, 0);
     }
 
 }

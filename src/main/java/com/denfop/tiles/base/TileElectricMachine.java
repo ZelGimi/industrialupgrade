@@ -49,7 +49,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
 
         if (MaxEnergy != 0) {
             energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier));
-            dischargeSlot = new InvSlotDischarge(this,14);
+            dischargeSlot = new InvSlotDischarge(this, 14);
             energy.addManagedSlot(dischargeSlot);
         }
 
@@ -181,7 +181,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
             }
 
         }
-        super.addInformation(stack,tooltip);
+        super.addInformation(stack, tooltip);
     }
 
     public EnumTypeAudio getTypeAudio() {

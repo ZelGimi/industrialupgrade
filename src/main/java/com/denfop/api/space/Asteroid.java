@@ -27,6 +27,7 @@ public class Asteroid implements IAsteroid {
     private final double minLocation;
     List<IBaseResource> baseResourceList;
     List<MiniAsteroid> miniAsteroids;
+
     public Asteroid(
             String name, ISystem system, ResourceLocation textureLocation, EnumLevels levels, IStar star, int temperature
             , double distance, EnumType type, boolean colonies, int angle, double time, double size, double rotation,
@@ -43,12 +44,12 @@ public class Asteroid implements IAsteroid {
         this.temperature = temperature;
         this.type = type;
         this.colonies = colonies;
-        this.angle=angle;
+        this.angle = angle;
         this.time = time;
         this.size = size;
         this.rotation = rotation;
-        this.minLocation=minLocation;
-        this.maxLocation=maxLocation;
+        this.minLocation = minLocation;
+        this.maxLocation = maxLocation;
         this.miniAsteroids = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
 

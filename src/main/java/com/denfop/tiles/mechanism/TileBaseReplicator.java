@@ -203,9 +203,9 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
             }
             double size = 1;
             if (this.stack) {
-                size = (this.fluidTank.getFluidAmount() / this.patternUu);
-                size = Math.min(size, 64);
-                final int amount = this.outputSlot.get().isEmpty() ? 64 : 64 - this.outputSlot.get().getCount();
+                size = (this.fluidTank.getFluidAmount() / (this.patternUu * 1000));
+                size = Math.min(size, this.pattern.getStack().getMaxStackSize());
+                final int amount = this.outputSlot.get(0).isEmpty() ? 64 : this.outputSlot.get(0).getMaxStackSize() - this.outputSlot.get(0).getCount();
                 size = Math.min(amount, size);
                 if (size >= 1) {
                     uuRemaining = this.patternUu;

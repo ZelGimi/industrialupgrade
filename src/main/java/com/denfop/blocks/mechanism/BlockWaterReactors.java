@@ -116,8 +116,8 @@ public enum BlockWaterReactors implements IMultiTileBlock, IMultiBlockItem {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    int idBlock;
     private TileEntityBlock dummyTe;
-
 
     BlockWaterReactors(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
@@ -132,14 +132,19 @@ public enum BlockWaterReactors implements IMultiTileBlock, IMultiBlockItem {
 
 
     }
-    int idBlock;
-    public  int getIDBlock(){
-        return idBlock;
-    };
 
-    public void setIdBlock(int id){
+    public int getIDBlock() {
+        return idBlock;
+    }
+
+    ;
+
+    public void setIdBlock(int id) {
         idBlock = id;
-    };
+    }
+
+    ;
+
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -172,7 +177,7 @@ public enum BlockWaterReactors implements IMultiTileBlock, IMultiBlockItem {
             } else {
 
                 if (teBlock == BlockWaterReactors.water_controller || teBlock == BlockWaterReactors.water_per_controller || teBlock == BlockWaterReactors.water_adv_controller || teBlock == BlockWaterReactors.water_imp_controller) {
-                    return new String[]{"active","global"};
+                    return new String[]{"active", "global"};
                 } else {
 
                     return IMultiTileBlock.super.getMultiModels(teBlock);
@@ -227,7 +232,7 @@ public enum BlockWaterReactors implements IMultiTileBlock, IMultiBlockItem {
     @Override
     @Nonnull
     public MultiTileBlock.HarvestTool getHarvestTool() {
-        return MultiTileBlock.HarvestTool.Pickaxe;
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override

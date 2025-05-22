@@ -1,11 +1,9 @@
 package com.denfop.integration.jei.apiary;
 
-import com.denfop.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -22,7 +20,7 @@ public class ApiaryWrapper implements IRecipeWrapper {
 
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(this.input,1));
+        ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(this.input, 1));
     }
 
 

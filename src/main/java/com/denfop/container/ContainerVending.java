@@ -2,6 +2,9 @@ package com.denfop.container;
 
 import com.denfop.tiles.mechanism.vending.TileEntityBaseVending;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerVending extends ContainerFullInv<TileEntityBaseVending> {
 
@@ -28,18 +31,33 @@ public class ContainerVending extends ContainerFullInv<TileEntityBaseVending> {
                 addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.invSlotSellPrivate, i, xDisplayPosition2, 60));
             }
         }
-        if (b){
+        if (b) {
             for (int i = 0; i < 18; i++) {
-                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.invSlotInventoryInput, i, 7 + (i%9)*18,
-                        85 +  (i/9)*18));
+                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.invSlotInventoryInput, i, 7 + (i % 9) * 18,
+                        85 + (i / 9) * 18
+                ));
 
             }
             for (int i = 0; i < 18; i++) {
-                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.output, i, 7 + (i%9)*18,
-                        125 +  (i/9)*18));
+                addSlotToContainer(new SlotInvSlot(tileEntityBaseVending.output, i, 7 + (i % 9) * 18,
+                        125 + (i / 9) * 18
+                ));
 
             }
         }
+    }
+
+    @Override
+    public @NotNull ItemStack slotClick(
+            final int slotId,
+            final int dragType,
+            @NotNull final ClickType clickType,
+            @NotNull final EntityPlayer player
+    ) {
+        if (clickType == ClickType.QUICK_CRAFT)
+            return ItemStack.EMPTY;
+
+        return super.slotClick(slotId, dragType, clickType, player);
     }
 
     @Override

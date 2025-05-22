@@ -57,7 +57,7 @@ public class GuiSolarGeneratorEnergy extends GuiIU<ContainerSolarGeneratorEnergy
 
         int centerX = this.guiLeft + this.xSize / 2;
         int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
-        int textY = (int) ((this.guiTop + 6)/scale);
+        int textY = (int) ((this.guiTop + 6) / scale);
 
 
         this.fontRenderer.drawString(name, textX, textY, 4210752);
@@ -127,10 +127,10 @@ public class GuiSolarGeneratorEnergy extends GuiIU<ContainerSolarGeneratorEnergy
 
         int centerX = this.guiLeft + this.xSize / 2;
         int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
-        int textY = (int) ((this.guiTop + 6)/scale);
+        int textY = (int) ((this.guiTop + 6) / scale);
 
 
-        this.fontRenderer.drawString(name, textX, textY, ModUtils.convertRGBcolorToInt(42,42,42));
+        this.fontRenderer.drawString(name, textX, textY, ModUtils.convertRGBcolorToInt(42, 42, 42));
 
 
         GlStateManager.popMatrix();

@@ -61,12 +61,13 @@ public class GuiSteamAmpereGenerator extends GuiIU<ContainerSteamAmpereGenerator
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-       handleUpgradeTooltip(par1, par2);
+        handleUpgradeTooltip(par1, par2);
 
     }
 

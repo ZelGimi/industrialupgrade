@@ -162,7 +162,7 @@ public class BlockClassicOre extends BlockCore implements IModelRegister {
     @Override
     public IBlockState getStateFromMeta(final int meta) {
         boolean property = meta == 3;
-        return getDefaultState().withProperty(BOOL_PROPERTY,property).withProperty(VARIANT, Type.values()[meta]);
+        return getDefaultState().withProperty(BOOL_PROPERTY, property).withProperty(VARIANT, Type.values()[meta]);
     }
 
     public int getMetaFromState(IBlockState state) {
@@ -176,6 +176,7 @@ public class BlockClassicOre extends BlockCore implements IModelRegister {
     public int getLightValue(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
         return state.getValue(VARIANT).getLight();
     }
+
     @Override
     public void getDrops(
             @Nonnull final NonNullList<ItemStack> drops,
@@ -188,12 +189,12 @@ public class BlockClassicOre extends BlockCore implements IModelRegister {
         final int meta = this.getMetaFromState(state);
         if (meta == 0) {
             drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), 16));
-        }else if (meta == 1) {
+        } else if (meta == 1) {
             drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), 20));
-        }else if (meta == 2) {
+        } else if (meta == 2) {
             drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), 19));
-        }else if (meta == 3) {
-            super.getDrops(drops,world,pos,state,fortune);
+        } else if (meta == 3) {
+            super.getDrops(drops, world, pos, state, fortune);
         }
         return;
     }
@@ -211,6 +212,7 @@ public class BlockClassicOre extends BlockCore implements IModelRegister {
                 return WorldBaseGen.random.nextDouble() < 0.75 ? 1 : 0;
         }
     }
+
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         for (int i = 0; i < (Type.values()).length; i++) {

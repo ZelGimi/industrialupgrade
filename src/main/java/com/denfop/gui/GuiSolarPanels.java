@@ -4,21 +4,13 @@ import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerSolarPanels;
-import com.denfop.network.packet.PacketItemStackEvent;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,7 +33,7 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
         this.xSize = 198;
         this.ySize = 232;
         this.componentList.add(new GuiComponent(this, 63, 96, 18, 18,
-                new Component<>(new ComponentButton(tileentity, 1000, ""){
+                new Component<>(new ComponentButton(tileentity, 1000, "") {
                     @Override
                     public void ClickEvent() {
                         super.ClickEvent();
@@ -64,7 +56,10 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
 
         String storageString = Localization.translate("gui.SuperSolarPanel.storage") + ": ";
 
-        new AdvArea(this, 63, 97, 80, 113).withTooltip(Localization.translate("iu.panel_upgrade.info0")).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 63, 97, 80, 113).withTooltip(Localization.translate("iu.panel_upgrade.info0")).drawForeground(
+                mouseX,
+                mouseY
+        );
 
 
         String ModulesString6 = Localization.translate("iu.moduletype1");
@@ -82,11 +77,6 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
         String Time7 = Localization.translate("iu.time4");
         String maxstorage_1 = ModUtils.getString(this.tileentity.maxStorage);
         String maxstorage_2 = ModUtils.getString(this.tileentity.storage);
-
-
-
-
-
 
 
         String tooltip = storageString + maxstorage_2 + "/" + maxstorage_1;
@@ -117,10 +107,7 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
         }
 
 
-
-
         String temptime = Localization.translate("pollutionpnale");
-
 
 
         switch (this.tileentity.timer.getIndexWork()) {
@@ -163,6 +150,7 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
             this.drawTooltip(mouseX, mouseY, text);
         }
     }
+
     private void handleUpgradeTooltip1(int mouseX, int mouseY) {
         if (mouseX >= 57 && mouseX <= 86 && mouseY >= 81 && mouseY <= 94) {
             List<String> text = new LinkedList<>();

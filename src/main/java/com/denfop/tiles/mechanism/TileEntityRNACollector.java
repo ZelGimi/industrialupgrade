@@ -4,7 +4,17 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseFluidMachineRecipe;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.FluidHandlerRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InputFluid;
+import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -90,7 +100,7 @@ public class TileEntityRNACollector extends TileElectricMachine implements
         this.fluidSlot2 = new InvSlotFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
         this.fluidSlot2.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION,this,1000));
+        this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 1000));
 
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
@@ -105,8 +115,10 @@ public class TileEntityRNACollector extends TileElectricMachine implements
                         new RecipeOutput(null, container)
                 )
         );
-        Recipes.recipes.getRecipeFluid().addRecipe("rna_collector", new BaseFluidMachineRecipe(new InputFluid(container,
-                fluidStack), Collections.singletonList(
+        Recipes.recipes.getRecipeFluid().addRecipe("rna_collector", new BaseFluidMachineRecipe(new InputFluid(
+                container,
+                fluidStack
+        ), Collections.singletonList(
                 outputfluidStack)));
 
     }
@@ -138,7 +150,8 @@ public class TileEntityRNACollector extends TileElectricMachine implements
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.larva),
+        addRecipe(
+                new ItemStack(IUItem.larva),
                 new FluidStack(FluidName.fluidethanol.getInstance(), 250),
                 new FluidStack(FluidName.fluidbeerna.getInstance()
                         , 250)
@@ -150,7 +163,6 @@ public class TileEntityRNACollector extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidcroprna.getInstance()
                         , 250)
         );
-
 
 
     }
@@ -268,7 +280,8 @@ public class TileEntityRNACollector extends TileElectricMachine implements
         }
 
 
-        if (this.output != null&& this.rad.getEnergy() >= 50 && !this.inputSlotA.isEmpty() && this.inputSlotA.continue_process(this.output) && this.fluid_handler.output() != null && fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.energy.canUseEnergy(
+        if (this.output != null && this.rad.getEnergy() >= 50 && !this.inputSlotA.isEmpty() && this.inputSlotA.continue_process(
+                this.output) && this.fluid_handler.output() != null && fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.energy.canUseEnergy(
                 energyConsume)) {
             if (!this.getActive()) {
                 setActive(true);

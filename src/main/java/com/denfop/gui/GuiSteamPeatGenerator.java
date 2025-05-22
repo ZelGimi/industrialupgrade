@@ -54,6 +54,7 @@ public class GuiSteamPeatGenerator extends GuiIU<ContainerSteamPeatGenerator> {
 
         handleUpgradeTooltip(par1, par2);
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
             List<String> text = new ArrayList<>();
@@ -69,9 +70,10 @@ public class GuiSteamPeatGenerator extends GuiIU<ContainerSteamPeatGenerator> {
                 text.add(itemstack);
             }
 
-            this.drawTooltip(mouseX-60, mouseY, text);
+            this.drawTooltip(mouseX - 60, mouseY, text);
         }
     }
+
     @Override
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisteam_machine.png");

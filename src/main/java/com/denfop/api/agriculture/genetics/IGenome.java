@@ -16,4 +16,5 @@ public interface IGenome {
     Genome copy();
 
     NBTTagCompound writeNBT(NBTTagCompound nbtTagCompound);
+
 }

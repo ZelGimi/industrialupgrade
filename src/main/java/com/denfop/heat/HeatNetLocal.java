@@ -1,13 +1,6 @@
 package com.denfop.heat;
 
-import com.denfop.api.cool.CoolTick;
-import com.denfop.api.cool.ICoolAcceptor;
 import com.denfop.api.cool.ICoolConductor;
-import com.denfop.api.cool.ICoolEmitter;
-import com.denfop.api.cool.ICoolSink;
-import com.denfop.api.cool.ICoolSource;
-import com.denfop.api.cool.ICoolTile;
-import com.denfop.api.energy.SystemTick;
 import com.denfop.api.heat.HeatTick;
 import com.denfop.api.heat.HeatTickList;
 import com.denfop.api.heat.IHeatAcceptor;
@@ -18,7 +11,6 @@ import com.denfop.api.heat.IHeatSource;
 import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.InfoCable;
 import com.denfop.api.heat.Path;
-import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.tileentity.TileEntity;
@@ -37,8 +29,8 @@ public class HeatNetLocal {
 
 
     final HeatTickList<HeatTick<IHeatSource, Path>> senderPath = new HeatTickList<>();
-    List<IHeatSource> sourceToUpdateList = new ArrayList<>();
     private final Map<BlockPos, IHeatTile> chunkCoordinatesIHeatTileMap;
+    List<IHeatSource> sourceToUpdateList = new ArrayList<>();
 
     HeatNetLocal() {
         this.chunkCoordinatesIHeatTileMap = new HashMap<>();
@@ -110,7 +102,7 @@ public class HeatNetLocal {
             return;
         }
         this.chunkCoordinatesIHeatTileMap.put(coords, tile);
-        this.updateAdd(coords,tile);
+        this.updateAdd(coords, tile);
         if (tile instanceof IHeatAcceptor) {
             this.onTileEntityAdded((IHeatAcceptor) tile);
         }
@@ -119,6 +111,7 @@ public class HeatNetLocal {
 
         }
     }
+
     public void onTileEntityAdded(final IHeatAcceptor tile) {
         final LinkedList<IHeatTile> tileEntitiesToCheck = new LinkedList<>();
         tileEntitiesToCheck.add(tile);
@@ -144,6 +137,7 @@ public class HeatNetLocal {
         }
         this.sourceToUpdateList = new ArrayList<>(sourceToUpdateList);
     }
+
     private void updateRemove(BlockPos pos, IHeatTile tile) {
         for (final EnumFacing dir : EnumFacing.values()) {
             BlockPos pos1 = pos
@@ -155,6 +149,7 @@ public class HeatNetLocal {
 
         }
     }
+
     public void removeTile(IHeatTile tile1) {
 
         this.removeTileEntity(tile1);
@@ -233,8 +228,10 @@ public class HeatNetLocal {
         return tile.getTile();
     }
 
-    public Tuple<List<Path>,LinkedList<IHeatConductor>> discover(final IHeatSource emitter,
-                                                                 final HeatTick<IHeatSource, Path> tick) {
+    public Tuple<List<Path>, LinkedList<IHeatConductor>> discover(
+            final IHeatSource emitter,
+            final HeatTick<IHeatSource, Path> tick
+    ) {
         final LinkedList<IHeatTile> tileEntitiesToCheck = new LinkedList<>();
         List<Path> energyPaths = new LinkedList<>();
         long id = WorldBaseGen.random.nextLong();
@@ -282,7 +279,7 @@ public class HeatNetLocal {
 
                 final IHeatConductor energyConductor = cable.getConductor();
                 energyPath.conductors.add(energyConductor);
-                if (energyConductor.getHashCodeSource() != id1){
+                if (energyConductor.getHashCodeSource() != id1) {
                     energyConductor.setHashCodeSource(id1);
                     set.add(energyConductor);
                     if (energyConductor.getConductorBreakdownHeat() - 1 < energyPath.getMin()) {
@@ -296,9 +293,8 @@ public class HeatNetLocal {
             }
 
         }
-        return new Tuple<>(energyPaths,set);
+        return new Tuple<>(energyPaths, set);
     }
-
 
 
     public List<InfoTile<IHeatTile>> getValidReceivers(final IHeatTile emitter) {
@@ -408,10 +404,6 @@ public class HeatNetLocal {
     }
 
 
-
-
-
-
     public void remove1(final IHeatSource par1) {
 
         for (HeatTick<IHeatSource, Path> ticks : this.senderPath) {
@@ -437,12 +429,11 @@ public class HeatNetLocal {
     }
 
 
-
     public void removeAll(final List<HeatTick<IHeatSource, Path>> par1) {
         if (par1 == null) {
             return;
         }
-        for (HeatTick<IHeatSource,Path> iHeatSource : par1) {
+        for (HeatTick<IHeatSource, Path> iHeatSource : par1) {
             if (iHeatSource.getList() != null) {
                 for (Path path : iHeatSource.getList()) {
                     path.target.getEnergyTickList().remove(iHeatSource.getSource());
@@ -477,13 +468,10 @@ public class HeatNetLocal {
     }
 
 
-
     public void onUnload() {
         this.senderPath.clear();
         this.chunkCoordinatesIHeatTileMap.clear();
     }
-
-
 
 
 }
