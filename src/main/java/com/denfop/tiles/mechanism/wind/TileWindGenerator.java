@@ -2,7 +2,6 @@ package com.denfop.tiles.mechanism.wind;
 
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.EnergyNetLocal;
 import com.denfop.api.gui.IType;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;

@@ -1,23 +1,28 @@
 package com.denfop.blocks;
 
 import com.denfop.DataBlock;
+import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
+import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Locale;
 
 public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
@@ -28,7 +33,17 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
         BlockTagsProvider.list.add(this);
 
     }
+    @Override
+    public List<ItemStack> getDrops(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, int fortune) {
+        if (this.getElement().getId() != 10)
+            return super.getDrops(world, pos, state, fortune);
+        else {
+            RandomSource rand = world.random;
 
+            int count = rand.nextInt(3) + 1;
+            return List.of(new ItemStack(IUItem.peat_balls.getItem(), count));
+        }
+    }
     @Override
     int getMetaFromState(BlockState state) {
         return getElement().getId();

@@ -27,6 +27,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.common.IPlantable;
 
 import java.util.*;
 
@@ -660,7 +661,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
             if (isCoralOrCoralBlock(state) || isWaterPlant(state)) {
                 return false;
             }
-            if (state.getMaterial() == Material.AIR || state.getMaterial() == Material.REPLACEABLE_PLANT || state.getBlock() == Blocks.TALL_GRASS || state.getBlock() == Blocks.LARGE_FERN || state.getBlock() == Blocks.ROSE_BUSH) {
+            if ((state.isAir() || state.canBeReplaced(Fluids.EMPTY)) && (!(state.getBlock() instanceof IPlantable))) {
                 return true;
             }
             return state.getMaterial().isLiquid() && upState.getMaterial().isLiquid();

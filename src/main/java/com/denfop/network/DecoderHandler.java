@@ -7,7 +7,6 @@ import com.denfop.api.vein.Vein;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
-import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.math.Vector3d;

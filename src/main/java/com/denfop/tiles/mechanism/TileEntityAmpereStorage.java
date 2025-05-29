@@ -31,7 +31,7 @@ public class TileEntityAmpereStorage extends TileElectricMachine implements IUpd
     public final ComponentBaseEnergy pressure;
 
     public TileEntityAmpereStorage(BlockPos pos, BlockState state) {
-        super(0, 0, 1,BlockBaseMachine3.ampere_generator,pos,state);
+        super(0, 0, 1,BlockBaseMachine3.ampere_storage,pos,state);
 
         this.pressure = this.addComponent((new ComponentBaseEnergy(EnergyType.AMPERE, this, 100000,
 

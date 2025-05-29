@@ -78,8 +78,7 @@ public class GuiSimulationReactors<T extends ContainerSimulationReactors> extend
                     @Override
                     public void ClickEvent() {
                         new PacketUpdateServerTile(this.getEntityBlock(), 0);
-                        ((TileEntitySimulatorReactor) this.getEntityBlock()).updateTileServer(Minecraft.getInstance().player, 0);
-                    }
+                     }
 
                     @Override
                     public boolean active() {

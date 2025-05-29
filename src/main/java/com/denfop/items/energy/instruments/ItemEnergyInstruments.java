@@ -25,6 +25,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -47,6 +48,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -1094,7 +1096,8 @@ public class ItemEnergyInstruments extends Item implements IEnergyItem, IItemSta
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        switch (mop.getDirection().ordinal()) {
+        Direction direction = getPlayerPOVHitResult(world,player, ClipContext.Fluid.NONE).getDirection();
+        switch (direction.ordinal()) {
 
             case 0:
             case 1:

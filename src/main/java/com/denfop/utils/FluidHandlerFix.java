@@ -2,7 +2,6 @@ package com.denfop.utils;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class FluidHandlerFix {

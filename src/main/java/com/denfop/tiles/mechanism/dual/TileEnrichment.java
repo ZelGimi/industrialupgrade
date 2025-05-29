@@ -120,7 +120,7 @@ public class TileEnrichment extends TileDoubleElectricMachine implements IHasRec
         addenrichment(
                 new ItemStack(IUItem.toriy.getItem()),
                 new ItemStack(Items.GLOWSTONE_DUST),
-                new ItemStack(IUItem.radiationresources.getItemFromMeta(4), 14), 25
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(4), 1), 25
         );
         addenrichment(
                 new ItemStack(IUItem.preciousgem.getItemFromMeta(1), 4),

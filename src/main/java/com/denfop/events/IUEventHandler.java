@@ -61,7 +61,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.LevelEntityGetter;
@@ -402,8 +401,7 @@ public class IUEventHandler {
                     if (itemEntity.isRemoved()) {
                         continue;
                     }
-                    BlockPos pos = new BlockPos(itemEntity.getX(),itemEntity.getY(),itemEntity.getZ());
-                    if (world.getBlockState(pos).getBlock() == Blocks.WATER) {
+                   if (   itemEntity.isInWater()) {
                         ItemEntity entityItem = (checkAndTransform(world, itemEntity));
                         if (entityItem != null) {
                             world.addFreshEntity(entityItem);

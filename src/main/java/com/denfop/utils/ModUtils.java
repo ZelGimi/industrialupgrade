@@ -6,6 +6,7 @@ import com.denfop.Localization;
 import com.denfop.api.radiationsystem.EnumCoefficient;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.invslot.InvSlot;
+import com.denfop.items.ItemFluidCell;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
@@ -29,10 +30,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
@@ -1378,7 +1376,8 @@ public class ModUtils {
         Preconditions.checkNotNull(handler);
 
         ItemStack heldItem = player.getItemInHand(hand);
-        if (!heldItem.isEmpty()) {
+        if (!heldItem.isEmpty() && (heldItem.getItem() instanceof ItemFluidCell || heldItem.getItem() instanceof BucketItem)) {
+
             IItemHandler playerInventory = player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(new InvWrapper(player.getInventory()));
             if (playerInventory != null) {
                 FluidActionResult fluidActionResult = tryFillContainerAndStow(heldItem, handler, playerInventory,

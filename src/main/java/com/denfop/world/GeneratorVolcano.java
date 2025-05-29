@@ -340,8 +340,18 @@ public class GeneratorVolcano {
             if (basalts_ores == null) {
                 initBasaltsOres();
             }
-            final int height = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, position2.getX(), position2.getZ());
-            this.position = new BlockPos(position2.getX(), height - maxbaseHeight + 10, position2.getZ());
+
+            BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), world.getMaxBuildHeight(), position2.getZ());
+            while (checkPos.getY() > world.getMinBuildHeight()) {
+                checkPos.move(0, -1, 0);
+                BlockState state = world.getBlockState(checkPos);
+                if (!state.isAir() && !state.getMaterial().isLiquid()) {
+                    break;
+                }
+            }
+            this.position = checkPos.above(maxbaseHeight / 2);
+            if (position.getY() > 60)
+                position = position.below(position.getY()-60);
             this.y = 0;
             this.end = false;
         }

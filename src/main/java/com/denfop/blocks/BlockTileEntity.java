@@ -134,6 +134,8 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         }).noOcclusion().sound(value.getMaterial() == Material.WOOL ? SoundType.WOOL : SoundType.STONE);
         if (value.getMaterial() == Material.PLANT)
             prop = prop.noCollission();
+        if (value.getMaterial() == CABLE)
+            prop = prop.explosionResistance(300);
         if (value.getHarvestTool() != HarvestTool.None)
             prop = prop.requiresCorrectToolForDrops();
         BlockTileEntity<T> ret = new BlockTileEntity<>(prop,value, identifier, infoAboutTile);
@@ -553,6 +555,8 @@ public class BlockTileEntity<T extends Enum<T> & IMultiTileBlock> extends Block 
         TileEntityBlock te = getTe(level, blockPos);
         if (te != null && blockState2.getBlock() != blockState.getBlock()) {
             te.onBlockBreak(false);
+            te.onUnloaded();
+            level.removeBlock(te.getPos(), false);
         }
 
         super.onRemove(blockState, level, blockPos, blockState2, b);

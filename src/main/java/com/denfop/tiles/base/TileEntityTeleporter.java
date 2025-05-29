@@ -3,6 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.network.DecoderHandler;
@@ -15,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -72,7 +74,10 @@ public class TileEntityTeleporter extends TileElectricMachine {
         }
 
     }
-
+    @Override
+    public SoundEvent getSound() {
+        return EnumSound.teleporter.getSoundEvent();
+    }
     public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
         if (this.target != null) {

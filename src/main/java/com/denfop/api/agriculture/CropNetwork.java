@@ -139,7 +139,7 @@ public class CropNetwork {
         if ((radLevel == null || radLevel.getLevel().ordinal() <= crop.getRadiationRequirements().ordinal()) && isWaterNearby(world
             , pos,
                 crop)) {
-            int light = chunk.getLightEmission(pos);
+            int light = (int) (world.getRawBrightness(pos, 0));
             if (light >= crop.getLightLevel()) {
                 final ChunkLevel air = PollutionManager.pollutionManager.getChunkLevelAir(chunkPos);
                 if ((air == null || air.getLevelPollution().ordinal() <= crop
@@ -165,7 +165,7 @@ public class CropNetwork {
             final ChunkAccess chunk, Biome biome, final ChunkLevel chunkLevel
     ) {
         if (radLevel.getLevel().ordinal() <= crop.getRadiationRequirements().ordinal()) {
-            int light = chunk.getLightEmission(pos);
+            int light = (int) (world.getRawBrightness(pos, 0));
             if (light >= crop.getLightLevel()) {
                 final ChunkLevel air = PollutionManager.pollutionManager.getChunkLevelAir(chunkPos);
                 if ((air == null || air.getLevelPollution().ordinal() <= crop

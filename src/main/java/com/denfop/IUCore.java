@@ -693,6 +693,18 @@ public class IUCore {
                         )
                 );
             }
+            final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+            for (int i = 0; i < 8; i++) {
+                Recipes.recipes.addRecipe(
+                        "matter",
+                        new BaseMachineRecipe(
+                                new Input(
+                                        input.getInput(new ItemStack(IUItem.matter.getStack(i), 1))
+                                ),
+                                new RecipeOutput(null, new ItemStack(IUItem.matter.getStack(i), 1))
+                        )
+                );
+            }
             if (!change) {
                 change = true;
                 removeOre("forge:gems/Iridium");

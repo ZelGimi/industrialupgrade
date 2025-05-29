@@ -52,7 +52,7 @@ public class GenDieselHandler {
 
     public static void initRecipes() {
 
-        addRecipe(1060000, new FluidStack(FluidName.fluiddizel.getInstance().get(), 1000));
+        addRecipe(100000, new FluidStack(FluidName.fluiddizel.getInstance().get(), 1000));
         addRecipe(200000, new FluidStack(FluidName.fluida_diesel.getInstance().get(), 1000));
         addRecipe(400000, new FluidStack(FluidName.fluidaa_diesel.getInstance().get(), 1000));
         addRecipe(800000, new FluidStack(FluidName.fluidaaa_diesel.getInstance().get(), 1000));

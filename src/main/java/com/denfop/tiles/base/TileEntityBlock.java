@@ -18,7 +18,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.network.packet.PacketUpdateTile;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileExtractor;
 import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;

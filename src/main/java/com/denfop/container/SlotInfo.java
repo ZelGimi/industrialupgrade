@@ -5,12 +5,8 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;

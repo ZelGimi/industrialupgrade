@@ -40,8 +40,9 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.Queue;
+import java.util.*;
 
 public abstract class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends AbstractContainerScreen<T> implements MenuAccess<T> {
     public static final int textHeight = 8;

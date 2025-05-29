@@ -16,7 +16,6 @@ import com.denfop.container.ContainerBaseGenerationChipMachine;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGenerationMicrochip;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.resource.ItemIngots;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileBaseGenerationMicrochip;

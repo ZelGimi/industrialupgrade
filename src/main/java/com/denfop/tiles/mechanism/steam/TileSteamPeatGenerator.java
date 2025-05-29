@@ -156,7 +156,7 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
         if (fuel > 0 &&
                 !this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
             this.steam.addEnergy(2);
-            this.fluidTank.drain(2, IFluidHandler.FluidAction.EXECUTE);
+            this.fluidTank.drain(1, IFluidHandler.FluidAction.EXECUTE);
             this.setActive(true);
             fuel = Math.max(0, this.fuel - 1);
         } else {

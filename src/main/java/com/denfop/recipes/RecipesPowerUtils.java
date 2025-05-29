@@ -15,10 +15,10 @@ public class RecipesPowerUtils {
 
                 Character.valueOf('B'), new ItemStack(IUItem.tranformer.getItem(8), 1),
 
-                Character.valueOf('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
+                Character.valueOf('C'), ItemStackHelper.fromData(IUItem.basecircuit, 1,3),
 
                 Character.valueOf('D'),
-                new ItemStack(IUItem.electricblock.getItem(3), 1)});
+                new ItemStack(IUItem.electricblock.getItem(5), 1)});
              Recipes.recipe.addRecipe(ItemStackHelper.fromData(PowerUtils.module_fe), new Object[]{
                 "ABA", "CDC", "ABA",
 

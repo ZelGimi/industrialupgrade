@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static com.denfop.render.base.RenderType.LEASH;
 import static com.denfop.render.base.RenderType.LEASH_TRANSPARENT;
 
 public class TileEntityShield extends TileEntityInventory implements IUpdatableTileEvent {

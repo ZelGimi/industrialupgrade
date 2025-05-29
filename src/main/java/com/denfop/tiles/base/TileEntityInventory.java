@@ -160,6 +160,8 @@ public class TileEntityInventory extends TileEntityBlock implements IAdvInventor
     }
 
     private void openContainer(Player player) {
+        if (player.getLevel().isClientSide)
+            return;
         if (getGuiContainer(player) != null) {
             CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
 

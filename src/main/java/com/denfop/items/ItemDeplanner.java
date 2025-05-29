@@ -2,6 +2,7 @@ package com.denfop.items;
 
 import com.denfop.IUCore;
 import com.denfop.api.multiblock.IMainMultiBlock;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -79,7 +80,8 @@ public class ItemDeplanner extends Item {
                                 new BlockPos(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
                         default -> throw new IllegalStateException("Unexpected value: ");
                     };
-                    itemStackList.add(entry.getValue().copy());
+                    TileEntityBlock block = (TileEntityBlock) world.getBlockEntity(pos.offset(pos1));
+                    itemStackList.add(block.getPickBlock(null,null));
                     world.removeBlockEntity(pos.offset(pos1));
                     world.setBlock(pos.offset(pos1), Blocks.AIR.defaultBlockState(), 3);
 

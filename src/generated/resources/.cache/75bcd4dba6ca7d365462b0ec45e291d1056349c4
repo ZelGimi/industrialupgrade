@@ -1,11 +1,11 @@
-// 1.19.2	2025-05-17T20:15:55.9805568	Tags for minecraft:block
+// 1.19.2	2025-05-27T11:09:04.5434644	Tags for minecraft:block
 96fd12e961bf7ff91171fb82b7b17db4bb1cd658 data/forge/tags/blocks/needs_wood_tool.json
 b229d6a576e35b6d4980624c31fefcae59c1a8fc data/minecraft/tags/blocks/leaves.json
 a93bea601367478d3c3facfdba1b082f6bdc1530 data/minecraft/tags/blocks/logs.json
 6731b6e3c801ad068e2c2671654ffb05ee5ca57d data/minecraft/tags/blocks/mineable/axe.json
 8d62f7adf0be1e53d2d2821edac1d88ecb9dffd7 data/minecraft/tags/blocks/mineable/pickaxe.json
 7d3763966f01722171e0cf7899f5b854001cc709 data/minecraft/tags/blocks/mineable/shovel.json
-82f518b1ab1fc12feeb8d1bbd099d382e7e18dd1 data/minecraft/tags/blocks/mineable/wrench.json
+32639e9bacdc928c0412be316b7eecc58c86243f data/minecraft/tags/blocks/mineable/wrench.json
 b13c0dd6fa39b2df6a8715cbdf25fc2cfc2e6161 data/minecraft/tags/blocks/needs_iron_tool.json
-2a5b67141d78ebb68c72e90088f56ff334062091 data/minecraft/tags/blocks/needs_stone_tool.json
+b1015e21291994cc13b635354ecef7c2faaad065 data/minecraft/tags/blocks/needs_stone_tool.json
 a6d83cd31fcb47cc3ea38155fa4a855a7c23b27c data/minecraft/tags/blocks/saplings.json

@@ -26,6 +26,7 @@ import com.denfop.invslot.*;
 import com.denfop.utils.Keyboard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -61,7 +62,7 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
     private final Fluids fluids;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
-    private int level;
+    private int levelMech;
 
     public TileElectrolyzer(BlockPos pos, BlockState state) {
         super(24000, 1, 2, BlockBaseMachine2.electrolyzer_iu, pos, state);
@@ -89,7 +90,18 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
+    @Override
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
+        CompoundTag compoundTag =  super.writeToNBT(nbttagcompound);
+        compoundTag.putInt("levelMech",levelMech);
+        return compoundTag;
+    }
 
+    @Override
+    public void readFromNBT(CompoundTag nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        levelMech = nbttagcompound.getInt("levelMech");
+    }
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
@@ -234,7 +246,7 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
                 final BaseFluidMachineRecipe output = this.fluid_handler.output();
                 final FluidStack inputFluidStack = output.input.getInputs().get(0);
                 int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.getAmount();
-                size = Math.min(this.level + 1, size);
+                size = Math.min(this.levelMech + 1, size);
                 int cap = this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount();
                 FluidStack outputFluidStack = output.output_fluid.get(0);
                 cap /= outputFluidStack.getAmount();
@@ -327,13 +339,13 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
             final Direction side,
             final Vec3 hitX
     ) {
-        if (level < 10) {
+        if (levelMech < 10) {
             ItemStack stack = player.getItemInHand(hand);
             if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
                 return super.onActivated(player, hand, side, hitX);
             } else {
                 stack.shrink(1);
-                this.level++;
+                this.levelMech++;
                 return true;
             }
         } else {
@@ -343,17 +355,17 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
 
     @Override
     public int getLevelMechanism() {
-        return this.level;
+        return this.levelMech;
     }
 
     @Override
     public void setLevelMech(final int levelMech) {
-        this.level = levelMech;
+        this.levelMech = levelMech;
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.levelMech -= level;
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

@@ -179,7 +179,7 @@ public class ItemFluidCell extends ItemFluidContainer {
             boolean flag1 = iblockstate.getMaterial().isReplaceable();
             if (material.isLiquid())
                 return false;
-            if (iblockstate.isAir() && !flag1) {
+            if (!iblockstate.isAir() && !flag1) {
                 return false;
             } else {
                 if (worldIn.dimension() == Level.NETHER && containedBlock == Blocks.WATER) {

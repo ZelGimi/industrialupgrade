@@ -654,11 +654,11 @@ public class JEICompat implements IModPlugin {
         );
 
         registry.addRecipeCatalyst(
-                ItemStackHelper.fromData(IUItem.sunnariummaker, 1, 0),
+                ItemStackHelper.fromData(IUItem.sunnariumpanelmaker, 1, 0),
                 sunnarium.recipeType
         );
         registry.addRecipeCatalyst(
-                ItemStackHelper.fromData(IUItem.sunnariumpanelmaker, 1, 0),
+                ItemStackHelper.fromData(IUItem.sunnariummaker, 1, 0),
                 sunnarium_panel.recipeType
         );
         registry.addRecipeCatalyst(

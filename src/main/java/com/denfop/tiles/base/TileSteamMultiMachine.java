@@ -9,10 +9,7 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
-import com.denfop.componets.ComponentSteamEnergy;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.PressureComponent;
-import com.denfop.componets.SteamProcessMultiComponent;
+import com.denfop.componets.*;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamMultiMachine;
 import com.denfop.gui.GuiCore;
@@ -209,7 +206,10 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand)) && fluid != null) {
-
+            for (AbstractComponent component : componentList) {
+                if (component.onBlockActivated(player, hand))
+                    return true;
+            }
             return ModUtils.interactWithFluidHandler(player, hand,
                     fluid.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );

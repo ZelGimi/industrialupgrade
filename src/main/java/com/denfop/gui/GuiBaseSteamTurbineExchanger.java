@@ -18,7 +18,7 @@ public class GuiBaseSteamTurbineExchanger<T extends ContainerBaseSteamTurbineExc
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/пгшьфсршту.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }
