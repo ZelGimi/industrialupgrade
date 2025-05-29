@@ -1,12 +1,13 @@
 package com.denfop.network.packet;
 
-import net.minecraft.entity.player.EntityPlayer;
+
+import net.minecraft.world.entity.player.Player;
 
 public interface IPacket {
 
     byte getId();
 
-    void readPacket(CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer);
+    void readPacket(CustomPacketBuffer customPacketBuffer, final Player entityPlayer);
 
     EnumTypePacket getPacketType();
 

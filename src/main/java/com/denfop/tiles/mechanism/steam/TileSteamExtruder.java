@@ -9,18 +9,20 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileSteamMultiMachine;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileSteamExtruder extends TileSteamMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileSteamExtruder() {
+    public TileSteamExtruder(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.Extruding.usagePerTick,
                 EnumMultiMachine.Extruding.lenghtOperation,
-                4
+                4,BlockBaseMachine3.steam_extruder,pos,state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.125));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
@@ -31,7 +33,7 @@ public class TileSteamExtruder extends TileSteamMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override

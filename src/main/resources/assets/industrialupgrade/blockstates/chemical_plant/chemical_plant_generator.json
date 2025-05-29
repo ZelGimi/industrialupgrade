@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=chemical_plant_generator": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator"
+    },
+    "facing=south,type=chemical_plant_generator": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "y": 180
+    },
+    "facing=west,type=chemical_plant_generator": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "y": 270
+    },
+    "facing=east,type=chemical_plant_generator": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "y": 90
+    },
+    "facing=down,type=chemical_plant_generator": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "x": 90
+    },
+    "facing=up,type=chemical_plant_generator": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "x": 270
+    },
+    "facing=north,type=chemical_plant_generator_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator"
+    },
+    "facing=south,type=chemical_plant_generator_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "y": 180
+    },
+    "facing=west,type=chemical_plant_generator_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "y": 270
+    },
+    "facing=east,type=chemical_plant_generator_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "y": 90
+    },
+    "facing=down,type=chemical_plant_generator_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "x": 90
+    },
+    "facing=up,type=chemical_plant_generator_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_generator",
+      "x": 270
+    }
+  }
+}

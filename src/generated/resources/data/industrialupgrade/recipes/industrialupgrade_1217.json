@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/niobiumtitanium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/stainlesssteel"
+      }
+    ]
+  },
+  "pattern": [
+    " AB",
+    "ABB",
+    "AB "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_512_element"
+  },
+  "show_notification": true
+}

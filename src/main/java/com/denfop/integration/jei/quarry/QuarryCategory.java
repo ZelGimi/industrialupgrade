@@ -3,51 +3,55 @@ package com.denfop.integration.jei.quarry;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
+import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class QuarryCategory extends Gui implements IRecipeCategory<QuarryWrapper> {
+public class QuarryCategory extends GuiIU implements IRecipeCategory<QuarryHandler> {
 
     private final IDrawableStatic bg;
     private int energy = 0;
+    private final JeiInform jeiInform;
 
     public QuarryCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png"), 3, 3, 160,
                 80
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
+    }
+
+    @Override
+    public RecipeType<QuarryHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine.quantum_quarry.getName();
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.machines, 1, 8).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines, 1, 8).getUnlocalizedName());
-    }
-
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -55,28 +59,17 @@ public class QuarryCategory extends Gui implements IRecipeCategory<QuarryWrapper
         return bg;
     }
 
-
     @Override
-    public void drawExtras(final Minecraft mc) {
-
-
-        mc.getTextureManager().bindTexture(getTexture());
-
+    public void draw(QuarryHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
 
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final QuarryWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 7, 20);
-        isg.set(0, new ItemStack(IUItem.analyzermodule));
-        isg.init(1, false, 31, 11);
-        isg.set(1, recipes.getOutput());
+    public void setRecipe(IRecipeLayoutBuilder builder, QuarryHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,8,21).addItemStack(new ItemStack(IUItem.analyzermodule.getItem()));
+        builder.addSlot(RecipeIngredientRole.INPUT,32,12).addItemStack(recipe.getOutput());
     }
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png");

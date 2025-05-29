@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [128, 128],
 	"textures": {
-		"1": "industrialupgrade:models/water_mill",
-		"particle": "industrialupgrade:models/water_mill"
+		"1": "industrialupgrade:block/water_mill",
+		"particle": "industrialupgrade:block/water_mill"
 	},
 	"elements": [
 		{

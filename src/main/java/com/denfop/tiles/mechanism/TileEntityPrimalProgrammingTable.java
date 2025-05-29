@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
 import com.denfop.api.recipe.IHasRecipe;
@@ -12,23 +13,21 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockPrimalProgrammingTable;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPrimalProgrammingTable;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPrimalProgrammingTable;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,13 +52,13 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
     public MachineRecipe output;
     public boolean start;
     public int[] data;
-    public Map<UUID, Double> data1 = PrimitiveHandler.getPlayersData(EnumPrimitive.PCB);
+    public Map<UUID, Double> data1;
     private int RED_PERCENT = 35;
     private int GREEN_PERCENT = 80;
     private int YELLOW_PERCENT = 100 - RED_PERCENT - GREEN_PERCENT;
 
-    public TileEntityPrimalProgrammingTable() {
-        super(0, 0, 1);
+    public TileEntityPrimalProgrammingTable(BlockPos pos, BlockState state) {
+        super(0, 0, 1, BlockPrimalProgrammingTable.primal_programming_table, pos, state);
         this.output = null;
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300
@@ -75,28 +74,6 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
-        return super.hasCapability(capability, facing) && capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     private int[] generateColorStrip() {
         int[] data = new int[SIZE];
@@ -197,14 +174,13 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
         }
     }
 
-    public void updateTileServer(EntityPlayer var1, double var2) {
+    public void updateTileServer(Player var1, double var2) {
         if (start && var2 == 0) {
-            this.componentProgress.addProgress(0, (short) ((short) 60 * (1 + data1.getOrDefault(var1.getUniqueID(), 0.0) / 66D)));
+            this.componentProgress.addProgress(0, (short) ((short) 60 * (1 + data1.getOrDefault(var1.getUUID(), 0.0) / 66D)));
             if (componentProgress.getProgress(0) >= 300) {
                 componentProgress.setProgress((short) 300);
-                if (!this.getWorld().isRemote) {
-                    PrimitiveHandler.addExperience(EnumPrimitive.PCB, 0.75, var1.getUniqueID());
-                }
+                if (!this.getWorld().isClientSide)
+                    PrimitiveHandler.addExperience(EnumPrimitive.PCB, 0.75, var1.getUUID());
             }
             GREEN_PERCENT = (int) (80 * (1 - 0.75 * componentProgress.getBar()));
             RED_PERCENT = (int) (35 * (1 + 0.5 * componentProgress.getBar()));
@@ -219,9 +195,8 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
             this.data = generateColorStrip();
         } else if (start && var2 == 2) {
             this.componentProgress.setProgress(0, (short) 300);
-            if (!this.getWorld().isRemote) {
-                PrimitiveHandler.addExperience(EnumPrimitive.PCB, 0.5, var1.getUniqueID());
-            }
+            if (!this.getWorld().isClientSide)
+                PrimitiveHandler.addExperience(EnumPrimitive.PCB, 0.5, var1.getUUID());
         }
     }
 
@@ -229,9 +204,9 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
 
     public void onLoaded() {
         super.onLoaded();
-        data1 = PrimitiveHandler.getPlayersData(EnumPrimitive.PCB);
         inputSlotA.load();
         this.getOutput();
+        data1 = PrimitiveHandler.getPlayersData(EnumPrimitive.PCB);
     }
 
     public void onUnloaded() {
@@ -305,7 +280,7 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
         }
     }
 
-    public ContainerPrimalProgrammingTable getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPrimalProgrammingTable getGuiContainer(Player entityPlayer) {
         return new ContainerPrimalProgrammingTable(
                 entityPlayer, this);
     }
@@ -316,7 +291,7 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.programming_table;
+        return IUItem.programming_table.getBlock();
     }
 
     public void init() {
@@ -340,9 +315,9 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiPrimalProgrammingTable(new ContainerPrimalProgrammingTable(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiPrimalProgrammingTable((ContainerPrimalProgrammingTable) isAdmin);
     }
 
 

@@ -2,8 +2,8 @@
 	"credit": "Made with -frei",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/sintezator",
-		"particle": "industrialupgrade:models/sintezator"
+		"0": "industrialupgrade:block/sintezator",
+		"particle": "industrialupgrade:block/sintezator"
 	},
 	"elements": [
 		{

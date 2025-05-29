@@ -4,7 +4,7 @@ package com.denfop.integration.jei.smelteryfurnace;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -15,11 +15,17 @@ public class SmelteryFurnaceHandler {
     private static final List<SmelteryFurnaceHandler> recipes = new ArrayList<>();
     private final ItemStack input;
     private final FluidStack outputFluid;
+    private final BaseMachineRecipe container;
 
 
-    public SmelteryFurnaceHandler(ItemStack input, FluidStack outputFluid) {
+    public SmelteryFurnaceHandler(ItemStack input, FluidStack outputFluid, BaseMachineRecipe baseMachineRecipe) {
         this.input = input;
         this.outputFluid = outputFluid;
+        this.container  =baseMachineRecipe;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<SmelteryFurnaceHandler> getRecipes() {
@@ -56,15 +62,15 @@ public class SmelteryFurnaceHandler {
 
             addRecipe(
                     input,
-                    outputFluid
+                    outputFluid,baseMachineRecipe
             );
         }
 
 
     }
 
-    private static SmelteryFurnaceHandler addRecipe(ItemStack input, FluidStack outputFluid) {
-        SmelteryFurnaceHandler recipe = new SmelteryFurnaceHandler(input, outputFluid);
+    private static SmelteryFurnaceHandler addRecipe(ItemStack input, FluidStack outputFluid, BaseMachineRecipe baseMachineRecipe) {
+        SmelteryFurnaceHandler recipe = new SmelteryFurnaceHandler(input, outputFluid,baseMachineRecipe);
         if (recipes.contains(recipe)) {
             return null;
         }

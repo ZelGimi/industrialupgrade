@@ -1,8 +1,8 @@
 package com.denfop.api.windsystem;
 
 import com.denfop.api.item.IDamageItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public interface IWindRotor extends IDamageItem {
 

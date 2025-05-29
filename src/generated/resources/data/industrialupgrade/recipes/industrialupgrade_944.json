@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:reactormodules/generation1"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/cadmium"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    },
+    "D": [
+      {
+        "tag": "forge:plates/nickel"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "DED",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:reactormodules/generation2"
+  },
+  "show_notification": true
+}

@@ -3,7 +3,7 @@ package com.denfop.integration.jei.industrialorepurifier;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class IndustrialOrePurifierHandler {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("ore_purifier")) {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0), container.getOutput().metadata.getInteger("se")
+                    container.getOutput().items.get(0), container.getOutput().metadata.getInt("se")
             );
 
 
@@ -79,7 +79,7 @@ public class IndustrialOrePurifierHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

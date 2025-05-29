@@ -1,7 +1,7 @@
 package com.denfop.recipe;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 
 public interface IInputHandler {
 

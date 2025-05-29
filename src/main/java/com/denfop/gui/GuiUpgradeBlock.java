@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
@@ -13,19 +14,20 @@ import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.modules.ItemUpgradeModule;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
 import static com.denfop.events.IUEventHandler.getUpgradeItem;
 
-@SideOnly(Side.CLIENT)
-public class GuiUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> {
+@OnlyIn(Dist.CLIENT)
+public class GuiUpgradeBlock<T extends ContainerDoubleElectricMachine> extends GuiIU<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
@@ -41,20 +43,15 @@ public class GuiUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
 
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(getTexture());
         int progress = (int) (27 * this.container.base.getProgress());
         int progress1 = (int) (27 * this.container.base.getProgress());
-        final int xoffset = (this.width - this.xSize) / 2;
-        final int yoffset = (this.height - this.ySize) / 2;
+        final int xoffset = guiLeft;
+        final int yoffset = guiTop;
 
         ItemStack module = getUpgradeItem(this.container.base.inputSlotA.get(0))
                 ? this.container.base.inputSlotA.get(1)
@@ -64,7 +61,7 @@ public class GuiUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> {
                 : this.container.base.inputSlotA.get(1);
 
         boolean allow = true;
-        NBTTagCompound nbt1 = ModUtils.nbt(stack1);
+        CompoundTag nbt1 = ModUtils.nbt(stack1);
         BaseMachineRecipe output = Recipes.recipes.getRecipeOutput("upgradeblock",
                 false, this.container.base.inputSlotA.get(0),
                 this.container.base.inputSlotA.get(1)
@@ -77,7 +74,7 @@ public class GuiUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> {
                 allow = false;
             }
             if (module.getItem() instanceof ItemUpgradeModule) {
-                EnumInfoUpgradeModules type = ItemUpgradeModule.getType(module.getItemDamage());
+                EnumInfoUpgradeModules type = ItemUpgradeModule.getType(IUItem.upgrademodule.getMeta((ItemUpgradeModule) module.getItem()));
                 int min = 0;
                 final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack1);
                 for (int i = 0; i < 4 + list.size(); i++) {
@@ -90,23 +87,23 @@ public class GuiUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> {
                 }
                 if (allow) {
                     if (progress > 0) {
-                        drawTexturedModalRect(xoffset + 36, yoffset + 38, 180, 7, progress, 16);
+                        drawTexturedModalRect(poseStack, xoffset + 36, yoffset + 38, 180, 7, progress, 16);
                     }
                     if (progress1 > 0) {
-                        drawTexturedModalRect(xoffset + 81, yoffset + 38, 225, 7, progress1, 16);
+                        drawTexturedModalRect(poseStack, xoffset + 81, yoffset + 38, 225, 7, progress1, 16);
                     }
                 } else {
-                    drawTexturedModalRect(xoffset + 36, yoffset + 38, 180, 32, 27, 16);
-                    drawTexturedModalRect(xoffset + 81, yoffset + 38, 180, 48, 27, 16);
+                    drawTexturedModalRect(poseStack, xoffset + 36, yoffset + 38, 180, 32, 27, 16);
+                    drawTexturedModalRect(poseStack, xoffset + 81, yoffset + 38, 180, 48, 27, 16);
 
 
                 }
             } else {
                 if (progress > 0) {
-                    drawTexturedModalRect(xoffset + 36, yoffset + 38, 180, 7, progress, 16);
+                    drawTexturedModalRect(poseStack, xoffset + 36, yoffset + 38, 180, 7, progress, 16);
                 }
                 if (progress1 > 0) {
-                    drawTexturedModalRect(xoffset + 81, yoffset + 38, 225, 7, progress1, 16);
+                    drawTexturedModalRect(poseStack, xoffset + 81, yoffset + 38, 225, 7, progress1, 16);
                 }
             }
         }
@@ -114,7 +111,7 @@ public class GuiUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> {
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiUpgradeBlock.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiUpgradeBlock.png".toLowerCase());
     }
 
 }

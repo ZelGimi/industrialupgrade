@@ -4,15 +4,9 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.api.windsystem.EnumLevelGenerators;
-import com.denfop.api.windsystem.EnumRotorSide;
-import com.denfop.api.windsystem.EnumTypeWind;
-import com.denfop.api.windsystem.EnumWindSide;
-import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.api.windsystem.IWindRotor;
-import com.denfop.api.windsystem.InvSlotWindTurbineRotor;
-import com.denfop.api.windsystem.WindSystem;
+import com.denfop.api.windsystem.*;
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.windsystem.upgrade.IRotorUpgradeItem;
@@ -22,7 +16,9 @@ import com.denfop.api.windsystem.upgrade.event.EventRotorItemLoad;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockWindTurbine;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWindTurbine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWindTurbine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotTurbineRotorBlades;
@@ -38,31 +34,36 @@ import com.denfop.render.windgenerator.RotorModel;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.utils.DamageHandler;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.List;
 
 import static com.denfop.render.windgenerator.WindGeneratorRenderer.rotorModels;
+
 
 public class TileEntityWindTurbineController extends TileMultiBlockBase implements IWindMechanism, IType,
         IUpdatableTileEvent {
@@ -96,8 +97,8 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
     private int time;
     private boolean can_work = true;
 
-    public TileEntityWindTurbineController() {
-        super(InitMultiBlockSystem.WindTurbineMultiBlock);
+    public TileEntityWindTurbineController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.WindTurbineMultiBlock,BlockWindTurbine.wind_turbine_controller,pos,state);
         this.levelGenerators = EnumLevelGenerators.FOUR;
         this.slot = new InvSlotWindTurbineRotor(this);
         this.slot_blades = new InvSlotTurbineRotorBlades(this);
@@ -116,7 +117,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.windTurbine;
+        return IUItem.windTurbine.getBlock(getTeBlock());
     }
 
     @Override
@@ -125,7 +126,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         try {
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
             rotorSide = EnumRotorSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             generation = (double) DecoderHandler.decode(customPacketBuffer);
             timers = (int) DecoderHandler.decode(customPacketBuffer);
@@ -169,22 +170,21 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("coef", this.coefficient_power);
-        nbtTagCompound.setBoolean("work", this.work);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("coef", this.coefficient_power);
+        nbtTagCompound.putBoolean("work", this.work);
         return nbtTagCompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.coefficient_power = nbtTagCompound.getInteger("coef");
+        this.coefficient_power = nbtTagCompound.getInt("coef");
         this.work = nbtTagCompound.getBoolean("work");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.windturbine.info"));
@@ -192,46 +192,40 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
                 "wind.need_level1") + 14 + " " + Localization.translate("wind.need_level2"));
     }
 
-
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        ItemStack stack = player.getHeldItem(hand);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        ItemStack stack = player.getItemInHand(hand);
         if (this.getRotor() != null && stack.getItem() instanceof ItemWindRod) {
-            ItemStack rotor = this.slot.get();
-            if (((ItemWindRod) stack.getItem()).getLevel(this.getRotor().getLevel(), stack.getItemDamage())) {
+            ItemStack rotor = this.slot.get(0);
+            if (((ItemWindRod) stack.getItem()).getLevel(this.getRotor().getLevel(), ((ItemWindRod<?>) stack.getItem()).getElement().getId())) {
 
-                if (rotor.getItemDamage() >= rotor.getMaxDamage() * 0.25) {
+                if (rotor.getDamageValue() >= rotor.getMaxDamage() * 0.25) {
                     this.slot.damage((int) -(rotor.getMaxDamage() * 0.25), 0);
                     stack.shrink(1);
                     return true;
                 }
             }
         }
-
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(player, hand, side, vec3);
     }
+
+
 
     public boolean checkSpace() {
         int box = this.getRotorDiameter() / 2;
         if (box == 0) {
             return false;
         }
-        BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
+        Vector3f vec = this.getFacing().step();
+        BlockPos pos1 = pos.offset(new BlockPos((int) vec.x(), (int) vec.y(), (int) vec.z()));
         switch (this.getFacing().getAxis()) {
             case Y:
                 return false;
             case X:
                 for (int z = pos1.getZ() - box; z <= pos1.getZ() + box; z++) {
                     for (int y = pos1.getY() - box; y <= pos1.getY() + box; y++) {
-                        IBlockState state = this.world.getBlockState(new BlockPos(pos1.getX(), y, z));
-                        if (state.getMaterial() != Material.AIR) {
+                        BlockState state = this.level.getBlockState(new BlockPos(pos1.getX(), y, z));
+                        if (!state.isAir()) {
                             return false;
                         }
                     }
@@ -240,8 +234,8 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
             case Z:
                 for (int x = pos1.getX() - box; x <= pos1.getX() + box; x++) {
                     for (int y = pos1.getY() - box; y <= pos1.getY() + box; y++) {
-                        IBlockState state = this.world.getBlockState(new BlockPos(x, y, pos1.getZ()));
-                        if (state.getMaterial() != Material.AIR) {
+                        BlockState state = this.level.getBlockState(new BlockPos(x, y, pos1.getZ()));
+                        if (!state.isAir()) {
                             return false;
                         }
                     }
@@ -251,7 +245,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         return false;
     }
 
-    public boolean setFacingWrench(EnumFacing facing, EntityPlayer player) {
+    public boolean setFacingWrench(Direction facing, Player player) {
         boolean fac = super.setFacingWrench(facing, player);
         new PacketUpdateFieldTile(this, "facing", (byte) this.facing);
         return fac;
@@ -276,7 +270,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ISocket.class
                 );
-        this.energy = (ISocket) this.getWorld().getTileEntity(pos1.get(0));
+        this.energy = (ISocket) this.getWorld().getBlockEntity(pos1.get(0));
         if (this.getRotor() != null) {
             this.energy.getEnergy().setSourceTier(this.getRotor().getSourceTier());
         }
@@ -307,12 +301,12 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
 
     @Override
     public IWindRotor getRotor() {
-        return this.slot.isEmpty() ? null : (IWindRotor) this.slot.get().getItem();
+        return this.slot.isEmpty() ? null : (IWindRotor) this.slot.get(0).getItem();
     }
 
     @Override
     public ItemStack getItemStack() {
-        return this.slot.get();
+        return this.slot.get(0);
     }
 
     @Override
@@ -341,13 +335,13 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
 
         if (this.can_repair) {
             if (this.time != 0) {
-                if (this.world.provider.getWorldTime() % (this.time * 20L) == 0) {
+                if (this.level.getGameTime() % (this.time * 20L) == 0) {
                     this.slot.damage(-1, 0);
 
                 }
             }
         }
-        if (this.world.provider.getWorldTime() % 30 == 0) {
+        if (this.level.getGameTime() % 30 == 0) {
             if (this.getRotor() != null) {
                 space = checkSpace();
                 new PacketUpdateFieldTile(this, "space", this.space);
@@ -364,9 +358,9 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         if (this.tick >= 40) {
             this.tick = 40;
         }
-        if (space && (this.getRotor() != null && ((ItemDamage) this.slot
+        if (space && (this.getRotor() != null && this.slot
                 .get(0)
-                .getItem()).getCustomDamage(this.slot.get(0)) > 0)) {
+                .getItem().getDamage(this.slot.get(0)) <= this.slot.get(0).getMaxDamage())) {
             if (!this.getActive()) {
                 this.setActive(false);
             }
@@ -383,9 +377,9 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
             }
             this.wind_speed = WindSystem.windSystem.getWind_Strength();
             if (this.getMinWind() != 0) {
-                if (world.getWorldTime() % 40 == 0) {
+                if (level.getGameTime() % 40 == 0) {
                     generation = WindSystem.windSystem.getPowerFromWindRotor(
-                            this.world,
+                            this.level,
                             this.pos,
                             this,
                             this.getItemStack()
@@ -393,7 +387,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
                 }
             } else {
                 generation = WindSystem.windSystem.getPowerFromWindRotor(
-                        this.world,
+                        this.level,
                         this.pos,
                         this,
                         this.getItemStack()
@@ -402,7 +396,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
             this.energy.getEnergy().addEnergy(generation);
             this.energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
 
-            if (this.world.getWorldTime() % getDamageTimeFromWind() == 0) {
+            if (this.level.getGameTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
             }
         } else {
@@ -410,65 +404,70 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    protected void renderBlockRotor(IWindMechanism windGen, World world, BlockPos pos) {
-        int diameter = windGen.getRotorDiameter();
+    @OnlyIn(Dist.CLIENT)
+    protected void renderBlockRotor(IWindMechanism windGen, Level world, BlockPos pos, RenderLevelStageEvent event) {
+      int diameter = windGen.getRotorDiameter();
 
         if (diameter != 0) {
             float angle = windGen.getAngle();
             ResourceLocation rotorRL = windGen.getRotorRenderTexture();
-            ModelBase model = rotorModels.get(diameter);
+            rotorModels.clear();
+            EntityModel model = rotorModels.get(diameter);
             if (model == null) {
                 model = new RotorModel(diameter);
                 rotorModels.put(diameter, model);
             }
 
-            EnumFacing facing = windGen.getFacing();
-            pos = pos.offset(facing);
-            int light = world.getCombinedLight(pos, 0);
-            int blockLight = light % 65536;
-            int skyLight = light / 65536;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) blockLight, (float) skyLight);
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(0.5F, 0.5F, 0.5F);
-
+            Direction facing = windGen.getFacing();
+            pos = pos.offset(facing.getNormal());
+            PoseStack poseStack = event.getPoseStack();
+            poseStack.pushPose();
+            poseStack.translate(0.5F + facing.getStepX()* 0.35, 0.5F, 0.5F + facing.getStepZ() * 0.35);
             switch (facing) {
                 case NORTH:
-                    GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
                     break;
                 case EAST:
-                    GL11.glRotatef(-180.0F, 0.0F, 1.0F, 0.0F);
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-180.0F));
                     break;
                 case SOUTH:
-                    GL11.glRotatef(-270.0F, 0.0F, 1.0F, 0.0F);
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-270.0F));
                     break;
                 case UP:
-                    GL11.glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
+                    break;
             }
+
             if (windGen.getSpace()) {
-                if (!Minecraft.getMinecraft().isGamePaused()) {
-                    GlStateManager.rotate(angle, 1.0F, 0.0F, 0.0F);
+                if (!Minecraft.getInstance().isPaused()) {
+                    poseStack.mulPose(Axis.XP.rotationDegrees(angle));
                 }
             }
-            GlStateManager.translate(-0.2F, 0.0F, 0.0F);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(rotorRL);
-            model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-            GlStateManager.popMatrix();
+            poseStack.translate(-0.2F, 0.0F, 0.0F);
+             GuiCore.bindTexture(rotorRL);
+            VertexConsumer consumer =  Minecraft.getInstance()
+                    .renderBuffers()
+                    .bufferSource()
+                    .getBuffer(RenderType.entityCutout(rotorRL));
+            RenderSystem.setShaderColor(1,1,1,1);
+            int packedLight = event.getLevelRenderer().getLightColor(world, pos);
+            model.renderToBuffer(poseStack,consumer,packedLight, OverlayTexture.NO_OVERLAY,1,1,1,1);
+            poseStack.popPose();
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void render(
-            TileMultiBlockBase tileEntityMultiBlockBase
-    ) {
+            TileMultiBlockBase tileEntityMultiBlockBase, RenderLevelStageEvent event
+            ) {
         if (!this.isFull()) {
-            super.render(tileEntityMultiBlockBase);
+            super.render(tileEntityMultiBlockBase,event);
         }
         if (this.isFull()) {
-            GL11.glPushMatrix();
-            GlStateManager.translate(-0.5, 0, -0.5);
-            this.renderBlockRotor(this, this.getWorld(), this.getPos());
-            GL11.glPopMatrix();
+            event.getPoseStack().pushPose();
+            event.getPoseStack().translate(-0.5, 0, -0.5);
+            this.renderBlockRotor(this, this.getWorld(), this.getPos(),event);
+            event.getPoseStack().popPose();
         }
     }
 
@@ -524,7 +523,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.getWorld().isRemote || facing == 0 || facing == 1) {
+        if (this.getWorld().isClientSide || facing == 0 || facing == 1) {
             return;
         }
         this.timers = WindSystem.windSystem.getTime();
@@ -532,7 +531,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();
         if (!this.slot.isEmpty()) {
             MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this.getWorld(),
-                    (IRotorUpgradeItem) this.slot.get().getItem(), this.slot.get()
+                    (IRotorUpgradeItem) this.slot.get(0).getItem(), this.slot.get(0)
             ));
         }
         this.change();
@@ -547,10 +546,10 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         new PacketUpdateFieldTile(this, "generation", generation);
         new PacketUpdateFieldTile(this, "work", this.work);
         new PacketUpdateFieldTile(this, "slot", slot);
-        this.can_work = this.getWorld().provider.hasSkyLight() &&
-                !this.getWorld().provider.isNether();
-        if (!this.slot.get().isEmpty()) {
-            if (DamageHandler.getDamage(this.slot.get()) <= DamageHandler.getMaxDamage(this.slot.get()) * 0.75) {
+        this.can_work = this.getWorld().dimensionType().hasSkyLight() &&
+                !(this.getWorld().dimension() == Level.NETHER);
+        if (!this.slot.get(0).isEmpty()) {
+            if (DamageHandler.getDamage(this.slot.get(0)) >= DamageHandler.getMaxDamage(this.slot.get(0)) * 0.25) {
                 this.need_repair = true;
             }
         }
@@ -563,11 +562,11 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
     }
 
     @Override
-    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final Level world) {
         for (int i = pos.getX() - 8; i <= pos.getX() + 8; i++) {
             for (int j = pos.getY() - 8; j <= pos.getY() + 8; j++) {
                 for (int k = pos.getZ() - 8; k <= pos.getZ() + 8; k++) {
-                    final TileEntity tile = world.getTileEntity(new BlockPos(i, j, k));
+                    final BlockEntity tile = world.getBlockEntity(new BlockPos(i, j, k));
                     if (tile instanceof IWindMechanism) {
                         return false;
                     }
@@ -615,7 +614,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         super.readPacket(customPacketBuffer);
         try {
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new CompoundTag()));
             space = (boolean) DecoderHandler.decode(customPacketBuffer);
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
@@ -638,12 +637,12 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
 
     @Override
     public float getAngle() {
-        if (this.getWorld().provider.getDimension() != 0) {
+        if (this.getWorld().dimension() != Level.OVERWORLD) {
             return 0;
         }
         if (this.speed != 0.0F && this.work && (this.getRotor() != null && ((ItemDamage) this.slot
                 .get(0)
-                .getItem()).getCustomDamage(this.slot.get(0)) > 0)) {
+                .getItem()).getCustomDamage(this.slot.get(0))  <= DamageHandler.getDamage(this.slot.get(0)))) {
             final long k = (System.currentTimeMillis() - this.lastcheck);
             if (this.mind_wind != 0) {
                 this.angle += (float) ((float) k * WindSystem.windSystem.getSpeed(Math.min(
@@ -672,12 +671,12 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
 
     @Override
     public int getRotorDiameter() {
-        return getRotor() != null ? getRotor().getDiameter(this.slot.get()) : 0;
+        return getRotor() != null ? getRotor().getDiameter(this.slot.get(0)) : 0;
     }
 
     @Override
     public ResourceLocation getRotorRenderTexture() {
-        return getRotor() != null ? getRotor().getRotorRenderTexture(this.slot.get()) : null;
+        return getRotor() != null ? getRotor().getRotorRenderTexture(this.slot.get(0)) : null;
     }
 
     @Override
@@ -807,6 +806,8 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
 
     }
 
+
+
     @Override
     public double getAdditionalCoefficient() {
         return this.addition_efficient;
@@ -863,19 +864,19 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
     }
 
     @Override
-    public ContainerWindTurbine getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerWindTurbine getGuiContainer(final Player entityPlayer) {
         return new ContainerWindTurbine(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiWindTurbine(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiWindTurbine((ContainerWindTurbine) menu);
     }
 
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         if (i == 0) {
         } else {
             this.coefficient_power = (int) i;

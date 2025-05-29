@@ -4,8 +4,8 @@
     128
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/solid_matter_generator_combiner",
-    "particle" : "industrialupgrade:models/solid_matter_generator_combiner"
+    "0" : "industrialupgrade:block/solid_matter_generator_combiner",
+    "particle" : "industrialupgrade:block/solid_matter_generator_combiner"
   },
   "elements" : [
     {

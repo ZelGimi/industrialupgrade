@@ -2,25 +2,29 @@ package com.denfop.tiles.geothermalpump;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockGeothermalPump;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGeothermalController;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGeothermalController;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,17 +36,17 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
     List<IWaste> wasteList = new ArrayList<>();
     IExchanger exchanger;
 
-    public TileEntityGeothermalController() {
-        super(InitMultiBlockSystem.GeoThermalPumpMultiBlock);
+    public TileEntityGeothermalController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.GeoThermalPumpMultiBlock,BlockGeothermalPump.geothermal_controller,pos,state);
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         this.work = !work;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         work = nbttagcompound.getBoolean("work");
     }
@@ -55,14 +59,15 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
     }
 
     @Override
-    public ContainerGeothermalController getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerGeothermalController getGuiContainer(final Player entityPlayer) {
         return new ContainerGeothermalController(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiGeothermalController(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiGeothermalController((ContainerGeothermalController) menu);
     }
 
     @Override
@@ -84,11 +89,11 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
                 final int canAdd = generator.getFluidTank().getCapacity() - generator.getFluidTank().getFluidAmount();
                 if (baseEnergy.getEnergy() >= 10) {
                     if (canAdd >= 1) {
-                        generator.getFluidTank().fill(new FluidStack(FluidName.fluidneft.getInstance(), 1), true);
+                        generator.getFluidTank().fill(new FluidStack(FluidName.fluidneft.getInstance().get(), 1), IFluidHandler.FluidAction.EXECUTE);
                         baseEnergy.useEnergy(10);
-                        fluidTank.drain(3, true);
+                        fluidTank.drain(3, IFluidHandler.FluidAction.EXECUTE);
                         if (IUCore.random.nextInt(100) >= 98) {
-                            ItemStack stack = new ItemStack(IUItem.crafting_elements, 1, 457);
+                            ItemStack stack = new ItemStack(IUItem.crafting_elements.getStack(457), 1);
                             for (IWaste waste : this.wasteList) {
                                 if (waste.getSlot().add(stack)) {
                                     break;
@@ -97,7 +102,7 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
                         }
 
                         if (IUCore.random.nextInt(100) == 99 && IUCore.random.nextInt(2) == 0) {
-                            ItemStack stack = new ItemStack(IUItem.crafting_elements, 1, 461);
+                            ItemStack stack = new ItemStack(IUItem.crafting_elements.getStack(461), 1);
                             for (IWaste waste : this.wasteList) {
                                 if (waste.getSlot().add(stack)) {
                                     break;
@@ -105,7 +110,7 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
                             }
                         }
                         if (IUCore.random.nextInt(100) == 99 && IUCore.random.nextInt(2) == 0) {
-                            ItemStack stack = new ItemStack(IUItem.crafting_elements, 1, 462);
+                            ItemStack stack = new ItemStack(IUItem.crafting_elements.getStack(462), 1);
                             for (IWaste waste : this.wasteList) {
                                 if (waste.getSlot().add(stack)) {
                                     break;
@@ -114,7 +119,7 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
                         }
 
                         if (IUCore.random.nextInt(100) == 99 && IUCore.random.nextInt(2) == 0) {
-                            ItemStack stack = new ItemStack(IUItem.crafting_elements, 1, 463);
+                            ItemStack stack = new ItemStack(IUItem.crafting_elements.getStack(463), 1);
                             for (IWaste waste : this.wasteList) {
                                 if (waste.getSlot().add(stack)) {
                                     break;
@@ -128,8 +133,8 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        nbttagcompound.setBoolean("work", work);
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
+        nbttagcompound.putBoolean("work", work);
         return super.writeToNBT(nbttagcompound);
     }
 
@@ -153,14 +158,14 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IExchanger.class
                 );
-        this.exchanger = (IExchanger) this.getWorld().getTileEntity(pos1.get(0));
+        this.exchanger = (IExchanger) this.getWorld().getBlockEntity(pos1.get(0));
         List<BlockPos> pos2 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IGenerator.class
                 );
         for (BlockPos pos3 : pos2) {
-            this.generatorList.add((IGenerator) this.getWorld().getTileEntity(pos3));
+            this.generatorList.add((IGenerator) this.getWorld().getBlockEntity(pos3));
         }
         pos2 = this
                 .getMultiBlockStucture()
@@ -168,7 +173,7 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
                         IWaste.class
                 );
         for (BlockPos pos3 : pos2) {
-            this.wasteList.add((IWaste) this.getWorld().getTileEntity(pos3));
+            this.wasteList.add((IWaste) this.getWorld().getBlockEntity(pos3));
         }
     }
 
@@ -184,7 +189,7 @@ public class TileEntityGeothermalController extends TileMultiBlockBase implement
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.geothermalpump;
+        return IUItem.geothermalpump.getBlock(getTeBlock());
     }
 
 }

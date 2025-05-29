@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=soil_analyzer": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer"
+    },
+    "facing=south,type=soil_analyzer": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "y": 180
+    },
+    "facing=west,type=soil_analyzer": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "y": 270
+    },
+    "facing=east,type=soil_analyzer": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "y": 90
+    },
+    "facing=down,type=soil_analyzer": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "x": 90
+    },
+    "facing=up,type=soil_analyzer": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "x": 270
+    },
+    "facing=north,type=soil_analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer"
+    },
+    "facing=south,type=soil_analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "y": 180
+    },
+    "facing=west,type=soil_analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "y": 270
+    },
+    "facing=east,type=soil_analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "y": 90
+    },
+    "facing=down,type=soil_analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "x": 90
+    },
+    "facing=up,type=soil_analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/soil_analyzer",
+      "x": 270
+    }
+  }
+}

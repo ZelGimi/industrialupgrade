@@ -1,0 +1,6 @@
+{
+    "parent": "industrialupgrade:block/crop_0",
+    "textures": {
+        "texture": "industrialupgrade:block/crop/carrot_1"
+    }
+}

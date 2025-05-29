@@ -3,7 +3,7 @@ package com.denfop.integration.jei.welding;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class WeldingHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

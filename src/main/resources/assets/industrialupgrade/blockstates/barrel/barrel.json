@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=barrel": {
+      "model": "industrialupgrade:block/barrel/barrel"
+    },
+    "facing=south,type=barrel": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 180
+    },
+    "facing=west,type=barrel": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 270
+    },
+    "facing=east,type=barrel": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 90
+    },
+    "facing=down,type=barrel": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "x": 90
+    },
+    "facing=up,type=barrel": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "x": 270
+    },
+    "facing=north,type=barrel_invalid": {
+      "model": "industrialupgrade:block/barrel/barrel"
+    },
+    "facing=south,type=barrel_invalid": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 180
+    },
+    "facing=west,type=barrel_invalid": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 270
+    },
+    "facing=east,type=barrel_invalid": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 90
+    },
+    "facing=down,type=barrel_invalid": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "x": 90
+    },
+    "facing=up,type=barrel_invalid": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "x": 270
+    }
+  }
+}

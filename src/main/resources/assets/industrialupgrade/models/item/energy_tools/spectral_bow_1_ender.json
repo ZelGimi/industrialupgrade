@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/spectral_bow_1_ender"	}
+		"layer0": "industrialupgrade:item/spectral_bow_1_ender"	}
 }

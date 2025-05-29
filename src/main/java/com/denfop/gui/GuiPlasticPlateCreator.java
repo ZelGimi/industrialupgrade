@@ -9,14 +9,15 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerPlasticPlateCreator;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
-@SideOnly(Side.CLIENT)
-public class GuiPlasticPlateCreator extends GuiIU<ContainerPlasticPlateCreator> {
+@OnlyIn(Dist.CLIENT)
+public class GuiPlasticPlateCreator<T extends ContainerPlasticPlateCreator> extends GuiIU<ContainerPlasticPlateCreator> {
 
     public final ContainerPlasticPlateCreator container;
 
@@ -51,18 +52,13 @@ public class GuiPlasticPlateCreator extends GuiIU<ContainerPlasticPlateCreator> 
         this.addElement(TankGauge.createNormal(this, 6, 5, container.base.fluidTank));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
 
-    }
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        bindTexture(getTexture());
 
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
-
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
     public String getName() {

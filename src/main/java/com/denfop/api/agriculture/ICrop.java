@@ -4,9 +4,11 @@ import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.INetworkObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public interface ICrop extends INetworkObject {
 
     void setSun(final boolean sun);
 
+    void setTick(int progress);
     boolean isNight();
 
     void setNight(final boolean night);
@@ -40,7 +43,6 @@ public interface ICrop extends INetworkObject {
 
     ItemStack getStack();
 
-    void setStack(ItemStack cropItem);
 
     boolean isIgnoreSoil();
 
@@ -52,11 +54,11 @@ public interface ICrop extends INetworkObject {
 
     int getGenomeAdaptive();
 
-    void setGenomeAdaptive(final int genomeAdaptive);
-
     int getDefaultPestResistance();
 
     int getDefaultWeatherResistance();
+
+    void setGenomeAdaptive(final int genomeAdaptive);
 
     int getGenomeResistance();
 
@@ -70,7 +72,7 @@ public interface ICrop extends INetworkObject {
 
     List<ICrop> getCropCombine();
 
-    ItemStack getStackForDrop();
+    ItemStack  getStackForDrop();
 
     int getDefaultWaterRequirement();
 
@@ -95,13 +97,11 @@ public interface ICrop extends INetworkObject {
 
     void setSoilRequirements(LevelPollution pollution);
 
-    List<Biome> getBiomes();
+    List< ResourceKey<Biome> > getBiomes();
 
     boolean isCombineWithCrops(List<ICrop> crops);
 
     int getTick();
-
-    void setTick(int progress);
 
     int getMaxTick();
 
@@ -123,15 +123,17 @@ public interface ICrop extends INetworkObject {
 
     int getDefaultLightLevel();
 
-    boolean canGrowInBiome(Biome biomeName);
+    boolean canGrowInBiome(Biome biomeName, Level level);
+    boolean canGrowInBiome( ResourceKey<Biome> biomeName);
 
-    void addBiome(Biome biomeName);
+    void addBiome( ResourceKey<Biome> biomeName);
 
-    void removeBiome(Biome biomeName);
+    void removeBiome( ResourceKey<Biome>  biomeName);
 
     void setLight(int lightLevel);
 
     boolean compatibilityWithCrop(ICrop crop);
+
 
     List<ItemStack> getDrop();
 
@@ -151,14 +153,16 @@ public interface ICrop extends INetworkObject {
 
     int getStage();
 
-    void setStage(int i);
-
     int getMaxStage();
 
     void readPacket(CustomPacketBuffer buffer);
 
+    void setStack(ItemStack cropItem);
+
     int getRender();
 
     List<ResourceLocation> getTopTexture();
+
+    void setStage(int i);
 
 }

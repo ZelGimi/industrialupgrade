@@ -6,12 +6,14 @@ import com.denfop.api.windsystem.EnumLevelGenerators;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.EnumTypeStyle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TilePerWaterGenerator extends TileBaseWaterGenerator {
 
 
-    public TilePerWaterGenerator() {
-        super(EnumLevelGenerators.FOUR);
+    public TilePerWaterGenerator(BlockPos pos, BlockState state) {
+        super(EnumLevelGenerators.FOUR,BlockBaseMachine3.per_water_generator,pos,state);
     }
 
     @Override
@@ -24,7 +26,7 @@ public class TilePerWaterGenerator extends TileBaseWaterGenerator {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

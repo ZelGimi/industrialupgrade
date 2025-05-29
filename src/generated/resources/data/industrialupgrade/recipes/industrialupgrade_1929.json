@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/comb_pump"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_135_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    " A ",
+    "C C"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/adv_comb_pump"
+  },
+  "show_notification": true
+}

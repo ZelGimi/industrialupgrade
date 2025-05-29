@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/bismuth_dust"	}
+		"layer0": "industrialupgrade:item/bismuth_dust"	}
 }

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/lead"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/lithium"
+      }
+    ]
+  },
+  "pattern": [
+    "AB ",
+    "BA ",
+    "   "
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_365_element"
+  },
+  "show_notification": true
+}

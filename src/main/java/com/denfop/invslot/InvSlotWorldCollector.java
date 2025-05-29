@@ -3,7 +3,7 @@ package com.denfop.invslot;
 
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.base.TileBaseWorldCollector;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotWorldCollector extends InvSlot {
 
@@ -15,13 +15,14 @@ public class InvSlotWorldCollector extends InvSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.getmatter();
         TileBaseWorldCollector tile = (TileBaseWorldCollector) base;
         if (tile.getRecipeOutput() != null) {
             tile.getrequiredmatter(tile.getRecipeOutput().getRecipe().getOutput());
         }
+        return content;
     }
 
     public void getmatter() {
@@ -42,7 +43,7 @@ public class InvSlotWorldCollector extends InvSlot {
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
-        return itemStack.getItem() instanceof ItemSolidMatter && itemStack.getItemDamage() == this.tile.enumTypeCollector.getMeta();
+        return itemStack.getItem() instanceof ItemSolidMatter && ((ItemSolidMatter<?>) itemStack.getItem()).getElement().getId() == this.tile.enumTypeCollector.getMeta();
     }
 
     public void consume(int content, int amount) {

@@ -17,9 +17,8 @@ public enum EnumTimeVariety {
 
     public static EnumTimeVariety getVarietyFromTime(double time) {
         for (int i = varieties.length - 1; i >= 0; i--) {
-            if (time >= varieties[i].time) {
+            if (time >= varieties[i].time)
                 return varieties[i];
-            }
         }
         return EnumTimeVariety.BREW;
     }

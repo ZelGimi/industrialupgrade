@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/vanadoalumite_dust"
+    "layer0" : "industrialupgrade:item/vanadoalumite_dust"
   }
 }

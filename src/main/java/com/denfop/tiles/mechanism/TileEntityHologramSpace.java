@@ -1,15 +1,8 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.space.SpaceNet;
-import com.denfop.api.space.fakebody.FakeAsteroid;
-import com.denfop.api.space.fakebody.FakePlanet;
-import com.denfop.api.space.fakebody.FakeSatellite;
-import com.denfop.api.space.fakebody.IFakeAsteroid;
-import com.denfop.api.space.fakebody.IFakeBody;
-import com.denfop.api.space.fakebody.IFakePlanet;
-import com.denfop.api.space.fakebody.IFakeSatellite;
+import com.denfop.api.space.fakebody.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
@@ -19,14 +12,17 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.world.WorldBaseGen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,66 +34,48 @@ import java.util.function.Function;
 public class TileEntityHologramSpace extends TileEntityBlock {
 
     public List<IFakeBody> fakeBodyList = new ArrayList<>();
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     SolarSystemRenderer solarSystemRenderer;
-    private UUID uuid;
+    private UUID uuid = new UUID(WorldBaseGen.random.nextLong(),WorldBaseGen.random.nextLong());
+
+    public TileEntityHologramSpace(BlockPos p_155229_, BlockState p_155230_) {
+        super(BlockBaseMachine3.hologram_space, p_155229_, p_155230_);
+    }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.getWorld().isRemote) {
+       if (this.getWorld().isClientSide) {
             solarSystemRenderer = new SolarSystemRenderer();
-            GlobalRenderManager.addRender(world, pos, createFunction(this));
+            GlobalRenderManager.addRender(level, pos, createFunction(this));
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public Function createFunction(TileEntityHologramSpace te) {
-        Function function = o -> {
-            solarSystemRenderer.render(te);
-            return 0;
+    @OnlyIn(Dist.CLIENT)
+    public Function<RenderLevelStageEvent, Void> createFunction(TileEntityHologramSpace te) {
+        Function<RenderLevelStageEvent, Void> function = o -> {
+            solarSystemRenderer.render(te,o);
+            return null;
         };
         return function;
     }
-    @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
-        super.readFromNBT(nbtTagCompound);
-        this.uuid = nbtTagCompound.getUniqueId("player");
-    }
+
+
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setUniqueId("player", uuid);
-        return nbtTagCompound;
-    }
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (placer instanceof EntityPlayer) {
-            this.uuid = placer.getUniqueID();
+        if (placer instanceof Player) {
+            this.uuid = placer.getUUID();
         }
     }
 
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        if (this.getWorld().isRemote) {
-            GlobalRenderManager.removeRender(world, pos);
+       if (this.getWorld().isClientSide) {
+            GlobalRenderManager.removeRender(level, pos);
         }
     }
 
@@ -119,13 +97,13 @@ public class TileEntityHologramSpace extends TileEntityBlock {
                 }
                 if (fakeBody != null) {
                     try {
-                        EncoderHandler.encode(packetBuffer, fakeBody.writeNBTTagCompound(new NBTTagCompound()));
+                        EncoderHandler.encode(packetBuffer, fakeBody.writeNBTTagCompound(new CompoundTag()));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
             }
-           return packetBuffer;
+            return packetBuffer;
         }else{
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
             packetBuffer.writeInt(0);
@@ -133,7 +111,18 @@ public class TileEntityHologramSpace extends TileEntityBlock {
         }
 
     }
+    @Override
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
+        super.readFromNBT(nbtTagCompound);
+        this.uuid = nbtTagCompound.getUUID("player");
+    }
 
+    @Override
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putUUID("player", uuid);
+        return nbtTagCompound;
+    }
     @Override
     public void readUpdatePacket(final CustomPacketBuffer is) {
         super.readUpdatePacket(is);
@@ -143,17 +132,17 @@ public class TileEntityHologramSpace extends TileEntityBlock {
             byte id = is.readByte();
             try {
                 if (id == 0) {
-                    NBTTagCompound nbt = (NBTTagCompound) DecoderHandler.decode(is);
+                    CompoundTag nbt = (CompoundTag) DecoderHandler.decode(is);
                     FakePlanet fakePlanet = new FakePlanet(nbt);
                     this.fakeBodyList.add(fakePlanet);
                 }
                 if (id == 1) {
-                    NBTTagCompound nbt = (NBTTagCompound) DecoderHandler.decode(is);
+                    CompoundTag nbt = (CompoundTag) DecoderHandler.decode(is);
                     FakeSatellite fakePlanet = new FakeSatellite(nbt);
                     this.fakeBodyList.add(fakePlanet);
                 }
                 if (id == 2) {
-                    NBTTagCompound nbt = (NBTTagCompound) DecoderHandler.decode(is);
+                    CompoundTag nbt = (CompoundTag) DecoderHandler.decode(is);
                     FakeAsteroid fakePlanet = new FakeAsteroid(nbt);
                     this.fakeBodyList.add(fakePlanet);
                 }
@@ -173,17 +162,17 @@ public class TileEntityHologramSpace extends TileEntityBlock {
                 byte id = is.readByte();
                 try {
                     if (id == 0) {
-                        NBTTagCompound nbt = (NBTTagCompound) DecoderHandler.decode(is);
+                        CompoundTag nbt = (CompoundTag) DecoderHandler.decode(is);
                         FakePlanet fakePlanet = new FakePlanet(nbt);
                         this.fakeBodyList.add(fakePlanet);
                     }
                     if (id == 1) {
-                        NBTTagCompound nbt = (NBTTagCompound) DecoderHandler.decode(is);
+                        CompoundTag nbt = (CompoundTag) DecoderHandler.decode(is);
                         FakeSatellite fakePlanet = new FakeSatellite(nbt);
                         this.fakeBodyList.add(fakePlanet);
                     }
                     if (id == 2) {
-                        NBTTagCompound nbt = (NBTTagCompound) DecoderHandler.decode(is);
+                        CompoundTag nbt = (CompoundTag) DecoderHandler.decode(is);
                         FakeAsteroid fakePlanet = new FakeAsteroid(nbt);
                         this.fakeBodyList.add(fakePlanet);
                     }
@@ -212,7 +201,7 @@ public class TileEntityHologramSpace extends TileEntityBlock {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

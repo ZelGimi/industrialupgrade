@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nano_boots"
+		"layer0": "industrialupgrade:item/nano_boots"
 	}
 }

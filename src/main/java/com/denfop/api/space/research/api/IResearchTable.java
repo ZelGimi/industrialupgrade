@@ -14,7 +14,7 @@ public interface IResearchTable {
     UUID getPlayer();
 
 
-    EnumLevels getLevel();
+    EnumLevels getLevelTable();
 
     void setLevel(EnumLevels level);
 

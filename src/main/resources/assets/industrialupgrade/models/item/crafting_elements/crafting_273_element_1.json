@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/advanced_circuit_1"
+		"layer0": "industrialupgrade:item/advanced_circuit_1"
 	}
 }

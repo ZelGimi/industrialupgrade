@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism.blastfurnace.api;
 
 import com.denfop.componets.Fluids;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public interface IBlastInputFluid extends IBlastPart {
 

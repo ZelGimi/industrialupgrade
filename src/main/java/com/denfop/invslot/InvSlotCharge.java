@@ -1,11 +1,10 @@
 package com.denfop.invslot;
 
 import com.denfop.ElectricItem;
-import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotCharge extends InvSlot {
 
@@ -16,11 +15,6 @@ public class InvSlotCharge extends InvSlot {
         super(base1, TypeItemSlot.INPUT_OUTPUT, 1);
         this.tier = tier;
         this.ignore = false;
-    }
-
-    @Override
-    public EnumTypeSlot getTypeSlot() {
-        return EnumTypeSlot.BATTERY;
     }
 
     public void setIgnore(final boolean ignore) {

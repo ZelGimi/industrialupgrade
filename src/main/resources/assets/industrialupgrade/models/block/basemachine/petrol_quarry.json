@@ -4,8 +4,8 @@
     128
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/oil_pump",
-    "particle" : "industrialupgrade:models/oil_pump"
+    "0" : "industrialupgrade:block/oil_pump",
+    "particle" : "industrialupgrade:block/oil_pump"
   },
   "elements" : [
     {

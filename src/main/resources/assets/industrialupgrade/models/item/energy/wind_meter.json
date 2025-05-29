@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/tool/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/wind_meter"
+    "layer0" : "industrialupgrade:item/wind_meter"
   }
 }

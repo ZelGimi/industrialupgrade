@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/electrum"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/invar"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_601_element"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "ACA",
+    "EDE"
+  ],
+  "result": {
+    "item": "industrialupgrade:primal_fluid_integrator/primal_fluid_integrator"
+  },
+  "show_notification": true
+}

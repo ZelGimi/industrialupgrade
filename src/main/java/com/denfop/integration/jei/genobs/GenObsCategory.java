@@ -3,54 +3,53 @@ package com.denfop.integration.jei.genobs;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
+import com.denfop.tiles.mechanism.TileEntitySingleFluidAdapter;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper> {
+public class GenObsCategory extends GuiIU implements IRecipeCategory<GenObsHandler> {
+
+    private final JeiInform jeiInform;
 
     private final IDrawableStatic bg;
     private int energy = 0;
     private int progress = 0;
 
     public GenObsCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(((TileEntitySingleFluidAdapter) BlockBaseMachine3.single_fluid_adapter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiobsidiangenerator" +
                         ".png"), 5, 5, 145,
                 78
         );
     }
 
-    @Nonnull
-    @Override
-    public String getUid() {
-        return BlockBaseMachine2.gen_obsidian.getName();
-    }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 10).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine1, 1, 10).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -58,11 +57,8 @@ public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
-
-
+    public void draw(GenObsHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         energy++;
 
@@ -71,30 +67,22 @@ public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper
             progress = 0;
         }
 
-        mc.getTextureManager().bindTexture(getTexture());
+        bindTexture(getTexture());
 
 
-        drawTexturedModalRect(83, 35, 177, 41, xScale, 19);
-
-
+        drawTexturedModalRect( stack,83, 35, 177, 41, xScale, 19);
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final GenObsWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
+    public void setRecipe(IRecipeLayoutBuilder builder, GenObsHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 42, 20).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getInput().getFluid(),recipe.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 65, 20).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getInput1().getFluid(),recipe.getInput1().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,  121, 35).addItemStack(recipe.getOutput());
+    }
 
-
-        IGuiFluidStackGroup fff = layout.getFluidStacks();
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        fff.init(0, true, 42, 20, 12, 47, 10000, true, null);
-        fff.set(0, recipes.getInput1());
-        fff.init(1, true, 65, 20, 12, 47, 10000, true, null);
-        fff.set(1, recipes.getInput2());
-        isg.init(2, false, 121, 35);
-        isg.set(2, recipes.getOutput());
+    @Override
+    public RecipeType<GenObsHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     protected ResourceLocation getTexture() {

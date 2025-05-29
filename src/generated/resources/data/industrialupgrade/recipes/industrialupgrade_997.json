@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:expmodule"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_35_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "BCD",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/exp_chargepad"
+  },
+  "show_notification": true
+}

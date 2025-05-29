@@ -1,43 +1,52 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemDoublePlate extends ItemSubTypes<ItemDoublePlate.ItemDoublePlateTypes> implements IModelRegister {
-
-    protected static final String NAME = "itemdoubleplates";
-
-    public ItemDoublePlate() {
-        super(ItemDoublePlateTypes.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemDoublePlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemDoublePlate(T element) {
+        super(new Item.Properties(), element);
     }
 
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+    @Override
+    public Item getItem() {
+        return this;
     }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        String name = getElement().getName();
+        switch (this.getElement().getId()) {
+            case 3:
+                name = "tungsten";
+                break;
+            case 9:
+                name = "platinum";
+                break;
+            case 13:
+                name = "electrum";
+                break;
+            case 46:
+                name = "adamantium";
+                break;
+            case 49:
+                name = "meteoric";
+                break;
+            case 50:
+                name = "mithril";
+                break;
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":itemdoubleplates/" + ItemDoublePlateTypes
-                        .getFromID(meta)
-                        .getName(), null)
-        );
+        }
+        return new String[]{"forge:doubleplate/" + name.replace("_doubleplate", ""), "forge:doubleplate"};
     }
 
     public enum ItemDoublePlateTypes implements ISubEnum {
@@ -93,7 +102,6 @@ public class ItemDoublePlate extends ItemSubTypes<ItemDoublePlate.ItemDoublePlat
         meteoric_iron(49),
         mythril(50),
         orichalcum(51),
-
         ;
 
         private final String name;
@@ -112,9 +120,13 @@ public class ItemDoublePlate extends ItemSubTypes<ItemDoublePlate.ItemDoublePlat
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "itemdoubleplates";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

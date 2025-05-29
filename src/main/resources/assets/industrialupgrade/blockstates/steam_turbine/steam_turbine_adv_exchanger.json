@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=steam_turbine_adv_exchanger": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger"
+    },
+    "facing=south,type=steam_turbine_adv_exchanger": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_adv_exchanger": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_adv_exchanger": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "y": 90
+    },
+    "facing=down,type=steam_turbine_adv_exchanger": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "x": 90
+    },
+    "facing=up,type=steam_turbine_adv_exchanger": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "x": 270
+    },
+    "facing=north,type=steam_turbine_adv_exchanger_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger"
+    },
+    "facing=south,type=steam_turbine_adv_exchanger_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_adv_exchanger_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_adv_exchanger_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "y": 90
+    },
+    "facing=down,type=steam_turbine_adv_exchanger_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "x": 90
+    },
+    "facing=up,type=steam_turbine_adv_exchanger_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_adv_exchanger",
+      "x": 270
+    }
+  }
+}

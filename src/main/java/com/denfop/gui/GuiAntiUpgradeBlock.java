@@ -2,10 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.CustomButton;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.*;
 import com.denfop.api.upgrade.UpgradeModificator;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.componets.ComponentSoundButton;
@@ -13,21 +10,16 @@ import com.denfop.container.ContainerAntiUpgrade;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
+public class GuiAntiUpgradeBlock<T extends ContainerAntiUpgrade> extends GuiIU<ContainerAntiUpgrade> {
 
     public final ContainerAntiUpgrade container;
 
@@ -58,10 +50,10 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
         }
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
+    protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         for (int m = 0; m < 4; m++) {
@@ -69,8 +61,8 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
                 new PacketUpdateServerTile(this.container.base, m + 1);
             }
         }
-        final List<UpgradeModificator> list1 = UpgradeSystem.system.getListModifications(this.container.base.input.get());
-        if (x >= 149 && x <= 167 && y >= 10 && y < 27 && list1.size() >= 1) {
+        final List<UpgradeModificator> list1 = UpgradeSystem.system.getListModifications(this.container.base.input.get(0));
+        if (x >= 149 && x <= 167 && y >= 10 && y < 27 && !list1.isEmpty()) {
             new PacketUpdateServerTile(this.container.base, 5);
         }
         if (x >= 149 && x <= 167 && y >= 28 && y < 45 && list1.size() > 1) {
@@ -78,16 +70,6 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
         }
     }
 
-    public void initGui() {
-        super.initGui();
-
-
-    }
-
-    protected void actionPerformed(GuiButton guibutton) {
-
-
-    }
 
     @Override
     protected ResourceLocation getTexture() {
@@ -95,8 +77,8 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack,mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
         String tooltip2 =
                 ModUtils.getString(Math.min(
@@ -106,37 +88,36 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
                         "EF";
         new AdvArea(this, 26, 56, 37, 71)
                 .withTooltip(tooltip2)
-                .drawForeground(mouseX, mouseY);
+                .drawForeground(poseStack,mouseX, mouseY);
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 1, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2, 1, net.minecraft.network.chat.Component.nullToEmpty(name), 4210752, false);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
 
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        int xoffset = (this.width - this.imageWidth) / 2;
+        int yoffset = (this.height - this.imageHeight) / 2;
+        bindTexture(getTexture());
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         final int progress = Math.min(31 * this.container.base.progress / 100, 31);
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
         int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
         if (chargeLevel > 0) {
-            drawTexturedModalRect(xoffset + 25, yoffset + 57 + 14 - chargeLevel, 176, 14 - chargeLevel,
+            drawTexturedModalRect(poseStack, xoffset + 25, yoffset + 57 + 14 - chargeLevel, 176, 14 - chargeLevel,
                     14, chargeLevel
             );
 
         }
         if (progress > 0) {
-            drawTexturedModalRect(
+            drawTexturedModalRect(poseStack,
                     xoffset + 136,
                     yoffset + 58 - progress,
                     176,
@@ -146,21 +127,21 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
             );
         }
         if (!this.container.base.input.isEmpty()) {
-            final List<ItemStack> list = UpgradeSystem.system.getListStack(this.container.base.input.get());
-            final List<UpgradeModificator> list1 = UpgradeSystem.system.getListModifications(this.container.base.input.get());
+            final List<ItemStack> list = UpgradeSystem.system.getListStack(this.container.base.input.get(0));
+            final List<UpgradeModificator> list1 = UpgradeSystem.system.getListModifications(this.container.base.input.get(0));
             for (int i = 0; i < list1.size(); i++) {
-                drawTexturedModalRect(xoffset + 149, yoffset + 10 + 18 * i, 200,
+                drawTexturedModalRect(poseStack, xoffset + 149, yoffset + 10 + 18 * i, 200,
                         88, 18, 18
                 );
             }
             int i = 0;
-            GL11.glColor4f(1F, 1, 1F, 1);
+            RenderSystem.setShaderColor(1F, 1, 1F, 1);
             if (this.container.base.index <= 3) {
-                drawTexturedModalRect(xoffset + 70, yoffset + 8 + 18 * this.container.base.index, 200,
+                drawTexturedModalRect(poseStack, xoffset + 70, yoffset + 8 + 18 * this.container.base.index, 200,
                         11 + 18 * this.container.base.index, 18, 18
                 );
             } else {
-                drawTexturedModalRect(xoffset + 149, yoffset + 10 + 18 * (this.container.base.index - 4), 200,
+                drawTexturedModalRect(poseStack, xoffset + 149, yoffset + 10 + 18 * (this.container.base.index - 4), 200,
                         10 + 18, 18, 18
                 );
             }
@@ -170,40 +151,10 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
                     i++;
                     continue;
                 }
-                RenderHelper.enableGUIStandardItemLighting();
-                GL11.glPushMatrix();
-                GL11.glColor4f(1F, 1, 1F, 1);
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-                GlStateManager.disableLighting();
-                GlStateManager.enableDepth();
-                this.zLevel = 100.0F;
-                mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-                if (i < 4) {
-                    itemRender.renderItemAndEffectIntoGUI(
-                            stack,
-                            xoffset + 71,
-                            yoffset + 9 + i * 18
-                    );
-
-                } else {
-                    itemRender.renderItemAndEffectIntoGUI(
-                            stack,
-                            xoffset + 150,
-                            yoffset + 11 + (i - 4) * 18
-                    );
-
-                }
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GlStateManager.enableLighting();
-                RenderHelper.enableStandardItemLighting();
-                GL11.glColor4f(1F, 1, 1F, 1);
-                GL11.glPopMatrix();
+                new ItemStackImage(this,71, 9 + i * 18, () -> stack).drawBackground(poseStack,guiLeft,guiTop);
                 i++;
 
             }
-            RenderHelper.disableStandardItemLighting();
-            RenderHelper.enableGUIStandardItemLighting();
         }
     }
 

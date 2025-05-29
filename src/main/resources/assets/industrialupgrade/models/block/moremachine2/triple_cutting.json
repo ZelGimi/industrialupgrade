@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockcutting2_side",
-    "down" : "industrialupgrade:blocks/blockcutting2_side",
-    "up" : "industrialupgrade:blocks/blockcutting2_side",
-    "north" : "industrialupgrade:blocks/blockcutting2_main",
-    "east" : "industrialupgrade:blocks/blockcutting2_side",
-    "south" : "industrialupgrade:blocks/blockcutting2_side",
-    "west" : "industrialupgrade:blocks/blockcutting2_side"
+    "particle" : "industrialupgrade:block/blockcutting2_side",
+    "down" : "industrialupgrade:block/blockcutting2_side",
+    "up" : "industrialupgrade:block/blockcutting2_side",
+    "north" : "industrialupgrade:block/blockcutting2_main",
+    "east" : "industrialupgrade:block/blockcutting2_side",
+    "south" : "industrialupgrade:block/blockcutting2_side",
+    "west" : "industrialupgrade:block/blockcutting2_side"
   }
 }

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/eris_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/eris_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/eris_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/eris_boulder"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:spacecobblestone/eris_cobblestone"
+  }
+}

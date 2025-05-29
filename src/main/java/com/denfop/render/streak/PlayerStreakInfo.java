@@ -1,59 +1,43 @@
 package com.denfop.render.streak;
 
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class PlayerStreakInfo {
 
-    private boolean render;
-    private boolean renderPlayer;
     private RGB rgb;
     private boolean rainbow;
 
-    public PlayerStreakInfo(RGB rgb, boolean rainbow, boolean render, boolean renderPlayer) {
+    public PlayerStreakInfo(RGB rgb, boolean rainbow) {
         this.rgb = rgb;
         this.rainbow = rainbow;
-        this.render = render;
-        this.renderPlayer = renderPlayer;
     }
 
-    public PlayerStreakInfo(NBTTagCompound nbtTagCompound) {
+    public PlayerStreakInfo(CompoundTag nbtTagCompound) {
         this.rgb = new RGB(nbtTagCompound.getShort("red"), nbtTagCompound.getShort("green"), nbtTagCompound.getShort("blue"));
         this.rainbow = nbtTagCompound.getBoolean("rainbow");
-        this.render = nbtTagCompound.getBoolean("render");
-        this.renderPlayer = nbtTagCompound.getBoolean("renderPlayer");
     }
 
     public PlayerStreakInfo(CustomPacketBuffer customPacketBuffer) {
-        this.rgb = new RGB(
-                (short) (customPacketBuffer.readByte() + 128),
-                (short) (customPacketBuffer.readByte() + 128),
-                (short) (customPacketBuffer.readByte() + 128)
-        );
+        this.rgb = new RGB(customPacketBuffer.readShort(), customPacketBuffer.readShort(), customPacketBuffer.readShort());
         this.rainbow = customPacketBuffer.readBoolean();
-        this.render = customPacketBuffer.readBoolean();
-        this.renderPlayer = customPacketBuffer.readBoolean();
     }
 
-    public NBTTagCompound writeNBT() {
-        final NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("red", rgb.getRed());
-        nbt.setShort("blue", rgb.getBlue());
-        nbt.setShort("green", rgb.getGreen());
-        nbt.setBoolean("rainbow", rainbow);
-        nbt.setBoolean("render", render);
-        nbt.setBoolean("renderPlayer", render);
+    public CompoundTag writeNBT() {
+        final CompoundTag nbt = new CompoundTag();
+        nbt.putShort("red", rgb.getRed());
+        nbt.putShort("blue", rgb.getBlue());
+        nbt.putShort("green", rgb.getGreen());
+        nbt.putBoolean("rainbow", rainbow);
         return nbt;
     }
 
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
-        packetBuffer.writeByte(rgb.getRed() - 128);
-        packetBuffer.writeByte(rgb.getBlue() - 128);
-        packetBuffer.writeByte(rgb.getGreen() - 128);
+        packetBuffer.writeShort(rgb.getRed());
+        packetBuffer.writeShort(rgb.getBlue());
+        packetBuffer.writeShort(rgb.getGreen());
         packetBuffer.writeBoolean(this.rainbow);
-        packetBuffer.writeBoolean(this.render);
-        packetBuffer.writeBoolean(this.renderPlayer);
         return packetBuffer;
     }
 
@@ -71,22 +55,6 @@ public class PlayerStreakInfo {
 
     public void setRgb(final RGB rgb) {
         this.rgb = rgb;
-    }
-
-    public boolean isRender() {
-        return render;
-    }
-
-    public void setRender(final boolean render) {
-        this.render = render;
-    }
-
-    public boolean isRenderPlayer() {
-        return renderPlayer;
-    }
-
-    public void setRenderPlayer(final boolean renderPlayer) {
-        this.renderPlayer = renderPlayer;
     }
 
 }

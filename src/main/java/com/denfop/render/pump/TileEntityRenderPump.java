@@ -1,38 +1,61 @@
 package com.denfop.render.pump;
 
 import com.denfop.tiles.mechanism.TileEntityPrimalPump;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.text.TextComponentString;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.BlockHitResult;
+import org.joml.Matrix4f;
 
-public class TileEntityRenderPump extends TileEntitySpecialRenderer<TileEntityPrimalPump> {
+public class TileEntityRenderPump implements BlockEntityRenderer<TileEntityPrimalPump> {
 
-    public void render(
-            TileEntityPrimalPump tile,
-            double x,
-            double y,
-            double z,
-            float partialTicks,
-            int destroyStage,
-            float alpha
-    ) {
-        if (this.rendererDispatcher.cameraHitResult != null && tile
-                .getPos()
-                .equals(this.rendererDispatcher.cameraHitResult.getBlockPos())) {
-            this.setLightmapDisabled(true);
-            String text;
-            if (tile.fluidTank.getFluid() == null) {
-                text = "FluidTank: 0/" + tile.fluidTank.getCapacity();
+
+    private final BlockEntityRendererProvider.Context contex;
+
+    public TileEntityRenderPump(BlockEntityRendererProvider.Context p_173636_) {
+        this.contex = p_173636_;
+    }
+
+    @Override
+    public void render(TileEntityPrimalPump tile, float partialTicks, PoseStack poseStack,
+                       MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
+        if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult
+                && tile.getBlockPos().equals(hitResult.getBlockPos())) {
+
+            poseStack.pushPose();
+            poseStack.translate(0.5, 1.75, 0.5);
+
+            Component text;
+            if (tile.fluidTank.getFluid().isEmpty()) {
+                text =  Component.literal("FluidTank: 0/" + tile.fluidTank.getCapacity());
             } else {
-                text =
-                        tile.fluidTank
-                                .getFluid()
-                                .getLocalizedName() + ":" + tile.fluidTank.getFluidAmount() + "/" + tile.fluidTank.getCapacity();
+                text = Component.literal(tile.fluidTank.getFluid().getDisplayName().getString() + ": " +
+                                tile.fluidTank.getFluidAmount() + "/" + tile.fluidTank.getCapacity());
             }
 
-            final TextComponentString itextcomponent = new TextComponentString(text);
-            this.drawNameplate(tile, itextcomponent.getFormattedText(), x, y + 0.25, z, 12);
-            this.setLightmapDisabled(false);
+
+            renderFloatingText(text, poseStack, bufferSource, packedLight);
+            poseStack.popPose();
         }
     }
 
+    private void renderFloatingText(Component text, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        poseStack.pushPose();
+        poseStack.mulPose(contex.getEntityRenderer().cameraOrientation());
+        poseStack.scale(-0.025F, -0.025F, 0.025F);
+        Matrix4f matrix4f = poseStack.last().pose();
+        float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
+        int j = (int) (f1 * 255.0F) << 24;
+        Font font = contex.getFont();
+        float f2 = (float) (-font.width(text) / 2);
+        font.drawInBatch(text, f2, (float) 0, 553648127, false, matrix4f, buffer, Font.DisplayMode.NORMAL, j, packedLight);
+        if (true) {
+            font.drawInBatch(text, f2, (float) 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        }
+        poseStack.popPose();
+    }
 }

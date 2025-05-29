@@ -6,5 +6,4 @@ import com.denfop.componets.Energy;
 public interface ISocket extends IMultiElement {
 
     Energy getEnergy();
-
 }

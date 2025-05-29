@@ -1,123 +1,120 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.FluidName;
-import com.denfop.register.Register;
 import com.denfop.world.GenData;
 import com.denfop.world.WorldGenGas;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 
-public class ItemGasSensor extends Item implements IModelRegister {
-
-    private final String name;
+public class ItemGasSensor extends Item implements IItemTab {
+    private String nameItem;
 
     public ItemGasSensor() {
-        super();
-        this.setMaxStackSize(1);
-        this.canRepair = false;
-        this.name = "gas_sensor";
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-        IUCore.proxy.addIModelRegister(this);
+        super(new Item.Properties().stacksTo(1).setNoRepair());
     }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "tools" + "/" + name;
-
-        return new ModelResourceLocation(loc, null);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
+        }
 
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
-
-    public String getUnlocalizedName(ItemStack stack) {
-        return "iu." + super.getUnlocalizedName().substring(5);
+        return this.nameItem;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(
-            final World world,
-            final EntityPlayer player,
-            final EnumHand p_77659_3_
-    ) {
-        if (world.isRemote) {
-            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(p_77659_3_));
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (level.isClientSide) {
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
         }
-        ChunkPos chunkPos = new ChunkPos((int) player.posX >> 4, (int) player.posZ >> 4);
+
+        ChunkPos chunkPos = new ChunkPos((int) player.getX() >> 4, (int) player.getZ() >> 4);
         boolean empty = true;
+
         for (int i = -2; i < 3; i++) {
             for (int j = -2; j < 3; j++) {
                 final ChunkPos chunkPos1 = new ChunkPos(chunkPos.x + i, chunkPos.z + j);
                 GenData typeGas = WorldGenGas.gasMap.get(chunkPos1);
+
                 if (typeGas != null) {
                     empty = false;
-                    String text = "";
+                    Component text = Component.literal("");
+
                     switch (typeGas.getTypeGas()) {
                         case GAS:
-                            text = I18n.translateToLocal(FluidName.fluidgas.getInstance().getUnlocalizedName());
+                            text = Component.translatable(FluidName.fluidgas.getInstance().get().getFluidType().getDescriptionId());
                             break;
                         case IODINE:
-                            text = I18n.translateToLocal(FluidName.fluidiodine.getInstance().getUnlocalizedName());
+                            text = Component.translatable(FluidName.fluidiodine.getInstance().get().getFluidType().getDescriptionId());
                             break;
                         case BROMIDE:
-                            text = I18n.translateToLocal(FluidName.fluidbromine.getInstance().getUnlocalizedName());
+                            text = Component.translatable(FluidName.fluidbromine.getInstance().get().getFluidType().getDescriptionId());
                             break;
                         case CHLORINE:
-                            text = I18n.translateToLocal(FluidName.fluidchlorum.getInstance().getUnlocalizedName());
+                            text = Component.translatable(FluidName.fluidchlorum.getInstance().get().getFluidType().getDescriptionId());
                             break;
                         case FLUORINE:
-                            text = I18n.translateToLocal(FluidName.fluidfluor.getInstance().getUnlocalizedName());
+                            text = Component.translatable(FluidName.fluidfluor.getInstance().get().getFluidType().getDescriptionId());
                             break;
-
                     }
+
                     if (typeGas.getX() == 0 && typeGas.getZ() == 0) {
                         IUCore.proxy.messagePlayer(
                                 player,
-                                "X: " + (chunkPos1.getXStart() + 16) + ", Y:" + (typeGas.getY()) + ", Z: " + (chunkPos1.getZStart() + 16) +
-                                        " " + text
+                                Component.literal(
+                                        "X: " + (chunkPos1.getMinBlockX() + 16) +
+                                                ", Y: " + typeGas.getY() +
+                                                ", Z: " + (chunkPos1.getMinBlockZ() + 16) +
+                                                " " + text.getString()
+                                ).getString()
                         );
                     } else {
                         IUCore.proxy.messagePlayer(
                                 player,
-                                "X: " + (typeGas.getX()) + ", Y: " + (typeGas.getY()) + ", Z: " + (typeGas.getZ()) + " --> " + text
+                                Component.literal(
+                                        "X: " + typeGas.getX() +
+                                                ", Y: " + typeGas.getY() +
+                                                ", Z: " + typeGas.getZ() +
+                                                " --> " + text.getString()
+                                ).getString()
                         );
                     }
                 }
             }
         }
+
         if (empty) {
             IUCore.proxy.messagePlayer(
                     player,
-                    Localization.translate("iu.empty")
+                    Component.translatable("iu.empty").getString()
             );
         }
 
-        return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(p_77659_3_));
-    }
-
-    @Override
-    public void registerModels() {
-        registerModel(this, 0, this.name);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }
 
 }

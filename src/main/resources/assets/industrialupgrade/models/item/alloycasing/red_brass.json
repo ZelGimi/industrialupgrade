@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/red_brass_casing"
+    "layer0" : "industrialupgrade:item/red_brass_casing"
   }
 }

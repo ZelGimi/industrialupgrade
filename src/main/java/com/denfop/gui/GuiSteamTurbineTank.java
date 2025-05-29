@@ -4,30 +4,22 @@ import com.denfop.Constants;
 import com.denfop.api.gui.ImageInterface;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerSteamTurbineTank;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiSteamTurbineTank extends GuiIU<ContainerSteamTurbineTank> {
+public class GuiSteamTurbineTank<T extends ContainerSteamTurbineTank> extends GuiIU<ContainerSteamTurbineTank> {
 
     public GuiSteamTurbineTank(ContainerSteamTurbineTank guiContainer) {
         super(guiContainer);
-        this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.addElement(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         elements.add(TankGauge.createNormal(this, 80, 25, guiContainer.base.getTank()));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-    }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect( poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

@@ -2,10 +2,9 @@ package com.denfop.integration.jei.recycler;
 
 
 import com.denfop.IUItem;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,16 +61,8 @@ public class RecyclerHandler {
 
 
         }
-        for (Block container : ForgeRegistries.BLOCKS) {
 
 
-            addRecipe(
-                    new ItemStack(container),
-                    IUItem.scrap
-            );
-
-
-        }
     }
 
 

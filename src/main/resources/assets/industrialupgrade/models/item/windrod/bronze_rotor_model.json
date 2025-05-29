@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/bronze_rotor_model"
+    "layer0" : "industrialupgrade:item/bronze_rotor_model"
   }
 }

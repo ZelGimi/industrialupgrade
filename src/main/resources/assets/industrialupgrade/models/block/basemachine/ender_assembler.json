@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/ender_assembler",
-    "particle" : "industrialupgrade:models/ender_assembler"
+    "0" : "industrialupgrade:block/ender_assembler",
+    "particle" : "industrialupgrade:block/ender_assembler"
   },
   "elements" : [
     {

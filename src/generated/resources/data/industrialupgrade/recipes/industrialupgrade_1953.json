@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:compresscarbon"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:water_rotor/water_iridium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:corewater/core_wind6"
+  },
+  "show_notification": true
+}

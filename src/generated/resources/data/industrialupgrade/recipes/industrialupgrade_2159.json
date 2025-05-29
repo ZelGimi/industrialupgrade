@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/nichrome"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/cobalt"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "item": "industrialupgrade:wiring/itemcable22"
+  },
+  "show_notification": true
+}

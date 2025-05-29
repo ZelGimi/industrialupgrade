@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/chemical_plant_separate",
-    "down" : "industrialupgrade:blocks/chemical_plant_separate1",
-    "up" : "industrialupgrade:blocks/chemical_plant_separate1",
-    "north" : "industrialupgrade:blocks/chemical_plant_separate",
-    "east" : "industrialupgrade:blocks/chemical_plant_separate",
-    "south" : "industrialupgrade:blocks/chemical_plant_separate",
-    "west" : "industrialupgrade:blocks/chemical_plant_separate"
+    "particle" : "industrialupgrade:block/chemical_plant_separate",
+    "down" : "industrialupgrade:block/chemical_plant_separate1",
+    "up" : "industrialupgrade:block/chemical_plant_separate1",
+    "north" : "industrialupgrade:block/chemical_plant_separate",
+    "east" : "industrialupgrade:block/chemical_plant_separate",
+    "south" : "industrialupgrade:block/chemical_plant_separate",
+    "west" : "industrialupgrade:block/chemical_plant_separate"
   }
 }

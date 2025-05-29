@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "industrialupgrade:models/dryer",
-		"particle": "industrialupgrade:models/dryer"
+		"0": "industrialupgrade:block/dryer",
+		"particle": "industrialupgrade:block/dryer"
 	},
 	"elements": [
 		{

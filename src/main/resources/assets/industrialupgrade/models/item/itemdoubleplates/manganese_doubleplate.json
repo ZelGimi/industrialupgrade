@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/manganese_doubleplate"
+    "layer0" : "industrialupgrade:item/manganese_doubleplate"
   }
 }

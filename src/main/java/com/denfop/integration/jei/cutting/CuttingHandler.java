@@ -3,7 +3,7 @@ package com.denfop.integration.jei.cutting;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,16 @@ public class CuttingHandler {
 
     private static final List<CuttingHandler> recipes = new ArrayList<>();
     private final ItemStack input, output;
+    private final BaseMachineRecipe container;
 
-    public CuttingHandler(ItemStack input, ItemStack output) {
+    public CuttingHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
+        this.container=container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<CuttingHandler> getRecipes() {
@@ -25,8 +31,8 @@ public class CuttingHandler {
         return recipes;
     }
 
-    public static CuttingHandler addRecipe(ItemStack input, ItemStack output) {
-        CuttingHandler recipe = new CuttingHandler(input, output);
+    public static CuttingHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
+        CuttingHandler recipe = new CuttingHandler(input, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -49,12 +55,14 @@ public class CuttingHandler {
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("cutting")) {
 
-
-            addRecipe(
-                    container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0)
-            );
-
+    try {
+        addRecipe(
+                container.input.getInputs().get(0).getInputs().get(0),
+                container.getOutput().items.get(0),container
+        );
+    }catch (Exception e){
+        System.out.println(2);
+    };
 
         }
     }

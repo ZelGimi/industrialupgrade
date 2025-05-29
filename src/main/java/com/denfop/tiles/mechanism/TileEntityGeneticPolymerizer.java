@@ -2,42 +2,32 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGeneticPolymerizer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGeneticPolymerizer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -59,19 +49,19 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
     public InvSlotRecipes inputSlotA;
     public MachineRecipe output;
 
-    public TileEntityGeneticPolymerizer() {
+    public TileEntityGeneticPolymerizer(BlockPos pos, BlockState state) {
         super(
                 300,
                 1,
                 12,
-                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance(), FluidName.fluidcropgenetic.getInstance())
+                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance().get(), FluidName.fluidcropgenetic.getInstance().get()),BlockBaseMachine3.genetic_polymerizer,pos,state
         );
         this.outputSlot1 = new InvSlotOutput(this, 1);
         this.fluidSlot = new InvSlotFluidByList(
                 this,
                 1,
-                FluidName.fluidbeegenetic.getInstance(),
-                FluidName.fluidcropgenetic.getInstance()
+                FluidName.fluidbeegenetic.getInstance().get(),
+                FluidName.fluidcropgenetic.getInstance().get()
         );
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.output = null;
@@ -94,7 +84,7 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
         Recipes.recipes.addInitRecipes(this);
     }
 
-    public ContainerGeneticPolymerizer getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGeneticPolymerizer getGuiContainer(Player entityPlayer) {
         return new ContainerGeneticPolymerizer(entityPlayer, this);
 
     }
@@ -132,711 +122,711 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     public void init() {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 0)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(0))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.toriy, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 1))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(1)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 1)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(1))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.toriy, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 2))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(2)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 3)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(3))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 4))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 4))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(4)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 4)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(4))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 4))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 5))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(5)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 7)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(7))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.proton, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 8))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(8)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 8)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(8))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.proton, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 9))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(9)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 10)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(10))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.proton, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 11))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(11)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 12)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(12))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 13))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(13)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 13)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(13))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 14))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(14)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 15)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(15))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 16))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(16)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 16)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(16))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 17))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(17)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 18)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(18))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 0))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(0), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 19))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(19)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 19)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(19))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 0))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(0), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 20))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(20)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 21)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(21))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 4))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 22))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(22)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 22)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(22))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 4))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 23))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(23)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 24)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(24))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 25))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(25)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 25)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(25))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 26))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(26)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 27)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(27))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 28))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(28)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 28)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(28))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 29))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(29)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 30)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(30))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.toriy, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 31))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(31)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 31)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(31))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.toriy, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 32))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(32)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 33)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(33))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 1))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 34))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(34)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 34)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(34))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 1))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 35))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(35)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 38)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(38))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 39))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(39)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 39)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(39))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 2))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 40))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(40)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 41)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(41))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 42))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(42)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 42)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(42))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 43))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(43)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 44)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(44))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 3))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 45))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(45)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 45)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(45))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 3))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 46))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(46)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 47)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(47))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 48))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(48)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_bee, 1, 48)),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_bee.getStack(48))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 49))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(49)))
         ));
 
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 0)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(0))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.toriy, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 1))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(1)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 1)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(1))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.toriy, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 2))
-        ));
-
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 3)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 4))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 4))
-        ));
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 4)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 4))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 5))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(2)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 7)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(3))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.proton, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 8))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(4)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 8)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(4))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.proton, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 9))
-        ));
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 10)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.proton, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 11))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(5)))
         ));
 
-
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 13)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(7))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 1))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 14))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(8)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 14)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(8))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 1))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 15))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(9)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 15)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(10))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 4)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 1))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 16))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(11)))
         ));
 
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 22)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(13))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 23))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(14)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 23)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(14))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 24))
-        ));
-
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 25)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.toriy, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 26))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(15)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 26)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(15))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.toriy, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 4)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 27))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(16)))
         ));
 
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 28)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(22))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 29))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(23)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 29)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(23))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 30))
-        ));
-
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 31)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 4))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 32))
-        ));
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 32)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 4))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 33))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(24)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 37)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(25))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 38))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(26)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 38)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(26))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem(), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 39))
-        ));
-
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 40)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 41))
-        ));
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 41)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 42))
-        ));
-
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 43)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 44))
-        ));
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 44)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 2, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 45))
-        ));
-
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 46)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 47))
-        ));
-        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 47)),
-                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 48))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(27)))
         ));
 
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 19)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(28))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 3))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 17))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(29)))
+        ));
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(29))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(30)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 19)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(31))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 1))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 18))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(32)))
+        ));
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(32))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(33)))
         ));
 
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 19)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(37))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 2))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 20))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(38)))
         ));
         Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.genome_crop, 1, 19)),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(38))),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 2)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 10, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 2, 0))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2), 2))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 21))
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(39)))
+        ));
+
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(40))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(41)))
+        ));
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(41))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(42)))
+        ));
+
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(43))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(44)))
+        ));
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(44))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(45)))
+        ));
+
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(46))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 8)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(47)))
+        ));
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(47))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(48)))
+        ));
+
+
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(19))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(17)))
+        ));
+
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(19))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(18)))
+        ));
+
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(19))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(20)))
+        ));
+        Recipes.recipes.addRecipe("genetic_polymerizer", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.genome_crop.getStack(19))),
+                        input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 2)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 10)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(0), 2))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(21)))
         ));
     }
 
@@ -848,9 +838,11 @@ public class TileEntityGeneticPolymerizer extends TileElectricLiquidTankInventor
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiGeneticPolymerizer(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiGeneticPolymerizer((ContainerGeneticPolymerizer) menu);
 
     }
 

@@ -6,7 +6,7 @@ import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.colonies.api.IColony;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -34,14 +34,14 @@ public class PacketAddBuildingToColony implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
+    public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
         UUID uuid;
         try {
             uuid = (UUID) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (entityPlayer.getUniqueID().equals(uuid)) {
+        if (entityPlayer.getUUID().equals(uuid)) {
             String body = customPacketBuffer.readString();
             IBody body1 = SpaceNet.instance.getBodyFromName(body);
             SpaceNet.instance.getColonieNet().addItemToColony(body1, entityPlayer);

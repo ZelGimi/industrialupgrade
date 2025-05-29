@@ -1,8 +1,8 @@
 {
 	"credit": "texnounits",
 	"textures": {
-			"0": "industrialupgrade:items/gragonblood",
-		"particle": "industrialupgrade:items/gragonblood"
+			"0": "industrialupgrade:item/gragonblood",
+		"particle": "industrialupgrade:item/gragonblood"
 	},
 	"elements": [
 		{

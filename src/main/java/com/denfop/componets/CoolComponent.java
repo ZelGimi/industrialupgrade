@@ -1,45 +1,40 @@
 package com.denfop.componets;
 
-import com.denfop.api.cool.ICoolAcceptor;
-import com.denfop.api.cool.ICoolEmitter;
-import com.denfop.api.cool.ICoolSink;
-import com.denfop.api.cool.ICoolSource;
-import com.denfop.api.cool.ICoolTile;
+import com.denfop.api.cool.*;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.invslot.InvSlot;
+import com.denfop.items.modules.ItemCoolingUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CoolComponent extends AbstractComponent {
 
-    public final World world;
+    public final Level world;
     public final boolean fullEnergy;
     public double capacity;
     public double storage;
     public int sinkTier;
     public int sourceTier;
-    public Set<EnumFacing> sinkDirections;
-    public Set<EnumFacing> sourceDirections;
+    public Set<Direction> sinkDirections;
+    public Set<Direction> sourceDirections;
     public List<InvSlot> managedSlots;
     public boolean multiSource;
     public int sourcePackets;
@@ -50,7 +45,7 @@ public class CoolComponent extends AbstractComponent {
     public boolean upgrade = false;
     public int meta = 0;
     public boolean allow = false;
-    Map<EnumFacing, ICoolTile> energyCoolConductorMap = new HashMap<>();
+    Map<Direction, ICoolTile> energyCoolConductorMap = new HashMap<>();
     List<InfoTile<ICoolTile>> validColdReceivers = new LinkedList<>();
     private double coef;
 
@@ -61,8 +56,8 @@ public class CoolComponent extends AbstractComponent {
     public CoolComponent(
             TileEntityInventory parent,
             double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
+            Set<Direction> sinkDirections,
+            Set<Direction> sourceDirections,
             int tier
     ) {
         this(parent, capacity, sinkDirections, sourceDirections, tier, tier, false);
@@ -71,8 +66,8 @@ public class CoolComponent extends AbstractComponent {
     public CoolComponent(
             TileEntityInventory parent,
             double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
+            Set<Direction> sinkDirections,
+            Set<Direction> sourceDirections,
             int sinkTier,
             int sourceTier,
             boolean fullEnergy
@@ -86,7 +81,7 @@ public class CoolComponent extends AbstractComponent {
         this.sinkDirections = sinkDirections;
         this.sourceDirections = sourceDirections;
         this.fullEnergy = fullEnergy;
-        this.world = parent.getWorld();
+        this.world = parent.getLevel();
         this.coef = 1;
     }
 
@@ -106,19 +101,19 @@ public class CoolComponent extends AbstractComponent {
         return new CoolComponent(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
-    public void readFromNbt(NBTTagCompound nbt) {
+    public void readFromNbt(CompoundTag nbt) {
         this.storage = nbt.getDouble("storage");
         this.upgrade = nbt.getBoolean("upgrade");
-        this.meta = nbt.getInteger("meta");
+        this.meta = nbt.getInt("meta");
         this.allow = nbt.getBoolean("allow");
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound ret = new NBTTagCompound();
-        ret.setDouble("storage", this.storage);
-        ret.setBoolean("upgrade", this.upgrade);
-        ret.setInteger("meta", this.meta);
-        ret.setBoolean("allow", this.allow);
+    public CompoundTag writeToNbt() {
+        CompoundTag ret = new CompoundTag();
+        ret.putDouble("storage", this.storage);
+        ret.putBoolean("upgrade", this.upgrade);
+        ret.putInt("meta", this.meta);
+        ret.putBoolean("allow", this.allow);
 
         return ret;
     }
@@ -128,27 +123,30 @@ public class CoolComponent extends AbstractComponent {
         if (this.storage > this.capacity) {
             this.storage = this.capacity;
         }
-        if (!this.parent.getWorld().isRemote) {
+        if (!this.parent.getLevel().isClientSide) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
             } else {
 
                 this.createDelegate();
                 this.energyCoolConductorMap.clear();
                 this.validColdReceivers.clear();
-                MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate, this.parent.getWorld()));
+                MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate, this.parent.getLevel()));
             }
 
             this.loaded = true;
-            switch (this.parent.getWorld().provider.getBiomeForCoords(this.parent.getPos()).getTempCategory()) {
-                case COLD:
-                    coef = 0.5;
-                    break;
-                case WARM:
-                    coef = 1.5;
-                    break;
-                default:
-                    coef = 1;
-                    break;
+
+            Level world = parent.getLevel();
+
+
+            BlockPos pos = parent.getBlockPos();
+
+            Biome biome = world.getBiome(pos).value();
+            if (biome.coldEnoughToSnow(pos)) {
+                coef = 0.5;
+            } else if (biome.coldEnoughToSnow(pos)) {
+                coef = 1.5;
+            } else {
+                coef = 1;
             }
         }
 
@@ -165,8 +163,7 @@ public class CoolComponent extends AbstractComponent {
                 this.delegate = new CoolComponent.EnergyNetDelegateSink();
             }
 
-            this.delegate.setWorld(this.parent.getWorld());
-            this.delegate.setPos(this.parent.getPos());
+            this.delegate.setLevel(this.parent.getLevel());
         }
     }
 
@@ -174,14 +171,35 @@ public class CoolComponent extends AbstractComponent {
         if (this.delegate != null) {
 
 
-            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.parent.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.parent.getLevel()));
             this.delegate = null;
         }
 
         this.loaded = false;
     }
 
-    public void onContainerUpdate(EntityPlayerMP player) {
+    @Override
+    public boolean onBlockActivated(Player player, InteractionHand hand) {
+        if (!player.level().isClientSide() && player != null) {
+            if (this.getParent() instanceof TileMultiMachine multiMachine && player.getItemInHand(hand).getItem() instanceof ItemCoolingUpgrade<?>) {
+
+                ItemCoolingUpgrade<ItemCoolingUpgrade.Types> coolingUpgrade = (ItemCoolingUpgrade) player.getItemInHand(hand).getItem();
+
+                if (multiMachine.multi_process.getSizeWorkingSlot() <= coolingUpgrade.getTypeUpgrade(player.getItemInHand(hand)).getLevel()
+                        && !this.upgrade) {
+                    this.upgrade = true;
+                    this.meta = coolingUpgrade.getElement().getId();
+                    player.getItemInHand(hand).shrink(1);
+                    return true;
+                }
+            }
+
+
+        }
+        return super.onBlockActivated(player, hand);
+    }
+
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
@@ -307,12 +325,12 @@ public class CoolComponent extends AbstractComponent {
         this.sendingSidabled = !enabled;
     }
 
-    public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
+    public void setDirections(Set<Direction> sinkDirections, Set<Direction> sourceDirections) {
 
         if (this.delegate != null) {
 
 
-            assert !this.parent.getWorld().isRemote;
+            assert !this.parent.getLevel().isClientSide;
 
             MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.world));
         }
@@ -327,7 +345,7 @@ public class CoolComponent extends AbstractComponent {
 
         if (this.delegate != null) {
 
-            assert !this.parent.getWorld().isRemote;
+            assert !this.parent.getLevel().isClientSide;
 
             this.energyCoolConductorMap.clear();
             this.validColdReceivers.clear();
@@ -337,11 +355,11 @@ public class CoolComponent extends AbstractComponent {
 
     }
 
-    public Set<EnumFacing> getSourceDirs() {
+    public Set<Direction> getSourceDirs() {
         return Collections.unmodifiableSet(this.sourceDirections);
     }
 
-    public Set<EnumFacing> getSinkDirs() {
+    public Set<Direction> getSinkDirs() {
         return Collections.unmodifiableSet(this.sinkDirections);
     }
 
@@ -354,9 +372,10 @@ public class CoolComponent extends AbstractComponent {
     }
 
 
-    private abstract static class EnergyNetDelegate extends TileEntity implements ICoolTile {
+    private abstract class EnergyNetDelegate extends BlockEntity implements ICoolTile {
 
         private EnergyNetDelegate() {
+            super(CoolComponent.this.parent.getType(), CoolComponent.this.parent.getBlockPos(), CoolComponent.this.parent.getBlockState());
         }
 
     }
@@ -377,7 +396,7 @@ public class CoolComponent extends AbstractComponent {
             return CoolComponent.this.sinkTier;
         }
 
-        public boolean acceptsCoolFrom(ICoolEmitter emitter, EnumFacing dir) {
+        public boolean acceptsCoolFrom(ICoolEmitter emitter, Direction dir) {
             return CoolComponent.this.sinkDirections.contains(dir);
         }
 
@@ -400,16 +419,16 @@ public class CoolComponent extends AbstractComponent {
         }
 
         @Override
-        public void AddCoolTile(final ICoolTile tile, final EnumFacing dir) {
-            if (!this.getWorld().isRemote) {
+        public void AddCoolTile(final ICoolTile tile, final Direction dir) {
+            if (!this.getLevel().isClientSide) {
                 energyCoolConductorMap.put(dir, tile);
                 validColdReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
             }
         }
 
         @Override
-        public void RemoveCoolTile(final ICoolTile tile, final EnumFacing dir) {
-            if (!this.getWorld().isRemote) {
+        public void RemoveCoolTile(final ICoolTile tile, final Direction dir) {
+            if (!this.getLevel().isClientSide) {
                 energyCoolConductorMap.remove(dir);
                 final Iterator<InfoTile<ICoolTile>> iter = validColdReceivers.iterator();
                 while (iter.hasNext()) {
@@ -423,7 +442,7 @@ public class CoolComponent extends AbstractComponent {
         }
 
         @Override
-        public Map<EnumFacing, ICoolTile> getCoolTiles() {
+        public Map<Direction, ICoolTile> getCoolTiles() {
             return energyCoolConductorMap;
         }
 
@@ -433,8 +452,8 @@ public class CoolComponent extends AbstractComponent {
         }
 
         @Override
-        public @NotNull BlockPos getBlockPos() {
-            return CoolComponent.this.parent.getPos();
+        public @NotNull BlockPos getPos() {
+            return CoolComponent.this.parent.getBlockPos();
         }
 
         public double getDemandedCool() {
@@ -464,7 +483,7 @@ public class CoolComponent extends AbstractComponent {
         }
 
         @Override
-        public TileEntity getTile() {
+        public BlockEntity getTile() {
             return CoolComponent.this.parent;
         }
 
@@ -483,13 +502,13 @@ public class CoolComponent extends AbstractComponent {
             return CoolComponent.this.sourceTier;
         }
 
-        public boolean emitsCoolTo(ICoolAcceptor receiver, EnumFacing dir) {
+        public boolean emitsCoolTo(ICoolAcceptor receiver, Direction dir) {
             return CoolComponent.this.sourceDirections.contains(dir);
         }
 
         @Override
-        public @NotNull BlockPos getBlockPos() {
-            return CoolComponent.this.parent.getPos();
+        public @NotNull BlockPos getPos() {
+            return CoolComponent.this.parent.getBlockPos();
         }
 
         public long getIdNetwork() {
@@ -511,16 +530,16 @@ public class CoolComponent extends AbstractComponent {
         }
 
         @Override
-        public void AddCoolTile(final ICoolTile tile, final EnumFacing dir) {
-            if (!this.getWorld().isRemote) {
+        public void AddCoolTile(final ICoolTile tile, final Direction dir) {
+            if (!this.getLevel().isClientSide) {
                 energyCoolConductorMap.put(dir, tile);
                 validColdReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
             }
         }
 
         @Override
-        public void RemoveCoolTile(final ICoolTile tile, final EnumFacing dir) {
-            if (!this.getWorld().isRemote) {
+        public void RemoveCoolTile(final ICoolTile tile, final Direction dir) {
+            if (!this.getLevel().isClientSide) {
                 energyCoolConductorMap.remove(dir);
                 final Iterator<InfoTile<ICoolTile>> iter = validColdReceivers.iterator();
                 while (iter.hasNext()) {
@@ -534,7 +553,7 @@ public class CoolComponent extends AbstractComponent {
         }
 
         @Override
-        public Map<EnumFacing, ICoolTile> getCoolTiles() {
+        public Map<Direction, ICoolTile> getCoolTiles() {
             return energyCoolConductorMap;
         }
 
@@ -560,7 +579,7 @@ public class CoolComponent extends AbstractComponent {
         }
 
         @Override
-        public TileEntity getTile() {
+        public BlockEntity getTile() {
             return CoolComponent.this.parent;
         }
 

@@ -1,10 +1,10 @@
 package com.denfop.tiles.base;
 
+import com.denfop.DataBlockEntity;
 import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -592,13 +592,13 @@ public enum EnumMultiMachine {
     public final int usagePerTick;
     public final int lenghtOperation;
     public final int sizeWorkingSlot;
-    public final Block block_new;
+    public final DataBlockEntity block_new;
     public final int meta_new;
     public final int upgrade;
     public final int meta;
     public final EnumTypeMachines type;
     public final String recipe;
-    public final Block block;
+    public final DataBlockEntity block;
     public final boolean output;
     private final int min;
     private final int max;
@@ -607,9 +607,9 @@ public enum EnumMultiMachine {
             int usagePerTick,
             int lenghtOperation,
             int sizeWorkingSlot,
-            Block block_new,
+            DataBlockEntity block_new,
             int meta_new,
-            int upgrade, int meta, EnumTypeMachines type, Block block
+            int upgrade, int meta, EnumTypeMachines type, DataBlockEntity block
     ) {
 
 
@@ -632,9 +632,9 @@ public enum EnumMultiMachine {
             int usagePerTick,
             int lenghtOperation,
             int sizeWorkingSlot,
-            Block block_new,
+            DataBlockEntity block_new,
             int meta_new,
-            int upgrade, int meta, EnumTypeMachines type, Block block, boolean double_output
+            int upgrade, int meta, EnumTypeMachines type, DataBlockEntity block, boolean double_output
     ) {
 
 
@@ -657,9 +657,9 @@ public enum EnumMultiMachine {
             int usagePerTick,
             int lenghtOperation,
             int sizeWorkingSlot,
-            Block block_new,
+            DataBlockEntity block_new,
             int meta_new,
-            int upgrade, int meta, EnumTypeMachines type, Block block, int min, int max
+            int upgrade, int meta, EnumTypeMachines type, DataBlockEntity block, int min, int max
     ) {
 
 
@@ -680,7 +680,7 @@ public enum EnumMultiMachine {
 
     public static void write() {
 
-        final ItemStack stack = new ItemStack(IUItem.oilquarry);
+        final ItemStack stack = new ItemStack(IUItem.oilquarry.getItem());
         IUItem.map_upgrades.put(0, Collections.singletonList(stack));
         IUItem.map_upgrades.put(1, Collections.singletonList(stack));
         IUItem.map_upgrades.put(2, Collections.singletonList(stack));
@@ -700,7 +700,7 @@ public enum EnumMultiMachine {
 
         for (EnumMultiMachine multiMachine : values()) {
 
-            list2.add(new ItemStack(multiMachine.block, 1, multiMachine.meta));
+            list2.add(new ItemStack(multiMachine.block.getItem(multiMachine.meta), 1));
 
         }
         IUItem.upgrades_panels = list2;

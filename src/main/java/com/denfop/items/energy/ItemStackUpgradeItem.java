@@ -1,16 +1,16 @@
 package com.denfop.items.energy;
 
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeldUpgradeItem;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiUpgradeItem;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemStackInventory;
-import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -19,7 +19,7 @@ public class ItemStackUpgradeItem extends ItemStackInventory {
     public final ItemStack itemStack1;
 
 
-    public ItemStackUpgradeItem(EntityPlayer player, ItemStack stack) {
+    public ItemStackUpgradeItem(Player player, ItemStack stack) {
         super(player, stack, 0);
         this.itemStack1 = stack;
     }
@@ -29,18 +29,18 @@ public class ItemStackUpgradeItem extends ItemStackInventory {
     }
 
 
-    public ContainerBase<ItemStackUpgradeItem> getGuiContainer(EntityPlayer player) {
-        return new ContainerHeldUpgradeItem(this);
+    public ContainerBase<ItemStackUpgradeItem> getGuiContainer(Player player) {
+        return new ContainerHeldUpgradeItem(this, player);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiUpgradeItem(new ContainerHeldUpgradeItem(this), itemStack1);
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiUpgradeItem((ContainerHeldUpgradeItem) isAdmin, itemStack1);
     }
 
     @Override
-    public TileEntityInventory getParent() {
-        return null;
+    public ItemStackInventory getParent() {
+        return this;
     }
 
 

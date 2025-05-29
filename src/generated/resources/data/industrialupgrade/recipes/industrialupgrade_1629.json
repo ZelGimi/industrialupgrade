@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_478_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_40_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_97_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/hazmat_helmet"
+  },
+  "show_notification": true
+}

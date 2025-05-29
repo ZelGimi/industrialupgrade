@@ -1,24 +1,29 @@
 package com.denfop.tiles.smeltery;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockSmeltery;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSmelteryFuelTank;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSmelteryFuelTank;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class TileEntitySmelteryFuelTank extends TileEntityMultiBlockElement implements IFuelTank {
 
@@ -26,39 +31,34 @@ public class TileEntitySmelteryFuelTank extends TileEntityMultiBlockElement impl
     private final Fluids.InternalFluidTank fluidTank;
     private double speed;
 
-    public TileEntitySmelteryFuelTank() {
+    public TileEntitySmelteryFuelTank(BlockPos pos, BlockState state) {
+        super(BlockSmeltery.smeltery_fuel_tank,pos,state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluids", 10000);
-        this.fluidTank.setAcceptedFluids(Fluids.fluidPredicate(FluidRegistry.LAVA, FluidName.fluidpahoehoe_lava.getInstance()));
+        this.fluidTank.setAcceptedFluids(Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.LAVA, FluidName.fluidpahoehoe_lava.getInstance().get()));
     }
 
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    @Override
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
+
+
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.fluidTank.getFluid() != null && this.fluidTank
+        if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank
                 .getFluid()
                 .getFluid()
-                .equals(FluidName.fluidpahoehoe_lava.getInstance())) {
+                .equals(FluidName.fluidpahoehoe_lava.getInstance().get())) {
             speed = 2;
         } else {
             speed = 1;
@@ -71,14 +71,14 @@ public class TileEntitySmelteryFuelTank extends TileEntityMultiBlockElement impl
     }
 
     @Override
-    public ContainerSmelteryFuelTank getGuiContainer(final EntityPlayer var1) {
+    public ContainerSmelteryFuelTank getGuiContainer(final Player var1) {
         return new ContainerSmelteryFuelTank(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSmelteryFuelTank(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSmelteryFuelTank((ContainerSmelteryFuelTank) menu);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class TileEntitySmelteryFuelTank extends TileEntityMultiBlockElement impl
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.smeltery;
+        return IUItem.smeltery.getBlock(getTeBlock());
     }
 
     @Override

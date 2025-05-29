@@ -1,61 +1,75 @@
 package com.denfop.items.modules;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.reactors.IReactorModule;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.CraftingTypes> implements
-        IModelRegister, IReactorModule {
-
-    protected static final String NAME = "reactormodules";
-
-    public ItemReactorModules() {
-        super(ItemReactorModules.CraftingTypes.class);
-        this.setCreativeTab(IUCore.ModuleTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemReactorModules<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IReactorModule {
+    public ItemReactorModules(T element) {
+        super(new Item.Properties(), element);
     }
-
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":reactor_module/" + CraftingTypes
-                        .getFromID(meta).getName(), null)
-        );
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ModuleTab;
     }
-
+    @Override
+    public double getStableHeat(final ItemStack stack) {
+        Types craftingTypes = (Types) this.getElement();
+        return craftingTypes.getStableHeat();
+    }
 
     @Override
-    public void addInformation(
-            @Nonnull final ItemStack itemStack,
-            @Nullable final World worldIn,
-            @Nonnull final List<String> info,
-            @Nonnull final ITooltipFlag flagIn
-    ) {
-        super.addInformation(itemStack, worldIn, info, flagIn);
-        CraftingTypes craftingTypes = CraftingTypes.getFromID(itemStack.getItemDamage());
+    public double getRadiation(final ItemStack stack) {
+        Types craftingTypes = (Types) this.getElement();
+        return craftingTypes.getRadiation();
+    }
+
+    @Override
+    public double getGeneration(final ItemStack stack) {
+        Types craftingTypes = (Types) this.getElement();
+        return craftingTypes.getGeneration();
+    }
+
+    @Override
+    public double getComponentVent(final ItemStack stack) {
+        Types craftingTypes = (Types) this.getElement();
+        return craftingTypes.getComponentVent();
+    }
+
+    @Override
+    public double getVent(final ItemStack stack) {
+        Types craftingTypes = (Types) this.getElement();
+        return craftingTypes.getVent();
+    }
+
+    @Override
+    public double getExchanger(final ItemStack stack) {
+        Types craftingTypes = (Types) this.getElement();
+        return craftingTypes.getExchanger();
+    }
+
+    @Override
+    public double getCapacitor(final ItemStack stack) {
+        Types craftingTypes = (Types) this.getElement();
+        return craftingTypes.getCapacitor();
+    }
+
+    @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> info, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, info, p_41424_);
+        Types craftingTypes = (Types) this.getElement();
         double generation = craftingTypes.generation - 1;
         double radiation = craftingTypes.radiation - 1;
         double stableHeat = craftingTypes.stableHeat - 1;
@@ -64,102 +78,55 @@ public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.Crafting
         double vent = craftingTypes.vent - 1;
         double componentVent = craftingTypes.componentVent - 1;
         if (generation > 0) {
-            info.add(Localization.translate("reactor.generation_plus") + ((int) (craftingTypes.generation * 100) - 100) + "%");
+            info.add(Component.literal(Localization.translate("reactor.generation_plus") + ((int) (craftingTypes.generation * 100) - 100) + "%"));
         } else if (generation < 0) {
-            info.add(Localization.translate("reactor.generation_minus") + (100 - (int) (craftingTypes.generation * 100)) + "%");
+            info.add(Component.literal(Localization.translate("reactor.generation_minus") + (100 - (int) (craftingTypes.generation * 100)) + "%"));
         }
         if (radiation > 0) {
-            info.add(Localization.translate("reactor.radiation_plus") + ((int) (craftingTypes.radiation * 100) - 100) + "%");
+            info.add(Component.literal(Localization.translate("reactor.radiation_plus") + ((int) (craftingTypes.radiation * 100) - 100) + "%"));
         } else if (radiation < 0) {
-            info.add(Localization.translate("reactor.radiation_minus") + (100 - (int) (craftingTypes.radiation * 100)) + "%");
+            info.add(Component.literal(Localization.translate("reactor.radiation_minus") + (100 - (int) (craftingTypes.radiation * 100)) + "%"));
         }
         if (vent > 0) {
-            info.add(Localization.translate("reactor.vent_plus") + ((int) (craftingTypes.vent * 100) - 100) + "%");
+            info.add(Component.literal(Localization.translate("reactor.vent_plus") + ((int) (craftingTypes.vent * 100) - 100) + "%"));
         } else if (vent < 0) {
-            info.add(Localization.translate("reactor.vent_minus") + (100 - (int) (craftingTypes.vent * 100)) + "%");
+            info.add(Component.literal(Localization.translate("reactor.vent_minus") + (100 - (int) (craftingTypes.vent * 100)) + "%"));
         }
         if (stableHeat > 0) {
-            info.add(Localization.translate("reactor.stableheat_plus") + ((int) (craftingTypes.stableHeat * 100) - 100) + "%");
+            info.add(Component.literal(Localization.translate("reactor.stableheat_plus") + ((int) (craftingTypes.stableHeat * 100) - 100) + "%"));
         } else if (stableHeat < 0) {
-            info.add(Localization.translate("reactor.stableheat_minus") + (100 - (int) (craftingTypes.stableHeat * 100)) + "%");
+            info.add(Component.literal(Localization.translate("reactor.stableheat_minus") + (100 - (int) (craftingTypes.stableHeat * 100)) + "%"));
         }
         if (capacitor > 0) {
-            info.add(Localization.translate("reactor.capacitor_plus") + ((int) (craftingTypes.capacitor * 100) - 100) + "%");
+            info.add(Component.literal(Localization.translate("reactor.capacitor_plus") + ((int) (craftingTypes.capacitor * 100) - 100) + "%"));
         } else if (capacitor < 0) {
-            info.add(Localization.translate("reactor.capacitor_minus") + (100 - (int) (craftingTypes.capacitor * 100)) + "%");
+            info.add(Component.literal(Localization.translate("reactor.capacitor_minus") + (100 - (int) (craftingTypes.capacitor * 100)) + "%"));
         }
         if (componentVent > 0) {
-            info.add(Localization.translate("reactor.componentvent_plus") + ((int) (craftingTypes.componentVent * 100) - 100) + "%");
+            info.add(Component.literal(Localization.translate("reactor.componentvent_plus") + ((int) (craftingTypes.componentVent * 100) - 100) + "%"));
         } else if (componentVent < 0) {
-            info.add(Localization.translate("reactor.componentvent_minus") + (100 - (int) (craftingTypes.componentVent * 100)) + "%");
+            info.add(Component.literal(Localization.translate("reactor.componentvent_minus") + (100 - (int) (craftingTypes.componentVent * 100)) + "%"));
         }
         if (exchanger > 0) {
-            info.add(Localization.translate("reactor.exchanger_plus") + ((int) (craftingTypes.exchanger * 100) - 100) + "%");
+            info.add(Component.literal(Localization.translate("reactor.exchanger_plus") + ((int) (craftingTypes.exchanger * 100) - 100) + "%"));
         } else if (exchanger < 0) {
-            info.add(Localization.translate("reactor.exchanger_minus") + (100 - (int) (craftingTypes.exchanger * 100)) + "%");
+            info.add(Component.literal(Localization.translate("reactor.exchanger_minus") + (100 - (int) (craftingTypes.exchanger * 100)) + "%"));
         }
     }
 
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @Override
-    public double getStableHeat(final ItemStack stack) {
-        CraftingTypes craftingTypes = CraftingTypes.getFromID(stack.getItemDamage());
-        return craftingTypes.getStableHeat();
-    }
-
-    @Override
-    public double getRadiation(final ItemStack stack) {
-        CraftingTypes craftingTypes = CraftingTypes.getFromID(stack.getItemDamage());
-        return craftingTypes.getRadiation();
-    }
-
-    @Override
-    public double getGeneration(final ItemStack stack) {
-        CraftingTypes craftingTypes = CraftingTypes.getFromID(stack.getItemDamage());
-        return craftingTypes.getGeneration();
-    }
-
-    @Override
-    public double getComponentVent(final ItemStack stack) {
-        CraftingTypes craftingTypes = CraftingTypes.getFromID(stack.getItemDamage());
-        return craftingTypes.getComponentVent();
-    }
-
-    @Override
-    public double getVent(final ItemStack stack) {
-        CraftingTypes craftingTypes = CraftingTypes.getFromID(stack.getItemDamage());
-        return craftingTypes.getVent();
-    }
-
-    @Override
-    public double getExchanger(final ItemStack stack) {
-        CraftingTypes craftingTypes = CraftingTypes.getFromID(stack.getItemDamage());
-        return craftingTypes.getExchanger();
-    }
-
-    @Override
-    public double getCapacitor(final ItemStack stack) {
-        CraftingTypes craftingTypes = CraftingTypes.getFromID(stack.getItemDamage());
-        return craftingTypes.getCapacitor();
-    }
-
-    public enum CraftingTypes implements ISubEnum {
+    public enum Types implements ISubEnum {
         generation0(0.98, 1, 1.05, 1, 1, 1, 1),
         generation1(0.95, 1, 1.1, 1, 1, 1, 1),
         generation2(0.92, 1, 1.15, 1, 1, 1, 1),
         generation3(0.90, 1, 1.2, 1, 1, 1, 1),
         radiation0(1.02, 1.25, 1, 1, 1, 1, 1),
-        radiation1(1.04, 2.5, 1, 1, 1, 1, 1),
-        radiation2(1.06, 3, 1, 1, 1, 1, 1),
-        radiation3(1.08, 4, 1, 1, 1, 1, 1),
+        radiation1(1.05, 1.5, 1, 1, 1, 1, 1),
+        radiation2(1.08, 2, 1, 1, 1, 1, 1),
+        radiation3(1.1, 4, 1, 1, 1, 1, 1),
         stableheat0(1.05, 1.25, 0.98, 1, 1, 1, 1),
-        stableheat1(1.1, 1.5, 0.95, 1, 1, 1, 1),
-        stableheat2(1.15, 1.75, 0.9, 1, 1, 1, 1),
-        stableheat3(1.2, 2, 0.85, 1, 1, 1, 1),
+        stableheat1(1.1, 2.5, 0.95, 1, 1, 1, 1),
+        stableheat2(1.15, 3, 0.9, 1, 1, 1, 1),
+        stableheat3(1.2, 4, 0.85, 1, 1, 1, 1),
         vent0(1.0, 1, 1, 1, 1.05, 0.95, 1),
         vent1(1, 1, 1, 1, 1.1, 0.9, 1),
         vent2(1, 1, 1, 0.8, 1.15, 0.9, 1),
@@ -188,10 +155,9 @@ public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.Crafting
         private double exchanger;
         private double capacitor;
 
-        CraftingTypes(
+        Types(
                 double stableHeat, double radiation, double generation, double componentVent,
-                double vent, double exchanger, double capacitor
-        ) {
+                double vent, double exchanger, double capacitor) {
             this.name = this.name().toLowerCase(Locale.US);
             this.stableHeat = stableHeat;
             this.radiation = radiation;
@@ -202,7 +168,7 @@ public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.Crafting
             this.capacitor = capacitor;
         }
 
-        public static CraftingTypes getFromID(final int ID) {
+        public static Types getFromID(final int ID) {
             return values()[ID % values().length];
         }
 
@@ -236,6 +202,11 @@ public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.Crafting
 
         public String getName() {
             return this.name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "reactormodules";
         }
 
         public int getId() {

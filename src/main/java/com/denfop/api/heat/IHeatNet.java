@@ -1,11 +1,12 @@
 package com.denfop.api.heat;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface IHeatNet {
 
-    IHeatTile getSubTile(World var1, BlockPos var2);
+    IHeatTile getSubTile(Level var1, BlockPos var2);
 
 
 }

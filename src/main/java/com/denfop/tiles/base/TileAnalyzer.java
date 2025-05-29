@@ -2,6 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
@@ -12,27 +13,32 @@ import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAnalyzer;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiAnalyzer;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlotAnalyzer;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,8 +88,8 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
     private int indexPos;
     private int indexVein;
 
-    public TileAnalyzer() {
-        super(10000000, 14, 1);
+    public TileAnalyzer(BlockPos pos, BlockState state) {
+        super(10000000, 14, 1, BlockBaseMachine2.analyzer, pos, state);
 
         this.analysis = false;
         this.numberores = 0;
@@ -109,13 +115,14 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 1;
     }
 
+
     public void update_chunk() {
-        this.chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-        this.chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
+        this.chunkx = this.getWorld().getChunk(this.pos).getPos().x * 16;
+        this.chunkz = this.getWorld().getChunk(this.pos).getPos().z * 16;
         int size = this.size;
         this.xChunk = chunkx - 16 * size;
         this.zChunk = chunkz - 16 * size;
@@ -140,7 +147,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     @Override
@@ -209,47 +216,47 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
         return Math.min(((temp * temp1 * this.y) / (temp * temp1 * 256)), 1);
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
 
 
         this.start = nbttagcompound.getBoolean("start");
-        this.xChunk = nbttagcompound.getInteger("xChunk");
-        this.zChunk = nbttagcompound.getInteger("zChunk");
-        this.xendChunk = nbttagcompound.getInteger("xendChunk");
-        this.zendChunk = nbttagcompound.getInteger("zendChunk");
+        this.xChunk = nbttagcompound.getInt("xChunk");
+        this.zChunk = nbttagcompound.getInt("zChunk");
+        this.xendChunk = nbttagcompound.getInt("xendChunk");
+        this.zendChunk = nbttagcompound.getInt("zendChunk");
         this.sum = nbttagcompound.getDouble("sum");
-        this.sum1 = nbttagcompound.getInteger("sum1");
-        this.breakblock = nbttagcompound.getInteger("breakblock");
-        this.numberores = nbttagcompound.getInteger("numberores");
+        this.sum1 = nbttagcompound.getInt("sum1");
+        this.breakblock = nbttagcompound.getInt("breakblock");
+        this.numberores = nbttagcompound.getInt("numberores");
 
-        int size = nbttagcompound.getInteger("size_DataOre");
-        final NBTTagCompound dataOreTag = nbttagcompound.getCompoundTag("DataOre");
+        int size = nbttagcompound.getInt("size_DataOre");
+        final CompoundTag dataOreTag = nbttagcompound.getCompound("DataOre");
         for (int i = 0; i < size; i++) {
-            this.dataOreList.add(new DataOre(dataOreTag.getCompoundTag(String.valueOf(i))));
+            this.dataOreList.add(new DataOre(dataOreTag.getCompound(String.valueOf(i))));
         }
 
         this.analysis = nbttagcompound.getBoolean("analysis");
         this.quarry = nbttagcompound.getBoolean("quarry");
 
-        this.xcoord = nbttagcompound.getInteger("xcoord");
-        this.xendcoord = nbttagcompound.getInteger("xendcoord");
-        this.zcoord = nbttagcompound.getInteger("zcoord");
-        this.zendcoord = nbttagcompound.getInteger("zendcoord");
+        this.xcoord = nbttagcompound.getInt("xcoord");
+        this.xendcoord = nbttagcompound.getInt("xendcoord");
+        this.zcoord = nbttagcompound.getInt("zcoord");
+        this.zendcoord = nbttagcompound.getInt("zendcoord");
 
-        this.xTempChunk = nbttagcompound.getInteger("xTempChunk");
-        this.zTempChunk = nbttagcompound.getInteger("zTempChunk");
+        this.xTempChunk = nbttagcompound.getInt("xTempChunk");
+        this.zTempChunk = nbttagcompound.getInt("zTempChunk");
         this.chunksx = new int[this.xendcoord][this.zendcoord];
         this.chunksz = new int[this.xendcoord][this.zendcoord];
         for (int i = 0; i < this.xendcoord; i++) {
             for (int j = 0; j < this.zendcoord; j++) {
-                this.chunksx[i][j] = nbttagcompound.getInteger("chunksx" + i + j);
-                this.chunksz[i][j] = nbttagcompound.getInteger("chunksz" + i + j);
+                this.chunksx[i][j] = nbttagcompound.getInt("chunksx" + i + j);
+                this.chunksz[i][j] = nbttagcompound.getInt("chunksz" + i + j);
             }
         }
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         if (event == 1 && this.inputslot.quarry() && !this.analysis) {
             this.quarry = !this.quarry;
         }
@@ -284,14 +291,14 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                 this.analyze();
                 return;
             }
-            if (this.getWorld().provider.getWorldTime() % 2 == 0) {
+            if (this.getWorld().getGameTime() % 2 == 0) {
                 if (this.inputslot.getwirelessmodule()) {
                     List<Integer> list6 = this.inputslot.wirelessmodule();
                     int xx = list6.get(0);
                     int yy = list6.get(1);
                     int zz = list6.get(2);
                     BlockPos pos1 = new BlockPos(xx, yy, zz);
-                    final TileEntity tile = this.getWorld().getTileEntity(pos1);
+                    final BlockEntity tile = this.getWorld().getBlockEntity(pos1);
                     if (tile instanceof TileEntityAnalyzerChest) {
                         TileEntityAnalyzerChest target1 = (TileEntityAnalyzerChest) tile;
                         quarry(Collections.singletonList(target1));
@@ -300,13 +307,13 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
 
                 } else {
                     List<TileEntityAnalyzerChest> list = new ArrayList<>();
-                    for (EnumFacing direction : EnumFacing.values()) {
+                    for (Direction direction : Direction.values()) {
                         BlockPos pos1 = new BlockPos(
-                                this.pos.getX() + direction.getFrontOffsetX(),
-                                this.pos.getY() + direction.getFrontOffsetY(),
-                                this.pos.getZ() + direction.getFrontOffsetZ()
+                                this.pos.getX() + direction.getStepX(),
+                                this.pos.getY() + direction.getStepY(),
+                                this.pos.getZ() + direction.getStepZ()
                         );
-                        TileEntity target = this.getWorld().getTileEntity(pos1);
+                        BlockEntity target = this.getWorld().getBlockEntity(pos1);
                         if (target instanceof TileEntityAnalyzerChest) {
                             TileEntityAnalyzerChest target1 = (TileEntityAnalyzerChest) target;
                             list.add(target1);
@@ -380,47 +387,46 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                             yy,
                             z
                     );
-                    final IBlockState blockstate = this.getWorld().getBlockState(pos1);
-                    if (!(blockstate.getMaterial() == Material.AIR)) {
+                    final BlockState blockstate = this.getWorld().getBlockState(pos1);
+                    if (!(blockstate.isAir())) {
                         this.breakblock++;
 
                         Block block = blockstate.getBlock();
-                        ItemStack stack = new ItemStack(block, 1,
-                                block.getMetaFromState(blockstate)
-                        );
+                        ItemStack stack = new ItemStack(block, 1);
                         if (stack.isEmpty()) {
                             continue;
                         }
-                        int[] ints = OreDictionary.getOreIDs(stack);
+                        List<TagKey<Item>> ints = stack.getItemHolder().tags().toList();
                         if (!stack.isEmpty()) {
                             if ((blockstate
-                                    .getMaterial() == Material.IRON || blockstate
-                                    .getMaterial() == Material.ROCK) && ints.length > 0) {
+                                    .getMapColor(level,pos1) == MapColor.METAL || blockstate
+                                    .getMapColor(level,pos1) == MapColor.STONE) && !ints.isEmpty()) {
 
+                                for (TagKey<Item> id : ints) {
+                                    String name = id.location().getPath();
+                                    if (name.startsWith("ores") && !name.equals("ores")) {
+                                        if (!this.inputslot.CheckBlackList(
+                                                blacklist,
+                                                name
+                                        ) && this.inputslot.CheckWhiteList(whitelist, name)) {
 
-                                int id = ints[0];
-                                String name = OreDictionary.getOreName(id);
-                                if (name.startsWith("ore")) {
-                                    if (!this.inputslot.CheckBlackList(
-                                            blacklist,
-                                            name
-                                    ) && this.inputslot.CheckWhiteList(whitelist, name)) {
+                                            DataOre dataOre = this.dataOreList.get(name);
+                                            if (dataOre == null) {
+                                                dataOre = new DataOre(name, 1, yy, pos1, stack, blockstate);
+                                                this.dataOreList.add(dataOre);
+                                                numberores++;
+                                            } else {
 
-                                        DataOre dataOre = this.dataOreList.get(name);
-                                        if (dataOre == null) {
-                                            dataOre = new DataOre(name, 1, yy, pos1, stack, blockstate);
-                                            this.dataOreList.add(dataOre);
-                                            numberores++;
-                                        } else {
+                                                dataOre.addNumber(1);
+                                                dataOre.addY(yy);
+                                                dataOre.addPos(pos1);
+                                                numberores++;
 
-                                            dataOre.addNumber(1);
-                                            dataOre.addY(yy);
-                                            dataOre.addPos(pos1);
-                                            numberores++;
+                                            }
+                                            break;
+
 
                                         }
-
-
                                     }
                                 }
                             }
@@ -438,21 +444,21 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
         if (this.y >= 256) {
             final Vein vein = VeinSystem.system.getVein(this
                     .getWorld()
-                    .getChunkFromBlockCoords(new BlockPos(tempx, 0, tempz))
+                    .getChunk(new BlockPos(tempx, 0, tempz))
                     .getPos());
             if (vein != VeinSystem.system.getEMPTY()) {
                 if (vein.getType() == Type.VEIN && vein.isFind() && vein.getCol() > 0) {
                     final ItemStack stack;
                     if (vein.isOldMineral()) {
-                        stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                        stack = new ItemStack(IUItem.heavyore.getItem(vein.getMeta()), 1);
                     } else {
-                        stack = new ItemStack(IUItem.mineral, 1, vein.getMeta());
+                        stack = new ItemStack(IUItem.mineral.getItem(vein.getMeta()), 1);
                     }
-                    int id = OreDictionary.getOreIDs(stack)[0];
-                    String name = OreDictionary.getOreName(id);
+                    TagKey<Item> id = stack.getItemHolder().tags().toList().get(0);
+                    String name = id.location().getPath();
                     DataOre dataOre = this.dataOreList.get(name);
                     if (dataOre == null) {
-                        dataOre = new DataOre(name, vein.getCol(), 0, null, stack, null);
+                        dataOre = new DataOre(name, vein.getCol(), 0, null, stack, ((BlockItem) stack.getItem()).getBlock().defaultBlockState());
                         this.dataOreList.add(dataOre);
                     } else {
                         dataOre.addNumber(vein.getCol());
@@ -514,8 +520,8 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
 
             this.energy.useEnergy(1);
             final BlockPos pos1 = dataOre.getListPos().get(indexPos);
-            final IBlockState blockstate = this.getWorld().getBlockState(pos1);
-            final ItemStack stack4 = new ItemStack(blockstate.getBlock(), 1, blockstate.getBlock().getMetaFromState(blockstate));
+            final BlockState blockstate = this.getWorld().getBlockState(pos1);
+            final ItemStack stack4 = new ItemStack(blockstate.getBlock(), 1);
             if (stack4.isEmpty()) {
                 if (dataOre.getListPos().size() == this.indexPos) {
                     this.indexOre++;
@@ -530,8 +536,8 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                 }
                 continue;
             }
-            int[] ints = OreDictionary.getOreIDs(stack4);
-            if (ints.length == 0) {
+            List<TagKey<Item>> ints = stack4.getItemHolder().tags().toList();
+            if (ints.isEmpty()) {
                 if (dataOre.getListPos().size() == this.indexPos) {
                     this.indexOre++;
                     this.indexPos = 0;
@@ -545,47 +551,50 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                 }
                 continue;
             }
-            int id3 = OreDictionary.getOreIDs(stack4)[0];
-            String name3 = OreDictionary.getOreName(id3);
-            if (name3.equals(dataOre.getName())) {
-                this.breakblock++;
-                String name = dataOre.getName();
+            for (TagKey<Item> id3 : ints) {
+                String name3 = id3.location().getPath();
+                if (name3.startsWith("ores") && !name3.equals("ores")) {
+                    if (name3.equals(dataOre.getName())) {
+                        this.breakblock++;
+                        String name = dataOre.getName();
 
-                if (name.startsWith("ore")) {
-                    if (!(!this.inputslot.CheckBlackList(
-                            blacklist,
-                            name
-                    ) && this.inputslot.CheckWhiteList(
-                            whitelist,
-                            name
-                    ))) {
-                        continue;
-                    }
+                        if (name.startsWith("ores")) {
+                            if (!(!this.inputslot.CheckBlackList(
+                                    blacklist,
+                                    name
+                            ) && this.inputslot.CheckWhiteList(
+                                    whitelist,
+                                    name
+                            ))) {
+                                continue;
+                            }
 
 
-                    boolean need = false;
+                            boolean need = false;
 
-                    for (TileEntityAnalyzerChest analyzerChest : target1) {
-                        List<ItemStack> drop = dataOre.getRecipe_stack(this, pos1);
-                        for (ItemStack stack : drop) {
-                            if (this.energy.getEnergy() >= consume &&
-                                    analyzerChest.outputSlot.add(stack)) {
-                                need = true;
-                                this.energy.useEnergy(consume);
+                            for (TileEntityAnalyzerChest analyzerChest : target1) {
+                                List<ItemStack> drop = dataOre.getRecipe_stack(this, pos1);
+                                for (ItemStack stack : drop) {
+                                    if (this.energy.getEnergy() >= consume &&
+                                            analyzerChest.outputSlot.add(stack)) {
+                                        need = true;
+                                        this.energy.useEnergy(consume);
+                                    }
+                                }
+                                if (need) {
+                                    break;
+                                }
+                            }
+                            if (need) {
+                                level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 3);
+
                             }
                         }
-                        if (need) {
-                            break;
-                        }
-                    }
-                    if (need) {
-                        world.setBlockToAir(pos1);
 
                     }
+                    break;
                 }
             }
-
-
         }
         if (dataOre.getListPos().size() == this.indexPos) {
             if (this.indexVein == dataOre.getVeinsList().size()) {
@@ -610,9 +619,9 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
 
                             ItemStack stack;
                             if (vein.isOldMineral()) {
-                                stack = new ItemStack(IUItem.heavyore, col1, vein.getMeta());
+                                stack = new ItemStack(IUItem.heavyore.getItem(vein.getMeta()));
                             } else {
-                                stack = new ItemStack(IUItem.mineral, col1, vein.getMeta());
+                                stack = new ItemStack(IUItem.mineral.getItem(vein.getMeta()), col1);
                             }
                             while (analyzerChest.outputSlot.add(stack)) {
                                 vein.removeCol(col1);
@@ -633,46 +642,46 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
 
 
         for (int i = 0; i < this.xendcoord; i++) {
             for (int j = 0; j < this.zendcoord; j++) {
-                nbttagcompound.setInteger(("chunksx" + i + j), this.chunksx[i][j]);
-                nbttagcompound.setInteger(("chunksz" + i + j), this.chunksz[i][j]);
+                nbttagcompound.putInt(("chunksx" + i + j), this.chunksx[i][j]);
+                nbttagcompound.putInt(("chunksz" + i + j), this.chunksz[i][j]);
             }
         }
 
 
-        nbttagcompound.setBoolean("start", this.start);
-        nbttagcompound.setInteger("xcoord", this.xcoord);
-        nbttagcompound.setInteger("xendcoord", this.xendcoord);
-        nbttagcompound.setInteger("zcoord", this.zcoord);
-        nbttagcompound.setInteger("zendcoord", this.zendcoord);
+        nbttagcompound.putBoolean("start", this.start);
+        nbttagcompound.putInt("xcoord", this.xcoord);
+        nbttagcompound.putInt("xendcoord", this.xendcoord);
+        nbttagcompound.putInt("zcoord", this.zcoord);
+        nbttagcompound.putInt("zendcoord", this.zendcoord);
 
-        nbttagcompound.setInteger("xTempChunk", this.xTempChunk);
-        nbttagcompound.setInteger("zTempChunk", this.zTempChunk);
+        nbttagcompound.putInt("xTempChunk", this.xTempChunk);
+        nbttagcompound.putInt("zTempChunk", this.zTempChunk);
 
 
-        nbttagcompound.setInteger("xChunk", this.xChunk);
-        nbttagcompound.setInteger("zChunk", this.zChunk);
-        nbttagcompound.setInteger("xendChunk", this.xendChunk);
-        nbttagcompound.setInteger("zendChunk", this.zendChunk);
-        nbttagcompound.setDouble("sum", this.sum);
-        nbttagcompound.setInteger("sum1", this.sum1);
-        nbttagcompound.setInteger("breakblock", this.breakblock);
-        nbttagcompound.setInteger("numberores", this.numberores);
+        nbttagcompound.putInt("xChunk", this.xChunk);
+        nbttagcompound.putInt("zChunk", this.zChunk);
+        nbttagcompound.putInt("xendChunk", this.xendChunk);
+        nbttagcompound.putInt("zendChunk", this.zendChunk);
+        nbttagcompound.putDouble("sum", this.sum);
+        nbttagcompound.putInt("sum1", this.sum1);
+        nbttagcompound.putInt("breakblock", this.breakblock);
+        nbttagcompound.putInt("numberores", this.numberores);
 
-        nbttagcompound.setBoolean("analysis", this.analysis);
-        nbttagcompound.setBoolean("quarry", this.quarry);
-        nbttagcompound.setInteger("size_DataOre", dataOreList.size());
-        final NBTTagCompound dataOreTag = new NBTTagCompound();
+        nbttagcompound.putBoolean("analysis", this.analysis);
+        nbttagcompound.putBoolean("quarry", this.quarry);
+        nbttagcompound.putInt("size_DataOre", dataOreList.size());
+        final CompoundTag dataOreTag = new CompoundTag();
 
         for (int i = 0; i < dataOreList.size(); i++) {
-            dataOreTag.setTag(String.valueOf(i), this.dataOreList.get(i).getTagCompound());
+            dataOreTag.put(String.valueOf(i), this.dataOreList.get(i).getTagCompound());
         }
-        nbttagcompound.setTag("DataOre", dataOreTag);
+        nbttagcompound.put("DataOre", dataOreTag);
         return nbttagcompound;
     }
 
@@ -688,12 +697,12 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
 
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiAnalyzer getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiAnalyzer(new ContainerAnalyzer(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiAnalyzer((ContainerAnalyzer) isAdmin);
     }
 
-    public ContainerAnalyzer getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerAnalyzer getGuiContainer(Player entityPlayer) {
         return new ContainerAnalyzer(entityPlayer, this);
     }
 

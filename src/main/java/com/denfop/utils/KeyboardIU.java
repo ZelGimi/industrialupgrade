@@ -2,93 +2,106 @@ package com.denfop.utils;
 
 
 import com.denfop.api.IKeyboard;
-import net.minecraft.entity.player.EntityPlayer;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 
 public class KeyboardIU implements IKeyboard {
 
-    private final Map<EntityPlayer, Set<KeyboardIU.Key>> playerKeys = new WeakHashMap<>();
+    private final Map<Player, Set<KeyboardIU.Key>> playerKeys = new WeakHashMap<>();
 
     public KeyboardIU() {
     }
 
-    public boolean isJumpKeyDown(EntityPlayer player) {
-        return this.get(player, Key.JUMP);
+    public static boolean keyDown(KeyMapping keyMapping) {
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keyMapping.getKey().getValue());
     }
 
-    public boolean isArmorKey(EntityPlayer player) {
+    public static boolean isKeyDown(int keyMapping) {
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keyMapping);
+    }
+
+    public boolean isJumpKeyDown(Player player) {
+        return this.get(player, Key.JUMP);
+    }
+    public boolean isAltKeyDown(Player player) {
+        return this.get(player, Key.ALT);
+    }
+
+    public boolean isArmorKey(Player player) {
         return this.get(player, Key.ARMOR);
     }
 
-    public boolean isSneakKeyDown(EntityPlayer player) {
-        return player.isSneaking();
+    public boolean isSneakKeyDown(Player player) {
+        return player.isShiftKeyDown();
     }
 
-    public boolean isForwardKeyDown(EntityPlayer player) {
+    public boolean isForwardKeyDown(Player player) {
         return this.get(player, KeyboardIU.Key.FORWARD);
     }
 
-
-    public boolean isChangeKeyDown(EntityPlayer player) {
+    public boolean isChangeKeyDown(Player player) {
         return this.get(player, KeyboardIU.Key.CHANGE);
     }
 
-    public boolean isVerticalMode(EntityPlayer player) {
+    public boolean isVerticalMode(Player player) {
         return this.get(player, Key.VERTICALMODE);
     }
 
-    public boolean isBootsMode(EntityPlayer player) {
+    public boolean isBootsMode(Player player) {
         return this.get(player, Key.BOOTS);
     }
 
-    public boolean isLeggingsMode(EntityPlayer player) {
+    public boolean isLeggingsMode(Player player) {
         return this.get(player, Key.LEGGINGS);
     }
 
 
-    public boolean isFlyModeKeyDown(EntityPlayer player) {
+    public boolean isFlyModeKeyDown(Player player) {
         return this.get(player, KeyboardIU.Key.FLYMODE);
     }
 
     @Override
-    public boolean isBlackListModeKeyDown(final EntityPlayer player) {
+    public boolean isBlackListModeKeyDown(final Player player) {
         return this.get(player, Key.BLACKMODE);
     }
 
     @Override
-    public boolean isBlackListModeViewKeyDown(final EntityPlayer player) {
+    public boolean isBlackListModeViewKeyDown(final Player player) {
         return this.get(player, Key.BLACKLISTVIEWMODE);
     }
 
 
-    public boolean isSaveModeKeyDown(EntityPlayer player) {
+    public boolean isSaveModeKeyDown(Player player) {
         return this.get(player, Key.SAVEMODE);
     }
 
     public void sendKeyUpdate() {
     }
 
-    public void processKeyUpdate(EntityPlayer player, int keyState) {
+    public void processKeyUpdate(Player player, int keyState) {
         this.playerKeys.put(player, KeyboardIU.Key.fromInt(keyState));
     }
 
-    public void removePlayerReferences(EntityPlayer player) {
+    public void removePlayerReferences(Player player) {
         this.playerKeys.remove(player);
     }
 
-    private boolean get(EntityPlayer player, KeyboardIU.Key key) {
+    private boolean get(Player player, KeyboardIU.Key key) {
         Set<KeyboardIU.Key> keys = this.playerKeys.get(player);
         return keys != null && keys.contains(key);
     }
 
     @Override
-    public boolean isStreakKeyDown(final EntityPlayer player) {
+    public boolean isStreakKeyDown(final Player player) {
         return this.get(player, Key.STREAK);
+    }
+
+    public void register(RegisterKeyMappingsEvent event) {
     }
 
 
@@ -105,7 +118,8 @@ public class KeyboardIU implements IKeyboard {
         JUMP,
         ARMOR,
         BOOTS,
-        LEGGINGS;
+        LEGGINGS,
+        ALT;
 
 
         public static final KeyboardIU.Key[] keys = values();

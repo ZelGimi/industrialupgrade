@@ -1,7 +1,7 @@
 {
 	"parent": "block/cube_column",
 	"textures": {
-		"side": "industrialupgrade:blocks/reinforced_iron_scaffold_sides",
-		"end": "industrialupgrade:blocks/iron_scaffold_bottomtop"
+		"side": "industrialupgrade:block/reinforced_iron_scaffold_sides",
+		"end": "industrialupgrade:block/iron_scaffold_bottomtop"
 	}
 }

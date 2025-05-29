@@ -5,14 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockLightningRod;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityLightningRodPoles extends TileEntityMultiBlockElement implements IPoles {
 
-    public TileEntityLightningRodPoles() {
+
+    public TileEntityLightningRodPoles(BlockPos pos, BlockState state) {
+        super(BlockLightningRod.lightning_rod_poles, pos, state);
     }
 
     @Override
@@ -22,21 +22,9 @@ public class TileEntityLightningRodPoles extends TileEntityMultiBlockElement imp
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.lightning_rod;
+        return IUItem.lightning_rod.getBlock();
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
 }

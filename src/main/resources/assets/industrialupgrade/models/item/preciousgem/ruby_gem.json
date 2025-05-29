@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/ruby_gem"
+    "layer0" : "industrialupgrade:item/ruby_gem"
   }
 }

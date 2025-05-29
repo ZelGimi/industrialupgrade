@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:nanobox"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:compresscarbonultra"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_275_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:compresscarbon"
+      }
+    ],
+    "F": [
+      {
+        "tag": "forge:doubleplate/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    "FDF",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:quantumitems6"
+  },
+  "show_notification": true
+}

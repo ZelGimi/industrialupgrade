@@ -1,8 +1,8 @@
 {
 	"credit": "Made by -frei",
 	"textures": {
-		"0": "industrialupgrade:items/obsidian_hammer",
-		"particle": "industrialupgrade:items/obsidian_hammer"
+		"0": "industrialupgrade:item/obsidian_hammer",
+		"particle": "industrialupgrade:item/obsidian_hammer"
 	},
 	"elements": [
 		{

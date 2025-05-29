@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/photoniyglass2"
+    "layer0" : "industrialupgrade:item/photoniyglass2"
   }
 }

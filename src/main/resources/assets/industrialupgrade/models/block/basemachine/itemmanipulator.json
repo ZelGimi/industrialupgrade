@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/itemmanipulator_all-sides",
-    "down" : "industrialupgrade:blocks/itemmanipulator_all-sides",
-    "up" : "industrialupgrade:blocks/itemmanipulator_all-sides",
-    "north" : "industrialupgrade:blocks/itemmanipulator_all-sides",
-    "east" : "industrialupgrade:blocks/itemmanipulator_all-sides",
-    "south" : "industrialupgrade:blocks/itemmanipulator_all-sides",
-    "west" : "industrialupgrade:blocks/itemmanipulator_all-sides"
+    "particle" : "industrialupgrade:block/itemmanipulator_all-sides",
+    "down" : "industrialupgrade:block/itemmanipulator_all-sides",
+    "up" : "industrialupgrade:block/itemmanipulator_all-sides",
+    "north" : "industrialupgrade:block/itemmanipulator_all-sides",
+    "east" : "industrialupgrade:block/itemmanipulator_all-sides",
+    "south" : "industrialupgrade:block/itemmanipulator_all-sides",
+    "west" : "industrialupgrade:block/itemmanipulator_all-sides"
   }
 }

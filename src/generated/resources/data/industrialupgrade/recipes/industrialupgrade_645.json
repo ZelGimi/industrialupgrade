@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:stick"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "BAB",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/molot"
+  },
+  "show_notification": true
+}

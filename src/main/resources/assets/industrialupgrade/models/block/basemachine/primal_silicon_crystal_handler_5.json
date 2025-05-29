@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "industrialupgrade:models/primal_silicon_crystal_handler_5",
-		"particle": "industrialupgrade:models/primal_silicon_crystal_handler_5"
+		"1": "industrialupgrade:block/primal_silicon_crystal_handler_5",
+		"particle": "industrialupgrade:block/primal_silicon_crystal_handler_5"
 	},
 	"elements": [
 		{

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=modulator": {
+      "model": "industrialupgrade:block/basemachine/modulator"
+    },
+    "facing=south,type=modulator": {
+      "model": "industrialupgrade:block/basemachine/modulator",
+      "y": 180
+    },
+    "facing=west,type=modulator": {
+      "model": "industrialupgrade:block/basemachine/modulator",
+      "y": 270
+    },
+    "facing=east,type=modulator": {
+      "model": "industrialupgrade:block/basemachine/modulator",
+      "y": 90
+    },
+    "facing=down,type=modulator": {
+      "model": "industrialupgrade:block/basemachine/modulator",
+      "x": 90
+    },
+    "facing=up,type=modulator": {
+      "model": "industrialupgrade:block/basemachine/modulator",
+      "x": 270
+    },
+    "facing=north,type=modulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/modulator_active"
+    },
+    "facing=south,type=modulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "y": 180
+    },
+    "facing=west,type=modulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "y": 270
+    },
+    "facing=east,type=modulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "y": 90
+    },
+    "facing=down,type=modulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "x": 90
+    },
+    "facing=up,type=modulator_invalid": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "x": 270
+    },
+    "facing=north,type=modulator_active": {
+      "model": "industrialupgrade:block/basemachine/modulator_active"
+    },
+    "facing=south,type=modulator_active": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "y": 180
+    },
+    "facing=west,type=modulator_active": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "y": 270
+    },
+    "facing=east,type=modulator_active": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "y": 90
+    },
+    "facing=down,type=modulator_active": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "x": 90
+    },
+    "facing=up,type=modulator_active": {
+      "model": "industrialupgrade:block/basemachine/modulator_active",
+      "x": 270
+    }
+  }
+}

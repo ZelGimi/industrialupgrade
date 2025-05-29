@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/titanium_dust"
+    "layer0" : "industrialupgrade:item/titanium_dust"
   }
 }

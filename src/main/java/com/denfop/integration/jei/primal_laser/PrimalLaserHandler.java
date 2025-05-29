@@ -3,7 +3,7 @@ package com.denfop.integration.jei.primal_laser;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class PrimalLaserHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

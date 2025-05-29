@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nitenol_casing"	}
+		"layer0": "industrialupgrade:item/nitenol_casing"	}
 }

@@ -1,44 +1,63 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemDust extends ItemSubTypes<ItemDust.ItemDustTypes> implements IModelRegister {
-
-    protected static final String NAME = "itemdust";
-
-    public ItemDust() {
-        super(ItemDustTypes.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemDust(T element) {
+        super(new Item.Properties(), element);
     }
 
+    @Override
+    public Item getItem() {
+        return this;
+    }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        String name = getElement().getName();
+        switch (this.getElement().getId()) {
+            case 3:
+                name = "tungsten";
+                break;
+            case 9:
+                name = "platinum";
+                break;
+            case 13:
+                name = "electrum";
+                break;
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+        }
+        return new String[]{"forge:dusts/" + name, "forge:dusts"};
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item stack, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(
-                        Constants.MOD_ID + ":itemdust/" + ItemDustTypes.getFromID(meta).getName() + "_dust",
-                        null
-                )
-        );
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.item";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
+        }
+
+        return this.nameItem.replace("_dust","");
     }
 
     public enum ItemDustTypes implements ISubEnum {
@@ -126,6 +145,7 @@ public class ItemDust extends ItemSubTypes<ItemDust.ItemDustTypes> implements IM
         excited_uranium(78),
         iron_chloride(79),
         ;
+
         private final String name;
         private final int ID;
 
@@ -142,9 +162,18 @@ public class ItemDust extends ItemSubTypes<ItemDust.ItemDustTypes> implements IM
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "itemdust";
+        }
+
+        @Override
+        public String getOtherPart() {
+            return "_dust";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

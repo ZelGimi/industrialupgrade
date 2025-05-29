@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/spectralshovel_fire"	}
+		"layer0": "industrialupgrade:item/spectralshovel_fire"	}
 }

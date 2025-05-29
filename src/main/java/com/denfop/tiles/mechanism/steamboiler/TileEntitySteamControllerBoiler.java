@@ -9,9 +9,10 @@ import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
 
     IExchanger exchanger;
 
-    public TileEntitySteamControllerBoiler() {
-        super(InitMultiBlockSystem.SteamBoilerMultiBlock);
+    public TileEntitySteamControllerBoiler(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.SteamBoilerMultiBlock,BlockSteamBoiler.steam_boiler_controller,pos,state);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
                     .getTank()
                     .getFluidAmount() + 2 < this.steamTank.getTank().getCapacity()) {
                 this.steamTank.getSteam().addEnergy(2);
-                this.waterTank.getTank().drain(1, true);
+                this.waterTank.getTank().drain(1, IFluidHandler.FluidAction.EXECUTE);
                 this.setActive(true);
             } else {
                 this.setActive(false);
@@ -51,11 +52,11 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.steam_boiler;
+        return IUItem.steam_boiler.getBlock(getTeBlock());
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
 
     }
 
@@ -88,7 +89,7 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IExchanger.class
                 );
-        this.exchanger = (IExchanger) this.getWorld().getTileEntity(pos1.get(0));
+        this.exchanger = (IExchanger) this.getWorld().getBlockEntity(pos1.get(0));
 
 
         pos1 = this
@@ -96,31 +97,31 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IHeater.class
                 );
-        this.heater = (IHeater) this.getWorld().getTileEntity(pos1.get(0));
+        this.heater = (IHeater) this.getWorld().getBlockEntity(pos1.get(0));
 
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ITank.class
                 );
-        this.waterTank = (ITank) this.getWorld().getTileEntity(pos1.get(0));
+        this.waterTank = (ITank) this.getWorld().getBlockEntity(pos1.get(0));
         this.waterTank.getTank().setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
-        this.waterTank.getTank().setAcceptedFluids(Fluids.fluidPredicate(FluidRegistry.WATER));
+        this.waterTank.getTank().setAcceptedFluids(Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER));
         if (this.waterTank.getTank().getFluidAmount() > 0 && this.waterTank
                 .getTank()
                 .getFluid()
-                .getFluid() != FluidRegistry.WATER) {
-            this.waterTank.getTank().drain(this.waterTank.getTank().getFluidAmount(), true);
+                .getFluid() != net.minecraft.world.level.material.Fluids.WATER) {
+            this.waterTank.getTank().drain(this.waterTank.getTank().getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
         }
-        this.steamTank = (ITank) this.getWorld().getTileEntity(pos1.get(1));
+        this.steamTank = (ITank) this.getWorld().getBlockEntity(pos1.get(1));
         if (this.steamTank.getTank().getFluidAmount() > 0 && this.steamTank
                 .getTank()
                 .getFluid()
-                .getFluid() != FluidName.fluidsteam.getInstance()) {
-            this.steamTank.getTank().drain(this.steamTank.getTank().getFluidAmount(), true);
+                .getFluid() != FluidName.fluidsteam.getInstance().get()) {
+            this.steamTank.getTank().drain(this.steamTank.getTank().getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
         }
         this.steamTank.getTank().setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
-        this.steamTank.getTank().setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidsteam.getInstance()));
+        this.steamTank.getTank().setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidsteam.getInstance().get()));
         this.waterTank.setUnloaded();
         this.steamTank.setSteam();
     }

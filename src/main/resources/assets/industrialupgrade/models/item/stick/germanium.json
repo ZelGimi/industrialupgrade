@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/germanium_stick"
+    "layer0" : "industrialupgrade:item/germanium_stick"
   }
 }

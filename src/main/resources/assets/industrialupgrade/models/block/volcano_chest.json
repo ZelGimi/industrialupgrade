@@ -1,8 +1,8 @@
 {
     "parent": "block/block",
     "textures": {
-        "texture": "industrialupgrade:models/chest",
-		"particle": "industrialupgrade:models/chest"
+        "texture": "industrialupgrade:block/chest",
+		"particle": "industrialupgrade:block/chest"
     },
     "elements": [
         {   "from": [ 1, 0, 1 ],

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/centrifuge_front",
-    "down" : "industrialupgrade:blocks/centrifuge_side",
-    "up" : "industrialupgrade:blocks/centrifuge_top",
-    "north" : "industrialupgrade:blocks/centrifuge_front",
-    "east" : "industrialupgrade:blocks/centrifuge_side",
-    "south" : "industrialupgrade:blocks/centrifuge_side",
-    "west" : "industrialupgrade:blocks/centrifuge_side"
+    "particle" : "industrialupgrade:block/centrifuge_front",
+    "down" : "industrialupgrade:block/centrifuge_side",
+    "up" : "industrialupgrade:block/centrifuge_top",
+    "north" : "industrialupgrade:block/centrifuge_front",
+    "east" : "industrialupgrade:block/centrifuge_side",
+    "south" : "industrialupgrade:block/centrifuge_side",
+    "west" : "industrialupgrade:block/centrifuge_side"
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/reactorcuriumdual"
+    "layer0" : "industrialupgrade:item/reactorcuriumdual"
   }
 }

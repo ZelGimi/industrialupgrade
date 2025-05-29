@@ -1,8 +1,8 @@
 {
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/space/zond_1",
-		"particle": "industrialupgrade:models/space/zond_1"
+		"0": "industrialupgrade:block/space/zond_1",
+		"particle": "industrialupgrade:block/space/zond_1"
 	},
 	"elements": [
 		{

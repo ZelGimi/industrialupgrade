@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/replicator_iu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:basemachine3/scanner_iu"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:combiner_solid_matter/combiner_solid_matter"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_75_element"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_44_element"
+      }
+    ]
+  },
+  "pattern": [
+    "E F",
+    "ABC",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:converter_matter/converter_matter"
+  },
+  "show_notification": true
+}

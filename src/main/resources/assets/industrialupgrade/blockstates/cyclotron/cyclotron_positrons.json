@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=cyclotron_positrons": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons"
+    },
+    "facing=south,type=cyclotron_positrons": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "y": 180
+    },
+    "facing=west,type=cyclotron_positrons": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "y": 270
+    },
+    "facing=east,type=cyclotron_positrons": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "y": 90
+    },
+    "facing=down,type=cyclotron_positrons": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "x": 90
+    },
+    "facing=up,type=cyclotron_positrons": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "x": 270
+    },
+    "facing=north,type=cyclotron_positrons_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons"
+    },
+    "facing=south,type=cyclotron_positrons_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "y": 180
+    },
+    "facing=west,type=cyclotron_positrons_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "y": 270
+    },
+    "facing=east,type=cyclotron_positrons_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "y": 90
+    },
+    "facing=down,type=cyclotron_positrons_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "x": 90
+    },
+    "facing=up,type=cyclotron_positrons_invalid": {
+      "model": "industrialupgrade:block/cyclotron/cyclotron_positrons",
+      "x": 270
+    }
+  }
+}

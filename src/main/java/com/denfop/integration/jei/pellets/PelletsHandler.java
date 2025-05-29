@@ -3,7 +3,7 @@ package com.denfop.integration.jei.pellets;
 
 import com.denfop.IUItem;
 import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +56,10 @@ public class PelletsHandler {
     public static void initRecipes() {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 6; j++) {
-                ItemStack stack = new ItemStack(IUItem.pellets, 1, i);
+                ItemStack stack = new ItemStack(IUItem.pellets.getStack(i), 1);
                 double coef = 1;
                 for (Map.Entry<ItemStack, Double> entry : TileEntityPalletGenerator.integerMap.entrySet()) {
-                    if (entry.getKey().isItemEqual(stack)) {
+                    if (entry.getKey().is(stack.getItem())) {
                         coef = entry.getValue();
                     }
                 }
@@ -74,10 +74,10 @@ public class PelletsHandler {
         }
         for (int i = 8; i < 10; i++) {
             for (int j = 0; j < 6; j++) {
-                ItemStack stack = new ItemStack(IUItem.nuclear_res, 1, i);
+                ItemStack stack = new ItemStack(IUItem.nuclear_res.getStack(i), 1);
                 double coef = 1;
                 for (Map.Entry<ItemStack, Double> entry : TileEntityPalletGenerator.integerMap.entrySet()) {
-                    if (entry.getKey().isItemEqual(stack)) {
+                    if (entry.getKey().is(stack.getItem())) {
                         coef = entry.getValue();
                     }
                 }

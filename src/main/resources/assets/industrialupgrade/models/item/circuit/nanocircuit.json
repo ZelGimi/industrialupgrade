@@ -1,6 +1,20 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/QuantumItems9"
-  }
+    "layer0" : "industrialupgrade:item/quantumitems9"
+  },
+  "overrides" : [
+    {
+      "predicate" : {
+        "level" : 0
+      },
+      "model" : "industrialupgrade:item/circuit/nanocircuit_0"
+    },
+    {
+      "predicate" : {
+        "level" : 1
+      },
+      "model" : "industrialupgrade:item/circuit/nanocircuit_1"
+    }
+	]
 }

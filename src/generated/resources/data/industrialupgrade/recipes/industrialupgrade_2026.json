@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/superalloyrene"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:rods/barium"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "AB ",
+    " AA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_760_element"
+  },
+  "show_notification": true
+}

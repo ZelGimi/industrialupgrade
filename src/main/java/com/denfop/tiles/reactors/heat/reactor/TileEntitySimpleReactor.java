@@ -6,8 +6,14 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockHeatReactor;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.heat.IReactor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySimpleReactor extends TileEntityMultiBlockElement implements IReactor {
+
+    public TileEntitySimpleReactor(BlockPos pos, BlockState state) {
+        super(BlockHeatReactor.heat_reactor, pos, state);
+    }
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -16,7 +22,7 @@ public class TileEntitySimpleReactor extends TileEntityMultiBlockElement impleme
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.heat_reactor;
+        return IUItem.heat_reactor.getBlock(getTeBlock());
     }
 
     @Override

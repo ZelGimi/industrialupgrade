@@ -1,0 +1,27 @@
+{
+  "required": true,
+  "package": "com.denfop.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "industrialupgrade.refmap.json",
+  "mixins": [
+    "BlockEntityMixin",
+    "MixinInventory",
+    "MixinServerGamePacketListenerImpl",
+    "access.AbstractContainerMenuAccessor",
+    "access.DeferredRegisterAccessor",
+    "access.ExplosionAccessor",
+    "access.LootTableAccessor"
+  ],
+  "client": [
+    "access.AbstractContainerScreenAccessor",
+    "access.AbstractContainerScreenInvoker",
+    "access.LevelRendererAccessor",
+    "access.SoundEngineAccess",
+    "access.SoundManagerAccess",
+    "invoker.ParticleInvoker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

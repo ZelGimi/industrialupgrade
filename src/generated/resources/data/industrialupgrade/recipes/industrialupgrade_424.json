@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/chromium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ]
+  },
+  "pattern": [
+    "BBA",
+    " AA",
+    " AA"
+  ],
+  "result": {
+    "item": "industrialupgrade:tools/canister"
+  },
+  "show_notification": true
+}

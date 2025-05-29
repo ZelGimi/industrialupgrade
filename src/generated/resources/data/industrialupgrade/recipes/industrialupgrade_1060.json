@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/stainlesssteel"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:machineblock"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/molybdenumsteel"
+      }
+    ]
+  },
+  "pattern": [
+    "C C",
+    " B ",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:earth_quarry/earth_casing"
+  },
+  "show_notification": true
+}

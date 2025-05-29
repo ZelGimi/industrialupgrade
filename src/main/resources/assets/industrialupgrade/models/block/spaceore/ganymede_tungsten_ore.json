@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/ganymede_tungsten_ore"
+    "all" : "industrialupgrade:block/ganymede_tungsten_ore"
   }
 }

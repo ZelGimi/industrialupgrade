@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/cobaltchrome"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemplates/mythril"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/osmiridium"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "C C",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_750_element"
+  },
+  "show_notification": true
+}

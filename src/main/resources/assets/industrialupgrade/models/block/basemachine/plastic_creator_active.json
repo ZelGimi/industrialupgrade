@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/blockplasticcreator",
-		"particle": "industrialupgrade:models/blockplasticcreator"
+		"0": "industrialupgrade:block/blockplasticcreator",
+		"particle": "industrialupgrade:block/blockplasticcreator"
 	},
 	"elements": [
 		{

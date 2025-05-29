@@ -4,13 +4,8 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
@@ -19,22 +14,25 @@ import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPlasticPlateCreator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPlasticPlateCreator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileBasePlasticPlateCreator;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -45,8 +43,8 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TilePlasticPlateCreator() {
-        super(1, 300, 1);
+    public TilePlasticPlateCreator(BlockPos pos, BlockState state) {
+        super(1, 300, 1, BlockBaseMachine2.plastic_plate_creator, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "plasticplate", this, this.fluidTank);
         fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
@@ -54,18 +52,19 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
         Recipes.recipes.addInitRecipes(this);
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TilePlasticPlateCreator) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TilePlasticPlateCreator) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TilePlasticPlateCreator) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
 
             @Override
@@ -80,11 +79,11 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
         }
     }
@@ -92,70 +91,72 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
     public void init() {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidoxy.getInstance(), 1000),
-                input.getInput(new ItemStack(IUItem.plast))
-        ), new RecipeOutput(null, new ItemStack(IUItem.plastic_plate))));
+                new FluidStack(FluidName.fluidoxy.getInstance().get(), 1000),
+                input.getInput(new ItemStack(IUItem.plast.getItem()))
+        ), new RecipeOutput(null, new ItemStack(IUItem.plastic_plate.getItem()))));
+
+        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
+                new FluidStack(Fluids.WATER, 500),
+                input.getInput(new ItemStack(Blocks.DIRT))
+        ), new RecipeOutput(null, new ItemStack(Blocks.CLAY))));
+
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidglucose.getInstance(), 200),
+                        new FluidStack(FluidName.fluidglucose.getInstance().get(), 200),
                         input.getInput(Items.GLOWSTONE_DUST)
                 ),
                 new RecipeOutput(null, new ItemStack(Items.SUGAR, 2))
         ));
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidco2.getInstance(), 500),
+                new FluidStack(FluidName.fluidco2.getInstance().get(), 500),
                 input.getInput(new ItemStack(Items.FLINT, 4))
-        ), new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 344))));
+        ), new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(344), 1))));
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidRegistry.WATER, 500),
-                input.getInput(new ItemStack(IUItem.iudust, 2, 66))
-        ), new RecipeOutput(null, new ItemStack(IUItem.raw_apatite))));
-        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidRegistry.WATER, 500),
-                input.getInput(new ItemStack(Blocks.DIRT))
-        ), new RecipeOutput(null, new ItemStack(Blocks.CLAY))));
+                new FluidStack(Fluids.WATER, 500),
+                input.getInput(new ItemStack(IUItem.iudust.getStack(66), 2))
+        ), new RecipeOutput(null, new ItemStack(IUItem.raw_apatite.getItem()))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidoxy.getInstance(), 200),
-                input.getInput(new ItemStack(IUItem.red_phosphorus, 4))
-        ), new RecipeOutput(null, new ItemStack(IUItem.phosphorus_oxide, 2))));
+                new FluidStack(FluidName.fluidoxy.getInstance().get(), 200),
+                input.getInput(new ItemStack(IUItem.red_phosphorus.getItem(), 4))
+        ), new RecipeOutput(null, new ItemStack(IUItem.phosphorus_oxide.getItem(), 2))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidglowstone.getInstance(), 125),
-                input.getInput(new ItemStack(IUItem.iudust, 1, 75))
+                new FluidStack(FluidName.fluidglowstone.getInstance().get(), 125),
+                input.getInput(new ItemStack(IUItem.iudust.getStack(75), 1))
         ), new RecipeOutput(null, new ItemStack(Items.ENDER_PEARL))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidglowstone.getInstance(), 125),
-                input.getInput(new ItemStack(IUItem.iudust, 1, 77))
+                new FluidStack(FluidName.fluidglowstone.getInstance().get(), 125),
+                input.getInput(new ItemStack(IUItem.iudust.getStack(77), 1))
         ), new RecipeOutput(null, new ItemStack(Items.GHAST_TEAR))));
 
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidchlorum.getInstance(), 180),
-                input.getInput(new ItemStack(IUItem.iudust, 2, 26))
-        ), new RecipeOutput(null, new ItemStack(IUItem.iudust, 1, 79))));
+                new FluidStack(FluidName.fluidchlorum.getInstance().get(), 180),
+                input.getInput(new ItemStack(IUItem.iudust.getStack(26), 2))
+        ), new RecipeOutput(null, new ItemStack(IUItem.iudust.getStack(79), 1))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidorthophosphoricacid.getInstance(), 100),
-                input.getInput(new ItemStack(IUItem.iudust, 1, 37))
-        ), new RecipeOutput(null, new ItemStack(IUItem.iudust, 1, 70))));
+                new FluidStack(FluidName.fluidorthophosphoricacid.getInstance().get(), 100),
+                input.getInput(new ItemStack(IUItem.iudust.getStack(37), 1))
+        ), new RecipeOutput(null, new ItemStack(IUItem.iudust.getStack(70), 1))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidorthophosphoricacid.getInstance(), 100),
-                input.getInput(new ItemStack(IUItem.iudust, 1, 64))
-        ), new RecipeOutput(null, new ItemStack(IUItem.iudust, 1, 69))));
+                new FluidStack(FluidName.fluidorthophosphoricacid.getInstance().get(), 100),
+                input.getInput(new ItemStack(IUItem.iudust.getStack(64), 1))
+        ), new RecipeOutput(null, new ItemStack(IUItem.iudust.getStack(69), 1))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidbutadiene_nitrile.getInstance(), 100),
+                new FluidStack(FluidName.fluidbutadiene_nitrile.getInstance().get(), 100),
                 input.getInput(ModUtils.setSize(IUItem.rubber, 1))
-        ), new RecipeOutput(null, new ItemStack(IUItem.synthetic_rubber, 4))));
+        ), new RecipeOutput(null, new ItemStack(IUItem.synthetic_rubber.getItem(), 4))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidroyaljelly.getInstance(), 200),
+                new FluidStack(FluidName.fluidroyaljelly.getInstance().get(), 200),
                 input.getInput(Items.WHEAT)
-        ), new RecipeOutput(null, new ItemStack(IUItem.royal_jelly))));
+        ), new RecipeOutput(null, new ItemStack(IUItem.royal_jelly.getItem()))));
 
     }
 
@@ -164,7 +165,7 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     public String getInventoryName() {
@@ -180,13 +181,13 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
 
 
     @Override
-    public ContainerPlasticPlateCreator getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerPlasticPlateCreator getGuiContainer(final Player entityPlayer) {
         return new ContainerPlasticPlateCreator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiPlasticPlateCreator(new ContainerPlasticPlateCreator(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiPlasticPlateCreator((ContainerPlasticPlateCreator) isAdmin);
 
     }
 

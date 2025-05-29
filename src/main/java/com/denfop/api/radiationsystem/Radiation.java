@@ -6,18 +6,18 @@ import com.denfop.api.item.IHazmatLike;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
 import com.denfop.network.packet.PacketUpdateRadiation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 
 import java.util.Random;
 
 public class Radiation {
 
-    private final static Random rand = new Random();
     private final ChunkPos pos;
+    private final Random rand = new Random();
     private double radiation;
     private EnumLevelRadiation level;
     private EnumCoefficient coef;
@@ -29,11 +29,11 @@ public class Radiation {
         this.pos = pos;
     }
 
-    public Radiation(NBTTagCompound tagCompound) {
+    public Radiation(CompoundTag tagCompound) {
         this.radiation = tagCompound.getDouble("radiation");
         this.level = EnumLevelRadiation.values()[tagCompound.getByte("level")];
         this.coef = EnumCoefficient.values()[tagCompound.getByte("coef")];
-        this.pos = new ChunkPos(tagCompound.getInteger("x"), tagCompound.getInteger("z"));
+        this.pos = new ChunkPos(tagCompound.getInt("x"), tagCompound.getInt("z"));
     }
 
     public Radiation(CustomPacketBuffer packetBuffer) {
@@ -199,71 +199,71 @@ public class Radiation {
         }
     }
 
-    public void process(EntityPlayer player) {
+    public void process(Player player) {
         boolean need = IHazmatLike.hasCompleteHazmat(player, this.level);
-        final NBTTagCompound nbt = player.getEntityData();
+        final CompoundTag nbt = player.getPersistentData();
         double radiation = nbt.getDouble("radiation");
         if (!need) {
             switch (this.level) {
                 case MEDIUM:
                     int num = rand.nextInt(4);
-                    nbt.setDouble("radiation", radiation + 0.02);
+                    nbt.putDouble("radiation", radiation + 0.02f);
                     new PacketRadiationUpdateValue(player, radiation + 0.02);
                     switch (num) {
                         case 0:
-                            player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
                             break;
                         case 1:
-                            player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
                             break;
                         case 2:
-                            player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 0));
                             break;
                         case 3:
-                            player.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
                             break;
                     }
                     break;
                 case HIGH:
                     num = rand.nextInt(4);
-                    nbt.setDouble("radiation", radiation + 0.2);
+                    nbt.putDouble("radiation", radiation + 0.02f);
                     new PacketRadiationUpdateValue(player, radiation + 0.2);
                     switch (num) {
                         case 0:
-                            player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
                             break;
                         case 1:
-                            player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
                             break;
                         case 2:
-                            player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 0));
                             break;
                         case 3:
-                            player.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
                             break;
                     }
-                    player.addPotionEffect(new PotionEffect(IUPotion.radiation, 200, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 200, 0));
                     break;
                 case VERY_HIGH:
                     num = rand.nextInt(4);
-                    nbt.setDouble("radiation", radiation + 2);
+                    nbt.putDouble("radiation", radiation + 0.02f);
                     new PacketRadiationUpdateValue(player, radiation + 2);
                     switch (num) {
                         case 0:
-                            player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
                             break;
                         case 1:
-                            player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
                             break;
                         case 2:
-                            player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 0));
                             break;
                         case 3:
-                            player.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 0));
+                            player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
                             break;
                     }
-                    player.addPotionEffect(new PotionEffect(IUPotion.radiation, 43200, 0));
-                    player.addPotionEffect(new PotionEffect(MobEffects.WITHER, 400, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 43200, 0));
+                    player.addEffect(new MobEffectInstance(MobEffects.WITHER, 400, 0));
                     break;
                 default:
                     break;
@@ -271,13 +271,13 @@ public class Radiation {
         }
     }
 
-    public NBTTagCompound writeCompound() {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setDouble("radiation", this.radiation);
-        tag.setByte("level", (byte) this.level.ordinal());
-        tag.setByte("coef", (byte) this.coef.ordinal());
-        tag.setInteger("x", this.pos.x);
-        tag.setInteger("z", this.pos.z);
+    public CompoundTag writeCompound() {
+        CompoundTag tag = new CompoundTag();
+        tag.putDouble("radiation", this.radiation);
+        tag.putByte("level", (byte) this.level.ordinal());
+        tag.putByte("coef", (byte) this.coef.ordinal());
+        tag.putInt("x", this.pos.x);
+        tag.putInt("z", this.pos.z);
         return tag;
     }
 

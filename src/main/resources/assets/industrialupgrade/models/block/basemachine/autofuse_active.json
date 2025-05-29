@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/autofuse_left-right-back-front_active",
-    "down" : "industrialupgrade:blocks/autofuse_bottom",
-    "up" : "industrialupgrade:blocks/autofuse_top",
-    "north" : "industrialupgrade:blocks/autofuse_left-right-back-front_active",
-    "east" : "industrialupgrade:blocks/autofuse_left-right-back-front_active",
-    "south" : "industrialupgrade:blocks/autofuse_left-right-back-front_active",
-    "west" : "industrialupgrade:blocks/autofuse_left-right-back-front_active"
+    "particle" : "industrialupgrade:block/autofuse_left-right-back-front_active",
+    "down" : "industrialupgrade:block/autofuse_bottom",
+    "up" : "industrialupgrade:block/autofuse_top",
+    "north" : "industrialupgrade:block/autofuse_left-right-back-front_active",
+    "east" : "industrialupgrade:block/autofuse_left-right-back-front_active",
+    "south" : "industrialupgrade:block/autofuse_left-right-back-front_active",
+    "west" : "industrialupgrade:block/autofuse_left-right-back-front_active"
   }
 }

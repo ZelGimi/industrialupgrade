@@ -1,11 +1,10 @@
 package com.denfop.utils;
 
 
-import com.denfop.IUCore;
 import com.denfop.api.item.IDamageItem;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class DamageHandler {
 
@@ -17,7 +16,7 @@ public class DamageHandler {
         if (item == ItemStack.EMPTY.getItem()) {
             return 0;
         } else {
-            return item instanceof IDamageItem ? ((IDamageItem) item).getCustomDamage(stack) : stack.getItemDamage();
+            return item instanceof IDamageItem ? stack.getDamageValue() : stack.getDamageValue();
         }
     }
 
@@ -27,7 +26,7 @@ public class DamageHandler {
             if (item instanceof IDamageItem) {
                 ((IDamageItem) item).setCustomDamage(stack, damage);
             } else {
-                stack.setItemDamage(damage);
+                stack.setDamageValue(damage);
             }
 
         }
@@ -44,18 +43,14 @@ public class DamageHandler {
         }
     }
 
-    public static boolean damage(ItemStack stack, int damage, EntityLivingBase src) {
+    public static boolean damage(ItemStack stack, int damage, LivingEntity src) {
         Item item = stack.getItem();
         if (item == ItemStack.EMPTY.getItem()) {
             return false;
         } else if (item instanceof IDamageItem) {
             return ((IDamageItem) item).applyCustomDamage(stack, damage, src);
-        } else if (src != null) {
-            stack.damageItem(damage, src);
-            return true;
-        } else {
-            return stack.attemptDamageItem(damage, IUCore.random, null);
-        }
+        } else
+            return false;
     }
 
 }

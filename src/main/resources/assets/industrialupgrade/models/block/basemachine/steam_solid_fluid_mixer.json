@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/steam_machine/steam_solid_fluid_mixer",
-		"particle": "industrialupgrade:models/steam_machine/steam_solid_fluid_mixer"
+		"0": "industrialupgrade:block/steam_machine/steam_solid_fluid_mixer",
+		"particle": "industrialupgrade:block/steam_machine/steam_solid_fluid_mixer"
 	},
 	"elements": [
 		{

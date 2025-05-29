@@ -1,22 +1,27 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSafe;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSafe;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,43 +31,21 @@ public class TileEntitySafe extends TileEntityInventory {
     public final InvSlot slot;
     public int timer = 10;
 
-    public TileEntitySafe() {
+    public TileEntitySafe(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.safe, pos,state);
         this.getComponentPrivate().setActivate(true);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT_OUTPUT, 63);
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return false;
-        }
-        return super.hasCapability(capability, facing);
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return LazyOptional.empty();
+        return super.getCapability(cap, facing);
     }
+
 
     public List<InvSlot> getInputSlots() {
         return Collections.emptyList();
@@ -81,19 +64,21 @@ public class TileEntitySafe extends TileEntityInventory {
     }
 
     @Override
-    public ContainerSafe getGuiContainer(final EntityPlayer var1) {
+    public ContainerSafe getGuiContainer(final Player var1) {
         return new ContainerSafe(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSafe(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiSafe((ContainerSafe) menu);
+
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override

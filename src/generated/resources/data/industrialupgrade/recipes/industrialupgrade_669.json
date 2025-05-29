@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:tank_iu/adv_tank"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:photoniy"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:nanobox"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "CAC",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:tank_iu/imp_tank"
+  },
+  "show_notification": true
+}

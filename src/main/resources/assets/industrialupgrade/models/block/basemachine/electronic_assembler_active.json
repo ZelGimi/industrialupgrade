@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/electronic_assembler_front_active",
-    "down" : "industrialupgrade:blocks/electronic_assembler_sides",
-    "up" : "industrialupgrade:blocks/electronic_assembler_top_active",
-    "north" : "industrialupgrade:blocks/electronic_assembler_front_active",
-    "east" : "industrialupgrade:blocks/electronic_assembler_sides",
-    "south" : "industrialupgrade:blocks/electronic_assembler_sides",
-    "west" : "industrialupgrade:blocks/electronic_assembler_sides"
+    "particle" : "industrialupgrade:block/electronic_assembler_front_active",
+    "down" : "industrialupgrade:block/electronic_assembler_sides",
+    "up" : "industrialupgrade:block/electronic_assembler_top_active",
+    "north" : "industrialupgrade:block/electronic_assembler_front_active",
+    "east" : "industrialupgrade:block/electronic_assembler_sides",
+    "south" : "industrialupgrade:block/electronic_assembler_sides",
+    "west" : "industrialupgrade:block/electronic_assembler_sides"
   }
 }

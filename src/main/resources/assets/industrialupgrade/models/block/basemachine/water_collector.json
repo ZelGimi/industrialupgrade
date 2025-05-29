@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/water_collector",
-    "particle" : "industrialupgrade:models/water_collector"
+    "0" : "industrialupgrade:block/water_collector",
+    "particle" : "industrialupgrade:block/water_collector"
   },
   "elements" : [
     {

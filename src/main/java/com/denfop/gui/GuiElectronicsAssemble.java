@@ -5,19 +5,21 @@ import com.denfop.Localization;
 import com.denfop.container.ContainerElectronicsAssembler;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler> {
+@OnlyIn(Dist.CLIENT)
+public class GuiElectronicsAssemble<T extends ContainerElectronicsAssembler> extends GuiIU<ContainerElectronicsAssembler> {
 
     public final ContainerElectronicsAssembler container;
     int pointer;
@@ -36,8 +38,8 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
     }
 
     @Override
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
         hover = par1 >= 7 && par2 >= 62 && par1 <= 18 && par2 <= 73;
     }
@@ -62,10 +64,10 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         if (container.base.start) {
@@ -83,10 +85,8 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
                         value = -1;
                     }
                     if (value != -1) {
-                        this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
-                                SoundEvents.UI_BUTTON_CLICK,
-                                1.0F
-                        ));
+                        SoundManager soundManager = Minecraft.getInstance().getSoundManager();
+                        soundManager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                         new PacketUpdateServerTile(this.container.base, value);
                         pointer = WorldBaseGen.random.nextInt(146) + 20;
                     }
@@ -95,9 +95,9 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
         }
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     public void updateTickInterface() {
@@ -123,15 +123,14 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
 
     ;
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+
+        bindTexture(getTexture());
         int progress = (int) (34.0F * this.container.base.componentProgress.getBar());
-        this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 24, 177, 1, progress, 20);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 85, this.guiTop + 24, 177, 1, progress, 20);
         if (hover) {
-            this.drawTexturedModalRect(this.guiLeft + 7, this.guiTop + 62, 177, 32, 12, 12);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 7, this.guiTop + 62, 177, 32, 12, 12);
         }
 
         if (container.base.start) {
@@ -151,14 +150,14 @@ public class GuiElectronicsAssemble extends GuiIU<ContainerElectronicsAssembler>
                 if (i == 3) {
                     y1 = 172;
                 }
-                this.drawTexturedModalRect(this.guiLeft + 20 + k, this.guiTop + 66, 1 + k, y1, 1, 4);
+                this.drawTexturedModalRect(poseStack, this.guiLeft + 20 + k, this.guiTop + 66, 1 + k, y1, 1, 4);
                 k++;
             }
-            this.drawTexturedModalRect(this.guiLeft + pointer - 1, this.guiTop + 68, 177, 25, 4, 4);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + pointer - 1, this.guiTop + 68, 177, 25, 4, 4);
 
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

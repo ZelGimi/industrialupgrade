@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:items/katana_cyberpunk1",
-    "particle" : "industrialupgrade:items/katana_cyberpunk1"
+    "0" : "industrialupgrade:item/katana_cyberpunk1",
+    "particle" : "industrialupgrade:item/katana_cyberpunk1"
   },
   "elements" : [
     {

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/imp_redstone_generator_bottom",
-    "down" : "industrialupgrade:blocks/imp_redstone_generator_bottom",
-    "up" : "industrialupgrade:blocks/imp_redstone_generator_bottom",
-    "north" : "industrialupgrade:blocks/imp_redstone_generator_front",
-    "east" : "industrialupgrade:blocks/imp_redstone_generator_side",
-    "south" : "industrialupgrade:blocks/imp_redstone_generator_bottom",
-    "west" : "industrialupgrade:blocks/imp_redstone_generator_side"
+    "particle" : "industrialupgrade:block/imp_redstone_generator_bottom",
+    "down" : "industrialupgrade:block/imp_redstone_generator_bottom",
+    "up" : "industrialupgrade:block/imp_redstone_generator_bottom",
+    "north" : "industrialupgrade:block/imp_redstone_generator_front",
+    "east" : "industrialupgrade:block/imp_redstone_generator_side",
+    "south" : "industrialupgrade:block/imp_redstone_generator_bottom",
+    "west" : "industrialupgrade:block/imp_redstone_generator_side"
   }
 }

@@ -4,11 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockHeatReactor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySimpleCirculationPump extends TileEntityBaseCirculationPump {
 
-    public TileEntitySimpleCirculationPump() {
-        super(0);
+    public TileEntitySimpleCirculationPump(BlockPos pos, BlockState state) {
+        super(0,BlockHeatReactor.heat_circulationpump,pos,state);
     }
 
     @Override
@@ -18,7 +20,7 @@ public class TileEntitySimpleCirculationPump extends TileEntityBaseCirculationPu
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.heat_reactor;
+        return IUItem.heat_reactor.getBlock(getTeBlock());
     }
 
 }

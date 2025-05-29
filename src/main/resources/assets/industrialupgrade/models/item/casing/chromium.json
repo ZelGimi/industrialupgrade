@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/chromium_casing"
+    "layer0" : "industrialupgrade:item/chromium_casing"
   }
 }

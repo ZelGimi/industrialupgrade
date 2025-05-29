@@ -6,9 +6,10 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.container.ContainerInoculator;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiInoculator extends GuiIU<ContainerInoculator> {
+public class GuiInoculator<T extends ContainerInoculator> extends GuiIU<ContainerInoculator> {
 
     public GuiInoculator(ContainerInoculator guiContainer) {
         super(guiContainer);
@@ -20,24 +21,20 @@ public class GuiInoculator extends GuiIU<ContainerInoculator> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
 
-    }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         if (this.container.base instanceof IUpgradableBlock) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawBackgroundAndTitle( poseStack,partialTicks, mouseX, mouseY);
     }
 
     @Override

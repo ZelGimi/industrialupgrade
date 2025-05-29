@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:modules/genday"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:modules/gennight"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:alloydoubleplate/vitalium"
+      }
+    ]
+  },
+  "pattern": [
+    "DDD",
+    "BAC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:modules/phase"
+  },
+  "show_notification": true
+}

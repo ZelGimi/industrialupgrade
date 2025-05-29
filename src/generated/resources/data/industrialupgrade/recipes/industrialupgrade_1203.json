@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:spectral_box"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/superalloyhaynes"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_509_element"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BBB",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_525_element"
+  },
+  "show_notification": true
+}

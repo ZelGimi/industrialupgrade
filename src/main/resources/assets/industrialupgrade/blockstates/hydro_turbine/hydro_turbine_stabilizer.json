@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=hydro_turbine_stabilizer": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer"
+    },
+    "facing=south,type=hydro_turbine_stabilizer": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "y": 180
+    },
+    "facing=west,type=hydro_turbine_stabilizer": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "y": 270
+    },
+    "facing=east,type=hydro_turbine_stabilizer": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "y": 90
+    },
+    "facing=down,type=hydro_turbine_stabilizer": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "x": 90
+    },
+    "facing=up,type=hydro_turbine_stabilizer": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "x": 270
+    },
+    "facing=north,type=hydro_turbine_stabilizer_invalid": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer"
+    },
+    "facing=south,type=hydro_turbine_stabilizer_invalid": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "y": 180
+    },
+    "facing=west,type=hydro_turbine_stabilizer_invalid": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "y": 270
+    },
+    "facing=east,type=hydro_turbine_stabilizer_invalid": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "y": 90
+    },
+    "facing=down,type=hydro_turbine_stabilizer_invalid": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "x": 90
+    },
+    "facing=up,type=hydro_turbine_stabilizer_invalid": {
+      "model": "industrialupgrade:block/hydro_turbine/hydro_turbine_stabilizer",
+      "x": 270
+    }
+  }
+}

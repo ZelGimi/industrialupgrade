@@ -1,8 +1,8 @@
 {
 	"credit": "Made by -frei",
 	"textures": {
-		"0": "industrialupgrade:models/forge_hammer",
-		"particle": "industrialupgrade:models/forge_hammer"
+		"0": "industrialupgrade:block/forge_hammer",
+		"particle": "industrialupgrade:block/forge_hammer"
 	},
 	"elements": [
 		{

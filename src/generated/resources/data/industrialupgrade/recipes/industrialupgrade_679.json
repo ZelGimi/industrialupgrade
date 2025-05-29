@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/elec_heat"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/inconel"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/mithril"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "DBD",
+    "C C"
+  ],
+  "result": {
+    "item": "industrialupgrade:autoheater"
+  },
+  "show_notification": true
+}

@@ -5,14 +5,12 @@ import com.denfop.componets.AbstractComponent;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
@@ -25,13 +23,13 @@ public class PacketAbstractComponent implements IPacket {
     public PacketAbstractComponent(
             TileEntityBlock te,
             String componentName,
-            EntityPlayerMP player,
+            ServerPlayer player,
             CustomPacketBuffer data
     ) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(64);
         try {
             buffer.writeByte(this.getId());
-            EncoderHandler.encode(buffer, te.getPos(), false);
+            EncoderHandler.encode(buffer, te.getBlockPos(), false);
             buffer.writeString(componentName);
             buffer.writeBytes(data);
         } catch (IOException var7) {
@@ -47,8 +45,8 @@ public class PacketAbstractComponent implements IPacket {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
+    @OnlyIn(Dist.CLIENT)
+    public void readPacket(final CustomPacketBuffer is, final Player entityPlayer) {
         final BlockPos pos1;
         try {
             pos1 = DecoderHandler.decode(is, BlockPos.class);
@@ -57,28 +55,22 @@ public class PacketAbstractComponent implements IPacket {
         }
         String componentName = is.readString();
 
-
         final byte[] data = new byte[is.writerIndex() - is.readerIndex()];
         is.readBytes(data);
-        IUCore.proxy.requestTick(false, () -> {
-            World world = Minecraft.getMinecraft().world;
+        BlockEntity teRaw = entityPlayer.level().getBlockEntity(pos1);
+        if (teRaw instanceof TileEntityBlock) {
+            TileEntityBlock tile = (TileEntityBlock) teRaw;
+            AbstractComponent component = tile.getComp(componentName);
 
-            TileEntity teRaw = world.getTileEntity(pos1);
-            if (teRaw instanceof TileEntityBlock) {
-                TileEntityBlock tile = (TileEntityBlock) teRaw;
-                AbstractComponent component = tile.getComp(componentName);
+            if (component != null) {
+                try {
 
-                if (component != null) {
-                    try {
-
-                        component.onNetworkUpdate(new CustomPacketBuffer(data));
-                    } catch (IOException var6) {
-                        throw new RuntimeException(var6);
-                    }
+                    component.onNetworkUpdate(new CustomPacketBuffer(data));
+                } catch (IOException var6) {
+                    throw new RuntimeException(var6);
                 }
             }
-
-        });
+        }
     }
 
     @Override

@@ -9,20 +9,22 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.multimechanism.IFarmer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TilePhotonicFermer extends TileMultiMachine implements IFarmer {
 
     private final InvSlot fertilizerSlot;
     int col = 0;
 
-    public TilePhotonicFermer() {
-        super(EnumMultiMachine.PHO_Fermer
+    public TilePhotonicFermer(BlockPos pos, BlockState state) {
+        super(EnumMultiMachine.PHO_Fermer, BlocksPhotonicMachine.photonic_fermer, pos, state
         );
         this.fertilizerSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.fertilizer;
+                return stack.getItem() == IUItem.fertilizer.getItem();
             }
 
             public EnumTypeSlot getTypeSlot() {
@@ -44,14 +46,14 @@ public class TilePhotonicFermer extends TileMultiMachine implements IFarmer {
 
     @Override
     public int getSize(int size) {
-        size = Math.min(super.getSize(size), fertilizerSlot.get().getCount() * 8 + col);
+        size = Math.min(super.getSize(size), fertilizerSlot.get(0).getCount() * 8 + col);
         return size;
 
     }
 
     @Override
     public boolean canoperate(final int size) {
-        return !fertilizerSlot.isEmpty() && fertilizerSlot.get().getCount() * 8 + col >= size;
+        return !fertilizerSlot.isEmpty() && fertilizerSlot.get(0).getCount() * 8 + col >= size;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class TilePhotonicFermer extends TileMultiMachine implements IFarmer {
         while (size1 > 0) {
             if (col == 0) {
                 col += 16;
-                fertilizerSlot.get().shrink(1);
+                fertilizerSlot.get(0).shrink(1);
             }
             if (size1 <= col) {
                 col -= size1;
@@ -78,7 +80,7 @@ public class TilePhotonicFermer extends TileMultiMachine implements IFarmer {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.pho_machine;
+        return IUItem.pho_machine.getBlock(getTeBlock().getId());
     }
 
     public EnumMultiMachine getMachine() {

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.generator.things.fluid.TileAirCollector;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerAirCollector extends ContainerFullInv<TileAirCollector> {
 
-    public ContainerAirCollector(EntityPlayer entityPlayer, TileAirCollector tileEntity1) {
+    public ContainerAirCollector(Player entityPlayer, TileAirCollector tileEntity1) {
         super(entityPlayer, tileEntity1, 202);
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 15, 94));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 1, 60, 94));

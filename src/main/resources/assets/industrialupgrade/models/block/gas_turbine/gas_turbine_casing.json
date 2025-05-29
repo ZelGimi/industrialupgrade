@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_turbine_casing",
-    "down" : "industrialupgrade:blocks/gas_turbine_casing",
-    "up" : "industrialupgrade:blocks/gas_turbine_casing",
-    "north" : "industrialupgrade:blocks/gas_turbine_casing",
-    "east" : "industrialupgrade:blocks/gas_turbine_casing",
-    "south" : "industrialupgrade:blocks/gas_turbine_casing",
-    "west" : "industrialupgrade:blocks/gas_turbine_casing"
+    "particle" : "industrialupgrade:block/gas_turbine_casing",
+    "down" : "industrialupgrade:block/gas_turbine_casing",
+    "up" : "industrialupgrade:block/gas_turbine_casing",
+    "north" : "industrialupgrade:block/gas_turbine_casing",
+    "east" : "industrialupgrade:block/gas_turbine_casing",
+    "south" : "industrialupgrade:block/gas_turbine_casing",
+    "west" : "industrialupgrade:block/gas_turbine_casing"
   }
 }

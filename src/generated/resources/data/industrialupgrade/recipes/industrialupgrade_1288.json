@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/yttrium"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/strontium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/niobium"
+      }
+    ]
+  },
+  "pattern": [
+    "ECE",
+    "ABA",
+    "ECE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_267_element"
+  },
+  "show_notification": true
+}

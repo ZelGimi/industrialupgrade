@@ -12,40 +12,49 @@ import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.mechanism.multimechanism.simple.TileOreWashing;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
-public class OreWashingCategory extends GuiIU implements IRecipeCategory<OreWashingWrapper> {
+public class OreWashingCategory extends GuiIU implements IRecipeCategory<OreWashingHandler> {
 
     private final IDrawableStatic bg;
     private final ContainerMultiMachine container1;
     private final GuiComponent progress_bar;
     private int progress = 0;
     private int energy = 0;
+    private final JeiInform jeiInform;
 
     public OreWashingCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(new ContainerMultiMachine(Minecraft.getMinecraft().player,
+        super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileOreWashing) BlockMoreMachine3.orewashing.getDummyTe()), 1, true
         ));
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
@@ -59,10 +68,10 @@ public class OreWashingCategory extends GuiIU implements IRecipeCategory<OreWash
         progress_bar = new GuiComponent(this, 0, 0, EnumTypeComponent.MULTI_PROCESS,
                 new Component<>(new ComponentProcessRender(container1.base.multi_process, container1.base.getTypeMachine()))
         );
-        for (Slot slot : this.container1.inventorySlots) {
+        for (Slot slot : this.container1.slots) {
             if (slot instanceof SlotInvSlot) {
-                int xX = slot.xPos;
-                int yY = slot.yPos;
+                int xX = slot.x;
+                int yY = slot.y;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
                 if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
                     this.progress_bar.setIndex(0);
@@ -75,20 +84,14 @@ public class OreWashingCategory extends GuiIU implements IRecipeCategory<OreWash
         this.componentList.add(progress_bar);
     }
 
-    @Nonnull
-    @Override
-    public String getUid() {
-        return BlockMoreMachine3.orewashing.getName();
-    }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines_base3, 1, 8).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.machines_base3, 1, 8).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
+
     public String getModName() {
         return Constants.MOD_NAME;
     }
@@ -99,9 +102,8 @@ public class OreWashingCategory extends GuiIU implements IRecipeCategory<OreWash
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(OreWashingHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         if (this.energy < 100) {
             energy++;
@@ -111,39 +113,39 @@ public class OreWashingCategory extends GuiIU implements IRecipeCategory<OreWash
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(0, 0);
+        this.slots.drawBackground(stack,0, 0);
 
-        progress_bar.renderBar(0, 0, xScale);
-        mc.getTextureManager().bindTexture(getTexture());
+        progress_bar.renderBar(stack,0, 0, xScale);
+        draw(stack,Fluids.WATER.getFluidType().getDescription().getString() + ": " + recipe.getTemperature() + " " + Localization.translate(
+                "iu" + ".generic.text.mb"), 88, 44, 4210752);
+    }
+
+
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, OreWashingHandler recipe, IFocusGroup focuses) {
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotMultiRecipes.class);
+        final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
+        int i = 0;
+        for (; i < inputs.size(); i++) {
+            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+
+        }
+        final List<SlotInvSlot> outputSlots = container1.findClassSlots(InvSlotOutput.class);
+        final List<ItemStack> outputs = recipe.getOutput();
+        for (i = 0; i < outputs.size(); i++) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlots.get(i).getJeiX(), outputSlots.get(i).getJeiY()).addItemStack(outputs.get(i));
+        }
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final OreWashingWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotMultiRecipes.class);
-        final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
-        int i = 0;
-        for (; i < inputs.size(); i++) {
-            isg.init(i, true, slots1.get(i).getJeiX(), slots1.get(i).getJeiY());
-            isg.set(i, inputs.get(i));
-
-        }
-
-        final List<SlotInvSlot> outputSlots = container1.findClassSlots(InvSlotOutput.class);
-        final List<ItemStack> outputs = recipes.getOutputs();
-        for (i = 0; i < outputs.size(); i++) {
-            isg.init(i + inputs.size(), false, outputSlots.get(i).getJeiX(), outputSlots.get(i).getJeiY());
-            isg.set(i + inputs.size(), outputs.get(i));
-        }
+    public RecipeType<OreWashingHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine.png".toLowerCase());
     }
 
 

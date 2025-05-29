@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/zeliber"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/berylliumbronze"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/nichrome"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/aluminumbronze"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_683_element"
+  },
+  "show_notification": true
+}

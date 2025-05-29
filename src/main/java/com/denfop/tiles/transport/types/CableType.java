@@ -1,13 +1,13 @@
 package com.denfop.tiles.transport.types;
 
 import com.denfop.Constants;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum CableType implements IStringSerializable, ICableItem {
+public enum CableType implements StringRepresentable, ICableItem {
     glass(0.25F, 0.06D, 4096),
     glass1(0.25F, 0.07D, 8192),
     glass2(0.25F, 0.08D, 32768),
@@ -107,5 +107,11 @@ public enum CableType implements IStringSerializable, ICableItem {
     @Override
     public ResourceLocation getRecourse() {
         return texture;
+    }
+
+
+    @Override
+    public String getSerializedName() {
+        return getName();
     }
 }

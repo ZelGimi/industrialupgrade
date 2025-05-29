@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=enchanter_books": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books"
+    },
+    "facing=south,type=enchanter_books": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books",
+      "y": 180
+    },
+    "facing=west,type=enchanter_books": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books",
+      "y": 270
+    },
+    "facing=east,type=enchanter_books": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books",
+      "y": 90
+    },
+    "facing=down,type=enchanter_books": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books",
+      "x": 90
+    },
+    "facing=up,type=enchanter_books": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books",
+      "x": 270
+    },
+    "facing=north,type=enchanter_books_invalid": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active"
+    },
+    "facing=south,type=enchanter_books_invalid": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "y": 180
+    },
+    "facing=west,type=enchanter_books_invalid": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "y": 270
+    },
+    "facing=east,type=enchanter_books_invalid": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "y": 90
+    },
+    "facing=down,type=enchanter_books_invalid": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "x": 90
+    },
+    "facing=up,type=enchanter_books_invalid": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "x": 270
+    },
+    "facing=north,type=enchanter_books_active": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active"
+    },
+    "facing=south,type=enchanter_books_active": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "y": 180
+    },
+    "facing=west,type=enchanter_books_active": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "y": 270
+    },
+    "facing=east,type=enchanter_books_active": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "y": 90
+    },
+    "facing=down,type=enchanter_books_active": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "x": 90
+    },
+    "facing=up,type=enchanter_books_active": {
+      "model": "industrialupgrade:block/basemachine/enchanter_books_active",
+      "x": 270
+    }
+  }
+}

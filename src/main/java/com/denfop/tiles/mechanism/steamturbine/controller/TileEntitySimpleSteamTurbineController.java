@@ -4,11 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySimpleSteamTurbineController extends TileEntityBaseSteamTurbineController {
 
-    public TileEntitySimpleSteamTurbineController() {
-        super(0);
+    public TileEntitySimpleSteamTurbineController(BlockPos pos, BlockState state) {
+        super(0,BlockSteamTurbine.steam_turbine_controller,pos,state);
     }
 
     @Override
@@ -18,7 +20,7 @@ public class TileEntitySimpleSteamTurbineController extends TileEntityBaseSteamT
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.steam_turbine;
+        return IUItem.steam_turbine.getBlock(getTeBlock());
     }
 
 }

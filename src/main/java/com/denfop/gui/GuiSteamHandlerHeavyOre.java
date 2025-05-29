@@ -7,16 +7,14 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSteamHandlerHeavyOre;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiSteamHandlerHeavyOre extends GuiIU<ContainerSteamHandlerHeavyOre> {
+public class GuiSteamHandlerHeavyOre<T extends ContainerSteamHandlerHeavyOre> extends GuiIU<ContainerSteamHandlerHeavyOre> {
 
     public final ContainerSteamHandlerHeavyOre container;
 
@@ -38,11 +36,11 @@ public class GuiSteamHandlerHeavyOre extends GuiIU<ContainerSteamHandlerHeavyOre
         ));
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 2, name, 4210752, false);
+        this.drawXCenteredString(poseStack,this.imageWidth / 2, 2, name, 4210752, false);
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -64,23 +62,23 @@ public class GuiSteamHandlerHeavyOre extends GuiIU<ContainerSteamHandlerHeavyOre
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
         this.bindTexture();
 
         int progress = (int) ((218 - 178) * this.container.base.componentProgress.getBar());
 
         if (progress > 0) {
-            drawTexturedModalRect(this.guiLeft + 62, this.guiTop + 37, 178, 34, progress + 1, 14);
+            drawTexturedModalRect(poseStack,this.guiLeft + 62, this.guiTop + 37, 178, 34, progress + 1, 14);
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

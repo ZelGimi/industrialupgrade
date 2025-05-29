@@ -4,14 +4,14 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.items.modules.ItemQuarryModule;
-import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 
@@ -41,8 +41,8 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 this.tile.furnace = false;
                 this.tile.main_list = new ArrayList<>(IUCore.list_quarry);
                 if (!this.isEmpty()) {
-                    ItemStack type1 = this.get();
-                    EnumQuarryModules module = EnumQuarryModules.getFromID(type1.getItemDamage());
+                    ItemStack type1 = this.get(0);
+                    EnumQuarryModules module = EnumQuarryModules.getFromID(IUItem.module9.getMeta(this.get(0)));
                     EnumQuarryType type = module.type;
 
                     switch (type) {
@@ -97,12 +97,12 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 }
                 break;
             case 1:
-                if (this.get().isEmpty()) {
+                if (this.get(0).isEmpty()) {
                     this.tile.list_modules = null;
                 } else {
-                    this.tile.list_modules = EnumQuarryModules.getFromID(this.get().getItemDamage());
+                    this.tile.list_modules = EnumQuarryModules.getFromID(IUItem.module9.getMeta(this.get(0)));
                 }
-                this.tile.list = ModUtils.getQuarryListFromModule(this.get());
+                this.tile.list = ModUtils.getQuarryListFromModule(this.get(0));
                 if (this.tile.furnace) {
                     this.tile.main_list = new ArrayList<>(IUCore.get_ingot_quarry);
                 } else if (this.tile.comb_mac_enabled) {
@@ -124,18 +124,18 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 this.tile.inputslot.update();
                 break;
             case 2:
-                this.tile.analyzer = !this.get().isEmpty();
+                this.tile.analyzer = !this.get(0).isEmpty();
                 new PacketUpdateFieldTile(this.tile, "analyzer", tile.analyzer);
                 break;
             case 3:
-                this.tile.plasma = !this.get().isEmpty();
+                this.tile.plasma = !this.get(0).isEmpty();
                 break;
         }
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         switch (this.type) {
             case 0:
                 this.tile.comb_mac_enabled = false;
@@ -147,8 +147,8 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 this.tile.furnace = false;
                 this.tile.main_list = new ArrayList<>(IUCore.list_quarry);
                 if (!this.isEmpty()) {
-                    ItemStack type1 = this.get();
-                    EnumQuarryModules module = EnumQuarryModules.getFromID(type1.getItemDamage());
+                    ItemStack type1 = this.get(0);
+                    EnumQuarryModules module = EnumQuarryModules.getFromID(IUItem.module9.getMeta(this.get(0)));
                     EnumQuarryType type = module.type;
 
                     switch (type) {
@@ -203,45 +203,43 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 }
                 break;
             case 1:
-                if (this.get().isEmpty()) {
+                if (this.get(0).isEmpty()) {
                     this.tile.list_modules = null;
                 } else {
-                    this.tile.list_modules = EnumQuarryModules.getFromID(this.get().getItemDamage());
+                    this.tile.list_modules = EnumQuarryModules.getFromID(IUItem.module9.getMeta(this.get(0)));
                 }
-                this.tile.list = ModUtils.getQuarryListFromModule(this.get());
+                this.tile.list = ModUtils.getQuarryListFromModule(this.get(0));
                 this.tile.main_list.removeIf(stack -> this.tile.list(this.tile.list_modules, stack));
                 this.tile.inputslot.update();
                 break;
             case 2:
-                this.tile.analyzer = !this.get().isEmpty();
+                this.tile.analyzer = !this.get(0).isEmpty();
                 new PacketUpdateFieldTile(this.tile, "analyzer", tile.analyzer);
                 break;
             case 3:
-                this.tile.plasma = !this.get().isEmpty();
+                this.tile.plasma = !this.get(0).isEmpty();
                 break;
         }
+        return content;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
 
-            return itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(itemStack.getItemDamage()).type != EnumQuarryType.WHITELIST && EnumQuarryModules.getFromID(
-                    itemStack.getItemDamage()).type != EnumQuarryType.BLACKLIST);
+            return itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(IUItem.module9.getMeta(itemStack)).type != EnumQuarryType.WHITELIST && EnumQuarryModules.getFromID(
+                    IUItem.module9.getMeta(itemStack)).type != EnumQuarryType.BLACKLIST);
         } else if (type == 1) {
-            if (itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(itemStack.getItemDamage()).type == EnumQuarryType.WHITELIST || EnumQuarryModules.getFromID(
-                    itemStack.getItemDamage()).type == EnumQuarryType.BLACKLIST)) {
+            if (itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(IUItem.module9.getMeta(itemStack)).type == EnumQuarryType.WHITELIST || EnumQuarryModules.getFromID(
+                    IUItem.module9.getMeta(itemStack)).type == EnumQuarryType.BLACKLIST)) {
                 ((TileBaseQuantumQuarry) this.base).list = ModUtils.getQuarryListFromModule(itemStack);
-                return !itemStack.getItem().equals(IUItem.analyzermodule);
+                return !itemStack.getItem().equals(IUItem.analyzermodule.getItem());
             }
             return false;
         } else if (type == 3) {
-            if (itemStack.getItem() instanceof ItemCraftingElements && itemStack.getItemDamage() == 646) {
-                return true;
-            }
-            return false;
+            return itemStack.getItem() instanceof ItemCraftingElements && IUItem.crafting_elements.getMeta(itemStack) == 646;
 
         }
-        return itemStack.getItem().equals(IUItem.analyzermodule);
+        return itemStack.getItem().equals(IUItem.analyzermodule.getItem());
     }
 
     public int getStackSizeLimit() {

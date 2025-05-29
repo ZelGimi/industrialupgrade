@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=antimagnet": {
+      "model": "industrialupgrade:block/basemachine/antimagnet"
+    },
+    "facing=south,type=antimagnet": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 180
+    },
+    "facing=west,type=antimagnet": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 270
+    },
+    "facing=east,type=antimagnet": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 90
+    },
+    "facing=down,type=antimagnet": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "x": 90
+    },
+    "facing=up,type=antimagnet": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "x": 270
+    },
+    "facing=north,type=antimagnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/antimagnet"
+    },
+    "facing=south,type=antimagnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 180
+    },
+    "facing=west,type=antimagnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 270
+    },
+    "facing=east,type=antimagnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 90
+    },
+    "facing=down,type=antimagnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "x": 90
+    },
+    "facing=up,type=antimagnet_invalid": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "x": 270
+    },
+    "facing=north,type=antimagnet_active": {
+      "model": "industrialupgrade:block/basemachine/antimagnet"
+    },
+    "facing=south,type=antimagnet_active": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 180
+    },
+    "facing=west,type=antimagnet_active": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 270
+    },
+    "facing=east,type=antimagnet_active": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "y": 90
+    },
+    "facing=down,type=antimagnet_active": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "x": 90
+    },
+    "facing=up,type=antimagnet_active": {
+      "model": "industrialupgrade:block/basemachine/antimagnet",
+      "x": 270
+    }
+  }
+}

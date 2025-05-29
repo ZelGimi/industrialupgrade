@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/magnesium_casing"
+    "layer0" : "industrialupgrade:item/magnesium_casing"
   }
 }

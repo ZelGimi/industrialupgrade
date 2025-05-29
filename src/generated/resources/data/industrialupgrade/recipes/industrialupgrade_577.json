@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemdust/trinitrotoluene_dust"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:gunpowder"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:sand"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "CAC",
+    "BCB"
+  ],
+  "result": {
+    "count": 16,
+    "item": "minecraft:tnt"
+  },
+  "show_notification": true
+}

@@ -2,28 +2,23 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSteamAmpereGenerator;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiSteamAmpereGenerator extends GuiIU<ContainerSteamAmpereGenerator> {
+public class GuiSteamAmpereGenerator<T extends ContainerSteamAmpereGenerator> extends GuiIU<ContainerSteamAmpereGenerator> {
 
     public ContainerSteamAmpereGenerator container;
     public String name;
 
-    public GuiSteamAmpereGenerator(ContainerSteamAmpereGenerator guiContainer, boolean b) {
+    public GuiSteamAmpereGenerator(ContainerSteamAmpereGenerator guiContainer) {
         super(guiContainer, EnumTypeStyle.STEAM);
         this.container = guiContainer;
         this.name = Localization.translate(guiContainer.base.getName());
@@ -37,14 +32,6 @@ public class GuiSteamAmpereGenerator extends GuiIU<ContainerSteamAmpereGenerator
         ));
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
-
-    }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 13 && mouseY >= 3 && mouseY <= 13) {
@@ -65,27 +52,21 @@ public class GuiSteamAmpereGenerator extends GuiIU<ContainerSteamAmpereGenerator
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer( poseStack,f, x, y);
+       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+      bindTexture(getTexture());
 
 
-        x -= this.guiLeft;
-        y -= this.guiTop;
-        for (final GuiElement<?> guiElement : this.elements) {
-            guiElement.drawBackground(x, y);
 
-        }
-
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect( poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
     @Override

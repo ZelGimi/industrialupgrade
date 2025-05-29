@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nuclear/mox_pellet"
+		"layer0": "industrialupgrade:item/nuclear/mox_pellet"
 	}
 }

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "industrialupgrade:blocks/photonic_gen_matter",
-		"particle": "industrialupgrade:blocks/photonic_gen_matter"
+		"0": "industrialupgrade:block/photonic_gen_matter",
+		"particle": "industrialupgrade:block/photonic_gen_matter"
 	},
 	"elements": [
 		{

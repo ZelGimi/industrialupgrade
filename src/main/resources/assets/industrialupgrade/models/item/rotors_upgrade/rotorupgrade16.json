@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/rotorupgrade16"
+    "layer0" : "industrialupgrade:item/rotorupgrade16"
   }
 }

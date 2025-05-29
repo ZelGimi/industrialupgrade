@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 5.0,
+  "ingredient": {
+    "item": "industrialupgrade:blockresource/untreated_peat"
+  },
+  "result": "industrialupgrade:cultivated_peat"
+}

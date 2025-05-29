@@ -3,9 +3,10 @@ package com.denfop.integration.jei.electronics;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ElectronicsHandler {
@@ -13,17 +14,23 @@ public class ElectronicsHandler {
     private static final List<ElectronicsHandler> recipes = new ArrayList<>();
 
     private final ItemStack input, input1, input2, input3, input4, output;
+    private final BaseMachineRecipe container;
 
     public ElectronicsHandler(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3, ItemStack input4,
-            ItemStack output
-    ) {
+            ItemStack output,
+            BaseMachineRecipe container) {
         this.input = input;
         this.input1 = input1;
         this.input2 = input2;
         this.input3 = input3;
         this.input4 = input4;
         this.output = output;
+        this.container = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<ElectronicsHandler> getRecipes() {
@@ -35,9 +42,9 @@ public class ElectronicsHandler {
 
     public static ElectronicsHandler addRecipe(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
-            ItemStack input4, ItemStack output
-    ) {
-        ElectronicsHandler recipe = new ElectronicsHandler(input, input1, input2, input3, input4, output);
+            ItemStack input4, ItemStack output,
+            BaseMachineRecipe container) {
+        ElectronicsHandler recipe = new ElectronicsHandler(input, input1, input2, input3, input4, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -65,7 +72,7 @@ public class ElectronicsHandler {
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.input.getInputs().get(4).getInputs().get(0),
-                    container.getOutput().items.get(0)
+                    container.getOutput().items.get(0),container
             );
 
 
@@ -98,8 +105,9 @@ public class ElectronicsHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3) || is.isItemEqual(
-                input4);
+        return true;
     }
-
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1, input2, input3, input4);
+    }
 }

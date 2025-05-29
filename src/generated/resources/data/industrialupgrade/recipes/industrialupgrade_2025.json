@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/alcled"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:rods/thallium"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "AB ",
+    " AA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_728_element"
+  },
+  "show_notification": true
+}

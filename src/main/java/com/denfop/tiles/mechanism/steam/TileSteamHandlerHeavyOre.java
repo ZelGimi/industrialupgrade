@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism.steam;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
@@ -13,33 +14,26 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentSteamEnergy;
-import com.denfop.componets.ComponentSteamProcess;
-import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.PressureComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamHandlerHeavyOre;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamHandlerHeavyOre;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class TileSteamHandlerHeavyOre extends TileElectricMachine
@@ -61,36 +55,29 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
     private int[] col;
     private boolean work = false;
 
-    public TileSteamHandlerHeavyOre() {
-        this(1, 300, 3, EnumTypeStyle.DEFAULT);
-    }
 
     public TileSteamHandlerHeavyOre(
-            int energyPerTick,
-            int length,
-            int outputSlots,
-            EnumTypeStyle enumTypeSlot
-    ) {
-        super(0, 1, 1);
-        this.enumTypeSlot = enumTypeSlot;
-        this.outputSlot = new InvSlotOutput(this, outputSlots + 2 * enumTypeSlot.ordinal());
+            BlockPos pos, BlockState state) {
+        super(0, 1, 1,BlockBaseMachine3.steam_handler_ore,pos,state);
+        this.enumTypeSlot = EnumTypeStyle.DEFAULT;
+        this.outputSlot = new InvSlotOutput(this, 3 + 2 * enumTypeSlot.ordinal());
         this.inputSlotA = new InvSlotRecipes(this, "handlerho", this);
         this.col = new int[0];
         this.coef = getCoef();
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
-                (short) length
+                (short) 300
         ));
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = fluids.addTank("fluidTank2", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
-                FluidName.fluidsteam.getInstance()
+                FluidName.fluidsteam.getInstance().get()
         ));
         this.heat = this.addComponent(HeatComponent
                 .asBasicSink(this, 3000));
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 3));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.steam.setFluidTank(fluidTank);
-        this.componentProcess = this.addComponent(new ComponentSteamProcess(this, (int) (length / this.getSpeed()),
-                energyPerTick, 3
+        this.componentProcess = this.addComponent(new ComponentSteamProcess(this, (int) (300 / this.getSpeed()),
+                1, 3
         ) {
             @Override
             public void operateWithMax(final MachineRecipe output) {
@@ -106,7 +93,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
             @Override
             public void operateOnce(final List<ItemStack> processResult) {
                 for (int i = 0; i < col.length; i++) {
-                    final Random rand = world.rand;
+                    final RandomSource rand = level.random;
                     if ((100 - col[i]) <= rand.nextInt(100)) {
                         this.outputSlot.add(processResult.get(i));
                     }
@@ -127,7 +114,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -155,7 +142,6 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
 
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
 
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
@@ -174,70 +160,65 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
                 UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
         );
     }
-
-    public void onLoaded() {
-        super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            inputSlotA.load();
-            this.getOutput();
-            IBlockState blockState = world.getBlockState(this.pos.down());
-            if (blockState.getMaterial() != Material.AIR) {
-                this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                        .getInstance()
-                        .getBlock();
-            } else {
-                work = false;
+    @Override
+    public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
+        super.onNeighborChange(neighbor, neighborPos);
+        if (work) {
+            if (this.pos.below().distSqr(neighborPos) == 0) {
+                FluidState blockState = level.getFluidState(this.pos.below());
+                if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
+                    this.work = blockState.getType().isSame(Fluids.LAVA);
+                } else {
+                    work = false;
+                }
+            }
+        } else {
+            if (this.pos.below().distSqr(neighborPos) == 0) {
+                FluidState blockState = level.getFluidState(this.pos.below());
+                if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
+                    this.work = blockState.getType().isSame(Fluids.LAVA);
+                } else {
+                    work = false;
+                }
             }
         }
     }
 
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        if (!this.getWorld().isClientSide) {
+
+            FluidState blockState = level.getFluidState(this.pos.below());
+            if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
+                this.work = blockState.getType().isSame(Fluids.LAVA);
+            } else {
+                work = false;
+            }
+
+        }
+    }
     public void onUnloaded() {
         super.onUnloaded();
     }
 
 
     @Override
-    public ContainerSteamHandlerHeavyOre getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSteamHandlerHeavyOre getGuiContainer(Player entityPlayer) {
         return new ContainerSteamHandlerHeavyOre(entityPlayer, this);
 
     }
 
-    @Override
-    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
-        super.onNeighborChange(neighbor, neighborPos);
-        if (work) {
-            if (this.pos.down().distanceSq(neighborPos) == 0) {
-                IBlockState blockState = world.getBlockState(this.pos.down());
-                if (blockState.getMaterial() != Material.AIR) {
-                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                            .getInstance()
-                            .getBlock();
-                } else {
-                    work = false;
-                }
-            }
-        } else {
-            if (this.pos.down().distanceSq(neighborPos) == 0) {
-                IBlockState blockState = world.getBlockState(this.pos.down());
-                if (blockState.getMaterial() != Material.AIR) {
-                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                            .getInstance()
-                            .getBlock();
-                } else {
-                    work = false;
-                }
-            }
-        }
-    }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSteamHandlerHeavyOre(new ContainerSteamHandlerHeavyOre(entityPlayer, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSteamHandlerHeavyOre((ContainerSteamHandlerHeavyOre) menu);
     }
 
     public void operateOnce(List<ItemStack> processResult) {
         for (int i = 0; i < col.length; i++) {
-            final Random rand = world.rand;
+            final RandomSource rand = level.random;
             if ((100 - col[i]) <= rand.nextInt(100)) {
                 this.outputSlot.add(processResult.get(i));
             }
@@ -256,10 +237,10 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.work && this.getWorld().provider.getWorldTime() % 2 == 0) {
+        if (this.work && this.getWorld().getGameTime() % 2 == 0) {
             this.heat.addEnergy(1);
         }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+        if (this.getWorld().getGameTime() % 20 == 0) {
             this.heat.useEnergy(1);
         }
     }
@@ -301,7 +282,7 @@ public class TileSteamHandlerHeavyOre extends TileElectricMachine
         } else {
             this.col = new int[output.getRecipe().output.items.size()];
             for (int i = 0; i < col.length; i++) {
-                col[i] = (int) (output.getRecipe().output.metadata.getInteger(("input" + i)) * this.coef);
+                col[i] = (int) (output.getRecipe().output.metadata.getInt(("input" + i)) * this.coef);
                 col[i] = Math.max(0, Math.min(col[i], 95) - 5);
             }
         }

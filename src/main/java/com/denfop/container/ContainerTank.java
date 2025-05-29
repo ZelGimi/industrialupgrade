@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityLiquedTank;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerTank extends ContainerFullInv<TileEntityLiquedTank> {
 
-    public ContainerTank(EntityPlayer entityPlayer, TileEntityLiquedTank tileEntity1) {
+    public ContainerTank(Player entityPlayer, TileEntityLiquedTank tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));
         addSlotToContainer(new SlotInvSlot(tileEntity1.containerslot, 0, 125, 23));

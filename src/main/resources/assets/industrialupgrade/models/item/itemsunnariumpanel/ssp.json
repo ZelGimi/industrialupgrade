@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/ssp"
+    "layer0" : "industrialupgrade:item/ssp"
   }
 }

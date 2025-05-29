@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/inconel"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_90_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_614_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "CBE",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/machine_charger"
+  },
+  "show_notification": true
+}

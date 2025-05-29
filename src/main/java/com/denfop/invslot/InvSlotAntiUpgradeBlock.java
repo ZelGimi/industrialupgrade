@@ -2,7 +2,7 @@ package com.denfop.invslot;
 
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.tiles.base.TileAntiUpgradeBlock;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotAntiUpgradeBlock extends InvSlot {
 

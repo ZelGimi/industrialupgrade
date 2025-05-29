@@ -1,13 +1,16 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
-import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTank;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiTank;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -17,21 +20,23 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
-import com.denfop.render.tank.DataFluid;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -49,13 +54,12 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
     public final Fluids fluids;
     public final InvSlotOutput outputSlot;
     public FluidTank fluidTank;
-    @SideOnly(Side.CLIENT)
-    public DataFluid dataFluid;
+
     public int prev = -10;
     private int old_amount;
 
-    public TileEntityLiquedTank(int tanksize) {
-
+    public TileEntityLiquedTank(int tanksize, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block, pos, state);
 
         this.containerslot = new InvSlotFluidByList(this,
                 InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.OUTPUT
@@ -75,48 +79,21 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
 
     @Override
     public int getLightValue() {
-        if (this.fluidTank.getFluid() == null || this.fluidTank.getFluid().getFluid().getBlock() == null) {
+        if (this.fluidTank.getFluid().isEmpty() || this.fluidTank.getFluid().getFluid() == net.minecraft.world.level.material.Fluids.EMPTY) {
             return super.getLightValue();
         } else {
-            return this.fluidTank.getFluid().getFluid().getBlock().getLightValue(this.fluidTank
-                    .getFluid()
-                    .getFluid()
-                    .getBlock()
-                    .getDefaultState());
+            return this.fluidTank.getFluid().getFluid().getFluidType().getLightLevel();
         }
     }
 
-    @Override
-    public int getLightOpacity() {
-        if (this.fluidTank.getFluid() == null || this.fluidTank
-                .getFluid()
-                .getFluid()
-                .getBlock() == null) {
-            return super.getLightOpacity();
-        } else {
-            final int now = this.fluidTank.getFluid().getFluid().getBlock().getLightOpacity(this.fluidTank
-                    .getFluid()
-                    .getFluid()
-                    .getBlock()
-                    .getDefaultState());
-            if (this.prev != now) {
-                prev = now;
-                try {
-                    this.getWorld().checkLight(pos);
-                } catch (Exception ignored) {
-                }
-                ;
-
-            }
-            return now;
-        }
-    }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
-            fluidTank = (FluidTank) DecoderHandler.decode(customPacketBuffer);
+            FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
+            fluidTank.setFluid(fluidTank1.getFluid());
+            ;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -135,45 +112,47 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && player
+                .getItemInHand(hand)
+                .getCapability(
+                        ForgeCapabilities.FLUID_HANDLER_ITEM,
+                        null
+                ).orElse((IFluidHandlerItem) player
+                        .getItemInHand(hand).getItem().initCapabilities(player
+                                .getItemInHand(hand), player
+                                .getItemInHand(hand).getTag())) != null) {
+
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
+        } else {
+
+            return super.onActivated(player, hand, side, vec3);
         }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) stack.getTagCompound().getTag("fluid"));
+        if (stack.hasTag() && stack.getTag().contains("fluid")) {
+            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getLocalizedName());
-            tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.amount / 1000 + " B");
+            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getVisualOrderText());
+            tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
         super.addInformation(stack, tooltip);
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) stack.getTagCompound().getTag("fluid"));
+        if (stack.hasTag() && stack.getTag().contains("fluid")) {
+            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
             if (fluidStack != null) {
-                this.fluidTank.fill(fluidStack, true);
+                this.fluidTank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
             }
             this.old_amount = this.fluidTank.getFluidAmount();
             new PacketUpdateFieldTile(this, "fluidTank", this.fluidTank);
@@ -181,12 +160,12 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
     }
 
     @Override
-    public List<ItemStack> getWrenchDrops(final EntityPlayer player, final int fortune) {
+    public List<ItemStack> getWrenchDrops(final Player player, final int fortune) {
         List<ItemStack> itemStackList = super.getWrenchDrops(player, fortune);
 
         if (this.fluidTank.getFluidAmount() > 0) {
-            NBTTagCompound nbt = ModUtils.nbt(itemStackList.get(0));
-            nbt.setTag("fluid", this.fluidTank.getFluid().writeToNBT(new NBTTagCompound()));
+            CompoundTag nbt = ModUtils.nbt(itemStackList.get(0));
+            nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
         }
 
         return itemStackList;
@@ -194,16 +173,20 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (drop.isItemEqual(this.getPickBlock(
+        if (drop.is(this.getPickBlock(
                 null,
                 null
-        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
+        ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
             if (this.fluidTank.getFluidAmount() > 0) {
-                NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setTag("fluid", this.fluidTank.getFluid().writeToNBT(new NBTTagCompound()));
+                CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
             }
         }
         return drop;
+    }
+
+    public FluidTank getFluidTank() {
+        return fluidTank;
     }
 
     public double gaugeLiquidScaled(double i) {
@@ -240,7 +223,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean needsInvUpdate = false;
-        if (this.world.provider.getWorldTime() % 20 == 0) {
+        if (this.level.getGameTime() % 20 == 0) {
             boolean need = false;
             if (this.fluidTank.getFluidAmount() != this.old_amount) {
                 this.old_amount = this.fluidTank.getFluidAmount();
@@ -291,53 +274,21 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
         super.updateField(name, is);
     }
 
-    public boolean canFill() {
-        return true;
-    }
 
-
-    public boolean canDrain() {
-        return true;
-    }
-
-    public FluidTank getFluidTank() {
-        return this.fluidTank;
-    }
-
-
-    public ContainerTank getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerTank getGuiContainer(Player entityPlayer) {
         return new ContainerTank(entityPlayer, this);
     }
 
-    public int fill(FluidStack resource, boolean doFill) {
-        return this.canFill() ? this.getFluidTank().fill(resource, doFill) : 0;
-    }
 
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-
-        return !this.canDrain() ? null : this.getFluidTank().drain(maxDrain, doDrain);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
         return new GuiTank(new ContainerTank(entityPlayer, this));
     }
 
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-
-
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
-    }
-
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.level.isClientSide) {
             setUpgradestat();
         }
     }
@@ -346,26 +297,13 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
     }
 
 
-    public void markDirty() {
-        super.markDirty();
-        if (IUCore.proxy.isSimulating()) {
+    public void setChanged() {
+        super.setChanged();
+        if (!this.level.isClientSide) {
             setUpgradestat();
         }
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer,

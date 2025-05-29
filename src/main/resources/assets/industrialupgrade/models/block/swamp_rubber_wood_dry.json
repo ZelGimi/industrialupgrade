@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube",
 	"textures": {
-		"particle": "industrialupgrade:blocks/swamp_rubber_wood_dry_leftrightback",
-		"down": "industrialupgrade:blocks/swamp_rubber_wood_dry_bottomtop",
-		"up": "industrialupgrade:blocks/swamp_rubber_wood_dry_bottomtop",
-		"north": "industrialupgrade:blocks/swamp_rubber_wood_dry_front",
-		"east": "industrialupgrade:blocks/swamp_rubber_wood_dry_leftrightback",
-		"south": "industrialupgrade:blocks/swamp_rubber_wood_dry_leftrightback",
-		"west": "industrialupgrade:blocks/swamp_rubber_wood_dry_leftrightback"
+		"particle": "industrialupgrade:block/swamp_rubber_wood_dry_leftrightback",
+		"down": "industrialupgrade:block/swamp_rubber_wood_dry_bottomtop",
+		"up": "industrialupgrade:block/swamp_rubber_wood_dry_bottomtop",
+		"north": "industrialupgrade:block/swamp_rubber_wood_dry_front",
+		"east": "industrialupgrade:block/swamp_rubber_wood_dry_leftrightback",
+		"south": "industrialupgrade:block/swamp_rubber_wood_dry_leftrightback",
+		"west": "industrialupgrade:block/swamp_rubber_wood_dry_leftrightback"
 	}
 }

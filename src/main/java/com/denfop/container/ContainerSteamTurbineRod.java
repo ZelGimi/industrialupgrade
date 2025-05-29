@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.steamturbine.TileEntitySteamTurbineRod;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSteamTurbineRod extends ContainerFullInv<TileEntitySteamTurbineRod> {
 
     public ContainerSteamTurbineRod(
             final TileEntitySteamTurbineRod tileEntity1,
-            EntityPlayer entityPlayer
+            Player entityPlayer
     ) {
         super(entityPlayer, tileEntity1, 255);
 

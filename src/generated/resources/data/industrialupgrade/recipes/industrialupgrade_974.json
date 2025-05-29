@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemiucrafring/itemuraningot"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/spinel"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:platedense/lead"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "BAB",
+    "BDB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_441_element"
+  },
+  "show_notification": true
+}

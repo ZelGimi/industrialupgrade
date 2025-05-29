@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/speed_birth_rate_2"
+    "layer0" : "industrialupgrade:item/speed_birth_rate_2"
   }
 }

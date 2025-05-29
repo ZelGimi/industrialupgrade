@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:plastic_plate"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/orichalcum"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:doubleplate/vanadoalumite"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:rotorupgrade_schemes"
+  },
+  "show_notification": true
+}

@@ -1,21 +1,18 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerSteamTurbineCoolant;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiSteamTurbineCoolant extends GuiIU<ContainerSteamTurbineCoolant> {
+public class GuiSteamTurbineCoolant<T extends ContainerSteamTurbineCoolant> extends GuiIU<ContainerSteamTurbineCoolant> {
 
     public GuiSteamTurbineCoolant(ContainerSteamTurbineCoolant guiContainer) {
         super(guiContainer);
-        this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.addElement(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         elements.add(TankGauge.createNormal(this, 80, 25, guiContainer.base.getCoolant()));
         this.addComponent(new GuiComponent(this, 13, 57 - 36, EnumTypeComponent.PLUS_BUTTON,
                 new Component<>(new ComponentButton(this.container.base, 0) {
@@ -36,22 +33,19 @@ public class GuiSteamTurbineCoolant extends GuiIU<ContainerSteamTurbineCoolant> 
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(String.valueOf(this.container.base.getPressure()), 17, 40, ModUtils.convertRGBcolorToInt(15,
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer( poseStack,par1, par2);
+        draw( poseStack, String.valueOf(this.container.base.getPressure()), 17, 40, ModUtils.convertRGBcolorToInt(15,
                 125, 205
         ));
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
+
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect( poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

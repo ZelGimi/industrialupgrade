@@ -3,7 +3,7 @@ package com.denfop.integration.jei.macerator;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,16 @@ public class MaceratorHandler {
 
     private static final List<MaceratorHandler> recipes = new ArrayList<>();
     private final ItemStack input, output;
+    private final BaseMachineRecipe container;
 
-    public MaceratorHandler(ItemStack input, ItemStack output) {
+    public MaceratorHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
+        this.container = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<MaceratorHandler> getRecipes() {
@@ -25,8 +31,8 @@ public class MaceratorHandler {
         return recipes;
     }
 
-    public static MaceratorHandler addRecipe(ItemStack input, ItemStack output) {
-        MaceratorHandler recipe = new MaceratorHandler(input, output);
+    public static MaceratorHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
+        MaceratorHandler recipe = new MaceratorHandler(input, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -50,10 +56,10 @@ public class MaceratorHandler {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("macerator")) {
 
 
-            addRecipe(
-                    container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0)
-            );
+                addRecipe(
+                        container.input.getInputs().get(0).getInputs().get(0),
+                        container.getOutput().items.get(0),container
+                );
 
 
         }

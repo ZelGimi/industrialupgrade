@@ -2,22 +2,26 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerAmpereStorage;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiAmpereStorage;
+import com.denfop.gui.GuiCore;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 
@@ -26,13 +30,13 @@ public class TileEntityAmpereStorage extends TileElectricMachine implements IUpd
 
     public final ComponentBaseEnergy pressure;
 
-    public TileEntityAmpereStorage() {
-        super(0, 0, 1);
+    public TileEntityAmpereStorage(BlockPos pos, BlockState state) {
+        super(0, 0, 1,BlockBaseMachine3.ampere_storage,pos,state);
 
         this.pressure = this.addComponent((new ComponentBaseEnergy(EnergyType.AMPERE, this, 100000,
 
-                Arrays.asList(EnumFacing.values()),
-                Arrays.asList(EnumFacing.values()),
+                Arrays.asList(Direction.values()),
+                Arrays.asList(Direction.values()),
                 EnergyNetGlobal.instance.getTierFromPower(14),
                 EnergyNetGlobal.instance.getTierFromPower(14), false
         )));
@@ -47,7 +51,7 @@ public class TileEntityAmpereStorage extends TileElectricMachine implements IUpd
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -62,7 +66,7 @@ public class TileEntityAmpereStorage extends TileElectricMachine implements IUpd
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
 
     }
 
@@ -75,14 +79,15 @@ public class TileEntityAmpereStorage extends TileElectricMachine implements IUpd
 
 
     @Override
-    public ContainerAmpereStorage getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerAmpereStorage getGuiContainer(final Player entityPlayer) {
         return new ContainerAmpereStorage(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiAmpereStorage(getGuiContainer(entityPlayer), b);
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiAmpereStorage((ContainerAmpereStorage) menu);
     }
 
 

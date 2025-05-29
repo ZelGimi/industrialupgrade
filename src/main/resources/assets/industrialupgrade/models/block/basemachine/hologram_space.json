@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [128, 128],
 	"textures": {
-		"1": "industrialupgrade:models/hologram_space",
-		"particle": "industrialupgrade:models/hologram_space"
+		"1": "industrialupgrade:block/hologram_space",
+		"particle": "industrialupgrade:block/hologram_space"
 	},
 	"elements": [
 		{

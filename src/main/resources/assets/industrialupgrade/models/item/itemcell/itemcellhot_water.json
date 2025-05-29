@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/hotwater_cell"
+		"layer0": "industrialupgrade:item/hotwater_cell"
 	}
 }

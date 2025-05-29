@@ -1,10 +1,13 @@
 package com.denfop.tiles.base;
 
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.Fluids;
 import com.google.common.base.Predicate;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
+
 
 public abstract class TileElectricLiquidTankInventory extends TileElectricMachine {
 
@@ -13,9 +16,9 @@ public abstract class TileElectricLiquidTankInventory extends TileElectricMachin
 
     public TileElectricLiquidTankInventory(
             final double MaxEnergy, final int tier, final int tanksize,
-            Predicate<Fluid> fluids_list
+            Predicate<Fluid> fluids_list, IMultiTileBlock block, BlockPos pos, BlockState state
     ) {
-        super(MaxEnergy, tier, 1);
+        super(MaxEnergy, tier, 1, block, pos, state);
 
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000, fluids_list);
@@ -23,24 +26,15 @@ public abstract class TileElectricLiquidTankInventory extends TileElectricMachin
     }
 
     public TileElectricLiquidTankInventory(
-            final double MaxEnergy, final int tier, final int tanksize
+            final double MaxEnergy, final int tier, final int tanksize, IMultiTileBlock block, BlockPos pos, BlockState state
     ) {
-        super(MaxEnergy, tier, 1);
+        super(MaxEnergy, tier, 1, block, pos, state);
 
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000);
 
     }
 
-
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
-    }
 
     public double getEnergy() {
         return this.energy.getEnergy();

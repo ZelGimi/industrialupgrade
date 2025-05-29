@@ -2,10 +2,11 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerCyclotronElectrostaticDeflector;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiCyclotronElectrostaticDeflector extends GuiIU<ContainerCyclotronElectrostaticDeflector> {
+public class GuiCyclotronElectrostaticDeflector<T extends ContainerCyclotronElectrostaticDeflector> extends GuiIU<ContainerCyclotronElectrostaticDeflector> {
 
     public GuiCyclotronElectrostaticDeflector(ContainerCyclotronElectrostaticDeflector guiContainer) {
         super(guiContainer);
@@ -18,12 +19,12 @@ public class GuiCyclotronElectrostaticDeflector extends GuiIU<ContainerCyclotron
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
 
-        GlStateManager.color(1, 1, 1, 1);
+       RenderSystem.setShaderColor(1, 1, 1, 1);
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft + 80, this.guiTop + 44, 237, 1, 18, 18);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 80, this.guiTop + 44, 237, 1, 18, 18);
     }
 
 }

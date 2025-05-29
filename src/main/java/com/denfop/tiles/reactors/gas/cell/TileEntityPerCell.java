@@ -5,11 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
 import com.denfop.tiles.reactors.gas.ICell;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityPerCell extends TileEntityMainTank implements ICell {
 
-    public TileEntityPerCell() {
-        super(240000);
+    public TileEntityPerCell(BlockPos pos, BlockState state) {
+        super(240000,BlockGasReactor.per_gas_cell,pos,state);
     }
 
     @Override
@@ -19,7 +21,7 @@ public class TileEntityPerCell extends TileEntityMainTank implements ICell {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_reactor;
+        return IUItem.gas_reactor.getBlock(getTeBlock());
     }
 
     @Override

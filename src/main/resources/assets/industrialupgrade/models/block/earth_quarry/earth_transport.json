@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/earth_transport",
-    "down" : "industrialupgrade:blocks/earth_transport",
-    "up" : "industrialupgrade:blocks/earth_transport",
-    "north" : "industrialupgrade:blocks/earth_transport",
-    "east" : "industrialupgrade:blocks/earth_transport",
-    "south" : "industrialupgrade:blocks/earth_transport",
-    "west" : "industrialupgrade:blocks/earth_transport"
+    "particle" : "industrialupgrade:block/earth_transport",
+    "down" : "industrialupgrade:block/earth_transport",
+    "up" : "industrialupgrade:block/earth_transport",
+    "north" : "industrialupgrade:block/earth_transport",
+    "east" : "industrialupgrade:block/earth_transport",
+    "south" : "industrialupgrade:block/earth_transport",
+    "west" : "industrialupgrade:block/earth_transport"
   }
 }

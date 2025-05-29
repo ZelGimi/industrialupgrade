@@ -3,39 +3,33 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSolderingMechanism;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSolderingMechanism;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSolderingMechanism;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.resource.ItemIngots;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.recipe.IInputHandler;
-import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -66,13 +60,13 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
     private int GREEN_PERCENT = 80;
     private int YELLOW_PERCENT = 100 - RED_PERCENT - GREEN_PERCENT;
 
-    public TileEntityPrimalSolderingMechanism() {
-        super(0, 0, 1);
+    public TileEntityPrimalSolderingMechanism(BlockPos pos, BlockState state) {
+        super(0, 0, 1, BlockSolderingMechanism.primal_soldering_mechanism, pos, state);
         this.output = null;
         solderingIronSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.solderingIron;
+                return stack.getItem() == IUItem.solderingIron.getItem();
             }
         };
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
@@ -89,356 +83,6 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    private static void add(
-            ItemStack second, ItemStack three,
-            ItemStack four, ItemStack five,
-            ItemStack output
-    ) {
-        IInputItemStack first1;
-        IInputItemStack second1;
-        IInputItemStack three1;
-        IInputItemStack four1;
-        IInputItemStack five1;
-
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", (short) 4000);
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        first1 = input.getInput("ingotAluminum");
-        if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                .getOreName(OreDictionary.getOreIDs(second)[0])
-                .isEmpty() && second.getItem() instanceof ItemIngots) {
-            second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
-        } else {
-            second1 = input.getInput(second);
-        }
-        if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                .getOreName(OreDictionary.getOreIDs(three)[0])
-                .isEmpty() && three.getItem() instanceof ItemIngots) {
-            three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
-        } else {
-            three1 = input.getInput(three);
-        }
-        if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
-                .getOreName(OreDictionary.getOreIDs(four)[0])
-                .isEmpty() && four.getItem() instanceof ItemIngots) {
-            four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]));
-        } else {
-            four1 = input.getInput(four);
-        }
-        if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
-                .getOreName(OreDictionary.getOreIDs(five)[0])
-                .isEmpty() && five.getItem() instanceof ItemIngots) {
-            five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]));
-        } else {
-            five1 = input.getInput(five);
-        }
-        Recipes.recipes.addRecipe(
-                "microchip",
-                new BaseMachineRecipe(
-                        new Input(first1, second1, three1, four1, five1),
-                        new RecipeOutput(nbt, output)
-                )
-        );
-    }
-
-    public static void add(
-            ItemStack first,
-            ItemStack second,
-            ItemStack three,
-            ItemStack four,
-            ItemStack five,
-            ItemStack output,
-            short temperatures,
-            boolean check
-    ) {
-        IInputItemStack first1;
-        IInputItemStack second1;
-        IInputItemStack three1;
-        IInputItemStack four1;
-        IInputItemStack five1;
-
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", temperatures);
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        if (check) {
-            if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(first)[0])
-                    .isEmpty() && first.getItem() instanceof ItemIngots) {
-                first1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(first)[0]), first.getCount());
-            } else {
-                first1 = input.getInput(first);
-            }
-            if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(second)[0])
-                    .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]), second.getCount());
-            } else {
-                second1 = input.getInput(second);
-            }
-            if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(three)[0])
-                    .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]), three.getCount());
-            } else {
-                three1 = input.getInput(three);
-            }
-            if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(four)[0])
-                    .isEmpty() && four.getItem() instanceof ItemIngots) {
-                four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]), four.getCount());
-            } else {
-                four1 = input.getInput(four);
-            }
-            if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(five)[0])
-                    .isEmpty() && five.getItem() instanceof ItemIngots) {
-                five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]), five.getCount());
-            } else {
-                five1 = input.getInput(five);
-            }
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
-        } else {
-            Recipes.recipes.addRecipe("microchip", new BaseMachineRecipe(
-                    new Input(
-                            input.getInput(first),
-                            input.getInput(second),
-                            input.getInput(three),
-                            input.getInput(four),
-                            input.getInput(five)
-                    ),
-                    new RecipeOutput(nbt, output)
-            ));
-        }
-    }
-
-    public static void add(
-            ItemStack first,
-            ItemStack second,
-            ItemStack three,
-            ItemStack four,
-            String five,
-            ItemStack output,
-            short temperatures,
-            boolean check
-    ) {
-        IInputItemStack first1;
-        IInputItemStack second1;
-        IInputItemStack three1;
-        IInputItemStack four1;
-        IInputItemStack five1;
-
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", temperatures);
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        if (check) {
-            if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(first)[0])
-                    .isEmpty() && first.getItem() instanceof ItemIngots) {
-
-                first1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(first)[0]));
-            } else {
-                first1 = input.getInput(first);
-            }
-            if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(second)[0])
-                    .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
-            } else {
-                second1 = input.getInput(second);
-            }
-            if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(three)[0])
-                    .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
-            } else {
-                three1 = input.getInput(three);
-            }
-            if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(four)[0])
-                    .isEmpty() && four.getItem() instanceof ItemIngots) {
-                four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]));
-            } else {
-                four1 = input.getInput(four);
-            }
-            five1 = input.getInput(five);
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
-        }
-    }
-
-    public static void add(
-            String first,
-            ItemStack second,
-            ItemStack three,
-            ItemStack four,
-            ItemStack five,
-            ItemStack output,
-            boolean check
-    ) {
-        IInputItemStack first1;
-        IInputItemStack second1;
-        IInputItemStack three1;
-        IInputItemStack four1;
-        IInputItemStack five1;
-
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", (short) 4500);
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        if (check) {
-            first1 = input.getInput(first);
-            if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(second)[0])
-                    .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
-            } else {
-                second1 = input.getInput(second);
-            }
-            if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(three)[0])
-                    .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
-            } else {
-                three1 = input.getInput(three);
-            }
-            if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(four)[0])
-                    .isEmpty() && four.getItem() instanceof ItemIngots) {
-                four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]));
-            } else {
-                four1 = input.getInput(four);
-            }
-            if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(five)[0])
-                    .isEmpty() && five.getItem() instanceof ItemIngots) {
-                five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]));
-            } else {
-                five1 = input.getInput(five);
-            }
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
-        } else {
-            Recipes.recipes.addRecipe("microchip", new BaseMachineRecipe(
-                    new Input(
-                            input.getInput(first),
-                            input.getInput(second),
-                            input.getInput(three),
-                            input.getInput(four),
-                            input.getInput(five)
-                    ),
-                    new RecipeOutput(nbt, output)
-            ));
-
-
-        }
-    }
-
-    public static void add(
-            ItemStack first,
-            ItemStack second,
-            ItemStack three,
-            String four,
-            ItemStack five,
-            ItemStack output,
-            boolean check
-    ) {
-        IInputItemStack first1;
-        IInputItemStack second1;
-        IInputItemStack three1;
-        IInputItemStack four1;
-        IInputItemStack five1;
-
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", (short) 2000);
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        if (check) {
-            if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(first)[0])
-                    .isEmpty() && first.getItem() instanceof ItemIngots) {
-                first1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(first)[0]));
-            } else {
-                first1 = input.getInput(first);
-            }
-            if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(second)[0])
-                    .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
-            } else {
-                second1 = input.getInput(second);
-            }
-            if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(three)[0])
-                    .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
-            } else {
-                three1 = input.getInput(three);
-            }
-            four1 = input.getInput(four);
-            if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(five)[0])
-                    .isEmpty() && five.getItem() instanceof ItemIngots) {
-                five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]));
-            } else {
-                five1 = input.getInput(five);
-            }
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
-        } else {
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(
-                                    input.getInput(first),
-                                    input.getInput(second),
-                                    input.getInput(three),
-                                    input.getInput(four),
-                                    input.getInput(five)
-                            ),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
-
-
-        }
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     private int[] generateColorStrip() {
         int[] data = new int[SIZE];
@@ -526,26 +170,26 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
         return true;
     }
 
-    public void updateTileServer(EntityPlayer var1, double var2) {
+    public void updateTileServer(Player var1, double var2) {
         if (start && var2 == 0) {
             this.componentProgress.addProgress(0, (short) 8);
             if (componentProgress.getProgress(0) >= 300) {
                 componentProgress.setProgress((short) 300);
             }
-            this.solderingIronSlot.put(0, this.solderingIronSlot.get().getItem().getContainerItem(this.solderingIronSlot.get()));
+            this.solderingIronSlot.set(0, this.solderingIronSlot.get(0).getItem().getCraftingRemainingItem(this.solderingIronSlot.get(0)));
         } else if (start && var2 == 1) {
             this.componentProgress.addProgress(0, (short) -5);
             if (componentProgress.getProgress(0) < 0) {
                 componentProgress.setProgress((short) 0);
             }
-            this.solderingIronSlot.put(0, this.solderingIronSlot.get().getItem().getContainerItem(this.solderingIronSlot.get()));
+            this.solderingIronSlot.set(0, this.solderingIronSlot.get(0).getItem().getCraftingRemainingItem(this.solderingIronSlot.get(0)));
             failed++;
         } else if (start && var2 == 2) {
             this.componentProgress.addProgress(0, (short) -2);
             if (componentProgress.getProgress(0) < 0) {
                 componentProgress.setProgress((short) 0);
             }
-            this.solderingIronSlot.put(0, this.solderingIronSlot.get().getItem().getContainerItem(this.solderingIronSlot.get()));
+            this.solderingIronSlot.set(0, this.solderingIronSlot.get(0).getItem().getCraftingRemainingItem(this.solderingIronSlot.get(0)));
 
         }
         if (failed >= 12) {
@@ -635,7 +279,7 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
         }
     }
 
-    public ContainerSolderingMechanism getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSolderingMechanism getGuiContainer(Player entityPlayer) {
         return new ContainerSolderingMechanism(
                 entityPlayer, this);
     }
@@ -645,7 +289,7 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.solderingMechanism;
+        return IUItem.solderingMechanism.getBlock();
     }
 
     public void init() {
@@ -669,9 +313,9 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSolderingMechanism(new ContainerSolderingMechanism(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiSolderingMechanism((ContainerSolderingMechanism) isAdmin);
     }
 
     public String getStartSoundFile() {

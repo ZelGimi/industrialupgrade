@@ -5,9 +5,9 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerAutoFuse;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiAutoFuse extends GuiIU<ContainerAutoFuse> {
+public class GuiAutoFuse<T extends ContainerAutoFuse> extends GuiIU<ContainerAutoFuse> {
 
     public GuiAutoFuse(ContainerAutoFuse guiContainer) {
         super(guiContainer);

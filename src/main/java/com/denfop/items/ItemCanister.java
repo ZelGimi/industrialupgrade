@@ -1,56 +1,35 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
+import com.denfop.IUCore;
 import com.denfop.blocks.FluidName;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 
-public class ItemCanister extends ItemFluidContainer {
+public class ItemCanister extends ItemFluidContainer implements IItemTab {
 
     public ItemCanister() {
-        super("canister", 1000);
-        this.setMaxStackSize(1);
+        super(1000, 1);
     }
 
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu.").replace(".name", ""));
-    }
-
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
-            subItems.add(new ItemStack(this));
-            subItems.add(this.getItemStack(FluidName.fluidmotoroil));
-            subItems.add(this.getItemStack(FluidName.fluidsteam_oil));
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
     @Override
-    public void registerModels() {
-        ModelLoader.setCustomMeshDefinition(
-                this,
-                stack -> new ModelResourceLocation(Constants.MOD_ID + ":" + "tools" + "/" + "canister", null)
-        );
-        ModelBakery.registerItemVariants(
-                this,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + "tools" + "/" + "canister", null)
-        );
-
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
+    }
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            p_41392_.add(new ItemStack(this));
+            p_41392_.add(this.getItemStack(FluidName.fluidmotoroil.getInstance().get()));
+            p_41392_.add(this.getItemStack(FluidName.fluidsteam_oil.getInstance().get()));
+        }
     }
 
 
     public boolean canfill(Fluid fluid) {
-        return fluid == FluidName.fluidmotoroil.getInstance() || fluid == FluidName.fluidsteam_oil.getInstance();
+        return fluid == FluidName.fluidmotoroil.getInstance().get() || fluid == FluidName.fluidsteam_oil.getInstance().get() ;
     }
-
 
 }

@@ -2,23 +2,22 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileGenerationAdditionStone extends TileBaseAdditionGenStone implements IHasRecipe {
 
@@ -26,8 +25,8 @@ public class TileGenerationAdditionStone extends TileBaseAdditionGenStone implem
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileGenerationAdditionStone() {
-        super(1, 100, 12);
+    public TileGenerationAdditionStone(BlockPos pos, BlockState state) {
+        super(1, 100, 12,BlockBaseMachine3.gen_addition_stone,pos,state);
         this.inputSlotA = new InvSlotRecipes(this, "genadditionstone", this);
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
@@ -46,7 +45,7 @@ public class TileGenerationAdditionStone extends TileBaseAdditionGenStone implem
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -61,8 +60,8 @@ public class TileGenerationAdditionStone extends TileBaseAdditionGenStone implem
                 1
         ), this.granite);
         addGen(
-                input.getInput(ModUtils.getCellFromFluid("lava")),
-                input.getInput(ModUtils.getCellFromFluid("water")),
+                input.getInput(ModUtils.getCellFromFluid(Fluids.WATER)),
+                input.getInput(ModUtils.getCellFromFluid(Fluids.LAVA)),
                 this.granite
         );
 

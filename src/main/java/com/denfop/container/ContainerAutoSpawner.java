@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileAutoSpawner;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerAutoSpawner extends ContainerFullInv<TileAutoSpawner> {
 
-    public ContainerAutoSpawner(EntityPlayer entityPlayer, TileAutoSpawner tileEntity1) {
+    public ContainerAutoSpawner(Player entityPlayer, TileAutoSpawner tileEntity1) {
         super(entityPlayer, tileEntity1, 177);
         if (tileEntity1.outputSlot != null) {
             for (int i = 0; i < 3; i++) {

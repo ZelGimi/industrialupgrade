@@ -1,18 +1,15 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.container.ContainerTank;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiTank extends GuiIU<ContainerTank> {
+@OnlyIn(Dist.CLIENT)
+public class GuiTank<T extends ContainerTank> extends GuiIU<ContainerTank> {
 
     public final ContainerTank container;
 
@@ -28,17 +25,17 @@ public class GuiTank extends GuiIU<ContainerTank> {
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
 
-        super.drawForegroundLayer(par1, par2);
-        TankGauge.createNormal(this, 96, 22, container.base.getFluidTank()).drawForeground(par1, par2);
+        super.drawForegroundLayer(poseStack, par1, par2);
+        TankGauge.createNormal(this, 96, 22, container.base.getFluidTank()).drawForeground(poseStack, par1, par2);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
-        TankGauge.createNormal(this, 96, 22, container.base.getFluidTank()).drawBackground(xOffset, yOffset);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        int xOffset = (this.width - this.imageWidth) / 2;
+        int yOffset = (this.height - this.imageHeight) / 2;
+        TankGauge.createNormal(this, 96, 22, container.base.getFluidTank()).drawBackground(poseStack, xOffset, yOffset);
 
 
     }

@@ -1,44 +1,35 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSawmill;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSawmill;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -58,8 +49,8 @@ public class TileEntitySawmill extends TileElectricMachine implements
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
 
-    public TileEntitySawmill() {
-        super(200, 1, 1);
+    public TileEntitySawmill(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.sawmill,pos,state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
@@ -75,18 +66,19 @@ public class TileEntitySawmill extends TileElectricMachine implements
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TileEntitySawmill) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TileEntitySawmill) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TileEntitySawmill) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
 
             @Override
@@ -103,7 +95,7 @@ public class TileEntitySawmill extends TileElectricMachine implements
                 "sawmill",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 4, container))),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(container), 4))),
                         new RecipeOutput(null, output)
                 )
         );
@@ -147,48 +139,58 @@ public class TileEntitySawmill extends TileElectricMachine implements
     }
 
     @Override
-    public ContainerSawmill getGuiContainer(final EntityPlayer var1) {
+    public ContainerSawmill getGuiContainer(final Player var1) {
         return new ContainerSawmill(var1, this);
     }
 
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSawmill(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiSawmill((ContainerSawmill) menu);
     }
 
     @Override
     public void init() {
-        for (int i = 0; i < 4; i++) {
-            addRecipe(new ItemStack(Blocks.LOG, 1, i), new ItemStack(Blocks.PLANKS, 6, i));
-        }
-        for (int i = 4; i < 6; i++) {
-            addRecipe(new ItemStack(Blocks.LOG2, 1, i - 4), new ItemStack(Blocks.PLANKS, 6, i));
-        }
-        addRecipe(new ItemStack(Blocks.PLANKS, 1, 0), new ItemStack(Blocks.OAK_STAIRS, 1));
-        addRecipe(new ItemStack(Blocks.PLANKS, 1, 1), new ItemStack(Blocks.SPRUCE_STAIRS, 1));
-        addRecipe(new ItemStack(Blocks.PLANKS, 1, 2), new ItemStack(Blocks.BIRCH_STAIRS, 1));
-        addRecipe(new ItemStack(Blocks.PLANKS, 1, 3), new ItemStack(Blocks.JUNGLE_STAIRS, 1));
-        addRecipe(new ItemStack(Blocks.PLANKS, 1, 4), new ItemStack(Blocks.ACACIA_STAIRS, 1));
-        addRecipe(new ItemStack(Blocks.PLANKS, 1, 5), new ItemStack(Blocks.DARK_OAK_STAIRS, 1));
-        addRecipe(new ItemStack(Blocks.OAK_STAIRS, 1), new ItemStack(Blocks.WOODEN_SLAB, 3, 0));
-        addRecipe(new ItemStack(Blocks.SPRUCE_STAIRS, 1), new ItemStack(Blocks.WOODEN_SLAB, 3, 1));
-        addRecipe(new ItemStack(Blocks.BIRCH_STAIRS, 1), new ItemStack(Blocks.WOODEN_SLAB, 3, 2));
-        addRecipe(new ItemStack(Blocks.JUNGLE_STAIRS, 1), new ItemStack(Blocks.WOODEN_SLAB, 3, 3));
-        addRecipe(new ItemStack(Blocks.ACACIA_STAIRS, 1), new ItemStack(Blocks.WOODEN_SLAB, 3, 4));
-        addRecipe(new ItemStack(Blocks.DARK_OAK_STAIRS, 1), new ItemStack(Blocks.WOODEN_SLAB, 3, 5));
 
-        for (int i = 0; i < 6; i++) {
-            addRecipe(new ItemStack(Blocks.WOODEN_SLAB, 3, i), new ItemStack(Items.STICK, 1));
-        }
-        addRecipe(new ItemStack(Items.STICK, 1), new ItemStack(Blocks.WOODEN_BUTTON));
+            addRecipe(new ItemStack(Blocks.OAK_LOG), new ItemStack(Blocks.OAK_PLANKS, 6));
+            addRecipe(new ItemStack(Blocks.SPRUCE_LOG), new ItemStack(Blocks.SPRUCE_PLANKS, 6));
+            addRecipe(new ItemStack(Blocks.BIRCH_LOG), new ItemStack(Blocks.BIRCH_PLANKS, 6));
+            addRecipe(new ItemStack(Blocks.JUNGLE_LOG), new ItemStack(Blocks.JUNGLE_PLANKS, 6));
+            addRecipe(new ItemStack(Blocks.ACACIA_LOG), new ItemStack(Blocks.ACACIA_PLANKS, 6));
+            addRecipe(new ItemStack(Blocks.DARK_OAK_LOG), new ItemStack(Blocks.DARK_OAK_PLANKS, 6));
+
+            addRecipe(new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Blocks.OAK_STAIRS));
+            addRecipe(new ItemStack(Blocks.SPRUCE_PLANKS), new ItemStack(Blocks.SPRUCE_STAIRS));
+            addRecipe(new ItemStack(Blocks.BIRCH_PLANKS), new ItemStack(Blocks.BIRCH_STAIRS));
+            addRecipe(new ItemStack(Blocks.JUNGLE_PLANKS), new ItemStack(Blocks.JUNGLE_STAIRS));
+            addRecipe(new ItemStack(Blocks.ACACIA_PLANKS), new ItemStack(Blocks.ACACIA_STAIRS));
+            addRecipe(new ItemStack(Blocks.DARK_OAK_PLANKS), new ItemStack(Blocks.DARK_OAK_STAIRS));
+
+            addRecipe(new ItemStack(Blocks.OAK_STAIRS), new ItemStack(Blocks.OAK_SLAB, 3));
+            addRecipe(new ItemStack(Blocks.SPRUCE_STAIRS), new ItemStack(Blocks.SPRUCE_SLAB, 3));
+            addRecipe(new ItemStack(Blocks.BIRCH_STAIRS), new ItemStack(Blocks.BIRCH_SLAB, 3));
+            addRecipe(new ItemStack(Blocks.JUNGLE_STAIRS), new ItemStack(Blocks.JUNGLE_SLAB, 3));
+            addRecipe(new ItemStack(Blocks.ACACIA_STAIRS), new ItemStack(Blocks.ACACIA_SLAB, 3));
+            addRecipe(new ItemStack(Blocks.DARK_OAK_STAIRS), new ItemStack(Blocks.DARK_OAK_SLAB, 3));
+
+            addRecipe(new ItemStack(Blocks.OAK_SLAB, 3), new ItemStack(Items.STICK));
+            addRecipe(new ItemStack(Blocks.SPRUCE_SLAB, 3), new ItemStack(Items.STICK));
+            addRecipe(new ItemStack(Blocks.BIRCH_SLAB, 3), new ItemStack(Items.STICK));
+            addRecipe(new ItemStack(Blocks.JUNGLE_SLAB, 3), new ItemStack(Items.STICK));
+            addRecipe(new ItemStack(Blocks.ACACIA_SLAB, 3), new ItemStack(Items.STICK));
+            addRecipe(new ItemStack(Blocks.DARK_OAK_SLAB, 3), new ItemStack(Items.STICK));
+
+            addRecipe(new ItemStack(Items.STICK), new ItemStack(Blocks.OAK_BUTTON));
+
+
 
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -203,13 +205,13 @@ public class TileEntitySawmill extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
         }
 

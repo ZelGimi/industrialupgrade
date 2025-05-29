@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/biogas_cell"
+		"layer0": "industrialupgrade:item/biogas_cell"
 	}
 }

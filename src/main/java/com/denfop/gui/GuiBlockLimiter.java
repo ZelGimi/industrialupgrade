@@ -9,18 +9,19 @@ import com.denfop.api.gui.ImageScreen;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerBlockLimiter;
 import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
+public class GuiBlockLimiter<T extends ContainerBlockLimiter> extends GuiIU<ContainerBlockLimiter> {
 
 
     public GuiBlockLimiter(ContainerBlockLimiter guiContainer) {
@@ -92,33 +93,31 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
 
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
-        this.fontRenderer.drawString(TextFormatting.GREEN + ModUtils.getString(this.container.base.getEnergy().limit_amount),
+        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + ModUtils.getString(this.container.base.getEnergy().limit_amount),
                 (64 - getStringWidth(ModUtils.getString(this.container.base.getEnergy().limit_amount))), 31,
-                ModUtils.convertRGBcolorToInt(217, 217, 217)
+                ModUtils.convertRGBcolorToInt(217, 217, 217),false
         );
 
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
 
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
-
-        this.mc.getTextureManager().bindTexture(getTexture());
+        bindTexture(getTexture());
     }
 
     @Override

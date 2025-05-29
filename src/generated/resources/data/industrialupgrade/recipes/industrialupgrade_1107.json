@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/vitalium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/invar"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_124_element"
+  },
+  "show_notification": true
+}

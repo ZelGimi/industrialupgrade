@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:glowstone_dust"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_273_element",
+      "nbt": "{level:3}"
+    },
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:battery/lapotron_crystal"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:simplemachine/generator_matter"
+  },
+  "show_notification": true
+}

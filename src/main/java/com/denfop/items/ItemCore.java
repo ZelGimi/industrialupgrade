@@ -1,49 +1,20 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemCore extends ItemSubTypes<ItemCore.Types> implements IModelRegister {
-
-    protected static final String NAME = "itemcore";
-
-    public ItemCore() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemCore<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemCore(T element) {
+        super(new Item.Properties(), element);
     }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("iu.iu", "iu.item"));
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
-    }
-
     public enum Types implements ISubEnum {
         advcore(0),
         hybcore(1),
@@ -77,9 +48,13 @@ public class ItemCore extends ItemSubTypes<ItemCore.Types> implements IModelRegi
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "itemcore";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

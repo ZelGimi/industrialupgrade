@@ -5,15 +5,12 @@ import com.denfop.Localization;
 import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.ImageScreen;
 import com.denfop.container.ContainerController;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 
-@SideOnly(Side.CLIENT)
-public class GuiEnergyController extends GuiIU<ContainerController> {
+public class GuiEnergyController<T extends ContainerController> extends GuiIU<ContainerController> {
 
     public final ContainerController container;
 
@@ -36,39 +33,27 @@ public class GuiEnergyController extends GuiIU<ContainerController> {
     }
 
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 4, name, 4210752, false);
+        this.drawXCenteredString(poseStack,this.imageWidth / 2, 4, Component.nullToEmpty(name), 4210752, false);
     }
 
-    public void initGui() {
-        super.initGui();
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 
-    }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer( poseStack, par1, par2);
 
-        this.fontRenderer.drawString(Localization.translate("iu.energy_controller_info") + (this.container.base.size), 11, 36,
+       draw( poseStack, Localization.translate("iu.energy_controller_info") + (this.container.base.size), 11, 36,
                 2157374
         );
 
     }
 
 
-    protected void actionPerformed(GuiButton guibutton) {
 
-
-    }
 
     public ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");

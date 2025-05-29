@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcell/itemcell"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BBB",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/oak_tank"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:upgrades/adv_storageupgrade"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:battery/lapotron_crystal"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:upgrades/imp_storageupgrade"
+  }
+}

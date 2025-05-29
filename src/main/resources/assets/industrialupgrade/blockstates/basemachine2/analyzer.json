@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=analyzer": {
+      "model": "industrialupgrade:block/basemachine/analyzer"
+    },
+    "facing=south,type=analyzer": {
+      "model": "industrialupgrade:block/basemachine/analyzer",
+      "y": 180
+    },
+    "facing=west,type=analyzer": {
+      "model": "industrialupgrade:block/basemachine/analyzer",
+      "y": 270
+    },
+    "facing=east,type=analyzer": {
+      "model": "industrialupgrade:block/basemachine/analyzer",
+      "y": 90
+    },
+    "facing=down,type=analyzer": {
+      "model": "industrialupgrade:block/basemachine/analyzer",
+      "x": 90
+    },
+    "facing=up,type=analyzer": {
+      "model": "industrialupgrade:block/basemachine/analyzer",
+      "x": 270
+    },
+    "facing=north,type=analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active"
+    },
+    "facing=south,type=analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "y": 180
+    },
+    "facing=west,type=analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "y": 270
+    },
+    "facing=east,type=analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "y": 90
+    },
+    "facing=down,type=analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "x": 90
+    },
+    "facing=up,type=analyzer_invalid": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "x": 270
+    },
+    "facing=north,type=analyzer_active": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active"
+    },
+    "facing=south,type=analyzer_active": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "y": 180
+    },
+    "facing=west,type=analyzer_active": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "y": 270
+    },
+    "facing=east,type=analyzer_active": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "y": 90
+    },
+    "facing=down,type=analyzer_active": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "x": 90
+    },
+    "facing=up,type=analyzer_active": {
+      "model": "industrialupgrade:block/basemachine/analyzer_active",
+      "x": 270
+    }
+  }
+}

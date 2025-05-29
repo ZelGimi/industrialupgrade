@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/machine_charger_side",
-    "down" : "industrialupgrade:blocks/machine_charger_side",
-    "up" : "industrialupgrade:blocks/machine_charger_side",
-    "north" : "industrialupgrade:blocks/machine_charger_side",
-    "east" : "industrialupgrade:blocks/machine_charger_side",
-    "south" : "industrialupgrade:blocks/machine_charger_side",
-    "west" : "industrialupgrade:blocks/machine_charger_side"
+    "particle" : "industrialupgrade:block/machine_charger_side",
+    "down" : "industrialupgrade:block/machine_charger_side",
+    "up" : "industrialupgrade:block/machine_charger_side",
+    "north" : "industrialupgrade:block/machine_charger_side",
+    "east" : "industrialupgrade:block/machine_charger_side",
+    "south" : "industrialupgrade:block/machine_charger_side",
+    "west" : "industrialupgrade:block/machine_charger_side"
   }
 }

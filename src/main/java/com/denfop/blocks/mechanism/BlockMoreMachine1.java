@@ -1,9 +1,9 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.DefaultDrop;
+import com.denfop.blocks.state.HarvestTool;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multimechanism.dual.TileCombDoubleMacerator;
 import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleCombRecycler;
@@ -16,12 +16,13 @@ import com.denfop.tiles.mechanism.multimechanism.triple.TileCombTripleMacerator;
 import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleCombRecycler;
 import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleRecycler;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -41,55 +42,64 @@ public enum BlockMoreMachine1 implements IMultiTileBlock {
     ;
 
 
-    public static final ResourceLocation IDENTITY = IUCore.getIdentifier("moremachine1");
-
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
-    private final EnumRarity rarity;
     int idBlock;
     private TileEntityBlock dummyTe;
+    private BlockState defaultState;
+    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+
+    ;
 
     BlockMoreMachine1(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
-
-    }
-
-    BlockMoreMachine1(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
-        this.rarity = rarity;
-
-        GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
     }
+
+    ;
 
     public int getIDBlock() {
         return idBlock;
     }
 
-    ;
-
     public void setIdBlock(int id) {
         idBlock = id;
     }
 
-    ;
-
     public void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
+        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
-        for (final BlockMoreMachine1 block : BlockMoreMachine1.values()) {
-            if (block.teClass != null) {
-                try {
-                    block.dummyTe = block.teClass.newInstance();
-                } catch (Exception e) {
+        if (this.getTeClass() != null) {
+            try {
+                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+            } catch (Exception e) {
 
-                }
             }
         }
+    }
+
+    @Override
+    public void setDefaultState(BlockState blockState) {
+        this.defaultState = blockState;
+    }
+
+    @Override
+    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+        this.blockType = blockEntityType;
+    }
+
+    @Override
+    public BlockEntityType<? extends TileEntityBlock> getBlockType() {
+        return this.blockType.get();
+    }
+
+    @Override
+    public String getMainPath() {
+        return "moremachine1";
     }
 
     @Override
@@ -102,11 +112,6 @@ public enum BlockMoreMachine1 implements IMultiTileBlock {
         return this.itemMeta;
     }
 
-    @Override
-    @Nonnull
-    public ResourceLocation getIdentifier() {
-        return BlockMoreMachine1.IDENTITY;
-    }
 
     @Override
     public boolean hasItem() {
@@ -126,7 +131,7 @@ public enum BlockMoreMachine1 implements IMultiTileBlock {
 
     @Override
     @Nonnull
-    public Set<EnumFacing> getSupportedFacings() {
+    public Set<Direction> getSupportedFacings() {
         return ModUtils.horizontalFacings;
     }
 
@@ -137,14 +142,14 @@ public enum BlockMoreMachine1 implements IMultiTileBlock {
 
     @Override
     @Nonnull
-    public MultiTileBlock.HarvestTool getHarvestTool() {
-        return MultiTileBlock.HarvestTool.Wrench;
+    public HarvestTool getHarvestTool() {
+        return HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public MultiTileBlock.DefaultDrop getDefaultDrop() {
-        return MultiTileBlock.DefaultDrop.Machine;
+    public DefaultDrop getDefaultDrop() {
+        return DefaultDrop.Machine;
     }
 
     @Override

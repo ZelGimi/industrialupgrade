@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/spectralcircuit_part1"
+    "layer0" : "industrialupgrade:item/spectralcircuit_part1"
   }
 }

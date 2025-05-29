@@ -3,7 +3,7 @@ package com.denfop.integration.jei.refractory_furnace;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class RefractoryFurnaceHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

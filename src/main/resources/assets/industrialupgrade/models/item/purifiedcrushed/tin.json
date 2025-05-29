@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/purified/tin"
+		"layer0": "industrialupgrade:item/purified/tin"
 	}
 }

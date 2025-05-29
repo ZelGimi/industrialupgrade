@@ -1,19 +1,16 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWorldCollector;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWolrdCollector;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.invslot.InvSlotWorldCollector;
@@ -22,12 +19,14 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -55,8 +54,8 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
     private int progress;
 
 
-    public TileBaseWorldCollector(EnumTypeCollector enumTypeCollector1) {
-        super(0, 1, 1);
+    public TileBaseWorldCollector(EnumTypeCollector enumTypeCollector1, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(0, 1, 1,block,pos,state);
         enumTypeCollector = enumTypeCollector1;
         this.MatterSlot = new InvSlotWorldCollector(this);
         this.inputSlot = new InvSlotRecipes(this, enumTypeCollector1.name().toLowerCase() + "collector", this);
@@ -73,10 +72,9 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.need_info") + new ItemStack(
-                IUItem.matter,
-                1,
-                enumTypeCollector.getMeta()
-        ).getDisplayName());
+                IUItem.matter.getStack( enumTypeCollector.getMeta()),
+                1
+        ).getDisplayName().getString());
         super.addInformation(stack, tooltip);
     }
 
@@ -108,8 +106,8 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
 
     protected void addRecipe(ItemStack input, double need, ItemStack output) {
         final IInputHandler input_recipe = com.denfop.api.Recipes.inputFactory;
-        final NBTTagCompound nbt = ModUtils.nbt();
-        nbt.setDouble("need", need);
+        final CompoundTag nbt = ModUtils.nbt();
+        nbt.putDouble("need", need);
         Recipes.recipes.addRecipe(
                 enumTypeCollector.name().toLowerCase() + "collector",
                 new BaseMachineRecipe(new Input(input_recipe.getInput(input)), new RecipeOutput(nbt, output))
@@ -118,8 +116,8 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
 
     protected void addRecipe(String input, ItemStack output, double need) {
         final IInputHandler input_recipe = com.denfop.api.Recipes.inputFactory;
-        final NBTTagCompound nbt = ModUtils.nbt();
-        nbt.setDouble("need", getMatterFromEnergy(need));
+        final CompoundTag nbt = ModUtils.nbt();
+        nbt.putDouble("need", getMatterFromEnergy(need));
         Recipes.recipes.addRecipe(
                 enumTypeCollector.name().toLowerCase() + "collector",
                 new BaseMachineRecipe(new Input(input_recipe.getInput(input)), new RecipeOutput(nbt, output))
@@ -138,7 +136,7 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlot.load();
             this.setOverclockRates();
             this.getOutput();
@@ -225,17 +223,17 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.matter_energy = nbttagcompound.getDouble("matter_energy");
-        this.progress = nbttagcompound.getInteger("progress");
+        this.progress = nbttagcompound.getInt("progress");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        final NBTTagCompound nbt = super.writeToNBT(nbttagcompound);
-        nbt.setDouble("matter_energy", this.matter_energy);
-        nbt.setInteger("progress", this.progress);
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
+        final CompoundTag nbt = super.writeToNBT(nbttagcompound);
+        nbt.putDouble("matter_energy", this.matter_energy);
+        nbt.putInt("progress", this.progress);
         return nbt;
     }
 
@@ -245,7 +243,7 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
 
 
         MachineRecipe output = this.machineRecipe;
-        if (this.world.provider.getWorldTime() % 20 == 0 && output != null && this.matter_energy + 200 < this.max_matter_energy) {
+        if (this.level.getGameTime() % 20 == 0 && output != null && this.matter_energy + 200 < this.max_matter_energy) {
             this.MatterSlot.getmatter();
         }
         if (output != null && this.outputSlot.canAdd(this.machineRecipe.getRecipe().output.items) && !this.inputSlot.isEmpty() && this.canWork && this.need_matter <= this.matter_energy) {
@@ -287,14 +285,14 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
     }
 
     @Override
-    public ContainerWorldCollector getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerWorldCollector getGuiContainer(final Player entityPlayer) {
         return new ContainerWorldCollector(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiWolrdCollector getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiWolrdCollector(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiWolrdCollector((ContainerWorldCollector) menu);
     }
 
     @Override

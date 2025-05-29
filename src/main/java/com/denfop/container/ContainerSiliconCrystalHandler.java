@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntitySiliconCrystalHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSiliconCrystalHandler extends ContainerFullInv<TileEntitySiliconCrystalHandler> {
 
-    public ContainerSiliconCrystalHandler(final EntityPlayer player, final TileEntitySiliconCrystalHandler base) {
+    public ContainerSiliconCrystalHandler(final Player player, final TileEntitySiliconCrystalHandler base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 1, 50, 60));

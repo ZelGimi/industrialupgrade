@@ -2,47 +2,49 @@ package com.denfop.integration.jei.refrigeratorfluids;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerImpOilRefiner;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
+import com.denfop.integration.jei.JeiInform;
 import com.denfop.tiles.base.TileEntityRefrigeratorFluids;
 import com.denfop.tiles.mechanism.TileImpOilRefiner;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory<RefrigeratorFluidsWrapper> {
+public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory<RefrigeratorFluidsHandler> {
 
     private final IDrawableStatic bg;
     private final ContainerImpOilRefiner container1;
     private final GuiComponent progress_bar;
     private int progress = 0;
     private int energy = 0;
-
+    JeiInform jeiInform;
     public RefrigeratorFluidsCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+        super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
         this.container1 = (ContainerImpOilRefiner) this.getContainer();
         progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
@@ -59,23 +61,17 @@ public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory
 
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine3.refrigerator_fluids.getName();
+    public RecipeType<RefrigeratorFluidsHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.refrigerator_fluids).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.refrigerator_fluids).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -83,9 +79,8 @@ public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(RefrigeratorFluidsHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         if (this.energy < 100) {
             energy++;
@@ -95,32 +90,22 @@ public class RefrigeratorFluidsCategory extends GuiIU implements IRecipeCategory
         if (xScale >= 1) {
             progress = 0;
         }
-        mc.getTextureManager().bindTexture(getTexture());
+      bindTexture(getTexture());
 
-        progress_bar.renderBar(0, 0, xScale);
+        progress_bar.renderBar( stack,0, 0, xScale);
 
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground(this.guiLeft, this.guiTop - 5);
+            element.drawBackground( stack,this.guiLeft, this.guiTop);
         }
-
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final RefrigeratorFluidsWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RefrigeratorFluidsHandler recipes, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 44, 8).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getInput().getFluid(),recipes.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 8).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getOutput().getFluid(),recipes.getOutput().getAmount());
 
-
-        IGuiFluidStackGroup fff = layout.getFluidStacks();
-        fff.init(0, true, 44, 8, 12, 47, 8000, true, null);
-        fff.set(0, recipes.getInputstack());
-
-
-        fff.init(1, false, 104, 8, 12, 47, 8000, true, null);
-        fff.set(1, recipes.getOutputstack());
     }
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");

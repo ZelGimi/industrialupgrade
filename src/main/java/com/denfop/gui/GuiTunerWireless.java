@@ -4,16 +4,9 @@ import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.CustomButton;
 import com.denfop.container.ContainerTunerWireless;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-
-@SideOnly(Side.CLIENT)
-public class GuiTunerWireless extends GuiIU<ContainerTunerWireless> {
+public class GuiTunerWireless<T extends ContainerTunerWireless> extends GuiIU<ContainerTunerWireless> {
 
     public final ContainerTunerWireless container;
 
@@ -24,22 +17,6 @@ public class GuiTunerWireless extends GuiIU<ContainerTunerWireless> {
 
     }
 
-    public void initGui() {
-        super.initGui();
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
-
-    }
-
-
-    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
-
-    }
 
     public ResourceLocation getTexture() {
         return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");

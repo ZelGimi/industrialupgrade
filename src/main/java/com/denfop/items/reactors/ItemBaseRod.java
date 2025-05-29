@@ -1,6 +1,6 @@
 package com.denfop.items.reactors;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUPotion;
 import com.denfop.Localization;
@@ -9,105 +9,86 @@ import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IReactorItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 
-public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IReactorItem {
+public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IReactorItem, IItemTab {
 
     public final int numberOfCells;
     private final int heat;
     private final float power;
-    private final String name;
     private final int level;
     private final double radiation;
     double[] p = new double[]{5.0D, 20D, 60D, 200D};
 
-    public ItemBaseRod(String internalName, int cells, int heat, float power, int level) {
-        super(internalName, 1);
+    public ItemBaseRod(int cells, int heat, float power, int level) {
+        super(new Item.Properties().stacksTo(1).setNoRepair(), 1);
         this.heat = heat;
         this.power = power;
-        this.setCreativeTab(IUCore.ReactorsTab);
-        this.setMaxStackSize(1);
         this.numberOfCells = cells;
-        this.setNoRepair();
-        this.setCreativeTab(IUCore.ReactorsTab);
-        this.name = internalName;
         this.level = level;
         this.radiation = power * level * cells;
     }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "reactors" + "/" + name;
-        return new ModelResourceLocation(loc, null);
-    }
-
     @Override
-    public boolean showDurabilityBar(@NotNull final ItemStack stack) {
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ReactorsTab;
+    }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+        }
+
+        return this.nameItem;
+    }
+    public boolean isBarVisible(@Nonnull ItemStack stack) {
         return false;
     }
 
-    public void onUpdate(ItemStack stack, World world, Entity rawEntity, int slotIndex, boolean isCurrentItem) {
-        if (rawEntity instanceof EntityLivingBase) {
-            EntityLivingBase entity = (EntityLivingBase) rawEntity;
-            if (!IHazmatLike.hasCompleteHazmat(entity)) {
-                IUPotion.radiation.applyTo(
-                        entity,
-                        this.getRadiationDuration(),
-                        this.getRadiationAmplifier()
-                );
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotIndex, boolean isCurrentItem) {
+        if (entity instanceof LivingEntity) {
+            LivingEntity entityLiving = (LivingEntity) entity;
+            if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
+                IUPotion.radiation.applyEffect(entityLiving, this.getRadiationDuration());
             }
         }
     }
 
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
 
     @Override
-    public void registerModels() {
-        registerModels(this.name);
-    }
-
-    @Override
-    public void addInformation(
-            @Nonnull final ItemStack stack,
-            final World world,
-            @Nonnull final List<String> tooltip,
-            @Nonnull final ITooltipFlag advanced
-    ) {
-        super.addInformation(stack, world, tooltip, advanced);
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
         double temp = Math.log10(this.numberOfCells);
         double temp1 = Math.log10(2);
         double m = temp / temp1;
-        tooltip.add(Localization.translate("reactor.info") + ModUtils.getString(p[(int) m] * this.power * this.level) + " EF");
-        tooltip.add(Localization.translate("reactor.rod.radiation") + (int) this.radiation);
-        tooltip.add(Localization.translate("reactor.rod.heat") + this.heat);
-        tooltip.add(Localization.translate("reactor.rod_level") + this.level);
-        tooltip.add(Localization.translate("reactor.rod_level1"));
-
+        p_41423_.add(Component.literal(Localization.translate("reactor.info") + ModUtils.getString(p[(int) m] * this.power * this.level) + " EF"));
+        p_41423_.add(Component.literal(Localization.translate("reactor.rod.radiation") + (int) this.radiation));
+        p_41423_.add(Component.literal(Localization.translate("reactor.rod.heat") + this.heat));
+        p_41423_.add(Component.literal(Localization.translate("reactor.rod_level") + this.level));
+        p_41423_.add(Component.literal(Localization.translate("reactor.rod_level1")));
     }
 
 

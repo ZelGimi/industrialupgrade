@@ -4,8 +4,8 @@
     256
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/gas_combiner",
-    "particle" : "industrialupgrade:models/gas_combiner"
+    "0" : "industrialupgrade:block/gas_combiner",
+    "particle" : "industrialupgrade:block/gas_combiner"
   },
   "elements" : [
     {

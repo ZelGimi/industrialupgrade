@@ -4,21 +4,17 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.agriculture.genetics.GeneticTraits;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.CustomButton;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ItemStackImage;
+import com.denfop.api.gui.*;
 import com.denfop.container.ContainerGenomeExtractor;
 import com.denfop.network.packet.PacketUpdateServerTile;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
+public class GuiGenomeExtractor<T extends ContainerGenomeExtractor> extends GuiIU<ContainerGenomeExtractor> {
 
     public GuiGenomeExtractor(ContainerGenomeExtractor guiContainer) {
         super(guiContainer);
@@ -30,11 +26,11 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
         if (container.base.genCrop != null) {
-            int xMin = (this.width - this.xSize) / 2;
-            int yMin = (this.height - this.ySize) / 2;
+            int xMin = guiLeft;
+            int yMin = guiTop;
             int x = i - xMin;
             int y = j - yMin;
             List<GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genCrop.getGeneticTraitsMap().values());
@@ -47,8 +43,8 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
             }
         }
         if (container.base.genBee != null) {
-            int xMin = (this.width - this.xSize) / 2;
-            int yMin = (this.height - this.ySize) / 2;
+            int xMin = guiLeft;
+            int yMin = guiTop();
             int x = i - xMin;
             int y = j - yMin;
             List<com.denfop.api.bee.genetics.GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genBee
@@ -65,15 +61,15 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer( poseStack,par1, par2);
         if (container.base.genCrop != null) {
             List<GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genCrop.getGeneticTraitsMap().values());
             for (int i = 0; i < geneticTraitsList.size(); i++) {
                 final int finalI = i;
-                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_crop, 1,
-                        geneticTraitsList.get(finalI).ordinal()
-                )).drawForeground(par1, par2);
+                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_crop.getStack(
+                        geneticTraitsList.get(finalI).ordinal())
+                )).drawForeground(poseStack,par1, par2);
             }
         }
         if (container.base.genBee != null) {
@@ -82,23 +78,23 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
                     .values());
             for (int i = 0; i < geneticTraitsList.size(); i++) {
                 final int finalI = i;
-                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_bee, 1,
-                        geneticTraitsList.get(finalI).ordinal()
-                )).drawForeground(par1, par2);
+                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_bee.getStack(
+                        geneticTraitsList.get(finalI).ordinal())
+                )).drawForeground( poseStack,par1, par2);
             }
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer( poseStack,partialTicks, mouseX, mouseY);
         if (container.base.genCrop != null) {
             List<GeneticTraits> geneticTraitsList = new ArrayList<>(container.base.genCrop.getGeneticTraitsMap().values());
             for (int i = 0; i < geneticTraitsList.size(); i++) {
                 final int finalI = i;
-                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_crop, 1,
-                        geneticTraitsList.get(finalI).ordinal()
-                )).drawBackground(this.guiLeft, guiTop);
+                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_crop.getStack(
+                        geneticTraitsList.get(finalI).ordinal())
+                )).drawBackground( poseStack,this.guiLeft, guiTop);
             }
         }
         if (container.base.genBee != null) {
@@ -107,17 +103,17 @@ public class GuiGenomeExtractor extends GuiIU<ContainerGenomeExtractor> {
                     .values());
             for (int i = 0; i < geneticTraitsList.size(); i++) {
                 final int finalI = i;
-                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_bee, 1,
-                        geneticTraitsList.get(finalI).ordinal()
-                )).drawBackground(this.guiLeft, guiTop);
+                new ItemStackImage(this, 40 + (i % 7) * 18, 6 + (i / 7) * 18, () -> new ItemStack(IUItem.genome_bee.getStack(
+                        geneticTraitsList.get(finalI).ordinal())
+                )).drawBackground( poseStack,this.guiLeft, guiTop);
             }
         }
     }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
 
     }
 

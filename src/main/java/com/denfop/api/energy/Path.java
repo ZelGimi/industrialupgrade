@@ -1,6 +1,6 @@
 package com.denfop.api.energy;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Path {
 
     final IEnergySink target;
-    final EnumFacing targetDirection;
+    final Direction targetDirection;
     double min = Double.MAX_VALUE;
     double loss = 0.0D;
     boolean hasController = false;
@@ -18,7 +18,7 @@ public class Path {
     double adding = 0;
     List<IEnergyConductor> conductorList = new LinkedList<>();
 
-    Path(IEnergySink sink, EnumFacing facing) {
+    Path(IEnergySink sink, Direction facing) {
         this.target = sink;
         this.targetDirection = facing;
     }

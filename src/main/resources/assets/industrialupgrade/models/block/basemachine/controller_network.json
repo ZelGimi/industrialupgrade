@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/controller_network",
-    "particle" : "industrialupgrade:models/controller_network"
+    "0" : "industrialupgrade:block/controller_network",
+    "particle" : "industrialupgrade:block/controller_network"
   },
   "elements" : [
     {

@@ -1,9 +1,10 @@
 package com.denfop.world;
 
-import net.minecraft.world.World;
+
+import net.minecraft.world.level.Level;
 
 public interface IWorldTickCallback {
 
-    void onTick(World var1);
+    void onTick(Level var1);
 
 }

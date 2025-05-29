@@ -1,9 +1,9 @@
 package com.denfop.api.cool;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public interface ICoolEmitter extends ICoolTile {
 
-    boolean emitsCoolTo(ICoolAcceptor var1, EnumFacing var2);
+    boolean emitsCoolTo(ICoolAcceptor var1, Direction var2);
 
 }

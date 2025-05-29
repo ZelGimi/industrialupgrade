@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/turquoisepaint"
+    "layer0" : "industrialupgrade:item/turquoisepaint"
   }
 }

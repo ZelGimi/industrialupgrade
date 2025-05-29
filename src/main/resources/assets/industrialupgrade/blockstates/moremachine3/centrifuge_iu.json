@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=centrifuge_iu": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge"
+    },
+    "facing=south,type=centrifuge_iu": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge",
+      "y": 180
+    },
+    "facing=west,type=centrifuge_iu": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge",
+      "y": 270
+    },
+    "facing=east,type=centrifuge_iu": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge",
+      "y": 90
+    },
+    "facing=down,type=centrifuge_iu": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge",
+      "x": 90
+    },
+    "facing=up,type=centrifuge_iu": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge",
+      "x": 270
+    },
+    "facing=north,type=centrifuge_iu_invalid": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active"
+    },
+    "facing=south,type=centrifuge_iu_invalid": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "y": 180
+    },
+    "facing=west,type=centrifuge_iu_invalid": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "y": 270
+    },
+    "facing=east,type=centrifuge_iu_invalid": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "y": 90
+    },
+    "facing=down,type=centrifuge_iu_invalid": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "x": 90
+    },
+    "facing=up,type=centrifuge_iu_invalid": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "x": 270
+    },
+    "facing=north,type=centrifuge_iu_active": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active"
+    },
+    "facing=south,type=centrifuge_iu_active": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "y": 180
+    },
+    "facing=west,type=centrifuge_iu_active": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "y": 270
+    },
+    "facing=east,type=centrifuge_iu_active": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "y": 90
+    },
+    "facing=down,type=centrifuge_iu_active": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "x": 90
+    },
+    "facing=up,type=centrifuge_iu_active": {
+      "model": "industrialupgrade:block/moremachine3/centrifuge_active",
+      "x": 270
+    }
+  }
+}

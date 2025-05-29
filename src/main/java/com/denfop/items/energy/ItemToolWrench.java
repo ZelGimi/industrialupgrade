@@ -1,110 +1,74 @@
 package com.denfop.items.energy;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.tile.IWrenchable;
 import com.denfop.audio.EnumSound;
-import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ItemToolWrench extends Item implements IModelRegister {
-
-    private final String name;
+public class ItemToolWrench extends Item implements IItemTab {
+    String nameItem;
 
     public ItemToolWrench() {
-        this("wrench");
+        super(new Properties().durability(120).defaultDurability(0).setNoRepair());
     }
 
-    protected ItemToolWrench(String name) {
-        super();
-        this.setMaxDamage(120);
-        this.setMaxStackSize(1);
-        this.setNoRepair();
-        this.setCreativeTab(IUCore.EnergyTab);
-        this.name = name;
-        IUCore.proxy.addIModelRegister(this);
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "energy" + "/" + name;
-
-        return new ModelResourceLocation(loc, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
-
-    public static WrenchResult wrenchBlock(World world, BlockPos pos, EnumFacing side, EntityPlayer player, boolean remove) {
-        IBlockState state = world.getBlockState(pos);
-        state = state.getActualState(world, pos);
-        state = state.getActualState(world, pos);
+    public static WrenchResult wrenchBlock(Level level, BlockPos pos, Direction side, Player player, boolean remove) {
+        BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
-        if (!block.isAir(state, world, pos)) {
-            if (block instanceof IWrenchable) {
-                IWrenchable wrenchable = (IWrenchable) block;
-                EnumFacing currentFacing = wrenchable.getFacing(world, pos);
-                EnumFacing newFacing = currentFacing;
+
+        if (!block.defaultBlockState().isAir()) {
+            if (block instanceof IWrenchable wrenchable) {
+                Direction currentFacing = wrenchable.getFacing(level, pos);
+                Direction newFacing = currentFacing;
                 int experience;
+
                 if (!IUCore.keyboard.isChangeKeyDown(player)) {
-                    if (player.isSneaking()) {
-                        newFacing = side.getOpposite();
-                    } else {
-                        newFacing = side;
-                    }
+                    newFacing = player.isShiftKeyDown() ? side.getOpposite() : side;
                 } else {
-                    EnumFacing.Axis axis = side.getAxis();
-                    if (side.getAxisDirection() == AxisDirection.POSITIVE && !player.isSneaking() || side.getAxisDirection() == AxisDirection.NEGATIVE && player.isSneaking()) {
-                        newFacing = currentFacing.rotateAround(axis);
+                    Direction.Axis axis = side.getAxis();
+                    if ((side.getAxisDirection() == Direction.AxisDirection.POSITIVE && !player.isShiftKeyDown()) ||
+                            (side.getAxisDirection() == Direction.AxisDirection.NEGATIVE && player.isShiftKeyDown())) {
+                        newFacing = currentFacing.getClockWise(axis);
                     } else {
-                        for (experience = 0; experience < 3; ++experience) {
-                            newFacing = newFacing.rotateAround(axis);
+                        for (int i = 0; i < 3; ++i) {
+                            newFacing = newFacing.getClockWise(axis);
                         }
                     }
                 }
 
-                if (newFacing != currentFacing && wrenchable.setFacing(world, pos, newFacing, player)) {
+                if (newFacing != currentFacing && wrenchable.setFacing(level, pos, newFacing, player)) {
                     return WrenchResult.Rotated;
                 }
 
-                if (remove && wrenchable.wrenchCanRemove(world, pos, player)) {
-                    if (!world.isRemote) {
-                        TileEntity te = world.getTileEntity(pos);
-                        if (player instanceof EntityPlayerMP) {
-                            experience = ForgeHooks.onBlockBreakEvent(
-                                    world,
-                                    ((EntityPlayerMP) player).interactionManager.getGameType(),
-                                    (EntityPlayerMP) player,
-                                    pos
-                            );
+                if (remove && wrenchable.wrenchCanRemove(level, pos, player)) {
+                    if (!level.isClientSide) {
+                        BlockEntity te = level.getBlockEntity(pos);
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            experience = ForgeHooks.onBlockBreakEvent(level, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos);
                             if (experience < 0) {
                                 return WrenchResult.Nothing;
                             }
@@ -112,80 +76,81 @@ public class ItemToolWrench extends Item implements IModelRegister {
                             experience = 0;
                         }
 
-                        block.onBlockHarvested(world, pos, state, player);
-                        if (!block.removedByPlayer(state, world, pos, player, true)) {
+                        block.playerWillDestroy(level, pos, state, player);
+                        if (!block.onDestroyedByPlayer(state, level, pos, player, true, level.getFluidState(pos))) {
                             return WrenchResult.Nothing;
                         }
 
-                        block.onBlockDestroyedByPlayer(world, pos, state);
-                        List<ItemStack> drops = wrenchable.getWrenchDrops(world, pos, state, te, player,
-                                player.getEntityWorld().rand.nextInt(100)
-                        );
+                        block.destroy(level, pos, state);
+                        List<ItemStack> drops = wrenchable.getWrenchDrops(level, pos, state, te, player, RandomSource.create().nextInt(100));
                         if (drops != null && !drops.isEmpty()) {
-
-                            for (final ItemStack drop : drops) {
-                                ModUtils.dropAsEntity(world, pos, drop);
+                            for (ItemStack drop : drops) {
+                                ModUtils.dropAsEntity(level, pos, drop);
                             }
-
                         }
-                        wrenchable.wrenchBreak(world, pos);
-                        if (!player.capabilities.isCreativeMode && experience > 0) {
-                            block.dropXpOnBlockBreak(world, pos, experience);
+
+                        wrenchable.wrenchBreak(level, pos);
+                        if (!player.isCreative() && experience > 0) {
+                            block.popExperience((ServerLevel) level, pos, experience);
                         }
                     }
 
                     return WrenchResult.Removed;
                 }
-            } else if (block.rotateBlock(world, pos, side)) {
-                return WrenchResult.Rotated;
             }
-
         }
         return WrenchResult.Nothing;
     }
 
-    private static String getTeName(Object te) {
-        return te != null ? te.getClass().getSimpleName().replace("TileEntity", "") : "none";
-    }
+    public @NotNull InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        Player player = context.getPlayer();
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Direction side = context.getClickedFace();
+        InteractionHand hand = context.getHand();
 
-    public @NotNull EnumActionResult onItemUseFirst(
-            EntityPlayer player,
-            World world,
-            BlockPos pos,
-            EnumFacing side,
-            float hitX,
-            float hitY,
-            float hitZ,
-            EnumHand hand
-    ) {
-        ItemStack stack = ModUtils.get(player, hand);
         if (!this.canTakeDamage(stack, 1)) {
-            return EnumActionResult.FAIL;
+            return InteractionResult.FAIL;
         } else {
-            WrenchResult result = wrenchBlock(world, pos, side, player, this.canTakeDamage(stack, 10));
-            if (result != ItemToolWrench.WrenchResult.Nothing) {
-                if (!world.isRemote) {
-                    this.damage(stack, result == ItemToolWrench.WrenchResult.Rotated ? 1 : 10, player);
+            WrenchResult result = wrenchBlock(level, pos, side, player, this.canTakeDamage(stack, 10));
+            if (result != WrenchResult.Nothing) {
+                if (!level.isClientSide) {
+                    this.damage(stack, result == WrenchResult.Rotated ? 1 : 10, player);
                 } else {
                     player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
-
                 }
 
-                return world.isRemote ? EnumActionResult.PASS : EnumActionResult.SUCCESS;
+                return level.isClientSide ? InteractionResult.PASS : InteractionResult.SUCCESS;
             } else {
-                return EnumActionResult.FAIL;
+                return InteractionResult.FAIL;
             }
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
-    }
+    public @NotNull InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Direction side = context.getClickedFace();
+        InteractionHand hand = context.getHand();
+        ItemStack stack = ModUtils.get(player, hand);
 
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
+        if (!this.canTakeDamage(stack, 1)) {
+            return InteractionResult.FAIL;
+        } else {
+            WrenchResult result = wrenchBlock(level, pos, side, player, this.canTakeDamage(stack, 10));
+            if (result != WrenchResult.Nothing) {
+                if (!level.isClientSide) {
+                    this.damage(stack, result == WrenchResult.Rotated ? 1 : 10, player);
+                } else {
+                    player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
+                }
+
+                return level.isClientSide ? InteractionResult.PASS : InteractionResult.SUCCESS;
+            } else {
+                return InteractionResult.FAIL;
+            }
+        }
     }
 
     public boolean canTakeDamage(ItemStack stack, int amount) {
@@ -193,14 +158,31 @@ public class ItemToolWrench extends Item implements IModelRegister {
     }
 
 
-    public void damage(ItemStack is, int damage, EntityPlayer player) {
-        is.damageItem(damage, player);
+    public void damage(ItemStack stack, int amount, Player player) {
+        stack.hurtAndBreak(amount, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
     }
 
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
+        }
+
+        return this.nameItem;
+    }
 
     @Override
-    public void registerModels() {
-        this.registerModels(this.name);
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
 
     private enum WrenchResult {
@@ -211,5 +193,4 @@ public class ItemToolWrench extends Item implements IModelRegister {
         WrenchResult() {
         }
     }
-
 }

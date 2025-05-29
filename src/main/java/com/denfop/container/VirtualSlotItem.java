@@ -1,7 +1,7 @@
 package com.denfop.container;
 
 import com.denfop.api.inv.VirtualSlot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Collections;

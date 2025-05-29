@@ -3,63 +3,69 @@ package com.denfop.integration.jei.convertermatter;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockConverterMatter;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockSimpleMachine;
+import com.denfop.container.ContainerMultiMachine;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileCompressor;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class ConverterCategory extends Gui implements IRecipeCategory<ConverterWrapper> {
+public class ConverterCategory extends GuiIU implements IRecipeCategory<ConverterHandler> {
 
     private final IDrawableStatic bg;
+    private final JeiInform jeiInform;
     private int progress = 0;
     private int energy = 0;
 
     public ConverterCategory(
-            final IGuiHelper guiHelper
+            final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(new ContainerMultiMachine(Minecraft.getInstance().player,
+                ((TileCompressor) BlockSimpleMachine.compressor_iu.getDummyTe()), 1, true
+        ));
+        this.jeiInform=jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiconvertersolidmatter.png"), 3, 5,
                 168,
                 135
         );
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockConverterMatter.converter_matter.getName();
+    public RecipeType<ConverterHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.convertersolidmatter, 1, 0).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.convertersolidmatter, 1, 0).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
+    @SuppressWarnings("removal")
     @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(ConverterHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         energy++;
         int energylevel = (int) Math.min(38.0F * energy / 100, 38);
@@ -69,34 +75,28 @@ public class ConverterCategory extends Gui implements IRecipeCategory<ConverterW
             progress = 0;
         }
 
-        mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(116, 110, 176,
+        bindTexture(getTexture());
+        drawTexturedModalRect( stack,116, 110, 176,
                 81, energylevel, 11
         );
 
 
-        drawTexturedModalRect(78, 46, 176, 24, xScale, 16);
-        drawTexturedModalRect((166) - xScale, 46, 208 - xScale, 24, xScale, 16);
+        drawTexturedModalRect( stack,78, 46, 176, 24, xScale, 16);
+        drawTexturedModalRect( stack,(166) - xScale, 46, 208 - xScale, 24, xScale, 16);
 
-        drawTexturedModalRect(114, 9 + 1, 177, 42, 16, xScale);
+        drawTexturedModalRect( stack,114, 9 + 1, 177, 42, 16, xScale);
 
-        drawTexturedModalRect(114, 98 - xScale, 177, 74 - xScale, 16, xScale);
+        drawTexturedModalRect( stack,114, 98 - xScale, 177, 74 - xScale, 16, xScale);
 
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final ConverterWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, false, 113, 45);
-        isg.set(0, recipes.getOutput());
-        isg.init(1, true, 47, 45);
-        isg.set(1, recipes.getOutput());
-
+    public void setRecipe(IRecipeLayoutBuilder builder, ConverterHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 113, 45).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT,  47, 45).addItemStack(recipe.getOutput());
     }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiconvertersolidmatter.png");

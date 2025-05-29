@@ -3,7 +3,7 @@ package com.denfop.integration.jei.sunnariumpanel;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +12,17 @@ public class SannariumPanelHandler {
 
     private static final List<SannariumPanelHandler> recipes = new ArrayList<>();
     private final ItemStack input, input1, output;
+    private final BaseMachineRecipe container;
 
-    public SannariumPanelHandler(ItemStack input, ItemStack input1, ItemStack output) {
+    public SannariumPanelHandler(ItemStack input, ItemStack input1, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
+        this.container  = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<SannariumPanelHandler> getRecipes() {
@@ -26,8 +32,8 @@ public class SannariumPanelHandler {
         return recipes;
     }
 
-    public static SannariumPanelHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output) {
-        SannariumPanelHandler recipe = new SannariumPanelHandler(input, input1, output);
+    public static SannariumPanelHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, BaseMachineRecipe container) {
+        SannariumPanelHandler recipe = new SannariumPanelHandler(input, input1, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -52,7 +58,7 @@ public class SannariumPanelHandler {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
-                    container.getOutput().items.get(0)
+                    container.getOutput().items.get(0),container
             );
 
 
@@ -73,7 +79,7 @@ public class SannariumPanelHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

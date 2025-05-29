@@ -2,18 +2,15 @@ package com.denfop.items;
 
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerVeinSensor;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiVeinSensor;
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Vector2;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -27,7 +24,7 @@ public class ItemStackVeinSensor extends ItemStackInventory {
 
 
     public ItemStackVeinSensor(
-            EntityPlayer player, ItemStack stack, final Map<Integer, Map<Vector2, DataOres>> map,
+            Player player, ItemStack stack, final Map<Integer, Map<Vector2, DataOres>> map,
             final Vector2 vector2
     ) {
         super(player, stack, 0);
@@ -48,34 +45,19 @@ public class ItemStackVeinSensor extends ItemStackInventory {
         super.save();
     }
 
-    public void saveAndThrow(ItemStack stack) {
-        NBTTagList contentList = new NBTTagList();
 
-        for (int i = 0; i < this.inventory.length; ++i) {
-            if (!ModUtils.isEmpty(this.inventory[i])) {
-                NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setByte("Slot", (byte) i);
-                this.inventory[i].writeToNBT(nbt);
-                contentList.appendTag(nbt);
-            }
-        }
-
-        ModUtils.nbt(stack).setTag("Items", contentList);
-        this.clear();
-    }
-
-    public ContainerBase<ItemStackVeinSensor> getGuiContainer(EntityPlayer player) {
+    public ContainerBase<ItemStackVeinSensor> getGuiContainer(Player player) {
         return new ContainerVeinSensor(player, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiVeinSensor(new ContainerVeinSensor(player, this), itemStack1);
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
+        return new GuiVeinSensor((ContainerVeinSensor) isAdmin, itemStack1);
     }
 
     @Override
-    public TileEntityInventory getParent() {
-        return null;
+    public ItemStackInventory getParent() {
+        return this;
     }
 
 

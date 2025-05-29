@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -12,17 +13,20 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAutoOpenBox;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiAutoOpenBox;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -37,22 +41,24 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
     public int timer = 20;
     private boolean doublescrap;
 
-    public TileEntityAutoOpenBox() {
+    public TileEntityAutoOpenBox(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.auto_open_box,pos,state);
         this.slot = new InvSlotOutput(this, 15);
         this.slot1 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.isItemEqual(IUItem.scrapBox) || stack.getItem() == (IUItem.doublescrapBox);
+                return stack.is(IUItem.scrapBox.getItem()) || stack.getItem() == (IUItem.doublescrapBox).getItem();
             }
 
             @Override
-            public void put(int i, final ItemStack content) {
-                super.put(i, content);
+            public ItemStack set(int i, final ItemStack content) {
+                super.set(i, content);
                 if (!content.isEmpty()) {
-                    doublescrap = !content.isItemEqual(IUItem.scrapBox);
+                    doublescrap = !content.is(IUItem.scrapBox.getItem());
                 } else {
                     doublescrap = false;
                 }
+                return content;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 100, 1));
@@ -86,13 +92,13 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiAutoOpenBox(this.getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiAutoOpenBox((ContainerAutoOpenBox) menu);
     }
 
     @Override
-    public ContainerAutoOpenBox getGuiContainer(final EntityPlayer var1) {
+    public ContainerAutoOpenBox getGuiContainer(final Player var1) {
         return new ContainerAutoOpenBox(this, var1);
     }
 
@@ -103,7 +109,7 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -119,7 +125,7 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
             } else {
                 slot.add(ScrapboxRecipeManager.instance.getRandomDrop());
             }
-            this.slot1.get().shrink(1);
+            this.slot1.get(0).shrink(1);
             this.energy.useEnergy(4);
         } else {
             if (timer > 0) {

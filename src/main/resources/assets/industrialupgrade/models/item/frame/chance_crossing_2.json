@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/chance_crossing_2"
+    "layer0" : "industrialupgrade:item/chance_crossing_2"
   }
 }

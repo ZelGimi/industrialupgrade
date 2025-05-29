@@ -8,14 +8,16 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.mechanism.TilePump;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileImpPump extends TilePump {
 
     private final AirPollutionComponent pollutionAir;
     private final SoilPollutionComponent pollutionSoil;
 
-    public TileImpPump() {
-        super(15, 10);
+    public TileImpPump(BlockPos pos, BlockState state) {
+        super(15, 10, BlockBaseMachine2.imp_pump, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
@@ -30,7 +32,6 @@ public class TileImpPump extends TilePump {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
-
 }

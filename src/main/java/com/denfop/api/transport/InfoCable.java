@@ -1,20 +1,20 @@
 package com.denfop.api.transport;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public class InfoCable {
 
     private final ITransportConductor conductor;
-    private final EnumFacing facing;
+    private final Direction facing;
     private final InfoCable cable;
 
-    public InfoCable(ITransportConductor conductor, EnumFacing facing, InfoCable cable) {
+    public InfoCable(ITransportConductor conductor, Direction facing, InfoCable cable) {
         this.conductor = conductor;
         this.facing = facing;
         this.cable = cable;
     }
 
-    public EnumFacing getFacing() {
+    public Direction getFacing() {
         return facing;
     }
 

@@ -9,12 +9,12 @@ import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerEarthAnalyzer;
 import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryAnalyzer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
-
-public class GuiEarthAnalyzer extends GuiIU<ContainerEarthAnalyzer> {
+public class GuiEarthAnalyzer<T extends ContainerEarthAnalyzer> extends GuiIU<ContainerEarthAnalyzer> {
 
     public GuiEarthAnalyzer(ContainerEarthAnalyzer guiContainer) {
         super(guiContainer);
@@ -35,50 +35,51 @@ public class GuiEarthAnalyzer extends GuiIU<ContainerEarthAnalyzer> {
         ));
     }
 
-    @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
 
-    }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         if (this.container.base.isAnalyzed() && !this.container.base.fullAnalyzed()) {
-            this.fontRenderer.drawString(Localization.translate("earth_quarry.analyze"), 60, 34,
+            draw(poseStack, Localization.translate("earth_quarry.analyze"), 60, 34,
                     ModUtils.convertRGBcolorToInt(56, 56, 56)
             );
         } else if (this.container.base.fullAnalyzed() && this.container.base.isAnalyzed()) {
-            this.fontRenderer.drawString(Localization.translate("earth_quarry.analyze1"), 60, 34,
+            draw (poseStack, Localization.translate("earth_quarry.analyze1"), 60, 34,
                     ModUtils.convertRGBcolorToInt(56, 56, 56)
             );
         } else if (this.container.base.fullAnalyzed() && !this.container.base.isAnalyzed()) {
-            this.fontRenderer.drawString(Localization.translate("earth_quarry.full_analyze"), 60, 34,
+            draw(poseStack, Localization.translate("earth_quarry.full_analyze"), 60, 34,
                     ModUtils.convertRGBcolorToInt(56, 56, 56)
             );
         }
-        this.fontRenderer.drawString(Localization.translate("earth_quarry.block_col") + container.base.blockCol, 10, 60,
+        PoseStack pose = poseStack.pose();
+        pose.pushPose();
+        pose.translate(10, 60,10);
+        pose.scale(0.75f,0.75f,1);
+        draw(poseStack, Localization.translate("earth_quarry.block_col") + container.base.blockCol, 0, 0,
                 ModUtils.convertRGBcolorToInt(56, 56, 56)
         );
-        this.fontRenderer.drawString(Localization.translate("earth_quarry.block_ores") + container.base.blockOres, 10, 70,
+        pose.popPose();
+        pose.pushPose();
+        pose.translate(10, 70,10);
+        pose.scale(0.75f,0.75f,1);
+        draw(poseStack, Localization.translate("earth_quarry.block_ores") + container.base.blockOres, 0, 0,
                 ModUtils.convertRGBcolorToInt(56, 56, 56)
         );
+        pose.popPose();
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
 
     }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawBackgroundAndTitle(poseStack,partialTicks, mouseX, mouseY);
+     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
 

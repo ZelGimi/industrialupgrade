@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=steam_extruder_active": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder_active"
+    },
+    "facing=south,type=steam_extruder_active": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder_active",
+      "y": 180
+    },
+    "facing=west,type=steam_extruder_active": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder_active",
+      "y": 270
+    },
+    "facing=east,type=steam_extruder_active": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder_active",
+      "y": 90
+    },
+    "facing=down,type=steam_extruder_active": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder_active",
+      "x": 90
+    },
+    "facing=up,type=steam_extruder_active": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder_active",
+      "x": 270
+    },
+    "facing=north,type=steam_extruder_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder"
+    },
+    "facing=south,type=steam_extruder_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "y": 180
+    },
+    "facing=west,type=steam_extruder_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "y": 270
+    },
+    "facing=east,type=steam_extruder_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "y": 90
+    },
+    "facing=down,type=steam_extruder_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "x": 90
+    },
+    "facing=up,type=steam_extruder_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "x": 270
+    },
+    "facing=north,type=steam_extruder": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder"
+    },
+    "facing=south,type=steam_extruder": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "y": 180
+    },
+    "facing=west,type=steam_extruder": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "y": 270
+    },
+    "facing=east,type=steam_extruder": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "y": 90
+    },
+    "facing=down,type=steam_extruder": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "x": 90
+    },
+    "facing=up,type=steam_extruder": {
+      "model": "industrialupgrade:block/basemachine/steam_extruder",
+      "x": 270
+    }
+  }
+}

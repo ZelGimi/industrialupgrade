@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/rna_collector_main",
-    "down" : "industrialupgrade:blocks/rna_collector_bottom",
-    "up" : "industrialupgrade:blocks/rna_collector_top_active",
-    "north" : "industrialupgrade:blocks/rna_collector_main_active",
-    "east" : "industrialupgrade:blocks/rna_collector_side",
-    "south" : "industrialupgrade:blocks/rna_collector_bottom",
-    "west" : "industrialupgrade:blocks/rna_collector_side"
+    "particle" : "industrialupgrade:block/rna_collector_main",
+    "down" : "industrialupgrade:block/rna_collector_bottom",
+    "up" : "industrialupgrade:block/rna_collector_top_active",
+    "north" : "industrialupgrade:block/rna_collector_main_active",
+    "east" : "industrialupgrade:block/rna_collector_side",
+    "south" : "industrialupgrade:block/rna_collector_bottom",
+    "west" : "industrialupgrade:block/rna_collector_side"
   }
 }

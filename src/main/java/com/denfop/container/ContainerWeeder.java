@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityWeeder;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerWeeder extends ContainerFullInv<TileEntityWeeder> {
 
-    public ContainerWeeder(TileEntityWeeder tileEntityChickenFarm, EntityPlayer var1) {
+    public ContainerWeeder(TileEntityWeeder tileEntityChickenFarm, Player var1) {
         super(tileEntityChickenFarm, var1);
         this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.slot, 0, 80, 18));
         for (int i = 0; i < 4; i++) {

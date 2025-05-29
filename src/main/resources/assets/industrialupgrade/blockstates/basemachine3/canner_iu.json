@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=canner_iu": {
+      "model": "industrialupgrade:block/basemachine/canner"
+    },
+    "facing=south,type=canner_iu": {
+      "model": "industrialupgrade:block/basemachine/canner",
+      "y": 180
+    },
+    "facing=west,type=canner_iu": {
+      "model": "industrialupgrade:block/basemachine/canner",
+      "y": 270
+    },
+    "facing=east,type=canner_iu": {
+      "model": "industrialupgrade:block/basemachine/canner",
+      "y": 90
+    },
+    "facing=down,type=canner_iu": {
+      "model": "industrialupgrade:block/basemachine/canner",
+      "x": 90
+    },
+    "facing=up,type=canner_iu": {
+      "model": "industrialupgrade:block/basemachine/canner",
+      "x": 270
+    },
+    "facing=north,type=canner_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/canner_active"
+    },
+    "facing=south,type=canner_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "y": 180
+    },
+    "facing=west,type=canner_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "y": 270
+    },
+    "facing=east,type=canner_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "y": 90
+    },
+    "facing=down,type=canner_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "x": 90
+    },
+    "facing=up,type=canner_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "x": 270
+    },
+    "facing=north,type=canner_iu_active": {
+      "model": "industrialupgrade:block/basemachine/canner_active"
+    },
+    "facing=south,type=canner_iu_active": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "y": 180
+    },
+    "facing=west,type=canner_iu_active": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "y": 270
+    },
+    "facing=east,type=canner_iu_active": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "y": 90
+    },
+    "facing=down,type=canner_iu_active": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "x": 90
+    },
+    "facing=up,type=canner_iu_active": {
+      "model": "industrialupgrade:block/basemachine/canner_active",
+      "x": 270
+    }
+  }
+}

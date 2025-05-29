@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gears/barium"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:imp_bee_frame_template"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/gadolinium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/vanady"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:frame/chance_crossing_3"
+  },
+  "show_notification": true
+}

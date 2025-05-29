@@ -4,70 +4,44 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.solar.EnumSolarType;
 import com.denfop.api.solar.ISolarItem;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
 
-public class ItemDaySolarPanelGlass extends ItemSubTypes<ItemDaySolarPanelGlass.Types> implements ISolarItem, IModelRegister {
-
-    protected static final String NAME = "solar_panel_glass";
-
-    public ItemDaySolarPanelGlass() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemDaySolarPanelGlass<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements ISolarItem {
+    public ItemDaySolarPanelGlass(T element) {
+        super(new Item.Properties(), element);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            final List<String> tooltip,
-            final ITooltipFlag flagIn
-    ) {
-        tooltip.add(Localization.translate("iu.minipanel.generating_day") + this.getGenerationValue(stack.getItemDamage()) + " EF/t");
-        tooltip.add(Localization.translate("iu.minipanel.jei"));
-        tooltip.add(Localization.translate("iu.minipanel.jei1") + Localization.translate(new ItemStack(IUItem.basemachine2, 1
-                , 91).getUnlocalizedName()));
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-    }
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.minipanel.generating_day") + this.getGenerationValue(this.getElement().getId()) + " EF/t"));
+        p_41423_.add(Component.literal(Localization.translate("iu.minipanel.jei")));
+        p_41423_.add(Component.literal(Localization.translate("iu.minipanel.jei1") + Localization.translate(new ItemStack(IUItem.basemachine2.getItem(91), 1).getDescriptionId())));
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
     }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
-
     @Override
     public ResourceLocation getResourceLocation(int meta) {
         return new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/items/day/" + ItemDayNightSolarPanelGlass.Types.getFromID(meta).getName() + ".png"
+                "textures/item/day/" + Types.getFromID(this.getElement().getId()).getName() + ".png"
         );
     }
 
@@ -114,9 +88,13 @@ public class ItemDaySolarPanelGlass extends ItemSubTypes<ItemDaySolarPanelGlass.
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "solar_panel_glass";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

@@ -1,88 +1,74 @@
 package com.denfop.items.reactors;
 
-import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IDamageItem;
-import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class ItemDamage extends Item implements IDamageItem, IModelRegister {
+public class ItemDamage extends Item implements IDamageItem {
 
-    private final int maxDamage;
-    private final String name;
 
-    public ItemDamage(String name, int maxDamage) {
-        super();
-        this.setNoRepair();
-        this.maxDamage = maxDamage;
-        this.name = name;
-        this.setCreativeTab(IUCore.ReactorsTab);
-        if (name != null) {
-            this.setUnlocalizedName(name);
-            Register.registerItem(this, IUCore.getIdentifier(name));
-            IUCore.proxy.addIModelRegister(this);
+    private final int maxDamageItem;
+    protected String nameItem;
+
+    public ItemDamage(Item.Properties properties, int maxDamage) {
+        super(properties);
+        this.maxDamageItem = maxDamage;
+    }
+
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
         }
+
+        return this.nameItem;
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-
-        final String loc = Constants.MOD_ID +
-                ':' +
-                name;
-        return new ModelResourceLocation(loc, null);
+    public  int getMaxDamage(ItemStack stack){
+        return getMaxCustomDamage(stack);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+
+    @Override
+    public int getDamage(ItemStack stack) {
+        return !stack.hasTag() ? 0 : stack.getTag().getInt("damage");
+    }
+
+    public boolean isBarVisible(@Nonnull ItemStack stack) {
+        return true;
+    }
+
+    public int getBarWidth(@Nonnull ItemStack stack) {
+        return Math.round(13.0F - (float) ((double) this.getCustomDamage(stack) * 13.0F / (double) this.getMaxCustomDamage(stack)));
     }
 
     @Override
-    public void registerModels() {
-        registerModels(this.name);
+    public int getBarColor(ItemStack stack) {
+        return Mth.hsvToRgb((float) (Math.max(0.0F, 1.0F - (this.getCustomDamage(stack) / (double) this.getMaxCustomDamage(stack))) / 3.0F), 1.0F, 1.0F);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
-    }
-
-
-    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
+    @Override
+    public boolean isDamageable(ItemStack stack) {
         return true;
     }
 
-    public double getDurabilityForDisplay(@Nonnull ItemStack stack) {
-        return (double) this.getCustomDamage(stack) / (double) this.getMaxCustomDamage(stack);
-    }
-
-    public boolean isDamageable() {
-        return true;
-    }
 
     public boolean isDamaged(@Nonnull ItemStack stack) {
         return this.getCustomDamage(stack) > 0;
@@ -90,17 +76,17 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
 
 
     public int getCustomDamage(ItemStack stack) {
-        if (!stack.hasTagCompound()) {
+        if (!stack.hasTag()) {
             return 0;
         } else {
-            assert stack.getTagCompound() != null;
-            return stack.getTagCompound().getInteger("damage");
+            assert stack.getTag() != null;
+            return stack.getTag().getInt("damage");
         }
     }
 
 
     public int getMaxCustomDamage(ItemStack stack) {
-        return this.maxDamage;
+        return this.maxDamageItem;
     }
 
     public void setDamage(@Nonnull ItemStack stack, int damage) {
@@ -108,27 +94,20 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
     }
 
     public void setCustomDamage(ItemStack stack, int damage) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        if (damage > maxDamage) {
-            damage = maxDamage;
+        CompoundTag nbt = ModUtils.nbt(stack);
+        if (damage > maxDamageItem) {
+            damage = maxDamageItem;
         }
-        nbt.setInteger("damage", damage);
+        nbt.putInt("damage", damage);
     }
 
-    public boolean applyCustomDamage(ItemStack stack, int damage, EntityLivingBase src) {
-        int damage1 = this.getCustomDamage(stack) - damage;
-        if (damage1 <= 0) {
+    public boolean applyCustomDamage(ItemStack stack, int damage, LivingEntity src) {
+        int damage1 = this.getCustomDamage(stack) + damage;
+        if (damage1 <= 0)
             damage1 = 0;
-        }
         this.setCustomDamage(stack, damage1);
-        return getMaxCustomDamage(stack) - damage1 == 0;
+        return true;
     }
 
-    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
-            ItemStack stack = new ItemStack(this);
-            subItems.add(stack);
-        }
-    }
 
 }

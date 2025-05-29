@@ -1,24 +1,31 @@
 package com.denfop.tiles.mechanism.steamturbine.coolant;
 
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamTurbineCoolant;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamTurbineCoolant;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.steamturbine.ICoolant;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +33,15 @@ import java.util.List;
 public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockElement implements ICoolant, IUpdatableTileEvent {
 
     private final Fluids fluids;
-    private final int level;
+    private final int blockLevel;
     private final Fluids.InternalFluidTank tank;
     double power = 0;
     Fluid currentStack = null;
     private int x = 1;
 
-    public TileEntityBaseSteamTurbineCoolant(int level) {
-        this.level = level;
+    public TileEntityBaseSteamTurbineCoolant(int blockLevel, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
+        this.blockLevel = blockLevel;
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = this.fluids.addTankInsert("tank", 10000);
         this.getFluidsFromLevel();
@@ -41,27 +49,27 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
 
     private void getFluidsFromLevel() {
         List<Fluid> fluidList = new ArrayList<>();
-        switch (level) {
+        switch (blockLevel) {
             default:
-                fluidList.add(FluidName.fluidhyd.getInstance());
+                fluidList.add(FluidName.fluidhyd.getInstance().get());
                 break;
             case 1:
-                fluidList.add(FluidName.fluidhyd.getInstance());
-                fluidList.add(FluidName.fluidazot.getInstance());
-                fluidList.add(FluidName.fluidcoolant.getInstance());
+                fluidList.add(FluidName.fluidhyd.getInstance().get());
+                fluidList.add(FluidName.fluidazot.getInstance().get());
+                fluidList.add(FluidName.fluidcoolant.getInstance().get());
                 break;
             case 2:
-                fluidList.add(FluidName.fluidhyd.getInstance());
-                fluidList.add(FluidName.fluidazot.getInstance());
-                fluidList.add(FluidName.fluidcoolant.getInstance());
-                fluidList.add(FluidName.fluidHelium.getInstance());
+                fluidList.add(FluidName.fluidhyd.getInstance().get());
+                fluidList.add(FluidName.fluidazot.getInstance().get());
+                fluidList.add(FluidName.fluidcoolant.getInstance().get());
+                fluidList.add(FluidName.fluidHelium.getInstance().get());
                 break;
             case 3:
-                fluidList.add(FluidName.fluidhyd.getInstance());
-                fluidList.add(FluidName.fluidazot.getInstance());
-                fluidList.add(FluidName.fluidcoolant.getInstance());
-                fluidList.add(FluidName.fluidHelium.getInstance());
-                fluidList.add(FluidName.fluidcryogen.getInstance());
+                fluidList.add(FluidName.fluidhyd.getInstance().get());
+                fluidList.add(FluidName.fluidazot.getInstance().get());
+                fluidList.add(FluidName.fluidcoolant.getInstance().get());
+                fluidList.add(FluidName.fluidHelium.getInstance().get());
+                fluidList.add(FluidName.fluidcryogen.getInstance().get());
                 break;
 
 
@@ -70,25 +78,18 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && this.getMain() != null) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null && this.getMain() != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
+
+
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
@@ -106,14 +107,14 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSteamTurbineCoolant(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSteamTurbineCoolant((ContainerSteamTurbineCoolant) menu);
     }
 
 
     @Override
-    public ContainerSteamTurbineCoolant getGuiContainer(final EntityPlayer var1) {
+    public ContainerSteamTurbineCoolant getGuiContainer(final Player var1) {
         return new ContainerSteamTurbineCoolant(this, var1);
     }
 
@@ -123,25 +124,25 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        x = nbtTagCompound.getInteger("coolant_x");
+        x = nbtTagCompound.getInt("coolant_x");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("coolant_x", x);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("coolant_x", x);
         return nbtTagCompound;
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (this.getMain() == null) {
             return;
         }
         if (var2 == 0) {
-            this.x = Math.min(this.x + 1, this.level + 2);
+            this.x = Math.min(this.x + 1, this.blockLevel + 2);
         } else {
             this.x = Math.max(0, this.x - 1);
         }
@@ -160,11 +161,11 @@ public class TileEntityBaseSteamTurbineCoolant extends TileEntityMultiBlockEleme
     }
 
     private double getPowerFromFluid() {
-        Fluid hyd = FluidName.fluidhyd.getInstance();
-        Fluid hel = FluidName.fluidHelium.getInstance();
-        Fluid coolant = FluidName.fluidcoolant.getInstance();
-        Fluid nitrogen = FluidName.fluidazot.getInstance();
-        Fluid cryogen = FluidName.fluidcryogen.getInstance();
+        Fluid hyd = FluidName.fluidhyd.getInstance().get();
+        Fluid hel = FluidName.fluidHelium.getInstance().get();
+        Fluid coolant = FluidName.fluidcoolant.getInstance().get();
+        Fluid nitrogen = FluidName.fluidazot.getInstance().get();
+        Fluid cryogen = FluidName.fluidcryogen.getInstance().get();
         if (this.currentStack == hyd) {
             this.power = 1;
         } else if (this.currentStack == nitrogen) {

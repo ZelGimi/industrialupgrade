@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=gen_pet": {
+      "model": "industrialupgrade:block/basemachine/gen_pet"
+    },
+    "facing=south,type=gen_pet": {
+      "model": "industrialupgrade:block/basemachine/gen_pet",
+      "y": 180
+    },
+    "facing=west,type=gen_pet": {
+      "model": "industrialupgrade:block/basemachine/gen_pet",
+      "y": 270
+    },
+    "facing=east,type=gen_pet": {
+      "model": "industrialupgrade:block/basemachine/gen_pet",
+      "y": 90
+    },
+    "facing=down,type=gen_pet": {
+      "model": "industrialupgrade:block/basemachine/gen_pet",
+      "x": 90
+    },
+    "facing=up,type=gen_pet": {
+      "model": "industrialupgrade:block/basemachine/gen_pet",
+      "x": 270
+    },
+    "facing=north,type=gen_pet_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active"
+    },
+    "facing=south,type=gen_pet_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "y": 180
+    },
+    "facing=west,type=gen_pet_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "y": 270
+    },
+    "facing=east,type=gen_pet_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "y": 90
+    },
+    "facing=down,type=gen_pet_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "x": 90
+    },
+    "facing=up,type=gen_pet_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "x": 270
+    },
+    "facing=north,type=gen_pet_active": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active"
+    },
+    "facing=south,type=gen_pet_active": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "y": 180
+    },
+    "facing=west,type=gen_pet_active": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "y": 270
+    },
+    "facing=east,type=gen_pet_active": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "y": 90
+    },
+    "facing=down,type=gen_pet_active": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "x": 90
+    },
+    "facing=up,type=gen_pet_active": {
+      "model": "industrialupgrade:block/basemachine/gen_pet_active",
+      "x": 270
+    }
+  }
+}

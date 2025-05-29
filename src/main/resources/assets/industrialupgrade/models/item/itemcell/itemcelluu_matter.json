@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/uu_matter_cell"
+		"layer0": "industrialupgrade:item/uu_matter_cell"
 	}
 }

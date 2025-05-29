@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/for2"
+    "layer0" : "industrialupgrade:item/for2"
   }
 }

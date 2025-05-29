@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/silver_dustcrushed"
+    "layer0" : "industrialupgrade:item/silver_dustcrushed"
   }
 }

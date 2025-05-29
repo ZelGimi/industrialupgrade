@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/zinc_purifiedcrushed"
+    "layer0" : "industrialupgrade:item/zinc_purifiedcrushed"
   }
 }

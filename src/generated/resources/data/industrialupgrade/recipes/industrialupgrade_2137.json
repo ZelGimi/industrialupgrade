@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/steam_crystal_charge"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_44_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "BC ",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/crystal_charge"
+  },
+  "show_notification": true
+}

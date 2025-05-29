@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=energy_barrier": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier"
+    },
+    "facing=south,type=energy_barrier": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "y": 180
+    },
+    "facing=west,type=energy_barrier": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "y": 270
+    },
+    "facing=east,type=energy_barrier": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "y": 90
+    },
+    "facing=down,type=energy_barrier": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "x": 90
+    },
+    "facing=up,type=energy_barrier": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "x": 270
+    },
+    "facing=north,type=energy_barrier_invalid": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier"
+    },
+    "facing=south,type=energy_barrier_invalid": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "y": 180
+    },
+    "facing=west,type=energy_barrier_invalid": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "y": 270
+    },
+    "facing=east,type=energy_barrier_invalid": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "y": 90
+    },
+    "facing=down,type=energy_barrier_invalid": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "x": 90
+    },
+    "facing=up,type=energy_barrier_invalid": {
+      "model": "industrialupgrade:block/basemachine/energy_barrier",
+      "x": 270
+    }
+  }
+}

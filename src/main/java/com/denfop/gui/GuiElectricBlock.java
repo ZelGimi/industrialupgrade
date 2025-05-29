@@ -7,19 +7,19 @@ import com.denfop.api.gui.Area;
 import com.denfop.container.ContainerElectricBlock;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiElectricBlock extends GuiCore<ContainerElectricBlock> {
+public class GuiElectricBlock<T extends ContainerElectricBlock> extends GuiIU<ContainerElectricBlock> {
 
     private static final ResourceLocation background = new ResourceLocation(
             Constants.MOD_ID,
-            "textures/gui/GUIElectricBlockEuRf.png"
+            "textures/gui/GUIElectricBlockEuRf.png".toLowerCase()
     );
     private final ContainerElectricBlock container;
     private final String armorInv;
@@ -27,54 +27,46 @@ public class GuiElectricBlock extends GuiCore<ContainerElectricBlock> {
 
     public GuiElectricBlock(ContainerElectricBlock container1) {
         super(container1);
-        this.ySize = 167;
+        this.imageHeight = 167;
+        this.componentList.clear();
         this.container = container1;
+
         this.armorInv = Localization.translate("EUStorage.gui.info.armor");
         this.name = Localization.translate(container.base.getName());
     }
 
-    public void initGui() {
-        super.initGui();
-
-
-    }
-
-    protected void actionPerformed(GuiButton guibutton) {
-
-
-    }
 
     @Override
     protected ResourceLocation getTexture() {
         if (this.container.base.energy.getSourceTier() == 1) {
             return new ResourceLocation(
                     Constants.MOD_ID,
-                    "textures/gui/GUIElectricBlockEuRf1.png"
+                    "textures/gui/GUIElectricBlockEuRf1.png".toLowerCase()
             );
         }
         if (this.container.base.energy.getSourceTier() == 2) {
             return new ResourceLocation(
                     Constants.MOD_ID,
-                    "textures/gui/GUIElectricBlockEuRf2.png"
+                    "textures/gui/GUIElectricBlockEuRf2.png".toLowerCase()
             );
         }
 
         return new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/gui/GUIElectricBlockEuRf.png"
+                "textures/gui/GUIElectricBlockEuRf.png".toLowerCase()
         );
     }
 
     @Override
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6,
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+       draw(poseStack, this.name, (int) ((float) (this.imageWidth - this.getStringWidth(this.name)) / 2), 6,
                 4210752
         );
 
         String tooltip =
                 "EF: " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(this.container.base.energy.getCapacity());
-        new Area(this, 62, 27, 79, 22).withTooltip(tooltip).drawForeground(par1, par2);
+        new Area(this, 62, 27, 79, 22).withTooltip(tooltip).drawForeground(poseStack, par1, par2);
 
 
         String output = Localization.translate(
@@ -82,27 +74,29 @@ public class GuiElectricBlock extends GuiCore<ContainerElectricBlock> {
                 ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(this.container.base.energy.getSourceTier())
                 )
         );
-        this.fontRenderer.drawString(output, 77, 17, 4210752);
+        draw(poseStack, output, 77, 17, 4210752);
 
 
         handleUpgradeTooltip(par1, par2);
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int j = (this.width - this.xSize) / 2;
-        int k = (this.height - this.ySize) / 2;
-        drawTexturedModalRect(j, k, 0, 0, this.xSize, this.ySize);
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(j + 3, k + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
+
+
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(getTexture());
+        int j = guiLeft;
+        int k = guiTop;
+        drawTexturedModalRect(poseStack, j, k, 0, 0, this.imageWidth, this.imageHeight);
+
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, j + 3, k + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
         if (this.container.base.energy.getEnergy() > 0.0D) {
             int i1 = (int) (78.0F * this.container.base.getChargeLevel());
 
-            drawTexturedModalRect(j + 62, k + 27, 176, 0, i1 + 1, 22);
+            drawTexturedModalRect(poseStack, j + 62, k + 27, 176, 0, i1 + 1, 22);
         }
     }
 

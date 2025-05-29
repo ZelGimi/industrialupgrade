@@ -1,8 +1,8 @@
 package com.denfop.tiles.base;
 
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
@@ -13,40 +13,31 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.Energy;
-import com.denfop.componets.Redstone;
-import com.denfop.componets.RedstoneHandler;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCombinerMatter;
 import com.denfop.gui.GuiCombinerMatter;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotMatter;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.gui.GuiCore;
+import com.denfop.invslot.*;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TileCombinerMatter extends TileElectricLiquidTankInventory implements IUpgradableBlock,
         IUpdateTick, IMatter {
@@ -65,15 +56,15 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
     private MachineRecipe recipe;
     private int amountScrap;
 
-    public TileCombinerMatter() {
-        super(0, 14, 12);
+    public TileCombinerMatter(BlockPos pos, BlockState state) {
+        super(0, 14, 12, BlockBaseMachine2.combiner_matter, pos, state);
         this.energycost = 0;
         this.amplifierSlot = new InvSlotRecipes(this, "matterAmplifier", this);
         this.outputSlot = new InvSlotOutput(this, 1);
 
         fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
         this.containerslot = new InvSlotFluidByList(this, InvSlot.TypeItemSlot.INPUT, 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT, FluidName.fluiduu_matter.getInstance()
+                InvSlotFluid.TypeFluidSlot.OUTPUT, FluidName.fluiduu_matter.getInstance().get()
         );
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.inputSlot = new InvSlotMatter(this);
@@ -125,7 +116,7 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     @Override
@@ -133,16 +124,16 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
         return 4;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.scrap = nbttagcompound.getInteger("scrap");
+        this.scrap = nbttagcompound.getInt("scrap");
         this.lastEnergy = nbttagcompound.getDouble("lastEnergy");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("scrap", this.scrap);
-        nbttagcompound.setDouble("lastEnergy", this.lastEnergy);
+        nbttagcompound.putInt("scrap", this.scrap);
+        nbttagcompound.putDouble("lastEnergy", this.lastEnergy);
         return nbttagcompound;
 
     }
@@ -150,7 +141,7 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.fluidTank.getCapacity() <= 0) {
-            this.fluidTank.drain(Integer.MAX_VALUE, true);
+            this.fluidTank.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
         }
         if (this.redstone.hasRedstoneInput() || this.energy.getEnergy() <= 0.0D) {
             if (this.getActive()) {
@@ -214,14 +205,14 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
     public void onUnloaded() {
 
         super.onUnloaded();
-        if (!this.getWorld().isRemote) {
-            Map<ChunkPos, List<IMatter>> chunkPosListMap = TileMultiMatter.worldMatterMap.get(this.world.provider.getDimension());
+        if (!this.getWorld().isClientSide) {
+            Map<ChunkPos, List<IMatter>> chunkPosListMap = TileMultiMatter.worldMatterMap.get(this.getWorld().dimension());
             if (chunkPosListMap == null) {
                 chunkPosListMap = new HashMap<>();
                 ChunkPos chunkPos = new ChunkPos(this.pos.getX() >> 4, this.pos.getZ() >> 4);
                 List<IMatter> matters = new LinkedList<>();
                 chunkPosListMap.put(chunkPos, matters);
-                TileMultiMatter.worldMatterMap.put(this.world.provider.getDimension(), chunkPosListMap);
+                TileMultiMatter.worldMatterMap.put(this.getWorld().dimension(), chunkPosListMap);
             } else {
                 ChunkPos chunkPos = new ChunkPos(this.pos.getX() >> 4, this.pos.getZ() >> 4);
                 List<IMatter> matters = chunkPosListMap.get(chunkPos);
@@ -243,22 +234,18 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
             return;
         }
         m = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
-        this.fluidTank.fillInternal(new FluidStack(FluidName.fluiduu_matter.getInstance(), Math.min(m, k)), true);
+        this.fluidTank.fill(new FluidStack(FluidName.fluiduu_matter.getInstance().get(), Math.min(m, k)), IFluidHandler.FluidAction.EXECUTE);
         this.energy.useEnergy(this.energycost * Math.min(m, k));
     }
 
 
-    public ContainerCombinerMatter getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerCombinerMatter getGuiContainer(Player entityPlayer) {
         return new ContainerCombinerMatter(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiCombinerMatter(new ContainerCombinerMatter(entityPlayer, this));
-    }
-
-
-    public void onGuiClosed(EntityPlayer entityPlayer) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiCombinerMatter((ContainerCombinerMatter) isAdmin);
     }
 
 
@@ -274,19 +261,19 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!getWorld().isClientSide) {
             setUpgradestat();
             this.inputSlot.update();
             this.amplifierSlot.load();
             getOutput();
-            Map<ChunkPos, List<IMatter>> chunkPosListMap = TileMultiMatter.worldMatterMap.get(this.world.provider.getDimension());
+            Map<ChunkPos, List<IMatter>> chunkPosListMap = TileMultiMatter.worldMatterMap.get(this.getWorld().dimension());
             if (chunkPosListMap == null) {
                 chunkPosListMap = new HashMap<>();
                 ChunkPos chunkPos = new ChunkPos(this.pos.getX() >> 4, this.pos.getZ() >> 4);
                 List<IMatter> matters = new LinkedList<>();
                 matters.add(this);
                 chunkPosListMap.put(chunkPos, matters);
-                TileMultiMatter.worldMatterMap.put(this.world.provider.getDimension(), chunkPosListMap);
+                TileMultiMatter.worldMatterMap.put(this.getWorld().dimension(), chunkPosListMap);
             } else {
                 ChunkPos chunkPos = new ChunkPos(this.pos.getX() >> 4, this.pos.getZ() >> 4);
                 List<IMatter> matters = chunkPosListMap.get(chunkPos);
@@ -340,7 +327,7 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
         if (this.recipe == null) {
             this.amountScrap = 0;
         } else {
-            this.amountScrap = recipe.getRecipe().getOutput().metadata.getInteger("amount");
+            this.amountScrap = recipe.getRecipe().getOutput().metadata.getInt("amount");
         }
     }
 

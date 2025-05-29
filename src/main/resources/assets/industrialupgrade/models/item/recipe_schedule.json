@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/recipe_schedule"
+    "layer0" : "industrialupgrade:item/recipe_schedule"
   }
 }

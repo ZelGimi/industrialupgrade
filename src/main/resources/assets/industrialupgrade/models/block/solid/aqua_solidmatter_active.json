@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/water_solid_active",
-    "down" : "industrialupgrade:blocks/water_solid_active",
-    "up" : "industrialupgrade:blocks/water_solid_active",
-    "north" : "industrialupgrade:blocks/water_solid_active",
-    "east" : "industrialupgrade:blocks/water_solid_active",
-    "south" : "industrialupgrade:blocks/water_solid_active",
-    "west" : "industrialupgrade:blocks/water_solid_active"
+    "particle" : "industrialupgrade:block/water_solid_active",
+    "down" : "industrialupgrade:block/water_solid_active",
+    "up" : "industrialupgrade:block/water_solid_active",
+    "north" : "industrialupgrade:block/water_solid_active",
+    "east" : "industrialupgrade:block/water_solid_active",
+    "south" : "industrialupgrade:block/water_solid_active",
+    "west" : "industrialupgrade:block/water_solid_active"
   }
 }

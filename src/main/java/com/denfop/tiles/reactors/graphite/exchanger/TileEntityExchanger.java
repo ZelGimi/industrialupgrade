@@ -1,8 +1,12 @@
 package com.denfop.tiles.reactors.graphite.exchanger;
 
 import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.reactors.IGraphiteReactor;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerExchanger;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiExchanger;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.IUpdatableTileEvent;
@@ -11,23 +15,25 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.graphite.IExchanger;
 import com.denfop.tiles.reactors.graphite.IExchangerItem;
 import com.denfop.tiles.reactors.graphite.controller.TileEntityMainController;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityExchanger extends TileEntityMultiBlockElement implements IExchanger, IUpdatableTileEvent {
 
-    public final int level;
+    public final int levelBlock;
     private final InvSlot slot;
     public double percent = 1;
     private int x = 0;
     private IExchangerItem item;
 
-    public TileEntityExchanger(int level) {
-        this.level = level;
+    public TileEntityExchanger(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
+        this.levelBlock = levelBlock;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public EnumTypeSlot getTypeSlot() {
@@ -36,13 +42,13 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((TileEntityExchanger) this.base).getBlockLevel();
+                return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevelExchanger() <= ((TileEntityExchanger) this.base).getBlockLevel();
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (!world.isRemote) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (!level.isClientSide) {
                     if (content.isEmpty()) {
                         ((TileEntityExchanger) this.base).percent = 1;
                     } else {
@@ -50,6 +56,7 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
                         item = (IExchangerItem) content.getItem();
                     }
                 }
+                return content;
             }
         };
         slot.setStackSizeLimit(1);
@@ -60,11 +67,11 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
         super.updateEntityServer();
         if (this.getMain() != null) {
             TileEntityMainController controller = (TileEntityMainController) this.getMain();
-            if (controller.work && !this.slot.isEmpty() && world.provider.getWorldTime() % 20 == 0) {
+            if (controller.work && !this.slot.isEmpty() && level.getGameTime() % 20 == 0) {
                 if (item == null) {
-                    this.item = (IExchangerItem) this.slot.get().getItem();
+                    this.item = (IExchangerItem) this.slot.get(0).getItem();
                 }
-                this.item.damageItem(this.slot.get(), -1);
+                this.item.damageItem(this.slot.get(0), -1);
             }
         }
     }
@@ -72,11 +79,11 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            if (this.getSlot().get().isEmpty()) {
+        if (!this.getWorld().isClientSide) {
+            if (this.getSlot().get(0).isEmpty()) {
                 this.percent = 1;
             } else {
-                this.percent = 1 - ((IExchangerItem) this.getSlot().get().getItem()).getPercent();
+                this.percent = 1 - ((IExchangerItem) this.getSlot().get(0).getItem()).getPercent();
             }
         }
     }
@@ -102,15 +109,15 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        x = nbtTagCompound.getInteger("exchanger_x");
+        x = nbtTagCompound.getInt("exchanger_x");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("exchanger_x", x);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("exchanger_x", x);
         return nbtTagCompound;
     }
 
@@ -134,18 +141,19 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
     }
 
     @Override
-    public ContainerExchanger getGuiContainer(final EntityPlayer var1) {
+    public ContainerExchanger getGuiContainer(final Player var1) {
         return new ContainerExchanger(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiExchanger(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiExchanger((ContainerExchanger) menu);
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (this.getMain() == null) {
             return;
         }

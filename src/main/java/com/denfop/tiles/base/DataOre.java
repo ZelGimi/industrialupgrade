@@ -7,13 +7,14 @@ import com.denfop.api.vein.VeinSystem;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,12 +30,12 @@ public class DataOre {
     private ItemStack stack;
 
     private List<ItemStack> recipe_stack;
-    private IBlockState iBlockState;
+    private BlockState iBlockState;
 
     private int number;
     private int y;
 
-    public DataOre(String name, int number, int y, BlockPos pos, ItemStack stack, IBlockState state) {
+    public DataOre(String name, int number, int y, BlockPos pos, ItemStack stack, BlockState state) {
         this.name = name;
         this.number = number;
         this.y = y;
@@ -46,31 +47,27 @@ public class DataOre {
         this.stack = stack;
         this.veinsList = new ArrayList<>();
 
-        if (state == null) {
-            this.iBlockState = Block.getBlockFromItem(stack.getItem()).getStateFromMeta(stack.getItemDamage());
-        } else {
-            this.iBlockState = state;
-        }
+        this.iBlockState = state;
     }
 
-    public DataOre(NBTTagCompound tagCompound) {
+    public DataOre(CompoundTag tagCompound) {
         name = tagCompound.getString("name");
-        number = tagCompound.getInteger("number");
-        y = tagCompound.getInteger("y");
-        int size = tagCompound.getInteger("size");
+        number = tagCompound.getInt("number");
+        y = tagCompound.getInt("y");
+        int size = tagCompound.getInt("size");
         this.listPos = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            NBTTagCompound posTag = tagCompound.getCompoundTag("blockpos_" + i);
-            this.listPos.add(new BlockPos(posTag.getInteger("x"), posTag.getInteger("y"), posTag.getInteger("z")));
+            CompoundTag posTag = tagCompound.getCompound("blockpos_" + i);
+            this.listPos.add(new BlockPos(posTag.getInt("x"), posTag.getInt("y"), posTag.getInt("z")));
         }
-        NBTTagCompound stackTag = tagCompound.getCompoundTag("stackTag");
-        stack = new ItemStack(stackTag);
-        this.iBlockState = Block.getBlockFromItem(stack.getItem()).getStateFromMeta(stack.getItemDamage());
+        CompoundTag stackTag = tagCompound.getCompound("stackTag");
+        stack = ItemStack.of(stackTag);
+        this.iBlockState = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
         this.veinsList = new ArrayList<>();
-        int size1 = tagCompound.getInteger("size1");
+        int size1 = tagCompound.getInt("size1");
         for (int i = 0; i < size1; i++) {
-            NBTTagCompound veinTag = tagCompound.getCompoundTag("vein_" + i);
-            ChunkPos chunkPos = new ChunkPos(veinTag.getInteger("x"), veinTag.getInteger("z"));
+            CompoundTag veinTag = tagCompound.getCompound("vein_" + i);
+            ChunkPos chunkPos = new ChunkPos(veinTag.getInt("x"), veinTag.getInt("z"));
             Vein vein = VeinSystem.system.getVein(chunkPos);
             if (vein != VeinSystem.EMPTY) {
                 this.veinsList.add(vein);
@@ -93,7 +90,7 @@ public class DataOre {
             throw new RuntimeException(e);
         }
         try {
-            this.iBlockState = ((Block) DecoderHandler.decode(customPacketBuffer)).getStateFromMeta(stack.getItemDamage());
+            this.iBlockState = ((Block) DecoderHandler.decode(customPacketBuffer)).defaultBlockState();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -104,15 +101,14 @@ public class DataOre {
         }
     }
 
-    public List<ItemStack> getRecipe_stack(TileAnalyzer tileAnalyzer, BlockPos pos) {
+    public List<ItemStack> getRecipe_stack(com.denfop.tiles.base.TileAnalyzer tileAnalyzer, BlockPos pos) {
         if (recipe_stack != null) {
             return recipe_stack;
         }
         final List<ItemStack> drops = iBlockState.getBlock().getDrops(
-                tileAnalyzer.getWorld(),
-                pos,
                 iBlockState,
-                tileAnalyzer.lucky
+                (ServerLevel) tileAnalyzer.getWorld(),
+                pos, null
         );
         List<ItemStack> list = new ArrayList<>();
 
@@ -166,7 +162,7 @@ public class DataOre {
                 } else {
                     boolean can = true;
                     for (BaseMachineRecipe recipe1 : recipes) {
-                        if (recipe1.getOutput().items.get(0).isItemEqual(stack)) {
+                        if (recipe1.getOutput().items.get(0).is(stack.getItem())) {
                             final ItemStack stack1 = stack.copy();
                             stack1.setCount(recipe1.getOutput().items.get(0).getCount());
                             list.add(stack1);
@@ -181,13 +177,23 @@ public class DataOre {
             }
         }
         if (tileAnalyzer.furnace) {
-            for (ItemStack stack1 : drops) {
-                final ItemStack smelt = FurnaceRecipes.instance().getSmeltingResult(stack1).copy();
-                if (!smelt.isEmpty()) {
-                    smelt.setCount(stack1.getCount() * smelt.getCount());
-                    list.add(smelt);
-                } else {
-                    list.add(stack1);
+            final List<BaseMachineRecipe> recipes = Recipes.recipes.getRecipeList("furnace");
+            BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("furnace", false, stack);
+            if (recipe != null) {
+                list.add(recipe.getOutput().items.get(0).copy());
+            } else {
+                boolean can = true;
+                for (BaseMachineRecipe recipe1 : recipes) {
+                    if (recipe1.getOutput().items.get(0).is(stack.getItem())) {
+                        final ItemStack stack1 = stack.copy();
+                        stack1.setCount(recipe1.getOutput().items.get(0).getCount());
+                        list.add(stack1);
+                        can = false;
+                        break;
+                    }
+                }
+                if (!can) {
+                    list.add(stack);
                 }
             }
         }
@@ -200,30 +206,30 @@ public class DataOre {
         return recipe_stack;
     }
 
-    public NBTTagCompound getTagCompound() {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setString("name", name);
-        tagCompound.setInteger("number", number);
-        tagCompound.setInteger("y", y);
-        tagCompound.setInteger("size", this.listPos.size());
+    public CompoundTag getTagCompound() {
+        CompoundTag tagCompound = new CompoundTag();
+        tagCompound.putString("name", name);
+        tagCompound.putInt("number", number);
+        tagCompound.putInt("y", y);
+        tagCompound.putInt("size", this.listPos.size());
         for (int i = 0; i < listPos.size(); i++) {
-            NBTTagCompound posTag = new NBTTagCompound();
+            CompoundTag posTag = new CompoundTag();
             BlockPos pos = this.listPos.get(i);
-            posTag.setInteger("x", pos.getX());
-            posTag.setInteger("y", pos.getY());
-            posTag.setInteger("z", pos.getZ());
-            tagCompound.setTag("blockpos_" + i, posTag);
+            posTag.putInt("x", pos.getX());
+            posTag.putInt("y", pos.getY());
+            posTag.putInt("z", pos.getZ());
+            tagCompound.put("blockpos_" + i, posTag);
         }
-        NBTTagCompound stackTag = new NBTTagCompound();
-        stack.writeToNBT(stackTag);
-        tagCompound.setTag("stackTag", stackTag);
-        tagCompound.setInteger("size1", this.veinsList.size());
+        CompoundTag stackTag = new CompoundTag();
+        stack.save(stackTag);
+        tagCompound.put("stackTag", stackTag);
+        tagCompound.putInt("size1", this.veinsList.size());
         for (int i = 0; i < veinsList.size(); i++) {
-            NBTTagCompound VeinTag = new NBTTagCompound();
+            CompoundTag VeinTag = new CompoundTag();
             Vein vein = this.veinsList.get(i);
-            VeinTag.setInteger("x", vein.getChunk().x);
-            VeinTag.setInteger("z", vein.getChunk().z);
-            tagCompound.setTag("vein_" + i, VeinTag);
+            VeinTag.putInt("x", vein.getChunk().x);
+            VeinTag.putInt("z", vein.getChunk().z);
+            tagCompound.put("vein_" + i, VeinTag);
         }
         return tagCompound;
     }
@@ -256,7 +262,7 @@ public class DataOre {
         return customPacketBuffer;
     }
 
-    public IBlockState getiBlockState() {
+    public BlockState getiBlockState() {
         return iBlockState;
     }
 

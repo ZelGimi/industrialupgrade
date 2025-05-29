@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/haumea_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/haumea_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/haumea_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/haumea_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/haumea_boulder"
+  }
+}

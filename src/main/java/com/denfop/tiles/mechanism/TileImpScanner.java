@@ -8,14 +8,16 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.TileScanner;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileImpScanner extends TileScanner {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileImpScanner() {
-        super(2000);
+    public TileImpScanner(BlockPos pos, BlockState state) {
+        super(2000,BlockBaseMachine3.imp_scanner,pos,state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
@@ -30,7 +32,7 @@ public class TileImpScanner extends TileScanner {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

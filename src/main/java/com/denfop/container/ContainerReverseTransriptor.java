@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityReverseTransriptor;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerReverseTransriptor extends ContainerFullInv<TileEntityReverseTransriptor> {
 
-    public ContainerReverseTransriptor(EntityPlayer entityPlayer, TileEntityReverseTransriptor tileEntity1) {
+    public ContainerReverseTransriptor(Player entityPlayer, TileEntityReverseTransriptor tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 45, 99));

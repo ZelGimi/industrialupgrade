@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/dust/sulfur"
+		"layer0": "industrialupgrade:item/dust/sulfur"
 	}
 }

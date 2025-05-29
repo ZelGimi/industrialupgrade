@@ -2,13 +2,13 @@ package com.denfop.api.gui;
 
 import com.denfop.gui.GuiCore;
 import com.denfop.utils.ModUtils;
-import com.google.common.base.Supplier;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ItemStackImageText extends GuiElement<ItemStackImageText> {
 
@@ -21,24 +21,22 @@ public class ItemStackImageText extends GuiElement<ItemStackImageText> {
         this.text = text;
     }
 
-    public void drawBackground(int mouseX, int mouseY) {
-        super.drawBackground(mouseX, mouseY);
+    public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
+        super.drawBackground(poseStack, mouseX, mouseY);
         ItemStack stack = this.itemSupplier.get();
         if (!ModUtils.isEmpty(stack)) {
-            RenderHelper.enableGUIStandardItemLighting();
-            this.gui.drawItemStack(this.x, this.y, stack);
-            RenderHelper.disableStandardItemLighting();
+            this.gui.drawItemStack(poseStack, this.x, this.y, stack);
         }
 
     }
 
-    public void drawForeground(int mouseX, int mouseY) {
+    public void drawForeground(GuiGraphics poseStack, int mouseX, int mouseY) {
         if (this.contains(mouseX, mouseY)) {
             ItemStack stack = this.itemSupplier.get();
             if (!ModUtils.isEmpty(stack)) {
                 String[] lines = text.split("\n");
                 List<String> stringList = new ArrayList<>(Arrays.asList(lines));
-                this.gui.drawTooltipOnlyName(mouseX, mouseY, stack, stringList);
+                this.gui.drawTooltipOnlyName(poseStack, mouseX, mouseY, stack, stringList);
             }
         }
 

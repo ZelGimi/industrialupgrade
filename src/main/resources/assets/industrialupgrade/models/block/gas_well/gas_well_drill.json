@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_well_drill",
-    "down" : "industrialupgrade:blocks/gas_well_casing",
-    "up" : "industrialupgrade:blocks/gas_well_casing",
-    "north" : "industrialupgrade:blocks/gas_well_drill",
-    "east" : "industrialupgrade:blocks/gas_well_drill",
-    "south" : "industrialupgrade:blocks/gas_well_drill",
-    "west" : "industrialupgrade:blocks/gas_well_drill"
+    "particle" : "industrialupgrade:block/gas_well_drill",
+    "down" : "industrialupgrade:block/gas_well_casing",
+    "up" : "industrialupgrade:block/gas_well_casing",
+    "north" : "industrialupgrade:block/gas_well_drill",
+    "east" : "industrialupgrade:block/gas_well_drill",
+    "south" : "industrialupgrade:block/gas_well_drill",
+    "west" : "industrialupgrade:block/gas_well_drill"
   }
 }

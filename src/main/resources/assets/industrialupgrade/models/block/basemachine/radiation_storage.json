@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "industrialupgrade:models/radiation_storage",
-		"particle": "industrialupgrade:models/radiation_storage"
+		"1": "industrialupgrade:block/radiation_storage",
+		"particle": "industrialupgrade:block/radiation_storage"
 	},
 	"elements": [
 		{

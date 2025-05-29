@@ -1,122 +1,62 @@
 package com.denfop.blocks;
 
-
-import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
+import com.denfop.DataBlock;
+import com.denfop.api.Recipes;
+import com.denfop.datagen.blocktags.BlockTagsProvider;
+import com.denfop.datagen.blocktags.IBlockTag;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.core.NonNullList;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Random;
 
-public class BlockSpace extends BlockCore implements IModelRegister {
-
-    public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("type", Type.class);
+public class BlockSpace<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
 
 
-    public BlockSpace() {
-        super(Material.ROCK, Constants.MOD_ID);
-        setUnlocalizedName("blockspace");
-        setCreativeTab(IUCore.OreTab);
-        setHardness(1.0F);
-        setResistance(5.0F);
-        setSoundType(SoundType.METAL);
-        setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.ariel_draconium));
-        setHarvestLevel("pickaxe", 1);
+    public BlockSpace(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
+        super(Properties.of().mapColor(MapColor.STONE).destroyTime(1f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
+        BlockTagsProvider.list.add(this);
+
     }
 
     @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
-    }
-
-    @Nonnull
-    public IBlockState getStateMeta(int meta) {
-        return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
-    }
-
-    @Nonnull
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
-    }
-
-    public void getSubBlocks(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
-        for (int i = 0; i < (Type.values()).length; i++) {
-            items.add(new ItemStack(this, 1, i));
-        }
-    }
-
-    public String getUnlocalizedName(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        if (meta >= (Type.values()).length) {
-            meta = 0;
-        }
-        return "iu." + Type.values()[meta].getName() + ".name";
-    }
-
-    public EnumRarity getRarity(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        if (meta >= (Type.values()).length) {
-            return EnumRarity.COMMON;
-        }
-        return Type.values()[meta].getRarity();
-    }
-
-
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT).getMetadata();
-    }
-
-    public int damageDropped(IBlockState state) {
-        return state.getValue(VARIANT).getMetadata();
-    }
-
-    public int getLightValue(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
-        return state.getValue(VARIANT).getLight();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        for (int i = 0; i < (Type.values()).length; i++) {
-            ModelLoader.setCustomModelResourceLocation(
-                    Item.getItemFromBlock(this),
-                    i,
-                    new ModelResourceLocation(this.modName + ":" + this.name, "type=" + Type.values()[i].getName())
-            );
-        }
+    int getMetaFromState(BlockState state) {
+        return getElement().getId();
     }
 
     @Override
-    public List<ItemStack> getDrops(final IBlockAccess world, final BlockPos pos, final IBlockState state, final int fortune) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder p_60538_) {
+        RandomSource rand = p_60538_.getLevel().random;
+
+        List<ItemStack> list = new ArrayList<>();
+        ItemStack stack1 = p_60538_.getOptionalParameter(LootContextParams.TOOL);
+        int fortune = 0;
+        if (stack1 != null)
+            fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack1);
         NonNullList<ItemStack> ret = NonNullList.create();
-        Type type = Type.values()[getMetaFromState(state)];
+        Type type = (Type) this.getElement();
         if (type.ordinal() != 3 && type.ordinal() != 4 && type.ordinal() != 5 && type.ordinal() != 0 && type.ordinal() != 10) {
             ItemStack stack = type.getStack();
             if (stack == null) {
-                stack = OreDictionary.getOres(type.getRaw()).get(0);
+                stack = Recipes.inputFactory.getInput(type.getRaw()).getInputs().get(0);
                 type.setStack(stack);
             }
             stack = stack.copy();
@@ -127,11 +67,26 @@ public class BlockSpace extends BlockCore implements IModelRegister {
             ret.add(new ItemStack(Items.REDSTONE, i));
         } else if (type.ordinal() == 3) {
             final int i = WorldBaseGen.random.nextInt(fortune + 2) + 1;
-            ret.add(new ItemStack(Items.DYE, i, 4));
+            ret.add(new ItemStack(Items.LAPIS_LAZULI, i));
         } else {
-            ret.add(new ItemStack(this, 1, type.ordinal()));
+            ret.add(new ItemStack(this, 1));
         }
         return ret;
+    }
+
+    public int quantityDropped(int fortune, RandomSource random) {
+
+        return quantityDroppedWithBonus(fortune, random);
+    }
+
+    public int quantityDroppedWithBonus(int fortune, @Nonnull RandomSource random) {
+        return (fortune == 0) ? 1
+                : (1 + random.nextInt(fortune));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_49915_) {
+
     }
 
     public int quantityRedstoneDroppedWithBonus(int fortune, Random random) {
@@ -155,19 +110,27 @@ public class BlockSpace extends BlockCore implements IModelRegister {
         }
     }
 
-    public boolean preInit() {
-        setRegistryName("blockspace");
-        ForgeRegistries.BLOCKS.register(this);
-        ItemBlockCore itemBlock = new ItemBlockCore(this);
-        itemBlock.setRegistryName(Objects.requireNonNull(getRegistryName()));
-        ForgeRegistries.ITEMS.register(itemBlock);
-        IUCore.proxy.addIModelRegister(this);
-
-        return true;
+    @Override
+    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+        return this.stateDefinition.any();
     }
 
+    @Override
+    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+        p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
+    }
 
-    public enum Type implements IStringSerializable {
+    @Override
+    public Block getBlock() {
+        return this;
+    }
+
+    @Override
+    public Pair<String, Integer> getHarvestLevel() {
+        return new Pair<>("pickaxe", 1);
+    }
+
+    public enum Type implements ISubEnum {
         ariel_draconium(0),
         asteroid_barium_ore(1),
         asteroid_cadmium_ore(2),
@@ -184,7 +147,7 @@ public class BlockSpace extends BlockCore implements IModelRegister {
         enceladus_magnesium_ore(13),
         eris_magnesium(14),
         eris_manganese(15),
-        ;
+        ;;
 
         private final int metadata;
         private final String name;
@@ -194,6 +157,7 @@ public class BlockSpace extends BlockCore implements IModelRegister {
         Type(int metadata) {
             this.metadata = metadata;
             this.name = this.name().toLowerCase(Locale.US);
+            setRaw(this.getName().split("_")[1]);
         }
 
         public static Type getFromID(final int ID) {
@@ -204,12 +168,22 @@ public class BlockSpace extends BlockCore implements IModelRegister {
             return this.metadata;
         }
 
+        @Override
+        public int getId() {
+            return this.metadata;
+        }
+
+        @Override
+        public String getOtherPart() {
+            return "type=";
+        }
+
         public String getRaw() {
             return raw;
         }
 
         public void setRaw(String name) {
-            this.raw = "raw" + name;
+            this.raw = "forge:raw_materials/" + name;
         }
 
         @Nonnull
@@ -217,12 +191,13 @@ public class BlockSpace extends BlockCore implements IModelRegister {
             return this.name;
         }
 
-        public int getLight() {
-            return 0;
+        @Override
+        public String getMainPath() {
+            return "blockspace";
         }
 
-        public EnumRarity getRarity() {
-            return EnumRarity.COMMON;
+        public int getLight() {
+            return 0;
         }
 
         public ItemStack getStack() {
@@ -232,6 +207,6 @@ public class BlockSpace extends BlockCore implements IModelRegister {
         public void setStack(ItemStack stack) {
             this.stack = stack;
         }
-    }
 
+    }
 }

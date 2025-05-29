@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/storage_food_3"
+    "layer0" : "industrialupgrade:item/storage_food_3"
   }
 }

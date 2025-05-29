@@ -7,16 +7,18 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileBioMultiMachine;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileBioRolling extends TileBioMultiMachine {
 
 
-    public TileBioRolling() {
+    public TileBioRolling(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.Rolling.usagePerTick,
                 EnumMultiMachine.Rolling.lenghtOperation,
-                4
+                4,BlockBaseMachine3.bio_rolling,pos,state
         );
     }
 
@@ -25,7 +27,7 @@ public class TileBioRolling extends TileBioMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override

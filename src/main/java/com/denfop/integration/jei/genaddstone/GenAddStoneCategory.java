@@ -2,59 +2,62 @@ package com.denfop.integration.jei.genaddstone;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.ItemStackImage;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.mechanism.BlockMoreMachine3;
+import com.denfop.container.ContainerMultiMachine;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileGearMachine;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.Nonnull;
 
-public class GenAddStoneCategory extends Gui implements IRecipeCategory<GenAddStoneRecipeWrapper> {
+public class GenAddStoneCategory extends GuiIU implements IRecipeCategory<GenAddStoneHandler> {
 
     private final IDrawableStatic bg;
+    private final JeiInform jeiInform;
     private int energy = 0;
 
     public GenAddStoneCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone" +
+        super(new ContainerMultiMachine(Minecraft.getInstance().player,
+                ((TileGearMachine) BlockMoreMachine3.gearing.getDummyTe()), 1, true
+        ));
+        this.jeiInform=jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone".toLowerCase() +
                         ".png"), 3, 3, 140,
                 75
         );
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine3.gen_addition_stone.getName();
+    public RecipeType<GenAddStoneHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.gen_addition_stone).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.gen_addition_stone).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -62,56 +65,31 @@ public class GenAddStoneCategory extends Gui implements IRecipeCategory<GenAddSt
         return bg;
     }
 
-
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void draw(GenAddStoneHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         energy++;
         int energylevel = (int) Math.min(14.0F * energy / 100, 14);
 
 
-        mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(
+      bindTexture(getTexture());
+        drawTexturedModalRect(stack,
                 54 - 48, 33 + 14 - energylevel, 176,
                 14 - energylevel, 14, energylevel
         );
-        RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GlStateManager.disableLighting();
-        GlStateManager.enableDepth();
-        this.zLevel = 100.0F;
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
-        mc.getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(Blocks.COBBLESTONE), +61,
-                +25
-        );
-
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GlStateManager.enableLighting();
-
-        RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
+        new ItemStackImage(this,61,25,() -> new ItemStack(Blocks.COBBLESTONE)).drawBackground(stack,0,0);
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final GenAddStoneRecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 34, 18);
-        isg.set(0, recipes.getInput());
-        isg.init(1, true, 34, 46);
-        isg.set(1, recipes.getInput1());
-        isg.init(2, false, 86, 5);
-        isg.set(2, recipes.getOutput());
+    public void setRecipe(IRecipeLayoutBuilder builder, GenAddStoneHandler recipes, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,35, 19).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT,35, 47).addItemStack(recipes.getInput1());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 87, 6).addItemStack(recipes.getOutput());
     }
 
+
+
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png".toLowerCase());
     }
 
 

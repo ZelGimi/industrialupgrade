@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:tank_iu/tank_iu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:alloyplate/vanadoalumite"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:alloyplate/red_brass"
+      }
+    ]
+  },
+  "pattern": [
+    "C C",
+    "BAB",
+    "C C"
+  ],
+  "result": {
+    "item": "industrialupgrade:tank_iu/adv_tank"
+  },
+  "show_notification": true
+}

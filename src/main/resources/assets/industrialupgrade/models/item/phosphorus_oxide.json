@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/phosphorus_oxide"
+    "layer0" : "industrialupgrade:item/phosphorus_oxide"
   }
 }

@@ -1,44 +1,124 @@
 package com.denfop.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemStack;
+import com.denfop.Constants;
+import com.denfop.DataBlock;
+import com.denfop.DataMultiBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public abstract class BlockCore extends Block {
+import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN;
+import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL;
 
-    protected String modName;
-    protected String name;
+public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
+    final String modName;
+    private final T[] elements;
+    private final DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> data;
+    private final DataMultiBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> multiData;
+    private final T element;
 
-    public BlockCore(Material material, String modName) {
-        super(material);
-        this.modName = modName;
-        this.preInit();
+    public BlockCore(MapColor material, T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
+        super( Properties.of().mapColor(material));
+        this.elements = elements;
+        this.data = dataBlock;
+        this.element = element;
+        this.multiData = null;
+        this.modName = Constants.MOD_ID;
     }
 
-    public BlockCore(Material material, MapColor blockMapColor, String modName) {
-        super(material, blockMapColor);
-        this.modName = modName;
+    public BlockCore(Properties properties, T[] elements, DataMultiBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
+        super(properties);
+        this.elements = elements;
+        this.multiData = dataBlock;
+        this.data = null;
+        this.element = elements[0];
+        this.modName = Constants.MOD_ID;
     }
 
-    protected abstract boolean preInit();
-
-    @Nonnull
-    public Block setUnlocalizedName(@Nonnull String name) {
-        this.name = name;
-        name = this.modName + "." + name;
-        return super.setUnlocalizedName(name);
+    public BlockCore(Properties properties, T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
+        super(properties);
+        this.elements = elements;
+        this.data = dataBlock;
+        this.element = element;
+        this.modName = Constants.MOD_ID;
+        this.multiData = null;
     }
 
-    public String getUnlocalizedName(ItemStack stack) {
-        return this.getUnlocalizedName();
+    public DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> getData() {
+        return data;
     }
 
-    public EnumRarity getRarity(ItemStack stack) {
-        return EnumRarity.COMMON;
+    public T getElement() {
+        return this.element;
     }
 
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+        if (data != null)
+            return new ItemStack(this.data.getItem(getMetaFromState(state)));
+        if (multiData != null)
+            return new ItemStack(this.multiData.getItem(getMetaFromState(state)));
+        return ItemStack.EMPTY;
+    }
+
+    public DataMultiBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> getMultiData() {
+        return multiData;
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder p_60538_) {
+        ItemStack tool = p_60538_.getParameter(TOOL);
+        BlockPos pos =  BlockPos.containing(p_60538_.getParameter(ORIGIN));
+        List<ItemStack> drops = NonNullList.create();
+        drops = getDrops(p_60538_.getLevel(), pos, state, EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, tool));
+        return drops;
+    }
+
+
+
+    public List<ItemStack> getDrops(
+            @Nonnull final Level world,
+            @Nonnull final BlockPos pos,
+            @Nonnull final BlockState state,
+            final int fortune
+    ) {
+        if (data != null) {
+            return List.of(new ItemStack(this.getData().getItem(getMetaFromState(state))));
+
+        }
+        if (multiData != null) {
+            return List.of(new ItemStack(this.getMultiData().getItem(getMetaFromState(state))));
+
+        }
+        return List.of(ItemStack.EMPTY);
+    }
+
+    int getMetaFromState(BlockState state) {
+        return getElement().getId();
+    }
+
+    public T[] getElements() {
+        return elements;
+    }
+
+
+
+    abstract <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context);
+
+    abstract <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element);
 }

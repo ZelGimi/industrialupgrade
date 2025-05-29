@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityRoverAssembler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerRoverAssembler extends ContainerFullInv<TileEntityRoverAssembler> {
 
-    public ContainerRoverAssembler(TileEntityRoverAssembler tileEntityBatteryFactory, EntityPlayer var1) {
+    public ContainerRoverAssembler(TileEntityRoverAssembler tileEntityBatteryFactory, Player var1) {
         super(var1, tileEntityBatteryFactory, 178, 213);
         for (int i = 0; i < 5; i++) {
             this.addSlotToContainer(new SlotInvSlot(

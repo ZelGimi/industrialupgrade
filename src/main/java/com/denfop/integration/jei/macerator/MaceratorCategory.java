@@ -14,38 +14,40 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.container.SlotInvSlot;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
 import com.denfop.tiles.mechanism.multimechanism.simple.TileMacerator;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
-public class MaceratorCategory extends GuiIU implements IRecipeCategory<MaceratorWrapper> {
-
+public class MaceratorCategory extends GuiIU  implements IRecipeCategory<MaceratorHandler> {
     private final IDrawableStatic bg;
+    private final JeiInform jeiInform;
     private final ContainerMultiMachine container1;
     private final GuiComponent progress_bar;
     private int progress = 0;
     private int energy = 0;
-
-    public MaceratorCategory(
-            final IGuiHelper guiHelper
-    ) {
-        super(new ContainerMultiMachine(Minecraft.getMinecraft().player,
+    public MaceratorCategory(IGuiHelper guiHelper, JeiInform jeiInform) {
+        super(new ContainerMultiMachine(Minecraft.getInstance().player,
                 ((TileMacerator) BlockSimpleMachine.macerator_iu.getDummyTe()), 1, true
         ));
+        this.jeiInform=jeiInform;
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 80
@@ -59,10 +61,10 @@ public class MaceratorCategory extends GuiIU implements IRecipeCategory<Macerato
         progress_bar = new GuiComponent(this, 0, 0, EnumTypeComponent.MULTI_PROCESS,
                 new Component<>(new ComponentProcessRender(container1.base.multi_process, container1.base.getTypeMachine()))
         );
-        for (Slot slot : this.container1.inventorySlots) {
+        for (Slot slot : this.container1.slots) {
             if (slot instanceof SlotInvSlot) {
-                int xX = slot.xPos;
-                int yY = slot.yPos;
+                int xX = slot.x;
+                int yY = slot.y;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
                 if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
                     this.progress_bar.setIndex(0);
@@ -72,36 +74,54 @@ public class MaceratorCategory extends GuiIU implements IRecipeCategory<Macerato
 
             }
         }
+
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.add(progress_bar);
+
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockSimpleMachine.macerator_iu.getName();
-    }
+    public net.minecraft.network.chat.Component getTitle(){
+        return super.getTitle();
+    };
 
-    @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.simplemachine, 1, 0).getUnlocalizedName());
+    public RecipeType<MaceratorHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
-    @Nonnull
     @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
+    public String getTitles() {
+        return Localization.translate(IUItem.simplemachine.getItem(0).getDescription().getString());
     }
 
-    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
     }
 
+    @Override
+    public IDrawable getIcon() {
+        return null;
+    }
 
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void setRecipe(IRecipeLayoutBuilder layout, MaceratorHandler recipe, IFocusGroup focuses) {
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotMultiRecipes.class);
+        final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
+        int i = 0;
+        for (; i < inputs.size(); i++) {
+            layout.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+
+        }
+        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        layout.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
+
+        layout.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
+    }
+
+    @Override
+    public void draw(MaceratorHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics poseStack, double mouseX, double mouseY) {
         progress++;
         if (this.energy < 100) {
             energy++;
@@ -111,36 +131,13 @@ public class MaceratorCategory extends GuiIU implements IRecipeCategory<Macerato
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(0, 0);
+        this.slots.drawBackground(poseStack,0, 0);
 
-        progress_bar.renderBar(0, 0, xScale);
-        mc.getTextureManager().bindTexture(getTexture());
-    }
-
-    @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final MaceratorWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotMultiRecipes.class);
-        final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
-        int i = 0;
-        for (; i < inputs.size(); i++) {
-            isg.init(i, true, slots1.get(i).getJeiX(), slots1.get(i).getJeiY());
-            isg.set(i, inputs.get(i));
-
-        }
-
-        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
-        isg.set(i, recipes.getOutput());
+        progress_bar.renderBar(poseStack,0, 0, xScale);
+       GuiCore.bindTexture(getTexture());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine.png".toLowerCase());
     }
-
-
 }

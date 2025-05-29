@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/alumel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/duralumin"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "DAD",
+    "CCC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_235_element"
+  },
+  "show_notification": true
+}

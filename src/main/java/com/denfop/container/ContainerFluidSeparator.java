@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityFluidSeparator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerFluidSeparator extends ContainerFullInv<TileEntityFluidSeparator> {
 
-    public ContainerFluidSeparator(EntityPlayer entityPlayer, TileEntityFluidSeparator tileEntity1) {
+    public ContainerFluidSeparator(Player entityPlayer, TileEntityFluidSeparator tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 50, 99));

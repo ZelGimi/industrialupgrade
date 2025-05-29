@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:stick"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:platedense/iron"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/iron_hammer"
+  },
+  "show_notification": true
+}

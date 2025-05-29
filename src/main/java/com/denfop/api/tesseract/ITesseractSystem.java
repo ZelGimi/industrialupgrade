@@ -1,6 +1,7 @@
 package com.denfop.api.tesseract;
 
-import net.minecraft.world.World;
+
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -14,10 +15,10 @@ public interface ITesseractSystem {
 
     void removeChannel(Channel channel);
 
-    void onTick(World world);
+    void onTick(Level world);
 
-    void onWorldUnload(World world);
+    void onWorldUnload(Level world);
 
-    List<Channel> getPublicChannels(World world);
+    List<Channel> getPublicChannels(Level world);
 
 }

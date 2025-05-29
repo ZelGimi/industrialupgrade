@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.geothermalpump.TileEntityGeothermalExchanger;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGeothermalExchanger extends ContainerFullInv<TileEntityGeothermalExchanger> {
 
-    public ContainerGeothermalExchanger(TileEntityGeothermalExchanger tileEntityGeothermalExchanger, EntityPlayer var1) {
+    public ContainerGeothermalExchanger(TileEntityGeothermalExchanger tileEntityGeothermalExchanger, Player var1) {
         super(tileEntityGeothermalExchanger, var1);
     }
 

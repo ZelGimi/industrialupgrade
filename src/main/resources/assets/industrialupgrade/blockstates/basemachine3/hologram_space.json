@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=hologram_space": {
+      "model": "industrialupgrade:block/basemachine/hologram_space"
+    },
+    "facing=south,type=hologram_space": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "y": 180
+    },
+    "facing=west,type=hologram_space": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "y": 270
+    },
+    "facing=east,type=hologram_space": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "y": 90
+    },
+    "facing=down,type=hologram_space": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "x": 90
+    },
+    "facing=up,type=hologram_space": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "x": 270
+    },
+    "facing=north,type=hologram_space_invalid": {
+      "model": "industrialupgrade:block/basemachine/hologram_space"
+    },
+    "facing=south,type=hologram_space_invalid": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "y": 180
+    },
+    "facing=west,type=hologram_space_invalid": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "y": 270
+    },
+    "facing=east,type=hologram_space_invalid": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "y": 90
+    },
+    "facing=down,type=hologram_space_invalid": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "x": 90
+    },
+    "facing=up,type=hologram_space_invalid": {
+      "model": "industrialupgrade:block/basemachine/hologram_space",
+      "x": 270
+    }
+  }
+}

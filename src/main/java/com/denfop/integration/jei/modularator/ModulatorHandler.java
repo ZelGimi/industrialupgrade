@@ -3,7 +3,7 @@ package com.denfop.integration.jei.modularator;
 
 import com.denfop.IUCore;
 import com.denfop.api.recipe.RecipeInputStack;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;

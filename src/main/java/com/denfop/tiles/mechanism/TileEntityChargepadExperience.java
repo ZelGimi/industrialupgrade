@@ -11,40 +11,43 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Vector3f;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class TileEntityChargepadExperience extends TileEntityInventory {
 
     private final ComponentBaseEnergy energy;
-    private EntityPlayer player;
+    private Player player;
 
-    public TileEntityChargepadExperience() {
+    public TileEntityChargepadExperience(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.exp_chargepad,pos,state);
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 2000000000, 14));
         this.energy.setDirections(ModUtils.allFacings, ModUtils.allFacings);
     }
 
     public void onEntityCollision(Entity entity) {
         super.onEntityCollision(entity);
-        if (!this.getWorld().isRemote && entity instanceof EntityPlayer) {
+        if (!this.getWorld().isClientSide && entity instanceof Player) {
             if (this.canEntityDestroy(entity)) {
-                this.updatePlayer((EntityPlayer) entity);
+                this.updatePlayer((Player) entity);
             }
 
         }
 
     }
 
-    protected void getItems(EntityPlayer player) {
+    protected void getItems(Player player) {
         if (!this.canEntityDestroy(player)) {
             IUCore.proxy.messagePlayer(player, Localization.translate("iu.error"));
             return;
@@ -56,7 +59,7 @@ public class TileEntityChargepadExperience extends TileEntityInventory {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -79,50 +82,52 @@ public class TileEntityChargepadExperience extends TileEntityInventory {
         updatePlayer(null);
     }
 
-    protected void updatePlayer(EntityPlayer entity) {
+    protected void updatePlayer(Player entity) {
         this.player = entity;
 
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D));
+    public List<AABB> getAabbs(boolean forCollision) {
+        return Collections.singletonList(new AABB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D));
     }
 
-    protected void chargeitems(EntityPlayer player) {
+    protected void chargeitems(Player player) {
         final double value = Math.min(this.energy.getEnergy(), 1);
         this.energy.storage -= (value - ExperienceUtils.addPlayerXP1(player, (int) value));
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
-            World world = this.getWorld();
-            Random rnd = world.rand;
+            RandomSource rnd = this.level.random;
             final int n = 4;
-            final int green = 1;
-            int blue = 0;
+            float red = 0.0F;
+            float green = 1.0F;
+            float blue = 0.0F;
+            float size = 1.0F;
+
+            DustParticleOptions redstoneGreen = new DustParticleOptions(new Vector3f(red, green, blue), size);
+
             for (int i = 0; i < n; ++i) {
-                world.spawnParticle(
-                        EnumParticleTypes.REDSTONE,
-                        (float) pos.getX() + rnd.nextFloat(),
-                        (float) (pos.getY() + 1) + rnd.nextFloat(),
-                        (float) pos.getZ() + rnd.nextFloat(),
-                        -1,
-                        green,
-                        blue
+                this.level.addParticle(
+                        redstoneGreen,
+                        this.worldPosition.getX() + rnd.nextFloat(),
+                        this.worldPosition.getY() + 1 + rnd.nextFloat(),
+                        this.worldPosition.getZ() + rnd.nextFloat(),
+                        0.0D, 0.0D, 0.0D
                 );
-                world.spawnParticle(
-                        EnumParticleTypes.REDSTONE,
-                        (float) pos.getX() + rnd.nextFloat(),
-                        (float) (pos.getY() + 2) + rnd.nextFloat(),
-                        (float) pos.getZ() + rnd.nextFloat(),
-                        -1,
-                        green,
-                        blue
+
+                this.level.addParticle(
+                        redstoneGreen,
+                        this.worldPosition.getX() + rnd.nextFloat(),
+                        this.worldPosition.getY() + 2 + rnd.nextFloat(),
+                        this.worldPosition.getZ() + rnd.nextFloat(),
+                        0.0D, 0.0D, 0.0D
                 );
             }
         }
+
 
     }
 

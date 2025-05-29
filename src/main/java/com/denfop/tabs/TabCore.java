@@ -2,59 +2,48 @@ package com.denfop.tabs;
 
 
 import com.denfop.IUItem;
-import com.denfop.blocks.FluidName;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 
-import javax.annotation.Nonnull;
-
-public class TabCore extends CreativeTabs {
+public class TabCore extends CreativeModeTab {
 
     private final int type;
+    private final String name1;
 
     public TabCore(int type, String name) {
-        super(name);
+        super(CreativeModeTab.builder().withSearchBar());
+        this.name1 = name;
         this.type = type;
     }
 
-    @Nonnull
-    public ItemStack getTabIconItem() {
-        switch (type) {
-            case 0:
-                return new ItemStack(IUItem.blockpanel);
-            case 1:
-                return new ItemStack(IUItem.basemodules);
-            case 2:
-                return new ItemStack(IUItem.basecircuit, 1, 11);
-            case 3:
-                return new ItemStack(IUItem.toriyore);
-            case 4:
-                return new ItemStack(IUItem.spectral_helmet);
-            case 5:
-                return new ItemStack(IUItem.block);
-            case 6:
-                return IUItem.reactormendeleviumQuad;
-            case 7:
-                return new ItemStack(IUItem.machinekit, 1, 3);
-            case 8:
-                return new ItemStack(IUItem.templates);
-            case 9:
-                return new ItemStack(IUItem.crafting_elements, 1, 21);
-            case 10:
-                return new ItemStack(IUItem.water_reactors_component, 1, 8);
-            case 11:
-                return new ItemStack(FluidName.fluiduu_matter.getInstance().getBlock(), 1);
-            case 12:
-                return new ItemStack(IUItem.crops);
-            case 13:
-                return new ItemStack(IUItem.jarBees);
-            case 14:
-                return new ItemStack(IUItem.genome_crop);
-            case 15:
-                return new ItemStack(IUItem.rocket);
-
+    @Override
+    public ItemStack getIconItem() {
+        return switch (type) {
+            case 0 -> new ItemStack(IUItem.blockpanel.getItem(0));
+            case 1 -> new ItemStack(IUItem.basemodules.getItemFromMeta(0));
+            case 2 -> new ItemStack(IUItem.basecircuit.getItemFromMeta(11));
+            case 3 -> new ItemStack(IUItem.toriyore.getItem());
+            case 4 -> new ItemStack(IUItem.spectral_helmet.getItem());
+            case 5 -> new ItemStack(IUItem.block.getItem());
+            case 6 -> new ItemStack(IUItem.reactormendeleviumQuad.getItem());
+            case 7 -> new ItemStack(IUItem.machinekit.getStack(3), 1);
+            case 9 -> new ItemStack(IUItem.crafting_elements.getItemFromMeta(21));
+            case 10 -> new ItemStack(IUItem.water_reactors_component.getItem(8), 1);
+            case 11->new ItemStack(IUItem.crops.getStack(0));
+            case 12-> new ItemStack(IUItem.jarBees.getStack(0));
+            case 13-> new ItemStack(IUItem.genome_crop.getStack(0));
+            case 14-> new ItemStack(IUItem.rocket.getItem());
+            default -> new ItemStack(Blocks.COBBLESTONE);
+        };
+    }
+    Component name = null;
+    public Component getDisplayName() {
+        if (name == null){
+            this.name = Component.translatable("itemGroup." + name1);
         }
-        return new ItemStack(IUItem.blockpanel);
+        return name;
     }
 
 }

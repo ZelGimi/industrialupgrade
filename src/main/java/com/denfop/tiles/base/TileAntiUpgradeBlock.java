@@ -2,27 +2,30 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerAntiUpgrade;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiAntiUpgradeBlock;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlotAntiUpgradeBlock;
+import com.denfop.items.modules.ItemUpgradeModule;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,8 +37,8 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
     public int progress;
     public boolean need;
 
-    public TileAntiUpgradeBlock() {
-        super(1000, 14, 4);
+    public TileAntiUpgradeBlock(BlockPos pos, BlockState state) {
+        super(1000, 14, 4,BlockBaseMachine3.antiupgradeblock,pos,state);
         this.need = false;
         this.progress = 0;
         this.input = new InvSlotAntiUpgradeBlock(this);
@@ -47,7 +50,7 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 
@@ -86,30 +89,7 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
         return packet;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -119,11 +99,11 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
                     this.progress++;
                     this.energy.useEnergy(5);
                     if (this.progress >= 100) {
-                        final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get());
+                        final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get(0));
                         if (this.outputSlot.canAdd(list.get(this.index))) {
                             this.outputSlot.add(list.get(this.index));
                         }
-                        UpgradeSystem.system.removeUpdate(this.input.get(), this.getWorld(), list.get(index).getItemDamage());
+                        UpgradeSystem.system.removeUpdate(this.input.get(0), this.getWorld(), ((ItemUpgradeModule<?>)list.get(index).getItem()).getElement().getId());
                         this.need = false;
                         this.progress = 0;
 
@@ -135,33 +115,34 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
     }
 
     @Override
-    public ContainerAntiUpgrade getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerAntiUpgrade getGuiContainer(final Player entityPlayer) {
         return new ContainerAntiUpgrade(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiAntiUpgradeBlock(this.getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiAntiUpgradeBlock((ContainerAntiUpgrade) menu);
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.progress = nbttagcompound.getInteger("progress");
+        this.progress = nbttagcompound.getInt("progress");
         this.need = nbttagcompound.getBoolean("need");
-        this.index = nbttagcompound.getInteger("index");
+        this.index = nbttagcompound.getInt("index");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("progress", this.progress);
-        nbttagcompound.setInteger("index", this.index);
-        nbttagcompound.setBoolean("need", this.need);
+        nbttagcompound.putInt("progress", this.progress);
+        nbttagcompound.putInt("index", this.index);
+        nbttagcompound.putBoolean("need", this.need);
         return nbttagcompound;
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         if (i == 10) {
             super.updateTileServer(entityPlayer, i);
             return;
@@ -174,14 +155,14 @@ public class TileAntiUpgradeBlock extends TileElectricMachine implements IUpdata
         }
 
         if (i >= 1) {
-            final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get());
+            final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get(0));
             if (!list.get((int) (i - 1)).isEmpty()) {
                 this.index = (int) (i - 1);
                 return;
             }
         }
         if (i == 0) {
-            final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get());
+            final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get(0));
             boolean need = false;
             final ItemStack stack = list.get(this.index);
             if (!stack.isEmpty()) {

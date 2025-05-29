@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:bricks"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:casing/orichalcum"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/vanadoalumite"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_well/gas_well_casing"
+  },
+  "show_notification": true
+}

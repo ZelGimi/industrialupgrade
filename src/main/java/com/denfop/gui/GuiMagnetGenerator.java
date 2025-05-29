@@ -9,12 +9,13 @@ import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMagnetGenerator;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
 
-public class GuiMagnetGenerator extends GuiIU<ContainerMagnetGenerator> {
+public class GuiMagnetGenerator<T extends ContainerMagnetGenerator> extends GuiIU<ContainerMagnetGenerator> {
 
     public final ContainerMagnetGenerator container;
 
@@ -54,21 +55,17 @@ public class GuiMagnetGenerator extends GuiIU<ContainerMagnetGenerator> {
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics pose, int par1, int par2) {
+        super.drawForegroundLayer(pose, par1, par2);
 
         String name = Localization.translate(this.container.base.getName());
 
-        int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
-        this.fontRenderer.drawString(name, nmPos, 6, 4210752);
+        int nmPos = (this.imageWidth - this.getStringWidth(name)) / 2;
+    draw(pose, name, nmPos, 6, 4210752);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        int h = (this.width - this.xSize) / 2;
-        int k = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);
-        this.drawBackground();
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
 
 
     }

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/slow_aging_3"
+    "layer0" : "industrialupgrade:item/slow_aging_3"
   }
 }

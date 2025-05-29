@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gems/diamond"
+      }
+    ]
+  },
+  "pattern": [
+    " AA",
+    "A A",
+    "AA "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_305_element"
+  },
+  "show_notification": true
+}

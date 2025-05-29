@@ -1,13 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.blastfurnace.block.TileBlastFurnaceMain;
-import net.minecraft.entity.player.EntityPlayer;
-
-import javax.annotation.Nonnull;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerBlastFurnace extends ContainerFullInv<TileBlastFurnaceMain> {
 
-    public ContainerBlastFurnace(EntityPlayer entityPlayer, TileBlastFurnaceMain tileEntityBlastFurnaceMain) {
+    public ContainerBlastFurnace(Player entityPlayer, TileBlastFurnaceMain tileEntityBlastFurnaceMain) {
         super(entityPlayer, tileEntityBlastFurnaceMain, 182);
 
 
@@ -27,13 +25,6 @@ public class ContainerBlastFurnace extends ContainerFullInv<TileBlastFurnaceMain
         addSlotToContainer(new SlotInvSlot(tileEntityBlastFurnaceMain.fluidSlot,
                 0, 8, 78
         ));
-    }
-
-
-    @Override
-    public void onContainerClosed(@Nonnull final EntityPlayer playerIn) {
-        super.onContainerClosed(playerIn);
-        this.base.entityPlayerList.remove(playerIn);
     }
 
 

@@ -1,88 +1,67 @@
 package com.denfop.render.panel;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ModelMiniPanelGlass extends ModelBase {
+@OnlyIn(Dist.CLIENT)
+public class ModelMiniPanelGlass<T extends Entity> extends EntityModel<T> {
 
-    private final ModelRenderer glass;
+    private final ModelPart glass;
 
     public ModelMiniPanelGlass(int number) {
+        super(RenderType::entityCutoutNoCull);
 
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+
+        int x = 0, y = 0, z = 0;
+        int dx = 0, dy = 0, dz = 0;
+
+        int texWidth = 16;
+        int texHeight = 16;
+        int texOffX = 0;
+        int textOffY = 0;
         switch (number) {
-            case 1:
-            case 7:
-                this.textureWidth = 6;
-                this.textureHeight = 5;
-                this.glass = new ModelRenderer(this, 1, 0);
-                break;
-            case 0:
-            case 2:
-            case 6:
-            case 8:
-                this.textureWidth = 5;
-                this.textureHeight = 5;
-                this.glass = new ModelRenderer(this, 0, 0);
-                break;
-            case 3:
-            case 5:
-                this.textureWidth = 5;
-                this.textureHeight = 6;
-                this.glass = new ModelRenderer(this, 9, 0);
-                break;
-            case 4:
-                this.textureWidth = 6;
-                this.textureHeight = 6;
-                this.glass = new ModelRenderer(this, 0, 0);
-                break;
-            default:
-                this.textureWidth = 16;
-                this.textureHeight = 16;
-                this.glass = new ModelRenderer(this, 0, 0);
-                break;
+            case 0: texWidth = 5; texHeight = 5; x = 0; z = 0; dx = 5; dz = 5; break;
+            case 1: texWidth = 6; texHeight = 5; x = 5; z = 0; dx = 6; dz = 5; texOffX = 1; break;
+            case 2: texWidth = 5; texHeight = 5; x = 11; z = 0; dx = 5; dz = 5; break;
+            case 3: texWidth = 5; texHeight = 6; x = 0; z = 5; dx = 5; dz = 6; texOffX = 9; break;
+            case 4: texWidth = 6; texHeight = 6; x = 5; z = 5; dx = 6; dz = 6; break;
+            case 5: texWidth = 5; texHeight = 6; x = 11; z = 5; dx = 5; dz = 6; texOffX = 9; break;
+            case 6: texWidth = 5; texHeight = 5; x = 0; z = 11; dx = 5; dz = 5; break;
+            case 7: texWidth = 6; texHeight = 5; x = 5; z = 11; dx = 6; dz = 5;texOffX = 1; break;
+            case 8: texWidth = 5; texHeight = 5; x = 11; z = 11; dx = 5; dz = 5; break;
+            default: texWidth = 16; texHeight = 16; x = 0; z = 0; dx = 16; dz = 16; break;
         }
 
-        switch (number) {
-            case 0:
-                this.glass.addBox(0, 16.05F, 0, 5, 0, 5);
-                break;
-            case 1:
-                this.glass.addBox(5, 16.05F, 0, 6, 0, 5);
-                break;
-            case 2:
-                this.glass.addBox(11, 16.05F, 0, 5, 0, 5);
-                break;
-            case 3:
-                this.glass.addBox(0, 16.05F, 5, 5, 0, 6);
-                break;
-            case 4:
-                this.glass.addBox(5, 16.05F, 5, 6, 0, 6);
-                break;
-            case 5:
-                this.glass.addBox(11, 16.05F, 5, 5, 0, 6);
-                break;
-            case 6:
-                this.glass.addBox(0, 16.05F, 11, 5, 0, 5);
-                break;
-            case 7:
-                this.glass.addBox(5, 16.05F, 11, 6, 0, 5);
-                break;
-            case 8:
-                this.glass.addBox(11, 16.05F, 11, 5, 0, 5);
-                break;
-            default:
-                this.glass.addBox(0, 16.05F, 0, 16, 0, 16);
-                break;
-        }
-        this.glass.mirror = true;
-        this.glass.setRotationPoint(0F, 0.0F, 0.0F);
-        this.glass.mirror = true;
+        root.addOrReplaceChild("glass",
+                CubeListBuilder.create().texOffs(texOffX, textOffY).addBox(x, 16.05F, z, dx, 0, dz),
+                PartPose.ZERO);
+
+        LayerDefinition layerDefinition = LayerDefinition.create(mesh, texWidth, texHeight);
+        this.glass = layerDefinition.bakeRoot().getChild("glass");
+    }
+
+    @Override
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+                          float netHeadYaw, float headPitch) {
 
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float scale) {
-        this.glass.render(0.0625F);
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight,
+                               int packedOverlay, float red, float green, float blue, float alpha) {
+        glass.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
-
 }

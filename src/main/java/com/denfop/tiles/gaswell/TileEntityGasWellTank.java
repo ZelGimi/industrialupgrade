@@ -1,27 +1,33 @@
 package com.denfop.tiles.gaswell;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasWell;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGasWellTank;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGasWellTank;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityGasWellTank extends TileEntityMultiBlockElement implements ITank {
 
     private final Fluids fluids;
     private final Fluids.InternalFluidTank fluidTank;
 
-    public TileEntityGasWellTank() {
+    public TileEntityGasWellTank(BlockPos pos, BlockState state) {
+        super( BlockGasWell.gas_well_tank, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTankExtract("fluids", 10000);
     }
+
 
     @Override
     public boolean hasOwnInventory() {
@@ -29,14 +35,14 @@ public class TileEntityGasWellTank extends TileEntityMultiBlockElement implement
     }
 
     @Override
-    public ContainerGasWellTank getGuiContainer(final EntityPlayer var1) {
+    public ContainerGasWellTank getGuiContainer(final Player var1) {
         return new ContainerGasWellTank(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiGasWellTank(this.getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiGasWellTank((ContainerGasWellTank) menu);
     }
 
     @Override
@@ -51,7 +57,7 @@ public class TileEntityGasWellTank extends TileEntityMultiBlockElement implement
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_well;
+        return IUItem.gas_well.getBlock(getTeBlock());
     }
 
 }

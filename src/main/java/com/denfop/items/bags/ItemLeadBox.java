@@ -1,69 +1,224 @@
 package com.denfop.items.bags;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUPotion;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.container.ContainerLeadBox;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.reactors.IRadioactiveItemType;
 import com.denfop.items.reactors.ItemBaseRod;
-import com.denfop.register.Register;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemLeadBox extends Item implements IItemStackInventory, IModelRegister {
-
+public class ItemLeadBox extends Item implements IItemStackInventory, IItemTab {
     private final int slots;
+    private String nameItem;
 
-    private final String internalName;
-
-    public ItemLeadBox(String internalName) {
-
-        this.setCreativeTab(IUCore.EnergyTab);
-        this.setMaxStackSize(1);
-        this.internalName = internalName;
+    public ItemLeadBox() {
+        super(new Properties().stacksTo(1));
         this.slots = 27;
-        IUCore.proxy.addIModelRegister(this);
-        Register.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
+    }
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            p_41392_.add(new ItemStack(this, 1));
+        }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "bags" + "/" + name;
-
-        return new ModelResourceLocation(loc, null);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
 
-    public boolean canInsert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+        }
+
+        return this.nameItem;
+    }
+    public IAdvInventory getInventory(Player player, ItemStack stack) {
+        return new ItemStackLeadBox(player, stack, this.slots);
+    }
+
+    public void save(ItemStack stack, Player player) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("open", true);
+        nbt.putInt("slot_inventory", player.getInventory().selected);
+    }
+
+    @Override
+    public void inventoryTick(
+            ItemStack stack,
+            Level world,
+            Entity entity,
+            int itemSlot,
+            boolean isSelected
+    ) {
+        super.inventoryTick(stack, world, entity, itemSlot, isSelected);
+
+        if (!(entity instanceof Player)) {
+            return;
+        }
+        Player player = (Player) entity;
+        CompoundTag nbt = stack.getOrCreateTag();
+
+        if (nbt.getBoolean("open")) {
+            int slotId = nbt.getInt("slot_inventory");
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerLeadBox) {
+                ItemStackLeadBox toolbox = ((ContainerLeadBox) player.containerMenu).base;
+                if (toolbox.isThisContainer(stack)) {
+                    toolbox.saveAsThrown(stack);
+                    player.closeContainer();
+                    nbt.putBoolean("open", false);
+                }
+            }
+        }
+
+        if (world.getGameTime() % 40 == 0) {
+            if (!(player.containerMenu instanceof ContainerLeadBox)) {
+                boolean rod = nbt.getBoolean("rod");
+                for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                    ItemStack currentStack = player.getInventory().getItem(i);
+                    if (currentStack.getItem() instanceof IRadioactiveItemType) {
+                        if (!rod && currentStack.getItem() instanceof ItemBaseRod) {
+                            continue;
+                        }
+                        ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
+                        if (box.canAdd(currentStack)) {
+                            box.add(currentStack);
+                            player.removeEffect(IUPotion.radiation);
+                            player.getInventory().setItem(i, ItemStack.EMPTY);
+                            player.containerMenu.broadcastChanges();
+                            box.setChanged();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(
+            ItemStack stack,
+            @Nullable Level world,
+            List<Component> tooltip,
+            TooltipFlag flag
+    ) {
+        tooltip.add(Component.translatable("iu.radiationbox"));
+        CompoundTag nbt = stack.getOrCreateTag();
+        boolean rod = nbt.getBoolean("rod");
+        tooltip.add(Component.translatable("message.text.mode_no_instrument").append(": ")
+                .append(rod ? Component.translatable("message.leadbox.enable") : Component.translatable("message.leadbox.disable")));
+
+        if (!Screen.hasShiftDown()) {
+            tooltip.add(Component.translatable("press.lshift"));
+        } else {
+            tooltip.add(Component.translatable("iu.changemode_key").append(Component.translatable("iu.changemode_rcm1")).append(" + SHIFT"));
+        }
+        super.appendHoverText(stack, world, tooltip, flag);
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerLeadBox) {
+            ItemStackLeadBox toolbox = ((ContainerLeadBox) player.containerMenu).base;
+            if (toolbox.isThisContainer(stack)) {
+                toolbox.saveAndThrow(stack);
+                player.closeContainer();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    @Nonnull
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
+        ItemStack stack = ModUtils.get(player, hand);
+       /* if (world.isClientSide) {
+            try {
+                Optional<MenuScreens.ScreenConstructor<ContainerBase<?>, ?>> factory = MenuScreens.getScreenFactory(Register.inventory_container.get(), Minecraft.getInstance(), 0, Component.translatable("iu"));
+                factory.get().create(getInventory(player,stack).getGuiContainer(player),player.getInventory(), Component.translatable(""));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }*/
+        if (!world.isClientSide && !player.isShiftKeyDown()) {
+            save(stack, player);
+
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+            growingBuffer.writeByte(1);
+
+            growingBuffer.flip();
+            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+
+
+            return InteractionResultHolder.success(player.getItemInHand(hand));
+
+        } else if (!world.isClientSide && player.isShiftKeyDown()) {
+            CompoundTag nbt = ModUtils.nbt(stack);
+            boolean rod = !nbt.getBoolean("rod");
+            nbt.putBoolean("rod", rod);
+
+            if (rod) {
+                IUCore.proxy.messagePlayer(
+                        player,
+                        ChatFormatting.GREEN + Localization.translate("message.text.mode_no_instrument") + ": "
+                                + Localization.translate("message.leadbox.enable")
+                );
+            } else {
+                IUCore.proxy.messagePlayer(
+                        player,
+                        ChatFormatting.RED + Localization.translate("message.text.mode_no_instrument") + ": "
+                                + Localization.translate("message.leadbox.disable")
+                );
+            }
+        }
+
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
+    }
+
+    public boolean canInsert(Player player, ItemStack stack, ItemStack stack1) {
         ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
-        NBTTagCompound nbt = ModUtils.nbt(stack);
+        CompoundTag nbt = ModUtils.nbt(stack);
         boolean rod = nbt.getBoolean("rod");
         if (stack1.getItem() instanceof IRadioactiveItemType) {
             if (!rod) {
@@ -75,168 +230,9 @@ public class ItemLeadBox extends Item implements IItemStackInventory, IModelRegi
         return false;
     }
 
-    public void insert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
+    public void insert(Player player, ItemStack stack, ItemStack stack1) {
         ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
         box.add(stack1);
-        box.markDirty();
+        box.setChanged();
     }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            final List<String> tooltip,
-            final ITooltipFlag flagIn
-    ) {
-        tooltip.add(Localization.translate("iu.radiationbox"));
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        boolean rod = nbt.getBoolean("rod");
-        tooltip.add(Localization.translate("message.text.mode_no_instrument") + ": "
-                + (rod ? Localization.translate("message.leadbox.enable") : Localization.translate("message.leadbox.disable")));
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("press.lshift"));
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.changemode_key") + Localization.translate(
-                    "iu.changemode_rcm1") + " + SHIFT");
-        }
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
-    public void onUpdate(
-            @Nonnull final ItemStack stack,
-            @Nonnull final World worldIn,
-            @Nonnull final Entity entityIn,
-            final int itemSlot,
-            final boolean isSelected
-    ) {
-        super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (!(entityIn instanceof EntityPlayer)) {
-            return;
-        }
-        EntityPlayer player = (EntityPlayer) entityIn;
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-
-
-        if (nbt.getBoolean("open")) {
-            int slot_id = nbt.getInteger("slot_inventory");
-            if (slot_id != itemSlot && !player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerLeadBox) {
-                ItemStackLeadBox toolbox = ((ContainerLeadBox) player.openContainer).base;
-                if (toolbox.isThisContainer(stack)) {
-                    toolbox.saveAsThrown(stack);
-                    player.closeScreen();
-                    nbt.setBoolean("open", false);
-                }
-            }
-        }
-
-        if (worldIn.provider.getWorldTime() % 40 == 0) {
-            if (!(player.openContainer instanceof ContainerLeadBox)) {
-                boolean rod = nbt.getBoolean("rod");
-                for (int i = 0; i < 36; i++) {
-                    final ItemStack stack1 = player.inventory.getStackInSlot(i);
-                    if (stack1.getItem() instanceof IRadioactiveItemType) {
-                        if (!rod) {
-                            if (stack1.getItem() instanceof ItemBaseRod) {
-                                continue;
-                            }
-                        }
-                        ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
-                        if (box.canAdd(stack1)) {
-                            box.add(stack1);
-                            player.removePotionEffect(IUPotion.radiation);
-                            player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
-                            player.inventoryContainer.detectAndSendChanges();
-                            box.markDirty();
-                        }
-
-                    }
-                }
-            }
-
-
-        }
-    }
-
-    @Nonnull
-    public String getUnlocalizedName() {
-        return "item." + this.internalName + ".name";
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> getModelLocation1(name));
-        ModelBakery.registerItemVariants(this, getModelLocation1(name));
-    }
-
-    @Override
-    public void registerModels() {
-        registerModels(this.internalName);
-    }
-
-    @Override
-    public void getSubItems(@Nonnull final CreativeTabs p_150895_1_, @Nonnull final NonNullList<ItemStack> var3) {
-        if (this.isInCreativeTab(p_150895_1_)) {
-            final ItemStack var4 = new ItemStack(this, 1);
-            var3.add(var4);
-        }
-    }
-
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
-
-        ItemStack stack = ModUtils.get(player, hand);
-        if (IUCore.proxy.isSimulating() && !player.isSneaking()) {
-            save(stack, player);
-            player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-
-        } else if (IUCore.proxy.isSimulating() && player.isSneaking()) {
-            NBTTagCompound nbt = ModUtils.nbt(stack);
-            boolean rod = !nbt.getBoolean("rod");
-            nbt.setBoolean("rod", rod);
-            if (rod) {
-                IUCore.proxy.messagePlayer(
-                        player,
-                        TextFormatting.GREEN + Localization.translate("message.text.mode_no_instrument") + ": "
-                                + Localization.translate("message.leadbox.enable")
-                );
-            } else {
-                IUCore.proxy.messagePlayer(
-                        player,
-                        TextFormatting.RED + Localization.translate("message.text.mode_no_instrument") + ": "
-                                + Localization.translate("message.leadbox.disable")
-                );
-            }
-        }
-
-        return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
-    }
-
-    public void save(ItemStack stack, EntityPlayer player) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("open", true);
-        nbt.setInteger("slot_inventory", player.inventory.currentItem);
-    }
-
-    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerLeadBox) {
-            ItemStackLeadBox toolbox = ((ContainerLeadBox) player.openContainer).base;
-            if (toolbox.isThisContainer(stack)) {
-                toolbox.saveAndThrow(stack);
-                player.closeScreen();
-            }
-        }
-
-        return true;
-    }
-
-
-    public IAdvInventory getInventory(EntityPlayer player, ItemStack stack) {
-        return new ItemStackLeadBox(player, stack, this.slots);
-    }
-
-
 }

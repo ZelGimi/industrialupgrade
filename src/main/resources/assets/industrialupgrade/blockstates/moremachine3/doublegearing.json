@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=doublegearing": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing"
+    },
+    "facing=south,type=doublegearing": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing",
+      "y": 180
+    },
+    "facing=west,type=doublegearing": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing",
+      "y": 270
+    },
+    "facing=east,type=doublegearing": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing",
+      "y": 90
+    },
+    "facing=down,type=doublegearing": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing",
+      "x": 90
+    },
+    "facing=up,type=doublegearing": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing",
+      "x": 270
+    },
+    "facing=north,type=doublegearing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active"
+    },
+    "facing=south,type=doublegearing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "y": 180
+    },
+    "facing=west,type=doublegearing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "y": 270
+    },
+    "facing=east,type=doublegearing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "y": 90
+    },
+    "facing=down,type=doublegearing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "x": 90
+    },
+    "facing=up,type=doublegearing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "x": 270
+    },
+    "facing=north,type=doublegearing_active": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active"
+    },
+    "facing=south,type=doublegearing_active": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "y": 180
+    },
+    "facing=west,type=doublegearing_active": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "y": 270
+    },
+    "facing=east,type=doublegearing_active": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "y": 90
+    },
+    "facing=down,type=doublegearing_active": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "x": 90
+    },
+    "facing=up,type=doublegearing_active": {
+      "model": "industrialupgrade:block/moremachine3/doublegearing_active",
+      "x": 270
+    }
+  }
+}

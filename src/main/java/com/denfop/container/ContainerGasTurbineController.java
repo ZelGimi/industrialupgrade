@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.gasturbine.TileEntityGasTurbineController;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGasTurbineController extends ContainerFullInv<TileEntityGasTurbineController> {
 
     public ContainerGasTurbineController(
             TileEntityGasTurbineController tileEntityGeothermalController,
-            EntityPlayer entityPlayer
+            Player entityPlayer
     ) {
         super(tileEntityGeothermalController, entityPlayer);
     }

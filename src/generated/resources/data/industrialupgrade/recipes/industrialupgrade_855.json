@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcell/itemcell"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/aluminumbronze"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "BAB",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_50_element"
+  },
+  "show_notification": true
+}

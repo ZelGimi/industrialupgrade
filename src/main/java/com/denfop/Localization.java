@@ -1,5 +1,7 @@
 package com.denfop;
 
+import net.minecraft.network.chat.Component;
+
 public class Localization {
 
     public Localization() {
@@ -7,11 +9,11 @@ public class Localization {
 
 
     public static String translate(String key) {
-        return net.minecraft.util.text.translation.I18n.translateToLocal(key);
+        return Component.translatable(key).getString();
     }
 
     public static String translate(String key, Object... args) {
-        return net.minecraft.util.text.translation.I18n.translateToLocalFormatted(key, args);
+        return Component.translatable(key, args).getString();
     }
 
 }

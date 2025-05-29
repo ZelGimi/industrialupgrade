@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=antiupgradeblock": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock"
+    },
+    "facing=south,type=antiupgradeblock": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 180
+    },
+    "facing=west,type=antiupgradeblock": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 270
+    },
+    "facing=east,type=antiupgradeblock": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 90
+    },
+    "facing=down,type=antiupgradeblock": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "x": 90
+    },
+    "facing=up,type=antiupgradeblock": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "x": 270
+    },
+    "facing=north,type=antiupgradeblock_invalid": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock"
+    },
+    "facing=south,type=antiupgradeblock_invalid": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 180
+    },
+    "facing=west,type=antiupgradeblock_invalid": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 270
+    },
+    "facing=east,type=antiupgradeblock_invalid": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 90
+    },
+    "facing=down,type=antiupgradeblock_invalid": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "x": 90
+    },
+    "facing=up,type=antiupgradeblock_invalid": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "x": 270
+    },
+    "facing=north,type=antiupgradeblock_active": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock"
+    },
+    "facing=south,type=antiupgradeblock_active": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 180
+    },
+    "facing=west,type=antiupgradeblock_active": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 270
+    },
+    "facing=east,type=antiupgradeblock_active": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "y": 90
+    },
+    "facing=down,type=antiupgradeblock_active": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "x": 90
+    },
+    "facing=up,type=antiupgradeblock_active": {
+      "model": "industrialupgrade:block/basemachine/antiupgradeblock",
+      "x": 270
+    }
+  }
+}

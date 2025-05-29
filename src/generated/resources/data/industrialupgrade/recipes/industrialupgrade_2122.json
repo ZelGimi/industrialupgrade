@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/bismuth"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/molybdenum"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/duralumin"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "DAD",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_677_element"
+  },
+  "show_notification": true
+}

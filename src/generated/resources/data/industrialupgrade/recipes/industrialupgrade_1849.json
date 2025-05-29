@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_reactor/gas_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_335_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_414_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_356_element"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_reactor/gas_chamber"
+  },
+  "show_notification": true
+}

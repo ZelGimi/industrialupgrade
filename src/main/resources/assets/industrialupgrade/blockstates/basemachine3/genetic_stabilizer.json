@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=genetic_stabilizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer"
+    },
+    "facing=south,type=genetic_stabilizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer",
+      "y": 180
+    },
+    "facing=west,type=genetic_stabilizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer",
+      "y": 270
+    },
+    "facing=east,type=genetic_stabilizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer",
+      "y": 90
+    },
+    "facing=down,type=genetic_stabilizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer",
+      "x": 90
+    },
+    "facing=up,type=genetic_stabilizer": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer",
+      "x": 270
+    },
+    "facing=north,type=genetic_stabilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active"
+    },
+    "facing=south,type=genetic_stabilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "y": 180
+    },
+    "facing=west,type=genetic_stabilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "y": 270
+    },
+    "facing=east,type=genetic_stabilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "y": 90
+    },
+    "facing=down,type=genetic_stabilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "x": 90
+    },
+    "facing=up,type=genetic_stabilizer_invalid": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "x": 270
+    },
+    "facing=north,type=genetic_stabilizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active"
+    },
+    "facing=south,type=genetic_stabilizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "y": 180
+    },
+    "facing=west,type=genetic_stabilizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "y": 270
+    },
+    "facing=east,type=genetic_stabilizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "y": 90
+    },
+    "facing=down,type=genetic_stabilizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "x": 90
+    },
+    "facing=up,type=genetic_stabilizer_active": {
+      "model": "industrialupgrade:block/basemachine/genetic_stabilizer_active",
+      "x": 270
+    }
+  }
+}

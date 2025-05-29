@@ -5,16 +5,14 @@ import com.denfop.Localization;
 import com.denfop.api.gui.CustomButton;
 import com.denfop.container.ContainerFacadeBlock;
 import com.denfop.utils.ListInformationUtils;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiFacadeBlock extends GuiIU<ContainerFacadeBlock> {
+public class GuiFacadeBlock<T extends ContainerFacadeBlock> extends GuiIU<ContainerFacadeBlock> {
 
     public GuiFacadeBlock(final ContainerFacadeBlock container) {
         super(container);
@@ -33,8 +31,8 @@ public class GuiFacadeBlock extends GuiIU<ContainerFacadeBlock> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack,mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
     }
 
@@ -54,25 +52,13 @@ public class GuiFacadeBlock extends GuiIU<ContainerFacadeBlock> {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        int h = (this.width - this.xSize) / 2;
-        int k = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(h + 3, k + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
-
-    }
-
-    @Override
-    public void initGui() {
-        super.initGui();
-
-    }
-
-    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer( poseStack,partialTicks, mouseX, mouseY);
+        int h = guiLeft;
+        int k = guiTop;
+       bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect( poseStack,h + 3, k + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
 
     }
 

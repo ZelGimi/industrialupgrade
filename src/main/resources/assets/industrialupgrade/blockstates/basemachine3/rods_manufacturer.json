@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=rods_manufacturer": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer"
+    },
+    "facing=south,type=rods_manufacturer": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer",
+      "y": 180
+    },
+    "facing=west,type=rods_manufacturer": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer",
+      "y": 270
+    },
+    "facing=east,type=rods_manufacturer": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer",
+      "y": 90
+    },
+    "facing=down,type=rods_manufacturer": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer",
+      "x": 90
+    },
+    "facing=up,type=rods_manufacturer": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer",
+      "x": 270
+    },
+    "facing=north,type=rods_manufacturer_invalid": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active"
+    },
+    "facing=south,type=rods_manufacturer_invalid": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "y": 180
+    },
+    "facing=west,type=rods_manufacturer_invalid": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "y": 270
+    },
+    "facing=east,type=rods_manufacturer_invalid": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "y": 90
+    },
+    "facing=down,type=rods_manufacturer_invalid": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "x": 90
+    },
+    "facing=up,type=rods_manufacturer_invalid": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "x": 270
+    },
+    "facing=north,type=rods_manufacturer_active": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active"
+    },
+    "facing=south,type=rods_manufacturer_active": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "y": 180
+    },
+    "facing=west,type=rods_manufacturer_active": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "y": 270
+    },
+    "facing=east,type=rods_manufacturer_active": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "y": 90
+    },
+    "facing=down,type=rods_manufacturer_active": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "x": 90
+    },
+    "facing=up,type=rods_manufacturer_active": {
+      "model": "industrialupgrade:block/basemachine/rods_manufacturer_active",
+      "x": 270
+    }
+  }
+}

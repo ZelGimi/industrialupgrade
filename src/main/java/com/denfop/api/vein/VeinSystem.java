@@ -1,21 +1,16 @@
 package com.denfop.api.vein;
 
-import com.denfop.Config;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeHills;
-import net.minecraft.world.biome.BiomeSnow;
-import net.minecraft.world.biome.BiomeTaiga;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class VeinSystem implements IVeinSystem {
 
@@ -23,13 +18,13 @@ public class VeinSystem implements IVeinSystem {
     public static Vein EMPTY = new Vein(Type.EMPTY, 0, new ChunkPos(999999999, 999999999));
     private final Random rand;
     List<Vein> list;
-    LinkedList<ChunkPos> chunkPos;
+    List<ChunkPos> chunkPos;
     Map<ChunkPos, Vein> chunkPosVeinMap;
 
     public VeinSystem() {
         system = this;
-        this.list = new LinkedList<>();
-        this.chunkPos = new LinkedList<>();
+        this.list = new ArrayList<>();
+        this.chunkPos = new ArrayList<>();
         this.chunkPosVeinMap = new HashMap<>();
         this.rand = new Random();
         MinecraftForge.EVENT_BUS.register(this);
@@ -39,7 +34,7 @@ public class VeinSystem implements IVeinSystem {
         return EMPTY;
     }
 
-    public LinkedList<ChunkPos> getChunkPos() {
+    public List<ChunkPos> getChunkPos() {
         return chunkPos;
     }
 
@@ -49,17 +44,16 @@ public class VeinSystem implements IVeinSystem {
     }
 
     @Override
-    public void addVein(final Chunk chunk) {
-
+    public void addVein(final LevelChunk chunk) {
+        Random rand = new Random();
         int chance = rand.nextInt(100);
-        rand.setSeed(rand.nextLong());
         Vein vein = new Vein(Type.EMPTY, 0, chunk.getPos());
-        final Biome biome = chunk.getWorld().getBiome(new BlockPos(chunk.x * 16, 0, chunk.z * 16));
-        int col = biome instanceof BiomeHills ? 25 : 0;
+        Holder<Biome> holder = chunk.getLevel().getBiome(new BlockPos(chunk.getPos().x * 16, 0, chunk.getPos().z * 16));
+        int col = holder.containsTag(BiomeTags.IS_HILL) ? 25 : 0;
         if (chance >= 15 + col) {
-            col = (biome instanceof BiomeTaiga || biome instanceof BiomeSnow) ? 15 : 0;
+            col = (holder.containsTag(BiomeTags.IS_TAIGA) || holder.containsTag(Tags.Biomes.IS_SNOWY)) ? 15 : 0;
             if (rand.nextInt(100) < 85 - col) {
-                getnumber(vein, biome);
+                getnumber(vein, holder);
             } else {
                 vein.setType(Type.GAS);
                 vein.setOldMineral(false);
@@ -67,14 +61,15 @@ public class VeinSystem implements IVeinSystem {
                 vein.setMaxCol(450000);
                 vein.setCol(450000);
             }
+            getnumber(vein, holder);
 
         } else {
-            int meta = rand.nextInt(30);
+            int meta = rand.nextInt(16);
             vein.setType(Type.VEIN);
             vein.setOldMineral(meta <= 15);
             vein.setMeta(meta);
-            vein.setMaxCol(Config.maxVein);
-            vein.setCol(Config.maxVein);
+            vein.setMaxCol(30000);
+            vein.setCol(30000);
         }
         this.list.add(vein);
         this.chunkPos.add(vein.getChunk());
@@ -82,11 +77,13 @@ public class VeinSystem implements IVeinSystem {
     }
 
     @Override
-    public void addVein(final NBTTagCompound tag) {
+    public void addVein(final CompoundTag tag) {
         Vein vein = new Vein(tag);
-        this.list.add(vein);
-        this.chunkPos.add(vein.getChunk());
-        this.chunkPosVeinMap.put(vein.getChunk(), vein);
+        if (!this.list.contains(vein)) {
+            this.list.add(vein);
+            this.chunkPos.add(vein.getChunk());
+            this.chunkPosVeinMap.put(vein.getChunk(), vein);
+        }
     }
 
     @Override
@@ -101,10 +98,12 @@ public class VeinSystem implements IVeinSystem {
         this.chunkPosVeinMap.clear();
     }
 
-    private void getnumber(Vein vein, final Biome biome) {
+    private void getnumber(Vein vein, final Holder<Biome> biome) {
         int number;
+
+        rand.setSeed(rand.nextLong());
         int meta = rand.nextInt(6);
-        if (Biome.getIdForBiome(biome) == 2) {
+        if (biome.is(Tags.Biomes.IS_DESERT)) {
             int random = rand.nextInt(100);
             if (random >= 35) {
                 number = rand.nextInt(500000) + 150000;
@@ -118,7 +117,7 @@ public class VeinSystem implements IVeinSystem {
                 vein.setCol(0);
                 vein.setMaxCol(0);
             }
-        } else if (Biome.getIdForBiome(biome) == 0) {
+        } else if (biome.is(BiomeTags.IS_OCEAN)) {
             int random;
             random = rand.nextInt(100);
             if (random >= 40) {
@@ -133,7 +132,7 @@ public class VeinSystem implements IVeinSystem {
                 vein.setCol(0);
                 vein.setMaxCol(0);
             }
-        } else if (Biome.getIdForBiome(biome) == 24) {
+        } else if (biome.is(BiomeTags.IS_DEEP_OCEAN)) {
             int random;
             random = rand.nextInt(100);
             if (random > 35) {
@@ -148,37 +147,7 @@ public class VeinSystem implements IVeinSystem {
                 vein.setCol(0);
                 vein.setMaxCol(0);
             }
-        } else if (Biome.getIdForBiome(biome) == 10) {
-            int random;
-            random = rand.nextInt(100);
-            if (random > 60) {
-                number = rand.nextInt(300000) + 100000;
-                vein.setCol(number);
-                vein.setMaxCol(number);
-                vein.setType(Type.OIL);
-                vein.setOldMineral(true);
-                vein.setMeta(meta);
-            } else {
-                vein.setType(Type.EMPTY);
-                vein.setCol(0);
-                vein.setMaxCol(0);
-            }
-        } else if (Biome.getIdForBiome(biome) == 17) {
-            int random;
-            random = rand.nextInt(100);
-            if (random > 35) {
-                number = rand.nextInt(300000) + 200000;
-                vein.setCol(number);
-                vein.setMaxCol(number);
-                vein.setType(Type.OIL);
-                vein.setOldMineral(true);
-                vein.setMeta(meta);
-            } else {
-                vein.setType(Type.EMPTY);
-                vein.setCol(0);
-                vein.setMaxCol(0);
-            }
-        } else if (Biome.getIdForBiome(biome) == 7) {
+        } else if (biome.is(BiomeTags.IS_RIVER)) {
             int random;
             random = rand.nextInt(100);
             if (random > 50) {
@@ -193,7 +162,7 @@ public class VeinSystem implements IVeinSystem {
                 vein.setCol(0);
                 vein.setMaxCol(0);
             }
-        } else if (Biome.getIdForBiome(biome) == 35) {
+        } else if (biome.is(BiomeTags.IS_SAVANNA)) {
             int random;
             random = rand.nextInt(100);
             if (random > 50) {

@@ -1,75 +1,42 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
-import com.denfop.api.upgrades.UpgradeRegistry;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.container.ContainerUpgrade;
 import com.denfop.items.bags.BagsDescription;
-import com.denfop.items.resource.ItemSubTypes;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
-import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
-import java.text.DecimalFormat;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
-public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> implements IModelRegister,
-        IUpgradeItem, IItemStackInventory, IUpdatableItemStackEvent {
-
-    protected static final String NAME = "upgrades";
-    private static final DecimalFormat decimalformat = new DecimalFormat("0.##");
-
-
-    public ItemUpgradeModule() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.UpgradeTab);
-        IUItem.overclockerUpgrade_1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.Overclocker1.ordinal()));
-        IUItem.overclockerUpgrade1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.Overclocker2.ordinal()));
-        IUItem.tranformerUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.transformer.ordinal()));
-        IUItem.tranformerUpgrade1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.transformer1.ordinal()));
-        IUItem.lap_energystorage_upgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.storage.ordinal()));
-        IUItem.adv_lap_energystorage_upgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.adv_storage.ordinal()));
-        IUItem.imp_lap_energystorage_upgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.imp_storage.ordinal()));
-        IUItem.per_lap_energystorage_upgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.per_storage.ordinal()));
-        IUItem.fluidpullingUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.fluid_pulling.ordinal()));
-        IUItem.overclockerUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.overclocker.ordinal()));
-        IUItem.transformerUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.transformer_simple.ordinal()));
-        IUItem.energyStorageUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.energy_storage.ordinal()));
-        IUItem.ejectorUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.ejector.ordinal()));
-        IUItem.fluidEjectorUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.fluid_ejector.ordinal()));
-        IUItem.pullingUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.pulling.ordinal()));
-
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IUpgradeItem, IItemStackInventory, IUpdatableItemStackEvent {
+    public ItemUpgradeModule(T element) {
+        super(new Item.Properties(), element);
     }
 
     public static Type getType(int meta) {
@@ -78,17 +45,20 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
         }
         return Type.Values[meta];
     }
-
-    private static EnumFacing getDirection(final ItemStack stack) {
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.UpgradeTab;
+    }
+    private static Direction getDirection(final ItemStack stack) {
         final int rawDir = ModUtils.nbt(stack).getByte("dir");
         if (rawDir < 1 || rawDir > 6) {
             return null;
         }
-        return EnumFacing.VALUES[rawDir - 1];
+        return Direction.values()[rawDir - 1];
     }
 
     private static String getSideName(final ItemStack stack) {
-        final EnumFacing dir = getDirection(stack);
+        final Direction dir = getDirection(stack);
         if (dir == null) {
             return "iu.tooltip.upgrade.ejector.anyside";
         }
@@ -118,8 +88,80 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
     }
 
     @Override
+    public IAdvInventory getInventory(final Player var1, final ItemStack var2) {
+        if (this.getElement().getId() < 11) {
+            return null;
+        } else {
+            return new ItemStackUpgradeModules(var1, var2);
+
+
+        }
+    }
+
+    public void save(ItemStack stack, Player player) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("open", true);
+        nbt.putInt("slot_inventory", player.getInventory().selected);
+    }
+
+    @Override
+    public void updateField(final String name, final CustomPacketBuffer buffer, ItemStack stack) {
+
+    }
+
+    @Override
+    public void inventoryTick(
+            ItemStack stack,
+            Level world,
+            Entity entity,
+            int itemSlot,
+            boolean isSelected
+    ) {
+        super.inventoryTick(stack, world, entity, itemSlot, isSelected);
+
+        if (!(entity instanceof Player)) {
+            return;
+        }
+        Player player = (Player) entity;
+        CompoundTag nbt = stack.getOrCreateTag();
+
+        if (nbt.getBoolean("open")) {
+            int slotId = nbt.getInt("slot_inventory");
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
+                ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
+                if (toolbox.isThisContainer(stack)) {
+                    toolbox.saveAsThrown(stack);
+                    player.closeContainer();
+                    nbt.putBoolean("open", false);
+                }
+            }
+        }
+
+
+    }
+
+    @Override
+    public void updateEvent(int event, ItemStack stack) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        byte event1 = (byte) event;
+        nbt.putByte("dir", event1);
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerUpgrade) {
+            ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.containerMenu).base;
+            if (toolbox.isThisContainer(stack)) {
+                toolbox.saveAsThrown(stack);
+                player.closeContainer();
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean isSuitableFor(final ItemStack stack, final Set<UpgradableProperty> types) {
-        Type type = getType(stack.getItemDamage());
+        Type type = getType(this.getElement().getId());
         if (type == null) {
             return false;
         }
@@ -153,7 +195,7 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
 
     @Override
     public int getExtraTier(final ItemStack itemStack) {
-        ItemUpgradeModule.Type type = getType(itemStack.getItemDamage());
+        ItemUpgradeModule.Type type = getType(this.getElement().getId());
         if (type == null) {
             return 0;
         } else {
@@ -172,7 +214,7 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
 
     @Override
     public double getProcessTimeMultiplier(final ItemStack itemStack) {
-        Type type = getType(itemStack.getItemDamage());
+        Type type = getType(this.getElement().getId());
         if (type == null) {
             return 1.0D;
         }
@@ -187,8 +229,127 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
         return 1.0D;
     }
 
+    @Override
+    @Nonnull
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
+        ItemStack stack = ModUtils.get(player, hand);
+       /* if (world.isClientSide) {
+            try {
+                Optional<MenuScreens.ScreenConstructor<ContainerBase<?>, ?>> factory = MenuScreens.getScreenFactory(Register.inventory_container.get(), Minecraft.getInstance(), 0, Component.translatable("iu"));
+                factory.get().create(getInventory(player,stack).getGuiContainer(player),player.getInventory(), Component.translatable(""));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }*/
+        if (!player.level().isClientSide) {
+            save(stack, player);
+
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+            growingBuffer.writeByte(1);
+
+            growingBuffer.flip();
+            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+        }
+
+        return InteractionResultHolder.success(player.getItemInHand(hand));
+
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+        Type type = getType(this.getElement().getId());
+        if (type == null) {
+            return;
+        }
+        super.appendHoverText(stack, world, tooltip, flag);
+
+        switch (type) {
+            case overclocker:
+            case Overclocker1:
+            case Overclocker2:
+                tooltip.add(Component.translatable(
+                        "iu.tooltip.upgrade.overclocker.time",
+                        String.format("%.2f", 100.0D * Math.pow(getProcessTimeMultiplier(stack), stack.getCount()))
+                ));
+                tooltip.add(Component.translatable(
+                        "iu.tooltip.upgrade.overclocker.power",
+                        String.format("%.2f", 100.0D * Math.pow(getEnergyDemandMultiplier(stack), stack.getCount()))
+                ));
+                break;
+
+            case ejector:
+            case fluid_ejector: {
+                String side = getSideName(stack);
+                tooltip.add(Component.translatable("iu.tooltip.upgrade.ejector", Component.translatable(side)));
+                if (type == Type.ejector) {
+                    CompoundTag nbt = stack.getOrCreateTag();
+                    List<BagsDescription> bags = new ArrayList<>();
+                    ListTag contentList = nbt.getList("Items", Tag.TAG_COMPOUND);
+
+                    for (int i = 0; i < contentList.size(); ++i) {
+                        CompoundTag slotNbt = contentList.getCompound(i);
+                        int slot = slotNbt.getByte("Slot");
+                        if (slot >= 0 && slot < 6) {
+                            ItemStack stack1 = ItemStack.of(slotNbt);
+                            if (!stack1.isEmpty()) {
+                                bags.add(new BagsDescription(stack1));
+                            }
+                        }
+                    }
+
+                    for (BagsDescription description : bags) {
+                        tooltip.add(Component.literal(description.getStack().getHoverName().getString()).withStyle(ChatFormatting.GREEN));
+                    }
+                }
+                break;
+            }
+
+            case pulling:
+            case fluid_pulling: {
+                String side = getSideName(stack);
+                tooltip.add(Component.translatable("iu.tooltip.upgrade.pulling", Component.translatable(side)));
+                if (type == Type.pulling) {
+                    CompoundTag nbt = stack.getOrCreateTag();
+                    List<BagsDescription> bags = new ArrayList<>();
+                    ListTag contentList = nbt.getList("Items", Tag.TAG_COMPOUND);
+
+                    for (int i = 0; i < contentList.size(); ++i) {
+                        CompoundTag slotNbt = contentList.getCompound(i);
+                        int slot = slotNbt.getByte("Slot");
+                        if (slot >= 0 && slot < 6) {
+                            ItemStack stack1 = ItemStack.of(slotNbt);
+                            if (!stack1.isEmpty()) {
+                                bags.add(new BagsDescription(stack1));
+                            }
+                        }
+                    }
+
+                    for (BagsDescription description : bags) {
+                        tooltip.add(Component.literal(description.getStack().getHoverName().getString()).withStyle(ChatFormatting.GREEN));
+                    }
+                }
+                break;
+            }
+
+            case transformer_simple:
+            case transformer:
+            case transformer1:
+                tooltip.add(Component.translatable("iu.tooltip.upgrade.transformer", this.getExtraTier(stack) * stack.getCount()));
+                break;
+
+            case storage:
+            case adv_storage:
+            case imp_storage:
+            case per_storage:
+            case energy_storage:
+                tooltip.add(Component.translatable("iu.tooltip.upgrade.storage", this.getExtraEnergyStorage(stack) * ModUtils.getSize(stack)));
+                break;
+        }
+    }
+
     public double getExtraEnergyStorage(ItemStack stack) {
-        Types type = this.getType(stack);
+        Types type = (Types) this.getElement();
         if (type == null) {
             return 0;
         } else {
@@ -211,7 +372,7 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
 
     @Override
     public double getEnergyDemandMultiplier(final ItemStack itemStack) {
-        Type type = getType(itemStack.getItemDamage());
+        Type type = getType(this.getElement().getId());
         if (type == null) {
             return 1.0D;
         }
@@ -226,176 +387,7 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
         return 1.0D;
     }
 
-    @Override
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            @Nonnull final List<String> list,
-            @Nonnull final ITooltipFlag flagIn
-    ) {
-        Type type = getType(stack.getItemDamage());
-        if (type == null) {
-            return;
-        }
-        super.addInformation(stack, worldIn, list, flagIn);
-        switch (type) {
-            case overclocker:
-            case Overclocker1:
-            case Overclocker2:
-                list.add(Localization.translate(
-                        "iu.tooltip.upgrade.overclocker.time",
-                        decimalformat.format(100.0D
-                                * Math.pow(getProcessTimeMultiplier(stack), stack.getCount()))
-                ));
-                list.add(Localization.translate(
-                        "iu.tooltip.upgrade.overclocker.power",
-                        decimalformat.format(100.0D
-                                * Math.pow(getEnergyDemandMultiplier(stack), stack.getCount()))
-                ));
-                break;
-            case ejector:
-            case fluid_ejector: {
-                final String side = getSideName(stack);
-                list.add(Localization.translate("iu.tooltip.upgrade.ejector", Localization.translate(side)));
-                if (type == Type.ejector) {
-                    final NBTTagCompound nbt = ModUtils.nbt(stack);
-                    List<BagsDescription> list1 = new ArrayList<>();
-                    NBTTagList contentList = nbt.getTagList("Items", 10);
-
-                    for (int i = 0; i < contentList.tagCount(); ++i) {
-                        NBTTagCompound slotNbt = contentList.getCompoundTagAt(i);
-                        int slot = slotNbt.getByte("Slot");
-                        if (slot >= 0 && slot < 6) {
-                            final ItemStack stack1 = new ItemStack(slotNbt);
-                            if (!stack1.isEmpty()) {
-                                list1.add(new BagsDescription(stack1));
-                            }
-                        }
-                    }
-
-                    for (BagsDescription description : list1) {
-                        list.add(TextFormatting.GREEN + description.getStack().getDisplayName());
-                    }
-                }
-                break;
-            }
-            case pulling:
-            case fluid_pulling: {
-                final String side = getSideName(stack);
-                list.add(Localization.translate("iu.tooltip.upgrade.pulling", Localization.translate(side)));
-                if (type == Type.pulling) {
-                    final NBTTagCompound nbt = ModUtils.nbt(stack);
-                    List<BagsDescription> list1 = new ArrayList<>();
-                    NBTTagList contentList = nbt.getTagList("Items", 10);
-
-                    for (int i = 0; i < contentList.tagCount(); ++i) {
-                        NBTTagCompound slotNbt = contentList.getCompoundTagAt(i);
-                        int slot = slotNbt.getByte("Slot");
-                        if (slot >= 0 && slot < 6) {
-                            final ItemStack stack1 = new ItemStack(slotNbt);
-                            if (!stack1.isEmpty()) {
-                                list1.add(new BagsDescription(stack1));
-                            }
-                        }
-                    }
-
-                    for (BagsDescription description : list1) {
-                        list.add(TextFormatting.GREEN + description.getStack().getDisplayName());
-                    }
-                }
-                break;
-
-            }
-            case transformer_simple:
-            case transformer:
-            case transformer1:
-                list.add(Localization.translate(
-                        "iu.tooltip.upgrade.transformer",
-                        this.getExtraTier(stack) * stack.getCount()
-                ));
-                break;
-            case storage:
-            case adv_storage:
-            case imp_storage:
-            case per_storage:
-            case energy_storage:
-                list.add(Localization.translate(
-                        "iu.tooltip.upgrade.storage",
-                        this.getExtraEnergyStorage(stack) * ModUtils.getSize(stack)
-                ));
-                break;
-
-        }
-    }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
-    }
-
-    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerUpgrade) {
-            ItemStackUpgradeModules toolbox = ((ContainerUpgrade) player.openContainer).base;
-            if (toolbox.isThisContainer(stack)) {
-                toolbox.saveAsThrown(stack);
-                player.closeScreen();
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public IAdvInventory getInventory(final EntityPlayer var1, final ItemStack var2) {
-        if (var2.getItemDamage() < 11) {
-            return null;
-        } else {
-            return new ItemStackUpgradeModules(var1, var2);
-
-
-        }
-    }
-
-    public void save(ItemStack stack, EntityPlayer player) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("open", true);
-        nbt.setInteger("slot_inventory", player.inventory.currentItem);
-    }
-
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand) {
-        ItemStack stack = ModUtils.get(player, hand);
-        if (IUCore.proxy.isSimulating() && stack.getItemDamage() >= 11 && stack.getCount() == 1) {
-            save(stack, player);
-            player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-
-        }
-        return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
-    }
-
-    @Override
-    public void updateField(final String name, final CustomPacketBuffer buffer, ItemStack stack) {
-
-    }
-
-    @Override
-    public void updateEvent(int event, ItemStack stack) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        byte event1 = (byte) event;
-        nbt.setByte("dir", event1);
-    }
-
-    private enum Type {
+    public enum Type {
         Overclocker1,
         Overclocker2,
         transformer,
@@ -436,13 +428,13 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
         ejector(11),
         pulling(12),
         fluid_ejector(13),
-        fluid_pulling(14);
+        fluid_pulling(14);;
 
         private final String name;
         private final int ID;
 
         Types(final int ID) {
-            this.name = this.name().toLowerCase(Locale.US);
+            this.name = this.name().toLowerCase();
             this.ID = ID;
         }
 
@@ -454,9 +446,13 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "upgrades";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

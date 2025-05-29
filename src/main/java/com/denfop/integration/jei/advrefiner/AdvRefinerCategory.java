@@ -3,39 +3,39 @@ package com.denfop.integration.jei.advrefiner;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.blocks.mechanism.BlockAdvRefiner;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
 import com.denfop.tiles.mechanism.TileAdvOilRefiner;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class AdvRefinerCategory extends GuiIU implements IRecipeCategory<AdvRefinerRecipeWrapper> {
+public class AdvRefinerCategory extends GuiIU implements IRecipeCategory<AdvRefinerHandler> {
 
     private final IDrawableStatic bg;
     private int energy = 0;
-
+    private final JeiInform<AdvRefinerCategory, AdvRefinerHandler> jeiInform;
     public AdvRefinerCategory(
-            final IGuiHelper guiHelper
+            final IGuiHelper guiHelper,JeiInform<AdvRefinerCategory, AdvRefinerHandler> jeiInform
     ) {
-        super(((TileAdvOilRefiner) BlockAdvRefiner.adv_refiner.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
-
+        super(((TileAdvOilRefiner) BlockAdvRefiner.adv_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform=jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
@@ -47,67 +47,52 @@ public class AdvRefinerCategory extends GuiIU implements IRecipeCategory<AdvRefi
 
     }
 
-    @Nonnull
+
     @Override
-    public String getUid() {
-        return BlockAdvRefiner.adv_refiner.getName();
+    public RecipeType<AdvRefinerHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.oiladvrefiner).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(new ItemStack(IUItem.oiladvrefiner.getItem()).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
-
+    @SuppressWarnings("removal")
     @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
     }
 
+    @Override
+    public IDrawable getIcon() {
+        return null;
+    }
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void setRecipe(IRecipeLayoutBuilder builder, AdvRefinerHandler recipes, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,16, 24).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getInput().getFluid(),recipes.getInput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,16 + 48, 24).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getOutput().getFluid(),recipes.getOutput().getAmount());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,16 + 96, 24).setFluidRenderer(10000, true,12, 47).addFluidStack(recipes.getOutput1().getFluid(),recipes.getOutput1().getAmount());
+    }
 
+
+    @Override
+    public void draw(AdvRefinerHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         new GuiComponent(this, 35, 38, EnumTypeComponent.FLUID_PART1,
                 new Component<>(new ComponentEmpty())
-        ).drawBackground(this.guiLeft, this.guiTop);
+        ).drawBackground(stack,this.guiLeft, this.guiTop);
         new GuiComponent(this, 88, 40, EnumTypeComponent.PLUS_BUTTON,
                 new Component<>(new ComponentEmpty())
-        ).drawBackground(this.guiLeft, this.guiTop);
+        ).drawBackground(stack,this.guiLeft, this.guiTop);
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground(this.guiLeft, this.guiTop);
+            element.drawBackground(stack,this.guiLeft, this.guiTop);
         }
     }
 
-    @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final AdvRefinerRecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
 
-
-        IGuiFluidStackGroup fff = layout.getFluidStacks();
-
-        fff.init(0, true, 16, 24, 12, 47, 10000, true, null);
-        fff.set(0, recipes.getInput());
-
-        fff.init(1, false, 16 + 48, 24, 12, 47, 10000, true, null);
-        fff.set(1, recipes.getOutputs().get(0));
-
-
-        fff.init(2, false, 16 + 96, 24, 12, 47, 10000, true, null);
-        fff.set(2, recipes.getOutputs().get(1));
-
-
-    }
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guioilrefiner.png");

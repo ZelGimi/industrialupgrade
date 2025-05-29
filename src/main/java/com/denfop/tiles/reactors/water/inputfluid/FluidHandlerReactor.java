@@ -3,31 +3,56 @@ package com.denfop.tiles.reactors.water.inputfluid;
 import com.denfop.componets.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class FluidHandlerReactor implements IFluidHandler {
 
     private final List<Fluids> list;
-    private final IFluidTankProperties[] fluidTankProperties;
+    private final FluidTank[] fluidTankProperties;
 
     public FluidHandlerReactor(List<Fluids> list) {
         this.list = list;
-        this.fluidTankProperties = new IFluidTankProperties[this.list.size()];
+        this.fluidTankProperties = new FluidTank[this.list.size()];
         for (int i = 0; i < list.size(); i++) {
-            fluidTankProperties[i] = this.list.get(i).getAllTanks().iterator().next().getTankProperties()[0];
+            fluidTankProperties[i] = this.list.get(i).getAllTanks().iterator().next();
         }
     }
 
+
+
+
+
+
+
+
+
     @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return fluidTankProperties;
+    public int getTanks() {
+        return fluidTankProperties.length;
+    }
+
+
+    @Override
+    public @NotNull FluidStack getFluidInTank(int tank) {
+        return fluidTankProperties[tank].getFluid();
     }
 
     @Override
-    public int fill(final FluidStack resource, final boolean doFill) {
+    public int getTankCapacity(int tank) {
+        return fluidTankProperties[tank].getTankCapacity(0);
+    }
+
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return false;
+    }
+
+    @Override
+    public int fill(FluidStack resource, FluidAction doFill) {
         for (int i = 1; i < this.list.size(); i++) {
             Fluids fluids = this.list.get(i);
             final int f = fluids.getAllTanks().iterator().next().fill(resource, doFill);
@@ -38,9 +63,9 @@ public class FluidHandlerReactor implements IFluidHandler {
         return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().fill(resource, doFill) : 0;
     }
 
-    @Nullable
+
     @Override
-    public FluidStack drain(final FluidStack resource, final boolean doDrain) {
+    public @NotNull FluidStack drain(FluidStack resource, FluidAction doDrain) {
         for (int i = 1; i < this.list.size(); i++) {
             Fluids fluids = this.list.get(i);
             FluidStack f = fluids.getAllTanks().iterator().next().drain(resource, doDrain);
@@ -48,12 +73,13 @@ public class FluidHandlerReactor implements IFluidHandler {
                 return f;
             }
         }
-        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(resource, doDrain) : null;
+        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(resource, doDrain) : FluidStack.EMPTY;
+
     }
 
-    @Nullable
+
     @Override
-    public FluidStack drain(final int maxDrain, final boolean doDrain) {
+    public @NotNull FluidStack drain(int maxDrain, FluidAction doDrain) {
         for (int i = 1; i < this.list.size(); i++) {
             Fluids fluids = this.list.get(i);
             FluidStack f = fluids.getAllTanks().iterator().next().drain(maxDrain, doDrain);
@@ -61,7 +87,7 @@ public class FluidHandlerReactor implements IFluidHandler {
                 return f;
             }
         }
-        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(maxDrain, doDrain) : null;
-    }
+        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(maxDrain, doDrain) : FluidStack.EMPTY;
 
+    }
 }

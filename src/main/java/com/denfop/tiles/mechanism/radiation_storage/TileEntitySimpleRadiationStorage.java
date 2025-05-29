@@ -5,15 +5,12 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.EnumTypeStyle;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 public class TileEntitySimpleRadiationStorage extends TileEntityRadiationStorage {
 
-    public TileEntitySimpleRadiationStorage() {
-        super(4000000, EnumTypeStyle.DEFAULT);
+    public TileEntitySimpleRadiationStorage(BlockPos pos, BlockState state) {
+        super(4000000, EnumTypeStyle.DEFAULT,BlockBaseMachine3.radiation_storage,pos,state);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -21,21 +18,8 @@ public class TileEntitySimpleRadiationStorage extends TileEntityRadiationStorage
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
 }

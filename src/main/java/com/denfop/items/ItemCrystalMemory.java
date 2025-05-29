@@ -1,78 +1,75 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.recipe.ReplicatorRecipe;
-import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemCrystalMemory extends Item implements IModelRegister {
+public class ItemCrystalMemory extends Item implements IItemTab {
+    private String nameItem;
 
     public ItemCrystalMemory() {
-        super();
-        this.setMaxStackSize(1);
-        String name = "crystal_memory";
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-        IUCore.proxy.addIModelRegister(this);
+        super(new Properties().stacksTo(1));
     }
-
-    public boolean isRepairable() {
-        return false;
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu.").replace(".name", ""));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
-        ItemStack recorded = this.readItemStack(stack);
-        if (!ModUtils.isEmpty(recorded)) {
-            tooltip.add(Localization.translate("iu.item.CrystalMemory.tooltip.iu.item") + " " + recorded.getDisplayName());
-            tooltip.add(Localization.translate("iu.item.CrystalMemory.tooltip.UU-Matter") + " " + ModUtils.getString(
-                    ReplicatorRecipe.getInBuckets(
-                            recorded)) + "B");
-        } else {
-            tooltip.add(Localization.translate("iu.item.CrystalMemory.tooltip.Empty"));
-        }
-
-    }
-
     public ItemStack readItemStack(ItemStack stack) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        NBTTagCompound contentTag = nbt.getCompoundTag("Pattern");
-        return new ItemStack(contentTag);
-    }
-
-    public void writecontentsTag(ItemStack stack, ItemStack recorded) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        NBTTagCompound contentTag = new NBTTagCompound();
-        recorded.writeToNBT(contentTag);
-        nbt.setTag("Pattern", contentTag);
+        CompoundTag nbt = ModUtils.nbt(stack);
+        CompoundTag contentTag = nbt.getCompound("Pattern");
+        return ItemStack.of(contentTag);
     }
 
     @Override
-    public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                0,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + "crystal_memory", null)
-        );
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        ItemStack recorded = this.readItemStack(p_41421_);
+        if (!ModUtils.isEmpty(recorded)) {
+            p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.iu.item") + " " + recorded.getDisplayName().getString()));
+            p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.UU-Matter") + " " + ModUtils.getString(
+                    ReplicatorRecipe.getInBuckets(
+                            recorded)) + "B"));
+        } else {
+            p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.Empty")));
+        }
     }
 
+    public void writecontentsTag(ItemStack stack, ItemStack recorded) {
+        CompoundTag nbt = ModUtils.nbt(stack);
+        CompoundTag contentTag = new CompoundTag();
+        recorded.save(contentTag);
+        nbt.put("Pattern", contentTag);
+    }
+
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
+        }
+
+        return this.nameItem;
+    }
 }

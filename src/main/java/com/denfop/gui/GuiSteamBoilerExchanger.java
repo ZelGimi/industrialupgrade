@@ -3,10 +3,11 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.container.ContainerDefaultMultiElement;
 import com.denfop.tiles.mechanism.steamboiler.TileEntitySteamExchangerBoiler;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiSteamBoilerExchanger extends GuiIU<ContainerDefaultMultiElement> {
+public class GuiSteamBoilerExchanger<T extends ContainerDefaultMultiElement> extends GuiIU<ContainerDefaultMultiElement> {
 
     public GuiSteamBoilerExchanger(ContainerDefaultMultiElement guiContainer) {
         super(guiContainer);
@@ -15,12 +16,12 @@ public class GuiSteamBoilerExchanger extends GuiIU<ContainerDefaultMultiElement>
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        GlStateManager.color(1, 1, 1, 1);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+       RenderSystem.setShaderColor(1, 1, 1, 1);
         bindTexture();
         if (((TileEntitySteamExchangerBoiler) container.base).isWork()) {
-            this.drawTexturedModalRect(this.guiLeft + 129, this.guiTop + 13, 243, 1, 12, 64);
+            this.drawTexturedModalRect(poseStack,this.guiLeft + 129, this.guiTop + 13, 243, 1, 12, 64);
         }
     }
 

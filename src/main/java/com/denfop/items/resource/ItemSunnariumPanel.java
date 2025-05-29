@@ -1,47 +1,20 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemSunnariumPanel extends ItemSubTypes<ItemSunnariumPanel.Types> implements IModelRegister {
-
-    protected static final String NAME = "itemsunnariumpanel";
-
-    public ItemSunnariumPanel() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemSunnariumPanel<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemSunnariumPanel(T element) {
+        super(new Item.Properties(), element);
     }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace("iu.iu", "iu.item"));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item stack, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
 
     public enum Types implements ISubEnum {
@@ -57,9 +30,7 @@ public class ItemSunnariumPanel extends ItemSubTypes<ItemSunnariumPanel.Types> i
         bsp(9),
         adspp(10),
         gsp(11),
-        ksp(12),
-
-        ;
+        ksp(12);
 
         private final String name;
         private final int ID;
@@ -77,9 +48,14 @@ public class ItemSunnariumPanel extends ItemSubTypes<ItemSunnariumPanel.Types> i
             return this.name;
         }
 
+
+        @Override
+        public String getMainPath() {
+            return "itemsunnariumpanel";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

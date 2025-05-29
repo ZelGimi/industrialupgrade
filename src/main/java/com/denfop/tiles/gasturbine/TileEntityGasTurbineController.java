@@ -3,12 +3,15 @@ package com.denfop.tiles.gasturbine;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockGasTurbine;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGasTurbineController;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGasTurbine;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -17,15 +20,16 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.tiles.reactors.graphite.IExchangerItem;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,8 +47,8 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
     List<IRecuperator> recuperators = new ArrayList<>();
     int generate = 0;
 
-    public TileEntityGasTurbineController() {
-        super(InitMultiBlockSystem.GasTurbineMultiBlock);
+    public TileEntityGasTurbineController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.GasTurbineMultiBlock,BlockGasTurbine.gas_turbine_controller,pos,state);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -52,7 +56,7 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
     public void updateEntityServer() {
         super.updateEntityServer();
         if (full) {
-            if (tank.getTank().getFluid() != null && work) {
+            if (!tank.getTank().getFluid().isEmpty() && work) {
                 FluidStack stack = tank.getTank().getFluid();
                 if (stack.getFluid() != momentGas) {
                     momentGas = stack.getFluid();
@@ -70,13 +74,13 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                 }
                 coef = coef / 4;
                 if (canWork && energy.getEnergy().getFreeEnergy() >= generate * coef) {
-                    tank.getTank().drain(1, true);
+                    tank.getTank().drain(1, IFluidHandler.FluidAction.EXECUTE);
                     energy.getEnergy().addEnergy(generate * coef);
-                    if (this.getWorld().getWorldTime() % 20 == 0) {
+                    if (this.getWorld().getGameTime() % 20 == 0) {
                         for (IRecuperator recuperator : recuperators) {
-                            ((IExchangerItem) recuperator.getExchanger().get().getItem()).damageItem(recuperator
+                            ((IExchangerItem) recuperator.getExchanger().get(0).getItem()).damageItem(recuperator
                                     .getExchanger()
-                                    .get(), -1);
+                                    .get(0), -1);
                         }
                     }
                     energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generate * coef) + 1);
@@ -86,13 +90,13 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        nbttagcompound.setBoolean("work", work);
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
+        nbttagcompound.putBoolean("work", work);
         return super.writeToNBT(nbttagcompound);
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         work = nbttagcompound.getBoolean("work");
     }
@@ -122,7 +126,7 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
         try {
             final FluidTank fluidTank = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank != null) {
-                this.tank.getTank().readFromNBT(fluidTank.writeToNBT(new NBTTagCompound()));
+                this.tank.getTank().readFromNBT(fluidTank.writeToNBT(new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -131,14 +135,14 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
     }
 
     @Override
-    public ContainerGasTurbineController getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerGasTurbineController getGuiContainer(final Player entityPlayer) {
         return new ContainerGasTurbineController(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiGasTurbine(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiGasTurbine((ContainerGasTurbineController) menu);
     }
 
     @Override
@@ -148,11 +152,11 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gasTurbine;
+        return IUItem.gasTurbine.getBlock(getTeBlock());
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         this.work = !this.work;
     }
 
@@ -163,14 +167,14 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ISocket.class
                 );
-        this.energy = (ISocket) this.getWorld().getTileEntity(pos1.get(0));
+        this.energy = (ISocket) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IRecuperator.class
                 );
         for (BlockPos pos : pos1) {
-            this.recuperators.add((IRecuperator) world.getTileEntity(pos));
+            this.recuperators.add((IRecuperator) getWorld().getBlockEntity(pos));
         }
 
         pos1 = this
@@ -178,7 +182,7 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ITank.class
                 );
-        this.tank = (ITank) this.getWorld().getTileEntity(pos1.get(0));
+        this.tank = (ITank) this.getWorld().getBlockEntity(pos1.get(0));
     }
 
     @Override
@@ -198,19 +202,19 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
 
     @Override
     public void init() {
-        gasMapValue.put(FluidName.fluidgas.getInstance(), 250);
-        gasMapValue.put(FluidName.fluidmethane.getInstance(), 140);
-        gasMapValue.put(FluidName.fluidpropane.getInstance(), 65);
-        gasMapValue.put(FluidName.fluidacetylene.getInstance(), 10);
-        gasMapValue.put(FluidName.fluidethylene.getInstance(), 40);
-        gasMapValue.put(FluidName.fluidethane.getInstance(), 52);
-        gasMapValue.put(FluidName.fluidbenzene.getInstance(), 35);
-        gasMapValue.put(FluidName.fluidcyclohexane.getInstance(), 70);
-        gasMapValue.put(FluidName.fluidbiogas.getInstance(), 15);
-        gasMapValue.put(FluidName.fluidpropylene.getInstance(), 70);
-        gasMapValue.put(FluidName.fluidbutadiene.getInstance(), 110);
-        gasMapValue.put(FluidName.fluidbutene.getInstance(), 120);
-        gasMapValue.put(FluidName.fluidtertbutylmethylether.getInstance(), 250);
+        gasMapValue.put(FluidName.fluidgas.getInstance().get(), 250);
+        gasMapValue.put(FluidName.fluidmethane.getInstance().get(), 140);
+        gasMapValue.put(FluidName.fluidpropane.getInstance().get(), 65);
+        gasMapValue.put(FluidName.fluidacetylene.getInstance().get(), 10);
+        gasMapValue.put(FluidName.fluidethylene.getInstance().get(), 40);
+        gasMapValue.put(FluidName.fluidethane.getInstance().get(), 52);
+        gasMapValue.put(FluidName.fluidbenzene.getInstance().get(), 35);
+        gasMapValue.put(FluidName.fluidcyclohexane.getInstance().get(), 70);
+        gasMapValue.put(FluidName.fluidbiogas.getInstance().get(), 15);
+        gasMapValue.put(FluidName.fluidpropylene.getInstance().get(), 70);
+        gasMapValue.put(FluidName.fluidbutadiene.getInstance().get(), 110);
+        gasMapValue.put(FluidName.fluidbutene.getInstance().get(), 120);
+        gasMapValue.put(FluidName.fluidtertbutylmethylether.getInstance().get(), 250);
     }
 
 }

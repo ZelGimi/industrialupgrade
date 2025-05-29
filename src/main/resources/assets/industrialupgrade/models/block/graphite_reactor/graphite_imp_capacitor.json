@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
     "textures": {
-        "all": "industrialupgrade:blocks/graphite_reactor/capacitor/imp_capacitor_side"
+        "all": "industrialupgrade:block/graphite_reactor/capacitor/imp_capacitor_side"
     }
 }

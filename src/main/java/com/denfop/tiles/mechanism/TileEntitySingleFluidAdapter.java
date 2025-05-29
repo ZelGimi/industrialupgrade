@@ -1,20 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -24,7 +14,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSingleFluidAdapter;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSingleFluidAdapter;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -36,17 +28,17 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -76,8 +68,8 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
     public double guiProgress;
     protected short progress;
 
-    public TileEntitySingleFluidAdapter() {
-        super(200, 1, 1);
+    public TileEntitySingleFluidAdapter(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.single_fluid_adapter,pos,state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -134,76 +126,76 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
 
     }
 
-    public ContainerSingleFluidAdapter getGuiContainer(final EntityPlayer var1) {
+    public ContainerSingleFluidAdapter getGuiContainer(final Player var1) {
         return new ContainerSingleFluidAdapter(var1, this);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiSingleFluidAdapter(getGuiContainer(var1));
+        return new GuiSingleFluidAdapter((ContainerSingleFluidAdapter) menu);
     }
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.phosphorus_oxide),
-                new FluidStack(FluidRegistry.WATER, 300), new FluidStack(FluidName.fluidorthophosphoricacid.getInstance()
+        addRecipe(new ItemStack(IUItem.phosphorus_oxide.getItem()),
+                new FluidStack(Fluids.WATER, 300), new FluidStack(FluidName.fluidorthophosphoricacid.getInstance().get()
                         , 200)
         );
 
         addRecipe(
-                new ItemStack(IUItem.iudust, 2, 73),
-                new FluidStack(FluidName.fluidchloroethane.getInstance(), 250),
-                new FluidStack(FluidName.fluidtetraethyllead.getInstance()
+                new ItemStack(IUItem.iudust.getStack(73), 2),
+                new FluidStack(FluidName.fluidchloroethane.getInstance().get(), 250),
+                new FluidStack(FluidName.fluidtetraethyllead.getInstance().get()
                         , 250)
         );
 
 
         addRecipe(
-                new ItemStack(IUItem.iudust, 1, 21),
-                new FluidStack(FluidName.fluidoxy.getInstance(), 400),
-                new FluidStack(FluidName.fluidcarbonmonoxide.getInstance()
+                new ItemStack(IUItem.iudust.getStack(21), 1),
+                new FluidStack(FluidName.fluidoxy.getInstance().get(), 400),
+                new FluidStack(FluidName.fluidcarbonmonoxide.getInstance().get()
                         , 200)
         );
         addRecipe(
-                new ItemStack(IUItem.iudust, 4, 1),
-                new FluidStack(FluidName.fluidpropane.getInstance(), 400),
-                new FluidStack(FluidName.fluidmethylpentane.getInstance()
+                new ItemStack(IUItem.iudust.getStack(1), 4),
+                new FluidStack(FluidName.fluidpropane.getInstance().get(), 400),
+                new FluidStack(FluidName.fluidmethylpentane.getInstance().get()
                         , 200)
         );
         addRecipe(
-                new ItemStack(IUItem.wolframite),
-                new FluidStack(FluidName.fluidquartz.getInstance(), 144),
-                new FluidStack(FluidName.fluidtemperedglass.getInstance()
+                new ItemStack(IUItem.wolframite.getItem()),
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144),
+                new FluidStack(FluidName.fluidtemperedglass.getInstance().get()
                         , 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 465),
-                new FluidStack(FluidRegistry.WATER, 50),
-                new FluidStack(FluidName.fluidneft.getInstance()
+                new ItemStack(IUItem.crafting_elements.getStack(465), 1),
+                new FluidStack(Fluids.WATER, 50),
+                new FluidStack(FluidName.fluidneft.getInstance().get()
                         , 1000)
         );
 
         addRecipe(
                 new ItemStack(Items.SUGAR),
-                new FluidStack(FluidName.fluidroyaljelly.getInstance(), 200),
-                new FluidStack(FluidName.fluidapianroyaljelly.getInstance()
+                new FluidStack(FluidName.fluidroyaljelly.getInstance().get(), 200),
+                new FluidStack(FluidName.fluidapianroyaljelly.getInstance().get()
                         , 200)
         );
-        addRecipe(new ItemStack(Items.DYE, 16, 4), new FluidStack(FluidName.fluiddistilled_water.getInstance(), 4000),
-                new FluidStack(FluidName.fluidcoolant.getInstance(), 1000)
+        addRecipe(new ItemStack(Items.LAPIS_LAZULI, 16), new FluidStack(FluidName.fluiddistilled_water.getInstance().get(), 4000),
+                new FluidStack(FluidName.fluidcoolant.getInstance().get(), 1000)
         );
-        addRecipe(IUItem.cfPowder, new FluidStack(FluidRegistry.WATER, 1000),
-                new FluidStack(FluidName.fluidconstruction_foam.getInstance(), 1000)
+        addRecipe(IUItem.cfPowder, new FluidStack(Fluids.WATER, 1000),
+                new FluidStack(FluidName.fluidconstruction_foam.getInstance().get(), 1000)
         );
 
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -218,7 +210,7 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.fluid_handler.load();
             this.getOutput();
@@ -227,15 +219,15 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -306,7 +298,7 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
         }
 
         if (check || (this.fluid_handler.output() == null && this.output != null && this.fluidTank1.getFluidAmount() > 0)) {
-            this.fluid_handler.getOutput(this.inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.output == null) {
                 this.fluid_handler.setOutput(null);

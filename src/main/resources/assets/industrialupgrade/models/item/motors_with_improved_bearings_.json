@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/motors_with_improved_bearings_"
+    "layer0" : "industrialupgrade:item/motors_with_improved_bearings_"
   }
 }

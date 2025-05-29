@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "industrialupgrade:blocks/wireless_pump",
-		"particle": "industrialupgrade:blocks/wireless_pump"
+		"1": "industrialupgrade:block/wireless_pump",
+		"particle": "industrialupgrade:block/wireless_pump"
 	},
 	"elements": [
 		{

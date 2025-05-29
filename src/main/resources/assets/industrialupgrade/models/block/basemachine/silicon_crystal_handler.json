@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/silicon_crystal_handler_front-back-right-left",
-    "down" : "industrialupgrade:blocks/silicon_crystal_handler_top-bottom",
-    "up" : "industrialupgrade:blocks/silicon_crystal_handler_top-bottom",
-    "north" : "industrialupgrade:blocks/silicon_crystal_handler_front-back-right-left",
-    "east" : "industrialupgrade:blocks/silicon_crystal_handler_front-back-right-left",
-    "south" : "industrialupgrade:blocks/silicon_crystal_handler_front-back-right-left",
-    "west" : "industrialupgrade:blocks/silicon_crystal_handler_front-back-right-left"
+    "particle" : "industrialupgrade:block/silicon_crystal_handler_front-back-right-left",
+    "down" : "industrialupgrade:block/silicon_crystal_handler_top-bottom",
+    "up" : "industrialupgrade:block/silicon_crystal_handler_top-bottom",
+    "north" : "industrialupgrade:block/silicon_crystal_handler_front-back-right-left",
+    "east" : "industrialupgrade:block/silicon_crystal_handler_front-back-right-left",
+    "south" : "industrialupgrade:block/silicon_crystal_handler_front-back-right-left",
+    "west" : "industrialupgrade:block/silicon_crystal_handler_front-back-right-left"
   }
 }

@@ -5,15 +5,14 @@ import com.denfop.Localization;
 import com.denfop.container.ContainerEFReader;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.IOException;
-
-@SideOnly(Side.CLIENT)
-public class GUIEFReader extends GuiIU<ContainerEFReader> implements IGuiUpdate {
+@OnlyIn(Dist.CLIENT)
+public class GUIEFReader<T extends ContainerEFReader> extends GuiIU<ContainerEFReader> {
 
     private static final ResourceLocation background = new ResourceLocation(
             Constants.TEXTURES,
@@ -35,102 +34,102 @@ public class GUIEFReader extends GuiIU<ContainerEFReader> implements IGuiUpdate 
     public GUIEFReader(ContainerEFReader container, final ItemStack itemStack1) {
         super(container);
         this.componentList.clear();
-        this.name = itemStack1.getDisplayName();
+        this.name = itemStack1.getDisplayName().getString();
         this.itemStack = itemStack1;
-        this.ySize = 121;
-        this.xSize = 188;
+        this.imageHeight = 121;
+        this.imageWidth = 188;
 
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6, 0);
-        this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode") + " Sink",
-                (169 + this.fontRenderer.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 18,
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+      draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 6, 0);
+        draw(poseStack, Localization.translate("itemToolMEter.mode") + " Sink",
+                (169 + this.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 18,
                 ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
-        this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode") + " Source",
-                (169 + this.fontRenderer.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 78,
+        draw(poseStack, Localization.translate("itemToolMEter.mode") + " Source",
+                (169 + this.getStringWidth(Localization.translate("itemToolMEter.mode") + " Sink")) / 2, 78,
                 ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
 
         if (this.mode == 0) {
-            this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode.EnergyIn") + ":",
+            draw(poseStack, Localization.translate("itemToolMEter.mode.EnergyIn") + ":",
                     12, 18,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(ModUtils.getString(this.energySink) + " EF/t",
+           draw(poseStack, ModUtils.getString(this.energySink) + " EF/t",
                     12, 28,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(Localization.translate("itemToolMEter.avg") + " " + ModUtils.getString(this.average / tick) +
+           draw(poseStack, Localization.translate("itemToolMEter.avg") + " " + ModUtils.getString(this.average / tick) +
                             " " +
                             "EF/t",
                     8, 38,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(Localization.translate("itemToolMEter.max/min") + ": ",
+            draw(poseStack, Localization.translate("itemToolMEter.max/min") + ": ",
                     12, 48,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(ModUtils.getString(this.max) + "/" + ModUtils.getString(this.min),
+            draw(poseStack, ModUtils.getString(this.max) + "/" + ModUtils.getString(this.min),
                     12, 58,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
         }
         if (this.mode == 1) {
 
-            this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode.EnergyOut") + ":",
+           draw(poseStack, Localization.translate("itemToolMEter.mode.EnergyOut") + ":",
                     12, 18,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(ModUtils.getString(this.energySource) + " EF/t",
+            draw(poseStack, ModUtils.getString(this.energySource) + " EF/t",
                     12, 28,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(Localization.translate("itemToolMEter.avg") + " " + ModUtils.getString(this.average / tick) +
+            draw(poseStack, Localization.translate("itemToolMEter.avg") + " " + ModUtils.getString(this.average / tick) +
                             " " +
                             "EF/t",
                     8, 38,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(Localization.translate("itemToolMEter.max/min") + ": ",
+            draw(poseStack, Localization.translate("itemToolMEter.max/min") + ": ",
                     12, 48,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
-            this.fontRenderer.drawString(ModUtils.getString(this.max) + "/" + ModUtils.getString(this.min),
+            draw(poseStack, ModUtils.getString(this.max) + "/" + ModUtils.getString(this.min),
                     12, 58,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
         }
-        this.fontRenderer.drawString(Localization.translate("itemToolMEter.cycle", ModUtils.getString(this.tick / 40D)),
+        draw(poseStack, Localization.translate("itemToolMEter.cycle", ModUtils.getString(this.tick / 40D)),
                 12, 78,
                 ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
-        this.fontRenderer.drawString(Localization.translate("itemToolMEter.mode.reset"),
+      draw(poseStack, Localization.translate("itemToolMEter.mode.reset"),
                 38, 101,
                 ModUtils.convertRGBcolorToInt(0, 0, 0)
         );
 
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         if (this.mode == 0) {
-            this.drawTexturedModalRect(this.guiLeft + 130, this.guiTop + 34, 198, 35, 19, 17);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 130, this.guiTop + 34, 198, 35, 19, 17);
 
         } else {
-            this.drawTexturedModalRect(this.guiLeft + 130, this.guiTop + 54, 198, 55, 19, 17);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 130, this.guiTop + 54, 198, 55, 19, 17);
 
         }
     }
 
     @Override
-    protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) throws IOException {
+    protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = mouseX - xMin;
         int y = mouseY - yMin;
         if (x >= 130 && y >= 34 && x <= 130 + 19 && y <= 34 + 17) {
@@ -162,7 +161,7 @@ public class GUIEFReader extends GuiIU<ContainerEFReader> implements IGuiUpdate 
         return background;
     }
 
-    @Override
+
     public void readField(final String string, final CustomPacketBuffer packetBuffer) {
         packetBuffer.readByte();
         if (string.equals("energySink")) {

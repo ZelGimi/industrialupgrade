@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/imp_neutron_protector"	}
+		"layer0": "industrialupgrade:item/imp_neutron_protector"	}
 }

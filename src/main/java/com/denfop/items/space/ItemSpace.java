@@ -1,45 +1,23 @@
 package com.denfop.items.space;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemSpace extends ItemSubTypes<ItemSpace.Type> implements IModelRegister {
-
-    protected static final String NAME = "itemspace";
-
-    public ItemSpace() {
-        super(Type.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemSpace<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemSpace(T element) {
+        super(new Item.Properties(), element);
     }
 
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.SpaceTab;
     }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item stack, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":itemspace/" + Type.getFromID(meta).getName(), null)
-        );
-    }
-
-    public enum Type implements ISubEnum {
+    public enum Types implements ISubEnum {
         ariel_boulder(),
         asteroids_boulder(),
         callisto_boulder(),
@@ -99,26 +77,32 @@ public class ItemSpace extends ItemSubTypes<ItemSpace.Type> implements IModelReg
         titania_pebble(),
         triton_pebble(),
         umbriel_pebble(),
-        venus_pebble(),
-
-        ;
+        venus_pebble();
 
         private final String name;
+        private final int ID;
 
-        Type() {
+        Types() {
             this.name = this.name().toLowerCase(Locale.US);
+            this.ID = this.ordinal();
         }
 
-        public static Type getFromID(final int ID) {
+        public static Types getFromID(final int ID) {
             return values()[ID % values().length];
         }
 
+        @Override
         public String getName() {
-            return this.name;
+            return name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "itemspace";
         }
 
         public int getId() {
-            return this.ordinal();
+            return this.ID;
         }
     }
 

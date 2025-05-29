@@ -4,7 +4,7 @@ import com.denfop.api.solar.EnumTypeParts;
 import com.denfop.api.solar.ISolarItem;
 import com.denfop.api.solar.SolarEnergySystem;
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotGlassMiniPanels extends InvSlot {
 
@@ -22,9 +22,10 @@ public class InvSlotGlassMiniPanels extends InvSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         SolarEnergySystem.system.recalculation(this.tile, EnumTypeParts.GENERATION);
+        return content;
     }
 
 }

@@ -2,7 +2,7 @@
   "parent" : "builtin/entity",
   "gui_light" : "front",
   "textures" : {
-    "particle" : "industrialupgrade:items/nano_shield"
+    "particle" : "industrialupgrade:item/nano_shield"
   },
   "display" : {
     "thirdperson_righthand" : {

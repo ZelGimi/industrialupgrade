@@ -1,6 +1,7 @@
 package com.denfop.api.reactors;
 
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.world.item.ItemStack;
 
 public interface IReactorModule {
 
@@ -17,5 +18,4 @@ public interface IReactorModule {
     double getExchanger(ItemStack stack);
 
     double getCapacitor(ItemStack stack);
-
 }

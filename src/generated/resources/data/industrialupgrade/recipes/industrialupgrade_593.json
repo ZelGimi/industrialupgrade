@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/charon_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/charon_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/charon_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/charon_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/charon_boulder"
+  }
+}

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/solarium_storage_bottom",
-    "down" : "industrialupgrade:blocks/solarium_storage_bottom",
-    "up" : "industrialupgrade:blocks/solarium_storage_bottom",
-    "north" : "industrialupgrade:blocks/solarium_storage_front",
-    "east" : "industrialupgrade:blocks/solarium_storage_side",
-    "south" : "industrialupgrade:blocks/solarium_storage_side",
-    "west" : "industrialupgrade:blocks/solarium_storage_side"
+    "particle" : "industrialupgrade:block/solarium_storage_bottom",
+    "down" : "industrialupgrade:block/solarium_storage_bottom",
+    "up" : "industrialupgrade:block/solarium_storage_bottom",
+    "north" : "industrialupgrade:block/solarium_storage_front",
+    "east" : "industrialupgrade:block/solarium_storage_side",
+    "south" : "industrialupgrade:block/solarium_storage_side",
+    "west" : "industrialupgrade:block/solarium_storage_side"
   }
 }

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/steel"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:bricks"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:lightning_rod/lightning_rod_casing"
+  },
+  "show_notification": true
+}

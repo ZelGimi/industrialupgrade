@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/alcled"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/aluminiumlithium"
+      }
+    ]
+  },
+  "pattern": [
+    "A  ",
+    "BA ",
+    "BBA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_529_element"
+  },
+  "show_notification": true
+}

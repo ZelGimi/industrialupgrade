@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:earth_quarry/earth_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:chest"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/gold"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/tin"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "DAD",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:earth_quarry/earth_chest"
+  },
+  "show_notification": true
+}

@@ -1,7 +1,7 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/reinforced_door"
+		"layer0": "industrialupgrade:item/reinforced_door"
 	},
 	"display": {
 		"thirdperson": {

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.crop.TileEntityMultiCrop;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerMultiCrop extends ContainerFullInv<TileEntityMultiCrop> {
 
-    public ContainerMultiCrop(TileEntityMultiCrop tileEntityMultiCrop, EntityPlayer var1) {
+    public ContainerMultiCrop(TileEntityMultiCrop tileEntityMultiCrop, Player var1) {
         super(var1, tileEntityMultiCrop, 178 + 40, 166 + 40);
         int totalSlots = tileEntityMultiCrop.place.length;
         int centerX = (178 + 40 - 18) / 2 - 1;

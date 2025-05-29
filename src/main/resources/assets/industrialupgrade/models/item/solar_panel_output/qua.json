@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/qua_output"
+		"layer0": "industrialupgrade:item/qua_output"
 	}
 }

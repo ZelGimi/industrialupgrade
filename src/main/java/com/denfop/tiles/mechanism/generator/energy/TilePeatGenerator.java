@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism.generator.energy;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
@@ -10,22 +11,25 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPeatGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPeatGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,13 +42,13 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
 
     public int fuel = 0;
 
-    public TilePeatGenerator() {
-        super(0, 1, 0);
+    public TilePeatGenerator(BlockPos pos, BlockState state) {
+        super(0, 1, 0,BlockBaseMachine3.peat_generator,pos,state);
         energy = this.addComponent(Energy.asBasicSource(this, 150000, 1));
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.cultivated_peat_balls;
+                return stack.getItem() == IUItem.cultivated_peat_balls.getItem();
             }
         };
         this.addComponent(new SoilPollutionComponent(this, 0.2));
@@ -52,7 +56,7 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
 
     }
 
-    @SideOnly(Side.CLIENT)
+
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
@@ -77,7 +81,7 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -91,7 +95,6 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
         return packet;
     }
 
-    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -111,7 +114,6 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
     @Override
     public void onLoaded() {
         super.onLoaded();
-        final ItemStack content = this.slot.get();
     }
 
     @Override
@@ -120,7 +122,7 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
         if (!this.slot.isEmpty()) {
             if (fuel == 0) {
                 fuel = 400;
-                this.slot.get().shrink(1);
+                this.slot.get(0).shrink(1);
                 if (!this.getActive()) {
                     this.setActive(true);
                 }
@@ -149,28 +151,29 @@ public class TilePeatGenerator extends TileElectricMachine implements IType {
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.fuel = nbttagcompound.getInteger("fuel");
+        this.fuel = nbttagcompound.getInt("fuel");
     }
 
     public int gaugeStorageScaled(int i) {
         return (int) (this.energy.getEnergy() * (double) i / this.energy.getCapacity());
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setInteger("fuel", this.fuel);
+        nbt.putInt("fuel", this.fuel);
         return nbt;
     }
 
-    public ContainerPeatGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPeatGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerPeatGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiPeatGenerator(new ContainerPeatGenerator(entityPlayer, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiPeatGenerator((ContainerPeatGenerator) menu);
     }
 
 

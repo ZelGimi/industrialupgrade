@@ -1,46 +1,40 @@
 package com.denfop.network;
 
+
 import com.denfop.api.radiationsystem.Radiation;
-import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeInfo;
-import com.denfop.api.research.main.BaseLevelSystem;
-import com.denfop.api.space.fakebody.FakePlanet;
-import com.denfop.api.tesseract.Channel;
 import com.denfop.api.vein.Vein;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EncodedType;
 import com.denfop.network.packet.INetworkObject;
-import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.DataOre;
 import com.denfop.utils.ModUtils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBufOutputStream;
-import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class EncoderHandler {
 
@@ -206,21 +200,22 @@ public class EncoderHandler {
                 }
                 break;
             case Block:
-                encode(os, ModUtils.getName((Block) o), false);
+                encode(os, BuiltInRegistries.BLOCK.getKey((Block) o), false);
                 break;
             case BlockPos:
                 BlockPos pos = (BlockPos) o;
-                os.writeBlockPos(pos);
-
-                break;
-            case network_object:
-                os.writeBytes(((INetworkObject) o).writePacket());
+                os.writeInt(pos.getX());
+                os.writeInt(pos.getY());
+                os.writeInt(pos.getZ());
                 break;
             case Boolean:
                 os.writeBoolean((Boolean) o);
                 break;
             case Byte:
                 os.writeByte((Byte) o);
+                break;
+            case network_object:
+                os.writeBytes(((INetworkObject) o).writePacket());
                 break;
             case Character:
                 os.writeChar((Character) o);
@@ -243,7 +238,7 @@ public class EncoderHandler {
                 os.writeDouble((Double) o);
                 break;
             case Enchantment:
-                encode(os, Enchantment.REGISTRY.getNameForObject((Enchantment) o), false);
+                encode(os, BuiltInRegistries.ENCHANTMENT.getKey((Enchantment) o), false);
                 break;
             case Enum:
                 os.writeVarInt(((Enum) o).ordinal());
@@ -252,13 +247,17 @@ public class EncoderHandler {
                 os.writeFloat((Float) o);
                 break;
             case Fluid:
-                os.writeString(((Fluid) o).getName());
+                encode(os, BuiltInRegistries.FLUID.getKey((Fluid) o), false);
                 break;
             case FluidStack:
                 FluidStack fs = (FluidStack) o;
-                encode(os, fs.getFluid(), false);
-                os.writeInt(fs.amount);
-                encode(os, fs.tag, true);
+                if (!fs.isEmpty())
+                    encode(os, fs.getFluid(), false);
+                else
+                    encode(os, Fluids.EMPTY, false);
+                os.writeInt(fs.getAmount());
+                if (!fs.isEmpty())
+                encode(os, fs.getTag(), true);
                 break;
             case FluidTank:
                 FluidTank tank = (FluidTank) o;
@@ -284,7 +283,7 @@ public class EncoderHandler {
                 encode(os, contents, false);
                 break;
             case Item:
-                encode(os, ModUtils.getName((Item) o), false);
+                encode(os, BuiltInRegistries.ITEM.getKey((Item) o), false);
                 break;
             case ItemStack:
                 ItemStack stack = (ItemStack) o;
@@ -293,8 +292,7 @@ public class EncoderHandler {
                 } else {
                     os.writeByte(ModUtils.getSize(stack));
                     encode(os, stack.getItem(), false);
-                    os.writeShort(stack.getItemDamage());
-                    encode(os, stack.getTagCompound(), true);
+                    encode(os, stack.getTag(), true);
                 }
                 break;
             case Long:
@@ -302,7 +300,7 @@ public class EncoderHandler {
                 break;
 
             case NBTTagCompound:
-                CompressedStreamTools.write((NBTTagCompound) o, new ByteBufOutputStream(os));
+                NbtIo.write((CompoundTag) o, new ByteBufOutputStream(os));
                 break;
             case Null:
                 if (!withType) {
@@ -312,12 +310,12 @@ public class EncoderHandler {
             case Object:
                 throw new IllegalArgumentException("unhandled class: " + o.getClass());
             case Potion:
-                encode(os, Potion.REGISTRY.getNameForObject((Potion) o), false);
+                encode(os, BuiltInRegistries.POTION.getKey((Potion) o), false);
                 break;
             case ResourceLocation:
                 ResourceLocation loc = (ResourceLocation) o;
-                os.writeString(loc.getResourceDomain());
-                os.writeString(loc.getResourcePath());
+                os.writeString(loc.getNamespace());
+                os.writeString(loc.getPath());
                 break;
             case Short:
                 os.writeShort((Short) o);
@@ -326,41 +324,28 @@ public class EncoderHandler {
                 os.writeString((String) o);
                 break;
             case TileEntity:
-                TileEntity te = (TileEntity) o;
-                encode(os, te.getWorld(), false);
-                encode(os, te.getPos(), false);
+                BlockEntity te = (BlockEntity) o;
+                encode(os, te.getLevel(), false);
+                encode(os, te.getBlockPos(), false);
                 break;
-            case BaseLevelSystem:
+      /*      case BaseLevelSystem:
                 BaseLevelSystem baseResearch = (BaseLevelSystem) o;
                 os.writeString(baseResearch.getPlayer().getName());
                 encode(os, baseResearch.write(), true);
-                break;
+                break;*/
             case UUID:
                 UUID uuid = (UUID) o;
                 os.writeLong(uuid.getMostSignificantBits());
                 os.writeLong(uuid.getLeastSignificantBits());
                 break;
             case Vec3:
-                Vec3d v = (Vec3d) o;
+                Vec3 v = (Vec3) o;
                 os.writeDouble(v.x);
                 os.writeDouble(v.y);
                 os.writeDouble(v.z);
                 break;
             case World:
-                os.writeInt(((World) o).provider.getDimension());
-                break;
-            case channel:
-                os.writeBytes(((Channel) o).writePacket());
-                break;
-            case Input:
-                IInputItemStack input = (IInputItemStack) o;
-                encode(os, input.getInputs(), true);
-                break;
-            case MachineRecipe:
-                BaseMachineRecipe machineRecipe = (BaseMachineRecipe) o;
-                encode(os, machineRecipe.output.items, true);
-                encode(os, machineRecipe.output.metadata, true);
-                encode(os, machineRecipe.input.getInputs(), true);
+                os.writeResourceKey(((Level) o).dimension());
                 break;
             case Vein:
                 Vein vein = (Vein) o;
@@ -374,10 +359,9 @@ public class EncoderHandler {
                 Radiation radiation = (Radiation) o;
                 os.writeBytes(radiation.writePacket());
                 break;
-            case FAKE_PLANET:
-                encode(os, ((FakePlanet) o).writeNBTTagCompound(new NBTTagCompound()));
+            /* case FAKE_PLANET:
                 break;
-
+*/
 
             default:
                 throw new IllegalArgumentException("unhandled type: " + type);

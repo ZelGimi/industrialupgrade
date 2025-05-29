@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/solid_fluid_mixer_main",
-    "down" : "industrialupgrade:blocks/solid_fluid_mixer_sides",
-    "up" : "industrialupgrade:blocks/solid_fluid_mixer_top_active",
-    "north" : "industrialupgrade:blocks/solid_fluid_mixer_main_active",
-    "east" : "industrialupgrade:blocks/solid_fluid_mixer_sides",
-    "south" : "industrialupgrade:blocks/solid_fluid_mixer_sides",
-    "west" : "industrialupgrade:blocks/solid_fluid_mixer_sides"
+    "particle" : "industrialupgrade:block/solid_fluid_mixer_main",
+    "down" : "industrialupgrade:block/solid_fluid_mixer_sides",
+    "up" : "industrialupgrade:block/solid_fluid_mixer_top_active",
+    "north" : "industrialupgrade:block/solid_fluid_mixer_main_active",
+    "east" : "industrialupgrade:block/solid_fluid_mixer_sides",
+    "south" : "industrialupgrade:block/solid_fluid_mixer_sides",
+    "west" : "industrialupgrade:block/solid_fluid_mixer_sides"
   }
 }

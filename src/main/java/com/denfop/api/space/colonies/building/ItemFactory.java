@@ -11,8 +11,8 @@ import com.denfop.api.space.colonies.enums.EnumMiningFactory;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,9 +26,8 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
         super(colonie);
         this.type = type;
         this.people = 0;
-        if (!simulate) {
+        if (!simulate)
             this.getColony().addBuilding(this);
-        }
     }
 
     public ItemFactory(CustomPacketBuffer packetBuffer, Colony colonie) {
@@ -38,7 +37,7 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
         this.getColony().addBuilding(this);
     }
 
-    public ItemFactory(final NBTTagCompound tag, final IColony colonie) {
+    public ItemFactory(final CompoundTag tag, final IColony colonie) {
         super(colonie);
         this.type = EnumMiningFactory.getID(tag.getByte("id"));
         this.people = tag.getByte("people");
@@ -64,29 +63,21 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
         if (storageList.isEmpty() || this.getColony().getEnergy() < this.getEnergy()) {
             return;
         }
-        if (this.getColony().getTick() % 5 != 0) {
+        if (this.getColony().getTick() % 5 != 0)
             return;
-        }
         if (WorldBaseGen.random.nextInt(100) < this.type.getChance()) {
             for (IStorage storage : storageList) {
                 if (storage.work()) {
-                    List<DataItem<ItemStack>> itemStacks = SpaceNet.instance
-                            .getColonieNet()
-                            .getItemsFromBody(getColony().getBody());
+                    List<DataItem<ItemStack>> itemStacks = SpaceNet.instance.getColonieNet().getItemsFromBody(getColony().getBody());
                     if (itemStacks.isEmpty()) {
                         return;
                     }
-                    itemStacks = itemStacks.stream().filter(fluidStackDataItem -> fluidStackDataItem.getLevel() <= this
-                            .getColony()
-                            .getLevel()).collect(
+                    itemStacks = itemStacks.stream().filter(fluidStackDataItem -> fluidStackDataItem.getLevel() <= this.getColony().getLevel()).collect(
                             Collectors.toList());
-                    if (itemStacks.isEmpty()) {
+                    if (itemStacks.isEmpty())
                         return;
-                    }
                     ItemStack itemStack = itemStacks.get(WorldBaseGen.random.nextInt(itemStacks.size())).getElement().copy();
-                    itemStack.setCount((int) ((WorldBaseGen.random.nextInt(this.type.getMaxItemValue()) + 1) * this
-                            .getColony()
-                            .getPercentEntertainment()));
+                    itemStack.setCount((int) ((WorldBaseGen.random.nextInt(this.type.getMaxItemValue()) + 1) * this.getColony().getPercentEntertainment()));
                     if (storage.canAddItemStack(itemStack)) {
                         this.getColony().useEnergy(this.getEnergy());
                         return;
@@ -107,10 +98,10 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
     }
 
     @Override
-    public NBTTagCompound writeTag(final NBTTagCompound tag) {
+    public CompoundTag writeTag(final CompoundTag tag) {
         super.writeTag(tag);
-        tag.setByte("id", (byte) this.type.ordinal());
-        tag.setByte("people", people);
+        tag.putByte("id", (byte) this.type.ordinal());
+        tag.putByte("people", people);
         return tag;
     }
 

@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/alcled"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:armour/lappack"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/vanadoalumite"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:battery/lapotron_crystal"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "CEC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/adv_lappack"
+  },
+  "show_notification": true
+}

@@ -4,10 +4,11 @@ import com.denfop.api.tesseract.event.EventAdderChannel;
 import com.denfop.api.tesseract.event.EventLoadTesseract;
 import com.denfop.api.tesseract.event.EventRemoverChannel;
 import com.denfop.api.tesseract.event.EventUnLoadTesseract;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EventHandler {
 
@@ -36,22 +37,22 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public void tick(TickEvent.WorldTickEvent event) {
-        if (event.world.isRemote) {
+    public void tick(TickEvent.LevelTickEvent event) {
+        if (event.level.isClientSide) {
             return;
         }
 
         if (event.phase == TickEvent.Phase.END) {
-            TesseractSystem.instance.onTick(event.world);
+            TesseractSystem.instance.onTick(event.level);
         }
     }
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-        if ((event.getWorld()).isRemote) {
+    public void onWorldUnload(LevelEvent.Unload event) {
+        if ((event.getLevel()).isClientSide()) {
             return;
         }
-        TesseractSystem.instance.onWorldUnload(event.getWorld());
+        TesseractSystem.instance.onWorldUnload((Level) event.getLevel());
     }
 
 }

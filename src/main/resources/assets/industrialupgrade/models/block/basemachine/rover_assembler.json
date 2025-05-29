@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [64, 64],
 	"textures": {
-		"3": "industrialupgrade:models/rover_assembler",
-		"particle": "industrialupgrade:models/rover_assembler"
+		"3": "industrialupgrade:block/rover_assembler",
+		"particle": "industrialupgrade:block/rover_assembler"
 	},
 	"elements": [
 		{

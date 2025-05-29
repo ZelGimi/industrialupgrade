@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.smeltery.TileEntitySmelteryCasting;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSmelteryCasting extends ContainerFullInv<TileEntitySmelteryCasting> {
 
     public ContainerSmelteryCasting(
             TileEntitySmelteryCasting tileEntityGeothermalExchanger,
-            EntityPlayer var1
+            Player var1
     ) {
         super(var1, tileEntityGeothermalExchanger, 166);
         this.addSlotToContainer(new SlotInvSlot(tileEntityGeothermalExchanger.getOutputSlot(), 0, 107, 35));

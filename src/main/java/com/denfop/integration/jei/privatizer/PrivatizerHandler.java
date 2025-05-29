@@ -2,7 +2,7 @@ package com.denfop.integration.jei.privatizer;
 
 
 import com.denfop.IUItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class PrivatizerHandler {
 
     public static void initRecipes() {
 
-        addRecipe(new ItemStack(IUItem.entitymodules, 1, 0));
+        addRecipe(new ItemStack(IUItem.entitymodules.getStack(0), 1));
 
 
     }

@@ -4,7 +4,7 @@ package com.denfop.integration.jei.smelterycasting;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class SmelteryCastingHandler {
         final List<BaseFluidMachineRecipe> list = Recipes.recipes.getRecipeFluid().getRecipeList(
                 "ingot_casting");
         for (BaseFluidMachineRecipe baseFluidMachineRecipe : list) {
-            ItemStack input = new ItemStack(IUItem.crafting_elements, 1, 496);
+            ItemStack input = new ItemStack(IUItem.crafting_elements.getStack(496), 1);
             FluidStack inputFluid = baseFluidMachineRecipe.input.getInputs().get(0);
             ItemStack output = baseFluidMachineRecipe.getOutput().items.get(0);
 
@@ -54,7 +54,7 @@ public class SmelteryCastingHandler {
         }
         for (BaseFluidMachineRecipe baseFluidMachineRecipe : Recipes.recipes.getRecipeFluid().getRecipeList(
                 "gear_casting")) {
-            ItemStack input = new ItemStack(IUItem.crafting_elements, 1, 497);
+            ItemStack input = new ItemStack(IUItem.crafting_elements.getStack(497), 1);
             FluidStack inputFluid = baseFluidMachineRecipe.input.getInputs().get(0);
             ItemStack output = baseFluidMachineRecipe.getOutput().items.get(0);
 

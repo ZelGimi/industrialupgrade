@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/zinc_casing"
+    "layer0" : "industrialupgrade:item/zinc_casing"
   }
 }

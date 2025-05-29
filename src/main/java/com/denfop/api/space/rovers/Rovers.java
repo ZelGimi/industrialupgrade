@@ -3,7 +3,7 @@ package com.denfop.api.space.rovers;
 import com.denfop.api.space.rovers.api.IRovers;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class Rovers implements IRovers {
 
@@ -43,7 +43,7 @@ public class Rovers implements IRovers {
             return false;
         }
         Rovers rovers = (Rovers) o;
-        return stack.isItemEqual(rovers.stack);
+        return stack.is(rovers.stack.getItem());
     }
 
 

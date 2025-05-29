@@ -1,28 +1,27 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public abstract class ContainerFullInv<T extends TileEntityInventory> extends ContainerBase<T> {
-
-    public ContainerFullInv(EntityPlayer player, T base, int height) {
-        super(base);
-        this.addPlayerInventorySlots(player, height);
+    public ContainerFullInv(Player player, T t, int height) {
+        super(t, player);
+        if (player != null)
+            this.addPlayerInventorySlots(player.getInventory(), height);
     }
 
-    public ContainerFullInv(EntityPlayer player, T base) {
-        super(base);
-        this.addPlayerInventorySlots(player, 166);
+    public ContainerFullInv(Player player, T base) {
+        super(base, player);
+        this.addPlayerInventorySlots(player.getInventory(), 166);
     }
 
-    public ContainerFullInv(T base, EntityPlayer player) {
-        super(base);
-        this.addPlayerInventorySlots(player, 166);
+    public ContainerFullInv(T base, Player player) {
+        super(base, player);
+        this.addPlayerInventorySlots(player.getInventory(), 166);
     }
 
-    public ContainerFullInv(EntityPlayer player, T base, int width, int height) {
-        super(base);
-        this.addPlayerInventorySlots(player, width, height);
+    public ContainerFullInv(Player player, T t, int width, int height) {
+        super(t, player);
+        this.addPlayerInventorySlots(player.getInventory(), width, height);
     }
-
 }

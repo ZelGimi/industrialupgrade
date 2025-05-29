@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:sugar"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:blaze_rod"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:nether_wart"
+      }
+    ],
+    "E": [
+      {
+        "item": "minecraft:glass_bottle"
+      }
+    ],
+    "H": [
+      {
+        "item": "minecraft:ender_pearl"
+      }
+    ]
+  },
+  "pattern": [
+    "BEB",
+    "CAC",
+    "DHD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_658_element"
+  },
+  "show_notification": true
+}

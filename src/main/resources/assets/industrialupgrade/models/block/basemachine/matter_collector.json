@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/matter_collector_side",
-    "down" : "industrialupgrade:blocks/matter_collector_side",
-    "up" : "industrialupgrade:blocks/matter_collector_side",
-    "north" : "industrialupgrade:blocks/matter_collector_main",
-    "east" : "industrialupgrade:blocks/matter_collector_main",
-    "south" : "industrialupgrade:blocks/matter_collector_main",
-    "west" : "industrialupgrade:blocks/matter_collector_main"
+    "particle" : "industrialupgrade:block/matter_collector_side",
+    "down" : "industrialupgrade:block/matter_collector_side",
+    "up" : "industrialupgrade:block/matter_collector_side",
+    "north" : "industrialupgrade:block/matter_collector_main",
+    "east" : "industrialupgrade:block/matter_collector_main",
+    "south" : "industrialupgrade:block/matter_collector_main",
+    "west" : "industrialupgrade:block/matter_collector_main"
   }
 }

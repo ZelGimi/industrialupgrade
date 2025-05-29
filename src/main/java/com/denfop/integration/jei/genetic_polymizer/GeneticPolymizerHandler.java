@@ -3,10 +3,11 @@ package com.denfop.integration.jei.genetic_polymizer;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GeneticPolymizerHandler {
@@ -26,6 +27,9 @@ public class GeneticPolymizerHandler {
         this.input4 = input4;
         this.input5 = input5;
         this.output = output;
+    }
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1, input3, input4, input5);
     }
 
     public static List<GeneticPolymizerHandler> getRecipes() {
@@ -106,7 +110,7 @@ public class GeneticPolymizerHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

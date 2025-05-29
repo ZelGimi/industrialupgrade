@@ -1,97 +1,94 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.blocks.FluidName;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
-import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fluids.Fluid;
+import com.denfop.utils.FluidHandlerFix;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemRadioprotector extends ItemFluidContainer {
+public class ItemRadioprotector extends ItemFluidContainer implements IProperties, IItemTab {
 
     public ItemRadioprotector() {
-        super("radioprotector", 1000);
-        this.setMaxStackSize(1);
+        super(1000, 1);
+        IUCore.proxy.addProperties(this);
+
     }
-
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu.").replace(".name", ""));
-    }
-
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
-            subItems.add(new ItemStack(this));
-            subItems.add(this.getItemStack(FluidName.fluidazurebrilliant));
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
     @Override
-    public void registerModels() {
-        ModelLoader.setCustomMeshDefinition(this, stack -> {
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
-            FluidStack fluid = FluidUtil.getFluidContained(stack);
-            if (fluid != null && fluid.amount == 1000) {
-                return new ModelResourceLocation(Constants.MOD_ID + ":" + "tools" + "/" + "radioprotector_full", null);
-            }
-
-            return new ModelResourceLocation(Constants.MOD_ID + ":" + "tools" + "/" + "radioprotector", null);
-
-        });
-        ModelBakery.registerItemVariants(
-                this,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + "tools" + "/" + "radioprotector_full", null)
-        );
-        ModelBakery.registerItemVariants(this, new ModelResourceLocation(Constants.MOD_ID + ":" + "tools" + "/" +
-                "radioprotector", null));
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-        if (IUCore.proxy.isSimulating()) {
-            ItemStack stack = ModUtils.get(player, hand);
-            final NBTTagCompound nbt = player.getEntityData();
-            FluidStack fluid = FluidUtil.getFluidContained(stack);
-            if (fluid != null && fluid.amount == 1000 && nbt.getDouble("radiation") > 0D) {
-                IFluidHandlerItem handler;
-                handler = FluidUtil.getFluidHandler(stack);
-                handler.drain(1000, true);
 
-                nbt.setDouble("radiation", 0);
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            p_41392_.add(new ItemStack(this));
+            p_41392_.add(this.getItemStack(FluidName.fluidazurebrilliant.getInstance().get()));
+        }
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        if (!world.isClientSide) {
+            ItemStack stack = player.getItemInHand(hand);
+            CompoundTag nbt = player.getPersistentData();
+            IFluidHandlerItem handler = FluidHandlerFix.getFluidHandler(stack);
+            FluidStack fluid = handler.getFluidInTank(0);
+
+            if (!fluid.isEmpty() && fluid.getAmount() == 1000 && nbt.getDouble("radiation") > 0D) {
+
+                handler.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+                nbt.putDouble("radiation", 0);
+
+
                 new PacketRadiationUpdateValue(player, 0);
-                player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 1200));
-                player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 600));
-                player.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 600));
-                player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 300));
+
+                player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 1200)); // HASTE
+                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600)); // REGENERATION
+                player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 600)); // SATURATION
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300)); // RESISTANCE
+                return InteractionResultHolder.success(player.getItemInHand(hand));
             }
+
         }
 
-        return super.onItemRightClick(world, player, hand);
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
 
     public boolean canfill(Fluid fluid) {
-        return fluid == FluidName.fluidazurebrilliant.getInstance();
+        return fluid == FluidName.fluidazurebrilliant.getInstance().get();
     }
 
 
+    @Override
+    public String[] properties() {
+        return new String[]{"full"};
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
+        return initCapabilities(itemStack, itemStack.getTag()).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null).getFluidInTank(0).isEmpty() ? 0 : 1;
+    }
 }

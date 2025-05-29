@@ -1,6 +1,7 @@
 package com.denfop.api.space;
 
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
@@ -12,5 +13,4 @@ public interface IStar extends IBody {
     List<IPlanet> getPlanetList();
 
     List<IAsteroid> getAsteroidList();
-
 }

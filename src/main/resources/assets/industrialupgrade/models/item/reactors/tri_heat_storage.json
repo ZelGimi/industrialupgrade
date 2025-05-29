@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/tri_heat_storage"
+    "layer0" : "industrialupgrade:item/tri_heat_storage"
   }
 }

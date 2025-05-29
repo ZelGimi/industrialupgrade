@@ -1,8 +1,8 @@
 {
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/space/space_probe2",
-		"particle": "industrialupgrade:models/space/space_probe2"
+		"0": "industrialupgrade:block/space/space_probe2",
+		"particle": "industrialupgrade:block/space/space_probe2"
 	},
 	"elements": [
 		{

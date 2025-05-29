@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/vanady_verysmalldust"
+    "layer0" : "industrialupgrade:item/vanady_verysmalldust"
   }
 }

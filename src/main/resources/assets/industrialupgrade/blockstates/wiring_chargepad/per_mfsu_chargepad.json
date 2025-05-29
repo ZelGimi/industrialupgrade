@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=per_mfsu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad"
+    },
+    "facing=south,type=per_mfsu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad",
+      "y": 180
+    },
+    "facing=west,type=per_mfsu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad",
+      "y": 270
+    },
+    "facing=east,type=per_mfsu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad",
+      "y": 90
+    },
+    "facing=down,type=per_mfsu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad",
+      "x": 90
+    },
+    "facing=up,type=per_mfsu_chargepad": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad",
+      "x": 270
+    },
+    "facing=north,type=per_mfsu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active"
+    },
+    "facing=south,type=per_mfsu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "y": 180
+    },
+    "facing=west,type=per_mfsu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "y": 270
+    },
+    "facing=east,type=per_mfsu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "y": 90
+    },
+    "facing=down,type=per_mfsu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "x": 90
+    },
+    "facing=up,type=per_mfsu_chargepad_invalid": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "x": 270
+    },
+    "facing=north,type=per_mfsu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active"
+    },
+    "facing=south,type=per_mfsu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "y": 180
+    },
+    "facing=west,type=per_mfsu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "y": 270
+    },
+    "facing=east,type=per_mfsu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "y": 90
+    },
+    "facing=down,type=per_mfsu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "x": 90
+    },
+    "facing=up,type=per_mfsu_chargepad_active": {
+      "model": "industrialupgrade:block/chargepad/per_mfsu_chargepad_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_363_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine3/wireless_controller_reactors"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/wireless_controller_heat_reactors"
+  },
+  "show_notification": true
+}

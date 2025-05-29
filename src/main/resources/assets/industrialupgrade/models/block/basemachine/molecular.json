@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/molecular_transducer",
-    "particle" : "industrialupgrade:models/molecular_transducer"
+    "0" : "industrialupgrade:block/molecular_transducer",
+    "particle" : "industrialupgrade:block/molecular_transducer"
   },
   "elements" : [
     {

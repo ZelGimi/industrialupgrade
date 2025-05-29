@@ -5,10 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGeothermalPump;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityGeothermalTransport extends TileEntityMultiBlockElement implements ITransport {
 
-    public TileEntityGeothermalTransport() {
+    public TileEntityGeothermalTransport(BlockPos pos, BlockState state) {
+        super(BlockGeothermalPump.geothermal_transport, pos, state);
     }
 
     @Override
@@ -18,7 +21,7 @@ public class TileEntityGeothermalTransport extends TileEntityMultiBlockElement i
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.geothermalpump;
+        return IUItem.geothermalpump.getBlock(getTeBlock());
     }
 
 }

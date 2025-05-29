@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityAutoCrafter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerAutoCrafter extends ContainerFullInv<TileEntityAutoCrafter> {
 
-    public ContainerAutoCrafter(TileEntityAutoCrafter tileEntityAutoCrafter, EntityPlayer var1) {
+    public ContainerAutoCrafter(TileEntityAutoCrafter tileEntityAutoCrafter, Player var1) {
         super(var1, tileEntityAutoCrafter, 202);
         for (int i = 0; i < 9; i++) {
             addSlotToContainer(new SlotVirtual(tileEntityAutoCrafter, i, 10 + (i % 3) * 18, 18 + (i / 3) * 18,

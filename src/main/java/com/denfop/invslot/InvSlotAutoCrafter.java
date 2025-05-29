@@ -2,7 +2,7 @@ package com.denfop.invslot;
 
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.tiles.mechanism.TileEntityAutoCrafter;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Collections;
@@ -15,9 +15,10 @@ public class InvSlotAutoCrafter extends InvSlot implements VirtualSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         ((TileEntityAutoCrafter) this.base).updateCraft();
+        return content;
     }
 
     @Override

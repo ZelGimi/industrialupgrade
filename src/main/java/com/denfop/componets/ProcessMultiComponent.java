@@ -1,8 +1,6 @@
 package com.denfop.componets;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IMultiUpdateTick;
@@ -10,28 +8,30 @@ import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.blocks.FluidName;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.tiles.mechanism.multimechanism.IMultiMachine;
 import com.denfop.utils.Timer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 public class ProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
 
@@ -160,10 +160,11 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 boolean recycler = this.enumMultiMachine.recipe.equals("recycler");
                 if (!recycler) {
                     maxSize = this.inputSlots.get(slotId).getCount() / output.getList().get(0);
+                    maxSize1 = output.getRecipe().output.items.get(0).getMaxStackSize();
                 } else {
                     maxSize = this.inputSlots.get(slotId).getCount();
+                    maxSize1 = output.getRecipe().output.items.get(0).getMaxStackSize();
                 }
-                maxSize1 = output.getRecipe().output.items.get(0).getMaxStackSize();
 
                 ItemStack outputStack = output.getRecipe().output.items.get(0);
 
@@ -173,13 +174,13 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 int count = 0;
                 for (int i = 0; i < outputSlot.size(); i++) {
                     final ItemStack output_stack = this.outputSlot.get(i);
-                    count += output_stack.isEmpty() ? maxSize1 : output_stack.isItemEqual(outputStack) ?
+                    count += output_stack.isEmpty() ? maxSize1 : output_stack.is(outputStack.getItem()) ?
                             output_stack.getMaxStackSize() - output_stack.getCount() : 0;
                 }
                 size = Math.min(size, count / outputStack.getCount());
                 if (this.multimachine.getTank() != null) {
                     size = Math.min(size, this.multimachine.getTank().getFluidAmount() / 1000);
-                    this.multimachine.getTank().drain(1000 * size, true);
+                    this.multimachine.getTank().drain(1000 * size, IFluidHandler.FluidAction.EXECUTE);
                 }
                 if (maxSize == size && (recycler || size * output.getRecipe().input
                         .getInputs()
@@ -220,13 +221,13 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 int count = 0;
                 for (int i = 0; i < sizeWorkingSlot; i++) {
                     final ItemStack output_stack = this.outputSlot.get(i);
-                    count += output_stack.isEmpty() ? maxSize1 : output_stack.isItemEqual(outputStack) ?
+                    count += output_stack.isEmpty() ? maxSize1 : output_stack.is(outputStack.getItem()) ?
                             output_stack.getMaxStackSize() - output_stack.getCount() : 0;
                 }
                 size = Math.min(size, count / outputStack.getCount());
                 if (this.multimachine.getTank() != null) {
                     size = Math.min(size, this.multimachine.getTank().getFluidAmount() / 1000);
-                    this.multimachine.getTank().drain(1000 * size, true);
+                    this.multimachine.getTank().drain(1000 * size, IFluidHandler.FluidAction.EXECUTE);
                 }
                 this.multimachine.consume(size);
                 if (maxSize == size && (recycler ||
@@ -240,7 +241,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     this.inputSlots.consume(slotId, size, output.getList().get(0));
                     this.outputSlot.add(outputStack, size);
                 } else {
-                    Random rand = this.getParent().getWorld().rand;
+                    RandomSource rand = this.getParent().getLevel().random;
                     for (int i = 0; i < size; i++) {
                         this.inputSlots.consume(slotId);
                         if (rand.nextInt(max + 1) <= min) {
@@ -254,13 +255,11 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
                 operateOnce(slotId, output.getRecipe().output.items, size);
                 if (this.multimachine.getTank() != null) {
-                    this.multimachine.getTank().drain(1000, true);
+                    this.multimachine.getTank().drain(1000, IFluidHandler.FluidAction.EXECUTE);
                 }
                 if (!this.enumMultiMachine.recipe.equals("recycler")) {
                     if (this.multimachine.getTank() != null) {
-                        if (this.multimachine.getTank().getFluid() == null || this.multimachine
-                                .getTank()
-                                .getFluid().amount < 1000) {
+                        if (this.multimachine.getTank().getFluid().isEmpty() || this.multimachine.getTank().getFluid().getAmount() < 1000) {
                             break;
                         }
                     }
@@ -313,7 +312,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     this.exp.addEnergy(this.getRecipeOutput(slotId).getRecipe().output.metadata.getFloat("experience"));
                 }
             } else {
-                Random rand = this.getParent().getWorld().rand;
+                RandomSource rand = this.getParent().getLevel().random;
                 this.inputSlots.consume(slotId);
                 if (rand.nextInt(max + 1) <= min) {
                     this.outputSlot.add(processResult);
@@ -330,14 +329,14 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public MachineRecipe getOutput(int slotId) {
         if (enumMultiMachine == null || (
                 enumMultiMachine.type != EnumTypeMachines.COMBRECYCLER && enumMultiMachine.type != EnumTypeMachines.RECYCLER)) {
-            if (this.inputSlots.isEmpty(slotId)) {
+            if (this.inputSlots.get(slotId).isEmpty()) {
                 this.output[slotId] = null;
                 return null;
             }
             this.output[slotId] = this.inputSlots.process(slotId);
             return this.output[slotId];
         } else {
-            if (this.inputSlots.isEmpty(slotId)) {
+            if (this.inputSlots.get(slotId).isEmpty()) {
                 this.output[slotId] = null;
                 return null;
             }
@@ -347,22 +346,14 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     }
 
     @Override
-    public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        super.addInformation(stack, tooltip);
-        if (parent.getWorld() == null) {
-            tooltip.add(Localization.translate("iu.speed_canister.info"));
-        }
-    }
-
-    @Override
-    public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem().equals(IUItem.canister)) {
-            FluidStack fluid = FluidUtil.getFluidContained(stack);
-            if (fluid != null && fluid.getFluid() == FluidName.fluidmotoroil.getInstance() && fluid.amount >= 125 && (!timer1.canWork() || timer1.getBar() == 0) && (timer == null || !timer.canWork())) {
+    public boolean onBlockActivated(final Player player, final InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem().equals(IUItem.canister.getItem())) {
+            IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((IFluidHandlerItem) stack.getItem().initCapabilities(stack, stack.getTag()));
+            FluidStack fluid = handler.getFluidInTank(0);
+            if (!fluid.isEmpty() && fluid.getFluid() == FluidName.fluidmotoroil.getInstance().get() && fluid.getAmount() >= 125 && (!timer1.canWork() || timer1.getBar() == 0) && (timer == null || !timer.canWork())) {
                 this.timer = new Timer(0, 0, 35);
-                final IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
-                handler.drain(125, true);
+                handler.drain(125, IFluidHandler.FluidAction.EXECUTE);
                 return true;
             }
         }
@@ -373,7 +364,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public void updateEntityServer() {
 
         int quickly = 1;
-        if (this.parent.getWorld().provider.getWorldTime() % 20 == 0) {
+        if (this.parent.getLevel().getGameTime() % 20 == 0) {
             if (this.module_separate && !this.inputSlots.isEmpty()) {
                 if (sizeWorkingSlot > 1) {
 
@@ -384,12 +375,12 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                                 break;
                             }
                             ItemStack stack1 = this.inputSlots.get(i);
-                            if (stack.isItemEqual(stack1)) {
+                            if (stack.is(stack1.getItem())) {
                                 int min = stack.getMaxStackSize() - stack.getCount();
                                 min = Math.min(min, stack1.getCount());
                                 if (stack1.getCount() == min) {
                                     stack.grow(min);
-                                    this.inputSlots.put(i, ItemStack.EMPTY);
+                                    this.inputSlots.set(i, ItemStack.EMPTY);
                                 } else {
                                     stack.grow(min);
                                     stack1.shrink(min);
@@ -397,27 +388,27 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                             }
                         } else {
                             ItemStack stack1 = this.inputSlots.get(i);
-                            this.inputSlots.put(0, stack1);
-                            this.inputSlots.put(i, ItemStack.EMPTY);
+                            this.inputSlots.set(0, stack1);
+                            this.inputSlots.set(i, ItemStack.EMPTY);
                         }
                     }
                 }
             }
         }
 
-        if (this.parent.getWorld().provider.getWorldTime() % 10 == 0) {
+        if (this.parent.getLevel().getGameTime() % 10 == 0) {
             if (this.modulestorage && !this.inputSlots.isEmpty()) {
-                final ItemStack stack = this.inputSlots.get();
+                final ItemStack stack = this.inputSlots.get(0);
                 int size = 0;
                 int col = 0;
                 for (int i = 0; i < sizeWorkingSlot; i++) {
                     ItemStack stack1 = this.inputSlots.get(i);
 
-                    if (stack1.isItemEqual(stack)) {
+                    if (stack1.is(stack.getItem())) {
                         size += stack1.getCount();
                     }
 
-                    if (stack1.isItemEqual(stack) || stack1.isEmpty()) {
+                    if (stack1.is(stack.getItem()) || stack1.isEmpty()) {
                         col++;
                     }
                 }
@@ -425,7 +416,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 int count1 = size - (count * col);
                 for (int i = 0; i < sizeWorkingSlot; i++) {
                     ItemStack stack1 = this.inputSlots.get(i);
-                    if ((stack1.isItemEqual(stack)) || stack1.isEmpty()) {
+                    if ((stack1.is(stack.getItem())) || stack1.isEmpty()) {
                         ItemStack stack2 = stack.copy();
                         int dop = 0;
                         int prom = 64 - count;
@@ -441,7 +432,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                         }
 
                         stack2.setCount(count + dop);
-                        this.inputSlots.put(i, stack2);
+                        this.inputSlots.set(i, stack2);
 
                     }
 
@@ -464,11 +455,11 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
             if (this.output[i] != null && !this.inputSlots.get(i).isEmpty()) {
                 if (this.module_infinity_water) {
                     if (this.multimachine.getTank() != null && this.multimachine.getTank().getFluidAmount() < 32000) {
-                        this.multimachine.getTank().fill(new FluidStack(FluidRegistry.WATER, 64000), true);
+                        this.multimachine.getTank().fill(new FluidStack(Fluids.WATER, 64000), IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
                 if (this.multimachine.getTank() != null) {
-                    if (this.multimachine.getTank().getFluid() == null || this.multimachine.getTank().getFluid().amount < 1000) {
+                    if (this.multimachine.getTank().getFluid().isEmpty() || this.multimachine.getTank().getFluid().getAmount() < 1000) {
                         return;
                     }
                 }
@@ -536,7 +527,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     if (this.enumMultiMachine.type == EnumTypeMachines.ELECTRICFURNACE) {
 
 
-                        int exp = this.getParent().getWorld().rand.nextInt(3) + 1;
+                        int exp = this.getParent().getLevel().random.nextInt(3) + 1;
                         this.exp.addEnergy(exp);
                     }
 
@@ -582,35 +573,20 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         if (fillratio >= 0.5 && fillratio < 0.75) {
             this.operationLength = (int) (this.operationLength * 1.5);
         }
-        if (this.parent.getActive()) {
-            if (this.parent.getWorld().provider.getWorldTime() % 20 == 0) {
-                if (this.timer != null && this.timer.canWork()) {
-                    this.timer.work();
-                    if (!this.timer.canWork()) {
-                        timer1 = new Timer(0, 0, 10);
-                    }
-                }
-                if (timer1.canWork()) {
-                    timer1.work();
+        if (this.parent.getLevel().getGameTime() % 20 == 0) {
+            if (this.timer != null && this.timer.canWork()) {
+                this.timer.work();
+                if (!this.timer.canWork()) {
+                    timer1 = new Timer(0, 0, 10);
                 }
             }
-        }
-        if (this.parent.getActive()) {
-            if (this.parent.getWorld().provider.getWorldTime() % 20 == 0) {
-                if (this.timer != null && this.timer.canWork()) {
-                    this.timer.work();
-                    if (!this.timer.canWork()) {
-                        timer1 = new Timer(0, 0, 10);
-                    }
-                }
-                if (timer1.canWork()) {
-                    timer1.work();
-                }
+            if (timer1.canWork()) {
+                timer1.work();
             }
         }
     }
 
-    public void readFromNbt(NBTTagCompound nbttagcompound) {
+    public void readFromNbt(CompoundTag nbttagcompound) {
         for (int i = 0; i < sizeWorkingSlot; i++) {
             this.progress[i] = nbttagcompound.getShort("progress" + i);
         }
@@ -620,29 +596,29 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.module_infinity_water = nbttagcompound.getBoolean("module_infinity_water");
         this.module_separate = nbttagcompound.getBoolean("module_separate");
 
-        this.module = nbttagcompound.getInteger("module");
-        this.mode = nbttagcompound.getInteger("mode");
+        this.module = nbttagcompound.getInt("module");
+        this.mode = nbttagcompound.getInt("mode");
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound nbttagcompound = new NBTTagCompound();
+    public CompoundTag writeToNbt() {
+        CompoundTag nbttagcompound = new CompoundTag();
         for (int i = 0; i < sizeWorkingSlot; i++) {
-            nbttagcompound.setShort("progress" + i, progress[i]);
+            nbttagcompound.putShort("progress" + i, progress[i]);
         }
-        nbttagcompound.setInteger("module", module);
-        nbttagcompound.setInteger("mode", mode);
-        nbttagcompound.setBoolean("quickly", this.quickly);
-        nbttagcompound.setBoolean("modulesize", this.modulesize);
-        nbttagcompound.setBoolean("modulestorage", this.modulestorage);
-        nbttagcompound.setBoolean("module_infinity_water", this.module_infinity_water);
-        nbttagcompound.setBoolean("module_separate", this.module_separate);
+        nbttagcompound.putInt("module", module);
+        nbttagcompound.putInt("mode", mode);
+        nbttagcompound.putBoolean("quickly", this.quickly);
+        nbttagcompound.putBoolean("modulesize", this.modulesize);
+        nbttagcompound.putBoolean("modulestorage", this.modulestorage);
+        nbttagcompound.putBoolean("module_infinity_water", this.module_infinity_water);
+        nbttagcompound.putBoolean("module_separate", this.module_separate);
         return nbttagcompound;
     }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.parent.getLevel().isClientSide) {
             this.setOverclockRates();
             inputSlots.load();
             this.getsOutputs();
@@ -669,7 +645,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
         int tier = this.upgradeSlot.getTier(this.defaultTier);
         this.energy.setSinkTier(tier);
-        ((TileMultiMachine) parent).dischargeSlot.setTier(tier);
+        for (InvSlot slot : this.energy.managedSlots)
+            if (slot instanceof InvSlotDischarge)
+                ((InvSlotDischarge) slot).setTier(tier);
         this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
                 this.defaultEnergyStorage
         ));
@@ -681,7 +659,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     }
 
     @Override
-    public void onContainerUpdate(final EntityPlayerMP player) {
+    public void onContainerUpdate(final ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeInt(this.operationLength);
         for (int i = 0; i < sizeWorkingSlot; i++) {
@@ -781,7 +759,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     }
 
     public boolean onActivated(ItemStack heldItem) {
-        if (heldItem.getItem().equals(IUItem.module_quickly)) {
+        if (heldItem.getItem().equals(IUItem.module_quickly.getItem())) {
             if (!this.quickly && this.module < 2) {
                 this.quickly = true;
                 this.module++;
@@ -789,7 +767,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 return true;
             }
         }
-        if (heldItem.getItem().equals(IUItem.module_stack)) {
+        if (heldItem.getItem().equals(IUItem.module_stack.getItem())) {
             if (!this.modulesize && this.module < 2) {
                 this.modulesize = true;
                 this.module++;
@@ -797,7 +775,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 return true;
             }
         }
-        if (this.multimachine.getTank() != null && heldItem.getItem().equals(IUItem.module_infinity_water)) {
+        if (this.multimachine.getTank() != null && heldItem.getItem().equals(IUItem.module_infinity_water.getItem())) {
             if (!this.module_infinity_water && this.module < 2) {
                 this.module_infinity_water = true;
                 this.module++;
@@ -805,7 +783,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 return true;
             }
         }
-        if (heldItem.getItem().equals(IUItem.module_storage)) {
+        if (heldItem.getItem().equals(IUItem.module_storage.getItem())) {
             if (!this.modulestorage && this.module < 2) {
                 this.modulestorage = true;
                 this.module++;
@@ -813,7 +791,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 return true;
             }
         }
-        if (this.enumMultiMachine.type == EnumTypeMachines.COMPRESSOR && heldItem.getItem().equals(IUItem.module_separate)) {
+        if (this.enumMultiMachine.type == EnumTypeMachines.COMPRESSOR && heldItem.getItem().equals(IUItem.module_separate.getItem())) {
             if (!this.module_separate && this.module < 2) {
                 this.module_separate = true;
                 this.module++;

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/heat_limiter_side",
-    "down" : "industrialupgrade:blocks/welding_button",
-    "up" : "industrialupgrade:blocks/heat_limiter_top",
-    "north" : "industrialupgrade:blocks/heat_limiter_main",
-    "east" : "industrialupgrade:blocks/heat_limiter_side",
-    "south" : "industrialupgrade:blocks/heat_limiter_south",
-    "west" : "industrialupgrade:blocks/heat_limiter_side"
+    "particle" : "industrialupgrade:block/heat_limiter_side",
+    "down" : "industrialupgrade:block/welding_button",
+    "up" : "industrialupgrade:block/heat_limiter_top",
+    "north" : "industrialupgrade:block/heat_limiter_main",
+    "east" : "industrialupgrade:block/heat_limiter_side",
+    "south" : "industrialupgrade:block/heat_limiter_south",
+    "west" : "industrialupgrade:block/heat_limiter_side"
   }
 }

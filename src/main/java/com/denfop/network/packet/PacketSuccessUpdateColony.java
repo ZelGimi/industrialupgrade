@@ -1,9 +1,9 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
 
@@ -14,11 +14,11 @@ public class PacketSuccessUpdateColony implements IPacket {
 
     ;
 
-    public PacketSuccessUpdateColony(EntityPlayer entityPlayer) {
+    public PacketSuccessUpdateColony(Player entityPlayer) {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
         customPacketBuffer.writeByte(getId());
-        customPacketBuffer.writeUniqueId(entityPlayer.getUniqueID());
-        IUCore.network.getServer().sendPacket(customPacketBuffer, (EntityPlayerMP) entityPlayer);
+        customPacketBuffer.writeUUID(entityPlayer.getUUID());
+        IUCore.network.getServer().sendPacket(customPacketBuffer, (ServerPlayer) entityPlayer);
     }
 
     @Override
@@ -27,15 +27,15 @@ public class PacketSuccessUpdateColony implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
+    public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
         UUID uuid;
-        uuid = (UUID) customPacketBuffer.readUniqueId();
-        if (entityPlayer.getUniqueID().equals(uuid)) {
-            entityPlayer.inventory.getItemStack().shrink(1);
-            if (entityPlayer.inventory.getItemStack().getCount() == 0) {
-                entityPlayer.inventory.setItemStack(ItemStack.EMPTY);
+        uuid = (UUID) customPacketBuffer.readUUID();
+        if (entityPlayer.getUUID().equals(uuid)) {
+            entityPlayer.getInventory().getSelected().shrink(1);
+            if (entityPlayer.getInventory().getSelected().getCount() == 0) {
+                entityPlayer.getInventory().setPickedItem(ItemStack.EMPTY);
             }
-            entityPlayer.inventoryContainer.detectAndSendChanges();
+            entityPlayer.containerMenu.broadcastChanges();
         }
     }
 

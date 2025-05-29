@@ -1,7 +1,7 @@
 package com.denfop.tiles.base;
 
-import com.denfop.Config;
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -9,12 +9,10 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.Redstone;
-import com.denfop.componets.RedstoneHandler;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerNeutronGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiNeutronGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -24,17 +22,22 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
+
+;
 
 public class TileNeutronGenerator extends TileElectricMachine implements IUpgradableBlock,
         IUpdatableTileEvent {
@@ -50,21 +53,21 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
     private final AirPollutionComponent pollutionAir;
     public boolean work = true;
 
-    public TileNeutronGenerator() {
-        super((int) (Config.energy * 128), 14, 1);
+    public TileNeutronGenerator(BlockPos pos, BlockState state) {
+        super((int) (16250000.0D * 128), 14, 1, BlockBaseMachine.neutron_generator, pos, state);
 
-        this.energycost = (float) Config.energy / 100;
+        this.energycost = (float) 16250000.0D / 100;
         this.outputSlot = new InvSlotOutput(this, 1);
         this.containerslot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
                 1,
                 InvSlotFluid.TypeFluidSlot.OUTPUT,
-                FluidName.fluidNeutron.getInstance()
+                FluidName.fluidNeutron.getInstance().get()
         );
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 9 * 1000,
-                Fluids.fluidPredicate(FluidName.fluidNeutron.getInstance()), InvSlot.TypeItemSlot.OUTPUT
+                Fluids.fluidPredicate(FluidName.fluidNeutron.getInstance().get()), InvSlot.TypeItemSlot.OUTPUT
         );
         this.redstone = this.addComponent(new Redstone(this));
         this.redstone.subscribe(new RedstoneHandler() {
@@ -113,12 +116,12 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines;
+        return IUItem.machines.getBlock(getTeBlock());
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.setUpgradestat();
             energy.setReceivingEnabled(work);
         }
@@ -131,14 +134,14 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
         super.onUnloaded();
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         this.work = nbt.getBoolean("work");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setBoolean("work", this.work);
+        nbt.putBoolean("work", this.work);
         return nbt;
     }
 
@@ -178,7 +181,7 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
             return false;
         }
         m = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
-        this.fluidTank.fillInternal(new FluidStack(FluidName.fluidNeutron.getInstance(), Math.min(m, k)), true);
+        this.fluidTank.fill(new FluidStack(FluidName.fluidNeutron.getInstance().get(), Math.min(m, k)), IFluidHandler.FluidAction.EXECUTE);
         this.energy.useEnergy(this.energycost * Math.min(m, k));
         return true;
     }
@@ -188,16 +191,13 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
         return "" + p + "%";
     }
 
-    public ContainerNeutronGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerNeutronGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerNeutronGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiNeutronGenerator getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiNeutronGenerator(new ContainerNeutronGenerator(entityPlayer, this));
-    }
-
-    public void onGuiClosed(EntityPlayer player) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiNeutronGenerator((ContainerNeutronGenerator) menu);
     }
 
 
@@ -216,7 +216,7 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
 
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         if (i != 10) {
             this.work = !this.work;
             energy.setReceivingEnabled(work);

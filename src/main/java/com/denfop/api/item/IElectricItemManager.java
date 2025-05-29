@@ -1,7 +1,8 @@
 package com.denfop.api.item;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 public interface IElectricItemManager {
 
@@ -15,7 +16,7 @@ public interface IElectricItemManager {
 
     boolean canUse(ItemStack var1, double var2);
 
-    boolean use(ItemStack var1, double var2, EntityLivingBase var4);
+    boolean use(ItemStack var1, double var2, LivingEntity var4);
 
 
     String getToolTip(ItemStack var1);

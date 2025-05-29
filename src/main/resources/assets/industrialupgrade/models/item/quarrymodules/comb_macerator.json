@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/comb_macerator"
+    "layer0" : "industrialupgrade:item/comb_macerator"
   }
 }

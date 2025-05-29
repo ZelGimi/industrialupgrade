@@ -1,6 +1,7 @@
 package com.denfop.api.transport;
 
-import net.minecraft.util.EnumFacing;
+
+import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -9,15 +10,15 @@ public class Path {
 
     final ITransportSink target;
 
-    final EnumFacing targetDirection;
+    final Direction targetDirection;
     private final Object handler;
-    EnumFacing firstSide;
+    Direction firstSide;
 
     ITransportConductor first = null;
 
     ITransportConductor end = null;
 
-    Path(ITransportSink sink, EnumFacing facing) {
+    Path(ITransportSink sink, Direction facing) {
         this.target = sink;
         this.targetDirection = facing;
         this.handler = sink.getHandler(facing);

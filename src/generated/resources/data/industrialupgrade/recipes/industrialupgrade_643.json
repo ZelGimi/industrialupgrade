@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/venus_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/venus_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/venus_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/venus_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/venus_boulder"
+  }
+}

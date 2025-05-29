@@ -1,172 +1,17 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.MultiTileBlock;
-import com.denfop.tiles.base.TileAntiUpgradeBlock;
-import com.denfop.tiles.base.TileAutoSpawner;
-import com.denfop.tiles.base.TileEntityAntiMagnet;
-import com.denfop.tiles.base.TileEntityAutoDigger;
-import com.denfop.tiles.base.TileEntityAutomaticMechanism;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
-import com.denfop.tiles.base.TileEntityRefrigeratorFluids;
-import com.denfop.tiles.base.TileEntitySimulatorReactor;
-import com.denfop.tiles.base.TileEntityTeleporter;
-import com.denfop.tiles.base.TileEntityTesseract;
-import com.denfop.tiles.base.TileEntityWirelessGraphiteController;
-import com.denfop.tiles.base.TileEntityWirelessHeatController;
-import com.denfop.tiles.base.TileEntityWirelessMatterCollector;
-import com.denfop.tiles.base.TileLimiter;
-import com.denfop.tiles.base.TileQuantumMolecular;
-import com.denfop.tiles.base.TileRadiationPurifier;
+import com.denfop.blocks.state.DefaultDrop;
+import com.denfop.blocks.state.HarvestTool;
+import com.denfop.tiles.base.*;
 import com.denfop.tiles.crop.TileEntityDualMultiCrop;
 import com.denfop.tiles.crop.TileEntityQuadMultiCrop;
 import com.denfop.tiles.crop.TileEntitySingleMultiCrop;
 import com.denfop.tiles.crop.TileEntityTripleMultiCrop;
-import com.denfop.tiles.mechanism.TileAdvHandlerHeavyOre;
-import com.denfop.tiles.mechanism.TileAdvScanner;
-import com.denfop.tiles.mechanism.TileCanner;
-import com.denfop.tiles.mechanism.TileCrystalCharger;
-import com.denfop.tiles.mechanism.TileEntityAlkalineEarthQuarry;
-import com.denfop.tiles.mechanism.TileEntityAmpereGenerator;
-import com.denfop.tiles.mechanism.TileEntityAmpereStorage;
-import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
-import com.denfop.tiles.mechanism.TileEntityApothecaryBee;
-import com.denfop.tiles.mechanism.TileEntityAutoCrafter;
-import com.denfop.tiles.mechanism.TileEntityAutoFuse;
-import com.denfop.tiles.mechanism.TileEntityAutoOpenBox;
-import com.denfop.tiles.mechanism.TileEntityBatteryFactory;
-import com.denfop.tiles.mechanism.TileEntityBioGenerator;
-import com.denfop.tiles.mechanism.TileEntityBrewingPlant;
-import com.denfop.tiles.mechanism.TileEntityCactusFarm;
-import com.denfop.tiles.mechanism.TileEntityCentrifuge;
-import com.denfop.tiles.mechanism.TileEntityChargepadExperience;
-import com.denfop.tiles.mechanism.TileEntityChickenFarm;
-import com.denfop.tiles.mechanism.TileEntityCollectorProductBee;
-import com.denfop.tiles.mechanism.TileEntityCowFarm;
-import com.denfop.tiles.mechanism.TileEntityElectricDryer;
-import com.denfop.tiles.mechanism.TileEntityElectricRefractoryFurnace;
-import com.denfop.tiles.mechanism.TileEntityElectricSqueezer;
-import com.denfop.tiles.mechanism.TileEntityElectronicsAssembler;
-import com.denfop.tiles.mechanism.TileEntityEnchanterBooks;
-import com.denfop.tiles.mechanism.TileEntityEnergyBarrier;
-import com.denfop.tiles.mechanism.TileEntityEnergyTrash;
-import com.denfop.tiles.mechanism.TileEntityFacadeBlock;
-import com.denfop.tiles.mechanism.TileEntityFieldCleaner;
-import com.denfop.tiles.mechanism.TileEntityFluidAdapter;
-import com.denfop.tiles.mechanism.TileEntityFluidHeater;
-import com.denfop.tiles.mechanism.TileEntityFluidIntegrator;
-import com.denfop.tiles.mechanism.TileEntityFluidMixer;
-import com.denfop.tiles.mechanism.TileEntityFluidSeparator;
-import com.denfop.tiles.mechanism.TileEntityFluidTrash;
-import com.denfop.tiles.mechanism.TileEntityGasCombiner;
-import com.denfop.tiles.mechanism.TileEntityGeneticPolymerizer;
-import com.denfop.tiles.mechanism.TileEntityGeneticReplicator;
-import com.denfop.tiles.mechanism.TileEntityGeneticStabilize;
-import com.denfop.tiles.mechanism.TileEntityGeneticTransposer;
-import com.denfop.tiles.mechanism.TileEntityGenomeExtractor;
-import com.denfop.tiles.mechanism.TileEntityGraphiteHandler;
-import com.denfop.tiles.mechanism.TileEntityHologramSpace;
-import com.denfop.tiles.mechanism.TileEntityImpAlloySmelter;
-import com.denfop.tiles.mechanism.TileEntityIncubator;
-import com.denfop.tiles.mechanism.TileEntityIndustrialOrePurifier;
-import com.denfop.tiles.mechanism.TileEntityInoculator;
-import com.denfop.tiles.mechanism.TileEntityInsulator;
-import com.denfop.tiles.mechanism.TileEntityItemDivider;
-import com.denfop.tiles.mechanism.TileEntityItemDividerFluids;
-import com.denfop.tiles.mechanism.TileEntityItemManipulator;
-import com.denfop.tiles.mechanism.TileEntityItemTrash;
-import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
-import com.denfop.tiles.mechanism.TileEntityMachineCharge;
-import com.denfop.tiles.mechanism.TileEntityMatterFactory;
-import com.denfop.tiles.mechanism.TileEntityMobMagnet;
-import com.denfop.tiles.mechanism.TileEntityMoonSpotter;
-import com.denfop.tiles.mechanism.TileEntityMutatron;
-import com.denfop.tiles.mechanism.TileEntityNeutronSeparator;
-import com.denfop.tiles.mechanism.TileEntityNightConverter;
-import com.denfop.tiles.mechanism.TileEntityNightTransformer;
-import com.denfop.tiles.mechanism.TileEntityNuclearWasteRecycler;
-import com.denfop.tiles.mechanism.TileEntityOilPurifier;
-import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
-import com.denfop.tiles.mechanism.TileEntityPerAlloySmelter;
-import com.denfop.tiles.mechanism.TileEntityPigFarm;
-import com.denfop.tiles.mechanism.TileEntityPlantCollector;
-import com.denfop.tiles.mechanism.TileEntityPlantFertilizer;
-import com.denfop.tiles.mechanism.TileEntityPlantGardener;
-import com.denfop.tiles.mechanism.TileEntityPolymerizer;
-import com.denfop.tiles.mechanism.TileEntityPositronConverter;
-import com.denfop.tiles.mechanism.TileEntityProbeAssembler;
-import com.denfop.tiles.mechanism.TileEntityProgrammingTable;
-import com.denfop.tiles.mechanism.TileEntityPurifierSoil;
-import com.denfop.tiles.mechanism.TileEntityQuantumMiner;
-import com.denfop.tiles.mechanism.TileEntityRNACollector;
-import com.denfop.tiles.mechanism.TileEntityRadioactiveOreHandler;
-import com.denfop.tiles.mechanism.TileEntityReactorSafetyDoom;
-import com.denfop.tiles.mechanism.TileEntityRecipeTuner;
-import com.denfop.tiles.mechanism.TileEntityRefrigeratorCoolant;
-import com.denfop.tiles.mechanism.TileEntityResearchTableSpace;
-import com.denfop.tiles.mechanism.TileEntityReverseTransriptor;
-import com.denfop.tiles.mechanism.TileEntityRocketAssembler;
-import com.denfop.tiles.mechanism.TileEntityRocketLaunchPad;
-import com.denfop.tiles.mechanism.TileEntityRodFactory;
-import com.denfop.tiles.mechanism.TileEntityRodManufacturer;
-import com.denfop.tiles.mechanism.TileEntityRollingMachine;
-import com.denfop.tiles.mechanism.TileEntityRotorAssembler;
-import com.denfop.tiles.mechanism.TileEntityRotorModifier;
-import com.denfop.tiles.mechanism.TileEntityRoverAssembler;
-import com.denfop.tiles.mechanism.TileEntitySafe;
-import com.denfop.tiles.mechanism.TileEntitySaplingGardener;
-import com.denfop.tiles.mechanism.TileEntitySatelliteAssembler;
-import com.denfop.tiles.mechanism.TileEntitySawmill;
-import com.denfop.tiles.mechanism.TileEntitySheepFarm;
-import com.denfop.tiles.mechanism.TileEntityShield;
-import com.denfop.tiles.mechanism.TileEntitySiliconCrystalHandler;
-import com.denfop.tiles.mechanism.TileEntitySingleFluidAdapter;
-import com.denfop.tiles.mechanism.TileEntitySocketFactory;
-import com.denfop.tiles.mechanism.TileEntitySoilAnalyzer;
-import com.denfop.tiles.mechanism.TileEntitySolidFluidIntegrator;
-import com.denfop.tiles.mechanism.TileEntitySolidFluidMixer;
-import com.denfop.tiles.mechanism.TileEntitySolidMixer;
-import com.denfop.tiles.mechanism.TileEntitySolidStateElectrolyzer;
-import com.denfop.tiles.mechanism.TileEntityStampMechanism;
-import com.denfop.tiles.mechanism.TileEntitySteamGenerator;
-import com.denfop.tiles.mechanism.TileEntityTreeBreaker;
-import com.denfop.tiles.mechanism.TileEntityTripleSolidMixer;
-import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
-import com.denfop.tiles.mechanism.TileEntityUpgradeRover;
-import com.denfop.tiles.mechanism.TileEntityWaterRotorAssembler;
-import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
-import com.denfop.tiles.mechanism.TileEntityWeeder;
-import com.denfop.tiles.mechanism.TileEntityWirelessControllerReactors;
-import com.denfop.tiles.mechanism.TileEntityWirelessGasPump;
-import com.denfop.tiles.mechanism.TileEntityWirelessMineralQuarry;
-import com.denfop.tiles.mechanism.TileEntityWirelessOilPump;
-import com.denfop.tiles.mechanism.TileGasPump;
-import com.denfop.tiles.mechanism.TileGenerationAdditionStone;
-import com.denfop.tiles.mechanism.TileImpHandlerHeavyOre;
-import com.denfop.tiles.mechanism.TileImpOilRefiner;
-import com.denfop.tiles.mechanism.TileImpScanner;
-import com.denfop.tiles.mechanism.TilePatternStorage;
-import com.denfop.tiles.mechanism.TilePerHandlerHeavyOre;
-import com.denfop.tiles.mechanism.TilePerScanner;
-import com.denfop.tiles.mechanism.TilePrivatizer;
-import com.denfop.tiles.mechanism.TileSimplePump;
-import com.denfop.tiles.mechanism.TileSimpleScanner;
-import com.denfop.tiles.mechanism.TileSolidCooling;
-import com.denfop.tiles.mechanism.TileTunerWireless;
-import com.denfop.tiles.mechanism.TileWireInsulator;
-import com.denfop.tiles.mechanism.bio.TileBioCentrifuge;
-import com.denfop.tiles.mechanism.bio.TileBioCompressor;
-import com.denfop.tiles.mechanism.bio.TileBioCutting;
-import com.denfop.tiles.mechanism.bio.TileBioExtractor;
-import com.denfop.tiles.mechanism.bio.TileBioFurnace;
-import com.denfop.tiles.mechanism.bio.TileBioGearing;
-import com.denfop.tiles.mechanism.bio.TileBioMacerator;
-import com.denfop.tiles.mechanism.bio.TileBioOreWashing;
-import com.denfop.tiles.mechanism.bio.TileBioRolling;
+import com.denfop.tiles.mechanism.*;
+import com.denfop.tiles.mechanism.bio.*;
 import com.denfop.tiles.mechanism.combpump.TileEntityAdvCombPump;
 import com.denfop.tiles.mechanism.combpump.TileEntityImpCombPump;
 import com.denfop.tiles.mechanism.combpump.TileEntityPerCombPump;
@@ -208,33 +53,7 @@ import com.denfop.tiles.mechanism.solarium_storage.TileEntityAdvSolariumStorage;
 import com.denfop.tiles.mechanism.solarium_storage.TileEntityImpSolariumStorage;
 import com.denfop.tiles.mechanism.solarium_storage.TileEntityPerSolariumStorage;
 import com.denfop.tiles.mechanism.solarium_storage.TileEntitySimpleSolariumStorage;
-import com.denfop.tiles.mechanism.steam.TileAdvSteamQuarry;
-import com.denfop.tiles.mechanism.steam.TileBioExtruder;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamAmpereGenerator;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamBioGenerator;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamBoiler;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamConverter;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamDryer;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamFluidHeater;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamPressureConverter;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamSolidFluidMixer;
-import com.denfop.tiles.mechanism.steam.TileEntitySteamSqueezer;
-import com.denfop.tiles.mechanism.steam.TileQuarryPipe;
-import com.denfop.tiles.mechanism.steam.TileSteamCompressor;
-import com.denfop.tiles.mechanism.steam.TileSteamCrystalCharge;
-import com.denfop.tiles.mechanism.steam.TileSteamCutting;
-import com.denfop.tiles.mechanism.steam.TileSteamElectrolyzer;
-import com.denfop.tiles.mechanism.steam.TileSteamExtractor;
-import com.denfop.tiles.mechanism.steam.TileSteamExtruder;
-import com.denfop.tiles.mechanism.steam.TileSteamHandlerHeavyOre;
-import com.denfop.tiles.mechanism.steam.TileSteamMacerator;
-import com.denfop.tiles.mechanism.steam.TileSteamPeatGenerator;
-import com.denfop.tiles.mechanism.steam.TileSteamPump;
-import com.denfop.tiles.mechanism.steam.TileSteamQuarry;
-import com.denfop.tiles.mechanism.steam.TileSteamRolling;
-import com.denfop.tiles.mechanism.steam.TileSteamSharpener;
-import com.denfop.tiles.mechanism.steam.TileSteamStorage;
-import com.denfop.tiles.mechanism.steam.TileSteamWireInsulator;
+import com.denfop.tiles.mechanism.steam.*;
 import com.denfop.tiles.mechanism.vending.TileEntityAdvVending;
 import com.denfop.tiles.mechanism.vending.TileEntityImpVending;
 import com.denfop.tiles.mechanism.vending.TileEntityPerVending;
@@ -247,23 +66,19 @@ import com.denfop.tiles.mechanism.wind.TileAdvWindGenerator;
 import com.denfop.tiles.mechanism.wind.TileImpWindGenerator;
 import com.denfop.tiles.mechanism.wind.TilePerWindGenerator;
 import com.denfop.tiles.mechanism.wind.TileSimpleWindGenerator;
-import com.denfop.tiles.mechanism.worlcollector.TileAerAssembler;
-import com.denfop.tiles.mechanism.worlcollector.TileAquaAssembler;
-import com.denfop.tiles.mechanism.worlcollector.TileCrystallize;
-import com.denfop.tiles.mechanism.worlcollector.TileEarthAssembler;
-import com.denfop.tiles.mechanism.worlcollector.TileEnderAssembler;
-import com.denfop.tiles.mechanism.worlcollector.TileNetherAssembler;
+import com.denfop.tiles.mechanism.worlcollector.*;
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
 import com.denfop.tiles.tank.TileEntityOakTank;
 import com.denfop.tiles.tank.TileEntitySteelTank;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -278,19 +93,19 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     antimagnet(TileEntityAntiMagnet.class, 7),
     antiupgradeblock(TileAntiUpgradeBlock.class, 8),
     watergenerator(TileWaterGenerator.class, 9),
-    cooling(TileCooling.class, 10),
+      cooling(TileCooling.class, 10),
     aircollector(TileAirCollector.class, 11),
-    combiner_se_generators(TileEntityCombinerSEGenerators.class, 12),
+     combiner_se_generators(TileEntityCombinerSEGenerators.class, 12),
     probe_assembler(TileEntityProbeAssembler.class, 13),
-    research_table_space(TileEntityResearchTableSpace.class, 14),
+ research_table_space(TileEntityResearchTableSpace.class, 14),
     rocket_assembler(TileEntityRocketAssembler.class, 15),
-    rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
+rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
     rotor_assembler(TileEntityRotorAssembler.class, 17),
     rotor_modifier(TileEntityRotorModifier.class, 18),
     satellite_assembler(TileEntitySatelliteAssembler.class, 19),
     soil_analyzer(TileEntitySoilAnalyzer.class, 20),
     rods_manufacturer(TileEntityRodManufacturer.class, 21),
-    ender_assembler(TileEnderAssembler.class, 23),
+   ender_assembler(TileEnderAssembler.class, 23),
     gas_combiner(TileEntityGasCombiner.class, 26),
     analyzer_chest(TileEntityAnalyzerChest.class, 27),
     simple_wind_generator(TileSimpleWindGenerator.class, 28),
@@ -299,7 +114,6 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     per_wind_generator(TilePerWindGenerator.class, 31),
     energy_controller(TileEnergyController.class, 32),
     substitute(TileEnergySubstitute.class, 33),
-
     aer_assembler(TileAerAssembler.class, 34),
     aqua_assembler(TileAquaAssembler.class, 35),
     earth_assembler(TileEarthAssembler.class, 36),
@@ -381,8 +195,6 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     auto_open_box(TileEntityAutoOpenBox.class, 118),
     exp_chargepad(TileEntityChargepadExperience.class, 119),
     recipe_tuner(TileEntityRecipeTuner.class, 120),
-
-
     energy_trash(TileEntityEnergyTrash.class, 121),
     fluid_trash(TileEntityFluidTrash.class, 122),
     item_trash(TileEntityItemTrash.class, 123),
@@ -394,7 +206,7 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     wireless_oil_pump(TileEntityWirelessOilPump.class, 128),
     wireless_mineral_quarry(TileEntityWirelessMineralQuarry.class, 129),
     wireless_controller_reactors(TileEntityWirelessControllerReactors.class, 130),
-    simulation_reactors(TileEntitySimulatorReactor.class, 131),
+   simulation_reactors(TileEntitySimulatorReactor.class, 131),
     radiation_storage(TileEntitySimpleRadiationStorage.class, 132),
     wireless_controller_graphite_reactors(TileEntityWirelessGraphiteController.class, 133),
     wireless_controller_heat_reactors(TileEntityWirelessHeatController.class, 134),
@@ -412,16 +224,15 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     fluid_integrator(TileEntityFluidIntegrator.class, 146),
     solid_state_electrolyzer(TileEntitySolidStateElectrolyzer.class, 147),
     oil_purifier(TileEntityOilPurifier.class, 148),
-
     purifier_soil(TileEntityPurifierSoil.class, 149),
     electric_dryer(TileEntityElectricDryer.class, 150),
     electric_squeezer(TileEntityElectricSqueezer.class, 151),
     fluid_cooling(TileFluidCooling.class, 152),
     solid_cooling(TileSolidCooling.class, 153),
     imp_alloy_smelter(TileEntityImpAlloySmelter.class, 154),
-    per_alloy_smelter(TileEntityPerAlloySmelter.class, 155),
-    fluid_mixer(TileEntityFluidMixer.class, 156),
-    solid_fluid_mixer(TileEntitySolidFluidMixer.class, 157),
+  per_alloy_smelter(TileEntityPerAlloySmelter.class, 155),
+   fluid_mixer(TileEntityFluidMixer.class, 156),
+   solid_fluid_mixer(TileEntitySolidFluidMixer.class, 157),
     fluid_heater(TileEntityFluidHeater.class, 158),
     silicon_crystal_handler(TileEntitySiliconCrystalHandler.class, 159),
     neutronseparator(TileEntityNeutronSeparator.class, 160),
@@ -429,7 +240,7 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     itemmanipulator(TileEntityItemManipulator.class, 162),
     steamboiler(TileEntitySteamBoiler.class, 163, EnumTypeCasing.STEAM),
     steampressureconverter(TileEntitySteamPressureConverter.class, 164, EnumTypeCasing.STEAM),
-    steamdryer(TileEntitySteamDryer.class, 165, EnumTypeCasing.STEAM),
+       steamdryer(TileEntitySteamDryer.class, 165, EnumTypeCasing.STEAM),
     steam_macerator(TileSteamMacerator.class, 166, EnumTypeCasing.STEAM),
     steam_compressor(TileSteamCompressor.class, 167, EnumTypeCasing.STEAM),
     steam_extractor(TileSteamExtractor.class, 168, EnumTypeCasing.STEAM),
@@ -445,7 +256,7 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     steam_peat_generator(TileSteamPeatGenerator.class, 178, EnumTypeCasing.STEAM),
     steam_handler_ore(TileSteamHandlerHeavyOre.class, 179, EnumTypeCasing.STEAM),
     steam_electrolyzer(TileSteamElectrolyzer.class, 180, EnumTypeCasing.STEAM),
-    steam_ampere_generator(TileEntitySteamAmpereGenerator.class, 181, EnumTypeCasing.STEAM),
+   steam_ampere_generator(TileEntitySteamAmpereGenerator.class, 181, EnumTypeCasing.STEAM),
     steam_solid_fluid_mixer(TileEntitySteamSolidFluidMixer.class, 182, EnumTypeCasing.STEAM),
     programming_table(TileEntityProgrammingTable.class, 183),
     electronic_assembler(TileEntityElectronicsAssembler.class, 184),
@@ -499,7 +310,7 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     weeder(TileEntityWeeder.class, 232),
     apothecary_bee(TileEntityApothecaryBee.class, 233),
     collector_product_bee(TileEntityCollectorProductBee.class, 234),
-    incubator(TileEntityIncubator.class, 235),
+   incubator(TileEntityIncubator.class, 235),
     insulator(TileEntityInsulator.class, 236),
     rna_collector(TileEntityRNACollector.class, 237),
     mutatron(TileEntityMutatron.class, 238),
@@ -528,13 +339,16 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     steam_generator(TileEntitySteamGenerator.class, 261),
     ;
 
-    public static final ResourceLocation IDENTITY = IUCore.getIdentifier("basemachine3");
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private final EnumTypeCasing rarity;
     int idBlock;
     private TileEntityBlock dummyTe;
+    private BlockState defaultState;
+    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+
+    ;
 
     BlockBaseMachine3(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this(teClass, itemMeta, EnumTypeCasing.DEFAULT);
@@ -545,7 +359,6 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
         this.rarity = rarity;
-        GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
     }
@@ -556,28 +369,42 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
         return idBlock;
     }
 
-    ;
-
     public void setIdBlock(int id) {
         idBlock = id;
     }
 
     public void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
+        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
-        for (final BlockBaseMachine3 block : values()) {
-            if (block.teClass != null) {
-                try {
-                    block.dummyTe = block.teClass.newInstance();
-                } catch (Exception ignored) {
-
-
-                }
+        if (this.getTeClass() != null) {
+            try {
+                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+            } catch (Exception e) {
+                System.out.println(2);
             }
         }
+    }
 
+    @Override
+    public void setDefaultState(BlockState blockState) {
+        this.defaultState = blockState;
+    }
+
+    @Override
+    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+        this.blockType = blockEntityType;
+    }
+
+    @Override
+    public BlockEntityType<? extends TileEntityBlock> getBlockType() {
+        return this.blockType.get();
+    }
+
+    @Override
+    public String getMainPath() {
+        return "basemachine3";
     }
 
     @Override
@@ -590,11 +417,6 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
         return this.itemMeta;
     }
 
-    @Override
-    @Nonnull
-    public ResourceLocation getIdentifier() {
-        return IDENTITY;
-    }
 
     @Override
     public boolean hasItem() {
@@ -608,52 +430,58 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public boolean hasActive() {
+        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     @Nonnull
-    public Set<EnumFacing> getSupportedFacings() {
+    public Set<Direction> getSupportedFacings() {
         return ModUtils.horizontalFacings;
     }
 
     @Override
     public float getHardness() {
-        return 1.0f;
+        return 1.0F;
     }
 
     @Override
     @Nonnull
-    public MultiTileBlock.HarvestTool getHarvestTool() {
+    public HarvestTool getHarvestTool() {
         if (this == BlockBaseMachine3.oak_tank) {
-            return MultiTileBlock.HarvestTool.Axe;
+            return HarvestTool.Axe;
         }
-        if (this == BlockBaseMachine3.steel_tank || this == BlockBaseMachine3.quarry_pipe) {
-            return MultiTileBlock.HarvestTool.Pickaxe;
+        if (this == BlockBaseMachine3.steel_tank
+                ||  this == BlockBaseMachine3.quarry_pipe
+        ) {
+            return HarvestTool.Pickaxe;
         }
         if (rarity == EnumTypeCasing.BIO || rarity == EnumTypeCasing.STEAM) {
-            return MultiTileBlock.HarvestTool.Pickaxe;
+            return HarvestTool.Pickaxe;
         }
-        return this != BlockBaseMachine3.rolling_machine ? MultiTileBlock.HarvestTool.Wrench : MultiTileBlock.HarvestTool.Pickaxe;
+        return this != BlockBaseMachine3.rolling_machine ? HarvestTool.Wrench : HarvestTool.Pickaxe;
     }
 
     @Override
     @Nonnull
-    public MultiTileBlock.DefaultDrop getDefaultDrop() {
-        if (this == oak_tank || this == steel_tank || this == quarry_pipe) {
-            return MultiTileBlock.DefaultDrop.Self;
+    public DefaultDrop getDefaultDrop() {
+      if (this == oak_tank || this == steel_tank
+                  || this == quarry_pipe
+        ) {
+            return DefaultDrop.Self;
         }
         if (rarity == EnumTypeCasing.BIO || rarity == EnumTypeCasing.STEAM) {
-            return MultiTileBlock.DefaultDrop.Self;
+            return DefaultDrop.Self;
         }
-        return this != BlockBaseMachine3.rolling_machine ? MultiTileBlock.DefaultDrop.Machine :
-                MultiTileBlock.DefaultDrop.Self;
+        return this != BlockBaseMachine3.rolling_machine ? DefaultDrop.Machine :
+                DefaultDrop.Self;
     }
 
     @Override
     public boolean allowWrenchRotating() {
-        return this != BlockBaseMachine3.rolling_machine && this != BlockBaseMachine3.oak_tank && this != BlockBaseMachine3.steel_tank && this.rarity != EnumTypeCasing.BIO && this.rarity != EnumTypeCasing.STEAM;
+        return this != BlockBaseMachine3.rolling_machine  && this.rarity != EnumTypeCasing.BIO && this.rarity != EnumTypeCasing.STEAM;
     }
+
 
     @Override
     public TileEntityBlock getDummyTe() {
@@ -665,8 +493,4 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
         return false;
     }
 
-    @Override
-    public ModelResourceLocation getModelLocation(final ItemStack itemStack) {
-        return null;
-    }
 }

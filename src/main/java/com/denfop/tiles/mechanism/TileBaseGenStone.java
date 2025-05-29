@@ -1,13 +1,16 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGenStone;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGenStone;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
@@ -15,13 +18,15 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -48,16 +53,13 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     protected short progress;
     protected double guiProgress;
 
-    public TileBaseGenStone(int energyPerTick, int length, int outputSlots) {
-        this(energyPerTick, length, outputSlots, 1);
-    }
 
-    public TileBaseGenStone(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
-        super((double) energyPerTick * length, 1, outputSlots);
+    public TileBaseGenStone(int energyPerTick, int length, int outputSlots, IMultiTileBlock multiTileBlock, BlockPos pos, BlockState state) {
+        super((double) energyPerTick * length, 1, outputSlots, multiTileBlock, pos, state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = energyPerTick;
         this.defaultOperationLength = this.operationLength = length;
-        this.defaultTier = aDefaultTier;
+        this.defaultTier = 1;
         this.defaultEnergyStorage = energyPerTick * length;
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.output = null;
@@ -71,10 +73,10 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
-        this.mode = Mode.values()[nbttagcompound.getInteger("mode")];
+        this.mode = Mode.values()[nbttagcompound.getInt("mode")];
     }
 
     @Override
@@ -121,17 +123,9 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiGenStone getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiGenStone(new ContainerGenStone(entityPlayer, this));
-    }
-
-    public String getStartSoundFile() {
-        return "Machines/gen_cobblectone.ogg";
-    }
-
-    public String getInterruptSoundFile() {
-        return "Machines/InterruptOne.ogg";
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiGenStone((ContainerGenStone) menu);
     }
 
 
@@ -157,10 +151,10 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
-        nbttagcompound.setInteger("mode", this.mode.ordinal());
+        nbttagcompound.putShort("progress", this.progress);
+        nbttagcompound.putInt("mode", this.mode.ordinal());
 
         return nbttagcompound;
     }
@@ -171,7 +165,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.getLevel().isClientSide) {
             this.setOverclockRates();
             inputSlotA.load();
             this.getOutput();
@@ -276,7 +270,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         if (i == 10) {
             super.updateTileServer(entityPlayer, i);
         } else {
@@ -284,13 +278,10 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
         }
     }
 
-    public ContainerGenStone getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGenStone getGuiContainer(Player entityPlayer) {
         return new ContainerGenStone(entityPlayer, this);
     }
 
-
-    public void onGuiClosed(EntityPlayer entityPlayer) {
-    }
 
     public enum Mode {
         COBBLESTONE,

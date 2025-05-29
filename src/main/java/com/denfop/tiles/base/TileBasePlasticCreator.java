@@ -5,23 +5,19 @@ import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -42,10 +38,10 @@ public class TileBasePlasticCreator extends TileElectricLiquidTankInventory
     public InvSlotRecipes inputSlotA;
     public MachineRecipe output;
 
-    public TileBasePlasticCreator(int energyPerTick, int length, int aDefaultTier) {
-        super(energyPerTick * length, aDefaultTier, 12, Fluids.fluidPredicate(FluidRegistry.WATER));
+    public TileBasePlasticCreator(int energyPerTick, int length, int aDefaultTier, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(energyPerTick * length, aDefaultTier, 12, Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER), block, pos, state);
         this.outputSlot1 = new InvSlotOutput(this, 1);
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
+        this.fluidSlot = new InvSlotFluidByList(this, 1, net.minecraft.world.level.material.Fluids.WATER);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.output = null;
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -76,16 +72,6 @@ public class TileBasePlasticCreator extends TileElectricLiquidTankInventory
         }
         super.addInformation(stack, tooltip);
 
-    }
-
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
     }
 
 

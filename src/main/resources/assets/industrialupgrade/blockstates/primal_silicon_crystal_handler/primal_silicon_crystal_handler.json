@@ -1,0 +1,188 @@
+{
+  "variants": {
+    "facing=north,type=primal_silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler"
+    },
+    "facing=south,type=primal_silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "y": 180
+    },
+    "facing=west,type=primal_silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "y": 270
+    },
+    "facing=east,type=primal_silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "y": 90
+    },
+    "facing=down,type=primal_silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "x": 90
+    },
+    "facing=up,type=primal_silicon_crystal_handler": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "x": 270
+    },
+    "facing=north,type=primal_silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler"
+    },
+    "facing=south,type=primal_silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "y": 180
+    },
+    "facing=west,type=primal_silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "y": 270
+    },
+    "facing=east,type=primal_silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "y": 90
+    },
+    "facing=down,type=primal_silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "x": 90
+    },
+    "facing=up,type=primal_silicon_crystal_handler_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler",
+      "x": 270
+    },
+    "facing=north,type=primal_silicon_crystal_handler_1": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_1"
+    },
+    "facing=south,type=primal_silicon_crystal_handler_1": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_1",
+      "y": 180
+    },
+    "facing=west,type=primal_silicon_crystal_handler_1": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_1",
+      "y": 270
+    },
+    "facing=east,type=primal_silicon_crystal_handler_1": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_1",
+      "y": 90
+    },
+    "facing=down,type=primal_silicon_crystal_handler_1": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_1",
+      "x": 90
+    },
+    "facing=up,type=primal_silicon_crystal_handler_1": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_1",
+      "x": 270
+    },
+    "facing=north,type=primal_silicon_crystal_handler_2": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_2"
+    },
+    "facing=south,type=primal_silicon_crystal_handler_2": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_2",
+      "y": 180
+    },
+    "facing=west,type=primal_silicon_crystal_handler_2": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_2",
+      "y": 270
+    },
+    "facing=east,type=primal_silicon_crystal_handler_2": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_2",
+      "y": 90
+    },
+    "facing=down,type=primal_silicon_crystal_handler_2": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_2",
+      "x": 90
+    },
+    "facing=up,type=primal_silicon_crystal_handler_2": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_2",
+      "x": 270
+    },
+    "facing=north,type=primal_silicon_crystal_handler_3": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_3"
+    },
+    "facing=south,type=primal_silicon_crystal_handler_3": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_3",
+      "y": 180
+    },
+    "facing=west,type=primal_silicon_crystal_handler_3": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_3",
+      "y": 270
+    },
+    "facing=east,type=primal_silicon_crystal_handler_3": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_3",
+      "y": 90
+    },
+    "facing=down,type=primal_silicon_crystal_handler_3": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_3",
+      "x": 90
+    },
+    "facing=up,type=primal_silicon_crystal_handler_3": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_3",
+      "x": 270
+    },
+    "facing=north,type=primal_silicon_crystal_handler_4": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_4"
+    },
+    "facing=south,type=primal_silicon_crystal_handler_4": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_4",
+      "y": 180
+    },
+    "facing=west,type=primal_silicon_crystal_handler_4": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_4",
+      "y": 270
+    },
+    "facing=east,type=primal_silicon_crystal_handler_4": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_4",
+      "y": 90
+    },
+    "facing=down,type=primal_silicon_crystal_handler_4": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_4",
+      "x": 90
+    },
+    "facing=up,type=primal_silicon_crystal_handler_4": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_4",
+      "x": 270
+    },
+    "facing=north,type=primal_silicon_crystal_handler_5": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_5"
+    },
+    "facing=south,type=primal_silicon_crystal_handler_5": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_5",
+      "y": 180
+    },
+    "facing=west,type=primal_silicon_crystal_handler_5": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_5",
+      "y": 270
+    },
+    "facing=east,type=primal_silicon_crystal_handler_5": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_5",
+      "y": 90
+    },
+    "facing=down,type=primal_silicon_crystal_handler_5": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_5",
+      "x": 90
+    },
+    "facing=up,type=primal_silicon_crystal_handler_5": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_5",
+      "x": 270
+    },
+    "facing=north,type=primal_silicon_crystal_handler_6": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_6"
+    },
+    "facing=south,type=primal_silicon_crystal_handler_6": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_6",
+      "y": 180
+    },
+    "facing=west,type=primal_silicon_crystal_handler_6": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_6",
+      "y": 270
+    },
+    "facing=east,type=primal_silicon_crystal_handler_6": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_6",
+      "y": 90
+    },
+    "facing=down,type=primal_silicon_crystal_handler_6": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_6",
+      "x": 90
+    },
+    "facing=up,type=primal_silicon_crystal_handler_6": {
+      "model": "industrialupgrade:block/basemachine/primal_silicon_crystal_handler_6",
+      "x": 270
+    }
+  }
+}

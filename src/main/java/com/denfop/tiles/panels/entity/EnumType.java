@@ -2,7 +2,7 @@ package com.denfop.tiles.panels.entity;
 
 
 import com.denfop.Constants;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public enum EnumType {
     DEFAULT(0, 0, 1, 1, 0.65, 0, "Advanced"),
@@ -39,7 +39,7 @@ public enum EnumType {
         this.coefficient_end = coefficient_end;
         this.texture = new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/gui/GUI" + name + "SolarPanel.png"
+                ("textures/gui/GUI" + name + "SolarPanel.png").toLowerCase()
         );
         this.nameType = name;
     }

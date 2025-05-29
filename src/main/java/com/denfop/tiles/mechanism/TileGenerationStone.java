@@ -2,11 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -16,10 +12,13 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 
 public class TileGenerationStone extends TileBaseGenStone implements IHasRecipe {
 
@@ -27,8 +26,8 @@ public class TileGenerationStone extends TileBaseGenStone implements IHasRecipe 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileGenerationStone() {
-        super(1, 100, 12);
+    public TileGenerationStone(BlockPos pos, BlockState state) {
+        super(1, 100, 12, BlockBaseMachine.gen_stone, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "genstone", this);
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
@@ -47,7 +46,7 @@ public class TileGenerationStone extends TileBaseGenStone implements IHasRecipe 
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines;
+        return IUItem.machines.getBlock(getTeBlock());
     }
 
     @Override
@@ -62,8 +61,8 @@ public class TileGenerationStone extends TileBaseGenStone implements IHasRecipe 
                 1
         ), new ItemStack(Blocks.COBBLESTONE, 8));
         addGen(
-                input.getInput(ModUtils.getCellFromFluid("lava")),
-                input.getInput(ModUtils.getCellFromFluid("water")),
+                input.getInput(ModUtils.getCellFromFluid(Fluids.LAVA)),
+                input.getInput(ModUtils.getCellFromFluid(Fluids.WATER)),
                 new ItemStack(Blocks.COBBLESTONE, 8)
         );
 

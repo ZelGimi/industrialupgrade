@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/moon_tin_ore"
+    "all" : "industrialupgrade:block/moon_tin_ore"
   }
 }

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/weeder_main",
-    "down" : "industrialupgrade:blocks/weeder_bottom",
-    "up" : "industrialupgrade:blocks/weeder_top",
-    "north" : "industrialupgrade:blocks/weeder_main",
-    "east" : "industrialupgrade:blocks/weeder_side",
-    "south" : "industrialupgrade:blocks/weeder_bottom",
-    "west" : "industrialupgrade:blocks/weeder_side"
+    "particle" : "industrialupgrade:block/weeder_main",
+    "down" : "industrialupgrade:block/weeder_bottom",
+    "up" : "industrialupgrade:block/weeder_top",
+    "north" : "industrialupgrade:block/weeder_main",
+    "east" : "industrialupgrade:block/weeder_side",
+    "south" : "industrialupgrade:block/weeder_bottom",
+    "west" : "industrialupgrade:block/weeder_side"
   }
 }

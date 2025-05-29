@@ -1,7 +1,5 @@
 package com.denfop.items.energy.instruments;
 
-import com.denfop.Config;
-
 public enum EnumVarietyInstruments {
     CHAINSAW(1, 100, 30000, 12, 5, 0, 0, 10,
             0, 0, 0
@@ -12,37 +10,36 @@ public enum EnumVarietyInstruments {
     DIAMOND(1, 100, 30000, 16, 8, 0, 0, 20,
             30, 0, 0
     ),
-
-    VAJRA(4, Config.spectral_transfer, Config.spectral_maxEnergy, 5000, 4000, 3000, 2500,
-            Config.energyPerOperation,
-            (int) (Config.energyPerLowOperation * 1.25),
-            (int) (Config.energyPerultraLowPowerOperation * 1.25),
-            (int) (Config.energyPerultraLowPowerOperation1 * 1.25)
+    VAJRA(4, 15000, 50000000, 5000, 4000, 3000, 2500,
+            160,
+            (int) (80 * 1.25),
+            (int) (500 * 1.25),
+            (int) (700 * 1.25)
     ),
-    NANO(2, Config.nano_transfer, Config.nano_maxEnergy, 30, 15, Config.ultraLowPower, 0, Config.nano_energyPerOperation,
-            Config.nano_energyPerbigHolePowerOperation, Config.energyPerbigHolePowerOperation, 0
+    NANO(2, 1000, 1000000, 30, 15, 60, 0, 400,
+            550, 300, 0
     ),
     QUANTUM(
             3,
-            Config.quantum_transfer,
-            Config.quantum_maxEnergy,
+            2500,
+            10000000,
             40,
             20,
-            Config.ultraLowPower,
+            60,
             0,
-            Config.quantum_energyPerOperation,
-            Config.quantum_energyPerbigHolePowerOperation,
-            Config.energyPerbigHolePowerOperation,
+            350,
+            450,
+            300,
             0
     ),
-    SPECTRAL(4, Config.spectral_transfer, Config.spectral_maxEnergy, 60, 30, Config.ultraLowPower, 0,
-            Config.spectral_energyPerOperation,
-            Config.spectral_energyPerbigHolePowerOperation, Config.energyPerbigHolePowerOperation, 0
+    SPECTRAL(4, 5000, 50000000, 60, 30, 60, 0,
+            250,
+            370, 300, 0
     ),
-    PERFECT_DRILL(5, Config.ultdrilltransferLimit, Config.ultdrillmaxCharge, Config.effPower, Config.bigHolePower,
-            Config.ultraLowPower, Config.ultraLowPower1, Config.energyPerOperation, Config.energyPerLowOperation,
-            Config.energyPerultraLowPowerOperation,
-            Config.energyPerultraLowPowerOperation1
+    PERFECT_DRILL(5, 15000, 15000000, 80, 60,
+            60, 60, 160, 80,
+            500,
+            700
     );
 
     private final int tier;

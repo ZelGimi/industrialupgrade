@@ -5,10 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGeothermalPump;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityGeothermalRigDrill extends TileEntityMultiBlockElement implements IRig {
 
-    public TileEntityGeothermalRigDrill() {
+    public TileEntityGeothermalRigDrill(BlockPos pos, BlockState state) {
+        super(BlockGeothermalPump.geothermal_rig, pos, state);
     }
 
     @Override
@@ -18,7 +21,7 @@ public class TileEntityGeothermalRigDrill extends TileEntityMultiBlockElement im
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.geothermalpump;
+        return IUItem.geothermalpump.getBlock(getTeBlock());
     }
 
 }

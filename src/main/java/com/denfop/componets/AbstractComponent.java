@@ -1,20 +1,20 @@
 package com.denfop.componets;
 
-import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketAbstractComponent;
 import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 
 import java.io.IOException;
@@ -53,15 +53,13 @@ public abstract class AbstractComponent {
         return false;
     }
 
-    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
-
-    }
+    //  public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {}
 
     public boolean canEntityDestroy(Entity entity) {
         return true;
     }
 
-    public boolean wrenchCanRemove(final EntityPlayer player) {
+    public boolean wrenchCanRemove(final Player player) {
         return true;
     }
 
@@ -81,7 +79,7 @@ public abstract class AbstractComponent {
         return false;
     }
 
-    public NBTTagCompound writeNBTToDrops(NBTTagCompound tagCompound) {
+    public CompoundTag writeNBTToDrops(CompoundTag tagCompound) {
         return tagCompound;
     }
 
@@ -94,19 +92,18 @@ public abstract class AbstractComponent {
     }
 
     public void actionGetDrop() {
-        if (!this.getParent().getWorld().isRemote) {
+        if (!this.getParent().getLevel().isClientSide) {
             final ItemStack itemstack = getItemStackUpgrade();
             if (itemstack.isEmpty()) {
                 return;
             }
-            final EntityItem item = new EntityItem(this.getParent().getWorld());
+            final ItemEntity item = new ItemEntity(EntityType.ITEM, this.getParent().getLevel());
             item.setItem(itemstack);
-            item.setLocationAndAngles(this.getParent().getPos().getX(), this.getParent().getPos().getY(),
-                    this.getParent().getPos().getZ(), 0.0F,
-                    0.0F
+            item.setPos(this.getParent().getBlockPos().getX(), this.getParent().getBlockPos().getY(),
+                    this.getParent().getBlockPos().getZ()
             );
-            item.setPickupDelay(0);
-            this.getParent().getWorld().spawnEntity(item);
+            item.setPickUpDelay(0);
+            this.getParent().getLevel().addFreshEntity(item);
         }
     }
 
@@ -114,7 +111,7 @@ public abstract class AbstractComponent {
         return TypePurifierJob.None;
     }
 
-    public boolean canUsePurifier(final EntityPlayer player) {
+    public boolean canUsePurifier(final Player player) {
         return getPurifierJob() != TypePurifierJob.None;
     }
 
@@ -132,11 +129,11 @@ public abstract class AbstractComponent {
     public void updateEntityClient() {
     }
 
-    public boolean onBlockActivated(EntityPlayer player, EnumHand hand) {
+    public boolean onBlockActivated(Player player, InteractionHand hand) {
         return false;
     }
 
-    protected void setNetworkUpdate(EntityPlayerMP player, CustomPacketBuffer data) {
+    protected void setNetworkUpdate(ServerPlayer player, CustomPacketBuffer data) {
         new PacketAbstractComponent(this.parent, this.toString(), player, data);
     }
 
@@ -145,11 +142,11 @@ public abstract class AbstractComponent {
         return this.getClass().getName();
     }
 
-    public void readFromNbt(NBTTagCompound nbt) {
+    public void readFromNbt(CompoundTag nbt) {
     }
 
-    public NBTTagCompound writeToNbt() {
-        return new NBTTagCompound();
+    public CompoundTag writeToNbt() {
+        return new CompoundTag();
     }
 
     public void onLoaded() {
@@ -158,10 +155,10 @@ public abstract class AbstractComponent {
     public void onUnloaded() {
     }
 
-    public void onNeighborChange(Block srcBlock, BlockPos srcPos) {
+    public void onNeighborChange(BlockState srcBlock, BlockPos srcPos) {
     }
 
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
     }
 
     public CustomPacketBuffer updateComponent() {
@@ -171,15 +168,15 @@ public abstract class AbstractComponent {
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
     }
 
-    public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {
+    public Collection<? extends Capability<?>> getProvidedCapabilities(Direction side) {
         return Collections.emptySet();
     }
 
-    public <T> T getCapability(Capability<T> cap, EnumFacing side) {
+    public <T> T getCapability(Capability<T> cap, Direction side) {
         return null;
     }
 
-    public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
+    public void onPlaced(ItemStack stack, LivingEntity placer, Direction facing) {
     }
 
     public void blockBreak() {
@@ -187,9 +184,4 @@ public abstract class AbstractComponent {
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
     }
-
-    public List<ItemStack> getAuxDrops(List<ItemStack> ret) {
-        return Collections.emptyList();
-    }
-
 }

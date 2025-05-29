@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/quantumitems7"
+    "layer0" : "industrialupgrade:item/quantumitems7"
   }
 }

@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/polonium_gear"	}
+		"layer0": "industrialupgrade:item/polonium_gear"	}
 }

@@ -5,8 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSmeltery;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySmelteryCasing extends TileEntityMultiBlockElement implements ICasing {
+
+    public TileEntitySmelteryCasing(BlockPos pos, BlockState state) {
+        super(BlockSmeltery.smeltery_casing, pos, state);
+    }
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -15,7 +21,7 @@ public class TileEntitySmelteryCasing extends TileEntityMultiBlockElement implem
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.smeltery;
+        return IUItem.smeltery.getBlock(getTeBlock());
     }
 
 }

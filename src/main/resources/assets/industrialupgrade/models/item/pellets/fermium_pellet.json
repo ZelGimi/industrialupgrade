@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/fermium_pellet"
+    "layer0" : "industrialupgrade:item/fermium_pellet"
   }
 }

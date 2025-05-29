@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityRefrigeratorFluids;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerRefrigeratorFluids extends ContainerFullInv<TileEntityRefrigeratorFluids> {
 
-    public ContainerRefrigeratorFluids(EntityPlayer entityPlayer, TileEntityRefrigeratorFluids tileEntity1) {
+    public ContainerRefrigeratorFluids(Player entityPlayer, TileEntityRefrigeratorFluids tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 45, 99));

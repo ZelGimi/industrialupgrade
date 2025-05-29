@@ -1,83 +1,67 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
 import com.denfop.tiles.bee.FrameAttributeLevel;
 import com.denfop.tiles.bee.IFrameItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemFrame extends ItemSubTypes<ItemFrame.Types> implements IModelRegister, IFrameItem {
-
-    protected static final String NAME = "frame";
-
-    public ItemFrame() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
-        setMaxStackSize(1);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void addInformation(
-            @Nonnull final ItemStack stack,
-            @Nullable final World worldIn,
-            @Nonnull final List<String> tooltip,
-            @Nonnull final ITooltipFlag flagIn
-    ) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
-                stack)) + "/" + this.getMaxCustomDamage(stack));
-    }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IFrameItem {
+    public ItemFrame(T element) {
+        super(new Item.Properties().stacksTo(1), element);
     }
 
     @Override
     public FrameAttributeLevel getAttribute(final int meta) {
         return FrameAttributeLevel.values()[meta];
     }
-
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
+    }
     @Override
     public int getCustomDamage(final ItemStack stack) {
-        if (!stack.hasTagCompound()) {
+        if (!stack.hasTag()) {
             return 0;
         } else {
-            assert stack.getTagCompound() != null;
-            return stack.getTagCompound().getInteger("damage");
+            assert stack.getTag() != null;
+            return stack.getTag().getInt("damage");
         }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(p_41421_) - this.getCustomDamage(
+                p_41421_)) + "/" + this.getMaxCustomDamage(p_41421_)));
+    }
+
+    public boolean isBarVisible(@Nonnull ItemStack stack) {
+        return true;
+    }
+
+    public int getBarWidth(@Nonnull ItemStack stack) {
+        return Math.round(13.0F - (float) ((double) this.getCustomDamage(stack) * 13.0F / (double) this.getMaxCustomDamage(stack)));
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        return Mth.hsvToRgb((float) (Math.max(0.0F, 1.0F - (this.getCustomDamage(stack) / (double) this.getMaxCustomDamage(stack))) / 3.0F), 1.0F, 1.0F);
     }
 
     @Override
@@ -87,28 +71,20 @@ public class ItemFrame extends ItemSubTypes<ItemFrame.Types> implements IModelRe
 
     @Override
     public void setCustomDamage(final ItemStack stack, int damage) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
+        CompoundTag nbt = ModUtils.nbt(stack);
         if (damage > getMaxCustomDamage(stack)) {
             damage = getMaxCustomDamage(stack);
         }
-        nbt.setInteger("damage", damage);
+        nbt.putInt("damage", damage);
     }
 
-    public boolean applyCustomDamage(ItemStack stack, int damage, EntityLivingBase src) {
+    public boolean applyCustomDamage(ItemStack stack, int damage, LivingEntity src) {
         int damage1 = this.getCustomDamage(stack) - damage;
         if (damage1 <= 0) {
             damage1 = 0;
         }
         this.setCustomDamage(stack, damage1);
         return getMaxCustomDamage(stack) - damage1 == 0;
-    }
-
-    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
-        return true;
-    }
-
-    public double getDurabilityForDisplay(@Nonnull ItemStack stack) {
-        return (double) this.getCustomDamage(stack) / (double) this.getMaxCustomDamage(stack);
     }
 
     public enum Types implements ISubEnum {
@@ -139,7 +115,7 @@ public class ItemFrame extends ItemSubTypes<ItemFrame.Types> implements IModelRe
         storage_food_3,
         chance_healing_1,
         chance_healing_2,
-        chance_healing_3;
+        chance_healing_3;;
 
         private final String name;
         private final int ID;
@@ -162,9 +138,13 @@ public class ItemFrame extends ItemSubTypes<ItemFrame.Types> implements IModelRe
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "frame";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

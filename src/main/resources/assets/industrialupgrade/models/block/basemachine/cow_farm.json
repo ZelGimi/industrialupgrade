@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/cow_farm_main",
-    "down" : "industrialupgrade:blocks/cow_farm_bottom",
-    "up" : "industrialupgrade:blocks/cow_farm_top",
-    "north" : "industrialupgrade:blocks/cow_farm_main",
-    "east" : "industrialupgrade:blocks/cow_farm_side",
-    "south" : "industrialupgrade:blocks/cow_farm_side",
-    "west" : "industrialupgrade:blocks/cow_farm_side"
+    "particle" : "industrialupgrade:block/cow_farm_main",
+    "down" : "industrialupgrade:block/cow_farm_bottom",
+    "up" : "industrialupgrade:block/cow_farm_top",
+    "north" : "industrialupgrade:block/cow_farm_main",
+    "east" : "industrialupgrade:block/cow_farm_side",
+    "south" : "industrialupgrade:block/cow_farm_side",
+    "west" : "industrialupgrade:block/cow_farm_side"
   }
 }

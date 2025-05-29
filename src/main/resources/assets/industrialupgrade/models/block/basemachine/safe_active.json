@@ -5,8 +5,8 @@
     32
 	],
 	"textures": {
-		"2": "industrialupgrade:models/safe",
-		"particle" : "industrialupgrade:models/safe"
+		"2": "industrialupgrade:block/safe",
+		"particle" : "industrialupgrade:block/safe"
 	},
 	"elements": [
 		{

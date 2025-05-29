@@ -1,8 +1,8 @@
 package com.denfop.api.gasvein;
 
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
 
 public interface IGasVein {
 
@@ -24,7 +24,7 @@ public interface IGasVein {
     void removeCol(int col);
 
 
-    NBTTagCompound writeTag();
+    CompoundTag writeTag();
 
     CustomPacketBuffer writePacket();
 

@@ -1,22 +1,18 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerQuantumMolecular;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiQuantumTransformer;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -25,26 +21,26 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemEnchantedBook;
-import net.minecraft.item.ItemPotion;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
 
 public class TileQuantumMolecular extends TileElectricMachine implements
@@ -66,21 +62,21 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     protected int size_recipe = 0;
     protected ItemStack output_stack;
     ComponentBaseEnergy energy;
-    @SideOnly(Side.CLIENT)
-    private IBakedModel bakedModel;
-    @SideOnly(Side.CLIENT)
-    private IBakedModel transformedModel;
+    @OnlyIn(Dist.CLIENT)
+    private BakedModel bakedModel;
+    @OnlyIn(Dist.CLIENT)
+    private BakedModel transformedModel;
 
-    public TileQuantumMolecular() {
-        super(0, 14, 1);
+    public TileQuantumMolecular(BlockPos pos, BlockState state) {
+        super(0, 14, 1, BlockBaseMachine3.quantum_transformer, pos, state);
         this.progress = 0;
         this.time = new ArrayList<>();
         this.queue = false;
         this.redstoneMode = 0;
         this.inputSlot = new InvSlotRecipes(this, "quantummolecular", this) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 if (((TileQuantumMolecular) this.tile).getOutput() == null) {
                     if (!content.isEmpty()) {
                         final MachineRecipe recipe1 = Recipes.recipes.getRecipeMachineRecipeOutput(
@@ -125,6 +121,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
                 } else {
                     ((TileQuantumMolecular) this.tile).need_put_check = false;
                 }
+                return content;
             }
         };
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 0, 14));
@@ -134,8 +131,8 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     }
 
     public static void addrecipe(ItemStack stack, ItemStack stack2, ItemStack stack1, double energy) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setDouble("energy", energy);
+        CompoundTag nbt = new CompoundTag();
+        nbt.putDouble("energy", energy);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("quantummolecular", new BaseMachineRecipe(
                 new Input(input.getInput(stack), input.getInput(stack2)),
@@ -144,8 +141,8 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     }
 
     public static void addrecipe(ItemStack stack, String stack2, ItemStack stack1, double energy) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setDouble("energy", energy);
+        CompoundTag nbt = new CompoundTag();
+        nbt.putDouble("energy", energy);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("quantummolecular", new BaseMachineRecipe(
                 new Input(input.getInput(stack), input.getInput(stack2)),
@@ -158,7 +155,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -172,8 +169,8 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getBakedModel() {
+    @OnlyIn(Dist.CLIENT)
+    public BakedModel getBakedModel() {
         return bakedModel;
     }
 
@@ -181,15 +178,15 @@ public class TileQuantumMolecular extends TileElectricMachine implements
 
 
         addrecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 352),
-                new ItemStack(IUItem.crafting_elements, 1, 645),
-                new ItemStack(IUItem.crafting_elements, 1, 642),
+                new ItemStack(IUItem.crafting_elements.getStack(352)),
+                new ItemStack(IUItem.crafting_elements.getStack(645)),
+                new ItemStack(IUItem.crafting_elements.getStack(642)),
                 25000000
         );
         addrecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 642),
-                new ItemStack(IUItem.crafting_elements, 1, 647),
-                new ItemStack(IUItem.crafting_elements, 1, 646),
+                new ItemStack(IUItem.crafting_elements.getStack(642)),
+                new ItemStack(IUItem.crafting_elements.getStack(647)),
+                new ItemStack(IUItem.crafting_elements.getStack(646)),
                 25000000
         );
 
@@ -197,24 +194,11 @@ public class TileQuantumMolecular extends TileElectricMachine implements
 
 
     @Override
-    public ContainerQuantumMolecular getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerQuantumMolecular getGuiContainer(Player entityPlayer) {
         return new ContainerQuantumMolecular(entityPlayer, this);
     }
 
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
@@ -233,16 +217,18 @@ public class TileQuantumMolecular extends TileElectricMachine implements
             energy.onNetworkUpdate(customPacketBuffer);
             output_stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
 
-            this.bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                    output_stack,
-                    this.getWorld(),
-                    null
-            );
-            this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                    this.bakedModel,
-                    ItemCameraTransforms.TransformType.GROUND,
-                    false
-            );
+            if (!output_stack.isEmpty()) {
+                this.bakedModel = Minecraft.getInstance().getItemRenderer().getModel(
+                        output_stack,
+                        this.getWorld(),
+                        null, 0
+                );
+                this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
+                        this.bakedModel,
+                       GROUND,
+                        false
+                );
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -280,7 +266,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
         return true;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
 
 
@@ -291,7 +277,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlot.load();
             this.setOverclockRates();
             this.onUpdate();
@@ -305,22 +291,24 @@ public class TileQuantumMolecular extends TileElectricMachine implements
         return EnumSound.molecular.getSoundEvent();
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setByte("redstoneMode", this.redstoneMode);
-        nbttagcompound.setDouble("progress", this.progress);
-        nbttagcompound.setBoolean("queue", this.queue);
+        nbttagcompound.putByte("redstoneMode", this.redstoneMode);
+        nbttagcompound.putDouble("progress", this.progress);
+        nbttagcompound.putBoolean("queue", this.queue);
         return nbttagcompound;
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiQuantumTransformer(new ContainerQuantumMolecular(entityPlayer, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiQuantumTransformer((ContainerQuantumMolecular) menu);
     }
 
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
 
         if (event == 1) {
             this.queue = !this.queue;
@@ -358,14 +346,14 @@ public class TileQuantumMolecular extends TileElectricMachine implements
             try {
                 this.output_stack = (ItemStack) DecoderHandler.decode(is);
                 if (!output_stack.isEmpty()) {
-                    this.bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
+                    this.bakedModel = Minecraft.getInstance().getItemRenderer().getModel(
                             output_stack,
                             this.getWorld(),
-                            null
+                            null, 0
                     );
-                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
                             this.bakedModel,
-                            ItemCameraTransforms.TransformType.GROUND,
+                            GROUND,
                             false
                     );
                 }
@@ -377,14 +365,14 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getTransformedModel() {
+    @OnlyIn(Dist.CLIENT)
+    public BakedModel getTransformedModel() {
         return transformedModel;
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IUCore.proxy.isSimulating()) {
+    public void setChanged() {
+        super.setChanged();
+        if (!level.isClientSide) {
             setOverclockRates();
         }
     }
@@ -508,7 +496,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
                 size2 = (int) Math.floor((float) this.inputSlot.get(1).getCount() / size2);
                 size = Math.min(size, size2);
                 int size1 = !this.outputSlot.isEmpty()
-                        ? (64 - this.outputSlot.get().getCount()) / output1.getCount()
+                        ? (64 - this.outputSlot.get(0).getCount()) / output1.getCount()
                         : 64 / output1.getCount();
                 size = Math.min(size1, size);
                 size = Math.min(output1.getMaxStackSize(), size);
@@ -533,14 +521,14 @@ public class TileQuantumMolecular extends TileElectricMachine implements
                     this.inputSlot.get(0).shrink(count);
                     ItemStack stack = this.inputSlot.get(0).copy();
                     stack.setCount(count);
-                    this.inputSlot.put(1, stack);
+                    this.inputSlot.set(1, stack);
                 } else if (!this.inputSlot.get(1).isEmpty()) {
                     if (this.inputSlot.get(1).getCount() > 1) {
                         int count = this.inputSlot.get(1).getCount() / 2;
                         this.inputSlot.get(1).shrink(count);
                         ItemStack stack = this.inputSlot.get(1).copy();
                         stack.setCount(count);
-                        this.inputSlot.put(0, stack);
+                        this.inputSlot.set(0, stack);
 
                     }
                 }
@@ -597,7 +585,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
                 final List<ItemStack> list = this.output.getRecipe().input.getInputs().get(0).getInputs();
                 boolean is = false;
                 for (ItemStack stack : list) {
-                    if (stack.isItemEqual(this.inputSlot.get(0))) {
+                    if (stack.is(this.inputSlot.get(0).getItem())) {
                         is = true;
                         size = stack.getCount();
                         size2 = this.output.getRecipe().input.getInputs().get(1).getInputs().get(0).getCount();
@@ -613,7 +601,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
                 size2 = (int) Math.floor((float) this.inputSlot.get(1).getCount() / size2);
                 size = Math.min(size, size2);
                 int size1 = !this.outputSlot.isEmpty()
-                        ? (64 - this.outputSlot.get().getCount()) / output1.getCount()
+                        ? (64 - this.outputSlot.get(0).getCount()) / output1.getCount()
                         : 64 / output1.getCount();
                 size = Math.min(size1, size);
                 size = Math.min(output1.getMaxStackSize(), size);
@@ -660,7 +648,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
         if (this.output != null) {
             output_stack = this.output.getRecipe().output.items.get(0);
         } else {
-            output_stack = new ItemStack(Items.AIR);
+            output_stack = ItemStack.EMPTY;
         }
 
         return this.output;
@@ -679,11 +667,11 @@ public class TileQuantumMolecular extends TileElectricMachine implements
     @Override
     public void onUpdate() {
         for (int i = 0; i < this.inputSlot.size(); i++) {
-            if (this.inputSlot.get(i).getItem() instanceof ItemEnchantedBook) {
+            if (this.inputSlot.get(i).getItem() instanceof EnchantedBookItem) {
                 this.need = true;
                 return;
             }
-            if (this.inputSlot.get(i).getItem() instanceof ItemPotion) {
+            if (this.inputSlot.get(i).getItem() instanceof PotionItem) {
                 this.need = true;
                 return;
             }
@@ -702,7 +690,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
         if (this.output != null) {
             output_stack = this.output.getRecipe().output.items.get(0);
         } else {
-            output_stack = new ItemStack(Items.AIR);
+            output_stack = ItemStack.EMPTY;
         }
 
         new PacketUpdateFieldTile(this, "output", this.output_stack);

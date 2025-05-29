@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=heat_imp_coolant": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant"
+    },
+    "facing=south,type=heat_imp_coolant": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "y": 180
+    },
+    "facing=west,type=heat_imp_coolant": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "y": 270
+    },
+    "facing=east,type=heat_imp_coolant": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "y": 90
+    },
+    "facing=down,type=heat_imp_coolant": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "x": 90
+    },
+    "facing=up,type=heat_imp_coolant": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "x": 270
+    },
+    "facing=north,type=heat_imp_coolant_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant"
+    },
+    "facing=south,type=heat_imp_coolant_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "y": 180
+    },
+    "facing=west,type=heat_imp_coolant_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "y": 270
+    },
+    "facing=east,type=heat_imp_coolant_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "y": 90
+    },
+    "facing=down,type=heat_imp_coolant_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "x": 90
+    },
+    "facing=up,type=heat_imp_coolant_invalid": {
+      "model": "industrialupgrade:block/heat_reactor/heat_imp_coolant",
+      "x": 270
+    }
+  }
+}

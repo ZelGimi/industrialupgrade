@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/lapis"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "B B",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:electronic_stabilizers"
+  },
+  "show_notification": true
+}

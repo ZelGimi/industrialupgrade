@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_640_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:ingots/superalloyrene"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:itemcore/admcore"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_639_element"
+      }
+    ]
+  },
+  "pattern": [
+    " AB",
+    "ACD",
+    "BD "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_641_element"
+  },
+  "show_notification": true
+}

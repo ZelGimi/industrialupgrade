@@ -1,0 +1,6 @@
+{
+    "parent": "industrialupgrade:block/crop_1",
+    "textures": {
+        "texture": "industrialupgrade:block/crop/lead_stream_1"
+    }
+}

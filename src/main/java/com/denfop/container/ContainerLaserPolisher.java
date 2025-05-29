@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerLaserPolisher extends ContainerFullInv<TileEntityLaserPolisher> {
 
-    public ContainerLaserPolisher(final EntityPlayer player, final TileEntityLaserPolisher base) {
+    public ContainerLaserPolisher(final Player player, final TileEntityLaserPolisher base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.outputSlot, 0, 100, 35));
@@ -17,7 +17,7 @@ public class ContainerLaserPolisher extends ContainerFullInv<TileEntityLaserPoli
         ));
     }
 
-    public ContainerLaserPolisher(final EntityPlayer player, final TileEntityLaserPolisher base, boolean false1) {
+    public ContainerLaserPolisher(final Player player, final TileEntityLaserPolisher base, boolean false1) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.outputSlot, 0, 100, 35));

@@ -1,24 +1,23 @@
 package com.denfop.gui;
 
-import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerBase;
 import com.denfop.invslot.InvSlot;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.inventory.IInventory;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> extends GuiCore<T> {
+public class GuiIU<T extends ContainerBase<? extends IAdvInventory>> extends GuiCore<T> {
 
     private final EnumTypeStyle style;
     public boolean isBlack = false;
@@ -69,183 +68,6 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
         componentList.add(slots);
     }
 
-    public float adjustTextScale(String text, int canvasWidth, int canvasHeight, float scale, float scaleStep) {
-        FontRenderer fontRenderer = mc.fontRenderer;
-        float newScale = scale;
-        float min = 70;
-        float max = 0;
-        boolean prevScaleDecrease = false;
-        boolean prevScaleIncrease = false;
-        while (true) {
-
-
-            if (newScale < min) {
-                min = newScale;
-            }
-            if (newScale > max) {
-                max = newScale;
-            }
-            List<String> lines = splitTextToLines(text, canvasWidth, newScale, fontRenderer);
-
-            int totalTextHeight = (int) (lines.size() * fontRenderer.FONT_HEIGHT * newScale);
-
-            if (isTextTooLarge(lines, canvasWidth, canvasHeight, newScale, fontRenderer)) {
-
-                newScale *= 1 - scaleStep;
-                prevScaleDecrease = true;
-                if (prevScaleIncrease) {
-                    newScale = (min + max) * 0.95f / 2;
-                    break;
-                }
-            } else if (totalTextHeight < canvasHeight * 0.8F) {
-                prevScaleIncrease = true;
-                newScale *= (1 + scaleStep);
-                if (prevScaleDecrease) {
-                    newScale = (min + max) * 1.2f / 2;
-                    break;
-                }
-            } else {
-
-                break;
-            }
-        }
-        return newScale;
-    }
-
-    public boolean isTextTooLarge(
-            List<String> lines,
-            int canvasWidth,
-            int canvasHeight,
-            float scale,
-            FontRenderer fontRenderer
-    ) {
-        int totalHeight = (int) (lines.size() * fontRenderer.FONT_HEIGHT * scale);
-
-        for (String line : lines) {
-            int lineWidth = (int) (fontRenderer.getStringWidth(line) * scale);
-            if (lineWidth > canvasWidth) {
-                return true;
-            }
-        }
-        return totalHeight > canvasHeight;
-    }
-
-    public List<String> wrapTextWithNewlines(String text, int maxWidth) {
-        List<String> lines = new ArrayList<>();
-        String[] paragraphs = text.split("\n");
-
-        for (String paragraph : paragraphs) {
-            List<String> wrappedLines = wrapText(paragraph, maxWidth);
-            lines.addAll(wrappedLines);
-        }
-
-        return lines;
-    }
-
-    public List<String> wrapText(String text, int maxWidth) {
-        List<String> lines = new ArrayList<>();
-        StringBuilder currentLine = new StringBuilder();
-        String[] words = text.split(" ");
-        for (String word : words) {
-            if (fontRenderer.getStringWidth(currentLine + word) <= maxWidth) {
-                currentLine.append(word).append(" ");
-            } else {
-                lines.add(currentLine.toString().trim());
-                while (fontRenderer.getStringWidth(word) > maxWidth) {
-                    int partLength = maxWidth / fontRenderer.getCharWidth(' ');
-                    String part = word.substring(0, partLength);
-                    lines.add(part);
-                    word = word.substring(part.length());
-                }
-
-                currentLine.setLength(0);
-                currentLine.append(word).append(" ");
-            }
-        }
-
-        if (currentLine.length() > 0) {
-            lines.add(currentLine.toString().trim());
-        }
-
-        return lines;
-    }
-
-    public void drawTextInCanvas(String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale) {
-        int maxWidth = (int) (canvasWidth / scale);
-        int lineHeight = (int) (10 * scale);
-        int x = canvasX;
-        int y = canvasY;
-
-
-        List<String> lines = wrapTextWithNewlines(text, maxWidth);
-
-
-        for (String line : lines) {
-            if (y + lineHeight > canvasY + canvasHeight) {
-                break;
-            }
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(scale, scale, scale);
-            fontRenderer.drawString(line, (int) (x / scale), (int) (y / scale), 0xFFFFFF);
-            GlStateManager.popMatrix();
-
-            y += lineHeight;
-        }
-    }
-
-    public void drawTextInCanvas(
-            String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale,
-            int color
-    ) {
-        int maxWidth = (int) (canvasWidth / scale);
-        int lineHeight = (int) (10 * scale);
-        int x = canvasX;
-        int y = canvasY;
-
-
-        List<String> lines = wrapTextWithNewlines(text, maxWidth);
-
-
-        for (String line : lines) {
-            if (y + lineHeight > canvasY + canvasHeight) {
-                break;
-            }
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(scale, scale, scale);
-            fontRenderer.drawString(line, (int) (x / scale), (int) (y / scale), color);
-            GlStateManager.popMatrix();
-
-            y += lineHeight;
-        }
-    }
-
-    public List<String> splitTextToLines(String text, int canvasWidth, float scale, FontRenderer fontRenderer) {
-        List<String> lines = new LinkedList<>();
-        String[] manualLines = text.split("\n");
-
-        for (String manualLine : manualLines) {
-            StringBuilder currentLine = new StringBuilder();
-            String[] words = manualLine.split(" ");
-
-            for (String word : words) {
-                String testLine = currentLine.length() == 0 ? word : currentLine + " " + word;
-                int lineWidth = (int) (fontRenderer.getStringWidth(testLine) * scale);
-
-                if (lineWidth > canvasWidth) {
-                    lines.add(currentLine.toString());
-                    currentLine = new StringBuilder(word);
-                } else {
-                    currentLine.append(currentLine.length() == 0 ? word : " " + word);
-                }
-            }
-
-            if (currentLine.length() > 0) {
-                lines.add(currentLine.toString());
-            }
-        }
-        return lines;
-    }
-
     public EnumTypeComponent getComponent() {
         switch (this.style) {
             case ADVANCED:
@@ -267,8 +89,8 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
         }
     }
 
-    public FontRenderer getFontRenderer() {
-        return fontRenderer;
+    public Font getFontRenderer() {
+        return Minecraft.getInstance().font;
     }
 
     public EnumTypeStyle getStyle(EnumTypeComponent style) {
@@ -308,37 +130,41 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
         componentList.remove(component);
     }
 
-    public void drawForeground(int mouseX, int mouseY) {
-        componentList.forEach(guiComponent -> guiComponent.drawForeground(mouseX, mouseY));
+    public void drawForeground(GuiGraphics poseStack, int mouseX, int mouseY) {
+        componentList.forEach(guiComponent -> guiComponent.drawForeground(poseStack, mouseX, mouseY));
     }
 
-    public void drawBackground() {
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        componentList.forEach(guiComponent -> guiComponent.drawBackground(xoffset, yoffset));
 
-    }
-
-    protected void mouseClicked(int i, int j, int k) throws IOException {
+    protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         componentList.forEach(guiComponent -> guiComponent.buttonClicked(x, y));
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        this.drawBackground();
+    protected void renderBg(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.renderBg(poseStack, partialTicks, mouseX, mouseY);
+        drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        drawBackground(poseStack);
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackground(GuiGraphics poseStack) {
+        componentList.forEach(guiComponent -> guiComponent.drawBackground(poseStack, guiLeft(), guiTop()));
+
+    }
+
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+
+    }
+
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        String name = Localization.translate(this.container.base.getName());
-        int textWidth = this.fontRenderer.getStringWidth(name);
+        poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
+        String name =this.container.base.getDisplayName().getString();
+        int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 
 
@@ -346,26 +172,28 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
             scale = 120f / textWidth;
         }
 
+        PoseStack pose = poseStack.pose();
+        pose.pushPose();
+        pose.scale(scale, scale, 1.0f);
 
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 1.0f);
 
-
-        int centerX = this.guiLeft + this.xSize / 2;
+        int centerX = this.guiLeft + this.imageWidth / 2;
         int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
         int textY = (int) ((this.guiTop + 6) / scale);
 
 
-        this.fontRenderer.drawString(name, textX, textY, 4210752);
+        poseStack.drawString(Minecraft.getInstance().font,name, textX, textY, 4210752,false);
+        pose.scale(1/scale,1/scale,1);
 
-
-        GlStateManager.popMatrix();
-
+        pose.popPose();
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.drawForeground(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+        this.drawForeground(poseStack, par1, par2);
     }
 
+    public void updateTickInterface() {
+
+    }
 }

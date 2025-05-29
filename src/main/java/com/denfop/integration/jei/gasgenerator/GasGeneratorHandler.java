@@ -2,7 +2,7 @@ package com.denfop.integration.jei.gasgenerator;
 
 
 import com.denfop.blocks.FluidName;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class GasGeneratorHandler {
 
     public static void initRecipes() {
 
-        addRecipe(225000, new FluidStack(FluidName.fluidgas.getInstance(), 1000));
+        addRecipe(225000, new FluidStack(FluidName.fluidgas.getInstance().get(), 1000));
 
 
     }

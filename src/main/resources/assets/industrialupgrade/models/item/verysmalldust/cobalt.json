@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/cobalt_verysmalldust"
+    "layer0" : "industrialupgrade:item/cobalt_verysmalldust"
   }
 }

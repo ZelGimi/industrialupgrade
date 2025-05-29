@@ -3,12 +3,11 @@ package com.denfop.container;
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import com.denfop.utils.FluidHandlerFix;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +25,7 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     public SlotInfo(TileEntityInventory multiCable, int size, boolean fluid) {
         super(multiCable, null, size);
         this.fluid = fluid;
-        this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
+        this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), FluidStack.EMPTY));
         this.listBlack = new ArrayList<>();
         this.listWhite = new ArrayList<>();
     }
@@ -40,19 +39,16 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     }
 
     @Override
-    public void readFromNbt(final NBTTagCompound nbt) {
+    public void readFromNbt(final CompoundTag nbt) {
         super.readFromNbt(nbt);
         fluid = nbt.getBoolean("fluid");
         if (this.fluid) {
-            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
+            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), FluidStack.EMPTY));
 
             for (int i = 0; i < size(); i++) {
                 if (!this.get(i).isEmpty()) {
-                    Block block = Block.getBlockFromItem(this.get(i).getItem());
-                    if (block != Blocks.AIR) {
-                        if (block instanceof IFluidBlock) {
-                            fluidStackList.set(i, new FluidStack(((IFluidBlock) block).getFluid(), 1));
-                        }
+                    if (FluidHandlerFix.hasFluidHandler(this.get(i))) {
+                        fluidStackList.set(i, new FluidStack(FluidHandlerFix.getFluidHandler(this.get(i)).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), 1));
                     }
                 }
             }
@@ -60,9 +56,9 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound nbt) {
+    public CompoundTag writeToNbt(CompoundTag nbt) {
         nbt = super.writeToNbt(nbt);
-        nbt.setBoolean("fluid", isFluid());
+        nbt.putBoolean("fluid", isFluid());
         return nbt;
     }
 
@@ -88,7 +84,7 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
         return true;
     }
 
-    public void put(int index, ItemStack stack) {
+    public ItemStack set(int index, ItemStack stack) {
         if (!stack.isEmpty()) {
             stack = stack.copy();
             stack.setCount(1);
@@ -114,6 +110,7 @@ public class SlotInfo extends InvSlot implements VirtualSlot {
         this.listBlack = new ArrayList<>(listBlack);
         this.listWhite = new ArrayList<>(listWhite);
         this.onChanged();
+        return stack;
     }
 
     protected void putFromNBT(int index, ItemStack content) {

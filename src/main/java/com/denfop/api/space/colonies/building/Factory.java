@@ -8,7 +8,7 @@ import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.api.space.colonies.enums.EnumTypeFactory;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class Factory extends Building implements IFactory {
 
@@ -18,9 +18,8 @@ public class Factory extends Building implements IFactory {
     public Factory(final IColony colonie, EnumTypeFactory typeFactory, boolean simulate) {
         super(colonie);
         this.typeFactory = typeFactory;
-        if (!simulate) {
+        if (!simulate)
             this.getColony().addBuilding(this);
-        }
     }
 
     public Factory(CustomPacketBuffer packetBuffer, Colony colonie) {
@@ -31,7 +30,7 @@ public class Factory extends Building implements IFactory {
         this.getColony().addBuilding(this);
     }
 
-    public Factory(final NBTTagCompound tag, IColony colonie) {
+    public Factory(final CompoundTag tag, IColony colonie) {
         super(colonie);
         int id = tag.getByte("id");
         this.typeFactory = EnumTypeFactory.getID(id);
@@ -53,10 +52,10 @@ public class Factory extends Building implements IFactory {
     }
 
     @Override
-    public NBTTagCompound writeTag(final NBTTagCompound tag) {
+    public CompoundTag writeTag(final CompoundTag tag) {
         super.writeTag(tag);
-        tag.setByte("id", (byte) this.getType().ordinal());
-        tag.setByte("people", people);
+        tag.putByte("id", (byte) this.getType().ordinal());
+        tag.putByte("people", people);
         return tag;
     }
 

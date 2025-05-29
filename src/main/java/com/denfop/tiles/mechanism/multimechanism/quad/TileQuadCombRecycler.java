@@ -9,6 +9,8 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 
 public class TileQuadCombRecycler extends TileMultiMachine {
@@ -16,15 +18,16 @@ public class TileQuadCombRecycler extends TileMultiMachine {
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileQuadCombRecycler() {
-        super(EnumMultiMachine.QUAD_RECYCLER.usagePerTick, EnumMultiMachine.QUAD_RECYCLER.lenghtOperation);
+    public TileQuadCombRecycler(BlockPos pos, BlockState state) {
+        super(EnumMultiMachine.QUAD_RECYCLER.usagePerTick, EnumMultiMachine.QUAD_RECYCLER.lenghtOperation,
+                BlockMoreMachine1.quad_comb_recycler, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
 
 
     public void initiate(int soundEvent) {
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
+        if (this.getWorld().getGameTime() % 40 == 0) {
             super.initiate(soundEvent);
         }
     }
@@ -34,7 +37,7 @@ public class TileQuadCombRecycler extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base1;
+        return IUItem.machines_base1.getBlock(getTeBlock().getId());
     }
 
     @Override

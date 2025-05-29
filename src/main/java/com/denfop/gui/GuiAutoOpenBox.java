@@ -5,9 +5,9 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerAutoOpenBox;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiAutoOpenBox extends GuiIU<ContainerAutoOpenBox> {
+public class GuiAutoOpenBox<T extends ContainerAutoOpenBox> extends GuiIU<ContainerAutoOpenBox> {
 
     public GuiAutoOpenBox(ContainerAutoOpenBox guiContainer) {
         super(guiContainer);

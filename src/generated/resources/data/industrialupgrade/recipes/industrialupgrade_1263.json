@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/polonium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/aluminumbronze"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "AAA",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "item": "industrialupgrade:wiring/steam"
+  },
+  "show_notification": true
+}

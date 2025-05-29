@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gems/topaz"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "A A",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/topaz_boots"
+  },
+  "show_notification": true
+}

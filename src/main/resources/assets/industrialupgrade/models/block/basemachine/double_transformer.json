@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/advanced_molecular_converter",
-    "particle" : "industrialupgrade:models/advanced_molecular_converter"
+    "0" : "industrialupgrade:block/advanced_molecular_converter",
+    "particle" : "industrialupgrade:block/advanced_molecular_converter"
   },
   "elements" : [
     {

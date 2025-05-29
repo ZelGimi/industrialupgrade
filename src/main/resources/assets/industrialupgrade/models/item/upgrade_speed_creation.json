@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/upgrade_speed_creation"
+    "layer0" : "industrialupgrade:item/upgrade_speed_creation"
   }
 }

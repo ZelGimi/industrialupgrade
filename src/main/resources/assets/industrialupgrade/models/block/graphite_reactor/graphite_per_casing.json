@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
     "textures": {
-        "all": "industrialupgrade:blocks/graphite_reactor/casing/per_casing_side"
+        "all": "industrialupgrade:block/graphite_reactor/casing/per_casing_side"
     }
 }

@@ -1,12 +1,11 @@
 package com.denfop.invslot;
 
 import com.denfop.ElectricItem;
-import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class InvSlotDischarge extends InvSlot {
 
@@ -21,6 +20,7 @@ public class InvSlotDischarge extends InvSlot {
         this(base, TypeItemSlot.INPUT, tier);
     }
 
+
     public InvSlotDischarge(
             IAdvInventory<?> base,
             TypeItemSlot typeItemSlot,
@@ -30,11 +30,6 @@ public class InvSlotDischarge extends InvSlot {
         super(base, typeItemSlot, 1);
         this.tier = tier;
         this.allowRedstoneDust = allowRedstoneDust;
-    }
-
-    @Override
-    public EnumTypeSlot getTypeSlot() {
-        return EnumTypeSlot.BATTERY;
     }
 
     public boolean accepts(ItemStack stack, final int index) {
@@ -64,16 +59,15 @@ public class InvSlotDischarge extends InvSlot {
                         return 0.0D;
                     }
                     stack.shrink(1);
-                    this.put(0, stack);
+                    this.set(0, stack);
                 }
-
                 return realAmount;
             }
         }
     }
 
     public double dischargeWithRedstone(double capacity, double amount) {
-        final ItemStack stack = this.get();
+        final ItemStack stack = this.get(0);
         if (stack.isEmpty()) {
             return 0;
         }
@@ -83,7 +77,7 @@ public class InvSlotDischarge extends InvSlot {
         if (needRemove <= 0) {
             return 0;
         }
-        this.put(0, ModUtils.decSize(stack, needRemove));
+        this.set(0, ModUtils.decSize(stack, needRemove));
         return needRemove * canAdd;
 
     }

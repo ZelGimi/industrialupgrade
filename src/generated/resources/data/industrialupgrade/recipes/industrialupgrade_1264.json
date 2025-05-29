@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/tantalum"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/thallium"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "AAA",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "item": "industrialupgrade:wiring/biofuel"
+  },
+  "show_notification": true
+}

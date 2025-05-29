@@ -8,12 +8,14 @@ import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileAnalyzer;
 import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("ALL")
 public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
@@ -54,8 +56,8 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (this.type == 0) {
             this.tile.blacklist = this.getblacklist();
             this.tile.whitelist = this.getwhitelist();
@@ -67,15 +69,17 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
             this.tile.comb_macerator = this.comb_macerator();
             this.tile.furnace = this.getFurnaceModule();
         }
+        return content;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
         if (this.type == 0) {
             for (int i = 0; i < this.size(); i++) {
                 if (!this.get(i).isEmpty()) {
-                    if (this.get(i).getItemDamage() == itemStack.getItemDamage() && this
+
+                    if ((itemStack.getItem() instanceof ItemQuarryModule) && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == IUItem.module9.getMeta((ItemQuarryModule) itemStack.getItem()) && this
                             .get(i)
-                            .getItem() == itemStack.getItem() && (itemStack.getItem() instanceof ItemQuarryModule)) {
+                            .getItem() == itemStack.getItem()) {
                         return false;
 
                     }
@@ -86,12 +90,12 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
             return (itemStack.getItem() instanceof ItemQuarryModule)
 
-                    || itemStack.getItem().equals(IUItem.quarrymodule)
-                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 10);
+                    || itemStack.getItem().equals(IUItem.quarrymodule.getItem())
+                    || (itemStack.getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta((ItemAdditionModule) itemStack.getItem()) == 10);
         } else if (this.type == 1) {
-            if (OreDictionary.getOreIDs(itemStack).length > 0) {
-                int id = OreDictionary.getOreIDs(itemStack)[0];
-                String name = OreDictionary.getOreName(id);
+            if (itemStack.getItemHolder().tags().collect(Collectors.toList()).size() > 0) {
+                List<TagKey<Item>> id = itemStack.getItemHolder().tags().collect(Collectors.toList());
+                String name = id.get(0).location().getPath();
                 return name.startsWith("ore");
             } else {
                 return false;
@@ -111,7 +115,7 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
     public boolean quarry() {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                if (this.get(i).getItem().equals(IUItem.quarrymodule)) {
+                if (this.get(i).getItem().equals(IUItem.quarrymodule.getItem())) {
                     return true;
                 }
             }
@@ -123,7 +127,7 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 14) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 14) {
                     return true;
                 }
             }
@@ -135,7 +139,7 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 15) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 15) {
                     return true;
                 }
             }
@@ -147,7 +151,7 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 16) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 16) {
                     return true;
                 }
             }
@@ -159,10 +163,8 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() >= 6 && this
-                        .get(i)
-                        .getItemDamage() < 9) {
-                    return this.get(i).getItemDamage() - 5;
+                if (this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) >= 6 && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) < 9) {
+                    return IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) - 5;
                 }
             }
         }
@@ -171,7 +173,7 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
     public boolean getFurnaceModule() {
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 0) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 0) {
                 return true;
             }
         }
@@ -182,9 +184,9 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < this.size(); i++) {
 
-            if (!this.get(i).isEmpty() && get(i).getItemDamage() == 12) {
-                final NBTTagCompound nbt = ModUtils.nbt(this.get(i));
-                int size = nbt.getInteger("size");
+            if (!this.get(i).isEmpty()&& this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 12) {
+                final CompoundTag nbt = ModUtils.nbt(this.get(i));
+                int size = nbt.getInt("size");
                 for (int j = 0; j < size; j++) {
                     String l = "number_" + j;
                     String temp = ModUtils.NBTGetString(get(i), l);
@@ -199,9 +201,9 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
     public List<String> getwhitelist() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && get(i).getItemDamage() == 13) {
-                final NBTTagCompound nbt = ModUtils.nbt(this.get(i));
-                int size = nbt.getInteger("size");
+            if (!this.get(i).isEmpty()&& this.get(i).getItem() instanceof ItemQuarryModule  && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == 13) {
+                final CompoundTag nbt = ModUtils.nbt(this.get(i));
+                int size = nbt.getInt("size");
                 for (int j = 0; j < size; j++) {
                     String l = "number_" + j;
                     String temp = ModUtils.NBTGetString(get(i), l);
@@ -231,12 +233,8 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
     public int getChunksize() {
         int size = 0;
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemQuarryModule && this
-                    .get(i)
-                    .getItemDamage() > 8 && this
-                    .get(i)
-                    .getItemDamage() <= 11) {
-                size = this.get(i).getItemDamage() - 8;
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) > 8 && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) <= 11) {
+                size = IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) - 8;
                 return size;
             }
         }
@@ -246,9 +244,7 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
     public boolean getwirelessmodule() {
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
-                    .get(i)
-                    .getItemDamage() == 10) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta((ItemAdditionModule) this.get(i).getItem()) == 10) {
                 return true;
             }
         }
@@ -258,17 +254,15 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
     public List<Integer> wirelessmodule() {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
-                    .get(i)
-                    .getItemDamage() == 10) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta((ItemAdditionModule) this.get(i).getItem()) == 10) {
                 int x;
                 int y;
                 int z;
-                NBTTagCompound nbttagcompound = ModUtils.nbt(this.get(i));
+                CompoundTag nbttagcompound = ModUtils.nbt(this.get(i));
 
-                x = nbttagcompound.getInteger("Xcoord");
-                y = nbttagcompound.getInteger("Ycoord");
-                z = nbttagcompound.getInteger("Zcoord");
+                x = nbttagcompound.getInt("Xcoord");
+                y = nbttagcompound.getInt("Ycoord");
+                z = nbttagcompound.getInt("Zcoord");
 
                 if (x != 0 && y != 0 && z != 0) {
                     list.add(x);
@@ -286,10 +280,8 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
         double proccent;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() > 0 && this
-                        .get(i)
-                        .getItemDamage() < 6) {
-                    proccent = this.get(i).getItemDamage();
+                if (this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) > 0 && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) < 6) {
+                    proccent = IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem());
                     proccent = (proccent * 0.05);
                     proccent *= energy;
                     proccent = (energy - proccent);
@@ -309,10 +301,8 @@ public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
         double proccent;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() > 0 && this
-                        .get(i)
-                        .getItemDamage() < 6) {
-                    proccent = this.get(i).getItemDamage();
+                if (this.get(i).getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) > 0 && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) < 6) {
+                    proccent = IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem());
                     proccent = (proccent * 0.05);
                     proccent *= energy;
                     proccent = (energy - proccent);

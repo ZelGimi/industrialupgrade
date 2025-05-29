@@ -10,13 +10,7 @@ public enum EnumRoversLevel {
     ONE(EnumLevels.FIRST, EnumLevels.SECOND),
     TWO(EnumLevels.FIRST, EnumLevels.SECOND, EnumLevels.THIRD, EnumLevels.FOURTH),
     THREE(EnumLevels.FIRST, EnumLevels.SECOND, EnumLevels.THIRD, EnumLevels.FOURTH, EnumLevels.FIVE),
-    FOUR(EnumLevels.FIRST,
-            EnumLevels.SECOND,
-            EnumLevels.THIRD,
-            EnumLevels.FOURTH,
-            EnumLevels.FIVE,
-            EnumLevels.SIX,
-            EnumLevels.SEVEN);
+    FOUR(EnumLevels.FIRST, EnumLevels.SECOND, EnumLevels.THIRD, EnumLevels.FOURTH, EnumLevels.FIVE, EnumLevels.SIX, EnumLevels.SEVEN);
     List<EnumLevels> levelsList;
 
     EnumRoversLevel(EnumLevels... levels) {

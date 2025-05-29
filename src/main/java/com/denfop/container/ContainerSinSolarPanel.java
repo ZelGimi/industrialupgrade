@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileSintezator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSinSolarPanel extends ContainerFullInv<TileSintezator> {
 
     public final TileSintezator tileentity;
 
-    public ContainerSinSolarPanel(EntityPlayer entityPlayer, TileSintezator tileEntity1) {
+    public ContainerSinSolarPanel(Player entityPlayer, TileSintezator tileEntity1) {
         super(entityPlayer, tileEntity1, 178, 174);
         this.tileentity = tileEntity1;
 

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:wool"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/glass2"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:synthetic_plate"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/universal2"
+  },
+  "show_notification": true
+}

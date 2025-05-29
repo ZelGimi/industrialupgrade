@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:stick"
+      }
+    ],
+    "B": [
+      {
+        "tag": "minecraft:wool"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "AAA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/net"
+  },
+  "show_notification": true
+}

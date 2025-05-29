@@ -1,25 +1,20 @@
 package com.denfop.tiles.reactors.heat.controller;
 
-import com.denfop.Config;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.api.reactors.EnumTypeSecurity;
-import com.denfop.api.reactors.EnumTypeWork;
-import com.denfop.api.reactors.IAdvReactor;
-import com.denfop.api.reactors.IHeatReactor;
-import com.denfop.api.reactors.IReactorItem;
-import com.denfop.api.reactors.ITypeRector;
-import com.denfop.api.reactors.InvSlotReactorModules;
-import com.denfop.api.reactors.LogicHeatReactor;
-import com.denfop.api.reactors.LogicReactor;
+import com.denfop.api.reactors.*;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeatReactor;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiHeatController;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotScheduleReactor;
@@ -32,26 +27,23 @@ import com.denfop.network.packet.PacketExplosion;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import com.denfop.tiles.reactors.heat.ICirculationPump;
-import com.denfop.tiles.reactors.heat.ICoolant;
-import com.denfop.tiles.reactors.heat.IGraphiteController;
-import com.denfop.tiles.reactors.heat.IPump;
-import com.denfop.tiles.reactors.heat.ISocket;
-import com.denfop.tiles.reactors.heat.ITank;
+import com.denfop.tiles.reactors.heat.*;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.Explosion;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,7 +70,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     public double output = 0;
     public LogicHeatReactor reactor;
     public EnumTypeSecurity security = EnumTypeSecurity.NONE;
-    public int level = 0;
+    public int levelBlock = 0;
     public boolean heat_sensor;
     public boolean stable_sensor;
     public List<Fluids.InternalFluidTank> cells = new ArrayList<>();
@@ -88,8 +80,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     private List<ICirculationPump> listCirculationPump = new ArrayList<>();
     private List<IPump> listPump = new ArrayList<>();
 
-    public TileEntityMainController(final MultiBlockStructure multiBlockStructure, EnumHeatReactors enumFluidReactors) {
-        super(multiBlockStructure);
+    public TileEntityMainController(final MultiBlockStructure multiBlockStructure, EnumHeatReactors enumFluidReactors, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(multiBlockStructure, block, pos, state);
         this.enumFluidReactors = enumFluidReactors;
         this.reactorsElements = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,
                 enumFluidReactors.getHeight() * enumFluidReactors.getWidth()
@@ -108,14 +100,15 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                     if (stack1.isEmpty()) {
                         return false;
                     }
-                    return stack1.isItemEqual(stack);
+                    return stack1.is(stack.getItem());
                 }
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 reactor = null;
+                return content;
             }
         };
 
@@ -212,9 +205,9 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (var2 == 0) {
-            if (this.level > 0) {
+            if (this.levelBlock > 0) {
                 setWork(!this.work);
             }
         } else if (var2 == 1) {
@@ -241,7 +234,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                 this.energy.delegate = null;
                 this.energy.createDelegate();
                 this.energy.onLoaded();
-                switch (this.level) {
+                switch (this.levelBlock) {
                     case 0:
                         this.energy.setCapacity(4000000);
                         break;
@@ -272,7 +265,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             scheduleReactor.update();
             this.reactorsModules.load();
             try {
@@ -282,7 +275,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                     this.energy.delegate = null;
                     this.energy.createDelegate();
                     this.energy.onLoaded();
-                    switch (this.level) {
+                    switch (this.levelBlock) {
                         case 0:
                             this.energy.setCapacity(4000000);
                             break;
@@ -302,7 +295,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
             } catch (Exception ignored) {
             }
             ;
-            ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
+            ChunkPos chunkPos = this.getWorld().getChunkAt(this.pos).getPos();
             List<IAdvReactor> list = RadiationSystem.rad_system.getAdvReactorMap().computeIfAbsent(
                     chunkPos,
                     k -> new ArrayList<>()
@@ -320,8 +313,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        if (!this.getWorld().isRemote) {
-            ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
+        if (!this.getWorld().isClientSide) {
+            ChunkPos chunkPos = this.getWorld().getChunkAt(this.pos).getPos();
             List<IAdvReactor> list = RadiationSystem.rad_system.getAdvReactorMap().computeIfAbsent(
                     chunkPos,
                     k -> new ArrayList<>()
@@ -342,7 +335,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
                 if (this.typeWork == EnumTypeWork.WORK) {
                     this.energy.capacity = Math.max(this.output, this.energy.getDefaultCapacity());
-                    if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.work) {
+                    if (this.getWorld().getGameTime() % 20 == 0 && this.work) {
                         reactor.onTick();
                         if (this.rad.getEnergy() >= this.rad.getCapacity() * 0.5 && this.rad.getEnergy() < this.rad.getCapacity() * 0.75) {
                             this.setSecurity(EnumTypeSecurity.UNSTABLE);
@@ -369,7 +362,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                     }
                 } else {
                     if (this.energy.getEnergy() >= this.energy.getCapacity()) {
-                        this.level++;
+                        this.levelBlock++;
                         this.typeWork = EnumTypeWork.WORK;
                         this.energy.onUnloaded();
                         this.energy.setCapacity(this.energy.defaultCapacity);
@@ -409,7 +402,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.level = customPacketBuffer.readInt();
+        this.levelBlock = customPacketBuffer.readInt();
 
         this.typeWork = EnumTypeWork.values()[customPacketBuffer.readInt()];
 
@@ -442,7 +435,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         customPacketBuffer.writeDouble(this.heat);
         customPacketBuffer.writeDouble(this.output);
         this.timer.writeBuffer(customPacketBuffer);
-        customPacketBuffer.writeInt(this.level);
+        customPacketBuffer.writeInt(this.levelBlock);
         customPacketBuffer.writeInt(this.typeWork.ordinal());
 
         this.red_timer.writeBuffer(customPacketBuffer);
@@ -451,16 +444,16 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.work = nbttagcompound.getBoolean("work");
-        this.pressure = nbttagcompound.getInteger("pressure");
-        this.level = nbttagcompound.getInteger("level");
+        this.pressure = nbttagcompound.getInt("pressure");
+        this.levelBlock = nbttagcompound.getInt("level");
         this.timer.readNBT(nbttagcompound);
-        this.red_timer.readNBT(nbttagcompound.getCompoundTag("red"));
-        this.yellow_timer.readNBT(nbttagcompound.getCompoundTag("yellow"));
+        this.red_timer.readNBT(nbttagcompound.getCompound("red"));
+        this.yellow_timer.readNBT(nbttagcompound.getCompound("yellow"));
         this.heat = nbttagcompound.getDouble("heat");
-        this.typeWork = EnumTypeWork.values()[nbttagcompound.getInteger("typeWork")];
+        this.typeWork = EnumTypeWork.values()[nbttagcompound.getInt("typeWork")];
     }
 
     public Timer getYellow_timer() {
@@ -472,20 +465,20 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        final NBTTagCompound nbt = super.writeToNBT(nbttagcompound);
-        nbt.setBoolean("work", this.work);
-        nbt.setInteger("pressure", this.pressure);
-        nbt.setInteger("level", this.level);
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
+        final CompoundTag nbt = super.writeToNBT(nbttagcompound);
+        nbt.putBoolean("work", this.work);
+        nbt.putInt("pressure", this.pressure);
+        nbt.putInt("level", this.levelBlock);
         this.timer.writeNBT(nbt);
-        final NBTTagCompound nbt1 = new NBTTagCompound();
+        final CompoundTag nbt1 = new CompoundTag();
         this.red_timer.writeNBT(nbt1);
-        nbt.setTag("red", nbt1);
-        final NBTTagCompound nbt2 = new NBTTagCompound();
+        nbt.put("red", nbt1);
+        final CompoundTag nbt2 = new CompoundTag();
         this.yellow_timer.writeNBT(nbt2);
-        nbt.setTag("yellow", nbt2);
-        nbt.setDouble("heat", heat);
-        nbt.setInteger("typeWork", this.typeWork.ordinal());
+        nbt.put("yellow", nbt2);
+        nbt.putDouble("heat", heat);
+        nbt.putInt("typeWork", this.typeWork.ordinal());
         return nbt;
     }
 
@@ -519,45 +512,45 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
         for (int i = 0; i < pos1.size(); i++) {
             int k = i % 4;
-            ITank tank = ((ITank) this.getWorld().getTileEntity(pos1.get(i)));
+            ITank tank = ((ITank) this.getWorld().getBlockEntity(pos1.get(i)));
             if (tank == null) {
                 continue;
             }
             switch (k) {
                 case 0:
-                    tank.setFluid(FluidRegistry.WATER);
-                    if (tank.getTank().getFluid() != null && !tank.getTank().getFluid().getFluid().equals(FluidRegistry.WATER)) {
-                        tank.getTank().drain(tank.getTank().getFluidAmount(), true);
+                    tank.setFluid(net.minecraft.world.level.material.Fluids.WATER);
+                    if (!tank.getTank().getFluid().isEmpty() && !tank.getTank().getFluid().getFluid().equals(net.minecraft.world.level.material.Fluids.WATER)) {
+                        tank.getTank().drain(tank.getTank().getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
                     }
                     break;
                 case 1:
-                    tank.setFluid(FluidName.fluidoxy.getInstance());
-                    if (tank.getTank().getFluid() != null && !tank
+                    tank.setFluid(FluidName.fluidoxy.getInstance().get());
+                    if (!tank.getTank().getFluid().isEmpty() && !tank
                             .getTank()
                             .getFluid()
                             .getFluid()
-                            .equals(FluidName.fluidoxy.getInstance())) {
-                        tank.getTank().drain(tank.getTank().getFluidAmount(), true);
+                            .equals(FluidName.fluidoxy.getInstance().get())) {
+                        tank.getTank().drain(tank.getTank().getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
                     }
                     break;
                 case 2:
-                    tank.setFluid(FluidName.fluidhyd.getInstance());
-                    if (tank.getTank().getFluid() != null && !tank
+                    tank.setFluid(FluidName.fluidhyd.getInstance().get());
+                    if (!tank.getTank().getFluid().isEmpty() && !tank
                             .getTank()
                             .getFluid()
                             .getFluid()
-                            .equals(FluidName.fluidhyd.getInstance())) {
-                        tank.getTank().drain(tank.getTank().getFluidAmount(), true);
+                            .equals(FluidName.fluidhyd.getInstance().get())) {
+                        tank.getTank().drain(tank.getTank().getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
                     }
                     break;
                 case 3:
-                    tank.setFluid(FluidName.fluidHelium.getInstance());
-                    if (tank.getTank().getFluid() != null && !tank
+                    tank.setFluid(FluidName.fluidHelium.getInstance().get());
+                    if (!tank.getTank().getFluid().isEmpty() && !tank
                             .getTank()
                             .getFluid()
                             .getFluid()
-                            .equals(FluidName.fluidHelium.getInstance())) {
-                        tank.getTank().drain(tank.getTank().getFluidAmount(), true);
+                            .equals(FluidName.fluidHelium.getInstance().get())) {
+                        tank.getTank().drain(tank.getTank().getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
                     }
                     break;
             }
@@ -570,7 +563,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                 );
 
         for (BlockPos pos2 : pos1) {
-            IGraphiteController recirculationPump = ((IGraphiteController) this.getWorld().getTileEntity(pos2));
+            IGraphiteController recirculationPump = ((IGraphiteController) this.getWorld().getBlockEntity(pos2));
             this.listGraphiteController.add(recirculationPump);
 
         }
@@ -580,7 +573,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                         IPump.class
                 );
         for (BlockPos pos2 : pos1) {
-            IPump iInterCooler = ((IPump) this.getWorld().getTileEntity(pos2));
+            IPump iInterCooler = ((IPump) this.getWorld().getBlockEntity(pos2));
             this.listPump.add(iInterCooler);
         }
         pos1 = this
@@ -589,7 +582,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                         ICirculationPump.class
                 );
         for (BlockPos pos2 : pos1) {
-            ICirculationPump compressor = ((ICirculationPump) this.getWorld().getTileEntity(pos2));
+            ICirculationPump compressor = ((ICirculationPump) this.getWorld().getBlockEntity(pos2));
             this.listCirculationPump.add(compressor);
         }
         pos1 = this
@@ -598,7 +591,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                         ICoolant.class
                 );
         for (BlockPos pos2 : pos1) {
-            ICoolant compressor = ((ICoolant) this.getWorld().getTileEntity(pos2));
+            ICoolant compressor = ((ICoolant) this.getWorld().getBlockEntity(pos2));
             this.listCoolant.add(compressor);
         }
 
@@ -608,7 +601,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                         ISocket.class
                 );
         for (BlockPos pos2 : pos1) {
-            ISocket socket = ((ISocket) this.getWorld().getTileEntity(pos2));
+            ISocket socket = ((ISocket) this.getWorld().getBlockEntity(pos2));
             this.energy = socket.getEnergy();
         }
 
@@ -635,7 +628,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                 this.energy.delegate = null;
                 this.energy.createDelegate();
                 this.energy.onLoaded();
-                switch (this.level) {
+                switch (this.levelBlock) {
                     case 0:
                         this.energy.setCapacity(4000000);
                         break;
@@ -676,14 +669,15 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiHeatController(getGuiContainer(var1));
+
+        return new GuiHeatController((ContainerHeatReactor) menu);
     }
 
     @Override
-    public ContainerHeatReactor getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerHeatReactor getGuiContainer(final Player entityPlayer) {
         return new ContainerHeatReactor(this, entityPlayer);
     }
 
@@ -764,7 +758,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         int height = (this.getMultiBlockStucture().maxHeight + this.getMultiBlockStucture().minHeight);
         int length = (this.getMultiBlockStucture().maxLength + this.getMultiBlockStucture().maxLength);
         List<ChunkPos> chunkPosList = new ArrayList<>();
-        ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
+        ChunkPos chunkPos = this.getWorld().getChunkAt(this.pos).getPos();
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
                 chunkPosList.add(new ChunkPos(chunkPos.x + x, chunkPos.z + z));
@@ -774,68 +768,37 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
         this.setFull(false);
         this.activate = false;
-        Explosion explosion = new Explosion(this.world, null, this.getPos().getX() + weight, this.getPos().getY() + height,
-                this.getPos().getZ() + length, 25, false, true
+        Explosion explosion = new Explosion(this.level, null, this.getPos().getX() + weight, this.getPos().getY() + height,
+                this.getPos().getZ() + length, 25, false, Explosion.BlockInteraction.KEEP
         );
-        if (Config.explodeReactor) {
-            if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.getWorld(), explosion)) {
-                return;
-            }
-            world.setBlockToAir(pos);
-            for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
-                if (world.rand.nextInt(2) == 0) {
-                    continue;
-                }
-                BlockPos pos1;
-                switch (EnumFacing.values()[facing]) {
-                    case NORTH:
-                        pos1 = pos.add(entry.getKey());
-                        break;
-                    case EAST:
-                        pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
-                        break;
-                    case WEST:
-                        pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
-                        break;
-                    case SOUTH:
-                        pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + facing);
-                }
-                world.setBlockToAir(pos1);
 
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
+            if (level.random.nextInt(2) == 0) {
+                continue;
             }
-            explosion.doExplosionA();
-            explosion.doExplosionB(true);
-        } else {
-            world.setBlockToAir(pos);
-            for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
-                if (world.rand.nextInt(2) == 0) {
-                    continue;
-                }
-                BlockPos pos1;
-                switch (EnumFacing.values()[facing]) {
-                    case NORTH:
-                        pos1 = pos.add(entry.getKey());
-                        break;
-                    case EAST:
-                        pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
-                        break;
-                    case WEST:
-                        pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
-                        break;
-                    case SOUTH:
-                        pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + facing);
-                }
-                world.setBlockToAir(pos1);
+            BlockPos pos1;
+            switch (Direction.values()[facing]) {
+                case NORTH:
+                    pos1 = pos.offset(entry.getKey());
+                    break;
+                case EAST:
+                    pos1 = pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                    break;
+                case WEST:
+                    pos1 = pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                    break;
+                case SOUTH:
+                    pos1 = pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + facing);
+            }
+            level.setBlock(pos1, Blocks.AIR.defaultBlockState(), 3);
 
-            }
         }
-        if (this.world.provider.getDimension() == 0) {
+
+        if (this.level.dimension() == Level.OVERWORLD) {
             for (ChunkPos pos1 : chunkPosList) {
                 if (!pos1.equals(chunkPos)) {
                     new PacketUpdateRadiationValue(pos1, (int) (rad * 10));
@@ -844,9 +807,9 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                 }
             }
         }
-        if (Config.explodeReactor) {
-            new PacketExplosion(explosion, 25, false, true);
-        }
+
+        new PacketExplosion(explosion, 25, false, false);
+
     }
 
     public EnumTypeWork getTypeWork() {
@@ -941,7 +904,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
     @Override
     public int getLevelReactor() {
-        return this.level;
+        return this.levelBlock;
     }
 
     @Override
@@ -952,7 +915,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
     @Override
     public void increaseLevelReactor() {
-        this.level++;
+        this.levelBlock++;
     }
 
     @Override
@@ -1031,10 +994,10 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
     @Override
     public void damagePump(final int i) {
-        ((ItemsPumps) listCirculationPump.get(i).getSlot().get().getItem()).applyCustomDamage(listCirculationPump
+        ((ItemsPumps) listCirculationPump.get(i).getSlot().get(0).getItem()).applyCustomDamage(listCirculationPump
                 .get(i)
                 .getSlot()
-                .get(), -1, null);
+                .get(0), -1, null);
     }
 
     @Override

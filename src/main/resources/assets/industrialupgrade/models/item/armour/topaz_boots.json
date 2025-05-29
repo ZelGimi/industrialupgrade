@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/topaz_boots"
+    "layer0" : "industrialupgrade:item/topaz_boots"
   }
 }

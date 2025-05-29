@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:lens/earthlinse"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "ACA",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:modultype/module52"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:alloyingot/gallium_arsenic"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:rods/silver"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:rods/zinc"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    "CCC",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_565_element"
+  },
+  "show_notification": true
+}

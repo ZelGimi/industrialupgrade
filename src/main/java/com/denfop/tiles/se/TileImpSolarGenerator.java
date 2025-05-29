@@ -6,10 +6,9 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.tiles.base.TileSolarGeneratorEnergy;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,13 +16,13 @@ import java.util.List;
 public class TileImpSolarGenerator extends TileSolarGeneratorEnergy {
 
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-0.2, 0.0D, -0.2, 1.2, 2.0D,
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(-0.2, 0.0D, -0.2, 1.2, 2.0D,
             1.2
     ));
 
-    public TileImpSolarGenerator() {
+    public TileImpSolarGenerator(BlockPos pos, BlockState state) {
 
-        super(4);
+        super(4, BlockImpSolarEnergy.imp_se_gen, pos, state);
 
     }
 
@@ -32,7 +31,7 @@ public class TileImpSolarGenerator extends TileSolarGeneratorEnergy {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.imp_se_generator;
+        return IUItem.imp_se_generator.getBlock();
     }
 
     @Override
@@ -40,12 +39,8 @@ public class TileImpSolarGenerator extends TileSolarGeneratorEnergy {
         return EnumTypeStyle.IMPROVED;
     }
 
-    @Override
-    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
-        return new ItemStack(IUItem.imp_se_generator);
-    }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
 

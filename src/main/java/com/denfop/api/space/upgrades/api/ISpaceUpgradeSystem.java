@@ -3,9 +3,9 @@ package com.denfop.api.space.upgrades.api;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.info.SpaceUpgradeItemInform;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public interface ISpaceUpgradeSystem {
 
     void write(IRoversItem item, List<EnumTypeUpgrade> lst, ItemStack stack);
 
-    void removeUpdate(ItemStack stack, World world, int index);
+    void removeUpdate(ItemStack stack, Level world, int index);
 
     List<ItemStack> getListStack(ItemStack stack);
 

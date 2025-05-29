@@ -1,27 +1,358 @@
 {
-	"parent": "industrialupgrade:item/tool/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/spectral_bow"	},
-"overrides" : [
-	{
-"predicate" : { 
- "pulling" : 1.0 
-}, 
- "model" : "industrialupgrade:item/energy_tools/spectral_bow_1"
-},
-{
-"predicate" : {
-"pulling" : 1.0,
-"pull" : 0.65
-},
-"model" : "industrialupgrade:item/energy_tools/spectral_bow_2"
-},
-{
-"predicate" : {
-"pulling" : 1.0,
-"pull" : 0.9
-},
-"model" : "industrialupgrade:item/energy_tools/spectral_bow_3"
-}
-]
+  "parent" : "industrialupgrade:item/tool/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:item/spectral_bow"
+  },
+  "overrides" : [
+    {
+      "predicate" : {
+        "pulling" : 1.0
+      },
+      "model" : "industrialupgrade:item/energy_tools/spectral_bow_pulling_0"
+    },
+    {
+      "predicate" : {
+        "pulling" : 1.0,
+        "pull" : 0.65
+      },
+      "model" : "industrialupgrade:item/energy_tools/spectral_bow_pulling_1"
+    },
+    {
+      "predicate" : {
+        "pulling" : 1.0,
+        "pull" : 0.9
+      },
+      "model" : "industrialupgrade:item/energy_tools/spectral_bow_pulling_2"
+    },
+	 {
+            "predicate": {
+                "mode": 0.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_zelen"
+        },
+        {
+            "predicate": {
+                "mode": 0.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_zelen"
+        },
+        {
+            "predicate": {
+                "mode": 0.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_zelen"
+        },
+        {
+            "predicate": {
+                "mode": 0.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_zelen"
+        },
+        {
+            "predicate": {
+                "mode": 1.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_demon"
+        },
+        {
+            "predicate": {
+                "mode": 1.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_demon"
+        },
+        {
+            "predicate": {
+                "mode": 1.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_demon"
+        },
+        {
+            "predicate": {
+                "mode": 1.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_demon"
+        },
+        {
+            "predicate": {
+                "mode": 2.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_dark"
+        },
+        {
+            "predicate": {
+                "mode": 2.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_dark"
+        },
+        {
+            "predicate": {
+                "mode": 2.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_dark"
+        },
+        {
+            "predicate": {
+                "mode": 2.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_dark"
+        },
+        {
+            "predicate": {
+                "mode": 3.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_cold"
+        },
+        {
+            "predicate": {
+                "mode": 3.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_cold"
+        },
+        {
+            "predicate": {
+                "mode": 3.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_cold"
+        },
+        {
+            "predicate": {
+                "mode": 3.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_cold"
+        },
+        {
+            "predicate": {
+                "mode": 4.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_ender"
+        },
+        {
+            "predicate": {
+                "mode": 4.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_ender"
+        },
+        {
+            "predicate": {
+                "mode": 4.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_ender"
+        },
+        {
+            "predicate": {
+                "mode": 4.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_ender"
+        },
+        {
+            "predicate": {
+                "mode": 5.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_ukraine"
+        },
+        {
+            "predicate": {
+                "mode": 5.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_ukraine"
+        },
+        {
+            "predicate": {
+                "mode": 5.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_ukraine"
+        },
+        {
+            "predicate": {
+                "mode": 5.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_ukraine"
+        },
+        {
+            "predicate": {
+                "mode": 6.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_fire"
+        },
+        {
+            "predicate": {
+                "mode": 6.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_fire"
+        },
+        {
+            "predicate": {
+                "mode": 6.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_fire"
+        },
+        {
+            "predicate": {
+                "mode": 6.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_fire"
+        },
+        {
+            "predicate": {
+                "mode": 7.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_emerald"
+        },
+        {
+            "predicate": {
+                "mode": 7.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_emerald"
+        },
+        {
+            "predicate": {
+                "mode": 7.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_emerald"
+        },
+        {
+            "predicate": {
+                "mode": 7.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_emerald"
+        },
+        {
+            "predicate": {
+                "mode": 8.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_taiga"
+        },
+        {
+            "predicate": {
+                "mode": 8.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_taiga"
+        },
+        {
+            "predicate": {
+                "mode": 8.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_taiga"
+        },
+        {
+            "predicate": {
+                "mode": 8.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_taiga"
+        },
+        {
+            "predicate": {
+                "mode": 9.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_desert"
+        },
+        {
+            "predicate": {
+                "mode": 9.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_desert"
+        },
+        {
+            "predicate": {
+                "mode": 9.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_desert"
+        },
+        {
+            "predicate": {
+                "mode": 9.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_desert"
+        },
+        {
+            "predicate": {
+                "mode": 10.0,
+                "pulling": 0.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_snow"
+        },
+        {
+            "predicate": {
+                "mode": 10.0,
+                "pulling": 1.0
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_1_snow"
+        },
+        {
+            "predicate": {
+                "mode": 10.0,
+                "pulling": 1.0,
+                "pull": 0.65
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_2_snow"
+        },
+        {
+            "predicate": {
+                "mode": 10.0,
+                "pulling": 1.0,
+                "pull": 0.9
+            },
+            "model": "industrialupgrade:item/energy_tools/spectral_bow_3_snow"
+        }
+  ]
 }

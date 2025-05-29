@@ -1,6 +1,5 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
@@ -8,16 +7,11 @@ import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Energy;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
@@ -28,11 +22,13 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundCategory;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -62,18 +58,18 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
             int energyPerTick,
             int length,
             int outputSlots,
-            EnumDoubleElectricMachine type
+            EnumDoubleElectricMachine type, IMultiTileBlock block, BlockPos pos, BlockState state
     ) {
-        this(energyPerTick, length, outputSlots, 1, type, true);
+        this(energyPerTick, length, outputSlots, 1, type, true, block, pos, state);
     }
 
     public TileDoubleElectricMachine(
             int energyPerTick,
             int length,
             int outputSlots,
-            EnumDoubleElectricMachine type, boolean register
+            EnumDoubleElectricMachine type, boolean register, IMultiTileBlock block, BlockPos pos, BlockState state
     ) {
-        this(energyPerTick, length, outputSlots, 1, type, register);
+        this(energyPerTick, length, outputSlots, 1, type, register, block, pos, state);
     }
 
     public TileDoubleElectricMachine(
@@ -81,8 +77,9 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
             int length,
             int outputSlots,
             int aDefaultTier,
-            EnumDoubleElectricMachine type, boolean register
+            EnumDoubleElectricMachine type, boolean register, IMultiTileBlock block, BlockPos pos, BlockState state
     ) {
+        super(block, pos, state);
         this.outputSlot = new InvSlotOutput(this, outputSlots);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
@@ -111,14 +108,14 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
     }
 
-    public void updateTileServer(EntityPlayer var1, double var2) {
+    public void updateTileServer(Player var1, double var2) {
         sound = !sound;
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
             if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                new PacketStopSound(getWorld(), this.pos);
+                new PacketStopSound(getWorld(), this.getBlockPos());
 
 
             }
@@ -165,7 +162,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
-        if (stack.getItemDamage() == 4 && type == EnumDoubleElectricMachine.ALLOY_SMELTER) {
+        if (type == EnumDoubleElectricMachine.ALLOY_SMELTER) {
             if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("press.lshift"));
             }
@@ -176,7 +173,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
                 tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProgress.getMaxValue());
 
             }
-        } else if (stack.getItemDamage() == 0 && EnumDoubleElectricMachine.SUNNARIUM_PANEL == type) {
+        } else if (EnumDoubleElectricMachine.SUNNARIUM_PANEL == type) {
             if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("press.lshift"));
             }
@@ -234,12 +231,12 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
                 return;
             }
             if (soundEvent == 0) {
-                this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+                this.getWorld().playSound(null, this.getBlockPos(), getSound(), SoundSource.BLOCKS, 1F, 1);
             } else if (soundEvent == 1) {
-                new PacketStopSound(getWorld(), this.pos);
-                this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+                new PacketStopSound(getWorld(), this.getBlockPos());
+                this.getWorld().playSound(null, this.getBlockPos(), EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
             } else {
-                new PacketStopSound(getWorld(), this.pos);
+                new PacketStopSound(getWorld(), this.getBlockPos());
             }
         }
     }
@@ -255,22 +252,22 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
     public void onUpdate() {
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
         return nbttagcompound;
     }
 
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.getWorld().isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -290,7 +287,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
         return this.output;
     }
 
-    public ContainerDoubleElectricMachine getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerDoubleElectricMachine getGuiContainer(Player entityPlayer) {
         return new ContainerDoubleElectricMachine(entityPlayer, this, type);
     }
 

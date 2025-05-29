@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:circuit/advanced_part1"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:stick/cobalt"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:circuit/advanced_part2"
+  },
+  "show_notification": true
+}

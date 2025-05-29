@@ -2,7 +2,7 @@ package com.denfop.tiles.bee;
 
 import com.denfop.api.bee.IBee;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.Objects;
 
@@ -33,7 +33,7 @@ public class Bee {
         this.food = food;
     }
 
-    public Bee(NBTTagCompound tagCompound) {
+    public Bee(CompoundTag tagCompound) {
         this.maxLife = tagCompound.getShort("maxLife");
         this.ill = tagCompound.getBoolean("ill");
         this.typeBee = EnumTypeBee.values()[tagCompound.getByte("typeBee")];
@@ -62,16 +62,16 @@ public class Bee {
         return Objects.hash(id);
     }
 
-    public NBTTagCompound writeToNBT() {
-        final NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setShort("maxLife", (short) this.maxLife);
-        tagCompound.setByte("type", (byte) this.type.ordinal());
-        tagCompound.setByte("typeBee", (byte) this.typeBee.ordinal());
-        tagCompound.setBoolean("ill", ill);
-        tagCompound.setShort("birthTick", (short) birthTick);
-        tagCompound.setShort("tick", (short) tick);
-        tagCompound.setShort("jelly", (short) (this.jelly * 100));
-        tagCompound.setShort("food", (short) (this.food * 100));
+    public CompoundTag writeToNBT() {
+        final CompoundTag tagCompound = new CompoundTag();
+        tagCompound.putShort("maxLife", (short) this.maxLife);
+        tagCompound.putByte("type", (byte) this.type.ordinal());
+        tagCompound.putByte("typeBee", (byte) this.typeBee.ordinal());
+        tagCompound.putBoolean("ill", ill);
+        tagCompound.putShort("birthTick", (short) birthTick);
+        tagCompound.putShort("tick", (short) tick);
+        tagCompound.putShort("jelly", (short) (this.jelly * 100));
+        tagCompound.putShort("food", (short) (this.food * 100));
 
         return tagCompound;
     }

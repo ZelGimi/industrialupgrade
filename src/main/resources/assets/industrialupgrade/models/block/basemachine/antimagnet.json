@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:blocks/anti-magnetic_block",
-    "particle" : "industrialupgrade:blocks/anti-magnetic_block"
+    "0" : "industrialupgrade:block/anti-magnetic_block",
+    "particle" : "industrialupgrade:block/anti-magnetic_block"
   },
   "elements" : [
     {

@@ -2,9 +2,11 @@ package com.denfop.api.gui;
 
 import com.denfop.gui.GuiCore;
 import com.denfop.utils.ModUtils;
-import com.google.common.base.Supplier;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.function.Supplier;
 
 public class ItemStackImage extends GuiElement<ItemStackImage> {
 
@@ -15,28 +17,28 @@ public class ItemStackImage extends GuiElement<ItemStackImage> {
         this.itemSupplier = itemSupplier;
     }
 
-    public void drawBackground(int mouseX, int mouseY) {
+    public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
         if (!visible()) {
             return;
         }
-        super.drawBackground(mouseX, mouseY);
+        super.drawBackground(poseStack, mouseX, mouseY);
         ItemStack stack = this.itemSupplier.get();
         if (!ModUtils.isEmpty(stack)) {
-            RenderHelper.enableGUIStandardItemLighting();
-            this.gui.drawItemStack(this.x, this.y, stack);
-            RenderHelper.disableStandardItemLighting();
+            RenderSystem.enableBlend();
+            this.gui.drawItemStack(poseStack, this.x, this.y, stack);
+            RenderSystem.disableBlend();
         }
 
     }
 
-    public void drawForeground(int mouseX, int mouseY) {
+    public void drawForeground(GuiGraphics poseStack, int mouseX, int mouseY) {
         if (!visible()) {
             return;
         }
         if (this.contains(mouseX, mouseY)) {
             ItemStack stack = this.itemSupplier.get();
             if (!ModUtils.isEmpty(stack)) {
-                this.gui.drawTooltip(mouseX, mouseY, stack);
+                this.gui.drawTooltip(poseStack, mouseX, mouseY, stack);
             }
         }
 

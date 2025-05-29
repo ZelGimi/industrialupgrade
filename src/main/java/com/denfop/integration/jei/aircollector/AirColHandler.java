@@ -2,7 +2,7 @@ package com.denfop.integration.jei.aircollector;
 
 
 import com.denfop.blocks.FluidName;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -51,11 +51,11 @@ public class AirColHandler {
 
     public static void initRecipes() {
 
-        addRecipe(new FluidStack(FluidName.fluidazot.getInstance(), 6000),
+        addRecipe(new FluidStack(FluidName.fluidazot.getInstance().get(), 6000),
                 new FluidStack(
-                        FluidName.fluidoxy.getInstance(),
+                        FluidName.fluidoxy.getInstance().get(),
                         2000
-                ), new FluidStack(FluidName.fluidco2.getInstance(), 1000)
+                ), new FluidStack(FluidName.fluidco2.getInstance().get(), 1000)
         );
 
 

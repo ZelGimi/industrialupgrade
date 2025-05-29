@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerWaterRotorUpgrade extends ContainerFullInv<TileEntityWaterRotorModifier> {
 
-    public ContainerWaterRotorUpgrade(TileEntityWaterRotorModifier tileEntityRotorModifier, EntityPlayer entityPlayer) {
+    public ContainerWaterRotorUpgrade(TileEntityWaterRotorModifier tileEntityRotorModifier, Player entityPlayer) {
         super(entityPlayer, tileEntityRotorModifier, 206);
         addSlotToContainer(new SlotInvSlot(tileEntityRotorModifier.slot,
                 0, 78, 7

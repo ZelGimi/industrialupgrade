@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.agriculture.CropNetwork;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -12,23 +13,26 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWeeder;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWeeder;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.FakePlayerSpawner;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.crop.TileEntityCrop;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemHoe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -42,19 +46,20 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
     public final Energy energy;
     public final InvSlotUpgrade upgradeSlot;
     private final ComponentUpgradeSlots componentUpgrade;
-    AxisAlignedBB searchArea = new AxisAlignedBB(
-            pos.add(-RADIUS, -RADIUS, -RADIUS),
-            pos.add(RADIUS, RADIUS, RADIUS)
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS, RADIUS, RADIUS)
     );
     List<List<TileEntityCrop>> list = new ArrayList<>();
-    List<Chunk> chunks;
+    List<LevelChunk> chunks;
     private FakePlayerSpawner player;
 
-    public TileEntityWeeder() {
+    public TileEntityWeeder(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.weeder,pos,state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemHoe;
+                return stack.getItem() instanceof HoeItem;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
@@ -71,7 +76,7 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -96,38 +101,38 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            this.player = new FakePlayerSpawner(world);
-            final AxisAlignedBB aabb = searchArea.offset(pos);
-            searchArea = aabb;
-            int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
-            int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
-            int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
-            int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
+        if (!this.getWorld().isClientSide) {
+            this.player = new FakePlayerSpawner(level);
+            final AABB aabb = searchArea;
+            int j2 = Mth.floor((aabb.minX - 2) / 16.0D);
+            int k2 = Mth.ceil((aabb.maxX + 2) / 16.0D);
+            int l2 = Mth.floor((aabb.minZ - 2) / 16.0D);
+            int i3 = Mth.ceil((aabb.maxZ + 2) / 16.0D);
             chunks = new ArrayList<>();
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
-                    final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
+                    final LevelChunk chunk = level.getChunk(j3, k3);
                     if (!chunks.contains(chunk)) {
                         chunks.add(chunk);
                     }
                 }
             }
-            for (Chunk chunk : chunks) {
-                this.list.add(CropNetwork.instance.getCropsFromChunk(world, chunk.getPos()));
+            for (LevelChunk chunk : chunks) {
+                this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk.getPos()));
             }
         }
     }
 
     @Override
-    public ContainerWeeder getGuiContainer(final EntityPlayer var1) {
+    public ContainerWeeder getGuiContainer(final Player var1) {
         return new ContainerWeeder(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiWeeder(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiWeeder((ContainerWeeder) menu);
     }
 
     public boolean contains(BlockPos vec) {
@@ -145,18 +150,17 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0) {
+        if (this.getWorld().getGameTime() % 100 == 0) {
             updateCrop();
         }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(5)) {
+        if (this.getWorld().getGameTime() % 20 == 0 && this.energy.canUseEnergy(5)) {
             cycle:
             for (List<TileEntityCrop> crops : list) {
                 for (TileEntityCrop crop : crops) {
-                    if (this.energy.getEnergy() > 5 && !this.slot.get().isEmpty() && crop.isLoaded) {
+                    if (this.energy.getEnergy() > 5 && !this.slot.get(0).isEmpty() && crop.isLoaded) {
                         if (this.contains(crop.getPos()) && crop.getCrop() != null && crop.getCrop().getId() == 3) {
-                            this.slot.get().damageItem(1, player);
+                            this.slot.get(0).hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                             crop.resetCrop();
-                            crop.sendUpdatePacket("cropItem1", "");
                             this.energy.useEnergy(5);
                         }
                     } else {
@@ -170,8 +174,8 @@ public class TileEntityWeeder extends TileEntityInventory implements IUpgradable
 
     private void updateCrop() {
         list.clear();
-        for (Chunk chunk : chunks) {
-            this.list.add(CropNetwork.instance.getCropsFromChunk(world, chunk.getPos()));
+        for (LevelChunk chunk : chunks) {
+            this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk.getPos()));
         }
     }
 

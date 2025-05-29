@@ -5,7 +5,7 @@ import com.denfop.items.modules.EnumSpawnerModules;
 import com.denfop.items.modules.EnumSpawnerType;
 import com.denfop.items.modules.ItemSpawnerModules;
 import com.denfop.tiles.base.TileAutoSpawner;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotUpgradeModule extends InvSlot {
 
@@ -29,7 +29,7 @@ public class InvSlotUpgradeModule extends InvSlot {
         for (int i = 0; i < this.size(); i++) {
             this.tile.lootContext[i] = null;
             if (!this.get(i).isEmpty()) {
-                EnumSpawnerModules module = EnumSpawnerModules.getFromID(this.get(i).getItemDamage());
+                EnumSpawnerModules module =EnumSpawnerModules.getFromID(((ItemSpawnerModules<?>)this.get(i).getItem()).getElement().getId());
                 EnumSpawnerType type = module.type;
                 switch (type) {
                     case SPAWN:
@@ -72,8 +72,8 @@ public class InvSlotUpgradeModule extends InvSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         int spawn = 1;
         int chance = 0;
         int speed = 0;
@@ -83,7 +83,7 @@ public class InvSlotUpgradeModule extends InvSlot {
         for (int i = 0; i < this.size(); i++) {
             this.tile.lootContext[i] = null;
             if (!this.get(i).isEmpty()) {
-                EnumSpawnerModules module = EnumSpawnerModules.getFromID(this.get(i).getItemDamage());
+                EnumSpawnerModules module = EnumSpawnerModules.getFromID(((ItemSpawnerModules<?>)this.get(i).getItem()).getElement().getId());
                 EnumSpawnerType type = module.type;
                 switch (type) {
                     case SPAWN:
@@ -122,7 +122,7 @@ public class InvSlotUpgradeModule extends InvSlot {
         this.tile.speed = Math.min(80, speed);
         this.tile.experience = Math.min(100, experience);
         this.tile.fireAspect = Math.min(1, fireAspect);
-
+        return content;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {

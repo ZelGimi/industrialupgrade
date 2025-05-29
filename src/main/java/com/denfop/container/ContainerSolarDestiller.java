@@ -1,13 +1,15 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.solardestiller.TileEntityBaseSolarDestiller;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 
 public class ContainerSolarDestiller extends ContainerFullInv<TileEntityBaseSolarDestiller> {
 
-    public ContainerSolarDestiller(EntityPlayer player, TileEntityBaseSolarDestiller tileEntite) {
+    public ContainerSolarDestiller(Player player, TileEntityBaseSolarDestiller tileEntite) {
         super(null, tileEntite, 171);
+        this.player = player;
+        this.inventory = player.getInventory();
         this.addSlotToContainer(new SlotInvSlot(tileEntite.waterinputSlot, 0, 18, 28));
         this.addSlotToContainer(new SlotInvSlot(tileEntite.destiwaterinputSlot, 0, 142, 28));
         this.addSlotToContainer(new SlotInvSlot(tileEntite.wateroutputSlot, 0, 18, 46));
@@ -24,7 +26,7 @@ public class ContainerSolarDestiller extends ContainerFullInv<TileEntityBaseSola
         for (col = 0; col < 3; ++col) {
             for (int col1 = 0; col1 < 9; ++col1) {
                 this.addSlotToContainer(new Slot(
-                        player.inventory,
+                        player.getInventory(),
                         col1 + col * 9 + 9,
                         xStart + col1 * 18,
                         height + 1 + -82 + col * 18
@@ -33,7 +35,7 @@ public class ContainerSolarDestiller extends ContainerFullInv<TileEntityBaseSola
         }
 
         for (col = 0; col < 9; ++col) {
-            this.addSlotToContainer(new Slot(player.inventory, col, xStart + col * 18, height + -24));
+            this.addSlotToContainer(new Slot(player.getInventory(), col, xStart + col * 18, height + -24));
         }
     }
 

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:basemachine3/oak_tank"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "DAD",
+    "DCD"
+  ],
+  "result": {
+    "item": "industrialupgrade:primal_pump/primal_pump"
+  },
+  "show_notification": true
+}

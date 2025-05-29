@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/blueprint_290"
+    "layer0" : "industrialupgrade:item/blueprint_290"
   }
 }

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileMagnet;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerMagnet extends ContainerFullInv<TileMagnet> {
 
-    public ContainerMagnet(EntityPlayer entityPlayer, TileMagnet tileEntity1) {
+    public ContainerMagnet(Player entityPlayer, TileMagnet tileEntity1) {
         super(entityPlayer, tileEntity1, 186);
         for (int j = 0; j < 9; ++j) {
             addSlotToContainer(new SlotVirtual(tileEntity1, j, 175, 18 + j * 18,

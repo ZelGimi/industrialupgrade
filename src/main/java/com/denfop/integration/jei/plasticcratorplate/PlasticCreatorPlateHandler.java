@@ -3,7 +3,7 @@ package com.denfop.integration.jei.plasticcratorplate;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -14,14 +14,20 @@ public class PlasticCreatorPlateHandler {
     private static final List<PlasticCreatorPlateHandler> recipes = new ArrayList<>();
     private final FluidStack input2;
     private final ItemStack input, output;
+    private final BaseMachineRecipe container;
 
     public PlasticCreatorPlateHandler(
             ItemStack input, FluidStack input2,
-            ItemStack output
-    ) {
+            ItemStack output,
+            BaseMachineRecipe container) {
         this.input = input;
         this.input2 = input2;
         this.output = output;
+        this.container=container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<PlasticCreatorPlateHandler> getRecipes() {
@@ -33,9 +39,9 @@ public class PlasticCreatorPlateHandler {
 
     public static PlasticCreatorPlateHandler addRecipe(
             ItemStack input, FluidStack input2,
-            ItemStack output
-    ) {
-        PlasticCreatorPlateHandler recipe = new PlasticCreatorPlateHandler(input, input2, output);
+            ItemStack output,
+            BaseMachineRecipe container) {
+        PlasticCreatorPlateHandler recipe = new PlasticCreatorPlateHandler(input, input2, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -60,7 +66,7 @@ public class PlasticCreatorPlateHandler {
 
             addRecipe(container.input.getInputs().get(0).getInputs().get(0), container.input.getFluid(),
 
-                    container.getOutput().items.get(0)
+                    container.getOutput().items.get(0),container
             );
 
         }
@@ -80,7 +86,7 @@ public class PlasticCreatorPlateHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

@@ -1,7 +1,7 @@
 {
 	"parent": "block/door_top",
 	"textures": {
-		"bottom": "industrialupgrade:blocks/reinforced_door_bottom",
-		"top": "industrialupgrade:blocks/reinforced_door_top"
+		"bottom": "industrialupgrade:block/reinforced_door_bottom",
+		"top": "industrialupgrade:block/reinforced_door_top"
 	}
 }

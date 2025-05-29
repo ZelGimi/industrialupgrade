@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/charged_redstone"
+    "layer0" : "industrialupgrade:item/charged_redstone"
   }
 }

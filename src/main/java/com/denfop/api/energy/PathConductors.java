@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PathConductors<T> {
-
     private List<T> conductorList;
 
     public PathConductors(List<T> conductorList) {

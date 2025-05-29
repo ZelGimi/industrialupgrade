@@ -4,11 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityPerGraphiteController extends TileEntityGraphiteController {
 
-    public TileEntityPerGraphiteController() {
-        super(3);
+    public TileEntityPerGraphiteController(BlockPos pos, BlockState state) {
+        super(3, BlocksGraphiteReactors.graphite_per_graphite_controller,pos,state);
     }
 
     @Override
@@ -18,7 +20,7 @@ public class TileEntityPerGraphiteController extends TileEntityGraphiteControlle
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.graphite_reactor;
+        return IUItem.graphite_reactor.getBlock(getTeBlock());
     }
 
 }

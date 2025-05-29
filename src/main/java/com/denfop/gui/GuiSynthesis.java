@@ -12,15 +12,16 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.tiles.mechanism.dual.TileSynthesis;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
-@SideOnly(Side.CLIENT)
-public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
+@OnlyIn(Dist.CLIENT)
+public class GuiSynthesis<T extends ContainerDoubleElectricMachine> extends GuiIU<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
@@ -52,31 +53,31 @@ public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics stack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(stack, mouseX, mouseY);
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void renderBg(GuiGraphics stack, float f, int x, int y) {
+        super.renderBg(stack, f, x, y);
+        bindTexture(getTexture());
         int progress = (int) (13 * this.container.base.getProgress());
         int progress1 = (int) (24 * this.container.base.getProgress());
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
+        int xoffset = this.guiLeft();
+        int yoffset = guiTop();
 
 
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 42, yoffset + 35, 177, 33, progress + 1, 14);
+            drawTexturedModalRect(stack, xoffset + 42, yoffset + 35, 177, 33, progress + 1, 14);
         }
         if (progress1 > 0) {
-            drawTexturedModalRect(xoffset + 78, yoffset + 33, 177, 52, progress1 + 1, 23);
+            drawTexturedModalRect(stack, xoffset + 78, yoffset + 33, 177, 52, progress1 + 1, 23);
         }
 
         final MachineRecipe output = this.container.base.output;
         if (output != null) {
-            this.fontRenderer.drawString(
-                    TextFormatting.GREEN + Localization.translate("chance") + output.getRecipe().output.metadata.getInteger(
+           draw(stack,
+                    ChatFormatting.GREEN + Localization.translate("chance") + output.getRecipe().output.metadata.getInt(
                             "percent") + "%", xoffset + 66,
                     yoffset + 66, ModUtils.convertRGBcolorToInt(217, 217, 217)
             );
@@ -85,7 +86,7 @@ public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSynthesis.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSynthesis.png".toLowerCase());
     }
 
 }

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/ultimate_solar_helmet_demon"
+    "layer0" : "industrialupgrade:item/ultimate_solar_helmet_demon"
   }
 }

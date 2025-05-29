@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/replicator_side",
-    "down" : "industrialupgrade:blocks/replicator_side",
-    "up" : "industrialupgrade:blocks/replicator_top",
-    "north" : "industrialupgrade:blocks/replicator_side",
-    "east" : "industrialupgrade:blocks/replicator_side",
-    "south" : "industrialupgrade:blocks/replicator_side",
-    "west" : "industrialupgrade:blocks/replicator_side"
+    "particle" : "industrialupgrade:block/replicator_side",
+    "down" : "industrialupgrade:block/replicator_side",
+    "up" : "industrialupgrade:block/replicator_top",
+    "north" : "industrialupgrade:block/replicator_side",
+    "east" : "industrialupgrade:block/replicator_side",
+    "south" : "industrialupgrade:block/replicator_side",
+    "west" : "industrialupgrade:block/replicator_side"
   }
 }

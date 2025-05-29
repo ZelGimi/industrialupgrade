@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntitySocketFactory;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSocket extends ContainerFullInv<TileEntitySocketFactory> {
 
-    public ContainerSocket(TileEntitySocketFactory var1, EntityPlayer var11) {
+    public ContainerSocket(TileEntitySocketFactory var1, Player var11) {
         super(var11, var1);
         for (int i = 0; i < 2; i++) {
             this.addSlotToContainer(new SlotInvSlot(var1.inputSlotA, i, 40 + i * 18, 17));

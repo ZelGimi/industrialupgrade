@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:dusts/stone"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:clay_ball"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:sand"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "ABA",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_289_element"
+  },
+  "show_notification": true
+}

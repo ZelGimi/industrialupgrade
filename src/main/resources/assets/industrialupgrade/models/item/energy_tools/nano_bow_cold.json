@@ -1,7 +1,7 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nano_bow_cold"	},
+		"layer0": "industrialupgrade:item/nano_bow_cold"	},
 "overrides" : [
 	{
 "predicate" : { 

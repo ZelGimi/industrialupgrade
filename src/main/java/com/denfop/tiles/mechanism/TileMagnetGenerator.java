@@ -2,27 +2,32 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.MultiTileBlock;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
+import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerMagnetGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiMagnetGenerator;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,8 +36,8 @@ public class TileMagnetGenerator extends TileElectricMachine {
 
     public int timer;
 
-    public TileMagnetGenerator() {
-        super(0, 14, 1);
+    public TileMagnetGenerator(BlockPos pos, BlockState state) {
+        super(0, 14, 1, BlockBaseMachine1.magnet_generator, pos, state);
         this.timer = 86400;
         this.energy = this.addComponent(Energy.asBasicSource(
                 this,
@@ -52,9 +57,9 @@ public class TileMagnetGenerator extends TileElectricMachine {
         super.addInformation(stack, tooltip);
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.timer = nbttagcompound.getInteger("timer");
+        this.timer = nbttagcompound.getInt("timer");
 
     }
 
@@ -80,9 +85,9 @@ public class TileMagnetGenerator extends TileElectricMachine {
         return packet;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("timer", this.timer);
+        nbttagcompound.putInt("timer", this.timer);
         return nbttagcompound;
     }
 
@@ -91,38 +96,38 @@ public class TileMagnetGenerator extends TileElectricMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine;
+        return IUItem.basemachine.getBlock(getTeBlock().getId());
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (!(getWorld()).isRemote) {
-            NBTTagCompound nbt = ModUtils.nbt(stack);
+        if (!(getWorld()).isClientSide) {
+            CompoundTag nbt = ModUtils.nbt(stack);
             if (nbt.getBoolean("work")) {
-                this.timer = nbt.getInteger("timer");
+                this.timer = nbt.getInt("timer");
             }
         }
     }
 
     @Override
-    public List<ItemStack> getWrenchDrops(final EntityPlayer player, final int fortune) {
+    public List<ItemStack> getWrenchDrops(final Player player, final int fortune) {
         List<ItemStack> list = super.getWrenchDrops(player, fortune);
-        NBTTagCompound nbt = ModUtils.nbt(list.get(0));
-        nbt.setInteger("timer", this.timer);
-        nbt.setBoolean("work", true);
+        CompoundTag nbt = ModUtils.nbt(list.get(0));
+        nbt.putInt("timer", this.timer);
+        nbt.putBoolean("work", true);
         return list;
     }
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (drop.isItemEqual(this.getPickBlock(
+        if (drop.is(this.getPickBlock(
                 null,
                 null
-        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
-            NBTTagCompound nbt = ModUtils.nbt(drop);
-            nbt.setInteger("timer", this.timer);
-            nbt.setBoolean("work", true);
+        ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
+            CompoundTag nbt = ModUtils.nbt(drop);
+            nbt.putInt("timer", this.timer);
+            nbt.putBoolean("work", true);
 
         }
         return drop;
@@ -138,7 +143,7 @@ public class TileMagnetGenerator extends TileElectricMachine {
             }
             return;
         }
-        if (this.world.provider.getWorldTime() % 20 == 0) {
+        if (this.getWorld().getGameTime() % 20 == 0) {
             timer--;
         }
         this.energy.addEnergy(2);
@@ -146,7 +151,7 @@ public class TileMagnetGenerator extends TileElectricMachine {
             setActive(true);
             initiate(0);
         }
-        if (this.getWorld().provider.getWorldTime() % 200 == 0) {
+        if (this.getWorld().getGameTime() % 200 == 0) {
             initiate(2);
             initiate(0);
         }
@@ -162,13 +167,13 @@ public class TileMagnetGenerator extends TileElectricMachine {
     }
 
     @Override
-    public ContainerMagnetGenerator getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerMagnetGenerator getGuiContainer(final Player entityPlayer) {
         return new ContainerMagnetGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public GuiMagnetGenerator getGui(final EntityPlayer entityPlayer, final boolean b) {
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(final Player entityPlayer, ContainerBase<? extends IAdvInventory> b) {
         return new GuiMagnetGenerator(new ContainerMagnetGenerator(entityPlayer, this));
     }
 

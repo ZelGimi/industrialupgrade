@@ -1,16 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -19,7 +13,9 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTripleSolidMixer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiTripleSolidMixer;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
@@ -28,14 +24,15 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -58,8 +55,8 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
     public double guiProgress;
     protected short progress;
 
-    public TileEntityTripleSolidMixer() {
-        super(200, 1, 3);
+    public TileEntityTripleSolidMixer(BlockPos pos, BlockState state) {
+        super(200, 1, 3,BlockBaseMachine3.triple_solid_mixer,pos,state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -109,45 +106,45 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
         return EnumSound.solid_mixer.getSoundEvent();
     }
 
-    public ContainerTripleSolidMixer getGuiContainer(final EntityPlayer var1) {
+    public ContainerTripleSolidMixer getGuiContainer(final Player var1) {
         return new ContainerTripleSolidMixer(var1, this);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiTripleSolidMixer(getGuiContainer(var1));
+        return new GuiTripleSolidMixer((ContainerTripleSolidMixer) menu);
     }
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.iudust, 2, 66), new ItemStack(IUItem.iudust, 6, 60), new ItemStack(IUItem.iudust, 10, 21),
-                new ItemStack(IUItem.iudust, 6, 71),
-                new ItemStack(IUItem.white_phosphorus)
+        addRecipe(new ItemStack(IUItem.iudust.getStack(66), 2), new ItemStack(IUItem.iudust.getStack(60), 6), new ItemStack(IUItem.iudust.getStack(21), 10),
+                new ItemStack(IUItem.iudust.getStack(71), 6),
+                new ItemStack(IUItem.white_phosphorus.getItem())
         );
 
 
         addRecipe(
-                new ItemStack(IUItem.nuclear_res, 1, 21),
-                new ItemStack(IUItem.iudust, 3, 55),
-                new ItemStack(IUItem.iudust, 1, 62),
-                new ItemStack(IUItem.crushed, 1, 24),
+                new ItemStack(IUItem.nuclear_res.getStack(21), 1),
+                new ItemStack(IUItem.iudust.getStack(55), 3),
+                new ItemStack(IUItem.iudust.getStack(62), 1),
+                new ItemStack(IUItem.crushed.getStack(24), 1),
                 IUItem.stoneDust
         );
         addRecipe(
-                new ItemStack(IUItem.iudust, 2, 33),
-                new ItemStack(IUItem.iudust, 1, 59),
-                new ItemStack(IUItem.crafting_elements, 3, 499),
-                new ItemStack(IUItem.graphene),
-                new ItemStack(IUItem.iudust, 1, 31)
+                new ItemStack(IUItem.iudust.getStack(33), 2),
+                new ItemStack(IUItem.iudust.getStack(58), 1),
+                new ItemStack(IUItem.crafting_elements.getStack(499), 3),
+                new ItemStack(IUItem.graphene.getItem()),
+                new ItemStack(IUItem.iudust.getStack(31), 1)
         );
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -162,7 +159,7 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -170,15 +167,15 @@ public class TileEntityTripleSolidMixer extends TileElectricMachine implements
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 

@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/germanium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/germanium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/nichrome"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:doubleplate/vitalium"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_101_element"
+  },
+  "show_notification": true
+}

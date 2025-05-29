@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/germanium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_60_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_156_element"
+  },
+  "show_notification": true
+}

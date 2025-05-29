@@ -2,7 +2,7 @@ package com.denfop.integration.jei.genmatter;
 
 
 import com.denfop.blocks.FluidName;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class GenMatterHandler {
 
     public static void initRecipes() {
 
-        addRecipe(1000000, new FluidStack(FluidName.fluiduu_matter.getInstance(), 1000));
+        addRecipe(1000000, new FluidStack(FluidName.fluiduu_matter.getInstance().get(), 1000));
 
 
     }

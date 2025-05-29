@@ -1,65 +1,87 @@
 package com.denfop.tiles.mechanism.multiblocks.base;
 
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.api.multiblock.MultiBlockStructure;
-import com.denfop.container.ContainerBase;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.events.client.GlobalRenderManager;
-import com.denfop.items.energy.ItemToolWrench;
+import com.denfop.mixin.access.LevelRendererAccessor;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.block.state.IBlockState;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static com.denfop.render.multiblock.TileEntityMultiBlockRender.createFunction;
-
 public abstract class TileMultiBlockBase extends TileEntityInventory implements IMainMultiBlock,
         IUpdatableTileEvent {
 
-    private final MultiBlockStructure multiBlockStructure;
+    private MultiBlockStructure multiBlockStructure;
     public boolean full;
     public boolean activate;
-    public List<EntityPlayer> entityPlayerList;
-    @SideOnly(Side.CLIENT)
+    public List<Player> entityPlayerList;
+
+    @OnlyIn(Dist.CLIENT)
     private Function render;
 
-    public TileMultiBlockBase(MultiBlockStructure multiBlockStructure) {
+    public TileMultiBlockBase(MultiBlockStructure multiBlockStructure, IMultiTileBlock multiTileBlock, BlockPos pos, BlockState state) {
+        super(multiTileBlock, pos, state);
         this.multiBlockStructure = multiBlockStructure;
         this.full = false;
         this.entityPlayerList = new ArrayList<>();
         this.activate = false;
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public static Function<RenderLevelStageEvent, Void> createFunction(TileMultiBlockBase te) {
+        Function<RenderLevelStageEvent, Void> function = o -> {
+            PoseStack poseStack = o.getPoseStack();
+            poseStack.pushPose();
+            poseStack.translate(te.getBlockPos().getX() + 0.5f, te.getBlockPos().getY(), te.getBlockPos().getZ() + 0.5f);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            te.render(te, o);
+
+            poseStack.popPose();
+
+            return null;
+        };
+        return function;
+    }
+
+    @Override
+    public int getBlockLevel() {
+        return 0;
+    }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -72,23 +94,65 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     }
 
     @Override
+    public boolean isMain() {
+        return true;
+    }
+
+    @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        if (world == null) {
+        if (level == null) {
             tooltip.add(Localization.translate("multiblock.jei1"));
             if (getMultiBlockStucture() != null) {
                 for (ItemStack stack1 : getMultiBlockStucture().itemStackList) {
                     if (!stack1.isEmpty()) {
-                        tooltip.add(TextFormatting.GREEN + "" + stack1.getCount() + "x" + TextFormatting.GRAY + stack1.getDisplayName());
+                        tooltip.add(ChatFormatting.GREEN + "" + stack1.getCount() + "x" + ChatFormatting.GRAY + stack1.getDisplayName().getString());
                     }
+                }
+            }else{
+                try {
+                    this.multiBlockStructure = ((TileMultiBlockBase)this.getTeBlock().getTeClass().getConstructors()[0].newInstance(BlockPos.ZERO, this.getBlockState())).multiBlockStructure;
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
     }
 
-    @Override
-    public boolean isMain() {
-        return true;
+    private Direction rotateFacing(Direction original, Direction baseRotation) {
+        if (original == Direction.UP || original == Direction.DOWN) {
+            return original;
+        }
+
+        switch (baseRotation) {
+            case EAST:
+                return rotate90(original);
+            case WEST:
+                return rotate90(rotate90(rotate90(original)));
+            case SOUTH:
+                return rotate90(rotate90(original));
+            default:
+                return original;
+        }
+    }
+
+    private Direction rotate90(Direction facing) {
+        switch (facing) {
+            case NORTH:
+                return Direction.EAST;
+            case EAST:
+                return Direction.SOUTH;
+            case SOUTH:
+                return Direction.WEST;
+            case WEST:
+                return Direction.NORTH;
+            default:
+                return facing;
+        }
     }
 
     public MultiBlockStructure getMultiBlockStructure() {
@@ -106,12 +170,10 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         return packet;
     }
 
-
-    public boolean onRemovedByPlayer(EntityPlayer player, boolean willHarvest) {
+    public boolean onRemovedByPlayer(Player player, boolean willHarvest) {
 
         return true;
     }
-
 
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
@@ -126,108 +188,76 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void render(IBakedModel model, IBlockState state, EnumFacing enumfacing) {
+    public abstract void updateAfterAssembly();
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        int i = 0;
-        final List<BakedQuad> listQuads = model.getQuads(state, enumfacing, 0L);
-        for (int j = listQuads.size(); i < j; ++i) {
-            BakedQuad bakedquad = listQuads.get(i);
+    public abstract void usingBeforeGUI();
 
-
-            bufferbuilder.begin(7, DefaultVertexFormats.ITEM);
-            bufferbuilder.addVertexData(bakedquad.getVertexData());
-
-
-            Vec3i vec3i = bakedquad.getFace().getDirectionVec();
-            bufferbuilder.putNormal((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
-            tessellator.draw();
-        }
-
-    }
-
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void render(
-            TileMultiBlockBase tileEntityMultiBlockBase
+            TileMultiBlockBase tileEntityMultiBlockBase, RenderLevelStageEvent event
     ) {
         if (!this.isFull()) {
-            renderBlock(tileEntityMultiBlockBase);
+            renderBlock(tileEntityMultiBlockBase, event);
         } else if (this.getMultiBlockStucture().hasUniqueModels) {
-            renderUniqueMultiBlock();
+            renderUniqueMultiBlock(event);
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void renderUniqueMultiBlock() {
-
     }
 
     private void rotateBlocks() {
-        for (Map.Entry<BlockPos, EnumFacing> entry : this.multiBlockStructure.RotationMap.entrySet()) {
+        for (Map.Entry<BlockPos, Direction> entry : this.multiBlockStructure.RotationMap.entrySet()) {
             BlockPos pos1;
-            EnumFacing rotation = entry.getValue();
-            switch (this.getFacing()) {
-                case NORTH:
-                    pos1 = entry.getKey();
-                    break;
-                case EAST:
-                    pos1 = new BlockPos(-entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX());
-                    break;
-                case WEST:
-                    pos1 = new BlockPos(entry.getKey().getZ(), entry.getKey().getY(), -entry.getKey().getX());
-                    break;
-                case SOUTH:
-                    pos1 = new BlockPos(-entry.getKey().getX(), entry.getKey().getY(), -entry.getKey().getZ());
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + this.getFacing());
-            }
-            EnumFacing facing = ((TileMultiBlockBase) this).getFacing();
-            pos1 = pos.add(pos1);
+            Direction rotation = entry.getValue();
+            pos1 = switch (this.getFacing()) {
+                case NORTH -> entry.getKey();
+                case EAST -> new BlockPos(-entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX());
+                case WEST -> new BlockPos(entry.getKey().getZ(), entry.getKey().getY(), -entry.getKey().getX());
+                case SOUTH -> new BlockPos(-entry.getKey().getX(), entry.getKey().getY(), -entry.getKey().getZ());
+                default -> throw new IllegalStateException("Unexpected value: " + this.getFacing());
+            };
+            Direction facing = this.getFacing();
+            pos1 = pos.offset(pos1);
             if (pos1.equals(pos)) {
                 continue;
             }
-            if (facing == EnumFacing.NORTH) {
-                if (rotation == EnumFacing.EAST || rotation == EnumFacing.WEST) {
+            if (facing == Direction.NORTH) {
+                if (rotation == Direction.EAST || rotation == Direction.WEST) {
                     rotation = rotation.getOpposite();
                 }
-            } else if (facing == EnumFacing.SOUTH) {
-                if (rotation == EnumFacing.SOUTH || rotation == EnumFacing.NORTH) {
+            } else if (facing == Direction.SOUTH) {
+                if (rotation == Direction.SOUTH || rotation == Direction.NORTH) {
                     rotation = rotation.getOpposite();
                 }
-            } else if (facing == EnumFacing.EAST) {
-                if (rotation == EnumFacing.EAST || rotation == EnumFacing.WEST) {
-                    if (rotation == EnumFacing.EAST) {
-                        rotation = EnumFacing.NORTH;
+            } else if (facing == Direction.EAST) {
+                if (rotation == Direction.EAST || rotation == Direction.WEST) {
+                    if (rotation == Direction.EAST) {
+                        rotation = Direction.NORTH;
                     } else {
-                        rotation = EnumFacing.SOUTH;
+                        rotation = Direction.SOUTH;
                     }
                 } else {
-                    if (rotation == EnumFacing.SOUTH) {
-                        rotation = EnumFacing.WEST;
+                    if (rotation == Direction.SOUTH) {
+                        rotation = Direction.WEST;
                     } else {
-                        rotation = EnumFacing.EAST;
+                        rotation = Direction.EAST;
                     }
                 }
-            } else if (facing == EnumFacing.WEST) {
-                if (rotation == EnumFacing.EAST || rotation == EnumFacing.WEST) {
-                    if (rotation == EnumFacing.WEST) {
-                        rotation = EnumFacing.NORTH;
+            } else if (facing == Direction.WEST) {
+                if (rotation == Direction.EAST || rotation == Direction.WEST) {
+                    if (rotation == Direction.WEST) {
+                        rotation = Direction.NORTH;
                     } else {
-                        rotation = EnumFacing.SOUTH;
+                        rotation = Direction.SOUTH;
                     }
                 } else {
-                    if (rotation == EnumFacing.SOUTH) {
-                        rotation = EnumFacing.EAST;
+                    if (rotation == Direction.SOUTH) {
+                        rotation = Direction.EAST;
                     } else {
-                        rotation = EnumFacing.WEST;
+                        rotation = Direction.WEST;
                     }
                 }
             }
 
-            TileEntityMultiBlockElement multiBlockElement = (TileEntityMultiBlockElement) this.getWorld().getTileEntity(pos1);
+            TileEntityMultiBlockElement multiBlockElement = (TileEntityMultiBlockElement) this.getWorld().getBlockEntity(pos1);
             if (multiBlockElement != null) {
                 multiBlockElement.setFacing(rotation);
             }
@@ -235,42 +265,9 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
 
     }
 
-    private EnumFacing rotateFacing(EnumFacing original, EnumFacing baseRotation) {
-        if (original == EnumFacing.UP || original == EnumFacing.DOWN) {
-            return original;
-        }
-
-        switch (baseRotation) {
-            case EAST:
-                return rotate90(original);
-            case WEST:
-                return rotate90(rotate90(rotate90(original)));
-            case SOUTH:
-                return rotate90(rotate90(original));
-            default:
-                return original;
-        }
-    }
-
-
-    private EnumFacing rotate90(EnumFacing facing) {
-        switch (facing) {
-            case NORTH:
-                return EnumFacing.EAST;
-            case EAST:
-                return EnumFacing.SOUTH;
-            case SOUTH:
-                return EnumFacing.WEST;
-            case WEST:
-                return EnumFacing.NORTH;
-            default:
-                return facing;
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void renderBlock(
-            TileMultiBlockBase tile
+            TileMultiBlockBase tile, RenderLevelStageEvent event
     ) {
         if (facing == 0 || facing == 1) {
             return;
@@ -280,7 +277,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             if (entry.getValue().isEmpty()) {
                 continue;
             }
-            EnumFacing rotation = this.multiBlockStructure.RotationMap.get(entry.getKey());
+            Direction rotation = this.multiBlockStructure.RotationMap.get(entry.getKey());
             switch (this.getFacing()) {
                 case NORTH:
                     pos1 = new BlockPos(entry.getKey().getX(), entry.getKey().getY(), entry.getKey().getZ());
@@ -302,97 +299,98 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             if (item.isEmpty()) {
                 continue;
             }
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(pos1.getX(), 0.5 + pos1.getY(), pos1.getZ()); // Moving into the first slot
-            if (rotation != null) {
-                if (rotation != this.getFacing()) {
-                    switch (this.getFacing()) {
-                        case NORTH:
-                            switch (rotation) {
-                                case SOUTH:
-                                    GlStateManager.rotate(180, 0, 1F, 0);
-                                    break;
-                                case NORTH:
-                                    break;
-                                case WEST:
-                                    GlStateManager.rotate(-90, 0, 1F, 0);
-                                    break;
-                                case EAST:
-                                    GlStateManager.rotate(90, 0, 1F, 0);
-                                    break;
-                            }
-                            break;
-                        case SOUTH:
-                            switch (rotation) {
-                                case SOUTH:
-                                    break;
-                                case NORTH:
-                                    GlStateManager.rotate(180, 0, 1F, 0);
-                                    break;
-                                case WEST:
-                                    GlStateManager.rotate(90, 0, 1F, 0);
-                                    break;
-                                case EAST:
-                                    GlStateManager.rotate(-90, 0, 1F, 0);
-                                    break;
-                            }
-                            break;
-                        case WEST:
-                            switch (rotation) {
-                                case SOUTH:
-                                    GlStateManager.rotate(-90, 0, 1F, 0);
-                                    break;
-                                case NORTH:
-                                    GlStateManager.rotate(90, 0, 1F, 0);
-                                    break;
-                                case WEST:
-                                    break;
-                                case EAST:
-                                    GlStateManager.rotate(180, 0, 1F, 0);
-                                    break;
-                            }
-                            break;
-                        case EAST:
-                            switch (rotation) {
-                                case SOUTH:
-                                    GlStateManager.rotate(90, 0, 1F, 0);
-                                    break;
-                                case NORTH:
-                                    GlStateManager.rotate(-90, 0, 1F, 0);
-                                    break;
-                                case WEST:
-                                    GlStateManager.rotate(180, 0, 1F, 0);
+            PoseStack poseStack = event.getPoseStack();
 
-                                    break;
-                                case EAST:
-                                    break;
-                            }
-                            break;
-                    }
+            poseStack.pushPose();
+            poseStack.translate(pos1.getX(), 0.25 + pos1.getY(), pos1.getZ()); // Moving into the first slot
+            if (rotation != null) {
+                switch (this.getFacing()) {
+                    case NORTH:
+                        switch (rotation) {
+                            case SOUTH:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(180));  // Rotate 180 degrees around Y-axis
+                                break;
+                            case NORTH:
+                                break;
+                            case WEST:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(-90));  // Rotate -90 degrees around Y-axis
+                                break;
+                            case EAST:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(90));  // Rotate 90 degrees around Y-axis
+                                break;
+                        }
+                        break;
+                    case SOUTH:
+                        switch (rotation) {
+                            case SOUTH:
+                                break;
+                            case NORTH:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(180));  // Rotate 180 degrees around Y-axis
+                                break;
+                            case WEST:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(90));  // Rotate 90 degrees around Y-axis
+                                break;
+                            case EAST:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(-90));  // Rotate -90 degrees around Y-axis
+                                break;
+                        }
+                        break;
+                    case WEST:
+                        switch (rotation) {
+                            case SOUTH:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(-90));  // Rotate -90 degrees around Y-axis
+                                break;
+                            case NORTH:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(90));  // Rotate 90 degrees around Y-axis
+                                break;
+                            case WEST:
+                                break;
+                            case EAST:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(180));  // Rotate 180 degrees around Y-axis
+                                break;
+                        }
+                        break;
+                    case EAST:
+                        switch (rotation) {
+                            case SOUTH:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(90));  // Rotate 90 degrees around Y-axis
+                                break;
+                            case NORTH:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(-90));  // Rotate -90 degrees around Y-axis
+                                break;
+                            case WEST:
+                                poseStack.mulPose(Axis.YP.rotationDegrees(180));  // Rotate 180 degrees around Y-axis
+                                break;
+                            case EAST:
+                                break;
+                        }
+                        break;
                 }
+
             }
-            GlStateManager.scale(0.5f, 0.5f, 0.5f); // Scaling down the block
-            RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-            IBakedModel itemModel = this.multiBlockStructure.bakedModelMap.get(entry.getKey());
+
+            poseStack.scale(1f, 1f, 1f);
+            ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
+            BakedModel itemModel = this.multiBlockStructure.bakedModelMap.get(entry.getKey());
             if (itemModel == null) {
-                itemModel = renderItem.getItemModelWithOverrides(item, tile.getWorld(), null);
+                itemModel = renderItem.getModel(item, tile.getWorld(), null, 0);
                 this.multiBlockStructure.bakedModelMap.put(entry.getKey(), itemModel);
             }
-            renderItem.renderItem(item, itemModel);
-            GlStateManager.popMatrix();
+            int i;
+            if (level != null) {
+                i = LevelRenderer.getLightColor(level, getBlockPos());
+            } else {
+                i = 15728880;
+            }
+            renderItem.render(item, ItemDisplayContext.FIXED, false,
+                    poseStack, ((LevelRendererAccessor) event.getLevelRenderer()).getRenderBuffers().bufferSource(), i, OverlayTexture.NO_OVERLAY, itemModel);
+            poseStack.popPose();
         }
     }
 
-    public abstract void updateAfterAssembly();
+    @OnlyIn(Dist.CLIENT)
+    public void renderUniqueMultiBlock(RenderLevelStageEvent event) {
 
-    public abstract void usingBeforeGUI();
-
-    @Override
-    public ContainerBase<?> getGuiContainer(final EntityPlayer entityPlayer) {
-        if (!this.entityPlayerList.contains(entityPlayer)) {
-            this.entityPlayerList.add(entityPlayer);
-        }
-        return null;
     }
 
     @Override
@@ -404,14 +402,14 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     public void setFull(final boolean full) {
         if (!full) {
             if (!this.entityPlayerList.isEmpty()) {
-                this.entityPlayerList.forEach(EntityPlayer::closeScreen);
+                this.entityPlayerList.forEach(Player::closeContainer);
             }
         }
         this.full = full;
         if (full) {
             rotateBlocks();
         }
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "full", full);
         }
 
@@ -422,10 +420,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         return multiBlockStructure;
     }
 
-    @Override
-    public int getBlockLevel() {
-        return 0;
-    }
+
 
     @Override
     public boolean wasActivated() {
@@ -470,7 +465,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     }
 
     public void updateFull() {
-        setFull(getMultiBlockStucture().getFull(getFacing(), getBlockPos(), getWorld()));
+        setFull(getMultiBlockStucture().getFull(getFacing(), getBlockPos(), getLevel()));
         if (isFull()) {
             setActivated(true);
         }
@@ -504,30 +499,20 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         }
     }
 
-    public void updateFull(EntityPlayer player) {
-        setFull(getMultiBlockStucture().getFull(getFacing(), getBlockPos(), getWorld(), player));
+
+    public void updateFull(Player player) {
+        setFull(getMultiBlockStucture().getFull(getFacing(), getBlockPos(), getLevel(), player));
         if (isFull()) {
             setActivated(true);
         }
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
 
         if (!this.full || !this.activate) {
             this.getCooldownTracker().setTick(1);
-            if (player.getHeldItem(hand).getItem() instanceof ItemToolWrench || player
-                    .getHeldItem(hand)
-                    .getItem() == IUItem.GraviTool) {
-                return false;
-            }
+
             if (!this.getMultiBlockStucture().isHasActivatedItem()) {
                 this.updateFull(player);
                 if (full) {
@@ -535,7 +520,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                 }
                 return true;
             }
-            if (this.getMultiBlockStucture().isActivateItem(player.getHeldItem(hand))) {
+            if (this.getMultiBlockStucture().isActivateItem(player.getItemInHand(hand))) {
                 this.updateFull(player);
                 if (!this.full) {
                     return false;
@@ -543,13 +528,13 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                     this.updateAfterAssembly();
                 }
             } else {
-                if (!this.getWorld().isRemote) {
+                if (!this.getWorld().isClientSide) {
                     IUCore.proxy.messagePlayer(
                             player,
                             Localization.translate("iu.activate_multiblock") + " " + this
                                     .getMultiBlockStucture()
                                     .getActivateItem()
-                                    .getDisplayName()
+                                    .getDisplayName().getString()
                     );
                 }
             }
@@ -559,52 +544,47 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         }
 
 
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(player, hand, side, vec3);
     }
+
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.getWorld().isRemote) {
+        if (this.getLevel().isClientSide) {
             this.render = createFunction(this);
             GlobalRenderManager.addRender(this.getWorld(), pos, render);
         }
     }
 
     @Override
-    public void onBlockBreak(final boolean wrench) {
-        super.onBlockBreak(wrench);
+    public void onUnloaded() {
+        if (this.getLevel().isClientSide) {
+            GlobalRenderManager.removeRender(this.getWorld(), pos);
+        }
         if (this.isFull()) {
             if (this.multiBlockStructure != null) {
                 List<BlockPos> blockPosList = this.multiBlockStructure.getPoses(this.getFacing(), this.getBlockPos());
                 for (BlockPos pos1 : blockPosList) {
-                    TileEntity tileentity = this.getWorld().getTileEntity(pos1);
+                    BlockEntity tileentity = this.getLevel().getBlockEntity(pos1);
                     if (tileentity instanceof TileEntityMultiBlockElement) {
                         TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) tileentity;
                         te.setMainMultiElement(null);
                     }
                 }
             }
-            this.setFull(false);
-        }
-    }
-
-    @Override
-    public void onUnloaded() {
-        if (this.getWorld().isRemote) {
-            GlobalRenderManager.removeRender(this.getWorld(), pos);
         }
         super.onUnloaded();
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.activate = nbttagcompound.getBoolean("activate");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("activate", this.activate);
+        nbttagcompound.putBoolean("activate", this.activate);
         return nbttagcompound;
     }
 
@@ -616,5 +596,6 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     @Override
     public void setMainMultiElement(final IMainMultiBlock main) {
     }
+
 
 }

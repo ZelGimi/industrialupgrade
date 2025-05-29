@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=tip": {
+      "model": "industrialupgrade:block/mining_pipe_tip"
+    },
+    "facing=south,type=tip": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "y": 180
+    },
+    "facing=west,type=tip": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "y": 270
+    },
+    "facing=east,type=tip": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "y": 90
+    },
+    "facing=down,type=tip": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "x": 90
+    },
+    "facing=up,type=tip": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "x": 270
+    },
+    "facing=north,type=tip_invalid": {
+      "model": "industrialupgrade:block/mining_pipe_tip"
+    },
+    "facing=south,type=tip_invalid": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "y": 180
+    },
+    "facing=west,type=tip_invalid": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "y": 270
+    },
+    "facing=east,type=tip_invalid": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "y": 90
+    },
+    "facing=down,type=tip_invalid": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "x": 90
+    },
+    "facing=up,type=tip_invalid": {
+      "model": "industrialupgrade:block/mining_pipe_tip",
+      "x": 270
+    }
+  }
+}

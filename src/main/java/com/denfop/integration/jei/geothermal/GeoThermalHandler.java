@@ -43,8 +43,8 @@ public class GeoThermalHandler {
 
     public static void initRecipes() {
         addRecipe(
-                new FluidStack(FluidName.fluidhot_coolant.getInstance(), 3),
-                new FluidStack(FluidName.fluidneft.getInstance(), 1)
+                new FluidStack(FluidName.fluidhot_coolant.getInstance().get(), 3),
+                new FluidStack(FluidName.fluidneft.getInstance().get(), 1)
         );
     }
 

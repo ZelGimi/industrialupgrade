@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityElectricSqueezer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerElectricSqueezer extends ContainerFullInv<TileEntityElectricSqueezer> {
 
-    public ContainerElectricSqueezer(EntityPlayer var1, TileEntityElectricSqueezer tileEntity1) {
+    public ContainerElectricSqueezer(Player var1, TileEntityElectricSqueezer tileEntity1) {
         super(var1, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 120, 99));

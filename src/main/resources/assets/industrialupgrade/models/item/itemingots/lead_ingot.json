@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/ingot/lead"
+		"layer0": "industrialupgrade:item/ingot/lead"
 	}
 }

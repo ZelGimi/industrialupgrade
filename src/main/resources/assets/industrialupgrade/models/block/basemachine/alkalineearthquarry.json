@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/alkalineearthquarry_front",
-    "down" : "industrialupgrade:blocks/alkalineearthquarry_sides",
-    "up" : "industrialupgrade:blocks/alkalineearthquarry_top",
-    "north" : "industrialupgrade:blocks/alkalineearthquarry_front",
-    "east" : "industrialupgrade:blocks/alkalineearthquarry_left",
-    "south" : "industrialupgrade:blocks/alkalineearthquarry_sides",
-    "west" : "industrialupgrade:blocks/alkalineearthquarry_right"
+    "particle" : "industrialupgrade:block/alkalineearthquarry_front",
+    "down" : "industrialupgrade:block/alkalineearthquarry_sides",
+    "up" : "industrialupgrade:block/alkalineearthquarry_top",
+    "north" : "industrialupgrade:block/alkalineearthquarry_front",
+    "east" : "industrialupgrade:block/alkalineearthquarry_left",
+    "south" : "industrialupgrade:block/alkalineearthquarry_sides",
+    "west" : "industrialupgrade:block/alkalineearthquarry_right"
   }
 }

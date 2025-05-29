@@ -1,15 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -20,17 +14,20 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPositronsConverter;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPositronsConverter;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -48,8 +45,8 @@ public class TileEntityPositronConverter extends TileElectricMachine implements 
     public MachineRecipe output;
 
 
-    public TileEntityPositronConverter() {
-        super(500, 8, 1);
+    public TileEntityPositronConverter(BlockPos pos, BlockState state) {
+        super(500, 8, 1,BlockBaseMachine3.positronconverter,pos,state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -116,7 +113,7 @@ public class TileEntityPositronConverter extends TileElectricMachine implements 
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -125,14 +122,14 @@ public class TileEntityPositronConverter extends TileElectricMachine implements 
     }
 
     @Override
-    public ContainerPositronsConverter getGuiContainer(final EntityPlayer var1) {
+    public ContainerPositronsConverter getGuiContainer(final Player var1) {
         return new ContainerPositronsConverter(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiPositronsConverter(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiPositronsConverter((ContainerPositronsConverter) menu);
     }
 
     @Override
@@ -143,8 +140,8 @@ public class TileEntityPositronConverter extends TileElectricMachine implements 
                 "positrons",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 352)),
-                                input.getInput(new ItemStack(IUItem.proton))
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(352), 1)),
+                                input.getInput(new ItemStack(IUItem.proton.getItem()))
                         ),
                         new RecipeOutput(null, ItemStack.EMPTY)
                 )
@@ -154,7 +151,7 @@ public class TileEntityPositronConverter extends TileElectricMachine implements 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
 

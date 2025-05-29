@@ -1,9 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
@@ -18,7 +18,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerFluidMixer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiFluidMixer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -28,16 +30,17 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -67,8 +70,8 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
     protected short progress;
     protected double guiProgress;
 
-    public TileEntityFluidMixer() {
-        super(100, 1, 4);
+    public TileEntityFluidMixer(BlockPos pos, BlockState state) {
+        super(100, 1, 4,BlockBaseMachine3.fluid_mixer,pos,state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;
@@ -116,210 +119,210 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidnitricoxide.getInstance(), 100), new FluidStack(
-                FluidName.fluidhyd.getInstance(),
+                new FluidStack(FluidName.fluidnitricoxide.getInstance().get(), 100), new FluidStack(
+                FluidName.fluidhyd.getInstance().get(),
                 100
-        )), Arrays.asList(new FluidStack(FluidName.fluidazot.getInstance(), 100), new FluidStack(
-                FluidRegistry.WATER,
+        )), Arrays.asList(new FluidStack(FluidName.fluidazot.getInstance().get(), 100), new FluidStack(
+                net.minecraft.world.level.material.Fluids.WATER,
                 100
         ))));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidnitrogenhydride.getInstance(), 400),
+                new FluidStack(FluidName.fluidnitrogenhydride.getInstance().get(), 400),
                 new FluidStack(
-                        FluidName.fluidoxy.getInstance(),
+                        FluidName.fluidoxy.getInstance().get(),
                         400
                 )
-        ), Arrays.asList(new FluidStack(FluidName.fluidnitrogenoxy.getInstance(), 400), new FluidStack(
-                FluidRegistry.WATER,
+        ), Arrays.asList(new FluidStack(FluidName.fluidnitrogenoxy.getInstance().get(), 400), new FluidStack(
+                net.minecraft.world.level.material.Fluids.WATER,
                 600
         ))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethane.getInstance(), 100), new FluidStack(
-                FluidName.fluidbromine.getInstance(),
+                new FluidStack(FluidName.fluidmethane.getInstance().get(), 100), new FluidStack(
+                FluidName.fluidbromine.getInstance().get(),
                 100
         )), Arrays.asList(
-                new FluidStack(FluidName.fluidhydrogenbromide.getInstance(), 100),
+                new FluidStack(FluidName.fluidhydrogenbromide.getInstance().get(), 100),
                 new FluidStack(
-                        FluidName.fluidmethylbromide.getInstance(),
+                        FluidName.fluidmethylbromide.getInstance().get(),
                         100
                 )
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidpropionic_acid.getInstance(), 250), new FluidStack(
-                FluidRegistry.WATER,
+                new FluidStack(FluidName.fluidpropionic_acid.getInstance().get(), 250), new FluidStack(
+                net.minecraft.world.level.material.Fluids.WATER,
                 500
         )), Arrays.asList(
-                new FluidStack(FluidName.fluidhyd.getInstance(), 500),
+                new FluidStack(FluidName.fluidhyd.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluidacetic_acid.getInstance(),
+                        FluidName.fluidacetic_acid.getInstance().get(),
                         250
                 )
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidaniline.getInstance(), 100), new FluidStack(
-                FluidName.fluidchlorum.getInstance(),
+                new FluidStack(FluidName.fluidaniline.getInstance().get(), 100), new FluidStack(
+                FluidName.fluidchlorum.getInstance().get(),
                 300
         )), Arrays.asList(
-                new FluidStack(FluidName.fluidtrichloroaniline.getInstance(), 100),
+                new FluidStack(FluidName.fluidtrichloroaniline.getInstance().get(), 100),
                 new FluidStack(
-                        FluidName.fluidhydrogenchloride.getInstance(),
+                        FluidName.fluidhydrogenchloride.getInstance().get(),
                         150
                 )
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethylsulfate.getInstance(), 250), new FluidStack(
-                FluidName.fluidtrichloroaniline.getInstance(),
+                new FluidStack(FluidName.fluidmethylsulfate.getInstance().get(), 250), new FluidStack(
+                FluidName.fluidtrichloroaniline.getInstance().get(),
                 100
         )), Arrays.asList(
-                new FluidStack(FluidName.fluidmethyltrichloroaniline.getInstance(), 100),
+                new FluidStack(FluidName.fluidmethyltrichloroaniline.getInstance().get(), 100),
                 new FluidStack(
-                        FluidName.fluidsulfuricacid.getInstance(),
+                        FluidName.fluidsulfuricacid.getInstance().get(),
                         200
                 )
         )));
 
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethyltrichloroaniline.getInstance(), 200), new FluidStack(
-                FluidName.fluidmethanol.getInstance(),
+                new FluidStack(FluidName.fluidmethyltrichloroaniline.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidmethanol.getInstance().get(),
                 100
         )), Arrays.asList(
-                new FluidStack(FluidName.fluidweed_ex.getInstance(), 100),
+                new FluidStack(FluidName.fluidweed_ex.getInstance().get(), 100),
                 new FluidStack(
-                        FluidName.fluidmethylchloride.getInstance(),
+                        FluidName.fluidmethylchloride.getInstance().get(),
                         100
                 )
         )));
 
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethanol.getInstance(), 250), new FluidStack(
-                FluidName.fluidsulfuricacid.getInstance(),
+                new FluidStack(FluidName.fluidmethanol.getInstance().get(), 250), new FluidStack(
+                FluidName.fluidsulfuricacid.getInstance().get(),
                 250
         )), Arrays.asList(
-                new FluidStack(FluidName.fluidmethylsulfate.getInstance(), 250),
+                new FluidStack(FluidName.fluidmethylsulfate.getInstance().get(), 250),
                 new FluidStack(
-                        FluidRegistry.WATER,
+                        net.minecraft.world.level.material.Fluids.WATER,
                         1000
                 )
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidbenzene.getInstance(), 100), new FluidStack(
-                FluidName.fluidmethylbromide.getInstance(),
+                new FluidStack(FluidName.fluidbenzene.getInstance().get(), 100), new FluidStack(
+                FluidName.fluidmethylbromide.getInstance().get(),
                 100
         )), Arrays.asList(
-                new FluidStack(FluidName.fluidhydrogenbromide.getInstance(), 100),
+                new FluidStack(FluidName.fluidhydrogenbromide.getInstance().get(), 100),
                 new FluidStack(
-                        FluidName.fluidtoluene.getInstance(),
+                        FluidName.fluidtoluene.getInstance().get(),
                         100
                 )
         )));
 
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidpolyprop.getInstance(), 400),
+                new FluidStack(FluidName.fluidpolyprop.getInstance().get(), 400),
                 new FluidStack(
-                        FluidName.fluidnitrogenoxy.getInstance(),
+                        FluidName.fluidnitrogenoxy.getInstance().get(),
                         600
                 )
         ), Arrays.asList(
-                new FluidStack(FluidName.fluidacrylonitrile.getInstance(), 400),
+                new FluidStack(FluidName.fluidacrylonitrile.getInstance().get(), 400),
                 new FluidStack(
-                        FluidName.fluidazot.getInstance(),
+                        FluidName.fluidazot.getInstance().get(),
                         100
                 )
         )));
 
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidtertbutylsulfuricacid.getInstance(), 400),
+                new FluidStack(FluidName.fluidtertbutylsulfuricacid.getInstance().get(), 400),
                 new FluidStack(
-                        FluidRegistry.WATER,
+                        net.minecraft.world.level.material.Fluids.WATER,
                         400
                 )
         ), Arrays.asList(
-                new FluidStack(FluidName.fluidtertbutylalcohol.getInstance(), 400),
+                new FluidStack(FluidName.fluidtertbutylalcohol.getInstance().get(), 400),
                 new FluidStack(
-                        FluidName.fluidsulfuricacid.getInstance(),
-                        400
-                )
-        )));
-
-        Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidethylhexanol.getInstance(), 400),
-                new FluidStack(
-                        FluidName.fluidnitricacid.getInstance(),
-                        400
-                )
-        ), Arrays.asList(
-                new FluidStack(FluidName.fluidethylhexylnitrate.getInstance(), 400),
-                new FluidStack(
-                        FluidRegistry.WATER,
+                        FluidName.fluidsulfuricacid.getInstance().get(),
                         400
                 )
         )));
 
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcyclohexane.getInstance(), 400),
+                new FluidStack(FluidName.fluidethylhexanol.getInstance().get(), 400),
                 new FluidStack(
-                        FluidName.fluidmethylbromide.getInstance(),
+                        FluidName.fluidnitricacid.getInstance().get(),
                         400
                 )
         ), Arrays.asList(
-                new FluidStack(FluidName.fluidmethylcyclohexane.getInstance(), 400),
+                new FluidStack(FluidName.fluidethylhexylnitrate.getInstance().get(), 400),
                 new FluidStack(
-                        FluidName.fluidhydrogenbromide.getInstance(),
+                        net.minecraft.world.level.material.Fluids.WATER,
                         400
                 )
         )));
 
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsodiumhydroxide.getInstance(), 500),
+                new FluidStack(FluidName.fluidcyclohexane.getInstance().get(), 400),
                 new FluidStack(
-                        FluidName.fluidchlorum.getInstance(),
+                        FluidName.fluidmethylbromide.getInstance().get(),
+                        400
+                )
+        ), Arrays.asList(
+                new FluidStack(FluidName.fluidmethylcyclohexane.getInstance().get(), 400),
+                new FluidStack(
+                        FluidName.fluidhydrogenbromide.getInstance().get(),
+                        400
+                )
+        )));
+
+        Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
+                new FluidStack(FluidName.fluidsodiumhydroxide.getInstance().get(), 500),
+                new FluidStack(
+                        FluidName.fluidchlorum.getInstance().get(),
                         250
                 )
         ), Arrays.asList(
-                new FluidStack(FluidName.fluidsodium_hypochlorite.getInstance(), 500),
+                new FluidStack(FluidName.fluidsodium_hypochlorite.getInstance().get(), 500),
                 new FluidStack(
-                        FluidRegistry.WATER,
+                        net.minecraft.world.level.material.Fluids.WATER,
                         250
                 )
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidnitrogenhydride.getInstance(), 500),
+                new FluidStack(FluidName.fluidnitrogenhydride.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluidsodium_hypochlorite.getInstance(),
+                        FluidName.fluidsodium_hypochlorite.getInstance().get(),
                         250
                 )
         ), Arrays.asList(
-                new FluidStack(FluidName.fluidhydrazine.getInstance(), 250),
+                new FluidStack(FluidName.fluidhydrazine.getInstance().get(), 250),
                 new FluidStack(
-                        FluidRegistry.WATER,
+                        net.minecraft.world.level.material.Fluids.WATER,
                         250
                 )
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_mixer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethanol.getInstance(), 250),
+                new FluidStack(FluidName.fluidmethanol.getInstance().get(), 250),
                 new FluidStack(
-                        FluidName.fluidhydrazine.getInstance(),
+                        FluidName.fluidhydrazine.getInstance().get(),
                         250
                 )
         ), Arrays.asList(
-                new FluidStack(FluidName.fluiddimethylhydrazine.getInstance(), 250),
+                new FluidStack(FluidName.fluiddimethylhydrazine.getInstance().get(), 250),
                 new FluidStack(
-                        FluidRegistry.WATER,
+                        net.minecraft.world.level.material.Fluids.WATER,
                         200
                 )
         )));
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -365,7 +368,7 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -503,16 +506,17 @@ public class TileEntityFluidMixer extends TileElectricMachine implements IUpgrad
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerFluidMixer getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerFluidMixer getGuiContainer(Player entityPlayer) {
         return new ContainerFluidMixer(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiFluidMixer getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiFluidMixer(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiFluidMixer((ContainerFluidMixer) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

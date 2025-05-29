@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/mining_laser"
+		"layer0": "industrialupgrade:item/mining_laser"
 	}
 }

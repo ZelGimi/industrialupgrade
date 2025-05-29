@@ -3,11 +3,12 @@ package com.denfop.cool;
 
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EventHandler {
 
@@ -18,10 +19,10 @@ public class EventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEnergyTileLoad(final CoolTileLoadEvent event) {
-        if (event.getWorld().isRemote) {
+        if (event.getLevel().isClientSide()) {
             return;
         }
-        final CoolNetLocal local = CoolNetGlobal.getForWorld(event.getWorld());
+        final CoolNetLocal local = CoolNetGlobal.getForWorld((Level) event.getLevel());
 
         if (local != null) {
             local.addTile(event.tile);
@@ -30,31 +31,31 @@ public class EventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEnergyTileUnload(final CoolTileUnloadEvent event) {
-        if (event.getWorld().isRemote) {
+        if (event.getLevel().isClientSide()) {
             return;
         }
-        final CoolNetLocal local = CoolNetGlobal.getForWorld(event.getWorld());
+        final CoolNetLocal local = CoolNetGlobal.getForWorld((Level) event.getLevel());
         if (local != null) {
             local.removeTile(event.tile);
         }
     }
 
     @SubscribeEvent
-    public void tick(final TickEvent.WorldTickEvent event) {
-        if (event.world.isRemote) {
+    public void tick(final TickEvent.LevelTickEvent event) {
+        if (event.level.isClientSide) {
             return;
         }
         if (event.phase == TickEvent.Phase.END) {
-            CoolNetGlobal.onTickEnd(event.world);
+            CoolNetGlobal.onTickEnd(event.level);
         }
     }
 
     @SubscribeEvent
-    public void onWorldUnload(final WorldEvent.Unload event) {
-        if (event.getWorld().isRemote) {
+    public void onWorldUnload(final LevelEvent.Unload event) {
+        if (event.getLevel().isClientSide()) {
             return;
         }
-        CoolNetGlobal.onWorldUnload(event.getWorld());
+        CoolNetGlobal.onWorldUnload((Level) event.getLevel());
     }
 
 }

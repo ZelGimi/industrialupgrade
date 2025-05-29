@@ -8,14 +8,16 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.TileMultiMatter;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileUltimateMatter extends TileMultiMatter {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileUltimateMatter() {
-        super(700000F, 16, 256000000);
+    public TileUltimateMatter(BlockPos pos, BlockState state) {
+        super(700000F, 16, 256000000, BlockBaseMachine.per_matter, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.011));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.045));
     }
@@ -30,7 +32,6 @@ public class TileUltimateMatter extends TileMultiMatter {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines;
+        return IUItem.machines.getBlock(getTeBlock().getId());
     }
-
 }

@@ -3,25 +3,23 @@ package com.denfop.tiles.mechanism.water;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.water.upgrade.IRotorUpgradeItem;
 import com.denfop.api.water.upgrade.RotorUpgradeItemInform;
 import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.water.upgrade.event.EventRotorItemLoad;
-import com.denfop.api.windsystem.EnumLevelGenerators;
-import com.denfop.api.windsystem.EnumRotorSide;
-import com.denfop.api.windsystem.EnumTypeWind;
-import com.denfop.api.windsystem.EnumWindSide;
-import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.api.windsystem.IWindRotor;
-import com.denfop.api.windsystem.WindSystem;
+import com.denfop.api.windsystem.*;
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBaseWaterGenerator;
 import com.denfop.gui.GuiBaseWaterGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotWaterRotor;
 import com.denfop.invslot.InvSlotWaterRotorBlades;
@@ -35,26 +33,27 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.DamageHandler;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeOcean;
-import net.minecraft.world.biome.BiomeRiver;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.List;
+
+import static net.minecraft.tags.BiomeTags.IS_OCEAN;
+import static net.minecraft.tags.BiomeTags.IS_RIVER;
 
 public class TileBaseWaterGenerator extends TileEntityInventory implements IWindMechanism, IType,
         IUpdatableTileEvent {
@@ -86,12 +85,13 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     private float speed;
     private float angle;
     private long lastcheck;
-    private boolean work;
+    private boolean work = true;
     private int time;
     private boolean can_work;
     private double biome;
 
-    public TileBaseWaterGenerator(EnumLevelGenerators levelGenerators) {
+    public TileBaseWaterGenerator(EnumLevelGenerators levelGenerators, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
         this.levelGenerators = levelGenerators;
         this.slot = new InvSlotWaterRotor(this);
         this.slot_blades = new InvSlotWaterRotorBlades(this);
@@ -150,19 +150,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         return true;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public CustomPacketBuffer writeUpdatePacket() {
@@ -194,7 +182,6 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("wind.need_level") + this.levelGenerators.getMin() + " " + Localization.translate(
@@ -207,7 +194,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         try {
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
             rotorSide = EnumRotorSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             generation = (double) DecoderHandler.decode(customPacketBuffer);
             timers = (int) DecoderHandler.decode(customPacketBuffer);
@@ -246,44 +233,39 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        ItemStack stack = player.getHeldItem(hand);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        ItemStack stack = player.getItemInHand(hand);
         if (this.getRotor() != null && stack.getItem() instanceof ItemWindRod) {
-            ItemStack rotor = this.slot.get();
-            if (((ItemWindRod) stack.getItem()).getLevel(this.getRotor().getLevel(), stack.getItemDamage())) {
+            ItemStack rotor = this.slot.get(0);
+            if (((ItemWindRod) stack.getItem()).getLevel(this.getRotor().getLevel(), ((ItemWindRod<?>) stack.getItem()).getElement().getId())) {
 
-                if (rotor.getItemDamage() >= rotor.getMaxDamage() * 0.25) {
+                if (rotor.getDamageValue() >= rotor.getMaxDamage() * 0.25) {
                     this.slot.damage((int) -(rotor.getMaxDamage() * 0.25), 0);
                     stack.shrink(1);
                     return true;
                 }
             }
         }
-
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(player, hand, side, vec3);
     }
+
+
 
     public boolean checkSpace() {
         int box = this.getRotorDiameter() / 2;
         if (box == 0) {
             return false;
         }
-        BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
+        Vector3f vec = this.getFacing().step();
+        BlockPos pos1 = pos.offset(new BlockPos((int) vec.x(), (int) vec.y(), (int) vec.z()));
         switch (this.getFacing().getAxis()) {
             case Y:
                 return false;
             case X:
                 for (int z = pos1.getZ() - box; z <= pos1.getZ() + box; z++) {
                     for (int y = pos1.getY() - box; y <= pos1.getY() + box; y++) {
-                        IBlockState state = this.world.getBlockState(new BlockPos(pos1.getX(), y, z));
-                        if (state.getMaterial() != Material.WATER) {
+                        BlockState state = this.level.getBlockState(new BlockPos(pos1.getX(), y, z));
+                        if (!state.liquid()) {
                             return false;
                         }
                     }
@@ -292,8 +274,8 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
             case Z:
                 for (int x = pos1.getX() - box; x <= pos1.getX() + box; x++) {
                     for (int y = pos1.getY() - box; y <= pos1.getY() + box; y++) {
-                        IBlockState state = this.world.getBlockState(new BlockPos(x, y, pos1.getZ()));
-                        if (state.getMaterial() != Material.WATER) {
+                        BlockState state = this.level.getBlockState(new BlockPos(x, y, pos1.getZ()));
+                        if (!state.liquid()) {
                             return false;
                         }
                     }
@@ -303,7 +285,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         return false;
     }
 
-    public boolean setFacingWrench(EnumFacing facing, EntityPlayer player) {
+    public boolean setFacingWrench(Direction facing, Player player) {
         boolean fac = super.setFacingWrench(facing, player);
         new PacketUpdateFieldTile(this, "facing", this.facing);
         return fac;
@@ -339,12 +321,12 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
 
     @Override
     public IWindRotor getRotor() {
-        return this.slot.isEmpty() ? null : (IWindRotor) this.slot.get().getItem();
+        return this.slot.isEmpty() ? null : (IWindRotor) this.slot.get(0).getItem();
     }
 
     @Override
     public ItemStack getItemStack() {
-        return this.slot.get();
+        return this.slot.get(0);
     }
 
     @Override
@@ -369,13 +351,13 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
 
         if (this.can_repair) {
             if (this.time != 0) {
-                if (this.world.provider.getWorldTime() % (this.time * 20L) == 0) {
+                if (this.level.getGameTime() % (this.time * 20L) == 0) {
                     this.slot.damage(-1, 0);
 
                 }
             }
         }
-        if (this.world.provider.getWorldTime() % 30 == 0) {
+        if (this.level.getGameTime() % 30 == 0) {
             if (this.getRotor() != null) {
                 space = checkSpace();
                 new PacketUpdateFieldTile(this, "space", this.space);
@@ -394,7 +376,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         }
         if (space && (this.getRotor() != null && ((ItemDamage) this.slot
                 .get(0)
-                .getItem()).getCustomDamage(this.slot.get(0)) > 0)) {
+                .getItem()).getCustomDamage(this.slot.get(0)) < slot.get(0).getMaxDamage())) {
             if (!this.getActive()) {
                 this.setActive(true);
             }
@@ -414,14 +396,14 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
 
             generation =
                     WindSystem.windSystem.getPowerFromWaterRotor(
-                            this.world,
+                            this.level,
                             this,
                             this.getItemStack()
                     ) * this.biome * this.coefficient_power / 100D;
             this.energy.addEnergy(generation);
             this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
 
-            if (this.world.getWorldTime() % getDamageTimeFromWind() == 0) {
+            if (this.level.getGameTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
             }
         } else {
@@ -529,13 +511,13 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();
         if (!this.slot.isEmpty()) {
             MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this.getWorld(),
-                    (IRotorUpgradeItem) this.slot.get().getItem(), this.slot.get()
+                    (IRotorUpgradeItem) this.slot.get(0).getItem(), this.slot.get(0)
             ));
         }
         this.biome =
-                (this.getWorld().getBiome(this.pos) instanceof BiomeOcean || this
+                (this.getWorld().getBiome(this.pos).is(IS_OCEAN) || this
                         .getWorld()
-                        .getBiome(this.pos) instanceof BiomeRiver) ? 1 : 0.5;
+                        .getBiome(this.pos).is(IS_RIVER)) ? 1 : 0.5;
         this.change();
         this.setRotorSide(WindSystem.windSystem.getRotorSide(this.getFacing()));
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), true));
@@ -550,13 +532,14 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         if (this.getRotor() != null) {
             this.energy.setSourceTier(this.getRotor().getSourceTier());
         }
-        this.can_work = this.getWorld().provider.hasSkyLight() &&
-                !this.getWorld().provider.isNether();
+        this.can_work = this.getWorld().dimensionType().hasSkyLight() &&
+                !(this.getWorld().dimension() == Level.NETHER);
+        this.work = true;
         this.timers = WindSystem.windSystem.getTime();
         this.wind_side = WindSystem.windSystem.getWindSide();
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();
-        if (!this.slot.get().isEmpty()) {
-            if (DamageHandler.getDamage(this.slot.get()) <= DamageHandler.getMaxDamage(this.slot.get()) * 0.75) {
+        if (!this.slot.get(0).isEmpty()) {
+            if (DamageHandler.getDamage(this.slot.get(0)) >= DamageHandler.getMaxDamage(this.slot.get(0)) * 0.25) {
                 this.need_repair = true;
             }
         }
@@ -569,11 +552,11 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     }
 
     @Override
-    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final Level world) {
         for (int i = pos.getX() - 4; i <= pos.getX() + 4; i++) {
             for (int j = pos.getY() - 4; j <= pos.getY() + 4; j++) {
                 for (int k = pos.getZ() - 4; k <= pos.getZ() + 4; k++) {
-                    final TileEntity tile = world.getTileEntity(new BlockPos(i, j, k));
+                    final BlockEntity tile = world.getBlockEntity(new BlockPos(i, j, k));
                     if (tile instanceof IWindMechanism) {
                         return false;
                     }
@@ -601,16 +584,16 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("coef", this.coefficient_power);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("coef", this.coefficient_power);
         return nbtTagCompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.coefficient_power = nbtTagCompound.getInteger("coef");
+        this.coefficient_power = nbtTagCompound.getInt("coef");
     }
 
     public CustomPacketBuffer writePacket() {
@@ -635,7 +618,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         super.readPacket(customPacketBuffer);
         try {
             speed = (float) DecoderHandler.decode(customPacketBuffer);
-            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            slot.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new CompoundTag()));
             space = (boolean) DecoderHandler.decode(customPacketBuffer);
             coefficient = (double) DecoderHandler.decode(customPacketBuffer);
             wind_side = EnumWindSide.values()[(int) DecoderHandler.decode(customPacketBuffer)];
@@ -650,7 +633,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
 
     @Override
     public float getAngle() {
-        if (this.getWorld().provider.getDimension() != 0) {
+        if (this.getWorld().dimension() != Level.OVERWORLD) {
             return 0;
         }
         if (this.speed != 0.0F && this.work && (this.getRotor() != null && ((ItemDamage) this.slot
@@ -684,12 +667,12 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
 
     @Override
     public int getRotorDiameter() {
-        return getRotor() != null ? getRotor().getDiameter(this.slot.get()) : 0;
+        return getRotor() != null ? getRotor().getDiameter(this.slot.get(0)) : 0;
     }
 
     @Override
     public ResourceLocation getRotorRenderTexture() {
-        return getRotor() != null ? getRotor().getRotorRenderTexture(this.slot.get()) : null;
+        return getRotor() != null ? getRotor().getRotorRenderTexture(this.slot.get(0)) : null;
     }
 
     @Override
@@ -734,9 +717,10 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
             }
             final RotorUpgradeItemInform modules = RotorUpgradeSystem.instance.getModules(EnumInfoRotorUpgradeModules.getFromID(
                     16), list);
-            this.biome = (this.getWorld().getBiome(this.pos) instanceof BiomeOcean || this
-                    .getWorld()
-                    .getBiome(this.pos) instanceof BiomeRiver) ? 1 : 0.5;
+            this.biome =
+                    (this.getWorld().getBiome(this.pos).is(IS_OCEAN) || this
+                            .getWorld()
+                            .getBiome(this.pos).is(IS_RIVER)) ? 1 : 0.5;
             if (modules != null) {
                 this.biome = 1;
             }
@@ -802,21 +786,21 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     }
 
     @Override
-    public ContainerBaseWaterGenerator getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerBaseWaterGenerator getGuiContainer(final Player entityPlayer) {
         return new ContainerBaseWaterGenerator(this, entityPlayer);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiBaseWaterGenerator(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiBaseWaterGenerator((ContainerBaseWaterGenerator) menu);
 
     }
 
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         if (i == 0) {
             if (this.tick >= 20) {
                 WindSystem.windSystem.getNewFacing(this.getFacing(), this);

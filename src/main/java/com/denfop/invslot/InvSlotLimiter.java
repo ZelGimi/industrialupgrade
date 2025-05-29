@@ -1,8 +1,9 @@
 package com.denfop.invslot;
 
-import com.denfop.items.resource.ItemCraftingElements;
+
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.tiles.base.TileLimiter;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotLimiter extends InvSlot {
 
@@ -17,17 +18,18 @@ public class InvSlotLimiter extends InvSlot {
 
     @Override
     public boolean accepts(final ItemStack stack, final int index) {
-        return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() >= 206 && stack.getItemDamage() <= 216;
+        return stack.getItem() instanceof ItemCraftingElements && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() >= 206 && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() <= 216;
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (content.isEmpty()) {
             this.limiter.setTier(0);
         } else {
-            this.limiter.setTier(content.getItemDamage() - 205);
+            this.limiter.setTier(((ItemCraftingElements<?>) content.getItem()).getElement().getId() - 205);
         }
+        return content;
     }
 
 }

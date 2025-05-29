@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/titania_boulder"
+    "layer0" : "industrialupgrade:item/titania_boulder"
   }
 }

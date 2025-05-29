@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:machineblock"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:additionmodule/purifier"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_36_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CAD",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/radiation_purifier"
+  },
+  "show_notification": true
+}

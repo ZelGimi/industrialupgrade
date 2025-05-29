@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring/glass_1"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:6}"
+    },
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_299_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:upgrades/overclocker"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems7"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    "EDE"
+  ],
+  "result": {
+    "item": "industrialupgrade:upgrades/overclockerupgrade1"
+  },
+  "show_notification": true
+}

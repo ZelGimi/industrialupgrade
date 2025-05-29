@@ -14,23 +14,27 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerSolidMixer;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
+import com.denfop.integration.jei.JeiInform;
 import com.denfop.tiles.mechanism.TileEntitySolidMixer;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class SolidMixerCategory extends GuiIU implements IRecipeCategory<SolidMixerRecipeWrapper> {
+public class SolidMixerCategory extends GuiIU implements IRecipeCategory<SolidMixerHandler> {
 
     private final IDrawableStatic bg;
     private final ContainerSolidMixer container1;
@@ -38,15 +42,17 @@ public class SolidMixerCategory extends GuiIU implements IRecipeCategory<SolidMi
     private final GuiComponent slots1;
     private int progress = 0;
     private int energy = 0;
-
+    JeiInform jeiInform;
     public SolidMixerCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntitySolidMixer) BlockBaseMachine3.solid_mixer.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+        super(((TileEntitySolidMixer) BlockBaseMachine3.solid_mixer.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
@@ -63,24 +69,18 @@ public class SolidMixerCategory extends GuiIU implements IRecipeCategory<SolidMi
         this.componentList.add(progress_bar);
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine3.solid_mixer.getName();
+    public RecipeType<SolidMixerHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.solid_mixer).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.solid_mixer).getDescriptionId());
     }
 
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -88,9 +88,8 @@ public class SolidMixerCategory extends GuiIU implements IRecipeCategory<SolidMi
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(SolidMixerHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         if (this.energy < 100) {
             energy++;
@@ -100,42 +99,33 @@ public class SolidMixerCategory extends GuiIU implements IRecipeCategory<SolidMi
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(-20, -10);
-        this.slots1.drawBackground(-20, -10);
+        this.slots.drawBackground( stack,-20, -10);
+        this.slots1.drawBackground( stack,-20, -10);
 
-        progress_bar.renderBar(-15, 0, xScale);
-        mc.getTextureManager().bindTexture(getTexture());
-
-
+        progress_bar.renderBar( stack,-15, 0, xScale);
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final SolidMixerRecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-
+    public void setRecipe(IRecipeLayoutBuilder builder, SolidMixerHandler recipe, IFocusGroup focuses) {
         final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
-        final List<ItemStack> inputs = recipes.getInputs1();
-        final List<ItemStack> outputs = recipes.getOutputs();
+        final List<ItemStack> inputs = recipe.getInputs();
+        final List<ItemStack> outputs = recipe.getOutputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            isg.init(i, true, slots1.get(i).getJeiX() - 20, slots1.get(i).getJeiY() - 10);
-            isg.set(i, inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX() - 20, slots1.get(i).getJeiY() - 10).addItemStack(inputs.get(i));
+
 
         }
         final List<SlotInvSlot> outputSlot = container1.findClassSlots(InvSlotOutput.class);
         i = 0;
         for (; i < inputs.size(); i++) {
-            isg.init(i + inputs.size(), true, outputSlot.get(i).getJeiX() - 20, outputSlot.get(i).getJeiY() - 10);
-            isg.set(i + inputs.size(), outputs.get(i));
+            builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.get(i).getJeiX() - 20, outputSlot.get(i).getJeiY() - 10).addItemStack(outputs.get(i));
+
 
         }
-
-
     }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");

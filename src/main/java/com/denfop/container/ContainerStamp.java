@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityStampMechanism;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerStamp extends ContainerFullInv<TileEntityStampMechanism> {
 
-    public ContainerStamp(TileEntityStampMechanism tleEntityMatterFactory, EntityPlayer var1) {
+    public ContainerStamp(TileEntityStampMechanism tleEntityMatterFactory, Player var1) {
         super(tleEntityMatterFactory, var1);
         this.addSlotToContainer(new SlotInvSlot(tleEntityMatterFactory.inputSlotA, 0, 30, 22));
         this.addSlotToContainer(new SlotInvSlot(tleEntityMatterFactory.inputSlotA, 1, 48, 22));

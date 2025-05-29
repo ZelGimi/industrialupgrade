@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/kinetic_generator",
-		"particle": "industrialupgrade:models/kinetic_generator"
+		"0": "industrialupgrade:block/kinetic_generator",
+		"particle": "industrialupgrade:block/kinetic_generator"
 	},
 	"elements": [
 		{

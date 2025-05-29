@@ -1,13 +1,15 @@
 package com.denfop.api.radiationsystem;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EventHandler {
 
     @SubscribeEvent
     public void tick(TickEvent.PlayerTickEvent event) {
-        if (event.player.getEntityWorld().provider.getDimension() != 0 || event.player.getEntityWorld().isRemote || event.phase == TickEvent.Phase.START) {
+        if (event.player.level().dimension() != Level.OVERWORLD || event.player.level().isClientSide || event.phase == TickEvent.Phase.START) {
             return;
         }
         RadiationSystem.rad_system.work(event.player);
@@ -15,13 +17,11 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public void tick(TickEvent.WorldTickEvent event) {
-        if (event.world.provider.getDimension() != 0 || event.world.isRemote || event.phase == TickEvent.Phase.START) {
+    public void tick(TickEvent.LevelTickEvent event) {
+        if (event.level.dimension() != Level.OVERWORLD || event.level.isClientSide || event.phase == TickEvent.Phase.START) {
             return;
         }
-        if (event.world.getWorldTime() % 100 == 0) {
-            RadiationSystem.rad_system.workDecay(event.world);
-        }
+        RadiationSystem.rad_system.workDecay(event.level);
     }
 
 }

@@ -9,19 +9,20 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBarrel;
 import com.denfop.componets.Fluids;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
@@ -37,29 +38,17 @@ public class TileEntityBarrel extends TileEntityInventory {
     int time;
     private int prev;
 
-    public TileEntityBarrel() {
+    public TileEntityBarrel(BlockPos pos, BlockState state) {
+        super(BlockBarrel.barrel, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = this.fluids.addTankInsert("tank", 64000, Fluids.fluidPredicate(FluidRegistry.WATER));
+        this.tank = this.fluids.addTankInsert("tank", 64000, Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER));
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.barrel;
+        return IUItem.barrel.getBlock();
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -72,7 +61,7 @@ public class TileEntityBarrel extends TileEntityInventory {
         tooltip.add(Localization.translate("iu.barrel.info"));
         tooltip.add(Localization.translate("iu.barrel.info1"));
         tooltip.add(Localization.translate("iu.barrel.info2"));
-        if (world != null) {
+        if (level != null) {
             tooltip.add(Localization.translate("iu.beer.recipe"));
             tooltip.add(Localization.translate("iu.beer.recipe1") + " " + hops);
             tooltip.add(Localization.translate("iu.beer.recipe2") + " " + wheat);
@@ -85,60 +74,50 @@ public class TileEntityBarrel extends TileEntityInventory {
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(
-                        CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,
-                        null
-                ) && this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player
+                .getItemInHand(hand)) != null && this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
             ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
             this.prev = this.tank.getFluidAmount();
             waterVariety = EnumWaterVariety.getVarietyFromLevelWater(this.tank.getFluidAmount() / 1000);
             time = 0;
             return true;
         }
-        if (!this.getWorld().isRemote && stack.getItem() == Items.WHEAT && (this.hops + this.wheat < 10)) {
+        if (!this.getWorld().isClientSide && stack.getItem() == Items.WHEAT && (this.hops + this.wheat < 10)) {
             this.wheat++;
             stack.shrink(1);
         }
-        if (!this.getWorld().isRemote && stack.getItem() == IUItem.hops && (this.hops + this.wheat < 10)) {
+        if (!this.getWorld().isClientSide && stack.getItem() == IUItem.hops.getItem() && (this.hops + this.wheat < 10)) {
             this.hops++;
             stack.shrink(1);
         }
-        if (!this.getWorld().isRemote && hops + this.wheat == 10 && beerVariety == null) {
+        if (!this.getWorld().isClientSide && hops + this.wheat == 10 && beerVariety == null) {
             beerVariety = EnumBeerVariety.getBeerVarietyFromRatio(this.wheat, hops);
         }
-        if (!this.getWorld().isRemote && stack.getItem() == IUItem.booze_mug && !ModUtils
+        if (!this.getWorld().isClientSide && stack.getItem() == IUItem.booze_mug.getItem() && !ModUtils
                 .nbt(stack)
-                .hasKey("beer") && waterVariety != null && beerVariety != null) {
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
-            nbt.setBoolean("beer", true);
-            nbt.setByte("amount", (byte) 5);
-            nbt.setByte("waterVariety", (byte) waterVariety.ordinal());
-            nbt.setByte("timeVariety", (byte) timeVariety.ordinal());
-            nbt.setByte("beerVariety", (byte) beerVariety.ordinal());
+                .contains("beer") && waterVariety != null && beerVariety != null) {
+            final CompoundTag nbt = ModUtils.nbt(stack);
+            nbt.putBoolean("beer", true);
+            nbt.putByte("amount", (byte) 5);
+            nbt.putByte("waterVariety", (byte) waterVariety.ordinal());
+            nbt.putByte("timeVariety", (byte) timeVariety.ordinal());
+            nbt.putByte("beerVariety", (byte) beerVariety.ordinal());
             hops = 0;
             wheat = 0;
             time = 0;
             prev = 0;
-            this.tank.drain(this.tank.getFluidAmount(), true);
+            this.tank.drain(this.tank.getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
             beerVariety = null;
             timeVariety = EnumTimeVariety.BREW;
             waterVariety = null;
         }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(player, hand, side, vec3);
     }
+
 
     @Override
     public void updateEntityServer() {
@@ -157,9 +136,9 @@ public class TileEntityBarrel extends TileEntityInventory {
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.prev = nbtTagCompound.getInteger("prev");
+        this.prev = nbtTagCompound.getInt("prev");
         this.timeVariety = EnumTimeVariety.values()[nbtTagCompound.getByte("timeVariety")];
         if (nbtTagCompound.getBoolean("hasBeerVariety")) {
             this.beerVariety = EnumBeerVariety.values()[nbtTagCompound.getByte("hasBeerVariety")];
@@ -167,31 +146,31 @@ public class TileEntityBarrel extends TileEntityInventory {
         if (nbtTagCompound.getBoolean("hasWaterVariety")) {
             this.waterVariety = EnumWaterVariety.values()[nbtTagCompound.getByte("waterVariety")];
         }
-        this.time = nbtTagCompound.getInteger("time");
+        this.time = nbtTagCompound.getInt("time");
         this.wheat = nbtTagCompound.getByte("wheat");
         this.hops = nbtTagCompound.getByte("hops");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        final NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("prev", this.prev);
-        nbtTagCompound.setByte("timeVariety", (byte) this.timeVariety.ordinal());
+    public CompoundTag writeToNBT(CompoundTag nbt) {
+        final CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("prev", this.prev);
+        nbtTagCompound.putByte("timeVariety", (byte) this.timeVariety.ordinal());
         if (this.beerVariety != null) {
-            nbtTagCompound.setBoolean("hasBeerVariety", true);
-            nbtTagCompound.setByte("beerVariety", (byte) this.beerVariety.ordinal());
+            nbtTagCompound.putBoolean("hasBeerVariety", true);
+            nbtTagCompound.putByte("beerVariety", (byte) this.beerVariety.ordinal());
         } else {
-            nbtTagCompound.setBoolean("hasBeerVariety", false);
+            nbtTagCompound.putBoolean("hasBeerVariety", false);
         }
         if (this.waterVariety != null) {
-            nbtTagCompound.setBoolean("hasWaterVariety", true);
-            nbtTagCompound.setByte("waterVariety", (byte) this.waterVariety.ordinal());
+            nbtTagCompound.putBoolean("hasWaterVariety", true);
+            nbtTagCompound.putByte("waterVariety", (byte) this.waterVariety.ordinal());
         } else {
-            nbtTagCompound.setBoolean("hasWaterVariety", false);
+            nbtTagCompound.putBoolean("hasWaterVariety", false);
         }
-        nbtTagCompound.setInteger("time", this.time);
-        nbtTagCompound.setByte("wheat", this.wheat);
-        nbtTagCompound.setByte("hops", this.hops);
+        nbtTagCompound.putInt("time", this.time);
+        nbtTagCompound.putByte("wheat", this.wheat);
+        nbtTagCompound.putByte("hops", this.hops);
         return nbtTagCompound;
     }
 

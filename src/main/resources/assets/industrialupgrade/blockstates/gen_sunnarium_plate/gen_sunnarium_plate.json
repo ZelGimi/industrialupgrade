@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=gen_sunnarium_plate": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate"
+    },
+    "facing=south,type=gen_sunnarium_plate": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "y": 180
+    },
+    "facing=west,type=gen_sunnarium_plate": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "y": 270
+    },
+    "facing=east,type=gen_sunnarium_plate": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "y": 90
+    },
+    "facing=down,type=gen_sunnarium_plate": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "x": 90
+    },
+    "facing=up,type=gen_sunnarium_plate": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "x": 270
+    },
+    "facing=north,type=gen_sunnarium_plate_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate"
+    },
+    "facing=south,type=gen_sunnarium_plate_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "y": 180
+    },
+    "facing=west,type=gen_sunnarium_plate_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "y": 270
+    },
+    "facing=east,type=gen_sunnarium_plate_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "y": 90
+    },
+    "facing=down,type=gen_sunnarium_plate_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "x": 90
+    },
+    "facing=up,type=gen_sunnarium_plate_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_sunnarium_plate",
+      "x": 270
+    }
+  }
+}

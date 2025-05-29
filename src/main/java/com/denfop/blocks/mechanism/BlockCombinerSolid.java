@@ -1,18 +1,19 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.DefaultDrop;
+import com.denfop.blocks.state.HarvestTool;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityCombinerSolidMatter;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -23,25 +24,18 @@ public enum BlockCombinerSolid implements IMultiTileBlock {
     ;
 
 
-    public static final ResourceLocation IDENTITY = IUCore.getIdentifier("combiner_solid_matter");
-
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
-    private final EnumRarity rarity;
     int idBlock;
     private TileEntityBlock dummyTe;
+    private BlockState defaultState;
+    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+
+    ;
 
     BlockCombinerSolid(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
-
-    }
-
-    BlockCombinerSolid(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
-        this.rarity = rarity;
-
-        GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
     }
@@ -50,26 +44,36 @@ public enum BlockCombinerSolid implements IMultiTileBlock {
         return idBlock;
     }
 
-    ;
-
     public void setIdBlock(int id) {
         idBlock = id;
     }
 
-    ;
+    @Override
+    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+        this.blockType = blockEntityType;
+    }
+
+
+    @Override
+    public void setDefaultState(BlockState blockState) {
+        this.defaultState = blockState;
+    }
+
+    @Override
+    public BlockEntityType<? extends TileEntityBlock> getBlockType() {
+        return this.blockType.get();
+    }
 
     public void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
+        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
-        for (final BlockCombinerSolid block : values()) {
-            if (block.teClass != null) {
-                try {
-                    block.dummyTe = block.teClass.newInstance();
-                } catch (Exception e) {
+        if (this.teClass != null) {
+            try {
+                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+            } catch (Exception e) {
 
-                }
             }
         }
     }
@@ -79,16 +83,17 @@ public enum BlockCombinerSolid implements IMultiTileBlock {
         return this.name();
     }
 
+
+    @Override
+    public String getMainPath() {
+        return "combiner_solid_matter";
+    }
+
     @Override
     public int getId() {
         return this.itemMeta;
     }
 
-    @Override
-    @Nonnull
-    public ResourceLocation getIdentifier() {
-        return IDENTITY;
-    }
 
     @Override
     public boolean hasItem() {
@@ -100,6 +105,7 @@ public enum BlockCombinerSolid implements IMultiTileBlock {
         return this.teClass;
     }
 
+
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
@@ -108,7 +114,7 @@ public enum BlockCombinerSolid implements IMultiTileBlock {
 
     @Override
     @Nonnull
-    public Set<EnumFacing> getSupportedFacings() {
+    public Set<Direction> getSupportedFacings() {
         return ModUtils.horizontalFacings;
     }
 
@@ -119,14 +125,14 @@ public enum BlockCombinerSolid implements IMultiTileBlock {
 
     @Override
     @Nonnull
-    public MultiTileBlock.HarvestTool getHarvestTool() {
-        return MultiTileBlock.HarvestTool.Wrench;
+    public HarvestTool getHarvestTool() {
+        return HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public MultiTileBlock.DefaultDrop getDefaultDrop() {
-        return MultiTileBlock.DefaultDrop.Self;
+    public DefaultDrop getDefaultDrop() {
+        return DefaultDrop.Self;
     }
 
     @Override

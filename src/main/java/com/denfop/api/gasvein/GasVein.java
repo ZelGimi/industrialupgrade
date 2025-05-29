@@ -1,8 +1,8 @@
 package com.denfop.api.gasvein;
 
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
 
 import java.util.Objects;
 
@@ -21,12 +21,12 @@ public class GasVein implements IGasVein {
         this.maxcol = 0;
     }
 
-    public GasVein(NBTTagCompound tagCompound) {
+    public GasVein(CompoundTag tagCompound) {
 
         this.type = TypeGas.values()[tagCompound.getByte("type")];
         this.chunk = new ChunkPos(tagCompound.getShort("x"), tagCompound.getShort("z"));
-        this.col = tagCompound.getInteger("col");
-        this.maxcol = tagCompound.getInteger("maxcol");
+        this.col = tagCompound.getInt("col");
+        this.maxcol = tagCompound.getInt("maxcol");
         this.find = tagCompound.getBoolean("find");
         if (!this.find) {
             if (this.col != this.maxcol) {
@@ -112,14 +112,14 @@ public class GasVein implements IGasVein {
     }
 
     @Override
-    public NBTTagCompound writeTag() {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setBoolean("find", find);
-        tagCompound.setShort("x", (short) chunk.x);
-        tagCompound.setShort("z", (short) chunk.z);
-        tagCompound.setByte("type", (byte) type.ordinal());
-        tagCompound.setInteger("col", this.col);
-        tagCompound.setInteger("maxcol", this.maxcol);
+    public CompoundTag writeTag() {
+        CompoundTag tagCompound = new CompoundTag();
+        tagCompound.putBoolean("find", find);
+        tagCompound.putShort("x", (short) chunk.x);
+        tagCompound.putShort("z", (short) chunk.z);
+        tagCompound.putByte("type", (byte) type.ordinal());
+        tagCompound.putInt("col", this.col);
+        tagCompound.putInt("maxcol", this.maxcol);
 
         return tagCompound;
     }

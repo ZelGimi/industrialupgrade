@@ -2,8 +2,8 @@
 	"credit": "Made with -frei",
 	"texture_size": [128, 128],
 	"textures": {
-		"1": "industrialupgrade:models/admpanel",
-		"particle": "industrialupgrade:models/admpanel"
+		"1": "industrialupgrade:block/admpanel",
+		"particle": "industrialupgrade:block/admpanel"
 	},
 	"elements": [
 		{

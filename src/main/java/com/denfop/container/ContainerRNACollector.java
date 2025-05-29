@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityRNACollector;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerRNACollector extends ContainerFullInv<TileEntityRNACollector> {
 
-    public ContainerRNACollector(EntityPlayer var1, TileEntityRNACollector tileEntity1) {
+    public ContainerRNACollector(Player var1, TileEntityRNACollector tileEntity1) {
         super(var1, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 36, 99));

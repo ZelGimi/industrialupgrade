@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/tempered_glass"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/molybdenumsteel"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_678_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/aluminiumlithium"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "CAD",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:colonial_building/medium_mining_factory"
+  },
+  "show_notification": true
+}

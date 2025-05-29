@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube",
 	"textures": {
-		"particle": "industrialupgrade:blocks/mob_magnet_top",
-		"down": "industrialupgrade:blocks/mob_magnet_top",
-		"up": "industrialupgrade:blocks/mob_magnet_top",
-		"north": "industrialupgrade:blocks/mob_magnet_side",
-		"east": "industrialupgrade:blocks/mob_magnet_side1",
-		"south": "industrialupgrade:blocks/mob_magnet_side2",
-		"west": "industrialupgrade:blocks/mob_magnet_side3"
+		"particle": "industrialupgrade:block/mob_magnet_top",
+		"down": "industrialupgrade:block/mob_magnet_top",
+		"up": "industrialupgrade:block/mob_magnet_top",
+		"north": "industrialupgrade:block/mob_magnet_side",
+		"east": "industrialupgrade:block/mob_magnet_side1",
+		"south": "industrialupgrade:block/mob_magnet_side2",
+		"west": "industrialupgrade:block/mob_magnet_side3"
 	}
 }

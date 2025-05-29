@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=tripleorewashing": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing"
+    },
+    "facing=south,type=tripleorewashing": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing",
+      "y": 180
+    },
+    "facing=west,type=tripleorewashing": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing",
+      "y": 270
+    },
+    "facing=east,type=tripleorewashing": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing",
+      "y": 90
+    },
+    "facing=down,type=tripleorewashing": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing",
+      "x": 90
+    },
+    "facing=up,type=tripleorewashing": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing",
+      "x": 270
+    },
+    "facing=north,type=tripleorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active"
+    },
+    "facing=south,type=tripleorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "y": 180
+    },
+    "facing=west,type=tripleorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "y": 270
+    },
+    "facing=east,type=tripleorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "y": 90
+    },
+    "facing=down,type=tripleorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "x": 90
+    },
+    "facing=up,type=tripleorewashing_invalid": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "x": 270
+    },
+    "facing=north,type=tripleorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active"
+    },
+    "facing=south,type=tripleorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "y": 180
+    },
+    "facing=west,type=tripleorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "y": 270
+    },
+    "facing=east,type=tripleorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "y": 90
+    },
+    "facing=down,type=tripleorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "x": 90
+    },
+    "facing=up,type=tripleorewashing_active": {
+      "model": "industrialupgrade:block/moremachine3/tripleorewashing_active",
+      "x": 270
+    }
+  }
+}

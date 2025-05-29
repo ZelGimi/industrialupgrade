@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/alcled"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/vanadoalumite"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:itemcore/hybcore"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:upgrades/overclockerupgrade2"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "DED",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:quarrymodules/ef"
+  },
+  "show_notification": true
+}

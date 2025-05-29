@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/facademechanism_side",
-    "down" : "industrialupgrade:blocks/facademechanism_side",
-    "up" : "industrialupgrade:blocks/facademechanism_side",
-    "north" : "industrialupgrade:blocks/facademechanism_side",
-    "east" : "industrialupgrade:blocks/facademechanism_side",
-    "south" : "industrialupgrade:blocks/facademechanism_side",
-    "west" : "industrialupgrade:blocks/facademechanism_side"
+    "particle" : "industrialupgrade:block/facademechanism_side",
+    "down" : "industrialupgrade:block/facademechanism_side",
+    "up" : "industrialupgrade:block/facademechanism_side",
+    "north" : "industrialupgrade:block/facademechanism_side",
+    "east" : "industrialupgrade:block/facademechanism_side",
+    "south" : "industrialupgrade:block/facademechanism_side",
+    "west" : "industrialupgrade:block/facademechanism_side"
   }
 }

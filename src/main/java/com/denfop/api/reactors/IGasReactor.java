@@ -2,7 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.componets.Energy;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public interface IGasReactor extends IAdvReactor, IMainMultiBlock {
 

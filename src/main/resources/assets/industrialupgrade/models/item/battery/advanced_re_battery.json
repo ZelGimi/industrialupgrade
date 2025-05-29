@@ -1,0 +1,38 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:item/battery/advanced_re_battery_0"
+  },
+  "overrides" : [
+    {
+      "predicate" : {
+        "level" : 0
+      },
+      "model" : "industrialupgrade:item/battery/advanced_re_battery0"
+    },
+    {
+      "predicate" : {
+        "level" : 0.25
+      },
+      "model" : "industrialupgrade:item/battery/advanced_re_battery1"
+    },
+    {
+      "predicate" : {
+        "level" : 0.5
+      },
+      "model" : "industrialupgrade:item/battery/advanced_re_battery2"
+    },
+    {
+      "predicate" : {
+        "level" : 0.75
+      },
+      "model" : "industrialupgrade:item/battery/advanced_re_battery3"
+    },
+    {
+      "predicate" : {
+        "level" : 1
+      },
+      "model" : "industrialupgrade:item/battery/advanced_re_battery4"
+    }
+	]
+}

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockrecycler1_side",
-    "down" : "industrialupgrade:blocks/blockrecycler1_side",
-    "up" : "industrialupgrade:blocks/blockrecycler1_top_active",
-    "north" : "industrialupgrade:blocks/blockrecycler1_main_active",
-    "east" : "industrialupgrade:blocks/blockrecycler1_side",
-    "south" : "industrialupgrade:blocks/blockrecycler1_side",
-    "west" : "industrialupgrade:blocks/blockrecycler1_side"
+    "particle" : "industrialupgrade:block/blockrecycler1_side",
+    "down" : "industrialupgrade:block/blockrecycler1_side",
+    "up" : "industrialupgrade:block/blockrecycler1_top_active",
+    "north" : "industrialupgrade:block/blockrecycler1_main_active",
+    "east" : "industrialupgrade:block/blockrecycler1_side",
+    "south" : "industrialupgrade:block/blockrecycler1_side",
+    "west" : "industrialupgrade:block/blockrecycler1_side"
   }
 }

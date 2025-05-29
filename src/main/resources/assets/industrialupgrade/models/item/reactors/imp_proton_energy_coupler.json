@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/imp_proton_energy_coupler"	}
+		"layer0": "industrialupgrade:item/imp_proton_energy_coupler"	}
 }

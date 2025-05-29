@@ -7,45 +7,35 @@ import com.denfop.api.space.colonies.api.IColony;
 import com.denfop.api.space.colonies.api.IColonyBuilding;
 import com.denfop.api.space.colonies.api.IColonyNet;
 import com.denfop.api.space.colonies.api.building.IStorage;
-import com.denfop.api.space.colonies.building.ColonyHouse;
-import com.denfop.api.space.colonies.building.ColonyPanelFactory;
-import com.denfop.api.space.colonies.building.Factory;
-import com.denfop.api.space.colonies.building.OxygenFactory;
-import com.denfop.api.space.colonies.building.ProtectionBuilding;
+import com.denfop.api.space.colonies.building.*;
 import com.denfop.api.space.colonies.enums.EnumHousesLevel;
 import com.denfop.api.space.colonies.enums.EnumProtectionLevel;
 import com.denfop.api.space.colonies.enums.EnumTypeFactory;
 import com.denfop.api.space.colonies.enums.EnumTypeSolarPanel;
 import com.denfop.api.space.fakebody.Data;
 import com.denfop.network.packet.PacketSuccessUpdateColony;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ColonyNet implements IColonyNet {
 
     Map<UUID, List<IColony>> fakePlayerListMap;
     List<IColony> colonyList;
     List<UUID> fakePlayerList;
-    Map<IBody, List<DataItem<ItemStack>>> bodyItemStackList = new HashMap<>();
-    Map<IBody, List<DataItem<FluidStack>>> bodyFluidStackList = new HashMap<>();
-    Map<UUID, List<Sends>> sends = new HashMap<>();
+    Map<IBody, List<DataItem<ItemStack>>> bodyItemStackList = new ConcurrentHashMap<>();
+    Map<IBody, List<DataItem<FluidStack>>> bodyFluidStackList = new ConcurrentHashMap<>();
+    Map<UUID, List<Sends>> sends = new ConcurrentHashMap<>();
     List<IColony> deleteList = new LinkedList<>();
 
     public ColonyNet() {
-        this.fakePlayerListMap = new HashMap<>();
+        this.fakePlayerListMap = new ConcurrentHashMap<>();
         this.colonyList = new LinkedList<>();
         this.fakePlayerList = new LinkedList<>();
     }
@@ -56,10 +46,10 @@ public class ColonyNet implements IColonyNet {
     }
 
     @Override
-    public boolean canAddColony(final IBody body, final EntityPlayer player) {
+    public boolean canAddColony(final IBody body, final Player player) {
         final Data data = SpaceNet.instance
                 .getFakeSpaceSystem()
-                .getDataFromUUID(player.getUniqueID())
+                .getDataFromUUID(player.getUUID())
                 .get(body);
         if (data == null) {
             return false;
@@ -96,7 +86,7 @@ public class ColonyNet implements IColonyNet {
         if (((ColonyPanelFactory) panel).getType() != EnumTypeSolarPanel.LOW) {
             return false;
         }
-        List<IColony> list = fakePlayerListMap.get(player.getUniqueID());
+        List<IColony> list = fakePlayerListMap.get(player.getUUID());
         if (list == null) {
             return true;
         }
@@ -108,8 +98,8 @@ public class ColonyNet implements IColonyNet {
         return true;
     }
 
-    private IColonyBuilding hasItemInInventory(EntityPlayer player, Class<?> colonyClass, int count) {
-        final NonNullList<ItemStack> mainInventory = player.inventory.mainInventory;
+    private IColonyBuilding hasItemInInventory(Player player, Class<?> colonyClass, int count) {
+        final NonNullList<ItemStack> mainInventory = player.getInventory().items;
         for (ItemStack stack : mainInventory) {
             if (stack.getItem() instanceof IBuildingItem && stack.getCount() >= count) {
                 IBuildingItem buildingItem = (IBuildingItem) stack.getItem();
@@ -122,8 +112,8 @@ public class ColonyNet implements IColonyNet {
         return null;
     }
 
-    private void consumeItemInInventory(EntityPlayer player, Class<?> colonyClass, int count, Colony colony) {
-        final NonNullList<ItemStack> mainInventory = player.inventory.mainInventory;
+    private void consumeItemInInventory(Player player, Class<?> colonyClass, int count, Colony colony) {
+        final NonNullList<ItemStack> mainInventory = player.getInventory().items;
         for (ItemStack stack : mainInventory) {
             if (stack.getItem() instanceof IBuildingItem && stack.getCount() >= count) {
                 IBuildingItem buildingItem = (IBuildingItem) stack.getItem();
@@ -138,20 +128,21 @@ public class ColonyNet implements IColonyNet {
         }
     }
 
-    public void addItemToColony(IBody body, EntityPlayer player) {
-        List<IColony> list = fakePlayerListMap.get(player.getUniqueID());
+    public void addItemToColony(IBody body, Player player) {
+        List<IColony> list = fakePlayerListMap.get(player.getUUID());
         if (list == null) {
             return;
         }
         for (IColony colony : list) {
             if (colony.matched(body)) {
-                ItemStack stack = player.inventory.getItemStack();
+                ItemStack stack = player.containerMenu.getCarried();
                 if (stack.getItem() instanceof IBuildingItem) {
                     IBuildingItem buildingItem = (IBuildingItem) stack.getItem();
                     IColonyBuilding building = buildingItem.getBuilding(colony, stack, true);
                     if (colony.getLevel() >= building.getMinLevelColony() && colony.getAvailableBuilding() > 0) {
                         buildingItem.getBuilding(colony, stack, false);
                         stack.shrink(1);
+                        player.containerMenu.broadcastChanges();
                         new PacketSuccessUpdateColony(player);
                         break;
                     }
@@ -163,18 +154,18 @@ public class ColonyNet implements IColonyNet {
     }
 
     @Override
-    public void addColony(final IBody body, final EntityPlayer player) {
+    public void addColony(final IBody body, final Player player) {
         if (canAddColony(body, player)) {
             List<IColony> colonyList;
-            final Colony colony = new Colony(body, player.getUniqueID());
+            final Colony colony = new Colony(body, player.getUUID());
             consumeItemInInventory(player, ColonyHouse.class, 3, colony);
             consumeItemInInventory(player, Factory.class, 2, colony);
             consumeItemInInventory(player, OxygenFactory.class, 1, colony);
             consumeItemInInventory(player, ProtectionBuilding.class, 1, colony);
             consumeItemInInventory(player, ColonyPanelFactory.class, 1, colony);
-            colonyList = this.fakePlayerListMap.computeIfAbsent(player.getUniqueID(), l -> new LinkedList<>());
+            colonyList = this.fakePlayerListMap.computeIfAbsent(player.getUUID(), l -> new LinkedList<>());
             if (colonyList.isEmpty()) {
-                this.fakePlayerList.add(player.getUniqueID());
+                this.fakePlayerList.add(player.getUUID());
             }
             colonyList.add(colony);
             this.colonyList.add(colony);
@@ -255,43 +246,43 @@ public class ColonyNet implements IColonyNet {
     }
 
     @Override
-    public NBTTagCompound writeNBT(final NBTTagCompound tag, UUID player) {
+    public CompoundTag writeNBT(final CompoundTag tag, UUID player) {
         final List<IColony> list = fakePlayerListMap.getOrDefault(player, Collections.emptyList());
-        NBTTagList nbt = new NBTTagList();
-        tag.setUniqueId("player", player);
+        ListTag nbt = new ListTag();
+        tag.putUUID("player", player);
         for (IColony colonies : list) {
-            nbt.appendTag(colonies.writeNBT(new NBTTagCompound()));
+            nbt.add(colonies.writeNBT(new CompoundTag()));
         }
-        NBTTagList nbt1 = new NBTTagList();
+        ListTag nbt1 = new ListTag();
         for (Sends sends1 : sends.getOrDefault(player, Collections.emptyList())) {
-            nbt1.appendTag(sends1.writeToNbt());
+            nbt1.add(sends1.writeToNbt());
         }
-        tag.setTag("sends", nbt1);
-        tag.setTag("colonial", nbt);
+        tag.put("sends", nbt1);
+        tag.put("colonial", nbt);
         return tag;
     }
 
     @Override
-    public void addColony(final NBTTagCompound tag) {
-        NBTTagList nbt = tag.getTagList("colonial", 10);
-        NBTTagList nbt1 = tag.getTagList("sends", 10);
+    public void addColony(final CompoundTag tag) {
+        ListTag nbt = tag.getList("colonial", 10);
+        ListTag nbt1 = tag.getList("sends", 10);
         List<IColony> list;
 
-        UUID player = tag.getUniqueId("player");
+        UUID player = tag.getUUID("player");
         if (this.fakePlayerList.contains(player)) {
             return;
         }
         this.fakePlayerList.add(player);
         list = new LinkedList<>();
         List<Sends> list1 = new LinkedList<>();
-        for (int i = 0; i < nbt1.tagCount(); i++) {
-            NBTTagCompound nbt2 = nbt1.getCompoundTagAt(i);
+        for (int i = 0; i < nbt1.size(); i++) {
+            CompoundTag nbt2 = nbt1.getCompound(i);
             Sends sends1 = new Sends(nbt2);
             list1.add(sends1);
         }
 
-        for (int i = 0; i < nbt.tagCount(); i++) {
-            NBTTagCompound nbt2 = nbt.getCompoundTagAt(i);
+        for (int i = 0; i < nbt.size(); i++) {
+            CompoundTag nbt2 = nbt.getCompound(i);
             IColony colonies = new Colony(nbt2, player);
             list.add(colonies);
             colonyList.add(colonies);
@@ -324,15 +315,15 @@ public class ColonyNet implements IColonyNet {
                     List<IStorage> storages = colony.getStorageList();
                     for (IStorage storage : storages) {
                         for (ItemStack stack : storage.getStacks()) {
-                            if (sends1.stacks.size() == 27) {
+                            if (sends1.stacks.size() == 27)
                                 break;
-                            }
+                            if (stack != null && !stack.isEmpty())
                             sends1.addStack(stack.copy());
                         }
                         for (FluidStack fluidStack : storage.getFluidStacks()) {
-                            if (sends1.fluidStacks.size() == 9) {
+                            if (sends1.fluidStacks.size() == 9)
                                 break;
-                            }
+                            if (fluidStack != null && !fluidStack.isEmpty())
                             sends1.addStack(fluidStack.copy());
                         }
                         storage.getStacks().clear();

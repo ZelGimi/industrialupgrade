@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/triton_pebble"	}
+		"layer0": "industrialupgrade:item/triton_pebble"	}
 }

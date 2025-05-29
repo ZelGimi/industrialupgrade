@@ -1,52 +1,59 @@
 package com.denfop.network;
 
+import com.denfop.IUCore;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.EnumTypePacket;
 import com.denfop.network.packet.IPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientCustomPacketEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
-@SideOnly(Side.CLIENT)
+import java.util.UUID;
+
+@OnlyIn(Dist.CLIENT)
 public class NetworkManagerClient extends NetworkManager {
 
 
     public NetworkManagerClient() {
+        super();
+
     }
 
+    @Override
+    public void sendPacket(CustomPacketBuffer buffer) {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server == null) {
+            this.sendPacket(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(Minecraft.getInstance().player.getX(),Minecraft.getInstance().player.getY(),Minecraft.getInstance().player.getZ(),2,Minecraft.getInstance().player.level().dimension()))
+                    , buffer);
+            return;
+        }
+        UUID playerUUID = IUCore.proxy.getPlayerInstance().getUUID();
+        ServerPlayer serverPlayer = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(playerUUID);
+        this.sendPacket(PacketDistributor.PLAYER.with(() -> serverPlayer), buffer);
 
-    private void onPacketData(CustomPacketBuffer is, final EntityPlayer player) {
-        if (is.writerIndex() > is.readerIndex()) {
-            byte type = is.readByte();
-            IPacket packet = this.packetMap.get(type);
-            if (packet != null && packet.getPacketType() == EnumTypePacket.SERVER) {
-                packet.readPacket(is, player);
-                is.flip();
-            }
+    }
+
+    public void sendPacket(PacketDistributor.PacketTarget packetDistributor, CustomPacketBuffer buffer) {
+        Minecraft.getInstance().getConnection().getConnection().send(makePacket(NetworkDirection.PLAY_TO_SERVER, buffer));
+    }
+    public void onPacketData(CustomPacketBuffer is,  byte type) {
+        Player player = Minecraft.getInstance().player;
+        IPacket packet = this.packetMap.get(type);
+        if (packet != null && packet.getPacketType() == EnumTypePacket.SERVER) {
+            packet.readPacket(is, player);
         }
     }
-
     protected boolean isClient() {
         return true;
     }
 
 
-    @SubscribeEvent
-    public void onPacket(ClientCustomPacketEvent event) {
-
-        if (event.getPacket() != null && Minecraft.getMinecraft() != null && Minecraft.getMinecraft().player != null && event
-                .getPacket()
-                .payload() != null) {
-            try {
-                this.onPacketData(new CustomPacketBuffer(event.getPacket().payload()), Minecraft.getMinecraft().player);
-            } catch (Throwable var3) {
-                throw new RuntimeException(var3);
-            }
-        }
+    public void onTickEnd(WorldData worldData) {
     }
-
-
 }

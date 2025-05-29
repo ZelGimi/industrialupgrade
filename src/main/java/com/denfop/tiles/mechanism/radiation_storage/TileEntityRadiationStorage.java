@@ -4,22 +4,26 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRadiationStorage;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRadiationStorage;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,11 +33,12 @@ public class TileEntityRadiationStorage extends TileEntityInventory implements I
     public final ComponentBaseEnergy radiation;
     private final EnumTypeStyle enumTypeStyle;
 
-    public TileEntityRadiationStorage(double maxStorage1, EnumTypeStyle enumTypeStyle) {
+    public TileEntityRadiationStorage(double maxStorage1, EnumTypeStyle enumTypeStyle, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
         this.radiation = this.addComponent((new ComponentBaseEnergy(EnergyType.RADIATION, this, maxStorage1,
 
-                Arrays.asList(EnumFacing.values()),
-                Arrays.asList(EnumFacing.values()),
+                Arrays.asList(Direction.values()),
+                Arrays.asList(Direction.values()),
                 EnergyNetGlobal.instance.getTierFromPower(14),
                 EnergyNetGlobal.instance.getTierFromPower(14), false
         )));
@@ -41,7 +46,6 @@ public class TileEntityRadiationStorage extends TileEntityInventory implements I
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
 
         tooltip.add(Localization.translate("iu.item.tooltip.Capacity") + " " + ModUtils.getString(this.radiation.getCapacity()) + " " +
@@ -58,15 +62,15 @@ public class TileEntityRadiationStorage extends TileEntityInventory implements I
                     final ComponentBaseEnergy component2 = this.radiation;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
-                            final NBTTagCompound nbt = ModUtils.nbt(drop);
-                            nbt.setDouble("energy", component2.getEnergy());
+                            final CompoundTag nbt = ModUtils.nbt(drop);
+                            nbt.putDouble("energy", component2.getEnergy());
                         }
                     }
                     return drop;
                 case None:
                     return null;
                 case Generator:
-                    return new ItemStack(IUItem.basemachine2, 1, 78);
+                    return new ItemStack(IUItem.basemachine2.getItem(78), 1);
                 case Machine:
                     return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                 case AdvMachine:
@@ -78,20 +82,17 @@ public class TileEntityRadiationStorage extends TileEntityInventory implements I
         return drop;
     }
 
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
-        super.onPlaced(stack, placer, facing);
 
-    }
 
     @Override
-    public ContainerRadiationStorage getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerRadiationStorage getGuiContainer(final Player entityPlayer) {
         return new ContainerRadiationStorage(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiRadiationStorage(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiRadiationStorage((ContainerRadiationStorage) menu);
     }
 
 

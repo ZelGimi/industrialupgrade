@@ -1,70 +1,69 @@
 package com.denfop.items.energy;
 
-import com.denfop.Constants;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.items.BaseEnergyItem;
+import com.denfop.items.IProperties;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemBattery extends BaseEnergyItem implements IModelRegister {
+public class ItemBattery extends BaseEnergyItem implements IProperties {
 
     private static final int maxLevel = 4;
     public final boolean wirelessCharge;
-    private final String name1;
 
-    public ItemBattery(String name, double maxCharge, double transferLimit, int tier, boolean wirelessCharge) {
-        super(name, maxCharge, transferLimit, tier);
+    public ItemBattery(double maxCharge, double transferLimit, int tier, boolean wirelessCharge) {
+        super(maxCharge, transferLimit, tier);
         this.wirelessCharge = wirelessCharge;
-        this.name1 = name;
-        IUCore.proxy.addIModelRegister(this);
+        IUCore.proxy.addProperties(this);
     }
 
-    public ItemBattery(String name, double maxCharge, double transferLimit, int tier) {
-        super(name, maxCharge, transferLimit, tier);
+    public ItemBattery(double maxCharge, double transferLimit, int tier) {
+        super(maxCharge, transferLimit, tier);
         this.wirelessCharge = false;
-        this.name1 = name;
-        IUCore.proxy.addIModelRegister(this);
+        IUCore.proxy.addProperties(this);
+
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+        }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "battery" + "/" + name + extraName;
-
-        return new ModelResourceLocation(loc, null);
+        return this.nameItem;
     }
 
     @Override
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            final List<String> tooltip,
-            final ITooltipFlag flagIn
+    public void appendHoverText(
+            ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag
     ) {
         if (this.wirelessCharge) {
             int mode = ModUtils.NBTGetInteger(stack, "mode");
@@ -72,267 +71,102 @@ public class ItemBattery extends BaseEnergyItem implements IModelRegister {
                 mode = 0;
             }
 
-            tooltip.add(
-                    TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
-                            + Localization.translate("message.battery.mode." + mode)
-            );
-            if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                tooltip.add(Localization.translate("press.lshift"));
+            tooltip.add(Component.translatable("message.text.mode")
+                    .append(": ")
+                    .append(Component.translatable("message.battery.mode." + mode))
+                    .withStyle(ChatFormatting.GREEN));
+
+            if (!Screen.hasShiftDown()) {
+                tooltip.add(Component.translatable("press.lshift"));
+            } else {
+                tooltip.add(Component.translatable("iu.changemode_key")
+                        .append(Component.translatable("iu.changemode_rcm1")));
             }
-            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                tooltip.add(Localization.translate("iu.changemode_key") + Localization.translate(
-                        "iu.changemode_rcm1"));
-            }
         }
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, world, tooltip, flag);
     }
 
-    public int getItemEnchantability() {
-        return 0;
-    }
 
-    public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {
-        return false;
-    }
+
 
     @Override
-    public void getSubItems(@Nonnull final CreativeTabs p_150895_1_, @Nonnull final NonNullList<ItemStack> var3) {
-        if (this.isInCreativeTab(p_150895_1_)) {
-            final ItemStack var4 = new ItemStack(this, 1);
-            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
-            var3.add(var4);
-            var3.add(new ItemStack(this, 1));
-        }
-    }
-
-    @Override
-    public void registerModels() {
-        registerModels(this.name1);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> {
-            double damage = ElectricItem.manager.getCharge(stack);
-            double maxDamage = ElectricItem.manager.getMaxCharge(stack);
-            int level = (int) (ItemBattery.maxLevel * damage / maxDamage);
-
-            return getModelLocation1(name1, Integer.toString(level));
-        });
-
-        for (int level = 0; level <= maxLevel; ++level) {
-            ModelBakery.registerItemVariants(this, getModelLocation1(name1, Integer.toString(level)));
-        }
-
-    }
-
-    @Override
-    public void onUpdate(
-            @Nonnull ItemStack itemStack,
-            @Nonnull World p_77663_2_,
-            @Nonnull Entity p_77663_3_,
-            int p_77663_4_,
-            boolean p_77663_5_
-    ) {
-        if (!(p_77663_3_ instanceof EntityPlayer)) {
+    public void inventoryTick(ItemStack itemStack, Level world, net.minecraft.world.entity.Entity entity, int slot, boolean isSelected) {
+        if (!(entity instanceof Player player) || world.isClientSide || !wirelessCharge) {
             return;
         }
-        if (wirelessCharge) {
-            int mode = ModUtils.NBTGetInteger(itemStack, "mode");
-            EntityPlayer entityplayer = (EntityPlayer) p_77663_3_;
-            if (mode == 1) {
-                if (!p_77663_2_.isRemote && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
-                    boolean transferred = false;
-                    for (int i = 0; i < 9; i++) {
-                        ItemStack stack = entityplayer.inventory.mainInventory.get(i);
-                        if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem && !(stack.getItem() instanceof ItemBattery)) {
-                            double transfer = ElectricItem.manager.discharge(
-                                    itemStack,
-                                    2.0D * this.transferLimit,
-                                    2147483647,
-                                    true,
-                                    true,
-                                    true
-                            );
-                            if (!(transfer <= 0.0D)) {
-                                transfer = ElectricItem.manager.charge(stack, transfer, 2147483647, true, false);
-                                if (!(transfer <= 0.0D)) {
-                                    ElectricItem.manager.discharge(itemStack, transfer, 2147483647, true, true, false);
-                                    transferred = true;
-                                }
-                            }
-                        }
-                    }
-                    if (transferred && !IUCore.proxy.isRendering()) {
-                        entityplayer.openContainer.detectAndSendChanges();
-                    }
-                }
-            } else if (mode == 2) {
-                if (!p_77663_2_.isRemote && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
-                    boolean transferred = false;
-                    for (int i = 0; i < entityplayer.inventory.mainInventory.size(); i++) {
-                        ItemStack stack = entityplayer.inventory.mainInventory.get(i);
-                        if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem && !(stack.getItem() instanceof ItemBattery)) {
-                            double transfer = ElectricItem.manager.discharge(
-                                    itemStack,
-                                    2.0D * this.transferLimit,
-                                    2147483647,
-                                    true,
-                                    true,
-                                    true
-                            );
-                            if (!(transfer <= 0.0D)) {
-                                transfer = ElectricItem.manager.charge(stack, transfer, 2147483647, true, false);
-                                if (!(transfer <= 0.0D)) {
-                                    ElectricItem.manager.discharge(itemStack, transfer, 2147483647, true, true, false);
-                                    transferred = true;
-                                }
-                            }
-                        }
-                    }
-                    if (transferred && !IUCore.proxy.isRendering()) {
-                        entityplayer.openContainer.detectAndSendChanges();
-                    }
-                }
 
-            } else if (mode == 3) {
-                if (!p_77663_2_.isRemote && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
-                    boolean transferred = false;
-                    for (int i = 0; i < entityplayer.inventory.armorInventory.size(); i++) {
-                        ItemStack stack = entityplayer.inventory.armorInventory.get(i);
-                        if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem && !(stack.getItem() instanceof ItemBattery)) {
-                            double transfer = ElectricItem.manager.discharge(
-                                    itemStack,
-                                    2.0D * this.transferLimit,
-                                    2147483647,
-                                    true,
-                                    true,
-                                    true
-                            );
-                            if (!(transfer <= 0.0D)) {
-                                transfer = ElectricItem.manager.charge(stack, transfer, 2147483647, true, false);
-                                if (!(transfer <= 0.0D)) {
-                                    ElectricItem.manager.discharge(itemStack, transfer, 2147483647, true, true, false);
-                                    transferred = true;
-                                }
-                            }
-                        }
-                    }
-                    if (transferred && !IUCore.proxy.isRendering()) {
-                        entityplayer.openContainer.detectAndSendChanges();
-                    }
-                }
+        int mode = ModUtils.NBTGetInteger(itemStack, "mode");
+        if (mode < 1 || mode > 4) return;
 
-            } else if (mode == 4) {
-                if (IUCore.proxy.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 10 == 0) {
-                    boolean transferred = false;
-                    for (int i = 0; i < entityplayer.inventory.armorInventory.size(); i++) {
-                        ItemStack stack = entityplayer.inventory.armorInventory.get(i);
-                        if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem && !(stack.getItem() instanceof ItemBattery)) {
-                            double transfer = ElectricItem.manager.discharge(
-                                    itemStack,
-                                    2.0D * this.transferLimit,
-                                    2147483647,
-                                    true,
-                                    true,
-                                    true
-                            );
-                            if (!(transfer <= 0.0D)) {
-                                transfer = ElectricItem.manager.charge(stack, transfer, 2147483647, true, false);
-                                if (!(transfer <= 0.0D)) {
-                                    ElectricItem.manager.discharge(itemStack, transfer, 2147483647, true, true, false);
-                                    transferred = true;
-                                }
-                            }
-                        }
-                    }
-                    if (transferred && !IUCore.proxy.isRendering()) {
-                        entityplayer.openContainer.detectAndSendChanges();
-                    }
+        if (world.getGameTime() % ((mode == 4) ? 40 : 10) == 0) {
+            boolean transferred = false;
 
-
-                }
-                if (IUCore.proxy.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
-                    boolean transferred = false;
-                    for (int i = 0; i < entityplayer.inventory.mainInventory.size(); i++) {
-                        ItemStack stack = entityplayer.inventory.mainInventory.get(i);
-                        if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem && !(stack.getItem() instanceof ItemBattery)) {
-                            double transfer = ElectricItem.manager.discharge(
-                                    itemStack,
-                                    2.0D * this.transferLimit,
-                                    2147483647,
-                                    true,
-                                    true,
-                                    true
-                            );
-                            if (!(transfer <= 0.0D)) {
-                                transfer = ElectricItem.manager.charge(stack, transfer, 2147483647, true, false);
-                                if (!(transfer <= 0.0D)) {
-                                    ElectricItem.manager.discharge(itemStack, transfer, 2147483647, true, true, false);
-                                    transferred = true;
-                                }
-                            }
-                        }
-                    }
-                    if (transferred && !IUCore.proxy.isRendering()) {
-                        entityplayer.openContainer.detectAndSendChanges();
+            switch (mode) {
+                case 1 -> transferred = chargeItems(player.getInventory().items, itemStack);
+                case 2 -> transferred = chargeItems(player.getInventory().items, itemStack);
+                case 3 -> transferred = chargeItems(player.getInventory().armor, itemStack);
+                case 4 -> {
+                    transferred = chargeItems(player.getInventory().armor, itemStack);
+                    if (world.getGameTime() % 40 == 0) {
+                        transferred |= chargeItems(player.getInventory().items, itemStack);
                     }
                 }
             }
 
+            if (transferred) {
+                player.containerMenu.broadcastChanges();
+            }
         }
+    }
 
-
+    private boolean chargeItems(Iterable<ItemStack> inventory, ItemStack battery) {
+        boolean transferred = false;
+        for (ItemStack stack : inventory) {
+            if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem && !(stack.getItem() instanceof ItemBattery)) {
+                double transfer = ElectricItem.manager.discharge(battery, 2.0D * this.transferLimit, Integer.MAX_VALUE, true, true, true);
+                if (transfer > 0) {
+                    transfer = ElectricItem.manager.charge(stack, transfer, Integer.MAX_VALUE, true, false);
+                    if (transfer > 0) {
+                        ElectricItem.manager.discharge(battery, transfer, Integer.MAX_VALUE, true, true, false);
+                        transferred = true;
+                    }
+                }
+            }
+        }
+        return transferred;
     }
 
     public boolean canProvideEnergy(ItemStack stack) {
         return true;
     }
 
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
-        if (IUCore.proxy.isSimulating() && wirelessCharge) {
-            int mode = ModUtils.NBTGetInteger(player.getHeldItem(hand), "mode");
-            mode++;
-            if (mode > 4 || mode < 0) {
-                mode = 0;
-            }
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        if (!world.isClientSide && wirelessCharge) {
+            ItemStack stack = player.getItemInHand(hand);
+            int mode = ModUtils.NBTGetInteger(stack, "mode");
+            mode = (mode + 1) % 5;
 
-            ModUtils.NBTSetInteger(player.getHeldItem(hand), "mode", mode);
-            IUCore.proxy.messagePlayer(
-                    player,
-                    TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
-                            + Localization.translate("message.battery.mode." + mode)
-            );
+            ModUtils.NBTSetInteger(stack, "mode", mode);
+            player.displayClientMessage(
+                    Component.literal(ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": " +
+                            Localization.translate("message.battery.mode." + mode)), true);
         }
 
-        ItemStack stack = ModUtils.get(player, hand);
-        if (!world.isRemote && ModUtils.getSize(stack) == 1) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!world.isClientSide && ModUtils.getSize(stack) == 1) {
             if (ElectricItem.manager.getCharge(stack) > 0.0D) {
                 boolean transferred = false;
 
                 for (int i = 0; i < 9; ++i) {
-                    ItemStack target = player.inventory.mainInventory.get(i);
-                    if (!target.isEmpty() && target.getItem() instanceof IEnergyItem && target != stack && !(ElectricItem.manager.discharge(
-                            target,
-                            1.0D / 0.0,
-                            2147483647,
-                            true,
-                            true,
-                            true
-                    ) > 0.0D)) {
-                        double transfer = ElectricItem.manager.discharge(
-                                stack,
-                                2.0D * this.transferLimit,
-                                2147483647,
-                                true,
-                                true,
-                                true
-                        );
-                        if (!(transfer <= 0.0D)) {
+                    ItemStack target = player.getInventory().items.get(i);
+                    if (!target.isEmpty() && target.getItem() instanceof IEnergyItem && target != stack &&
+                            !(ElectricItem.manager.discharge(target, Double.POSITIVE_INFINITY, Integer.MAX_VALUE, true, true, true) > 0.0D)) {
+                        double transfer = ElectricItem.manager.discharge(stack, 2.0D * this.transferLimit, Integer.MAX_VALUE, true, true, true);
+                        if (transfer > 0.0D) {
                             transfer = ElectricItem.manager.charge(target, transfer, this.tier, true, false);
-                            if (!(transfer <= 0.0D)) {
-                                ElectricItem.manager.discharge(stack, transfer, 2147483647, true, true, false);
+                            if (transfer > 0.0D) {
+                                ElectricItem.manager.discharge(stack, transfer, Integer.MAX_VALUE, true, true, false);
                                 transferred = true;
                             }
                         }
@@ -340,14 +174,29 @@ public class ItemBattery extends BaseEnergyItem implements IModelRegister {
                 }
 
                 if (transferred) {
-                    player.openContainer.detectAndSendChanges();
+                    player.containerMenu.broadcastChanges();
                 }
             }
 
-            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+            return InteractionResultHolder.success(stack);
         } else {
-            return new ActionResult<>(EnumActionResult.PASS, stack);
+            return InteractionResultHolder.pass(stack);
         }
     }
+
+
+    @Override
+    public String[] properties() {
+        return new String[]{"level"};
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public float getItemProperty(ItemStack stack, ClientLevel level, LivingEntity entity, int p174679, String property) {
+        double damage = ElectricItem.manager.getCharge(stack);
+        double maxDamage = ElectricItem.manager.getMaxCharge(stack);
+        return (float) ((int) (ItemBattery.maxLevel * damage / maxDamage) * 0.25);
+    }
+
 
 }

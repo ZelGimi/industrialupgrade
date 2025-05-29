@@ -1,12 +1,12 @@
 package com.denfop.api.energy;
 
 
-import com.denfop.Config;
 import com.denfop.api.IAdvEnergyNet;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     public static IEnergyTile EMPTY = new EnergyTile() {
 
     };
-    private static Map<Integer, EnergyNetLocal> worldToEnergyNetMap;
+    private static Map<ResourceKey<Level>, EnergyNetLocal> worldToEnergyNetMap;
 
     static {
         EnergyNetGlobal.worldToEnergyNetMap = new HashMap<>();
@@ -37,11 +37,11 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
         instance = this;
     }
 
-    public static EnergyNetLocal getForWorld(final World world) {
+    public static EnergyNetLocal getForWorld(final Level world) {
         if (world == null) {
             return EnergyNetLocal.EMPTY;
         }
-        final int id = world.provider.getDimension();
+        ResourceKey<Level> id = world.dimension();
         if (!worldToEnergyNetMap.containsKey(id)) {
             final EnergyNetLocal local = new EnergyNetLocal(world);
             worldToEnergyNetMap.put(id, local);
@@ -50,12 +50,12 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
         return worldToEnergyNetMap.getOrDefault(id, EnergyNetLocal.EMPTY);
     }
 
-    public static EnergyNetLocal getForWorld(final int id) {
+    public static EnergyNetLocal getForWorld(final ResourceKey<Level> id) {
         return worldToEnergyNetMap.getOrDefault(id, EnergyNetLocal.EMPTY);
     }
 
 
-    public static void onTickEnd(final World world) {
+    public static void onTickEnd(final Level world) {
         final EnergyNetLocal energyNet = getForWorld(world);
         if (energyNet != EnergyNetLocal.EMPTY) {
             energyNet.onTickEnd();
@@ -70,16 +70,16 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
         return (EnergyNetGlobal) instance;
     }
 
-    public static void onWorldUnload(final World world) {
-        final EnergyNetLocal local = EnergyNetGlobal.getForWorld(world.provider.getDimension());
+    public static void onWorldUnload(final Level world) {
+        final EnergyNetLocal local = EnergyNetGlobal.getForWorld(world.dimension());
         if (local != EnergyNetLocal.EMPTY) {
             local.onUnload();
-            worldToEnergyNetMap.remove(world.provider.getDimension());
+            worldToEnergyNetMap.remove(world.dimension());
         }
 
     }
 
-    public IEnergyTile getTileEntity(final World world, final int x, final int y, final int z) {
+    public IEnergyTile getTileEntity(final Level world, final int x, final int y, final int z) {
         final EnergyNetLocal local = getForWorld(world);
         if (local != EnergyNetLocal.EMPTY) {
             return local.getTileEntity(new BlockPos(x, y, z));
@@ -87,7 +87,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
         return EMPTY;
     }
 
-    public IEnergyTile getTileEntity(final World world, BlockPos pos) {
+    public IEnergyTile getTileEntity(final Level world, BlockPos pos) {
         final EnergyNetLocal local = getForWorld(world);
         if (local != EnergyNetLocal.EMPTY) {
             return local.getTileEntity(pos);
@@ -97,7 +97,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
 
 
     @Override
-    public IEnergyTile getTile(final World world, final BlockPos blockPos) {
+    public IEnergyTile getTile(final Level world, final BlockPos blockPos) {
         final EnergyNetLocal local = getForWorld(world);
         if (local != EnergyNetLocal.EMPTY) {
             return local.getTileEntity(blockPos);
@@ -107,13 +107,13 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
 
 
     @Override
-    public World getWorld(final IEnergyTile tile) {
+    public Level getWorld(final IEnergyTile tile) {
         if (tile == null) {
             return null;
-        } else if (tile instanceof TileEntity) {
-            return ((TileEntity) tile).getWorld();
+        } else if (tile instanceof BlockEntity) {
+            return ((BlockEntity) tile).getLevel();
         } else if (tile.getTileEntity() != null) {
-            return tile.getTileEntity().getWorld();
+            return tile.getTileEntity().getLevel();
         } else {
             throw new UnsupportedOperationException("unlocatable tile type: " + tile.getClass().getName());
         }
@@ -154,7 +154,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
 
 
     @Override
-    public SunCoef getSunCoefficient(final World world) {
+    public SunCoef getSunCoefficient(final Level world) {
         return getForWorld(world).getSuncoef();
     }
 
@@ -164,7 +164,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     }
 
     @Override
-    public Map<ChunkPos, List<IEnergySink>> getChunkPosListMap(final World world) {
+    public Map<ChunkPos, List<IEnergySink>> getChunkPosListMap(final Level world) {
         return getForWorld(world).getChunkPosListMap();
     }
 
@@ -189,7 +189,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     }
 
     @Override
-    public TileEntity getBlockPosFromEnergyTile(final IEnergyTile tile) {
+    public BlockEntity getBlockPosFromEnergyTile(final IEnergyTile tile) {
         final EnergyNetLocal local = getForWorld(getWorld(tile));
         if (local != EnergyNetLocal.EMPTY) {
             return local.getTileFromIEnergy(tile);
@@ -200,7 +200,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     }
 
     @Override
-    public List<Path> getEnergyPaths(final World world, final BlockPos pos) {
+    public List<Path> getEnergyPaths(final Level world, final BlockPos pos) {
         final EnergyNetLocal local = getForWorld(world);
         IEnergyTile energyTile = local.getChunkCoordinatesIEnergyTileMap().get(pos);
         if (energyTile != EMPTY) {
@@ -211,11 +211,11 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
 
     @Override
     public void update() {
-        this.transformer = Config.newsystem;
-        this.losing = Config.enablelosing;
-        this.ignoring = Config.enableIC2EasyMode;
-        this.explosing = Config.enableexlposion;
-        this.hasrestrictions = !Config.cableEasyMode;
+        this.transformer = true;
+        this.losing = true;
+        this.ignoring = false;
+        this.explosing = true;
+        this.hasrestrictions = true;
     }
 
 }

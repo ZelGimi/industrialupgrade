@@ -1,7 +1,8 @@
 package com.denfop.api.transport;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -19,13 +20,13 @@ public interface ITransportConductor<T, E> extends ITransportAcceptor<T, E>, ITr
 
     boolean isItem();
 
-    List<ItemStack> getBlackListItems(EnumFacing facing);
+    List<ItemStack> getBlackListItems(Direction facing);
 
-    List<ItemStack> getWhiteListItems(EnumFacing facing);
+    List<ItemStack> getWhiteListItems(Direction facing);
 
-    List<FluidStack> getBlackListFluids(EnumFacing facing);
+    List<FluidStack> getBlackListFluids(Direction facing);
 
-    List<FluidStack> getWhiteListFluids(EnumFacing facing);
+    List<FluidStack> getWhiteListFluids(Direction facing);
 
     boolean canWork();
 

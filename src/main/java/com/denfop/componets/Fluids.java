@@ -11,30 +11,26 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class Fluids extends AbstractComponent {
 
+    public static final Fluid LAVA = net.minecraft.world.level.material.Fluids.LAVA;
+    public static final Fluid WATER = net.minecraft.world.level.material.Fluids.WATER;
+    public static final Fluid EMPTY = net.minecraft.world.level.material.Fluids.EMPTY;
     protected final List<Fluids.InternalFluidTank> managedTanks = new ArrayList<>();
     protected final List<Supplier<? extends Collection<Fluids.InternalFluidTank>>> unmanagedTanks = new ArrayList();
 
@@ -123,8 +119,8 @@ public class Fluids extends AbstractComponent {
     public Fluids.InternalFluidTank addTank(
             String name,
             int capacity,
-            Collection<EnumFacing> inputSides,
-            Collection<EnumFacing> outputSides,
+            Collection<Direction> inputSides,
+            Collection<Direction> outputSides,
             Predicate<Fluid> acceptedFluids, InvSlot.TypeItemSlot typeItemSlot
     ) {
         return this.addTank(new Fluids.InternalFluidTank(name, inputSides, outputSides, acceptedFluids, capacity, typeItemSlot));
@@ -157,8 +153,8 @@ public class Fluids extends AbstractComponent {
 
     public void changeConnectivity(
             Fluids.InternalFluidTank tank,
-            Collection<EnumFacing> inputSides,
-            Collection<EnumFacing> outputSides
+            Collection<Direction> inputSides,
+            Collection<Direction> outputSides
     ) {
         assert this.managedTanks.contains(tank);
 
@@ -181,10 +177,10 @@ public class Fluids extends AbstractComponent {
         return tank;
     }
 
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         for (final InternalFluidTank tank : this.managedTanks) {
-            NBTTagCompound subTag = new NBTTagCompound();
+            CompoundTag subTag = new CompoundTag();
             subTag = tank.writeToNBT(subTag);
             try {
                 EncoderHandler.encode(buffer, subTag);
@@ -200,7 +196,7 @@ public class Fluids extends AbstractComponent {
     public CustomPacketBuffer updateComponent() {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         for (final InternalFluidTank tank : this.managedTanks) {
-            NBTTagCompound subTag = new NBTTagCompound();
+            CompoundTag subTag = new CompoundTag();
             subTag = tank.writeToNBT(subTag);
             try {
                 EncoderHandler.encode(buffer, subTag);
@@ -213,42 +209,44 @@ public class Fluids extends AbstractComponent {
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         for (final InternalFluidTank tank : this.managedTanks) {
-            tank.readFromNBT((NBTTagCompound) DecoderHandler.decode(is));
+            tank.readFromNBT((CompoundTag) DecoderHandler.decode(is));
         }
 
     }
 
-    public void readFromNbt(NBTTagCompound nbt) {
+    public void readFromNbt(CompoundTag nbt) {
 
         for (final InternalFluidTank tank : this.managedTanks) {
-            if (nbt.hasKey(tank.identifier, 10)) {
-                tank.readFromNBT(nbt.getCompoundTag(tank.identifier));
+            if (nbt.contains(tank.identifier, 10)) {
+                tank.readFromNBT(nbt.getCompound(tank.identifier));
             }
         }
 
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound nbt = new NBTTagCompound();
+    public CompoundTag writeToNbt() {
+        CompoundTag nbt = new CompoundTag();
 
         for (final InternalFluidTank tank : this.managedTanks) {
-            NBTTagCompound subTag = new NBTTagCompound();
+            CompoundTag subTag = new CompoundTag();
             subTag = tank.writeToNBT(subTag);
-            nbt.setTag(tank.identifier, subTag);
+            nbt.put(tank.identifier, subTag);
         }
 
         return nbt;
     }
 
-    public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {
-        return Collections.singleton(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+    @Override
+    public Collection<? extends Capability<?>> getProvidedCapabilities(Direction side) {
+        return Collections.singleton(ForgeCapabilities.FLUID_HANDLER);
     }
 
-    public <T> T getCapability(Capability<T> cap, EnumFacing side) {
-        return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) new FluidHandler(side) : super.getCapability(
+    @Override
+    public <T> T getCapability(Capability<T> cap, Direction side) {
+        return cap == ForgeCapabilities.FLUID_HANDLER ? (T) new FluidHandler(side) : super.getCapability(
                 cap,
-                side
-        );
+                side)
+                ;
     }
 
     public List<InternalFluidTank> getManagedTanks() {
@@ -277,14 +275,14 @@ public class Fluids extends AbstractComponent {
         List<String> fluidList = new ArrayList<>();
         private InvSlot.TypeItemSlot typeItemSlot;
         private Predicate<Fluid> acceptedFluids;
-        private List<EnumFacing> inputSides;
-        private List<EnumFacing> outputSides;
+        private List<Direction> inputSides;
+        private List<Direction> outputSides;
         private boolean canAccept = true;
 
         protected InternalFluidTank(
                 String identifier,
-                Collection<EnumFacing> inputSides,
-                Collection<EnumFacing> outputSides,
+                Collection<Direction> inputSides,
+                Collection<Direction> outputSides,
                 Predicate<Fluid> acceptedFluids,
                 int capacity, InvSlot.TypeItemSlot typeItemSlot
         ) {
@@ -294,38 +292,30 @@ public class Fluids extends AbstractComponent {
             this.inputSides = new ArrayList<>(inputSides);
             this.outputSides = new ArrayList<>(outputSides);
             this.typeItemSlot = typeItemSlot;
-            List<Fluid> fluidList1 = FluidRegistry.getRegisteredFluids().values().stream().filter(acceptedFluids).collect(
-                    Collectors.toList());
+            List<Fluid> fluidList1 = ForgeRegistries.FLUIDS.getValues().stream().filter(acceptedFluids).toList();
             for (Fluid fluid1 : fluidList1) {
-                fluidList.add(Localization.translate(fluid1.getUnlocalizedName()));
+                fluidList.add(Localization.translate(fluid1.getFluidType().getDescriptionId()));
             }
 
         }
 
         public CustomPacketBuffer writePacket() {
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
-            packetBuffer.writeBoolean(fluid != null);
-            if (fluid != null) {
-                packetBuffer.writeString(fluid.getFluid().getName());
-                packetBuffer.writeInt(fluid.amount);
-            }
+            fluid.writeToPacket(packetBuffer);
             return packetBuffer;
         }
 
         public void readPacket(CustomPacketBuffer packetBuffer) {
-            boolean hasFluid = packetBuffer.readBoolean();
-            if (hasFluid) {
-                String name = packetBuffer.readString();
-                int amount = packetBuffer.readInt();
-                Fluid fluid = FluidRegistry.getFluid(name);
-                this.fluid = new FluidStack(fluid, amount);
-            } else {
-                fluid = null;
-            }
+            this.fluid = FluidStack.readFromPacket(packetBuffer);
         }
 
         public List<String> getFluidList() {
             return fluidList;
+        }
+
+        @Override
+        protected void onContentsChanged() {
+            super.onContentsChanged();
         }
 
         public void setTypeItemSlot(final InvSlot.TypeItemSlot typeItemSlot) {
@@ -346,13 +336,11 @@ public class Fluids extends AbstractComponent {
             return this.typeItemSlot.isOutput();
         }
 
-        public boolean canFillFluidType(FluidStack fluid) {
-            return fluid != null && this.acceptsFluid(fluid.getFluid());
+
+        public boolean isFluidValid(FluidStack stack) {
+            return this.acceptsFluid(stack.getFluid());
         }
 
-        public boolean canDrainFluidType(FluidStack fluid) {
-            return fluid != null && this.acceptsFluid(fluid.getFluid());
-        }
 
         public boolean acceptsFluid(Fluid fluid) {
             return this.acceptedFluids.apply(fluid);
@@ -364,60 +352,19 @@ public class Fluids extends AbstractComponent {
 
         public void setAcceptedFluids(final Predicate<Fluid> acceptedFluids) {
             this.acceptedFluids = acceptedFluids;
-            List<Fluid> fluidList1 = FluidRegistry.getRegisteredFluids().values().stream().filter(acceptedFluids).collect(
-                    Collectors.toList());
+            List<Fluid> fluidList1 = ForgeRegistries.FLUIDS.getValues().stream().filter(acceptedFluids).toList();
             fluidList.clear();
             for (Fluid fluid1 : fluidList1) {
-                fluidList.add(Localization.translate(fluid1.getUnlocalizedName()));
+                fluidList.add(Localization.translate(fluid1.getFluidType().getDescriptionId()));
             }
 
         }
 
-        IFluidTankProperties getTankProperties(final EnumFacing side) {
-            assert side == null || this.inputSides.contains(side) || this.outputSides.contains(side);
-
-            return new IFluidTankProperties() {
-                public FluidStack getContents() {
-                    return InternalFluidTank.this.getFluid();
-                }
-
-                public int getCapacity() {
-                    return InternalFluidTank.this.capacity;
-                }
-
-                public boolean canFillFluidType(FluidStack fluidStack) {
-                    if (fluidStack != null && fluidStack.amount > 0) {
-                        return InternalFluidTank.this.acceptsFluid(fluidStack.getFluid()) && (side == null || InternalFluidTank.this.canFill(
-                                side));
-                    } else {
-                        return false;
-                    }
-                }
-
-                public boolean canFill() {
-                    return InternalFluidTank.this.canFill(side);
-                }
-
-                public boolean canDrainFluidType(FluidStack fluidStack) {
-                    if (fluidStack != null && fluidStack.amount > 0) {
-                        return InternalFluidTank.this.acceptsFluid(fluidStack.getFluid()) && (side == null || InternalFluidTank.this.canDrain(
-                                side));
-                    } else {
-                        return false;
-                    }
-                }
-
-                public boolean canDrain() {
-                    return InternalFluidTank.this.canDrain(side);
-                }
-            };
-        }
-
-        public boolean canFill(EnumFacing side) {
+        public boolean canFill(Direction side) {
             return canAccept && this.inputSides.contains(side);
         }
 
-        public boolean canDrain(EnumFacing side) {
+        public boolean canDrain(Direction side) {
             return this.outputSides.contains(side);
         }
 
@@ -429,41 +376,45 @@ public class Fluids extends AbstractComponent {
 
     private class FluidHandler implements IFluidHandler {
 
-        private final EnumFacing side;
+        private final Direction side;
 
-        FluidHandler(EnumFacing side) {
+        FluidHandler(Direction side) {
             this.side = side;
         }
 
-        public IFluidTankProperties[] getTankProperties() {
-            List<IFluidTankProperties> props = new ArrayList<>(Fluids.this.managedTanks.size());
-            final Iterator<InternalFluidTank> var2 = Fluids.this.getAllTanks().iterator();
 
-            while (true) {
-                Fluids.InternalFluidTank tank;
-                do {
-                    if (!var2.hasNext()) {
-                        return props.toArray(new IFluidTankProperties[0]);
-                    }
-
-                    tank = var2.next();
-                } while (!tank.canFill(this.side) && !tank.canDrain(this.side));
-
-                props.add(tank.getTankProperties(this.side));
-            }
+        @Override
+        public int getTanks() {
+            return Fluids.this.managedTanks.size();
         }
 
-        public int fill(FluidStack resource, boolean doFill) {
 
-            if (resource != null && resource.amount > 0) {
+        @Override
+        public @NotNull FluidStack getFluidInTank(int tank) {
+            return Fluids.this.managedTanks.get(tank).getFluid();
+        }
+
+        @Override
+        public int getTankCapacity(int tank) {
+            return Fluids.this.managedTanks.get(tank).getTankCapacity(0);
+        }
+
+        @Override
+        public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+            return Fluids.this.managedTanks.get(tank).acceptsFluid(stack.getFluid());
+        }
+
+
+        @Override
+        public int fill(FluidStack resource, FluidAction action) {
+            if (resource != null && resource.getAmount() > 0) {
                 int total = 0;
                 FluidStack missing = resource.copy();
-
                 for (final InternalFluidTank tank : Fluids.this.getAllTanks()) {
                     if (tank.canFill(this.side)) {
-                        total += tank.fill(missing, doFill);
-                        missing.amount = resource.amount - total;
-                        if (missing.amount <= 0) {
+                        total += tank.fill(missing, action);
+                        missing.setAmount(resource.getAmount() - total);
+                        if (missing.getAmount() <= 0) {
                             break;
                         }
                     }
@@ -475,20 +426,21 @@ public class Fluids extends AbstractComponent {
             }
         }
 
-        public FluidStack drain(FluidStack resource, boolean doDrain) {
-            if (resource != null && resource.amount > 0) {
+        @Override
+        public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+            if (resource != null && resource.getAmount() > 0) {
                 FluidStack ret = new FluidStack(resource.getFluid(), 0);
 
                 for (final InternalFluidTank tank : Fluids.this.getAllTanks()) {
                     if (tank.canDrain(this.side)) {
                         FluidStack inTank = tank.getFluid();
-                        if (inTank != null && inTank.getFluid() == resource.getFluid()) {
-                            FluidStack add = tank.drain(resource.amount - ret.amount, doDrain);
-                            if (add != null) {
+                        if (!inTank.isEmpty() && inTank.getFluid() == resource.getFluid()) {
+                            FluidStack add = tank.drain(resource.getAmount() - ret.getAmount(), action);
+                            if (!add.isEmpty()) {
                                 assert add.getFluid() == resource.getFluid();
 
-                                ret.amount += add.amount;
-                                if (ret.amount >= resource.amount) {
+                                ret.setAmount(ret.getAmount() + add.getAmount());
+                                if (ret.getAmount() >= resource.getAmount()) {
                                     break;
                                 }
                             }
@@ -496,27 +448,28 @@ public class Fluids extends AbstractComponent {
                     }
                 }
 
-                return ret.amount == 0 ? null : ret;
+                return ret.getAmount() == 0 ? FluidStack.EMPTY : ret;
             } else {
-                return null;
+                return FluidStack.EMPTY;
             }
         }
 
-        public FluidStack drain(int maxDrain, boolean doDrain) {
-
-            for (final InternalFluidTank tank : Fluids.this.getAllTanks()) {
+        @Override
+        public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+            Iterable<InternalFluidTank> tanks = Fluids.this.getAllTanks();
+            for (final InternalFluidTank tank : tanks) {
                 if (tank.canDrain(this.side)) {
-                    FluidStack stack = tank.drain(maxDrain, false);
-                    if (stack != null) {
-                        stack.amount = maxDrain;
-                        return this.drain(stack, doDrain);
+                    FluidStack stack = tank.drain(maxDrain, action);
+                    if (!stack.isEmpty()) {
+                        stack.setAmount(maxDrain);
+                        return this.drain(stack, action);
                     }
                 }
             }
 
-            return null;
+            return FluidStack.EMPTY;
         }
-
     }
+
 
 }

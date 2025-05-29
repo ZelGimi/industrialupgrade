@@ -2,8 +2,9 @@ package com.denfop.integration.jei.bf;
 
 
 import com.denfop.IUItem;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import com.denfop.recipes.ItemStackHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +50,9 @@ public class BlastFHandler {
     }
 
     public static void initRecipes() {
-        addRecipe(new ItemStack(Items.IRON_INGOT), IUItem.advIronIngot);
-        addRecipe(new ItemStack(IUItem.iuingot, 1, 3), new ItemStack(IUItem.crafting_elements, 1, 480));
-        addRecipe(new ItemStack(IUItem.plastic_plate), new ItemStack(IUItem.crafting_elements, 1, 479));
+        addRecipe(ItemStackHelper.fromData(Items.IRON_INGOT), IUItem.advIronIngot);
+        addRecipe(ItemStackHelper.fromData(IUItem.iuingot, 1, 3), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 480));
+        addRecipe(ItemStackHelper.fromData(IUItem.plastic_plate), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 479));
 
     }
 

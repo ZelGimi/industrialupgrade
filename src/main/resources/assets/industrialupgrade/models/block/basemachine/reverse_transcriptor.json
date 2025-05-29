@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/reverse_transcriptor_main",
-    "down" : "industrialupgrade:blocks/reverse_transcriptor_side",
-    "up" : "industrialupgrade:blocks/reverse_transcriptor_top",
-    "north" : "industrialupgrade:blocks/reverse_transcriptor_main",
-    "east" : "industrialupgrade:blocks/reverse_transcriptor_side",
-    "south" : "industrialupgrade:blocks/reverse_transcriptor_side",
-    "west" : "industrialupgrade:blocks/reverse_transcriptor_side"
+    "particle" : "industrialupgrade:block/reverse_transcriptor_main",
+    "down" : "industrialupgrade:block/reverse_transcriptor_side",
+    "up" : "industrialupgrade:block/reverse_transcriptor_top",
+    "north" : "industrialupgrade:block/reverse_transcriptor_main",
+    "east" : "industrialupgrade:block/reverse_transcriptor_side",
+    "south" : "industrialupgrade:block/reverse_transcriptor_side",
+    "west" : "industrialupgrade:block/reverse_transcriptor_side"
   }
 }

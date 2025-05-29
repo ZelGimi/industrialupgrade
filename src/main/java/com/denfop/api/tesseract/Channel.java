@@ -1,8 +1,8 @@
 package com.denfop.api.tesseract;
 
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.Objects;
 
@@ -23,7 +23,7 @@ public class Channel {
         this.active = false;
         this.isPrivate = isPrivate;
         this.tesseract = tesseract;
-        this.pos = tesseract.getBlockPos();
+        this.pos = tesseract.getPos();
     }
 
     public Channel(int channel, TypeMode mode, TypeChannel typeChannel, boolean isPrivate) {
@@ -33,7 +33,7 @@ public class Channel {
         this.active = false;
         this.isPrivate = isPrivate;
         this.tesseract = null;
-        this.pos = BlockPos.ORIGIN;
+        this.pos = BlockPos.ZERO;
     }
 
     public Channel(CustomPacketBuffer customPacketBuffer) {
@@ -44,10 +44,10 @@ public class Channel {
         this.isPrivate = customPacketBuffer.readBoolean();
     }
 
-    public Channel(NBTTagCompound nbtTagCompound) {
-        this.channel = nbtTagCompound.getInteger("channel");
-        this.mode = TypeMode.values()[nbtTagCompound.getInteger("mode")];
-        this.typeChannel = TypeChannel.values()[nbtTagCompound.getInteger("typeChannel")];
+    public Channel(CompoundTag nbtTagCompound) {
+        this.channel = nbtTagCompound.getInt("channel");
+        this.mode = TypeMode.values()[nbtTagCompound.getInt("mode")];
+        this.typeChannel = TypeChannel.values()[nbtTagCompound.getInt("typeChannel")];
         this.active = nbtTagCompound.getBoolean("active");
         this.isPrivate = nbtTagCompound.getBoolean("isPrivate");
     }
@@ -58,7 +58,7 @@ public class Channel {
 
     public void setTesseract(final ITesseract tesseract) {
         this.tesseract = tesseract;
-        this.pos = tesseract.getBlockPos();
+        this.pos = tesseract.getPos();
     }
 
     @Override
@@ -88,13 +88,13 @@ public class Channel {
         return packetBuffer;
     }
 
-    public NBTTagCompound writeNBT() {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setInteger("channel", channel);
-        tagCompound.setInteger("mode", mode.ordinal());
-        tagCompound.setInteger("typeChannel", typeChannel.ordinal());
-        tagCompound.setBoolean("active", active);
-        tagCompound.setBoolean("isPrivate", isPrivate);
+    public CompoundTag writeNBT() {
+        CompoundTag tagCompound = new CompoundTag();
+        tagCompound.putInt("channel", channel);
+        tagCompound.putInt("mode", mode.ordinal());
+        tagCompound.putInt("typeChannel", typeChannel.ordinal());
+        tagCompound.putBoolean("active", active);
+        tagCompound.putBoolean("isPrivate", isPrivate);
         return tagCompound;
     }
 

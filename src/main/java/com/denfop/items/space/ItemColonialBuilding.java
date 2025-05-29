@@ -1,157 +1,42 @@
 package com.denfop.items.space;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.space.colonies.api.IBuildingItem;
 import com.denfop.api.space.colonies.api.IColony;
 import com.denfop.api.space.colonies.api.IColonyBuilding;
 import com.denfop.api.space.colonies.api.building.IBuildingHouse;
 import com.denfop.api.space.colonies.api.building.IFactory;
-import com.denfop.api.space.colonies.building.ColonyEntertainment;
-import com.denfop.api.space.colonies.building.ColonyHouse;
-import com.denfop.api.space.colonies.building.ColonyPanelFactory;
-import com.denfop.api.space.colonies.building.Factory;
-import com.denfop.api.space.colonies.building.FluidFactory;
-import com.denfop.api.space.colonies.building.ItemFactory;
-import com.denfop.api.space.colonies.building.OxygenFactory;
-import com.denfop.api.space.colonies.building.ProtectionBuilding;
-import com.denfop.api.space.colonies.building.StorageBuilding;
-import com.denfop.api.space.colonies.enums.EnumEntertainment;
-import com.denfop.api.space.colonies.enums.EnumHouses;
-import com.denfop.api.space.colonies.enums.EnumMiningFactory;
-import com.denfop.api.space.colonies.enums.EnumProtectionLevel;
-import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
-import com.denfop.api.space.colonies.enums.EnumTypeFactory;
-import com.denfop.api.space.colonies.enums.EnumTypeOxygenFactory;
-import com.denfop.api.space.colonies.enums.EnumTypeSolarPanel;
+import com.denfop.api.space.colonies.building.*;
+import com.denfop.api.space.colonies.enums.*;
+import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Nullable;
+import com.denfop.items.ItemMain;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Types> implements IModelRegister, IBuildingItem {
-
-    protected static final String NAME = "colonial_building";
-
-    public ItemColonialBuilding() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.SpaceTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemColonialBuilding<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IBuildingItem {
+    public ItemColonialBuilding(T element) {
+        super(new Item.Properties(), element);
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            final List<String> tooltip,
-            final ITooltipFlag flagIn
-    ) {
-        IColonyBuilding building = getBuilding(null, stack, true);
-        if (building != null) {
-            if (building instanceof IBuildingHouse) {
-                IBuildingHouse buildingHouse = (IBuildingHouse) building;
-                tooltip.add(Localization.translate("iu.colony_building.houses") + " " + buildingHouse.getMaxPeople());
-                tooltip.add(Localization.translate("iu.colony_building.houses_oxygen") + " " + (int) (buildingHouse.getMaxPeople() * buildingHouse
-                        .getHouses()
-                        .getConsumeOxygen()));
-                tooltip.add(Localization.translate("iu.colony_building.houses_food") + " " + (int) (buildingHouse.getMaxPeople()));
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse
-                        .getHouses()
-                        .getEnergy()));
+    public static EnumTypeUpgrade getType(int meta) {
+        return EnumTypeUpgrade.getFromID(meta);
 
-            }
-            if (building instanceof IFactory) {
-                IFactory buildingHouse = (IFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.generate_food") + " " + (int) (buildingHouse.needWorkers() * 2));
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
-
-            }
-            if (building instanceof ColonyPanelFactory) {
-                ColonyPanelFactory buildingHouse = (ColonyPanelFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.generate_energy") + " " + (int) (buildingHouse.getEnergy()));
-
-            }
-            if (building instanceof OxygenFactory) {
-                OxygenFactory buildingHouse = (OxygenFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
-                tooltip.add(Localization.translate("iu.colony_building.generate_oxygen") + " " + (int) (buildingHouse.getGeneration()));
-
-            }
-            if (building instanceof ProtectionBuilding) {
-                ProtectionBuilding buildingHouse = (ProtectionBuilding) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.protection") + " " + (int) (buildingHouse
-                        .getProtectionBuilding()
-                        .getProtection()));
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse
-                        .getProtectionBuilding()
-                        .getEnergy()));
-
-            }
-            if (building instanceof ItemFactory) {
-                ItemFactory buildingHouse = (ItemFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
-
-            }
-            if (building instanceof FluidFactory) {
-                FluidFactory buildingHouse = (FluidFactory) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
-
-            }
-            if (building instanceof StorageBuilding) {
-                StorageBuilding buildingHouse = (StorageBuilding) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse.getEnergy()));
-
-            }
-            if (building instanceof ColonyEntertainment) {
-                ColonyEntertainment buildingHouse = (ColonyEntertainment) building;
-                tooltip.add(Localization.translate("iu.colony_building.need_workers") + " " + buildingHouse.needWorkers());
-                tooltip.add(Localization.translate("iu.colony_building.houses_energy") + " " + (int) (buildingHouse
-                        .getType()
-                        .getEnergy()));
-                tooltip.add(Localization.translate("iu.colony_building.entertainment") + " " + (int) (buildingHouse
-                        .getType()
-                        .getEntertainment()));
-
-            }
-            tooltip.add(Localization.translate("iu.colonial_building.info") + building.getMinLevelColony());
-        }
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
     }
 
     @Override
     public EnumTypeBuilding getBuilding(final ItemStack stack) {
-        switch (stack.getItemDamage()) {
+        switch (this.getElement().getId()) {
             case 0:
             case 1:
             case 2:
@@ -179,14 +64,17 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
                 return EnumTypeBuilding.FABRIC;
         }
     }
-
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.SpaceTab;
+    }
     @Override
     public IColonyBuilding getBuilding(final IColony colony, final ItemStack stack, boolean simulate) {
         EnumTypeBuilding building = getBuilding(stack);
         switch (building) {
             case HOUSES:
                 EnumHouses houses = null;
-                switch (stack.getItemDamage()) {
+                switch (this.getElement().getId()) {
                     case 4:
                         houses = EnumHouses.LOW;
                         break;
@@ -201,7 +89,7 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
                 return new ColonyHouse(houses, colony, simulate);
             case PROTECTION:
                 EnumProtectionLevel protectionLevel = null;
-                switch (stack.getItemDamage()) {
+                switch (this.getElement().getId()) {
                     case 0:
                         protectionLevel = EnumProtectionLevel.LOW;
                         break;
@@ -221,7 +109,7 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
                 return new StorageBuilding(colony, simulate);
             case OXYGEN:
                 EnumTypeOxygenFactory oxygenFactory = null;
-                switch (stack.getItemDamage()) {
+                switch (this.getElement().getId()) {
                     case 19:
                         oxygenFactory = EnumTypeOxygenFactory.LOW;
                         break;
@@ -235,7 +123,7 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
                 return new OxygenFactory(colony, oxygenFactory, simulate);
             case ENTERTAINMENT:
                 EnumEntertainment entertainment = null;
-                switch (stack.getItemDamage()) {
+                switch (this.getElement().getId()) {
                     case 21:
                         entertainment = EnumEntertainment.LOW;
                         break;
@@ -250,7 +138,7 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
                 return new ColonyEntertainment(entertainment, colony, simulate);
             case GENERATORS:
                 EnumTypeSolarPanel solarPanel = null;
-                switch (stack.getItemDamage()) {
+                switch (this.getElement().getId()) {
                     case 16:
                         solarPanel = EnumTypeSolarPanel.LOW;
                         break;
@@ -264,7 +152,7 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
                 assert solarPanel != null;
                 return new ColonyPanelFactory(colony, solarPanel, simulate);
             case FABRIC:
-                switch (stack.getItemDamage()) {
+                switch (this.getElement().getId()) {
                     case 13:
                         return new Factory(colony, EnumTypeFactory.LOW, simulate);
                     case 14:
@@ -272,7 +160,7 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
                     case 15:
                         return new Factory(colony, EnumTypeFactory.HIGH, simulate);
                 }
-                switch (stack.getItemDamage()) {
+                switch (this.getElement().getId()) {
                     case 7:
                         return new ItemFactory(colony, EnumMiningFactory.LOW, simulate);
                     case 8:
@@ -280,7 +168,7 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
                     case 9:
                         return new ItemFactory(colony, EnumMiningFactory.HIGH, simulate);
                 }
-                switch (stack.getItemDamage()) {
+                switch (this.getElement().getId()) {
                     case 10:
                         return new FluidFactory(colony, EnumMiningFactory.LOW, simulate);
                     case 11:
@@ -292,6 +180,71 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
         return null;
     }
 
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(
+            ItemStack stack,
+            @Nullable Level worldIn,
+            List<Component> tooltip,
+            TooltipFlag flagIn
+    ) {
+        IColonyBuilding building = getBuilding(null, stack, true);
+        if (building != null) {
+            if (building instanceof IBuildingHouse) {
+                IBuildingHouse buildingHouse = (IBuildingHouse) building;
+                tooltip.add(Component.translatable("iu.colony_building.houses").append(" " + buildingHouse.getMaxPeople()));
+                tooltip.add(Component.translatable("iu.colony_building.houses_oxygen").append(" " + (int) (buildingHouse.getMaxPeople() * buildingHouse.getHouses().getConsumeOxygen())));
+                tooltip.add(Component.translatable("iu.colony_building.houses_food").append(" " + (int) (buildingHouse.getMaxPeople())));
+                tooltip.add(Component.translatable("iu.colony_building.houses_energy").append(" " + (int) (buildingHouse.getHouses().getEnergy())));
+            }
+            if (building instanceof IFactory) {
+                IFactory buildingHouse = (IFactory) building;
+                tooltip.add(Component.translatable("iu.colony_building.need_workers").append(" " + buildingHouse.needWorkers()));
+                tooltip.add(Component.translatable("iu.colony_building.generate_food").append(" " + (int) (buildingHouse.needWorkers() * 2)));
+                tooltip.add(Component.translatable("iu.colony_building.houses_energy").append(" " + (int) (buildingHouse.getEnergy())));
+            }
+            if (building instanceof ColonyPanelFactory) {
+                ColonyPanelFactory buildingHouse = (ColonyPanelFactory) building;
+                tooltip.add(Component.translatable("iu.colony_building.need_workers").append(" " + buildingHouse.needWorkers()));
+                tooltip.add(Component.translatable("iu.colony_building.generate_energy").append(" " + (int) (buildingHouse.getEnergy())));
+            }
+            if (building instanceof OxygenFactory) {
+                OxygenFactory buildingHouse = (OxygenFactory) building;
+                tooltip.add(Component.translatable("iu.colony_building.need_workers").append(" " + buildingHouse.needWorkers()));
+                tooltip.add(Component.translatable("iu.colony_building.houses_energy").append(" " + (int) (buildingHouse.getEnergy())));
+                tooltip.add(Component.translatable("iu.colony_building.generate_oxygen").append(" " + (int) (buildingHouse.getGeneration())));
+            }
+            if (building instanceof ProtectionBuilding) {
+                ProtectionBuilding buildingHouse = (ProtectionBuilding) building;
+                tooltip.add(Component.translatable("iu.colony_building.need_workers").append(" " + buildingHouse.needWorkers()));
+                tooltip.add(Component.translatable("iu.colony_building.protection").append(" " + (int) (buildingHouse.getProtectionBuilding().getProtection())));
+                tooltip.add(Component.translatable("iu.colony_building.houses_energy").append(" " + (int) (buildingHouse.getProtectionBuilding().getEnergy())));
+            }
+            if (building instanceof ItemFactory) {
+                ItemFactory buildingHouse = (ItemFactory) building;
+                tooltip.add(Component.translatable("iu.colony_building.need_workers").append(" " + buildingHouse.needWorkers()));
+                tooltip.add(Component.translatable("iu.colony_building.houses_energy").append(" " + (int) (buildingHouse.getEnergy())));
+            }
+            if (building instanceof FluidFactory) {
+                FluidFactory buildingHouse = (FluidFactory) building;
+                tooltip.add(Component.translatable("iu.colony_building.need_workers").append(" " + buildingHouse.needWorkers()));
+                tooltip.add(Component.translatable("iu.colony_building.houses_energy").append(" " + (int) (buildingHouse.getEnergy())));
+            }
+            if (building instanceof StorageBuilding) {
+                StorageBuilding buildingHouse = (StorageBuilding) building;
+                tooltip.add(Component.translatable("iu.colony_building.need_workers").append(" " + buildingHouse.needWorkers()));
+                tooltip.add(Component.translatable("iu.colony_building.houses_energy").append(" " + (int) (buildingHouse.getEnergy())));
+            }
+            if (building instanceof ColonyEntertainment) {
+                ColonyEntertainment buildingHouse = (ColonyEntertainment) building;
+                tooltip.add(Component.translatable("iu.colony_building.need_workers").append(" " + buildingHouse.needWorkers()));
+                tooltip.add(Component.translatable("iu.colony_building.houses_energy").append(" " + (int) (buildingHouse.getType().getEnergy())));
+                tooltip.add(Component.translatable("iu.colony_building.entertainment").append(" " + (int) (buildingHouse.getType().getEntertainment())));
+            }
+            tooltip.add(Component.translatable("iu.colonial_building.info").append(" " + building.getMinLevelColony()));
+        }
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    }
 
     public enum Types implements ISubEnum {
         low_protection(0),
@@ -321,23 +274,28 @@ public class ItemColonialBuilding extends ItemSubTypes<ItemColonialBuilding.Type
         medium_entertainment(22),
         high_entertainment(23),
         medium_oxygen(24),
-        high_oxygen(25),
-        ;
+        high_oxygen(25);
 
         private final String name;
         private final int ID;
 
-        Types(final int ID) {
+        Types(int id) {
             this.name = this.name().toLowerCase(Locale.US);
-            this.ID = ID;
+            this.ID = id;
         }
 
         public static Types getFromID(final int ID) {
             return values()[ID % values().length];
         }
 
+        @Override
         public String getName() {
-            return this.name;
+            return name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "colonial_building";
         }
 
         public int getId() {

@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gears/ferromanganese"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:smeltery/smeltery_casing"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_496_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine3/oak_tank"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "EDE",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:mini_smeltery/mini_smeltery"
+  },
+  "show_notification": true
+}

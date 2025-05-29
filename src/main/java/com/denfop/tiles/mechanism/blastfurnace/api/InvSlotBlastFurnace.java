@@ -4,8 +4,8 @@ import com.denfop.IUItem;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.resource.ItemIngots;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileBlastFurnaceMain;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 
 public class InvSlotBlastFurnace extends InvSlot {
@@ -19,32 +19,32 @@ public class InvSlotBlastFurnace extends InvSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (content.isEmpty()) {
             ((TileBlastFurnaceMain) this.base).outputStack = ItemStack.EMPTY;
         } else {
-            int meta = content.getItemDamage();
             if (content.getItem().equals(Items.IRON_INGOT)) {
                 ((TileBlastFurnaceMain) this.base).outputStack = IUItem.advIronIngot;
             } else {
-                if (content.getItem() instanceof ItemIngots && meta == 3) {
-                    ((TileBlastFurnaceMain) this.base).outputStack = new ItemStack(IUItem.crafting_elements, 1, 480);
+                if (content.getItem() instanceof ItemIngots && IUItem.iuingot.getMeta((ItemIngots) content.getItem()) == 3) {
+                    ((TileBlastFurnaceMain) this.base).outputStack = new ItemStack(IUItem.crafting_elements.getStack(480));
                 } else {
-                    ((TileBlastFurnaceMain) this.base).outputStack = new ItemStack(IUItem.crafting_elements, 1, 479);
+                    ((TileBlastFurnaceMain) this.base).outputStack = new ItemStack(IUItem.crafting_elements.getStack(479));
 
                 }
             }
         }
+        return content;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
-        int meta = itemStack.getItemDamage();
+
         return itemStack
                 .getItem()
-                .equals(Items.IRON_INGOT) || (itemStack.getItem() instanceof ItemIngots && meta == 3) || (itemStack
+                .equals(Items.IRON_INGOT) || (itemStack.getItem() instanceof ItemIngots && IUItem.iuingot.getMeta((ItemIngots) itemStack.getItem()) == 3) || (itemStack
                 .getItem()
-                .equals(IUItem.plastic_plate));
+                .equals(IUItem.plastic_plate.getItem()));
     }
 
     public int getStackSizeLimit() {

@@ -6,11 +6,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.componets.EnumTypeStyle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TilePerQuantumQuarry extends TileBaseQuantumQuarry {
 
-    public TilePerQuantumQuarry() {
-        super(1);
+    public TilePerQuantumQuarry(BlockPos pos, BlockState blockState) {
+        super(1, BlockBaseMachine.per_quantum_quarry, pos, blockState);
     }
 
     @Override
@@ -23,7 +25,6 @@ public class TilePerQuantumQuarry extends TileBaseQuantumQuarry {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines;
+        return IUItem.machines.getBlock(getTeBlock().getId());
     }
-
 }

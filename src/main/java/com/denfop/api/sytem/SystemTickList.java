@@ -48,5 +48,4 @@ public class SystemTickList<T extends SystemTick<ISource, Path>> extends ArrayLi
         }
         return null;
     }
-
 }

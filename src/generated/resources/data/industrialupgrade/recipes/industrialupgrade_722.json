@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:adv_spectral_box"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/sincore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:rotors_upgrade/rotorupgrade15"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:quantumitems4"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:rotors_upgrade/rotorupgrade16"
+  },
+  "show_notification": true
+}

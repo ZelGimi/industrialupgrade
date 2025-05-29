@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/sapling_gardener_main",
-    "down" : "industrialupgrade:blocks/sapling_gardener_bottom",
-    "up" : "industrialupgrade:blocks/sapling_gardener_top",
-    "north" : "industrialupgrade:blocks/sapling_gardener_main",
-    "east" : "industrialupgrade:blocks/sapling_gardener_side",
-    "south" : "industrialupgrade:blocks/sapling_gardener_side",
-    "west" : "industrialupgrade:blocks/sapling_gardener_side"
+    "particle" : "industrialupgrade:block/sapling_gardener_main",
+    "down" : "industrialupgrade:block/sapling_gardener_bottom",
+    "up" : "industrialupgrade:block/sapling_gardener_top",
+    "north" : "industrialupgrade:block/sapling_gardener_main",
+    "east" : "industrialupgrade:block/sapling_gardener_side",
+    "south" : "industrialupgrade:block/sapling_gardener_side",
+    "west" : "industrialupgrade:block/sapling_gardener_side"
   }
 }

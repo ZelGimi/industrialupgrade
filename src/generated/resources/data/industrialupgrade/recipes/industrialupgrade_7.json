@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/tantalum"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:baseblockingot1/tantalum"
+  }
+}

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "industrialupgrade:blocks/hydro_turbine_casing_1",
-		"particle": "industrialupgrade:blocks/hydro_turbine_casing_1"
+		"0": "industrialupgrade:block/hydro_turbine_casing_1",
+		"particle": "industrialupgrade:block/hydro_turbine_casing_1"
 	},
 	"elements": [
 		{
@@ -57,5 +57,29 @@
 				"down": {"uv": [9, 0, 0, 12], "rotation": 270, "texture": "#0"}
 			}
 		}
-	]
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [20, 40, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }

@@ -1,8 +1,8 @@
 {
 	"credit": "texnounits",
 	"textures": {
-		"1": "industrialupgrade:models/quarry_vein",
-		"particle": "industrialupgrade:models/quarry_vein"
+		"1": "industrialupgrade:block/quarry_vein",
+		"particle": "industrialupgrade:block/quarry_vein"
 	},
 	"elements": [
 		{

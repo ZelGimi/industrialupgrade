@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/charon_zinc"
+    "all" : "industrialupgrade:block/charon_zinc"
   }
 }

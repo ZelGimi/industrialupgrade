@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/imp_kg",
-		"particle": "industrialupgrade:models/imp_kg"
+		"0": "industrialupgrade:block/imp_kg",
+		"particle": "industrialupgrade:block/imp_kg"
 	},
 	"elements": [
 		{

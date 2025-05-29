@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/germanium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:capacitor/imp_capacitor"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:capacitor/per_capacitor"
+  },
+  "show_notification": true
+}

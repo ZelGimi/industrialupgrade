@@ -1,32 +1,46 @@
 package com.denfop.render.steam;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.entity.Entity;
 
-public class SteamRod extends ModelBase {
+public class SteamRod<T extends Entity> extends EntityModel<T> {
 
-    ModelRenderer rotor1;
+
+
+    private final ModelPart rotor1;
 
     public SteamRod(int radius) {
-        this.textureWidth = 32;
-        this.textureHeight = 256;
-        this.rotor1 = new ModelRenderer(this, 0, 0);
-        this.rotor1.addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8);
-        this.rotor1.setRotationPoint(-8.0F, 0.0F, 0.0F);
-        this.rotor1.setTextureSize(32, 256);
-        this.rotor1.mirror = true;
-        setRotation(this.rotor1, 0.0F, -0.5F, 0.0F);
+        super(RenderType::entityCutoutNoCull);
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+
+        rotor1 =   root.addOrReplaceChild("rotor1", CubeListBuilder.create()
+                        .texOffs(0, 0)
+                        .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
+                PartPose.rotation(0.0F, -0.5F, 0.0F)).bake(32, 256);
+
+
     }
 
-    private static void setRotation(ModelRenderer model, float x, float y, float z) {
-        model.rotateAngleX = x;
-        model.rotateAngleY = y;
-        model.rotateAngleZ = z;
+
+
+    @Override
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+                          float netHeadYaw, float headPitch) {
+
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float scale) {
-        this.rotor1.render(scale);
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight,
+                               int packedOverlay, float red, float green, float blue, float alpha) {
+        rotor1.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
-
 }

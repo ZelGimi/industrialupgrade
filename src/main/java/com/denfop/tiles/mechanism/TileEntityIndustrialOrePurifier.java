@@ -1,16 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -20,7 +14,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerIndustrialOrePurifier;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiIndustrialOrePurifier;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
@@ -29,14 +25,15 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -61,8 +58,8 @@ public class TileEntityIndustrialOrePurifier extends TileElectricMachine impleme
     public double consumeSE = 0;
     protected short progress;
 
-    public TileEntityIndustrialOrePurifier() {
-        super(200, 1, 1);
+    public TileEntityIndustrialOrePurifier(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.industrial_ore_purifier,pos,state);
         Recipes.recipes.addInitRecipes(this);
 
         this.addComponent(new SoilPollutionComponent(this, 0.25));
@@ -80,8 +77,8 @@ public class TileEntityIndustrialOrePurifier extends TileElectricMachine impleme
 
     public static void addRecipe(ItemStack container, ItemStack container1, double se) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        final NBTTagCompound nbt = ModUtils.nbt();
-        nbt.setDouble("se", se);
+        final CompoundTag nbt = ModUtils.nbt();
+        nbt.putDouble("se", se);
         Recipes.recipes.addRecipe(
                 "ore_purifier",
                 new BaseMachineRecipe(
@@ -106,31 +103,32 @@ public class TileEntityIndustrialOrePurifier extends TileElectricMachine impleme
 
     }
 
-    public ContainerIndustrialOrePurifier getGuiContainer(final EntityPlayer var1) {
+    public ContainerIndustrialOrePurifier getGuiContainer(final Player var1) {
         return new ContainerIndustrialOrePurifier(var1, this);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiIndustrialOrePurifier(getGuiContainer(var1));
+
+        return new GuiIndustrialOrePurifier((ContainerIndustrialOrePurifier) menu);
     }
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.nuclear_res, 1, 21), new ItemStack(IUItem.crushed, 1, 24), 1);
-        addRecipe(new ItemStack(IUItem.nuclear_res, 1, 19), new ItemStack(IUItem.toriy), 0);
-        addRecipe(new ItemStack(IUItem.nuclear_res, 1, 17), new ItemStack(IUItem.radiationresources), 10);
-        addRecipe(new ItemStack(IUItem.nuclear_res, 1, 18), new ItemStack(IUItem.radiationresources, 1, 1), 15);
-        addRecipe(new ItemStack(IUItem.nuclear_res, 1, 20), new ItemStack(IUItem.radiationresources, 1, 2), 20);
+        addRecipe(new ItemStack(IUItem.nuclear_res.getStack(21)), new ItemStack(IUItem.crushed.getStack(24)), 1);
+        addRecipe(new ItemStack(IUItem.nuclear_res.getStack(19)), new ItemStack(IUItem.toriy.getItem()), 0);
+        addRecipe(new ItemStack(IUItem.nuclear_res.getStack(17)), new ItemStack(IUItem.radiationresources.getStack(0)), 10);
+        addRecipe(new ItemStack(IUItem.nuclear_res.getStack(18)), new ItemStack(IUItem.radiationresources.getStack(1)), 15);
+        addRecipe(new ItemStack(IUItem.nuclear_res.getStack(20)), new ItemStack(IUItem.radiationresources.getStack(2)), 20);
 
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -145,7 +143,7 @@ public class TileEntityIndustrialOrePurifier extends TileElectricMachine impleme
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -153,15 +151,15 @@ public class TileEntityIndustrialOrePurifier extends TileElectricMachine impleme
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 

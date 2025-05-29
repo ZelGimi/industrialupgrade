@@ -5,10 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockLightningRod;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityLightningRodGrounding extends TileEntityMultiBlockElement implements IGrounding {
 
-    public TileEntityLightningRodGrounding() {
+
+    public TileEntityLightningRodGrounding(BlockPos pos, BlockState state) {
+        super(BlockLightningRod.lightning_rod_grounding, pos, state);
     }
 
     @Override
@@ -18,7 +22,7 @@ public class TileEntityLightningRodGrounding extends TileEntityMultiBlockElement
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.lightning_rod;
+        return IUItem.lightning_rod.getBlock(getTeBlock());
     }
 
 }

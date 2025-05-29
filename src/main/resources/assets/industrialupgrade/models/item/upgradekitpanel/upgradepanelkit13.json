@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/upgradepanelkit13"
+    "layer0" : "industrialupgrade:item/upgradepanelkit13"
   }
 }

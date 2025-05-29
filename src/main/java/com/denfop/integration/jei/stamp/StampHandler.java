@@ -3,9 +3,10 @@ package com.denfop.integration.jei.stamp;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StampHandler {
@@ -133,7 +134,10 @@ public class StampHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3);
+        return true;
+    }
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1, input2, input3);
     }
 
 }

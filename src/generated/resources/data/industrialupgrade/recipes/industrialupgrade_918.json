@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/cadmium"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:fan/imp_fan"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "CBC",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:fan/per_fan"
+  },
+  "show_notification": true
+}

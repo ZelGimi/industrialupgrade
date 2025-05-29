@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/dust/small_tin"
+		"layer0": "industrialupgrade:item/dust/small_tin"
 	}
 }

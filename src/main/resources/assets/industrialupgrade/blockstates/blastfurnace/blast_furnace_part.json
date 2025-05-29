@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=blast_furnace_part": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part"
+    },
+    "facing=south,type=blast_furnace_part": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "y": 180
+    },
+    "facing=west,type=blast_furnace_part": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "y": 270
+    },
+    "facing=east,type=blast_furnace_part": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "y": 90
+    },
+    "facing=down,type=blast_furnace_part": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "x": 90
+    },
+    "facing=up,type=blast_furnace_part": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "x": 270
+    },
+    "facing=north,type=blast_furnace_part_invalid": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part"
+    },
+    "facing=south,type=blast_furnace_part_invalid": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "y": 180
+    },
+    "facing=west,type=blast_furnace_part_invalid": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "y": 270
+    },
+    "facing=east,type=blast_furnace_part_invalid": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "y": 90
+    },
+    "facing=down,type=blast_furnace_part_invalid": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "x": 90
+    },
+    "facing=up,type=blast_furnace_part_invalid": {
+      "model": "industrialupgrade:block/blastfurnace/blast_furnace_part",
+      "x": 270
+    }
+  }
+}

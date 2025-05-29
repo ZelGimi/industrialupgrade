@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/sun_matter"
+    "layer0" : "industrialupgrade:item/sun_matter"
   }
 }

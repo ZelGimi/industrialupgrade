@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/reactorprotoneit"
+    "layer0" : "industrialupgrade:item/reactorprotoneit"
   }
 }

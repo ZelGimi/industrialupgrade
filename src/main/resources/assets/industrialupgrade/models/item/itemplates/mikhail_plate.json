@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/mikhail_plate"
+    "layer0" : "industrialupgrade:item/mikhail_plate"
   }
 }

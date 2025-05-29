@@ -13,36 +13,40 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerFluidIntegrator;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
+import com.denfop.integration.jei.JeiInform;
 import com.denfop.tiles.mechanism.TileEntityFluidIntegrator;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class SmelteryFurnaceCategory extends GuiIU implements IRecipeCategory<SmelteryFurnaceRecipeWrapper> {
+public class SmelteryFurnaceCategory extends GuiIU implements IRecipeCategory<SmelteryFurnaceHandler> {
 
     private final IDrawableStatic bg;
     private final ContainerFluidIntegrator container1;
     private final GuiComponent slots1;
     private final GuiComponent progress_bar;
     private int progress;
-
+    JeiInform jeiInform;
 
     public SmelteryFurnaceCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
-
+        super(((TileEntityFluidIntegrator) BlockBaseMachine3.fluid_integrator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 107
@@ -61,23 +65,17 @@ public class SmelteryFurnaceCategory extends GuiIU implements IRecipeCategory<Sm
         this.componentList.add(progress_bar);
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockSmeltery.smeltery_furnace.getName();
+    public RecipeType<SmelteryFurnaceHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate((JEICompat.getBlockStack(BlockSmeltery.smeltery_furnace)).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate((JEICompat.getBlockStack(BlockSmeltery.smeltery_furnace)).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -85,44 +83,30 @@ public class SmelteryFurnaceCategory extends GuiIU implements IRecipeCategory<Sm
         return bg;
     }
 
-
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void draw(SmelteryFurnaceHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         double xScale = progress / 100D;
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(-20, 0);
+        this.slots.drawBackground(stack, -20, 0);
 
-        progress_bar.renderBar(-10, 10, xScale);
+        progress_bar.renderBar(stack, -10, 10, xScale);
         for (final GuiElement<?> element : ((List<GuiElement<?>>) this.elements)) {
-            element.drawBackground(this.guiLeft, this.guiTop);
+            element.drawBackground(stack, this.guiLeft, this.guiTop);
         }
-
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final SmelteryFurnaceRecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-
-
-        IGuiFluidStackGroup fff = layout.getFluidStacks();
-        final IGuiItemStackGroup isg = layout.getItemStacks();
-
-
-        fff.init(0, false, 85, 44, 16, 16, recipes.getOutputFluid().amount, true, null);
-        fff.set(0, recipes.getOutputFluid());
-
-
-        isg.init(0, true, 60 - 21, 44 - 1);
-        isg.set(0, recipes.getInput());
-
+    public void setRecipe(IRecipeLayoutBuilder builder, SmelteryFurnaceHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 44).setFluidRenderer(recipe.getOutputFluid().getAmount(),true,16, 16).addFluidStack(recipe.getOutputFluid().getFluid(),recipe.getOutputFluid().getAmount());
+        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 20, 44 - 0).addItemStack(recipe.getInput());
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");

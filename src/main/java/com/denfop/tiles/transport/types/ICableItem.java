@@ -1,6 +1,7 @@
 package com.denfop.tiles.transport.types;
 
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
 
 public interface ICableItem {
 

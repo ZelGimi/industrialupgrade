@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=primal_laser_polisher": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher"
+    },
+    "facing=south,type=primal_laser_polisher": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher",
+      "y": 180
+    },
+    "facing=west,type=primal_laser_polisher": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher",
+      "y": 270
+    },
+    "facing=east,type=primal_laser_polisher": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher",
+      "y": 90
+    },
+    "facing=down,type=primal_laser_polisher": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher",
+      "x": 90
+    },
+    "facing=up,type=primal_laser_polisher": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher",
+      "x": 270
+    },
+    "facing=north,type=primal_laser_polisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active"
+    },
+    "facing=south,type=primal_laser_polisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "y": 180
+    },
+    "facing=west,type=primal_laser_polisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "y": 270
+    },
+    "facing=east,type=primal_laser_polisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "y": 90
+    },
+    "facing=down,type=primal_laser_polisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "x": 90
+    },
+    "facing=up,type=primal_laser_polisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "x": 270
+    },
+    "facing=north,type=primal_laser_polisher_active": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active"
+    },
+    "facing=south,type=primal_laser_polisher_active": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "y": 180
+    },
+    "facing=west,type=primal_laser_polisher_active": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "y": 270
+    },
+    "facing=east,type=primal_laser_polisher_active": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "y": 90
+    },
+    "facing=down,type=primal_laser_polisher_active": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "x": 90
+    },
+    "facing=up,type=primal_laser_polisher_active": {
+      "model": "industrialupgrade:block/basemachine/primal_laser_polisher_active",
+      "x": 270
+    }
+  }
+}

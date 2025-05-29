@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:heat_reactors/heat_imp_graphite_controller"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_392_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_397_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_402_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_368_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    "CAC",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:heat_reactors/heat_per_graphite_controller"
+  },
+  "show_notification": true
+}

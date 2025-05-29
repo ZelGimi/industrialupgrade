@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=nether_assembler": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler"
+    },
+    "facing=south,type=nether_assembler": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 180
+    },
+    "facing=west,type=nether_assembler": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 270
+    },
+    "facing=east,type=nether_assembler": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 90
+    },
+    "facing=down,type=nether_assembler": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "x": 90
+    },
+    "facing=up,type=nether_assembler": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "x": 270
+    },
+    "facing=north,type=nether_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler"
+    },
+    "facing=south,type=nether_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 180
+    },
+    "facing=west,type=nether_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 270
+    },
+    "facing=east,type=nether_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 90
+    },
+    "facing=down,type=nether_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "x": 90
+    },
+    "facing=up,type=nether_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "x": 270
+    },
+    "facing=north,type=nether_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler"
+    },
+    "facing=south,type=nether_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 180
+    },
+    "facing=west,type=nether_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 270
+    },
+    "facing=east,type=nether_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "y": 90
+    },
+    "facing=down,type=nether_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "x": 90
+    },
+    "facing=up,type=nether_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/infernal_assembler",
+      "x": 270
+    }
+  }
+}

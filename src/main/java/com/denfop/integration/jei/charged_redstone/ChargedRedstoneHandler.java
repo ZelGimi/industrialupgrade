@@ -3,7 +3,7 @@ package com.denfop.integration.jei.charged_redstone;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class ChargedRedstoneHandler {
 
     public static void initRecipes() {
         addRecipe(
-                new ItemStack(IUItem.charged_redstone),
+                new ItemStack(IUItem.charged_redstone.getItem()),
                 Localization.translate("charged_redstone.info")
         );
     }

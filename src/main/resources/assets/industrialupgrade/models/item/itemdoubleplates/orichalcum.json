@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/orichalcum_doubleplate"	}
+		"layer0": "industrialupgrade:item/orichalcum_doubleplate"	}
 }

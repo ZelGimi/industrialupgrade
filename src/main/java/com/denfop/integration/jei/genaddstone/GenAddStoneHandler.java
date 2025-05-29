@@ -3,8 +3,8 @@ package com.denfop.integration.jei.genaddstone;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,12 +59,12 @@ public class GenAddStoneHandler {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
-                    new ItemStack(Blocks.STONE, 8, 3)
+                    new ItemStack(Blocks.ANDESITE)
             );
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
-                    new ItemStack(Blocks.STONE, 8, 5)
+                    new ItemStack(Blocks.DIORITE)
             );
         }
 
@@ -84,7 +84,7 @@ public class GenAddStoneHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

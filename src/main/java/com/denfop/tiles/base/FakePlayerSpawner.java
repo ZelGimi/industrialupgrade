@@ -1,8 +1,8 @@
 package com.denfop.tiles.base;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
 
 
@@ -10,8 +10,8 @@ import net.minecraftforge.common.util.FakePlayer;
 public class FakePlayerSpawner extends FakePlayer {
 
 
-    public FakePlayerSpawner(World world) {
-        super((WorldServer) world, new GameProfile(null, "lDenfop"));
+    public FakePlayerSpawner(Level world) {
+        super((ServerLevel) world, new GameProfile(null, "lDenfop"));
     }
 
 }

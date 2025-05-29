@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/imp_vent"
+    "layer0" : "industrialupgrade:item/imp_vent"
   }
 }

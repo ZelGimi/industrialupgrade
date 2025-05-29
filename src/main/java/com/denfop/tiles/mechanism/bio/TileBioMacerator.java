@@ -8,16 +8,18 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileBioMultiMachine;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileBioMacerator extends TileBioMultiMachine {
 
 
-    public TileBioMacerator() {
+    public TileBioMacerator(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.MACERATOR.usagePerTick,
                 EnumMultiMachine.MACERATOR.lenghtOperation,
-                4
+                4,BlockBaseMachine3.bio_macerator,pos,state
         );
     }
 
@@ -26,7 +28,7 @@ public class TileBioMacerator extends TileBioMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override

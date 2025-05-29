@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.space.EnumLevels;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
@@ -17,7 +18,9 @@ import com.denfop.api.space.research.event.ResearchTableReLoadEvent;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerResearchTableSpace;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiResearchTableSpace;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.space.ItemResearchLens;
@@ -26,44 +29,40 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFakeBody;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import com.denfop.world.WorldBaseGen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TileEntityResearchTableSpace extends TileEntityInventory implements IResearchTable {
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 2, 2.0D,
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(0, 0.0D, 0, 2, 2.0D,
             1.5
     ));
-    private static final List<AxisAlignedBB> aabbs_east = Collections.singletonList(new AxisAlignedBB(0, 0.0D, -1, 1, 2.0D,
+    private static final List<AABB> aabbs_east = Collections.singletonList(new AABB(0, 0.0D, -1, 1, 2.0D,
             1
     ));
-    private static final List<AxisAlignedBB> aabbs_south = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 2, 2.0D,
+    private static final List<AABB> aabbs_south = Collections.singletonList(new AABB(0, 0.0D, 0, 2, 2.0D,
             1
     ));
-    private static final List<AxisAlignedBB> aabbs_west = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 1, 2.0D,
+    private static final List<AABB> aabbs_west = Collections.singletonList(new AABB(0, 0.0D, 0, 1, 2.0D,
             2
     ));
-    private static final List<AxisAlignedBB> aabbs_north = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, 0, 1, 2.0D,
+    private static final List<AABB> aabbs_north = Collections.singletonList(new AABB(-1, 0.0D, 0, 1, 2.0D,
             1
     ));
     public final InvSlot slotLens;
@@ -77,12 +76,13 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     public IFakeBody fakeBody;
     public IColony colony;
     boolean added = false;
-    private UUID player;
+    private UUID player = new UUID(WorldBaseGen.random.nextLong(),WorldBaseGen.random.nextLong());
     private InfoSends sends;
 
-    public TileEntityResearchTableSpace() {
+    public TileEntityResearchTableSpace(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.research_table_space,pos,state);
         this.map = new HashMap<>();
-        this.player = null;
+        this.player = new UUID(WorldBaseGen.random.nextLong(),WorldBaseGen.random.nextLong());
         this.fakeBodySpaceOperationMap = new LinkedList<>();
         this.slotLens = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
@@ -93,17 +93,18 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
             @Override
             public void update() {
                 super.update();
-                if (this.get().isEmpty()) {
+                if (this.get(0).isEmpty()) {
                     level = EnumLevels.NONE;
                 } else {
-                    level = EnumLevels.values()[this.get().getItemDamage()];
+                    level = EnumLevels.values()[((ItemResearchLens<?>)this.get(0).getItem()).getElement().getId()];
                 }
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 update();
+                return content;
             }
         };
     }
@@ -117,7 +118,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -127,7 +128,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
             MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
             added = true;
         }
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.getSpaceBody();
             dataMap.clear();
             dataMap = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(this.player);
@@ -155,10 +156,11 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
         super.readContainerPacket(customPacketBuffer);
         dataMap.clear();
         try {
-            NBTTagCompound nbt = (NBTTagCompound) DecoderHandler.decode(customPacketBuffer);
-            NBTTagList tagList = nbt.getTagList("list", 10);
-            for (NBTBase nbtbase : tagList.tagList) {
-                NBTTagCompound tagCompound = (NBTTagCompound) nbtbase;
+            CompoundTag nbt = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
+            ListTag tagList = nbt.getList("list", 10);
+            for (ListIterator<Tag> it = tagList.listIterator(); it.hasNext(); ) {
+                Tag nbtbase = it.next();
+                CompoundTag tagCompound = (CompoundTag) nbtbase;
                 Data data = new Data(tagCompound);
                 dataMap.put(data.getBody(), data);
             }
@@ -178,13 +180,13 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
-        NBTTagList tagList = new NBTTagList();
+        ListTag tagList = new ListTag();
         for (Map.Entry<IBody, Data> entry : dataMap.entrySet()) {
-            final NBTTagCompound nbt = entry.getValue().writeNBT();
-            tagList.appendTag(nbt);
+            final CompoundTag nbt = entry.getValue().writeNBT();
+            tagList.add(nbt);
         }
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        nbtTagCompound.setTag("list", tagList);
+        CompoundTag nbtTagCompound = new CompoundTag();
+        nbtTagCompound.put("list", tagList);
         try {
             EncoderHandler.encode(customPacketBuffer, nbtTagCompound);
         } catch (IOException e) {
@@ -207,13 +209,14 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiResearchTableSpace(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiResearchTableSpace((ContainerResearchTableSpace) menu);
     }
 
     @Override
-    public ContainerResearchTableSpace getGuiContainer(final EntityPlayer var1) {
+    public ContainerResearchTableSpace getGuiContainer(final Player var1) {
         return new ContainerResearchTableSpace(this, var1);
     }
 
@@ -221,7 +224,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 80 == 0)
+        if (this.getWorld().getGameTime() % 80 == 0)
             MinecraftForge.EVENT_BUS.post(new ResearchTableReLoadEvent(this.getWorld(), this));
         if (timer > 0) {
             timer--;
@@ -233,7 +236,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
             body = null;
             fakeBody = null;
         }
-        if (this.getWorld().getWorldTime() % 20 == 0) {
+        if (this.getWorld().getGameTime() % 20 == 0) {
             boolean find = false;
             if (body != null) {
                 if (colony != null) {
@@ -247,9 +250,19 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
                             list = list.stream().filter(colony -> colony.matched(body)).collect(Collectors.toList());
                             if (list.isEmpty()) {
                                 colony = null;
+                                sends = null;
                             } else {
                                 colony = list.get(0);
+
                             }
+                        }
+                    }else{
+                        List<Sends> sends =
+                                SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player).stream().filter(sends1 -> sends1.getBody() == colony.getBody()).collect(
+                                        Collectors.toList());
+                        this.sends= new InfoSends();
+                        for (Sends send : sends) {
+                            this.sends.addTimer(send.getTimerToPlanet());
                         }
                     }
                 } else {
@@ -286,14 +299,14 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (placer instanceof EntityPlayer) {
-            this.player = placer.getUniqueID();
+        if (placer instanceof Player) {
+            this.player = placer.getUUID();
         }
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         switch (this.getFacing()) {
             case EAST:
                 return aabbs_east;
@@ -309,41 +322,18 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.player = nbtTagCompound.getUniqueId("player");
+        this.player = nbtTagCompound.getUUID("player");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setUniqueId("player", player);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putUUID("player", player);
         return nbtTagCompound;
     }
 
@@ -362,7 +352,7 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
 
 
     @Override
-    public EnumLevels getLevel() {
+    public EnumLevels getLevelTable() {
         return this.level;
     }
 

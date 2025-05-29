@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/cobalt"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/nickel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ]
+  },
+  "pattern": [
+    "ABB",
+    "C D",
+    " AA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_141_element"
+  },
+  "show_notification": true
+}

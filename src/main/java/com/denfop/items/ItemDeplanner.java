@@ -1,127 +1,115 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.multiblock.IMainMultiBlock;
-import com.denfop.register.Register;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ItemDeplanner extends Item implements IModelRegister {
-
-    private final String name;
+public class ItemDeplanner extends Item implements IItemTab {
+    private String nameItem;
 
     public ItemDeplanner() {
-        super();
-        this.setMaxStackSize(1);
-        this.canRepair = false;
-        this.name = "multiblock_deplanner";
-        this.setCreativeTab(IUCore.EnergyTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-        IUCore.proxy.addIModelRegister(this);
+        super(new Properties().stacksTo(1).setNoRepair());
     }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "tools" + "/" + name;
-
-        return new ModelResourceLocation(loc, null);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+        }
 
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+        return this.nameItem;
     }
 
     @Override
-    public EnumActionResult onItemUseFirst(
-            final EntityPlayer player,
-            final World world,
-            final BlockPos pos,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ,
-            final EnumHand hand
-    ) {
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
 
-        TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof IMainMultiBlock) {
+        Player player = context.getPlayer();
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+
+        BlockEntity tile = world.getBlockEntity(pos);
+
+        if (tile instanceof IMainMultiBlock && !world.isClientSide) {
             IMainMultiBlock mainMultiBlock = (IMainMultiBlock) tile;
             List<ItemStack> itemStackList = new ArrayList<>();
-            if (mainMultiBlock.isFull()) {
 
+            if (mainMultiBlock.isFull()) {
                 for (Map.Entry<BlockPos, ItemStack> entry : mainMultiBlock.getMultiBlockStucture().ItemStackMap.entrySet()) {
                     BlockPos pos1;
-                    if (entry.getKey().equals(BlockPos.ORIGIN)) {
+                    if (entry.getKey().equals(BlockPos.ZERO)) {
                         continue;
                     }
                     if (entry.getValue().isEmpty()) {
                         continue;
                     }
 
-                    switch (((TileMultiBlockBase) mainMultiBlock).getFacing()) {
-                        case NORTH:
-                            pos1 = new BlockPos(entry.getKey().getX(), entry.getKey().getY(), entry.getKey().getZ());
-                            break;
-                        case EAST:
-                            pos1 = new BlockPos(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
-                            break;
-                        case WEST:
-                            pos1 = new BlockPos(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
-                            break;
-                        case SOUTH:
-                            pos1 = new BlockPos(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected value: ");
-                    }
-                    itemStackList.add(entry.getValue().copy());
-                    world.removeTileEntity(pos.add(pos1));
-                    world.setBlockToAir(pos.add(pos1));
+
+                    pos1 = switch (((TileMultiBlockBase) mainMultiBlock).getFacing()) {
+                        case NORTH -> new BlockPos(entry.getKey().getX(), entry.getKey().getY(), entry.getKey().getZ());
+                        case EAST ->
+                                new BlockPos(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                        case WEST ->
+                                new BlockPos(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                        case SOUTH ->
+                                new BlockPos(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                        default -> throw new IllegalStateException("Unexpected value: ");
+                    };
+                    TileEntityBlock block = (TileEntityBlock) world.getBlockEntity(pos.offset(pos1));
+                    itemStackList.add(block.getPickBlock(null,null));
+                    world.removeBlockEntity(pos.offset(pos1));
+                    world.setBlock(pos.offset(pos1), Blocks.AIR.defaultBlockState(), 3);
 
                 }
-                itemStackList.add(mainMultiBlock.getMultiBlockStucture().ItemStackMap.get(BlockPos.ORIGIN).copy());
+                itemStackList.add(mainMultiBlock.getMultiBlockStucture().ItemStackMap.get(BlockPos.ZERO).copy());
 
                 ((TileMultiBlockBase) mainMultiBlock).onUnloaded();
-                world.removeTileEntity(pos);
-                world.setBlockToAir(pos);
-                if (!world.isRemote) {
-                    for (ItemStack stack : itemStackList) {
-                        EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
-                        item.setPickupDelay(0);
-                        world.spawnEntity(item);
+                world.removeBlockEntity(pos);
+                world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+
+                if (!world.isClientSide) {
+                    for (ItemStack stack1 : itemStackList) {
+                        ItemEntity entityItem = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack1);
+                        entityItem.setPickUpDelay(0);
+                        world.addFreshEntity(entityItem);
                     }
                 }
-                return EnumActionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
-        return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
+
+        return InteractionResult.PASS;
     }
 
-    @Override
-    public void registerModels() {
-        registerModel(this, 0, this.name);
-    }
 
 }

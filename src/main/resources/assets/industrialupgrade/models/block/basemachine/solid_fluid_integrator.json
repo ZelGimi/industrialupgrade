@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/solid_fluid_integrator_front",
-    "down" : "industrialupgrade:blocks/solid_fluid_integrator_side",
-    "up" : "industrialupgrade:blocks/solid_fluid_integrator_side",
-    "north" : "industrialupgrade:blocks/solid_fluid_integrator_front",
-    "east" : "industrialupgrade:blocks/solid_fluid_integrator_side",
-    "south" : "industrialupgrade:blocks/solid_fluid_integrator_side",
-    "west" : "industrialupgrade:blocks/solid_fluid_integrator_side"
+    "particle" : "industrialupgrade:block/solid_fluid_integrator_front",
+    "down" : "industrialupgrade:block/solid_fluid_integrator_side",
+    "up" : "industrialupgrade:block/solid_fluid_integrator_side",
+    "north" : "industrialupgrade:block/solid_fluid_integrator_front",
+    "east" : "industrialupgrade:block/solid_fluid_integrator_side",
+    "south" : "industrialupgrade:block/solid_fluid_integrator_side",
+    "west" : "industrialupgrade:block/solid_fluid_integrator_side"
   }
 }

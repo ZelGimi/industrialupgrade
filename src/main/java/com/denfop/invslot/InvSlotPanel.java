@@ -1,21 +1,17 @@
 package com.denfop.invslot;
 
-import cofh.redstoneflux.api.IEnergyContainerItem;
+
 import com.denfop.ElectricItem;
+import com.denfop.IUItem;
 import com.denfop.api.item.IEnergyItem;
-import com.denfop.items.modules.EnumBaseType;
-import com.denfop.items.modules.EnumModule;
-import com.denfop.items.modules.ItemAdditionModule;
-import com.denfop.items.modules.ItemBaseModules;
-import com.denfop.items.modules.ItemModuleType;
-import com.denfop.items.modules.ItemModuleTypePanel;
+import com.denfop.items.modules.*;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotPanel extends InvSlot {
 
@@ -29,11 +25,12 @@ public class InvSlotPanel extends InvSlot {
 
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.checkmodule();
         TileSolarPanel tile = (TileSolarPanel) base;
         tile.solarType = this.solartype();
+        return content;
     }
 
     public boolean accepts(final ItemStack stack, final int index) {
@@ -41,7 +38,6 @@ public class InvSlotPanel extends InvSlot {
                 || stack.getItem() instanceof ItemModuleTypePanel
                 || stack.getItem() instanceof ItemAdditionModule
                 || stack.getItem() instanceof IEnergyItem
-                || stack.getItem() instanceof IEnergyContainerItem
                 || stack.getItem() instanceof ItemModuleType
                 ;
     }
@@ -49,13 +45,13 @@ public class InvSlotPanel extends InvSlot {
 
     public int solartype() {
         TileSolarPanel tile = (TileSolarPanel) base;
-        tile.level = 0;
+        tile.levelPanel = 0;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemModuleType) {
-                tile.level = get(i).getItemDamage() + 1;
+                tile.levelPanel = IUItem.module5.getMeta((ItemModuleType) get(i).getItem()) + 1;
             }
         }
-        EnumType type = EnumType.getFromID(tile.level);
+        EnumType type = EnumType.getFromID(tile.levelPanel);
 
         return tile.setSolarType(type);
     }
@@ -63,7 +59,7 @@ public class InvSlotPanel extends InvSlot {
     public int solartypeFast() {
         TileSolarPanel tile = (TileSolarPanel) base;
 
-        EnumType type = EnumType.getFromID(tile.level);
+        EnumType type = EnumType.getFromID(tile.levelPanel);
 
         return tile.setSolarType(type);
     }
@@ -78,7 +74,7 @@ public class InvSlotPanel extends InvSlot {
         tile.tier = (int) tile.defaultTier;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule) {
-                int kk = get(i).getItemDamage();
+                int kk = IUItem.module7.getMeta((ItemAdditionModule) this.get(i).getItem());
                 if (kk == 1) {
                     tile.tier++;
                 } else if (kk == 2) {
@@ -89,12 +85,11 @@ public class InvSlotPanel extends InvSlot {
                 }
             }
         }
-        if (tile.tier < 1) {
+        if (tile.tier < 1)
             tile.tier = 1;
-        }
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemModuleTypePanel) {
-                int g = this.get(i).getItemDamage();
+                int g = IUItem.module6.getMeta((ItemModuleTypePanel) this.get(i).getItem());
 
                 if (tile.tier >= g + 1) {
                     EnumSolarPanels solar = ItemModuleTypePanel.getSolarType(g);
@@ -110,10 +105,10 @@ public class InvSlotPanel extends InvSlot {
 
 
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && EnumModule.getFromID(this.get(i).getItemDamage()) != null && this
+            if (!this.get(i).isEmpty() && this
                     .get(i)
-                    .getItem() instanceof ItemBaseModules) {
-                EnumModule module = EnumModule.getFromID(this.get(i).getItemDamage());
+                    .getItem() instanceof ItemBaseModules && EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) this.get(i).getItem())) != null) {
+                EnumModule module = EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) this.get(i).getItem()));
                 EnumBaseType type = module.type;
                 double percent = module.percent;
                 switch (type) {
@@ -142,9 +137,8 @@ public class InvSlotPanel extends InvSlot {
         this.wirelessmodule();
 
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && EnumModule.getFromID(this
-                    .get(i).getItemDamage()) != null && this.get(i).getItem() instanceof ItemBaseModules) {
-                EnumModule module = EnumModule.getFromID(this.get(i).getItemDamage());
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemBaseModules && EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) this.get(i).getItem())) != null) {
+                EnumModule module = EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) this.get(i).getItem()));
                 EnumBaseType type = module.type;
                 if (type == EnumBaseType.PHASE) {
                     tile.coef = module.percent;
@@ -154,9 +148,8 @@ public class InvSlotPanel extends InvSlot {
             }
         }
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && EnumModule.getFromID(this
-                    .get(i).getItemDamage()) != null && this.get(i).getItem() instanceof ItemBaseModules) {
-                EnumModule module = EnumModule.getFromID(this.get(i).getItemDamage());
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemBaseModules && EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) this.get(i).getItem())) != null) {
+                EnumModule module = EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) this.get(i).getItem()));
                 EnumBaseType type = module.type;
                 if (type == EnumBaseType.MOON_LINSE) {
                     tile.moonPhase = module.percent;
@@ -191,18 +184,16 @@ public class InvSlotPanel extends InvSlot {
         tile.wirelessComponent.setUpdate(false);
         tile.wirelessComponent.removeAll();
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
-                    .get(i)
-                    .getItemDamage() == 10) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta((ItemAdditionModule) this.get(i).getItem()) == 10) {
 
                 int x;
                 int y;
                 int z;
-                NBTTagCompound nbttagcompound = ModUtils.nbt(this.get(i));
+                CompoundTag nbttagcompound = ModUtils.nbt(this.get(i));
 
-                x = nbttagcompound.getInteger("Xcoord");
-                y = nbttagcompound.getInteger("Ycoord");
-                z = nbttagcompound.getInteger("Zcoord");
+                x = nbttagcompound.getInt("Xcoord");
+                y = nbttagcompound.getInt("Ycoord");
+                z = nbttagcompound.getInt("Zcoord");
                 if (!nbttagcompound.getBoolean("change")) {
                     tile.wirelessComponent.setUpdate(true);
                     BlockPos pos = new BlockPos(x, y, z);

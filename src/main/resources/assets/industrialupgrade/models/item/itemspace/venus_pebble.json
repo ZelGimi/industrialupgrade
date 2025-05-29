@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/venus_pebble"	}
+		"layer0": "industrialupgrade:item/venus_pebble"	}
 }

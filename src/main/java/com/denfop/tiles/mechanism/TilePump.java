@@ -1,35 +1,38 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPump;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPump;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -49,8 +52,8 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
     public int operationLength;
     public ComponentProgress componentProgress;
 
-    public TilePump(int size, int operationLength) {
-        super(20, 1, size);
+    public TilePump(int size, int operationLength, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(20, 1, size, block, pos, state);
         this.containerSlot = new InvSlotFluid(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
@@ -153,17 +156,16 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
         for (int i = this.pos.getX() - 5; i <= this.pos.getX() + 5; i++) {
             for (int j = this.pos.getZ() - 5; j <= this.pos.getZ() + 5; j++) {
                 for (int k = this.pos.getY() - 5; k <= this.pos.getY() + 5; k++) {
-                    for (EnumFacing dir : EnumFacing.values()) {
+                    for (Direction dir : Direction.values()) {
                         if (this.fluidTank.getFluidAmount() >= this.fluidTank.getCapacity()) {
                             return false;
                         }
-                        liquid = this.pump(new BlockPos(i + dir.getFrontOffsetX(), k + dir.getFrontOffsetY(),
-                                j + dir.getFrontOffsetZ()
+                        liquid = this.pump(new BlockPos(i + dir.getStepX(), k + dir.getStepY(),
+                                j + dir.getStepZ()
                         ), false);
-                        if (this.getFluidTank().fill(liquid, false) > 0) {
-                            this.getFluidTank().fill(liquid, true);
+                        if (this.getFluidTank().fill(liquid, IFluidHandler.FluidAction.SIMULATE) > 0) {
+                            this.getFluidTank().fill(liquid, IFluidHandler.FluidAction.EXECUTE);
                             canOperate = true;
-                            componentProgress.setProgress((short) 0);
                         }
                     }
                 }
@@ -175,54 +177,35 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
     }
 
     public FluidStack pump(BlockPos pos, boolean sim) {
-        FluidStack ret = null;
+        FluidStack ret = FluidStack.EMPTY;
         int freespace = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
 
         if (freespace >= 1000) {
-            IBlockState block = this.getWorld().getBlockState(pos);
-            if (block.getMaterial().isLiquid()) {
+            BlockState block = this.getWorld().getBlockState(pos);
+            if (block.liquid()) {
+                FluidState fluidState = block.getBlock().getFluidState(block);
 
+                if (!fluidState.isSource()) {
+                    return FluidStack.EMPTY;
+                }
 
-                if (block.getBlock() instanceof IFluidBlock) {
-                    IFluidBlock liquid = (IFluidBlock) block.getBlock();
-                    if ((this.fluidTank.getFluid() == null || this.fluidTank
-                            .getFluid()
-                            .getFluid() == liquid.getFluid()) && liquid.canDrain(
-                            this.getWorld(),
-                            pos
-                    )) {
-                        if (!sim) {
-                            ret = liquid.drain(this.getWorld(), pos, true);
-                            this.getWorld().setBlockToAir(pos);
-                        } else {
-                            ret = new FluidStack(liquid.getFluid(), 1000);
-                        }
-                    }
-                } else {
-                    if (block.getBlock().getMetaFromState(block) != 0) {
-                        return null;
-                    }
-
-                    ret = new FluidStack(FluidRegistry.getFluid(block.getBlock().getUnlocalizedName().substring(5)), 1000);
-                    if (this.fluidTank.getFluid() == null || this.fluidTank
-                            .getFluid()
-                            .getFluid() == ret.getFluid()) {
-                        if (!sim) {
-                            this.getWorld().setBlockToAir(pos);
-                        }
+                ret = new FluidStack(fluidState.getType(), 1000);
+                if (this.fluidTank.getFluid().isEmpty() || this.fluidTank
+                        .getFluid()
+                        .getFluid() == ret.getFluid()) {
+                    if (!sim) {
+                        this.getWorld().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                     }
                 }
             }
         }
-
-
         return ret;
     }
 
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!getWorld().isClientSide) {
             this.setUpgradestat();
         }
 
@@ -262,22 +245,14 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-    }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
-    }
-
-    public ContainerPump getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPump getGuiContainer(Player entityPlayer) {
         return new ContainerPump(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiPump getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiPump(new ContainerPump(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiPump((ContainerPump) isAdmin);
     }
 
 

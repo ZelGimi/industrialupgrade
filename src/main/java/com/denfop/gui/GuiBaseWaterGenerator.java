@@ -2,15 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiSlider;
-import com.denfop.api.gui.GuiVerticalSlider;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.ImageScreen;
-import com.denfop.api.gui.ItemStackImage;
+import com.denfop.api.gui.*;
 import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.WindSystem;
@@ -19,20 +11,18 @@ import com.denfop.container.ContainerBaseWaterGenerator;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiPageButtonList;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> implements GuiPageButtonList.GuiResponder,
+public class GuiBaseWaterGenerator<T extends ContainerBaseWaterGenerator> extends GuiIU<ContainerBaseWaterGenerator> implements GuiPageButtonList.GuiResponder,
         GuiVerticalSlider.FormatHelper {
 
     private final ResourceLocation background;
@@ -41,8 +31,8 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
 
     public GuiBaseWaterGenerator(ContainerBaseWaterGenerator guiContainer) {
         super(guiContainer, guiContainer.base.getStyle());
-        this.ySize = 245;
-        this.xSize = 211;
+        this.imageHeight = 245;
+        this.imageWidth = 211;
         this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/guiwindgenerator.png");
         this.addComponent(new GuiComponent(this, 183, 98, EnumTypeComponent.ENERGY_HEIGHT,
                 new Component<>(this.container.base.energy)
@@ -54,7 +44,7 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
                         new Component<>(new ComponentButton(container.base, 0, Localization.translate("iu.wind_change_side")))
                 )
         );
-        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.elements.add(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         this.elements.add(new ImageScreen(this, 27, 40, 130, 20));
         this.elements.add(new ImageScreen(this, 27, 65, 150, 80));
         EnumTypeComponent component;
@@ -82,26 +72,19 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
         this.inventory.setX(7);
     }
 
-    @Override
-    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
-        if (guibutton instanceof GuiSlider) {
-            GuiSlider slider = (GuiSlider) guibutton;
-            this.setEntryValue(guibutton.id, slider.getSliderValue());
-        }
 
-    }
+    GuiVerticalSlider slider;
 
     @Override
-    public void initGui() {
-        super.initGui();
-        this.buttonList.add(new GuiVerticalSlider(this, 0, (this.width - this.xSize) / 2 + 8,
-                (this.height - this.ySize) / 2 + 70,
+    public void init() {
+        super.init();
+        slider = new GuiVerticalSlider(this, 0, (this.width - this.imageWidth) / 2 + 8, (this.height - this.imageHeight) / 2 + 70,
                 "",
-                (float) 100, (float) 150, (float) this.container.base.coefficient_power, this, 75
-        ));
+                100,  150, this.container.base.coefficient_power, this, 75
+        );
 
-
+        this.addWidget(slider);
+        this.addRenderableWidget(slider);
     }
 
     @Override
@@ -141,29 +124,20 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
         }
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
 
-
-    }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.bindTexture();
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
+        int xoffset = guiLeft;
+        int yoffset =guiTop;
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
         if (!this.container.base.slot.isEmpty()) {
-            final List<ItemStack> list = RotorUpgradeSystem.instance.getListStack(this.container.base.slot.get());
+            final List<ItemStack> list = com.denfop.api.windsystem.upgrade.RotorUpgradeSystem.instance.getListStack(this.container.base.slot.get(0));
             int i = 0;
             for (ItemStack stack : list) {
 
@@ -171,21 +145,20 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
                     i++;
                     continue;
                 }
-                new ItemStackImage(this, 181, 19 + i * 18, () -> stack).drawBackground(xoffset, yoffset);
+                new ItemStackImage(this, 181, 19 + i * 18, () -> stack).drawBackground(poseStack,xoffset, yoffset);
                 i++;
 
             }
 
         }
-
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack,mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
-        if (this.container.base.getWorld().provider.getDimension() == 0) {
-            float scale = (float) (2D / new ScaledResolution(mc).getScaleFactor());
+        if (this.container.base.getWorld().dimension() == Level.OVERWORLD) {
+            float scale = (float) (2D / Minecraft.getInstance().getWindow().getGuiScale());
             String fields = "";
             if (this.container.base.getMinWind() != 0) {
                 fields += Localization.translate("iu.water_meter.info") + String.format(
@@ -204,13 +177,13 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
                 ) + " m/s";
             }
             scale = adjustTextScale(fields, 125 - 10, 20, scale, 0.8F);
-            drawTextInCanvas(fields, 27 + 30, 48, 125 - 10, 20, scale * 0.8f, ModUtils.convertRGBcolorToInt(13, 229, 34));
+            drawTextInCanvas(poseStack, fields, 27 + 30, 48, 125 - 10, 20, scale * 0.8f, ModUtils.convertRGBcolorToInt(13, 229, 34));
 
         }
 
 
         if (!this.container.base.slot.isEmpty()) {
-            final List<ItemStack> list = RotorUpgradeSystem.instance.getListStack(this.container.base.slot.get());
+            final List<ItemStack> list = RotorUpgradeSystem.instance.getListStack(this.container.base.slot.get(0));
             int i = 0;
             for (ItemStack stack : list) {
 
@@ -219,8 +192,8 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
                     continue;
                 }
                 new AdvArea(this, 180, 18 + i * 18, 197, 35 + i * 18)
-                        .withTooltip(stack.getDisplayName())
-                        .drawForeground(mouseX, mouseY);
+                        .withTooltip(stack.getDisplayName().getString())
+                        .drawForeground(poseStack, mouseX, mouseY);
                 i++;
             }
         }
@@ -278,9 +251,9 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
                 ) + " m/s";
                 new AdvArea(this, 33, 120, 123, 130)
                         .withTooltip(tooltip3)
-                        .drawForeground(mouseX, mouseY);
+                        .drawForeground(poseStack, mouseX, mouseY);
             }
-            float scale = (float) (2D / new ScaledResolution(mc).getScaleFactor());
+            float scale = (float) (2D /Minecraft.getInstance().getWindow().getGuiScale());
             if (prevText != fields.length()) {
                 scaled = -1;
                 prevText = fields.length();
@@ -291,7 +264,7 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> im
             } else {
                 scale = scaled;
             }
-            drawTextInCanvas(fields, 27 + 4, 65 + 4, 150 - 4, 80 - 4, scale * 1.3f, ModUtils.convertRGBcolorToInt(13, 229, 34));
+            drawTextInCanvas(poseStack, fields, 27 + 4, 65 + 4, 150 - 4, 80 - 4, scale * 1.3f, ModUtils.convertRGBcolorToInt(13, 229, 34));
         }
     }
 

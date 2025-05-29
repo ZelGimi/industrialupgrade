@@ -1,10 +1,10 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.DataBlockEntity;
 import com.denfop.IUItem;
 import com.denfop.audio.EnumSound;
-import net.minecraft.block.Block;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 
 import java.util.Arrays;
 
@@ -27,12 +27,12 @@ public enum EnumTypeMachines {
     Centrifuge(IUItem.machines_base3, 15, "centrifuge", EnumSound.centrifuge.getNameSounds()),
     Gearing(IUItem.machines_base3, 19, "gearing", "");
     public final int meta;
-    public final Block block;
+    public final DataBlockEntity block;
     private final String soundName;
     public String recipe;
     private SoundEvent sound;
 
-    EnumTypeMachines(Block block, int meta, String recipe, String soundEvent) {
+    EnumTypeMachines(DataBlockEntity block, int meta, String recipe, String soundEvent) {
         this.block = block;
         this.meta = meta;
         this.recipe = recipe;
@@ -44,7 +44,7 @@ public enum EnumTypeMachines {
 
 
             if (types.soundName.equals("furnace")) {
-                types.setSound(SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE);
+                types.setSound(SoundEvents.FURNACE_FIRE_CRACKLE);
             } else {
                 types.setSound(EnumSound.getSondFromString(types.soundName));
             }

@@ -3,9 +3,10 @@ package com.denfop.integration.jei.peralloysmelter;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PerAlloySmelterHandler {
@@ -13,6 +14,7 @@ public class PerAlloySmelterHandler {
     public static final List<PerAlloySmelterHandler> recipes = new ArrayList<>();
     public final ItemStack input, input1, input2, input3, input4, output;
     public final short temperature;
+    private final BaseMachineRecipe container;
 
     public PerAlloySmelterHandler(
             ItemStack input,
@@ -21,8 +23,8 @@ public class PerAlloySmelterHandler {
             ItemStack input3,
             ItemStack input4,
             ItemStack output,
-            final short temperature
-    ) {
+            final short temperature,
+            BaseMachineRecipe container) {
         this.input = input;
         this.input1 = input1;
         this.input2 = input2;
@@ -30,6 +32,11 @@ public class PerAlloySmelterHandler {
         this.input4 = input4;
         this.output = output;
         this.temperature = temperature;
+        this.container = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<PerAlloySmelterHandler> getRecipes() {
@@ -46,9 +53,9 @@ public class PerAlloySmelterHandler {
             ItemStack input3,
             ItemStack input4,
             ItemStack output,
-            final short temperature
-    ) {
-        PerAlloySmelterHandler recipe = new PerAlloySmelterHandler(input, input1, input2, input3, input4, output, temperature);
+            final short temperature,
+            BaseMachineRecipe container) {
+        PerAlloySmelterHandler recipe = new PerAlloySmelterHandler(input, input1, input2, input3, input4, output, temperature,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -70,13 +77,16 @@ public class PerAlloySmelterHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("peralloysmelter")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
-                    container.input.getInputs().get(1).getInputs().get(0),
-                    container.input.getInputs().get(2).getInputs().get(0), container.input.getInputs().get(3).getInputs().get(0),
-                    container.input.getInputs().get(4).getInputs().get(0),
-                    container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature")
-            );
-
+            try {
+                addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+                        container.input.getInputs().get(1).getInputs().get(0),
+                        container.input.getInputs().get(2).getInputs().get(0), container.input.getInputs().get(3).getInputs().get(0),
+                        container.input.getInputs().get(4).getInputs().get(0),
+                        container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"), container
+                );
+            }catch (Exception e){
+                System.out.println(2);
+            }
 
         }
     }
@@ -106,7 +116,9 @@ public class PerAlloySmelterHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2);
+        return true;
     }
-
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1, input2, input3, input4);
+    }
 }

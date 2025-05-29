@@ -5,9 +5,9 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerCyclotronQuantum;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiCyclotronQuantum extends GuiIU<ContainerCyclotronQuantum> {
+public class GuiCyclotronQuantum<T extends ContainerCyclotronQuantum> extends GuiIU<ContainerCyclotronQuantum> {
 
     public GuiCyclotronQuantum(ContainerCyclotronQuantum guiContainer) {
         super(guiContainer);

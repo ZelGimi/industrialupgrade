@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/woods_nugget"	}
+		"layer0": "industrialupgrade:item/woods_nugget"	}
 }

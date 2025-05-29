@@ -1,13 +1,17 @@
 package com.denfop.invslot;
 
 
+import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.TileModuleMachine;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 public class InvSlotModule extends InvSlot implements ITypeSlot {
 
@@ -23,11 +27,12 @@ public class InvSlotModule extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (type == 0) {
             this.update();
         }
+        return content;
     }
 
     public void update() {
@@ -36,10 +41,9 @@ public class InvSlotModule extends InvSlot implements ITypeSlot {
             for (int i = 0; i < this.size(); i++) {
                 if (!this.get(i).isEmpty()) {
 
+                    List<TagKey<Item>> list = this.get(i).getTags().toList();
 
-                    int id = OreDictionary.getOreIDs(this.get(i))[0];
-                    String ore = OreDictionary.getOreName(id);
-
+                    TagKey<Item> ore = list.get(0);
                     if (!this.tile.listItems.contains(ore)) {
                         this.tile.listItems.add(ore);
                     }
@@ -51,17 +55,17 @@ public class InvSlotModule extends InvSlot implements ITypeSlot {
 
     public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
-            if (OreDictionary.getOreIDs(itemStack).length > 0) {
-                int id = OreDictionary.getOreIDs(itemStack)[0];
-                String ore = OreDictionary.getOreName(id);
+            if (!itemStack.getTags().toList().isEmpty()) {
 
-                return ore.startsWith("ore") || ore.startsWith("gem") || ore.startsWith("ingot") || ore.startsWith("dust") || ore.startsWith(
+                TagKey<Item> ore = itemStack.getTags().toList().get(0);
+
+                return ore.location().getPath().startsWith("ore") || ore.location().getPath().startsWith("gem") || ore.location().getPath().startsWith("ingot") || ore.location().getPath().startsWith("dust") || ore.location().getPath().startsWith(
                         "shard");
             } else {
                 return false;
             }
         } else {
-            return itemStack.getItem() instanceof ItemQuarryModule && itemStack.getItemDamage() >= 12;
+            return itemStack.getItem() instanceof ItemQuarryModule && IUItem.module9.getMeta((ItemQuarryModule) itemStack.getItem()) >= 12;
         }
     }
 

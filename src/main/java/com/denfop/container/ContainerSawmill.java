@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntitySawmill;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSawmill extends ContainerFullInv<TileEntitySawmill> {
 
-    public ContainerSawmill(final EntityPlayer player, final TileEntitySawmill base) {
+    public ContainerSawmill(final Player player, final TileEntitySawmill base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.outputSlot, 0, 100, 35));

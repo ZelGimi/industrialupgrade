@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/aluminium"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:reactors/adv_reactor_plate"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:exchanger/adv_exchanger"
+  },
+  "show_notification": true
+}

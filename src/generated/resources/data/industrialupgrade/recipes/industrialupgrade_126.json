@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemdust/sodium_phosphate_dust"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemdust/potassium_phosphate_dust"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemdust/calcium_phosphate_dust"
+      }
+    ]
+  ],
+  "result": {
+    "count": 16,
+    "item": "industrialupgrade:fertilizer"
+  }
+}

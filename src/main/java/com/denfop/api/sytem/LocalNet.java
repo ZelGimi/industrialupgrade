@@ -4,16 +4,11 @@ package com.denfop.api.sytem;
 import com.denfop.api.energy.NodeStats;
 import com.denfop.api.energy.SystemTick;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LocalNet implements ILocalNet {
 
@@ -138,12 +133,12 @@ public class LocalNet implements ILocalNet {
         List<Path> energyPaths = tick.getList();
         if (energyPaths == null) {
             final Tuple<List<Path>, LinkedList<IConductor>> tuples = this.discover(energySource, tick);
-            energyPaths = tuples.getFirst();
+            energyPaths = tuples.getA();
             List<IConductor> conductors = tick.getConductors();
             if (conductors == null) {
-                tick.setConductors(tuples.getSecond());
+                tick.setConductors(tuples.getB());
             } else {
-                tick.setConductors(tuples.getSecond());
+                tick.setConductors(tuples.getB());
             }
             tick.setList(energyPaths);
         }
@@ -289,7 +284,7 @@ public class LocalNet implements ILocalNet {
 
     @Override
     public void addTile(final ITile tile1) {
-        this.addTileEntity(tile1.getBlockPos(), tile1);
+        this.addTileEntity(tile1.getPos(), tile1);
     }
 
 
@@ -300,9 +295,9 @@ public class LocalNet implements ILocalNet {
     }
 
     private void updateRemove(BlockPos pos, ITile tile) {
-        for (final EnumFacing dir : EnumFacing.values()) {
+        for (final Direction dir : Direction.values()) {
             BlockPos pos1 = pos
-                    .offset(dir);
+                    .offset(dir.getNormal());
             final ITile tile1 = this.chunkCoordinatesTileMap.get(pos1);
             if (tile1 != null) {
                 tile1.RemoveTile(energyType, tile, dir.getOpposite());
@@ -312,10 +307,10 @@ public class LocalNet implements ILocalNet {
     }
 
     public void removeTileEntity(ITile tile) {
-        if (!this.chunkCoordinatesTileMap.containsKey(tile.getBlockPos())) {
+        if (!this.chunkCoordinatesTileMap.containsKey(tile.getPos())) {
             return;
         }
-        final BlockPos coord = tile.getBlockPos();
+        final BlockPos coord = tile.getPos();
         this.chunkCoordinatesTileMap.remove(coord);
         if (tile instanceof IAcceptor) {
             this.removeAll(this.getSources((IAcceptor) tile));
@@ -363,7 +358,7 @@ public class LocalNet implements ILocalNet {
         for (Path energyPath : energyPaths) {
             ITile tileEntity = energyPath.target;
             energyPath.target.getEnergyTickList().add(tick.getSource());
-            EnumFacing energyBlockLink = energyPath.targetDirection;
+            Direction energyBlockLink = energyPath.targetDirection;
             tileEntity = tileEntity.getTiles(energyType).get(energyBlockLink);
             if (!(tileEntity instanceof IConductor)) {
                 continue;
@@ -389,7 +384,7 @@ public class LocalNet implements ILocalNet {
     public List<InfoTile<ITile>> getValidReceivers(final ITile emitter) {
 
         final BlockPos tile1;
-        tile1 = emitter.getBlockPos();
+        tile1 = emitter.getPos();
         if (tile1 != null) {
             if (emitter instanceof IDual) {
                 final List<InfoTile<ITile>> validReceivers = new LinkedList<>();
@@ -400,7 +395,7 @@ public class LocalNet implements ILocalNet {
                         continue;
                     }
                     if (target2 != null) {
-                        final EnumFacing inverseDirection2 = entry.direction;
+                        final Direction inverseDirection2 = entry.direction;
                         if (target2 instanceof IAcceptor) {
                             final IEmitter sender2 = (IEmitter) emitter;
                             final IAcceptor receiver2 = (IAcceptor) target2;
@@ -425,7 +420,7 @@ public class LocalNet implements ILocalNet {
                         continue;
                     }
                     if (target2 != null) {
-                        final EnumFacing inverseDirection2 = entry.direction;
+                        final Direction inverseDirection2 = entry.direction;
                         if (target2 instanceof IAcceptor && !(target2 instanceof IConductor && emitter instanceof IConductor)) {
                             final IEmitter sender2 = (IEmitter) emitter;
                             final IAcceptor receiver2 = (IAcceptor) target2;
@@ -465,12 +460,12 @@ public class LocalNet implements ILocalNet {
     }
 
     private void updateAdd(BlockPos pos, ITile tile) {
-        for (final EnumFacing dir : EnumFacing.values()) {
+        for (final Direction dir : Direction.values()) {
             BlockPos pos1 = pos
-                    .offset(dir);
+                    .offset(dir.getNormal());
             final ITile tile1 = this.chunkCoordinatesTileMap.get(pos1);
             if (tile1 != null) {
-                final EnumFacing inverseDirection2 = dir.getOpposite();
+                final Direction inverseDirection2 = dir.getOpposite();
                 if (tile instanceof IDual) {
                     tile1.AddTile(energyType, tile, inverseDirection2);
                     tile.AddTile(energyType, tile1, dir);
@@ -480,12 +475,9 @@ public class LocalNet implements ILocalNet {
                     if (tile1 instanceof IDual) {
                         tile1.AddTile(energyType, tile, inverseDirection2);
                         tile.AddTile(energyType, tile1, dir);
-                    } else if (sender2.emitsTo(
-                            receiver2,
-                            dir.getOpposite()
-                    ) && receiver2.acceptsFrom(
+                    } else if (sender2.emitsTo(receiver2, dir.getOpposite()) && receiver2.acceptsFrom(
                             sender2,
-                            dir
+                            inverseDirection2.getOpposite()
                     )) {
                         tile1.AddTile(energyType, tile, dir.getOpposite());
                         tile.AddTile(energyType, tile1, dir);

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=double_handlerho": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho"
+    },
+    "facing=south,type=double_handlerho": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho",
+      "y": 180
+    },
+    "facing=west,type=double_handlerho": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho",
+      "y": 270
+    },
+    "facing=east,type=double_handlerho": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho",
+      "y": 90
+    },
+    "facing=down,type=double_handlerho": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho",
+      "x": 90
+    },
+    "facing=up,type=double_handlerho": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho",
+      "x": 270
+    },
+    "facing=north,type=double_handlerho_invalid": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active"
+    },
+    "facing=south,type=double_handlerho_invalid": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "y": 180
+    },
+    "facing=west,type=double_handlerho_invalid": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "y": 270
+    },
+    "facing=east,type=double_handlerho_invalid": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "y": 90
+    },
+    "facing=down,type=double_handlerho_invalid": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "x": 90
+    },
+    "facing=up,type=double_handlerho_invalid": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "x": 270
+    },
+    "facing=north,type=double_handlerho_active": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active"
+    },
+    "facing=south,type=double_handlerho_active": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "y": 180
+    },
+    "facing=west,type=double_handlerho_active": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "y": 270
+    },
+    "facing=east,type=double_handlerho_active": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "y": 90
+    },
+    "facing=down,type=double_handlerho_active": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "x": 90
+    },
+    "facing=up,type=double_handlerho_active": {
+      "model": "industrialupgrade:block/basemachine/double_handlerho_active",
+      "x": 270
+    }
+  }
+}

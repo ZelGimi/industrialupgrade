@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/supersolarpanels.itemarmorquantumhelmet_emerald"
+    "layer0" : "industrialupgrade:item/supersolarpanels.itemarmorquantumhelmet_emerald"
   }
 }

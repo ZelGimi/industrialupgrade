@@ -4,23 +4,21 @@ import com.denfop.Localization;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.FluidName;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -44,11 +42,11 @@ public abstract class TileBasePlasticPlateCreator extends TileElectricLiquidTank
     public InvSlotRecipes inputSlotA;
     public MachineRecipe output;
 
-    public TileBasePlasticPlateCreator(int energyPerTick, int length, int aDefaultTier) {
-        super(energyPerTick * length, 1, 12, Fluids.fluidPredicate(FluidName.fluidoxy.getInstance()));
+    public TileBasePlasticPlateCreator(int energyPerTick, int length, int aDefaultTier, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(energyPerTick * length, 1, 12, Fluids.fluidPredicate(FluidName.fluidoxy.getInstance().get()), block, pos, state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.outputSlot1 = new InvSlotOutput(this, 1);
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidoxy.getInstance());
+        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidoxy.getInstance().get());
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) length
@@ -66,7 +64,7 @@ public abstract class TileBasePlasticPlateCreator extends TileElectricLiquidTank
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
 
 
@@ -85,7 +83,7 @@ public abstract class TileBasePlasticPlateCreator extends TileElectricLiquidTank
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         return nbttagcompound;
     }

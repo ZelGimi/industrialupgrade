@@ -5,70 +5,75 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.transport.ITransportConductor;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.state.TileEntityBlockStateContainer;
-import com.denfop.blocks.state.UnlistedProperty;
-import com.denfop.componets.AbstractComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCable;
 import com.denfop.gui.GuiCable;
+import com.denfop.gui.GuiCore;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.network.packet.PacketCableSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.render.transport.DataCable;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.*;
+
+import static com.denfop.blocks.BlockTileEntity.*;
 
 public class TileEntityMultiCable extends TileEntityInventory implements IUpdatableTileEvent {
 
-    public static final IUnlistedProperty<RenderState> renderStateProperty = new UnlistedProperty(
-            "renderstate",
-            RenderState.class
-    );
+    public static List<BlockEntityType<? extends TileEntityMultiCable>> list = new ArrayList<>();
     public ICableItem cableItem;
     public byte connectivity;
     public ItemStack stackFacade = ItemStack.EMPTY;
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public DataCable dataCable;
     private ResourceLocation texture;
-    private List<EnumFacing> blackList = new ArrayList<>();
-    private RenderState renderState;
+    private List<Direction> blackList = new ArrayList<>();
+    public static final NumberFormat lossFormat = new DecimalFormat("0.00#");
 
-
-    public TileEntityMultiCable(ICableItem name) {
+    public TileEntityMultiCable(ICableItem name, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
+        super(tileBlock, pos, state);
         this.cableItem = name;
         this.connectivity = 0;
+        if (list != null) {
+            if (pos.equals(BlockPos.ZERO)) {
+                list.add((BlockEntityType<? extends TileEntityMultiCable>) tileBlock.getBlockType());
+            }
+        }
     }
 
-    public List<EnumFacing> getBlackList() {
+    public List<Direction> getBlackList() {
         return blackList;
     }
 
@@ -88,97 +93,81 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
     }
 
     public void removeConductor() {
-        this.getWorld().setBlockToAir(this.pos);
-        new PacketCableSound(this.getWorld(), this.pos,
-                0.5F,
-                2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F
-        );
+        this.getWorld().setBlock(this.pos, Blocks.AIR.defaultBlockState(), 3);
+
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         nbt = super.writeToNBT(nbt);
-        final NBTTagCompound nbt1 = new NBTTagCompound();
+        final CompoundTag nbt1 = new CompoundTag();
         if (!this.blackList.isEmpty()) {
-            nbt1.setInteger("size", this.blackList.size());
+            nbt1.putInt("size", this.blackList.size());
             for (int i = 0; i < this.blackList.size(); i++) {
-                nbt1.setInteger(String.valueOf(i), this.blackList.get(i).ordinal());
+                nbt1.putInt(String.valueOf(i), this.blackList.get(i).ordinal());
             }
-            nbt.setTag("list", nbt1);
+            nbt.put("list", nbt1);
         }
         if (this.stackFacade != null && !this.stackFacade.isEmpty()) {
-            final NBTTagCompound nbt2 = new NBTTagCompound();
-            this.stackFacade.writeToNBT(nbt2);
-            nbt.setTag("stackFacade", nbt2);
+            final CompoundTag nbt2 = new CompoundTag();
+            this.stackFacade.save(nbt2);
+            nbt.put("stackFacade", nbt2);
         }
         return nbt;
     }
 
-    public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing) {
-
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return false;
-        }
-        if (super.hasCapability(capability, facing)) {
-            return true;
-        } else if (this.capabilityComponents == null) {
-            return false;
-        } else {
-            AbstractComponent comp = this.capabilityComponents.get(capability);
-            return comp != null && comp.getProvidedCapabilities(facing).contains(capability);
-        }
-
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return LazyOptional.empty();
+        return super.getCapability(cap, facing);
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        if (nbtTagCompound.hasKey("list")) {
-            final NBTTagCompound tagList = nbtTagCompound.getCompoundTag("list");
-            final int size = tagList.getInteger("size");
+        if (nbtTagCompound.contains("list")) {
+            final CompoundTag tagList = nbtTagCompound.getCompound("list");
+            final int size = tagList.getInt("size");
             for (int i = 0; i < size; i++) {
-                this.blackList.add(EnumFacing.values()[tagList.getInteger(String.valueOf(i))]);
+                this.blackList.add(Direction.values()[tagList.getInt(String.valueOf(i))]);
             }
         }
-        if (nbtTagCompound.hasKey("stackFacade")) {
-            final NBTTagCompound stackFacade = nbtTagCompound.getCompoundTag("stackFacade");
-            this.stackFacade = new ItemStack(stackFacade);
+        if (nbtTagCompound.contains("stackFacade")) {
+            final CompoundTag stackFacade = nbtTagCompound.getCompound("stackFacade");
+            this.stackFacade = ItemStack.of(stackFacade);
         }
     }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "stackFacade", this.stackFacade);
             this.updateConnectivity();
         }
     }
 
-    @Override
-    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
-        return super.getPickBlock(player, target);
-    }
 
     public List<ItemStack> getAuxDrops(int fortune) {
         return Collections.emptyList();
     }
 
     public SoundType getBlockSound(Entity entity) {
-        return SoundType.CLOTH;
+        return SoundType.WOOL;
     }
 
-    public AxisAlignedBB getVisualBoundingBox() {
+    public AABB getVisualBoundingBox() {
         return super.getVisualBoundingBox();
 
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         if (this.stackFacade == null || this.stackFacade.isEmpty() && !forCollision) {
             float th = this.cableItem.getThickness();
             float sp = (1.0F - th) / 2.0F;
-            List<AxisAlignedBB> ret = new ArrayList<>();
-            ret.add(new AxisAlignedBB(
+            List<AABB> ret = new ArrayList<>();
+            ret.add(new AABB(
                     sp,
                     sp,
                     sp,
@@ -186,8 +175,8 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
                     sp + th,
                     sp + th
             ));
-            EnumFacing[] var5 = EnumFacing.VALUES;
-            for (EnumFacing facing : var5) {
+            Direction[] var5 = Direction.values();
+            for (Direction facing : var5) {
                 boolean hasConnection = (this.connectivity & 1 << facing.ordinal()) != 0;
                 if (hasConnection) {
                     float zS = sp;
@@ -225,7 +214,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
                             throw new RuntimeException();
                     }
 
-                    ret.add(new AxisAlignedBB(xS, yS, zS, xE, yE, zE));
+                    ret.add(new AABB(xS, yS, zS, xE, yE, zE));
                 }
             }
 
@@ -246,38 +235,84 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         return null;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     public void setConnectivity(final byte connectivity) {
         if (this.connectivity != connectivity) {
             this.connectivity = connectivity;
             new PacketUpdateFieldTile(this, "connectivity", this.connectivity);
-            new PacketUpdateFieldTile(this, "texture", this.texture);
-            this.rerender();
+            Direction[] var5 = Direction.values();
+            Map<Direction, Boolean> booleanMap = new HashMap<>();
+            for (Direction facing : var5) {
+                boolean hasConnection = (this.connectivity & 1 << facing.ordinal()) != 0;
+                booleanMap.put(facing, hasConnection);
+            }
+            this.setBlockState(this.getBlockState().setValue(NORTH, booleanMap.get(Direction.SOUTH))
+                    .setValue(SOUTH, booleanMap.get(Direction.NORTH))
+                    .setValue(WEST, booleanMap.get(Direction.UP))
+                    .setValue(EAST, booleanMap.get(Direction.DOWN))
+                    .setValue(UP, booleanMap.get(Direction.WEST))
+                    .setValue(DOWN, booleanMap.get(Direction.EAST)));
+            this.getWorld().setBlock(this.worldPosition, getBlockState(), 3);
+
         }
+    }
+
+    @Override
+    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (level.isClientSide) {
+            return false;
+        }
+        final ItemStack stack = player.getItemInHand(hand);
+        if (stack.isEmpty()) {
+            if (!this.stackFacade.isEmpty()) {
+                this.stackFacade = ItemStack.EMPTY;
+                new PacketUpdateFieldTile(this, "stackFacade", stackFacade);
+            }
+        }
+        return super.onSneakingActivated(player, hand, side, vec3);
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<?>> getGui(final Player var1, final ContainerBase<?> var2) {
+        return new GuiCable(getGuiContainer(var1));
+    }
+
+    @Override
+    public ContainerCable getGuiContainer(final Player var1) {
+        return new ContainerCable(var1, this);
+    }
+
+    @Override
+    public BlockState getBlockState() {
+        if (this.blockState == null) {
+            try {
+                Direction[] var5 = Direction.values();
+                Map<Direction, Boolean> booleanMap = new HashMap<>();
+                for (Direction facing : var5) {
+                    boolean hasConnection = (this.connectivity & 1 << facing.ordinal()) != 0;
+                    booleanMap.put(facing, hasConnection);
+                }
+                this.blockState = this.block
+                        .defaultBlockState()
+                        .setValue(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
+                        .setValue(
+                                this.block.facingProperty,
+                                this.getFacing()
+                        ).setValue(NORTH, booleanMap.get(Direction.SOUTH))
+                        .setValue(SOUTH, booleanMap.get(Direction.NORTH))
+                        .setValue(WEST, booleanMap.get(Direction.UP))
+                        .setValue(EAST, booleanMap.get(Direction.DOWN))
+                        .setValue(UP, booleanMap.get(Direction.WEST))
+                        .setValue(DOWN, booleanMap.get(Direction.EAST));
+                ;
+            } catch (Exception e) {
+                this.blockState = this.block
+                        .defaultBlockState();
+            }
+            return this.blockState;
+        }
+        return this.blockState;
     }
 
     public void updateConnectivity() {
@@ -285,44 +320,35 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-
-        final ItemStack stack = player.getHeldItem(hand);
-        if (!this.getWorld().isRemote && stack.getItem() == IUItem.facadeItem) {
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
-            NBTTagList contentList = nbt.getTagList("Items", 10);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        final ItemStack stack = player.getItemInHand(hand);
+        if (!this.getWorld().isClientSide && stack.getItem() == IUItem.facadeItem.getItem()) {
+            final CompoundTag nbt = ModUtils.nbt(stack);
+            ListTag contentList = nbt.getList("Items", 10);
 
             for (int i = 0; i < 1; ++i) {
-                NBTTagCompound slotNbt = contentList.getCompoundTagAt(i);
-                this.stackFacade = new ItemStack(slotNbt);
+                CompoundTag slotNbt = contentList.getCompound(i);
+                this.stackFacade = ItemStack.of(slotNbt);
             }
-            final Block block = Block.getBlockFromItem(this.stackFacade.getItem());
+            final Block block = this.stackFacade.getItem() instanceof BlockItem ? ((BlockItem) this.stackFacade.getItem()).getBlock() : Blocks.AIR;
             if (block != Blocks.AIR) {
                 this.stackFacade = this.stackFacade.copy();
                 new PacketUpdateFieldTile(this, "stackFacade", stackFacade);
             } else {
                 this.stackFacade = ItemStack.EMPTY;
             }
-        } else if (stack.getItem() == IUItem.connect_item) {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        } else if (stack.getItem() == IUItem.connect_item.getItem()) {
+            return super.onActivated(player, hand, side, vec3);
         }
         if (this instanceof ITransportConductor) {
             boolean can = ((ITransportConductor) this).isInput() || ((ITransportConductor) this).isOutput();
             if (can) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 return false;
             }
         }
         return false;
-
 
     }
 
@@ -335,53 +361,31 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         new PacketUpdateFieldTile(this, "stackFacade", stackFacade);
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCable(getGuiContainer(var1));
-    }
-
-    @Override
-    public ContainerCable getGuiContainer(final EntityPlayer var1) {
-        return new ContainerCable(var1, this);
-    }
-
-    @Override
-    public boolean onSneakingActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (world.isRemote) {
-            return false;
-        }
-        final ItemStack stack = player.getHeldItem(hand);
-        if (stack.isEmpty()) {
-            if (!this.stackFacade.isEmpty()) {
-                this.stackFacade = ItemStack.EMPTY;
-                new PacketUpdateFieldTile(this, "stackFacade", stackFacade);
-            }
-        }
-        return super.onSneakingActivated(player, hand, side, hitX, hitY, hitZ);
-    }
 
     public void updateField(String name, CustomPacketBuffer is) {
         super.updateField(name, is);
         if (name.equals("connectivity")) {
             try {
                 this.connectivity = (byte) DecoderHandler.decode(is);
-                this.renderState = new RenderState(this.getTexture(), this.connectivity, this.getCableItem());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        if (name.equals("texture")) {
-            try {
-                this.texture = (ResourceLocation) DecoderHandler.decode(is);
-                this.renderState = new RenderState(this.getTexture(), this.connectivity, this.getCableItem());
+                Direction[] var5 = Direction.values();
+                Map<Direction, Boolean> booleanMap = new HashMap<>();
+                for (Direction facing : var5) {
+                    boolean hasConnection = (this.connectivity & 1 << facing.ordinal()) != 0;
+                    booleanMap.put(facing, hasConnection);
+                }
+                this.setBlockState(this.block
+                        .defaultBlockState()
+                        .setValue(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
+                        .setValue(
+                                this.block.facingProperty,
+                                this.getFacing()
+                        ).setValue(NORTH, booleanMap.get(Direction.SOUTH))
+                        .setValue(SOUTH, booleanMap.get(Direction.NORTH))
+                        .setValue(WEST, booleanMap.get(Direction.UP))
+                        .setValue(EAST, booleanMap.get(Direction.DOWN))
+                        .setValue(UP, booleanMap.get(Direction.WEST))
+                        .setValue(DOWN, booleanMap.get(Direction.EAST)));
+                this.getWorld().setBlock(this.worldPosition, super.getBlockState(), 3);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -431,7 +435,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
-            this.blackList = (List<EnumFacing>) DecoderHandler.decode(customPacketBuffer);
+            this.blackList = (List<Direction>) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -441,22 +445,11 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         return true;
     }
 
-    public TileEntityBlockStateContainer.PropertiesStateInstance getExtendedState(TileEntityBlockStateContainer.PropertiesStateInstance state) {
-        state = super.getExtendedState(state);
-        if (this.renderState == null) {
-
-            this.renderState = new RenderState(this.getTexture(), this.connectivity, this.getCableItem());
-
-        }
-        state = state.withProperties(renderStateProperty, this.renderState);
-
-        return state;
-    }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         byte event1 = (byte) var2;
-        EnumFacing facing1 = EnumFacing.values()[event1];
+        Direction facing1 = Direction.values()[event1];
         if (this.blackList.contains(facing1)) {
             this.blackList.remove(facing1);
         } else {

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.gaswell.TileEntityGasWellTank;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGasWellTank extends ContainerFullInv<TileEntityGasWellTank> {
 
-    public ContainerGasWellTank(TileEntityGasWellTank tileEntityGeothermalExchanger, EntityPlayer var1) {
+    public ContainerGasWellTank(TileEntityGasWellTank tileEntityGeothermalExchanger, Player var1) {
         super(tileEntityGeothermalExchanger, var1);
     }
 

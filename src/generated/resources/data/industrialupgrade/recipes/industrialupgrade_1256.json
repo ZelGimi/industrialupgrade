@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_354_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "ADA",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:primal_laser_polisher/primal_laser_polisher"
+  },
+  "show_notification": true
+}

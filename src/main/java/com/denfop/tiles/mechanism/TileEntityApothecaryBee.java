@@ -3,24 +3,27 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.bee.BeeNetwork;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerApothecaryBee;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiApothecaryBee;
+import com.denfop.gui.GuiCore;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.bee.TileEntityApiary;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,21 +33,21 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
 
     private static final int RADIUS = 4;
     public final ComponentBaseEnergy energy;
-    AxisAlignedBB searchArea = new AxisAlignedBB(
-            pos.add(-RADIUS, -RADIUS, -RADIUS),
-            pos.add(RADIUS, RADIUS, RADIUS)
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS, RADIUS, RADIUS)
     );
     List<List<TileEntityApiary>> list = new ArrayList<>();
-    List<Chunk> chunks;
+    List<LevelChunk> chunks;
 
-    public TileEntityApothecaryBee() {
-
+    public TileEntityApothecaryBee(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.apothecary_bee,pos,state);
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 20000));
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -61,37 +64,37 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            final AxisAlignedBB aabb = searchArea.offset(pos);
-            searchArea = aabb;
-            int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
-            int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
-            int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
-            int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
+        if (!this.getWorld().isClientSide) {
+            final AABB aabb = searchArea;
+            int j2 = Mth.floor((aabb.minX - 2) / 16.0D);
+            int k2 = Mth.ceil((aabb.maxX + 2) / 16.0D);
+            int l2 = Mth.floor((aabb.minZ - 2) / 16.0D);
+            int i3 = Mth.ceil((aabb.maxZ + 2) / 16.0D);
             chunks = new ArrayList<>();
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
-                    final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
+                    final LevelChunk chunk = level.getChunk(j3, k3);
                     if (!chunks.contains(chunk)) {
                         chunks.add(chunk);
                     }
                 }
             }
-            for (Chunk chunk : chunks) {
-                this.list.add(BeeNetwork.instance.getApiaryFromChunk(world, chunk.getPos()));
+            for (LevelChunk chunk : chunks) {
+                this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk.getPos()));
             }
         }
     }
 
     @Override
-    public ContainerApothecaryBee getGuiContainer(final EntityPlayer var1) {
+    public ContainerApothecaryBee getGuiContainer(final Player var1) {
         return new ContainerApothecaryBee(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiApothecaryBee(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiApothecaryBee((ContainerApothecaryBee) menu);
     }
 
     public boolean contains(BlockPos vec) {
@@ -108,18 +111,18 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
 
     private void updateBee() {
         list.clear();
-        for (Chunk chunk : chunks) {
-            this.list.add(BeeNetwork.instance.getApiaryFromChunk(world, chunk.getPos()));
+        for (LevelChunk chunk : chunks) {
+            this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk.getPos()));
         }
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0) {
+        if (this.getWorld().getGameTime() % 100 == 0) {
             updateBee();
         }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
+        if (this.getWorld().getGameTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
             cycle:
             for (List<TileEntityApiary> bees : list) {
                 for (TileEntityApiary bee : bees) {

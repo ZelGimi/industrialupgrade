@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:daynight_solar_panel_glass/adv"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:excitednucleus/advcore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:itemsunnarium/sunnarium_enriched_plate"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine3/solar_iu"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_30_element"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:machines/advanced_solar_paneliu"
+  },
+  "show_notification": true
+}

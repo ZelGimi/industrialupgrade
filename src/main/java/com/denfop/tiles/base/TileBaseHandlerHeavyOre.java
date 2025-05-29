@@ -4,36 +4,34 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHandlerHeavyOre;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiHandlerHeavyOre;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.world.WorldBaseGen;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
@@ -55,20 +53,13 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
     private boolean auto;
     private int[] col;
 
-    public TileBaseHandlerHeavyOre(EnumTypeStyle enumTypeSlot) {
-        this(1, 300, 3, 1, enumTypeSlot);
-    }
 
     public TileBaseHandlerHeavyOre(
-            int energyPerTick,
-            int length,
-            int outputSlots,
-            int aDefaultTier,
-            EnumTypeStyle enumTypeSlot
+            EnumTypeStyle enumTypeSlot, IMultiTileBlock block, BlockPos pos, BlockState state
     ) {
-        super(energyPerTick * length, 1, 1);
+        super(300, 1, 1, block, pos, state);
         this.enumTypeSlot = enumTypeSlot;
-        this.outputSlot = new InvSlotOutput(this, outputSlots + 2 * Math.min(3, enumTypeSlot.ordinal()));
+        this.outputSlot = new InvSlotOutput(this, 3 + 2 * Math.min(3, enumTypeSlot.ordinal()));
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.inputSlotA = new InvSlotRecipes(this, "handlerho", this);
         this.heat = this.addComponent(HeatComponent
@@ -84,9 +75,9 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
             }
         });
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
-                (short) length
+                (short) 300
         ));
-        this.componentProcess = this.addComponent(new ComponentProcess(this, (int) (length / this.getSpeed()), energyPerTick) {
+        this.componentProcess = this.addComponent(new ComponentProcess(this, (int) (300 / this.getSpeed()), 1) {
             @Override
             public void operateWithMax(final MachineRecipe output) {
                 operate(output);
@@ -106,8 +97,8 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
             @Override
             public void operateOnce(final List<ItemStack> processResult) {
                 for (int i = 0; i < col.length; i++) {
-                    final Random rand = world.rand;
-                    if (col[i] > WorldBaseGen.random.nextInt(100)) {
+                    RandomSource rand = level.random;
+                    if ((100-col[i]) <= rand.nextInt(100)) {
                         this.outputSlot.add(processResult.get(i));
                     }
                 }
@@ -119,13 +110,14 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TileBaseHandlerHeavyOre) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TileBaseHandlerHeavyOre) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TileBaseHandlerHeavyOre) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
@@ -135,7 +127,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
         };
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
@@ -185,18 +177,6 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
     }
 
 
-    public String getStartSoundFile() {
-        return "Machines/handlerho.ogg";
-    }
-
-    public String getInterruptSoundFile() {
-        return "Machines/InterruptOne.ogg";
-    }
-
-    public float getWrenchDropRate() {
-        return 0.85F;
-    }
-
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
@@ -205,13 +185,13 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             inputSlotA.load();
             this.getOutput();
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
         }
     }
@@ -222,25 +202,16 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
 
 
     @Override
-    public ContainerHandlerHeavyOre getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerHandlerHeavyOre getGuiContainer(Player entityPlayer) {
         return new ContainerHandlerHeavyOre(entityPlayer, this);
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiHandlerHeavyOre(new ContainerHandlerHeavyOre(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiHandlerHeavyOre((ContainerHandlerHeavyOre) isAdmin);
     }
 
-    public void operateOnce(List<ItemStack> processResult) {
-        for (int i = 0; i < col.length; i++) {
-            final Random rand = world.rand;
-            if ((col[i]) > rand.nextInt(100)) {
-                this.outputSlot.add(processResult.get(i));
-            }
-        }
-        this.inputSlotA.consume();
-    }
 
     public MachineRecipe getOutput() {
 
@@ -286,7 +257,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
         } else {
             this.col = new int[output.getRecipe().output.items.size()];
             for (int i = 0; i < col.length; i++) {
-                col[i] = (int) (output.getRecipe().output.metadata.getInteger(("input" + i)) * this.coef);
+                col[i] = (int) (output.getRecipe().output.metadata.getInt(("input" + i)) * this.coef);
                 col[i] = Math.min(col[i], 95);
             }
         }

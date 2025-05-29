@@ -1,13 +1,15 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityAutomaticMechanism;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 
 public class ContainerAutomaticMechanism extends ContainerBase<TileEntityAutomaticMechanism> {
 
-    public ContainerAutomaticMechanism(TileEntityAutomaticMechanism tileEntityAutomaticMechanism, EntityPlayer player) {
-        super(tileEntityAutomaticMechanism);
+    public ContainerAutomaticMechanism(TileEntityAutomaticMechanism tileEntityAutomaticMechanism, Player player) {
+        super(tileEntityAutomaticMechanism,null);
+        this.player = player;
+        this.inventory = player.getInventory();
         for (int i = 0; i < 36; i++) {
             addSlotToContainer(new SlotVirtual(tileEntityAutomaticMechanism, i, 8 + (i % 6) * 18, 25 + (i / 6) * 18,
                     tileEntityAutomaticMechanism.slot
@@ -25,7 +27,7 @@ public class ContainerAutomaticMechanism extends ContainerBase<TileEntityAutomat
         for (col = 0; col < 3; ++col) {
             for (int col1 = 0; col1 < 9; ++col1) {
                 this.addSlotToContainer(new Slot(
-                        player.inventory,
+                        player.getInventory(),
                         col1 + col * 9 + 9,
                         xStart + col1 * 18,
                         height + -82 + col * 18
@@ -34,7 +36,7 @@ public class ContainerAutomaticMechanism extends ContainerBase<TileEntityAutomat
         }
 
         for (col = 0; col < 9; ++col) {
-            this.addSlotToContainer(new Slot(player.inventory, col, xStart + col * 18, height + -24));
+            this.addSlotToContainer(new Slot(player.getInventory(), col, xStart + col * 18, height + -24));
         }
 
     }

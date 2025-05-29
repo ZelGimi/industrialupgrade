@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/radioactive_handler_ore_front",
-    "down" : "industrialupgrade:blocks/radioactive_handler_ore_sides",
-    "up" : "industrialupgrade:blocks/radioactive_handler_ore_top",
-    "north" : "industrialupgrade:blocks/radioactive_handler_ore_front",
-    "east" : "industrialupgrade:blocks/radioactive_handler_ore_sides",
-    "south" : "industrialupgrade:blocks/radioactive_handler_ore_sides",
-    "west" : "industrialupgrade:blocks/radioactive_handler_ore_sides"
+    "particle" : "industrialupgrade:block/radioactive_handler_ore_front",
+    "down" : "industrialupgrade:block/radioactive_handler_ore_sides",
+    "up" : "industrialupgrade:block/radioactive_handler_ore_top",
+    "north" : "industrialupgrade:block/radioactive_handler_ore_front",
+    "east" : "industrialupgrade:block/radioactive_handler_ore_sides",
+    "south" : "industrialupgrade:block/radioactive_handler_ore_sides",
+    "west" : "industrialupgrade:block/radioactive_handler_ore_sides"
   }
 }

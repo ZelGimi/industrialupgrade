@@ -3,14 +3,16 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IPatternStorage;
 import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.MultiTileBlock;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPatternStorage;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPatternStorage;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemCrystalMemory;
@@ -20,15 +22,16 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +50,8 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
     public double patternUu;
     public double patternEu;
 
-    public TilePatternStorage() {
+    public TilePatternStorage(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.pattern_storage_iu,pos,state);
         this.diskSlot = new InvSlot(
                 this,
                 InvSlot.TypeItemSlot.INPUT_OUTPUT,
@@ -55,7 +59,7 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
         ) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.crystalMemory;
+                return stack.getItem() == IUItem.crystalMemory.getItem();
             }
         };
     }
@@ -65,15 +69,15 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.readContents(nbttagcompound);
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
         this.writeContentsAsNbtList(nbt);
         return nbt;
@@ -109,10 +113,10 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
         return packet;
     }
 
-    public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
+    public void onPlaced(ItemStack stack, LivingEntity placer, Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (!this.getWorld().isRemote) {
-            NBTTagCompound nbt = ModUtils.nbt(stack);
+        if (!this.getWorld().isClientSide) {
+            CompoundTag nbt = ModUtils.nbt(stack);
             this.readContents(nbt);
         }
 
@@ -120,23 +124,23 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (drop.isItemEqual(this.getPickBlock(
+        if (drop.is(this.getPickBlock(
                 null,
                 null
-        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
-            NBTTagCompound nbt = ModUtils.nbt(drop);
+        ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
+            CompoundTag nbt = ModUtils.nbt(drop);
             this.writeContentsAsNbtList(nbt);
         }
 
         return drop;
     }
 
-    public void readContents(NBTTagCompound nbt) {
-        NBTTagList patternList = nbt.getTagList("patterns", 10);
+    public void readContents(CompoundTag nbt) {
+        ListTag patternList = nbt.getList("patterns", 10);
 
-        for (int i = 0; i < patternList.tagCount(); ++i) {
-            NBTTagCompound contentTag = patternList.getCompoundTagAt(i);
-            ItemStack Item = new ItemStack(contentTag);
+        for (int i = 0; i < patternList.size(); ++i) {
+            CompoundTag contentTag = patternList.getCompound(i);
+            ItemStack Item =  ItemStack.of(contentTag);
             this.addPattern(new RecipeInfo(Item, Recipes.recipes
                     .getRecipeOutput("replicator", false, Item)
                     .getOutput().metadata.getDouble(
@@ -146,28 +150,30 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
         this.refreshInfo();
     }
 
-    private void writeContentsAsNbtList(NBTTagCompound nbt) {
-        NBTTagList list = new NBTTagList();
+    private void writeContentsAsNbtList(CompoundTag nbt) {
+        ListTag list = new ListTag();
 
         for (final RecipeInfo stack : this.patterns) {
-            NBTTagCompound contentTag = new NBTTagCompound();
-            stack.getStack().writeToNBT(contentTag);
-            list.appendTag(contentTag);
+            CompoundTag contentTag = new CompoundTag();
+            stack.getStack().save(contentTag);
+            list.add(contentTag);
         }
 
-        nbt.setTag("patterns", list);
+        nbt.put("patterns", list);
     }
 
-    public ContainerBase<TilePatternStorage> getGuiContainer(EntityPlayer player) {
+    public ContainerBase<TilePatternStorage> getGuiContainer(Player player) {
         return new ContainerPatternStorage(player, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiPatternStorage(new ContainerPatternStorage(player, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiPatternStorage((ContainerPatternStorage) menu);
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         ItemStack crystalMemory;
         switch ((int) event) {
             case 0:
@@ -194,7 +200,7 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
                 break;
             case 2:
                 if (this.index >= 0 && this.index < this.patterns.size() && !this.diskSlot.isEmpty()) {
-                    crystalMemory = this.diskSlot.get();
+                    crystalMemory = this.diskSlot.get(0);
                     if (crystalMemory.getItem() instanceof ItemCrystalMemory) {
                         ((ItemCrystalMemory) crystalMemory.getItem()).writecontentsTag(
                                 crystalMemory,
@@ -205,7 +211,7 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
                 break;
             case 3:
                 if (!this.diskSlot.isEmpty()) {
-                    crystalMemory = this.diskSlot.get();
+                    crystalMemory = this.diskSlot.get(0);
                     if (crystalMemory.getItem() instanceof ItemCrystalMemory) {
                         ItemStack record = ((ItemCrystalMemory) crystalMemory.getItem()).readItemStack(crystalMemory);
                         if (record != null) {
@@ -236,8 +242,6 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
 
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
 
     public boolean addPattern(RecipeInfo stack) {
         if (ModUtils.isEmpty(stack.getStack())) {

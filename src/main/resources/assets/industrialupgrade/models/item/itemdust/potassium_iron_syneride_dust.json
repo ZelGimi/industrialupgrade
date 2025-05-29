@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/potassium_iron_syneride"
+    "layer0" : "industrialupgrade:item/potassium_iron_syneride"
   }
 }

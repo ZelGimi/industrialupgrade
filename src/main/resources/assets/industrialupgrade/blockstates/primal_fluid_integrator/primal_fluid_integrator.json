@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=primal_fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator"
+    },
+    "facing=south,type=primal_fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 180
+    },
+    "facing=west,type=primal_fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 270
+    },
+    "facing=east,type=primal_fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 90
+    },
+    "facing=down,type=primal_fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "x": 90
+    },
+    "facing=up,type=primal_fluid_integrator": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "x": 270
+    },
+    "facing=north,type=primal_fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator"
+    },
+    "facing=south,type=primal_fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 180
+    },
+    "facing=west,type=primal_fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 270
+    },
+    "facing=east,type=primal_fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 90
+    },
+    "facing=down,type=primal_fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "x": 90
+    },
+    "facing=up,type=primal_fluid_integrator_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "x": 270
+    },
+    "facing=north,type=primal_fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator"
+    },
+    "facing=south,type=primal_fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 180
+    },
+    "facing=west,type=primal_fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 270
+    },
+    "facing=east,type=primal_fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "y": 90
+    },
+    "facing=down,type=primal_fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "x": 90
+    },
+    "facing=up,type=primal_fluid_integrator_active": {
+      "model": "industrialupgrade:block/basemachine/primal_fluid_integrator",
+      "x": 270
+    }
+  }
+}

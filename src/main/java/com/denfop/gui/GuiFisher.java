@@ -10,16 +10,17 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerFisher;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiFisher extends GuiIU<ContainerFisher> {
+@OnlyIn(Dist.CLIENT)
+public class GuiFisher<T extends ContainerFisher> extends GuiIU<ContainerFisher> {
 
     public final ContainerFisher container;
 
@@ -43,11 +44,11 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
 
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        this.drawForeground(par1, par2);
-        this.fontRenderer.drawString(
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        this.drawForeground(poseStack, par1, par2);
+        draw(poseStack,
                 this.getName(),
-                (this.xSize - this.fontRenderer.getStringWidth(this.getName())) / 2,
+                (int) ((float) (this.imageWidth - this.getStringWidth(this.getName())) / 2),
                 6,
                 4210752
         );
@@ -66,10 +67,10 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
                 )) + "%";
         new AdvArea(this, 147, 27, 158, 76)
                 .withTooltip(tooltip2)
-                .drawForeground(par1, par2);
+                .drawForeground(poseStack, par1, par2);
         new AdvArea(this, 41, 45, 55, 60)
                 .withTooltip(tooltip)
-                .drawForeground(par1, par2);
+                .drawForeground(poseStack, par1, par2);
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -89,26 +90,25 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
     }
 
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
 
-        this.mc.getTextureManager().bindTexture(getTexture());
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        this.drawBackground();
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(this.guiLeft + 3, this.guiTop + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
+        bindTexture(getTexture());
+        this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, this.imageWidth, this.imageHeight);
+        this.drawBackground(poseStack);
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft() + 3, this.guiTop() + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
         int chargeLevel = (int) (48.0F * this.container.base.energy.getEnergy()
                 / this.container.base.energy.getCapacity());
         int progress = (15 * this.container.base.progress / 100);
         if (chargeLevel > 0) {
-            drawTexturedModalRect(this.guiLeft + 140 + 1 + 5, this.guiTop + 28 + 48 - chargeLevel, 176,
+            drawTexturedModalRect(poseStack, this.guiLeft() + 140 + 1 + 5, this.guiTop() + 28 + 48 - chargeLevel, 176,
                     48 - chargeLevel, 48, chargeLevel
             );
         }
 
         if (progress > 0) {
-            drawTexturedModalRect(this.guiLeft + 42, this.guiTop + 46, 177, 48, progress + 1, 14);
+            drawTexturedModalRect(poseStack, this.guiLeft() + 42, this.guiTop() + 46, 177, 48, progress + 1, 14);
         }
 
 

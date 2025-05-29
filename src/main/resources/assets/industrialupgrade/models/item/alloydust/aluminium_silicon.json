@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/aluminium_silicon_dust"	}
+		"layer0": "industrialupgrade:item/aluminium_silicon_dust"	}
 }

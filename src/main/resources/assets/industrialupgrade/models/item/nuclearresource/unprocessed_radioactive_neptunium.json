@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nuclear/unprocessed_radioactive_neptunium"
+		"layer0": "industrialupgrade:item/nuclear/unprocessed_radioactive_neptunium"
 	}
 }

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:spaceupgrademodule_schedule"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/woods"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/berylliumbronze"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/nitenol"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:spaceupgrademodules/space_upgrademodule"
+  },
+  "show_notification": true
+}

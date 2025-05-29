@@ -7,24 +7,17 @@ import com.denfop.api.agriculture.genetics.GeneticTraits;
 import com.denfop.api.agriculture.genetics.Genome;
 import com.denfop.api.agriculture.genetics.IGenomeItem;
 import com.denfop.api.audio.IAudioFixer;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerInoculator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiInoculator;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.items.bee.ItemJarBees;
@@ -32,12 +25,13 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -52,13 +46,13 @@ public class TileEntityInoculator extends TileElectricMachine implements IHasRec
     public ComponentProcess componentProcess;
     public MachineRecipe output;
 
-    public TileEntityInoculator() {
-        super(300, 1, 1);
+    public TileEntityInoculator(BlockPos pos, BlockState state) {
+        super(300, 1, 1,BlockBaseMachine3.inoculator,pos,state);
         Recipes.recipes.addInitRecipes(this);
         this.inputSlotA = new InvSlotRecipes(this, "inoculator", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
-                return itemStack.getItem() instanceof ICropItem || itemStack.getItem() instanceof com.denfop.api.bee.genetics.IGenomeItem || itemStack.getItem() instanceof IGenomeItem || itemStack.getItem() == IUItem.jarBees;
+                return itemStack.getItem() instanceof ICropItem || itemStack.getItem() instanceof com.denfop.api.bee.genetics.IGenomeItem || itemStack.getItem() instanceof IGenomeItem || itemStack.getItem() == IUItem.jarBees.getStack(0);
             }
         };
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
@@ -171,19 +165,19 @@ public class TileEntityInoculator extends TileElectricMachine implements IHasRec
             if (i == 3) {
                 continue;
             }
-            ItemStack input = new ItemStack(IUItem.crops);
+            ItemStack input = new ItemStack(IUItem.crops.getStack(0));
 
-            final NBTTagCompound nbt = ModUtils.nbt(input);
-            nbt.setInteger("crop_id", i);
+            final CompoundTag nbt = ModUtils.nbt(input);
+            nbt.putInt("crop_id", i);
             for (GeneticTraits traits : GeneticTraits.values()) {
-                addRecipe(input, new ItemStack(IUItem.genome_crop, 1, traits.ordinal()));
+                addRecipe(input, new ItemStack(IUItem.genome_crop.getStack(traits.ordinal()), 1));
             }
         }
         ;
         for (int i = 1; i < 6; i++) {
-            ItemStack input = IUItem.jarBees.getStackFromId(i);
+            ItemStack input = IUItem.jarBees.getStack(0).getStackFromId(i);
             for (com.denfop.api.bee.genetics.GeneticTraits traits : com.denfop.api.bee.genetics.GeneticTraits.values()) {
-                addRecipe(input, new ItemStack(IUItem.genome_bee, 1, traits.ordinal()));
+                addRecipe(input, new ItemStack(IUItem.genome_bee.getStack(traits.ordinal()), 1));
             }
         }
     }
@@ -193,17 +187,19 @@ public class TileEntityInoculator extends TileElectricMachine implements IHasRec
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiInoculator(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiInoculator((ContainerInoculator) menu);
     }
 
     @Override
-    public ContainerInoculator getGuiContainer(final EntityPlayer var1) {
+    public ContainerInoculator getGuiContainer(final Player var1) {
         return new ContainerInoculator(var1, this);
     }
 

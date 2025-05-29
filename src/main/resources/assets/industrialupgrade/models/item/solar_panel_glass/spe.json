@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/day/spe"
+		"layer0": "industrialupgrade:item/day/spe"
 	}
 }

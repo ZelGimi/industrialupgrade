@@ -2,11 +2,11 @@ package com.denfop.container;
 
 
 import com.denfop.tiles.mechanism.generator.things.fluid.TileLavaGenerator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerLavaGenerator extends ContainerFullInv<TileLavaGenerator> {
 
-    public ContainerLavaGenerator(EntityPlayer entityPlayer, TileLavaGenerator tileEntity1) {
+    public ContainerLavaGenerator(Player entityPlayer, TileLavaGenerator tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
 
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/simulation_reactors_bottom",
-    "down" : "industrialupgrade:blocks/simulation_reactors_bottom",
-    "up" : "industrialupgrade:blocks/simulation_reactors_bottom",
-    "north" : "industrialupgrade:blocks/simulation_reactors_main",
-    "east" : "industrialupgrade:blocks/simulation_reactors_bottom",
-    "south" : "industrialupgrade:blocks/simulation_reactors_bottom",
-    "west" : "industrialupgrade:blocks/simulation_reactors_bottom"
+    "particle" : "industrialupgrade:block/simulation_reactors_bottom",
+    "down" : "industrialupgrade:block/simulation_reactors_bottom",
+    "up" : "industrialupgrade:block/simulation_reactors_bottom",
+    "north" : "industrialupgrade:block/simulation_reactors_main",
+    "east" : "industrialupgrade:block/simulation_reactors_bottom",
+    "south" : "industrialupgrade:block/simulation_reactors_bottom",
+    "west" : "industrialupgrade:block/simulation_reactors_bottom"
   }
 }

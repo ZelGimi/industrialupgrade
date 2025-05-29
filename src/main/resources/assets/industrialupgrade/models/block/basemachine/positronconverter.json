@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/positronconverter_front",
-    "down" : "industrialupgrade:blocks/positronconverter_top",
-    "up" : "industrialupgrade:blocks/positronconverter_top",
-    "north" : "industrialupgrade:blocks/positronconverter_front",
-    "east" : "industrialupgrade:blocks/positronconverter_side",
-    "south" : "industrialupgrade:blocks/positronconverter_side",
-    "west" : "industrialupgrade:blocks/positronconverter_side"
+    "particle" : "industrialupgrade:block/positronconverter_front",
+    "down" : "industrialupgrade:block/positronconverter_top",
+    "up" : "industrialupgrade:block/positronconverter_top",
+    "north" : "industrialupgrade:block/positronconverter_front",
+    "east" : "industrialupgrade:block/positronconverter_side",
+    "south" : "industrialupgrade:block/positronconverter_side",
+    "west" : "industrialupgrade:block/positronconverter_side"
   }
 }

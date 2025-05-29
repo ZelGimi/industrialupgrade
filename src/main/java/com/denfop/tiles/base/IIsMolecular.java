@@ -1,9 +1,10 @@
 package com.denfop.tiles.base;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface IIsMolecular {
 
@@ -13,11 +14,11 @@ public interface IIsMolecular {
 
     TileEntityBlock getEntityBlock();
 
-    @SideOnly(Side.CLIENT)
-    IBakedModel getBakedModel();
+    @OnlyIn(Dist.CLIENT)
+    BakedModel getBakedModel();
 
-    @SideOnly(Side.CLIENT)
-    default IBakedModel getTransformedModel() {
+    @OnlyIn(Dist.CLIENT)
+    default BakedModel getTransformedModel() {
         return null;
     }
 

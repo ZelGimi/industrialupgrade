@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "industrialupgrade:models/space/lens_2",
-		"particle": "industrialupgrade:models/space/lens_2"
+		"0": "industrialupgrade:block/space/lens_2",
+		"particle": "industrialupgrade:block/space/lens_2"
 	},
 	"elements": [
 		{

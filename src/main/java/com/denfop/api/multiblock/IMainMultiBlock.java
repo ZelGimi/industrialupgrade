@@ -1,6 +1,6 @@
 package com.denfop.api.multiblock;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public interface IMainMultiBlock extends IMultiElement {
 
@@ -18,7 +18,7 @@ public interface IMainMultiBlock extends IMultiElement {
 
     void updateFull();
 
-    void updateFull(EntityPlayer player);
+    void updateFull(Player player);
 
 
 }

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/asteroids_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/asteroids_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/asteroids_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/asteroids_boulder"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:spacecobblestone/asteroids_cobblestone"
+  }
+}

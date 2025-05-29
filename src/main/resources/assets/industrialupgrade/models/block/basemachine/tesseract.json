@@ -1,8 +1,8 @@
 {
 	"credit": "texnounits",
 	"textures": {
-		"1": "industrialupgrade:blocks/tesseract",
-		"particle": "industrialupgrade:blocks/tesseract"
+		"1": "industrialupgrade:block/tesseract",
+		"particle": "industrialupgrade:block/tesseract"
 	},
 	"elements": [
 		{
@@ -674,7 +674,30 @@
 			}
 		}
 	],
-	"display": {},
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [20, 40, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
 	"groups": [
 		{
 			"name": "group",

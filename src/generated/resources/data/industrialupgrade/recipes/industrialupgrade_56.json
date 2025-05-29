@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": [
+      {
+        "tag": "forge:ingots/duralumin"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/invar"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:energy/magnet"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "CDC",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/impmagnet"
+  },
+  "show_notification": true
+}

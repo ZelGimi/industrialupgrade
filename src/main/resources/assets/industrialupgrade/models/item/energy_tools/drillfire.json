@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/tool/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/drillfire"
+    "layer0" : "industrialupgrade:item/drillfire"
   }
 }

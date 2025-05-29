@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/genetic_polymerizer_main",
-    "down" : "industrialupgrade:blocks/genetic_polymerizer_bottom",
-    "up" : "industrialupgrade:blocks/genetic_polymerizer_top",
-    "north" : "industrialupgrade:blocks/genetic_polymerizer_main",
-    "east" : "industrialupgrade:blocks/genetic_polymerizer_bottom",
-    "south" : "industrialupgrade:blocks/genetic_polymerizer_bottom",
-    "west" : "industrialupgrade:blocks/genetic_polymerizer_bottom"
+    "particle" : "industrialupgrade:block/genetic_polymerizer_main",
+    "down" : "industrialupgrade:block/genetic_polymerizer_bottom",
+    "up" : "industrialupgrade:block/genetic_polymerizer_top",
+    "north" : "industrialupgrade:block/genetic_polymerizer_main",
+    "east" : "industrialupgrade:block/genetic_polymerizer_bottom",
+    "south" : "industrialupgrade:block/genetic_polymerizer_bottom",
+    "west" : "industrialupgrade:block/genetic_polymerizer_bottom"
   }
 }

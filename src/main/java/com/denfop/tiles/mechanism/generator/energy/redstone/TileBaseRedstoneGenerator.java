@@ -2,25 +2,30 @@ package com.denfop.tiles.mechanism.generator.energy.redstone;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRedstoneGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRedstoneGenerator;
 import com.denfop.invslot.InvSlotRedstoneGenerator;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,8 +41,8 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
     public int max_fuel = 400;
     public int redstone_coef = 1;
 
-    public TileBaseRedstoneGenerator(double coef, int tier) {
-        super(0, tier, 0);
+    public TileBaseRedstoneGenerator(double coef, int tier, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(0, tier, 0, block, pos, state);
         energy = this.addComponent(Energy.asBasicSource(this, 150000 * coef, tier));
 
 
@@ -45,7 +50,7 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
         this.slot = new InvSlotRedstoneGenerator(this);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
@@ -92,7 +97,7 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
     @Override
     public void onLoaded() {
         super.onLoaded();
-        final ItemStack content = this.slot.get();
+        final ItemStack content = this.slot.get(0);
         if (content.isEmpty()) {
             this.redstone_coef = 0;
         }
@@ -109,12 +114,12 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
         if (!this.slot.isEmpty()) {
             if (fuel == 0) {
                 fuel = max_fuel;
-                if (this.slot.get().getItem() == Items.REDSTONE) {
+                if (this.slot.get(0).getItem() == Items.REDSTONE) {
                     this.redstone_coef = 1;
                 } else {
                     this.redstone_coef = 9;
                 }
-                this.slot.get().shrink(1);
+                this.slot.get(0).shrink(1);
                 if (!this.getActive()) {
                     this.setActive(true);
                 }
@@ -147,28 +152,28 @@ public class TileBaseRedstoneGenerator extends TileElectricMachine implements IT
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.fuel = nbttagcompound.getInteger("fuel");
+        this.fuel = nbttagcompound.getInt("fuel");
     }
 
     public int gaugeStorageScaled(int i) {
         return (int) (this.energy.getEnergy() * (double) i / this.energy.getCapacity());
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setInteger("fuel", this.fuel);
+        nbt.putInt("fuel", this.fuel);
         return nbt;
     }
 
-    public ContainerRedstoneGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerRedstoneGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerRedstoneGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiRedstoneGenerator(new ContainerRedstoneGenerator(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiRedstoneGenerator((ContainerRedstoneGenerator) isAdmin);
     }
 
 

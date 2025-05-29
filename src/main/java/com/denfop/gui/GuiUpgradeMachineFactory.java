@@ -5,9 +5,9 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerUpgradeMachineFactory;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiUpgradeMachineFactory extends GuiIU<ContainerUpgradeMachineFactory> {
+public class GuiUpgradeMachineFactory<T extends ContainerUpgradeMachineFactory> extends GuiIU<ContainerUpgradeMachineFactory> {
 
     public GuiUpgradeMachineFactory(ContainerUpgradeMachineFactory guiContainer) {
         super(guiContainer);
@@ -19,20 +19,7 @@ public class GuiUpgradeMachineFactory extends GuiIU<ContainerUpgradeMachineFacto
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-    }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
 
     @Override
     protected ResourceLocation getTexture() {

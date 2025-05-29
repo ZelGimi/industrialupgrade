@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/fluid_tank_normal_per"
+    "layer0" : "industrialupgrade:item/fluid_tank_normal_per"
   }
 }

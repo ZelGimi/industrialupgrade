@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -9,7 +10,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.CoolComponent;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSolidCoolMachine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSolidCoolMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -17,18 +20,17 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -46,8 +48,8 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
     public int max;
     public boolean work;
 
-    public TileSolidCooling() {
-        super(0, 0, 1);
+    public TileSolidCooling(BlockPos pos, BlockState state) {
+        super(0, 0, 1,BlockBaseMachine3.solid_cooling,pos,state);
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, 14));
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
@@ -57,7 +59,7 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
             public boolean accepts(final ItemStack stack, final int index) {
                 boolean find = false;
                 for (Map.Entry<ItemStack, Integer> entry : timerItem.entrySet()) {
-                    if (entry.getKey().isItemEqual(stack)) {
+                    if (entry.getKey().is(stack.getItem())) {
                         find = true;
                         break;
                     }
@@ -73,21 +75,10 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
         timerItem.put(new ItemStack(Blocks.SNOW, 1), 10);
         timerItem.put(new ItemStack(Blocks.ICE, 1), 30);
         timerItem.put(new ItemStack(Blocks.PACKED_ICE, 1), 90);
+        timerItem.put(new ItemStack(Blocks.BLUE_ICE, 1), 90*9);
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public boolean needUpdate() {
@@ -165,27 +156,27 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.max = nbttagcompound.getInteger("max");
+        this.max = nbttagcompound.getInt("max");
         this.work = nbttagcompound.getBoolean("work");
         this.cold.setCapacity(this.max);
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("max", this.max);
-        nbttagcompound.setBoolean("work", this.work);
+        nbttagcompound.putInt("max", this.max);
+        nbttagcompound.putBoolean("work", this.work);
         return nbttagcompound;
 
     }
 
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         if (i == 0) {
             this.cold.setCapacity(this.max + 4);
             if (this.cold.getCapacity() > 16) {
@@ -231,7 +222,7 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
         if (this.time == 0) {
             if (!this.slot.isEmpty()) {
                 for (Map.Entry<ItemStack, Integer> entry : timerItem.entrySet()) {
-                    if (entry.getKey().isItemEqual(this.slot.get())) {
+                    if (entry.getKey().is(this.slot.get(0).getItem())) {
                         this.time = entry.getValue();
                         this.slot.get(0).shrink(1);
                         break;
@@ -247,7 +238,7 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
                 this.setActive(true);
 
             }
-            if (this.world.provider.getWorldTime() % 400 == 0) {
+            if (this.level.getGameTime() % 400 == 0) {
                 initiate(2);
             }
 
@@ -262,21 +253,21 @@ public class TileSolidCooling extends TileElectricMachine implements IUpdatableT
             initiate(2);
             this.setActive(false);
         }
-        if (this.world.provider.getWorldTime() % 20 == 0 && this.cold.getEnergy() >= 1) {
+        if (this.level.getGameTime() % 20 == 0 && this.cold.getEnergy() >= 1) {
             this.cold.addEnergy(-1);
         }
     }
 
 
     @Override
-    public ContainerSolidCoolMachine getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerSolidCoolMachine getGuiContainer(final Player entityPlayer) {
         return new ContainerSolidCoolMachine(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiSolidCoolMachine(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSolidCoolMachine((ContainerSolidCoolMachine) menu);
     }
 
 

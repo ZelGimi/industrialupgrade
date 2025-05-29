@@ -4,9 +4,11 @@ import com.denfop.gui.GuiCore;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.init.SoundEvents;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 
 public class CustomButton extends GuiElement<CustomButton> {
 
@@ -42,22 +44,22 @@ public class CustomButton extends GuiElement<CustomButton> {
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        super.drawForeground(mouseX, mouseY);
+    public void drawForeground(GuiGraphics poseStack, int mouseX, int mouseY) {
+        super.drawForeground(poseStack, mouseX, mouseY);
         highlighted = this.contains(mouseX, mouseY);
         if (highlighted && visible()) {
-            new Area(this.gui, x, y, x1, y1).withTooltip(getText()).drawForeground(mouseX, mouseY);
+            new Area(this.gui, x, y, x1, y1).withTooltip(getText()).drawForeground(poseStack, mouseX, mouseY);
         }
     }
 
-    public void drawBackground(int mouseX, int mouseY) {
+    public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
         if (this.visible()) {
             if (highlighted) {
                 bindCommonTexture2();
-                GlStateManager.color(1, 1, 1, 1);
-                mouseX = gui.guiLeft;
-                mouseY = gui.guiTop;
-                this.getGui().drawTexturedModalRect(
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+                mouseX = gui.guiLeft();
+                mouseY = gui.guiTop();
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX(),
                         mouseY + this.getY(),
                         1,
@@ -65,7 +67,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                         Math.min(199, x1 - 1),
                         2
                 );
-                this.getGui().drawTexturedModalRect(
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX() + x1 - 5,
                         mouseY + this.getY(),
                         197,
@@ -77,7 +79,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                 int modulo = height % 16;
                 if (height / 16 > 0) {
                     for (int i = mouseY + this.getY() + 2; i < mouseY + this.getY() + y1 - 2; i += 16) {
-                        this.getGui().drawTexturedModalRect(
+                        this.getGui().drawTexturedModalRect(poseStack,
                                 mouseX + this.getX(),
                                 i,
                                 1,
@@ -85,7 +87,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                                 Math.min(199, x1 - 1),
                                 16
                         );
-                        this.getGui().drawTexturedModalRect(
+                        this.getGui().drawTexturedModalRect(poseStack,
                                 mouseX + this.getX() + x1 - 5,
                                 i,
                                 197,
@@ -95,7 +97,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                         );
                     }
                 }
-                this.getGui().drawTexturedModalRect(
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX(),
                         mouseY + this.getY() + 2 + height / 16,
                         1,
@@ -103,7 +105,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                         Math.min(199, x1 - 1),
                         modulo
                 );
-                this.getGui().drawTexturedModalRect(
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX() + x1 - 5,
                         mouseY + this.getY() + 2,
                         197,
@@ -111,7 +113,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                         6,
                         modulo
                 );
-                this.getGui().drawTexturedModalRect(
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX(),
                         mouseY + this.getY() + y1 - 2,
                         1,
@@ -119,7 +121,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                         Math.min(199, x1 - 1),
                         2
                 );
-                this.getGui().drawTexturedModalRect(
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX() + x1 - 5,
                         mouseY + this.getY() + y1 - 2,
                         197,
@@ -129,10 +131,10 @@ public class CustomButton extends GuiElement<CustomButton> {
                 );
             } else {
                 bindCommonTexture2();
-                GlStateManager.color(1, 1, 1, 1);
-                mouseX = gui.guiLeft;
-                mouseY = gui.guiTop;
-                this.getGui().drawTexturedModalRect(
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+                mouseX = gui.guiLeft();
+                mouseY = gui.guiTop();
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX(),
                         mouseY + this.getY(),
                         1,
@@ -140,7 +142,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                         Math.min(199, x1 - 1),
                         2
                 );
-                this.getGui().drawTexturedModalRect(
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX() + x1 - 5,
                         mouseY + this.getY(),
                         197,
@@ -152,7 +154,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                 int modulo = height % 16;
                 if (height / 16 > 0) {
                     for (int i = mouseY + this.getY() + 2; i < mouseY + this.getY() + y1 - 2; i += 16) {
-                        this.getGui().drawTexturedModalRect(
+                        this.getGui().drawTexturedModalRect(poseStack,
                                 mouseX + this.getX(),
                                 i,
                                 1,
@@ -160,7 +162,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                                 Math.min(199, x1 - 1),
                                 16
                         );
-                        this.getGui().drawTexturedModalRect(
+                        this.getGui().drawTexturedModalRect(poseStack,
                                 mouseX + this.getX() + x1 - 5,
                                 i,
                                 197,
@@ -171,7 +173,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                     }
                 }
                 if (modulo > 0) {
-                    this.getGui().drawTexturedModalRect(
+                    this.getGui().drawTexturedModalRect(poseStack,
                             mouseX + this.getX(),
                             mouseY + this.getY() + 2 + height / 16,
                             1,
@@ -179,7 +181,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                             Math.min(199, x1 - 1),
                             modulo
                     );
-                    this.getGui().drawTexturedModalRect(
+                    this.getGui().drawTexturedModalRect(poseStack,
                             mouseX + this.getX() + x1 - 5,
                             mouseY + this.getY() + 2,
                             197,
@@ -188,7 +190,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                             modulo
                     );
                 }
-                this.getGui().drawTexturedModalRect(
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX(),
                         mouseY + this.getY() + y1 - 2,
                         1,
@@ -196,7 +198,7 @@ public class CustomButton extends GuiElement<CustomButton> {
                         Math.min(199, x1 - 1),
                         2
                 );
-                this.getGui().drawTexturedModalRect(
+                this.getGui().drawTexturedModalRect(poseStack,
                         mouseX + this.getX() + x1 - 5,
                         mouseY + this.getY() + y1 - 2,
                         197,
@@ -206,9 +208,9 @@ public class CustomButton extends GuiElement<CustomButton> {
                 );
             }
             if (!this.highlighted) {
-                this.getGui().drawXCenteredString(this.getX() + x1 / 2, this.getY() + y1 / 2 - 4, getText(), 4210752, false);
+                this.getGui().drawXCenteredString(poseStack, this.getX() + x1 / 2, this.getY() + y1 / 2 - 4, Component.literal(getText()), 4210752, false);
             } else {
-                this.getGui().drawXCenteredString(this.getX() + x1 / 2, this.getY() + y1 / 2 - 4, getText(),
+                this.getGui().drawXCenteredString(poseStack, this.getX() + x1 / 2, this.getY() + y1 / 2 - 4, Component.literal(getText()),
                         ModUtils.convertRGBcolorToInt(255, 255, 255), false
                 );
             }
@@ -219,10 +221,7 @@ public class CustomButton extends GuiElement<CustomButton> {
     @Override
     protected boolean onMouseClick(final int mouseX, final int mouseY, final MouseButton button) {
         if (this.visible() && this.contains(mouseX, mouseY)) {
-            this.getGui().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
-                    SoundEvents.UI_BUTTON_CLICK,
-                    1.0F
-            ));
+            this.getGui().getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             new PacketUpdateServerTile(tile, event);
         }
         return super.onMouseClick(mouseX, mouseY, button);

@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/hafnium_ingot"	}
+		"layer0": "industrialupgrade:item/hafnium_ingot"	}
 }

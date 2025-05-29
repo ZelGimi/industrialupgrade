@@ -3,12 +3,12 @@ package com.denfop.api.water.upgrade;
 import com.denfop.IUItem;
 import com.denfop.api.water.upgrade.event.EventRotorItemLoad;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,27 +43,27 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
     }
 
     public int getRemaining(ItemStack item) {
-        NBTTagCompound nbt = ModUtils.nbt(item);
-        int id = nbt.getInteger("ID_Item");
+        CompoundTag nbt = ModUtils.nbt(item);
+        int id = nbt.getInt("ID_Item");
         return this.map_col.getOrDefault(id, 4);
     }
 
     public boolean hasInMap(ItemStack stack) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        int id = nbt.getInteger("ID_Item");
+        CompoundTag nbt = ModUtils.nbt(stack);
+        int id = nbt.getInt("ID_Item");
         ItemStack item = this.map_stack.get(id);
         if (item == null || item.isEmpty()) {
             return false;
         }
-        int id1 = ModUtils.nbt(item).getInteger("ID_Item");
-        return (item.isItemEqual(stack) && id1 == id && item.getTagCompound() != null && item
-                .getTagCompound()
-                .equals(stack.getTagCompound()));
+        int id1 = ModUtils.nbt(item).getInt("ID_Item");
+        return (item.is(stack.getItem()) && id1 == id && item.getTag() != null && item
+                .getTag()
+                .equals(stack.getTag()));
     }
 
     public List<RotorUpgradeItemInform> getInformation(ItemStack item) {
-        NBTTagCompound nbt = ModUtils.nbt(item);
-        int id = nbt.getInteger("ID_Item");
+        CompoundTag nbt = ModUtils.nbt(item);
+        int id = nbt.getInt("ID_Item");
         List<RotorUpgradeItemInform> list = this.map.get(id);
         return (list != null) ? list : new ArrayList<>();
     }
@@ -113,14 +113,14 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
     }
 
     public void updateListFromNBT(IRotorUpgradeItem item, ItemStack stack) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
+        CompoundTag nbt = ModUtils.nbt(stack);
         boolean hasID = nbt.getBoolean("hasID");
-        int id = nbt.getInteger("ID_Item");
+        int id = nbt.getInt("ID_Item");
         if (!hasID) {
             id = this.max;
             this.max++;
-            nbt.setInteger("ID_Item", id);
-            nbt.setBoolean("hasID", true);
+            nbt.putInt("ID_Item", id);
+            nbt.putBoolean("hasID", true);
         }
         List<EnumInfoRotorUpgradeModules> lst = new ArrayList<>();
         int empty = 0;
@@ -140,7 +140,7 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
             }
         }
         int ost = empty;
-        nbt.setBoolean("canupgrade", canupgrade);
+        nbt.putBoolean("canupgrade", canupgrade);
         if (this.map_col.containsKey(id)) {
             this.map_col.replace(id, ost);
         } else {
@@ -154,7 +154,7 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
     }
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
+    public void onWorldUnload(LevelEvent.Unload event) {
         this.map.clear();
         this.max = 0;
         this.map_col.clear();
@@ -174,8 +174,8 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
         for (Map.Entry<EnumInfoRotorUpgradeModules, Integer> map1 : map.entrySet()) {
             list.add(new RotorUpgradeItemInform(map1.getKey(), map1.getValue()));
         }
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        int id = nbt.getInteger("ID_Item");
+        CompoundTag nbt = ModUtils.nbt(stack);
+        int id = nbt.getInt("ID_Item");
         if (!this.map.containsKey(id)) {
             this.map.put(id, list);
             this.map_stack.put(id, stack);
@@ -185,21 +185,21 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
         }
     }
 
-    public void removeUpdate(ItemStack stack, World world, int index) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setString("mode_module" + index, "");
+    public void removeUpdate(ItemStack stack, Level world, int index) {
+        CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putString("mode_module" + index, "");
         MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(world, (IRotorUpgradeItem) stack.getItem(), stack));
     }
 
     public List<ItemStack> getListStack(ItemStack stack) {
         List<ItemStack> list = new ArrayList<>();
-        NBTTagCompound nbt = ModUtils.nbt(stack);
+        CompoundTag nbt = ModUtils.nbt(stack);
         for (int i = 0; i < 4; i++) {
             String name = nbt.getString("mode_module" + i);
-            if (!name.equals("")) {
+            if (!name.isEmpty()) {
                 for (EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules : EnumInfoRotorUpgradeModules.values()) {
                     if (enumInfoRotorUpgradeModules.name.equals(name)) {
-                        list.add(new ItemStack(IUItem.water_rotors_upgrade, 1, enumInfoRotorUpgradeModules.ordinal()));
+                        list.add(new ItemStack(IUItem.water_rotors_upgrade.getStack(enumInfoRotorUpgradeModules.ordinal()), 1));
                     }
                 }
             } else {
@@ -210,14 +210,14 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
     }
 
     public Map<Integer, ItemStack> getList(ItemStack stack) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
+        CompoundTag nbt = ModUtils.nbt(stack);
         Map<Integer, ItemStack> map = new HashMap<>();
         for (int i = 0; i < 4; i++) {
             String name = nbt.getString("mode_module" + i);
-            if (!name.equals("")) {
+            if (!name.isEmpty()) {
                 for (EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules : EnumInfoRotorUpgradeModules.values()) {
                     if (enumInfoRotorUpgradeModules.name.equals(name)) {
-                        map.put(i, new ItemStack(IUItem.water_rotors_upgrade, 1, enumInfoRotorUpgradeModules.ordinal()));
+                        map.put(i, new ItemStack(IUItem.water_rotors_upgrade.getStack(enumInfoRotorUpgradeModules.ordinal()), 1));
                     }
                 }
             } else {

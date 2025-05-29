@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/casing/steel"
+		"layer0": "industrialupgrade:item/casing/steel"
 	}
 }

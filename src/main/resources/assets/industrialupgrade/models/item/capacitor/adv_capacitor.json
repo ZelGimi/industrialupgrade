@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/adv_capacitor_item"
+		"layer0": "industrialupgrade:item/adv_capacitor_item"
 	}
 }

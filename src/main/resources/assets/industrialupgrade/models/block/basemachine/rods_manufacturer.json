@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "industrialupgrade:models/rods_manufacturer",
-		"particle": "industrialupgrade:models/rods_manufacturer"
+		"0": "industrialupgrade:block/rods_manufacturer",
+		"particle": "industrialupgrade:block/rods_manufacturer"
 	},
 	"elements": [
 		{

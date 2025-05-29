@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/cobaltchrome"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/niobiumtitanium"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:synthetic_plate"
+      }
+    ]
+  },
+  "pattern": [
+    "DBD",
+    "CAC",
+    "DBD"
+  ],
+  "result": {
+    "item": "industrialupgrade:chemical_plant/chemical_plant_casing"
+  },
+  "show_notification": true
+}

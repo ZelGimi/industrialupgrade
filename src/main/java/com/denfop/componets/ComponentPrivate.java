@@ -8,14 +8,15 @@ import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntityTesseract;
 import com.denfop.tiles.mechanism.TileEntitySafe;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,27 +33,38 @@ public class ComponentPrivate extends AbstractComponent {
         super(parent);
     }
 
+    public Player getPlayerByUUID(Level level, String name) {
+        for (int i = 0; i < level.players().size(); ++i) {
+            Player player = level.players().get(i);
+            if (name.equals(player.getName().getString())) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
     @Override
-    public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
+    public boolean onBlockActivated(final Player player, final InteractionHand hand) {
         super.onBlockActivated(player, hand);
-        final ItemStack stack = player.getHeldItem(hand);
-        if (!this.activate && !stack.isEmpty() && this.players.contains(player.getName())) {
-            if (stack.getItem() == IUItem.module7 && stack.getItemDamage() == 0) {
+        final ItemStack stack = player.getItemInHand(hand);
+        if (!this.activate && !stack.isEmpty() && this.players.contains(player.getName().getString())) {
+            if (stack.getItem() == IUItem.module7.getItemFromMeta(0)) {
                 this.activate = true;
                 for (int m = 0; m < 9; m++) {
-                    NBTTagCompound nbt = ModUtils.nbt(stack);
+                    CompoundTag nbt = ModUtils.nbt(stack);
                     String name = "player_" + m;
                     if (!nbt.getString(name).isEmpty()) {
                         this.players.add(nbt.getString(name));
-                        this.playersUUID.add(player.getEntityWorld().getPlayerEntityByName(nbt.getString(name)).getUniqueID());
+                        this.playersUUID.add(getPlayerByUUID(player.level(), nbt.getString(name)).getUUID());
                     }
                 }
                 stack.shrink(1);
                 return true;
             }
         }
-        if (this.activate && !this.getParent().getWorld().isRemote) {
-            if (!(this.players.contains(player.getName()) || player.capabilities.isCreativeMode)) {
+        if (this.activate && !this.getParent().getLevel().isClientSide) {
+            if (!(this.players.contains(player.getName().getString()) || player.isCreative())) {
                 CommonProxy.sendPlayerMessage(player, Localization.translate("iu.error"));
                 return true;
             }
@@ -65,21 +77,21 @@ public class ComponentPrivate extends AbstractComponent {
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (placer instanceof EntityPlayer) {
-            players.add(placer.getName());
-            playersUUID.add(placer.getUniqueID());
+        if (placer instanceof Player) {
+            players.add(placer.getName().getString());
+            playersUUID.add(placer.getUUID());
         }
     }
 
     public boolean canEntityDestroy(Entity entity) {
-        return !this.activate || (entity instanceof EntityPlayer && (this.players.contains(entity.getName()) || ((EntityPlayer) entity).capabilities.isCreativeMode));
+        return !this.activate || (entity instanceof Player && (this.players.contains(entity.getName().getString()) || ((Player) entity).isCreative()));
     }
 
     @Override
-    public boolean wrenchCanRemove(final EntityPlayer player) {
-        return !this.activate || (player != null && (this.players.contains(player.getName()) || player.capabilities.isCreativeMode));
+    public boolean wrenchCanRemove(final Player player) {
+        return !this.activate || (player != null && (this.players.contains(player.getName().getString()) || player.isCreative()));
 
     }
 
@@ -88,9 +100,11 @@ public class ComponentPrivate extends AbstractComponent {
     }
 
     @Override
-    public boolean canUsePurifier(final EntityPlayer player) {
-        return !(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe) && this.activate && (this.players.contains(
-                player.getName()) || player.capabilities.isCreativeMode);
+    public boolean canUsePurifier(final Player player) {
+        return
+              !(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe) &&
+                this.activate && (this.players.contains(
+                        player.getName().getString()) || player.isCreative());
     }
 
     public ItemStack getItemStackUpgrade() {
@@ -101,57 +115,55 @@ public class ComponentPrivate extends AbstractComponent {
         this.playersUUID.clear();
         this.players.add(player);
         this.playersUUID.add(playerUUID);
-        return new ItemStack(IUItem.module7);
+        return new ItemStack(IUItem.module7.getItemFromMeta(0));
     }
 
     @Override
     public List<ItemStack> getDrops() {
         final List<ItemStack> ret = super.getDrops();
         if (this.activate) {
-            if (!(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe)) {
-                ret.add(new ItemStack(IUItem.module7));
-            }
+             if (!(this.parent instanceof TileEntityTesseract || parent instanceof TileEntitySafe)) {
+            ret.add(new ItemStack(IUItem.module7.getItemFromMeta(0)));
+              }
         }
         return ret;
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound nbt = super.writeToNbt();
-        nbt.setInteger("size", this.players.size());
+    public CompoundTag writeToNbt() {
+        CompoundTag nbt = super.writeToNbt();
+        nbt.putInt("size", this.players.size());
         for (int i = 0; i < this.players.size(); i++) {
-            nbt.setString("player_" + i, this.players.get(i));
+            nbt.putString("player_" + i, this.players.get(i));
         }
-        nbt.setInteger("size1", this.playersUUID.size());
+        nbt.putInt("size1", this.playersUUID.size());
         for (int i = 0; i < this.playersUUID.size(); i++) {
-            nbt.setUniqueId("playerUUID_" + i, this.playersUUID.get(i));
+            nbt.putUUID("player_" + i, this.playersUUID.get(i));
         }
-        nbt.setBoolean("activate", activate);
+        nbt.putBoolean("activate", activate);
         return nbt;
     }
 
     @Override
-    public void readFromNbt(final NBTTagCompound nbt) {
+    public void readFromNbt(final CompoundTag nbt) {
         super.readFromNbt(nbt);
-        final int size = nbt.getInteger("size");
+        final int size = nbt.getInt("size");
         for (int i = 0; i < size; i++) {
             this.players.add(nbt.getString("player_" + i));
         }
-        final int size1 = nbt.getInteger("size1");
+        final int size1 = nbt.getInt("size1");
         for (int i = 0; i < size1; i++) {
-            this.playersUUID.add(nbt.getUniqueId("playerUUID_" + i));
+            this.playersUUID.add(nbt.getUUID("player_" + i));
         }
         this.activate = nbt.getBoolean("activate");
     }
 
     @Override
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeInt(this.players.size());
-        buffer.writeInt(this.playersUUID.size());
         buffer.writeBoolean(this.activate);
         this.players.forEach(buffer::writeString);
-        this.playersUUID.forEach(buffer::writeUniqueId);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
@@ -159,23 +171,17 @@ public class ComponentPrivate extends AbstractComponent {
     public CustomPacketBuffer updateComponent() {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeInt(this.players.size());
-        buffer.writeInt(this.playersUUID.size());
         buffer.writeBoolean(this.activate);
         this.players.forEach(buffer::writeString);
-        this.playersUUID.forEach(buffer::writeUniqueId);
         return buffer;
     }
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.players.clear();
         int size = is.readInt();
-        int size1 = is.readInt();
         this.activate = is.readBoolean();
         for (int i = 0; i < size; i++) {
             this.players.add(is.readString());
-        }
-        for (int i = 0; i < size1; i++) {
-            this.playersUUID.add(is.readUniqueId());
         }
     }
 

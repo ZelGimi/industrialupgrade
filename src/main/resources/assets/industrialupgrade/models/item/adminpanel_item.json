@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/adminpanel_item"
+    "layer0" : "industrialupgrade:item/adminpanel_item"
   }
 }

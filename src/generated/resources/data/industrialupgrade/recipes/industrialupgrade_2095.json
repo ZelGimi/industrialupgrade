@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:spaceupgrademodule_schedule"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/molybdenum"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/cadmium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/lapis"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:spaceupgrademodules/space_upgrademodule3"
+  },
+  "show_notification": true
+}

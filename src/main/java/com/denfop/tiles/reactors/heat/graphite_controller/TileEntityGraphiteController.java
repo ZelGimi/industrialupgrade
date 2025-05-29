@@ -1,39 +1,45 @@
 package com.denfop.tiles.reactors.heat.graphite_controller;
 
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.reactors.IHeatReactor;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeatGraphiteController;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiHeatGraphiteGraphiteController;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.resource.ItemCraftingElements;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.heat.IGraphiteController;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityGraphiteController extends TileEntityMultiBlockElement implements IGraphiteController,
         IUpdatableTileEvent {
 
     public final InvSlot slot;
-    private final int level;
+    private final int levelBlock;
     public double fuel;
     public int levelGraphite = 1;
     private int index;
 
-    public TileEntityGraphiteController(int level) {
-        this.level = level;
+    public TileEntityGraphiteController(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
+        this.levelBlock = levelBlock;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 if (!(stack.getItem() instanceof ItemCraftingElements)) {
                     return false;
                 }
-                final int itemDamage = stack.getItemDamage();
+                final int itemDamage = ((ItemCraftingElements<?>)stack.getItem()).getElement().getId();
                 switch (itemDamage) {
                     case 357:
                         return ((TileEntityGraphiteController) this.base).getBlockLevel() >= 0;
@@ -48,11 +54,12 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 if (content.isEmpty()) {
                     ((TileEntityGraphiteController) this.base).fuel = 0;
                 }
+                return content;
             }
         };
     }
@@ -67,14 +74,15 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     }
 
     @Override
-    public ContainerHeatGraphiteController getGuiContainer(final EntityPlayer var1) {
+    public ContainerHeatGraphiteController getGuiContainer(final Player var1) {
         return new ContainerHeatGraphiteController(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiHeatGraphiteGraphiteController(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiHeatGraphiteGraphiteController((ContainerHeatGraphiteController) menu);
     }
 
 
@@ -101,30 +109,30 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         fuel = nbtTagCompound.getDouble("fuel");
-        levelGraphite = nbtTagCompound.getInteger("levelGraphite");
-        index = nbtTagCompound.getInteger("index");
+        levelGraphite = nbtTagCompound.getInt("levelGraphite");
+        index = nbtTagCompound.getInt("index");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setDouble("fuel", fuel);
-        nbtTagCompound.setInteger("index", index);
-        nbtTagCompound.setInteger("levelGraphite", levelGraphite);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putDouble("fuel", fuel);
+        nbtTagCompound.putInt("index", index);
+        nbtTagCompound.putInt("levelGraphite", levelGraphite);
         return nbtTagCompound;
     }
 
     @Override
     public int getBlockLevel() {
-        return level;
+        return levelBlock;
     }
 
     @Override
     public ItemStack getGraphite() {
-        return this.slot.get();
+        return this.slot.get(0);
     }
 
     @Override
@@ -144,9 +152,9 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
 
     @Override
     public void consumeGraphite() {
-        if (!this.slot.get().isEmpty()) {
-            final int itemDamage = this.slot.get().getItemDamage();
-            this.slot.get().shrink(1);
+        if (!this.slot.get(0).isEmpty()) {
+            final int itemDamage =  ((ItemCraftingElements<?>)this.getSlot().get(0).getItem()).getElement().getId();
+            this.slot.get(0).shrink(1);
             switch (itemDamage) {
                 case 357:
                     this.fuel = 100;
@@ -178,7 +186,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (this.getMain() != null) {
             IHeatReactor heatReactor = (IHeatReactor) this.getMain();
             if (var2 == 0) {

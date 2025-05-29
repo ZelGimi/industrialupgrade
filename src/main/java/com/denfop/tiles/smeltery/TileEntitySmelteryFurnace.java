@@ -2,30 +2,27 @@ package com.denfop.tiles.smeltery;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockSmeltery;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSmelteryFurnace;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSmelteryFurnace;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
 
@@ -37,7 +34,8 @@ public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement imple
     private MachineRecipe output;
     private boolean changeRecipe;
 
-    public TileEntitySmelteryFurnace() {
+    public TileEntitySmelteryFurnace(BlockPos pos, BlockState state) {
+        super(BlockSmeltery.smeltery_furnace,pos,state);
         this.smeltery = new InvSlotRecipes(this, "smeltery", this);
         this.progress = this.addComponent(new ComponentProgress(this, 1, 180));
         Recipes.recipes.addInitRecipes(this);
@@ -74,7 +72,7 @@ public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement imple
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             smeltery.load();
             this.getOutput();
         }
@@ -106,14 +104,14 @@ public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement imple
     }
 
     @Override
-    public ContainerSmelteryFurnace getGuiContainer(final EntityPlayer var1) {
+    public ContainerSmelteryFurnace getGuiContainer(final Player var1) {
         return new ContainerSmelteryFurnace(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSmelteryFurnace(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSmelteryFurnace((ContainerSmelteryFurnace) menu);
     }
 
     @Override
@@ -123,7 +121,7 @@ public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement imple
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.smeltery;
+        return IUItem.smeltery.getBlock(getTeBlock());
     }
 
     @Override
@@ -154,20 +152,20 @@ public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement imple
 
         addRecipe(
                 "",
-                new ItemStack(IUItem.crafting_elements, 1, 503),
-                new FluidStack(FluidName.fluidtitaniumsteel.getInstance(), 100)
-        );
+                new ItemStack(IUItem.crafting_elements.getStack(503)),
+                        new FluidStack(FluidName.fluidtitaniumsteel.getInstance().get(), 100)
+                );
         addRecipe(
-                "gemQuartz",
+                "forge:gems/Quartz",
                 new ItemStack(Items.QUARTZ),
-                new FluidStack(FluidName.fluidquartz.getInstance(), 144)
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144)
         );
         addRecipe(
                 "",
-                new ItemStack(IUItem.crafting_elements, 1, 499),
-                new FluidStack(FluidName.fluidcarbon.getInstance(), 144)
-        );
-        String[] names = new String[]{"ingot", "plate", "casing", "raw", "block", "gear"};
+                new ItemStack(IUItem.crafting_elements.getStack(499)),
+                        new FluidStack(FluidName.fluidcarbon.getInstance().get(), 144)
+                );
+        String[] names = new String[]{"forge:ingots/", "forge:plates/", "forge:casings/", "forge:raw_materials/", "forge:storage_blocks/", "forge:gears/"};
         int[] amount = new int[]{1, 1, 2, 1, 1, 1};
         int[] amount1 = new int[]{1, 1, 1, 1, 9, 4};
         for (int i = 0; i < names.length; i++) {
@@ -177,134 +175,134 @@ public class TileEntitySmelteryFurnace extends TileEntityMultiBlockElement imple
 
             addRecipe(
                     names[i] + "Invar",
-                    new ItemStack(IUItem.crafting_elements, 1, 503),
-                    new FluidStack(FluidName.fluidinvar.getInstance(), amount1[i] * 100 / amount[i])
-            );
+                    new ItemStack(IUItem.crafting_elements.getStack(503)),
+                            new FluidStack(FluidName.fluidinvar.getInstance().get(), amount1[i] * 100 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Electrum",
-                    new ItemStack(IUItem.crafting_elements, 1, 503),
-                    new FluidStack(FluidName.fluidelectrum.getInstance(), amount1[i] * 100 / amount[i])
-            );
+                    new ItemStack(IUItem.crafting_elements.getStack(503)),
+                            new FluidStack(FluidName.fluidelectrum.getInstance().get(), amount1[i] * 100 / amount[i])
+                    );
             addRecipe(
                     names[i] + "GalliumArsenic",
-                    new ItemStack(IUItem.crafting_elements, 1, 503),
-                    new FluidStack(FluidName.fluidarsenicum_gallium.getInstance(), amount1[i] * 100 / amount[i])
-            );
+                    new ItemStack(IUItem.crafting_elements.getStack(503)),
+                            new FluidStack(FluidName.fluidarsenicum_gallium.getInstance().get(), amount1[i] * 100 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Nichrome",
-                    new ItemStack(IUItem.crafting_elements, 1, 503),
-                    new FluidStack(FluidName.fluidnichrome.getInstance(), amount1[i] * 100 / amount[i])
-            );
+                    new ItemStack(IUItem.crafting_elements.getStack(503)),
+                            new FluidStack(FluidName.fluidnichrome.getInstance().get(), amount1[i] * 100 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Duralumin",
-                    new ItemStack(IUItem.crafting_elements, 1, 503),
-                    new FluidStack(FluidName.fluidduralumin.getInstance(), amount1[i] * 100 / amount[i])
-            );
+                    new ItemStack(IUItem.crafting_elements.getStack(503)),
+                            new FluidStack(FluidName.fluidduralumin.getInstance().get(), amount1[i] * 100 / amount[i])
+                    );
             if (i != 5) {
                 addRecipe(
                         names[i] + "Bronze",
-                        new ItemStack(IUItem.crafting_elements, 1, 503),
-                        new FluidStack(FluidName.fluidbronze.getInstance(), amount1[i] * 100 / amount[i])
-                );
+                        new ItemStack(IUItem.crafting_elements.getStack(503)),
+                                new FluidStack(FluidName.fluidbronze.getInstance().get(), amount1[i] * 100 / amount[i])
+                        );
             }
             addRecipe(
                     names[i] + "Ferromanganese",
-                    new ItemStack(IUItem.crafting_elements, 1, 503),
-                    new FluidStack(FluidName.fluidferromanganese.getInstance(), amount1[i] * 100 / amount[i])
-            );
+                    new ItemStack(IUItem.crafting_elements.getStack(503)),
+                            new FluidStack(FluidName.fluidferromanganese.getInstance().get(), amount1[i] * 100 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Aluminumbronze",
-                    new ItemStack(IUItem.crafting_elements, 1, 503),
-                    new FluidStack(FluidName.fluidaluminiumbronze.getInstance(), amount1[i] * 100 / amount[i])
-            );
+                    new ItemStack(IUItem.crafting_elements.getStack(503)),
+                            new FluidStack(FluidName.fluidaluminiumbronze.getInstance().get(), amount1[i] * 100 / amount[i])
+                    );
         }
         for (int i = 0; i < names.length; i++) {
             if (i != 5) {
                 addRecipe(
                         names[i] + "Iron",
                         null,
-                        new FluidStack(FluidName.fluidiron.getInstance(), amount1[i] * 144 / amount[i])
+                        new FluidStack(FluidName.fluidiron.getInstance().get(), amount1[i] * 144 / amount[i])
                 );
             }
             if (i != 5) {
                 addRecipe(
                         names[i] + "Gold",
                         new ItemStack(Items.GOLD_INGOT),
-                        new FluidStack(FluidName.fluidgold.getInstance(), amount1[i] * 144 / amount[i])
+                        new FluidStack(FluidName.fluidgold.getInstance().get(), amount1[i] * 144 / amount[i])
                 );
             }
 
             addRecipe(
                     names[i] + "Aluminium",
-                    new ItemStack(IUItem.iuingot, 1, 1),
-                    new FluidStack(FluidName.fluidaluminium.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(1)),
+                            new FluidStack(FluidName.fluidaluminium.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Manganese",
-                    new ItemStack(IUItem.iuingot, 1, 16),
-                    new FluidStack(FluidName.fluidmanganese.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(16)),
+                            new FluidStack(FluidName.fluidmanganese.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
             if (i != 5) {
                 addRecipe(
                         names[i] + "Tin",
-                        new ItemStack(IUItem.iuingot, 1, 24),
-                        new FluidStack(FluidName.fluidtin.getInstance(), amount1[i] * 144 / amount[i])
-                );
+                        new ItemStack(IUItem.iuingot.getStack(24)),
+                                new FluidStack(FluidName.fluidtin.getInstance().get(), amount1[i] * 144 / amount[i])
+                        );
             }
             addRecipe(
                     names[i] + "Magnesium",
-                    new ItemStack(IUItem.iuingot, 1, 7),
-                    new FluidStack(FluidName.fluidmagnesium.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(7)),
+                            new FluidStack(FluidName.fluidmagnesium.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
             if (i != 5) {
                 addRecipe(
                         names[i] + "Copper",
-                        new ItemStack(IUItem.iuingot, 1, 21),
-                        new FluidStack(FluidName.fluidcopper.getInstance(), amount1[i] * 144 / amount[i])
-                );
+                        new ItemStack(Items.COPPER_INGOT),
+                                new FluidStack(FluidName.fluidcopper.getInstance().get(), amount1[i] * 144 / amount[i])
+                        );
             }
             addRecipe(
                     names[i] + "Arsenic",
-                    new ItemStack(IUItem.iuingot, 1, 28),
-                    new FluidStack(FluidName.fluidarsenicum.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(28)),
+                            new FluidStack(FluidName.fluidarsenicum.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Titanium",
-                    new ItemStack(IUItem.iuingot, 1, 10),
-                    new FluidStack(FluidName.fluidtitanium.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(10)),
+                            new FluidStack(FluidName.fluidtitanium.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Gallium",
-                    new ItemStack(IUItem.iuingot, 1, 32),
-                    new FluidStack(FluidName.fluidgallium.getInstance(), amount1[i] * 144 / amount[i])
-            );
-            if (!names[i].equals("raw") && i != 5) {
+                    new ItemStack(IUItem.iuingot.getStack(32)),
+                            new FluidStack(FluidName.fluidgallium.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
+            if (!names[i].equals("forge:raw_materials/") && i != 5) {
                 addRecipe(
                         names[i] + "Steel",
-                        new ItemStack(IUItem.iuingot, 1, 23),
-                        new FluidStack(FluidName.fluidsteel.getInstance(), amount1[i] * 144 / amount[i])
-                );
+                        new ItemStack(IUItem.iuingot.getStack(23)),
+                                new FluidStack(FluidName.fluidsteel.getInstance().get(), amount1[i] * 144 / amount[i])
+                        );
             }
             addRecipe(
                     names[i] + "Nickel",
-                    new ItemStack(IUItem.iuingot, 1, 8),
-                    new FluidStack(FluidName.fluidnickel.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(8)),
+                            new FluidStack(FluidName.fluidnickel.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Silver",
-                    new ItemStack(IUItem.iuingot, 1, 14),
-                    new FluidStack(FluidName.fluidsilver.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(14)),
+                            new FluidStack(FluidName.fluidsilver.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Tungsten",
-                    new ItemStack(IUItem.iuingot, 1, 3),
-                    new FluidStack(FluidName.fluidtungsten.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(3)),
+                            new FluidStack(FluidName.fluidtungsten.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
             addRecipe(
                     names[i] + "Chromium",
-                    new ItemStack(IUItem.iuingot, 1, 11),
-                    new FluidStack(FluidName.fluidchromium.getInstance(), amount1[i] * 144 / amount[i])
-            );
+                    new ItemStack(IUItem.iuingot.getStack(11)),
+                            new FluidStack(FluidName.fluidchromium.getInstance().get(), amount1[i] * 144 / amount[i])
+                    );
         }
     }
 

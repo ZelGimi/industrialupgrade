@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerAnalyzerChest extends ContainerFullInv<TileEntityAnalyzerChest> {
 
-    public ContainerAnalyzerChest(EntityPlayer entityPlayer, TileEntityAnalyzerChest tileEntity1) {
+    public ContainerAnalyzerChest(Player entityPlayer, TileEntityAnalyzerChest tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         if (tileEntity1.outputSlot != null) {
 

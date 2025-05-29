@@ -4,6 +4,7 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -15,10 +16,10 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBlastFurnace;
-import com.denfop.effects.SmokeParticle;
-import com.denfop.effects.SparkParticle;
 import com.denfop.gui.GuiBlastFurnace;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.items.resource.ItemIngots;
@@ -29,44 +30,41 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.register.InitMultiBlockSystem;
-import com.denfop.render.oilquarry.DataBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastHeat;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputFluid;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastMain;
 import com.denfop.tiles.mechanism.blastfurnace.api.InvSlotBlastFurnace;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import com.denfop.world.WorldBaseGen;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleFlame;
-import net.minecraft.client.particle.ParticleLava;
-import net.minecraft.client.particle.ParticleRedstone;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMain,
         IUpdatableTileEvent,
@@ -86,28 +84,25 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
 
     public IBlastHeat blastHeat;
     public IBlastInputFluid blastInputFluid;
-    public List<EntityPlayer> entityPlayerList;
+    public List<Player> entityPlayerList;
     public double progress = 0;
     public int bar = 1;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
 
     private boolean sound = true;
-    @SideOnly(Side.CLIENT)
-    private DataBlock dataBlock;
-    @SideOnly(Side.CLIENT)
-    private DataBlock dataBlock_active;
 
-    public TileBlastFurnaceMain() {
-        super(InitMultiBlockSystem.blastFurnaceMultiBlock);
+
+    public TileBlastFurnaceMain(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.blastFurnaceMultiBlock, BlockBlastFurnace.blast_furnace_main, pos, state);
         this.full = false;
         final Fluids fluids = this.addComponent(new Fluids(this));
 
         this.tank = fluids.addTank("tank", 10000, InvSlot.TypeItemSlot.INPUT,
-                Fluids.fluidPredicate(FluidName.fluidsteam.getInstance())
+                Fluids.fluidPredicate(FluidName.fluidsteam.getInstance().get())
         );
         this.entityPlayerList = new ArrayList<>();
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
+        this.fluidSlot = new InvSlotFluidByList(this, 1, net.minecraft.world.level.material.Fluids.WATER);
         this.output1 = new InvSlotOutput(this, 1);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
@@ -115,14 +110,13 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
 
-        if (this.getActive() && this.getWorld().getWorldTime() % 5 == 0) {
-            final Random rand = WorldBaseGen.random;
-
-            EnumFacing facing = this.getFacing();
+        if (this.getActive() && level.getGameTime() % 5 == 0) {
+            RandomSource rand = RandomSource.create();
+            Direction facing = this.getFacing();
 
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dz = -1; dz <= 1; dz++) {
@@ -130,79 +124,47 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                     double offsetZ = 0;
 
                     switch (facing) {
-                        case NORTH:
-                            offsetZ = -0.3;
-                            break;
-                        case SOUTH:
-                            offsetZ = 0.3;
-                            break;
-                        case WEST:
-                            offsetX = -0.3;
-                            break;
-                        case EAST:
-                            offsetX = 0.3;
-                            break;
-                        default:
-                            break;
+                        case NORTH -> offsetZ = -0.3;
+                        case SOUTH -> offsetZ = 0.3;
+                        case WEST -> offsetX = -0.3;
+                        case EAST -> offsetX = 0.3;
                     }
 
+                    Level world = getLevel();
+                    if (world == null) return;
 
-                    int sparkCount = 1 + rand.nextInt(2);
-                    for (int i = 0; i < sparkCount; i++) {
-                        Minecraft.getMinecraft().effectRenderer.addEffect(new SparkParticle(
-                                this.getWorld(),
-                                this.getPos().getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.2 - 0.1,
-                                this.getPos().getY() + 1.2 + rand.nextDouble() * 0.2,
-                                this.getPos().getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.2 - 0.1
-                        ));
+                    Vec3 particlePos = new Vec3(
+                            pos.getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.2 - 0.1,
+                            pos.getY() + 1.2 + rand.nextDouble() * 0.2,
+                            pos.getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.2 - 0.1
+                    );
+
+
+                    for (int i = 0; i < 1 + rand.nextInt(2); i++) {
+                        world.addParticle(ParticleTypes.FLAME, particlePos.x, particlePos.y, particlePos.z, 0, 0.05, 0);
                     }
 
-
-                    int smokeCount = 1 + rand.nextInt(2);
-                    for (int j = 0; j < smokeCount; j++) {
-                        Minecraft.getMinecraft().effectRenderer.addEffect(new SmokeParticle(
-                                this.getWorld(),
-                                this.getPos().getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.3 - 0.15,
-                                this.getPos().getY() + 1.5 + rand.nextDouble() * 0.2,
-                                this.getPos().getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.3 - 0.15
-                        ));
+                    // Частицы дыма
+                    for (int j = 0; j < 1 + rand.nextInt(2); j++) {
+                        world.addParticle(ParticleTypes.SMOKE, particlePos.x, particlePos.y + 0.3, particlePos.z, 0, 0.02, 0);
                     }
 
+                    // Частицы красного камня
                     if (rand.nextInt(3) == 0) {
-                        Minecraft.getMinecraft().effectRenderer.addEffect(
-                                new ParticleFlame.Factory().createParticle(
-                                        0, this.getWorld(),
-                                        this.getPos().getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.2 - 0.1,
-                                        this.getPos().getY() + 1.3 + rand.nextDouble() * 0.3,
-                                        this.getPos().getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.2 - 0.1,
-                                        0, 0.05, 0
-                                )
-                        );
+                        world.addParticle(new DustParticleOptions(new Vector3f(1, 0, 0), 1),
+                                pos.getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.4 - 0.2,
+                                pos.getY() + 1.4 + rand.nextDouble() * 0.3,
+                                pos.getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.4 - 0.2,
+                                1.0f, 0.3f, 0.1f);
                     }
 
-                    if (rand.nextInt(3) == 0) {
-                        Minecraft.getMinecraft().effectRenderer.addEffect(
-                                new ParticleRedstone.Factory().createParticle(
-                                        0, this.getWorld(),
-                                        this.getPos().getX() + 0.5 + dx + offsetX * -1 + rand.nextDouble() * 0.4 - 0.2,
-                                        this.getPos().getY() + 1.4 + rand.nextDouble() * 0.3,
-                                        this.getPos().getZ() + 0.5 + dz + offsetZ * -1 + rand.nextDouble() * 0.4 - 0.2,
-                                        1.0f, 0.3f, 0.1f
-                                )
-                        );
-                    }
-
-
+                    // Частицы лавы
                     if (rand.nextInt(5) == 0) {
-                        Minecraft.getMinecraft().effectRenderer.addEffect(
-                                Objects.requireNonNull(new ParticleLava.Factory().createParticle(
-                                        0, this.getWorld(),
-                                        this.getPos().getX() + 0.5 + dx + offsetX * -4 + rand.nextDouble() * 0.4 - 0.2,
-                                        this.getPos().getY() + 1.6,
-                                        this.getPos().getZ() + 0.5 + dz + offsetZ * -4 + rand.nextDouble() * 0.4 - 0.2,
-                                        0, 0.1, 0
-                                ))
-                        );
+                        world.addParticle(ParticleTypes.LAVA,
+                                pos.getX() + 0.5 + dx + offsetX * -4 + rand.nextDouble() * 0.4 - 0.2,
+                                pos.getY() + 1.6,
+                                pos.getZ() + 0.5 + dz + offsetZ * -4 + rand.nextDouble() * 0.4 - 0.2,
+                                0, 0.1, 0);
                     }
                 }
             }
@@ -210,98 +172,98 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public void renderUniqueMultiBlock() {
-        if (this.dataBlock.getBlockState().getBlock() == IUItem.invalid) {
-            return;
-        }
-        IBakedModel model2 = this.dataBlock.getState();
-        Class<?> clazz = model2.getClass();
-        Class<?> clazz1 = null;
+    /*  @SideOnly(Side.CLIENT)
+      public void renderUniqueMultiBlock() {
+          if (this.dataBlock.getBlockState().getBlock() == IUItem.invalid)
+              return;
+          IBakedModel model2 = this.dataBlock.getState();
+          Class<?> clazz = model2.getClass();
+          Class<?> clazz1 = null;
 
-        while (clazz != null) {
-            if (clazz.getName().equals("net.minecraftforge.client.model.FancyMissingModel$BakedModel")) {
-                clazz1 = clazz;
-                break;
-            }
-            clazz = clazz.getSuperclass();
-        }
-        if (clazz1 != null) {
-            IBlockState blockState1 = this.block
-                    .getDefaultState()
-                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global"))
-                    .withProperty(
-                            BlockTileEntity.facingProperty,
-                            this.getFacing()
-                    );
-            this.dataBlock = new DataBlock(blockState1);
-            IBakedModel model = Minecraft
-                    .getMinecraft()
-                    .getBlockRendererDispatcher()
-                    .getModelForState(blockState1);
-            this.dataBlock.setState(model);
+          while (clazz != null) {
+              if (clazz.getName().equals("net.minecraftforge.client.model.FancyMissingModel$BakedModel")) {
+                  clazz1 = clazz;
+                  break;
+              }
+              clazz = clazz.getSuperclass();
+          }
+          if (clazz1 != null){
+              IBlockState blockState1 = this.block
+                      .getDefaultState()
+                      .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global"))
+                      .withProperty(
+                              BlockTileEntity.facingProperty,
+                              this.getFacing()
+                      );
+              this.dataBlock = new DataBlock(blockState1);
+              IBakedModel model = Minecraft
+                      .getMinecraft()
+                      .getBlockRendererDispatcher()
+                      .getModelForState(blockState1);
+              this.dataBlock.setState(model);
 
-            blockState1 = this.block
-                    .getDefaultState()
-                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global_active"))
-                    .withProperty(
-                            BlockTileEntity.facingProperty,
-                            this.getFacing()
-                    );
-            this.dataBlock_active = new DataBlock(blockState1);
-            model = Minecraft
-                    .getMinecraft()
-                    .getBlockRendererDispatcher()
-                    .getModelForState(blockState1);
-            this.dataBlock_active.setState(model);
-        }
-        GlStateManager.popMatrix();
-        switch (facing) {
-            case 2:
-                GlStateManager.translate(this.pos.getX() - 1.05, this.pos.getY() - 1, this.pos.getZ() - 0.05);
-                break;
-            case 3:
-                GlStateManager.translate(this.pos.getX() - 1.05, this.pos.getY() - 1.05, this.pos.getZ() - 2.05);
-                break;
-            case 4:
-                GlStateManager.translate(this.pos.getX() - 0.05, this.pos.getY() - 1.05, this.pos.getZ() - 1);
-                break;
-            case 5:
-                GlStateManager.translate(this.pos.getX() - 2.05, this.pos.getY() - 1.05, this.pos.getZ() - 1.05);
-                break;
-        }
+              blockState1 = this.block
+                      .getDefaultState()
+                      .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global_active"))
+                      .withProperty(
+                              BlockTileEntity.facingProperty,
+                              this.getFacing()
+                      );
+              this.dataBlock_active = new DataBlock(blockState1);
+              model = Minecraft
+                      .getMinecraft()
+                      .getBlockRendererDispatcher()
+                      .getModelForState(blockState1);
+              this.dataBlock_active.setState(model);
+          }
+          GlStateManager.popMatrix();
+          switch (facing) {
+              case 2:
+                  GlStateManager.translate(this.pos.getX() - 1.05, this.pos.getY() - 1, this.pos.getZ() - 0.05);
+                  break;
+              case 3:
+                  GlStateManager.translate(this.pos.getX() - 1.05, this.pos.getY() - 1.05, this.pos.getZ() - 2.05);
+                  break;
+              case 4:
+                  GlStateManager.translate(this.pos.getX() - 0.05, this.pos.getY() - 1.05, this.pos.getZ() - 1);
+                  break;
+              case 5:
+                  GlStateManager.translate(this.pos.getX() - 2.05, this.pos.getY() - 1.05, this.pos.getZ() - 1.05);
+                  break;
+          }
 
-        GlStateManager.scale(3.08, 3.08, 3.08);
+          GlStateManager.scale(3.08, 3.08, 3.08);
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+          GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 
-        if (!this.getActive()) {
 
-            final IBakedModel model = dataBlock.getState();
-            final IBlockState state = dataBlock.getBlockState();
-            for (EnumFacing enumfacing : EnumFacing.values()) {
-                render(model, state, enumfacing);
-            }
+          if (!this.getActive()) {
 
-            render(model, state, null);
-        } else {
-            final IBakedModel model = dataBlock_active.getState();
-            final IBlockState state = dataBlock_active.getBlockState();
-            for (EnumFacing enumfacing : EnumFacing.values()) {
-                render(model, state, enumfacing);
-            }
-            render(model, state, null);
-        }
-        GlStateManager.pushMatrix();
-    }
+              final IBakedModel model = dataBlock.getState();
+              final IBlockState state = dataBlock.getBlockState();
+              for (EnumFacing enumfacing : EnumFacing.values()) {
+                  render(model, state, enumfacing);
+              }
 
+              render(model, state, null);
+          }else{
+              final IBakedModel model = dataBlock_active.getState();
+              final IBlockState state = dataBlock_active.getBlockState();
+              for (EnumFacing enumfacing : EnumFacing.values()) {
+                  render(model, state, enumfacing);
+              }
+              render(model, state, null);
+          }
+          GlStateManager.pushMatrix();
+      }
+      */
     public IMultiTileBlock getTeBlock() {
         return BlockBlastFurnace.blast_furnace_main;
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.blastfurnace;
+        return IUItem.blastfurnace.getBlock(getTeBlock().getId());
     }
 
     @Override
@@ -338,17 +300,14 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.blastfurnace.info1"));
         tooltip.add(Localization.translate("iu.blastfurnace.info3") + Localization.translate(new ItemStack(
-                IUItem.blastfurnace,
-                1,
-                0
-        ).getUnlocalizedName()));
+                IUItem.blastfurnace.getItem(0)
+        ).getDescriptionId()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 
@@ -383,10 +342,10 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
             new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
             new PacketStopSound(getWorld(), this.pos);
         }
@@ -400,13 +359,13 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IBlastInputFluid.class
                 );
-        this.setInputFluid((IBlastInputFluid) this.getWorld().getTileEntity(pos1.get(0)));
+        this.setInputFluid((IBlastInputFluid) this.getWorld().getBlockEntity(pos1.get(0)));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IBlastHeat.class
                 );
-        this.setHeat((IBlastHeat) this.getWorld().getTileEntity(pos1.get(0)));
+        this.setHeat((IBlastHeat) this.getWorld().getBlockEntity(pos1.get(0)));
     }
 
     @Override
@@ -419,27 +378,26 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "sound", this.sound);
             if (this.invSlotBlastFurnace.isEmpty()) {
                 outputStack = ItemStack.EMPTY;
             } else {
-                final ItemStack content = this.invSlotBlastFurnace.get();
-                int meta = content.getItemDamage();
+                final ItemStack content = this.invSlotBlastFurnace.get(0);
                 if (content.getItem().equals(Items.IRON_INGOT)) {
                     this.outputStack = IUItem.advIronIngot;
                 } else {
-                    if (content.getItem() instanceof ItemIngots && meta == 3) {
-                        this.outputStack = new ItemStack(IUItem.crafting_elements, 1, 480);
+                    if (content.getItem() instanceof ItemIngots && IUItem.iuingot.getMeta((ItemIngots) content.getItem()) == 3) {
+                        this.outputStack = new ItemStack(IUItem.crafting_elements.getStack(480));
                     } else {
-                        this.outputStack = new ItemStack(IUItem.crafting_elements, 1, 479);
+                        this.outputStack = new ItemStack(IUItem.crafting_elements.getStack(479), 1);
 
                     }
                 }
             }
         } else {
 
-            IBlockState blockState1 = this.block
+        /*    IBlockState blockState1 = this.block
                     .getDefaultState()
                     .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global"))
                     .withProperty(
@@ -452,7 +410,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                     .getBlockRendererDispatcher()
                     .getModelForState(blockState1);
             this.dataBlock.setState(model);
-            IBlockState blockState2 = this.block
+            IBlockState  blockState2 = this.block
                     .getDefaultState()
                     .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global_active"))
                     .withProperty(
@@ -465,6 +423,8 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                     .getBlockRendererDispatcher()
                     .getModelForState(blockState2);
             this.dataBlock_active.setState(model1);
+
+         */
         }
 
     }
@@ -515,7 +475,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                         this.setActive(true);
                     }
                     progress += 1 + (0.25 * (bar1 - 1));
-                    tank.drain(Math.min(bar1 * 2, this.tank.getFluidAmount()), true);
+                    tank.drain(Math.min(bar1 * 2, this.tank.getFluidAmount()), IFluidHandler.FluidAction.EXECUTE);
                     if (progress >= 3600 && this.output.add(outputStack)) {
                         progress = 0;
                         this.invSlotBlastFurnace.get(0).shrink(1);
@@ -533,8 +493,8 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                 if (size1 > 0) {
                     int add = Math.min(size_stream / 2, size1);
                     if (add > 0) {
-                        this.tank.fill(new FluidStack(FluidName.fluidsteam.getInstance(), add * 2), true);
-                        this.getInputFluid().getFluidTank().drain(add * 5, true);
+                        this.tank.fill(new FluidStack(FluidName.fluidsteam.getInstance().get(), add * 2), IFluidHandler.FluidAction.EXECUTE);
+                        this.getInputFluid().getFluidTank().drain(add * 5, IFluidHandler.FluidAction.EXECUTE);
 
                     }
                 }
@@ -585,17 +545,17 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     }
 
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
-        this.bar = nbttagcompound.getInteger("bar");
+        this.bar = nbttagcompound.getInt("bar");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
-        nbttagcompound.setInteger("bar", this.bar);
+        nbttagcompound.putBoolean("sound", this.sound);
+        nbttagcompound.putInt("bar", this.bar);
         return nbttagcompound;
     }
 
@@ -606,7 +566,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
 
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         switch ((int) i) {
             case 0:
                 this.bar = Math.min(this.bar + 1, 5);
@@ -643,45 +603,33 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if ((this.full && this.activate)) {
-            if (!this.getWorld().isRemote && player
-                    .getHeldItem(hand)
-                    .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+            if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
                 return ModUtils.interactWithFluidHandler(player, hand,
                         this.blastInputFluid
                                 .getFluid()
-                                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                                .getCapability(ForgeCapabilities.FLUID_HANDLER, side)
                 );
             } else {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+                return super.onActivated(player, hand, side, vec3);
             }
         }
 
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(player, hand, side, vec3);
     }
 
+
     @Override
-    public ContainerBlastFurnace getGuiContainer(final EntityPlayer entityPlayer) {
-        if (!this.entityPlayerList.contains(entityPlayer)) {
-            this.entityPlayerList.add(entityPlayer);
-        }
+    public ContainerBlastFurnace getGuiContainer(final Player entityPlayer) {
         return new ContainerBlastFurnace(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiBlastFurnace getGui(final EntityPlayer entityPlayer, final boolean b) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(final Player entityPlayer, final ContainerBase<? extends IAdvInventory> b) {
 
-        return new GuiBlastFurnace(this.getGuiContainer(entityPlayer));
+        return new GuiBlastFurnace((ContainerBlastFurnace) b);
     }
 
 
@@ -706,4 +654,9 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
 
     }
 
+
+    @Override
+    public int getBlockLevel() {
+        return 0;
+    }
 }

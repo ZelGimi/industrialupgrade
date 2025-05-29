@@ -3,7 +3,7 @@ package com.denfop.integration.jei.compressor;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,16 @@ public class CompressorHandler {
 
     private static final List<CompressorHandler> recipes = new ArrayList<>();
     private final ItemStack input, output;
+    private final BaseMachineRecipe container;
 
-    public CompressorHandler(ItemStack input, ItemStack output) {
+    public CompressorHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
+        this.container=container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<CompressorHandler> getRecipes() {
@@ -25,8 +31,8 @@ public class CompressorHandler {
         return recipes;
     }
 
-    public static CompressorHandler addRecipe(ItemStack input, ItemStack output) {
-        CompressorHandler recipe = new CompressorHandler(input, output);
+    public static CompressorHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
+        CompressorHandler recipe = new CompressorHandler(input, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -51,7 +57,7 @@ public class CompressorHandler {
             try {
                 addRecipe(
                         container.input.getInputs().get(0).getInputs().get(0),
-                        container.getOutput().items.get(0)
+                        container.getOutput().items.get(0),container
                 );
             } catch (Exception e) {
                 throw new RuntimeException();

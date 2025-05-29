@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.bee.BeeNetwork;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -10,28 +11,27 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Energy;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCollectorProductBee;
 import com.denfop.gui.GuiCollectorProductBee;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.bee.TileEntityApiary;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.ArrayList;
@@ -53,22 +53,22 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
     public final InvSlotUpgrade upgradeSlot;
     public final ComponentUpgradeSlots componentUpgrade;
     private final Fluids fluids;
-    AxisAlignedBB searchArea = new AxisAlignedBB(
-            pos.add(-RADIUS, -RADIUS, -RADIUS),
-            pos.add(RADIUS, RADIUS, RADIUS)
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS, RADIUS, RADIUS)
     );
     List<List<TileEntityApiary>> list = new ArrayList<>();
-    List<Chunk> chunks;
+    List<LevelChunk> chunks;
 
-    public TileEntityCollectorProductBee() {
-
+    public TileEntityCollectorProductBee(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.collector_product_bee,pos,state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 10000, 1));
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = this.fluids.addTankExtract("tank", 10000, Fluids.fluidPredicate(FluidName.fluidhoney.getInstance()));
-        this.tank1 = this.fluids.addTankExtract("tank1", 10000, Fluids.fluidPredicate(FluidName.fluidroyaljelly.getInstance()));
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidhoney.getInstance());
+        this.tank = this.fluids.addTankExtract("tank", 10000, Fluids.fluidPredicate(FluidName.fluidhoney.getInstance().get()));
+        this.tank1 = this.fluids.addTankExtract("tank1", 10000, Fluids.fluidPredicate(FluidName.fluidroyaljelly.getInstance().get()));
+        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidhoney.getInstance().get());
         this.fluidSlot.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, FluidName.fluidroyaljelly.getInstance());
+        this.fluidSlot1 = new InvSlotFluidByList(this, 1, FluidName.fluidroyaljelly.getInstance().get());
         this.fluidSlot1.setTypeFluidSlot(InvSlotFluid.TypeFluidSlot.OUTPUT);
         this.outputSlot = new InvSlotOutput(this, 2);
         this.outputSlot1 = new InvSlotOutput(this, 16);
@@ -87,7 +87,7 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -112,44 +112,44 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            final AxisAlignedBB aabb = searchArea.offset(pos);
-            searchArea = aabb;
-            int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
-            int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
-            int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
-            int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
+        if (!this.getWorld().isClientSide) {
+            final AABB aabb = searchArea;
+            int j2 = Mth.floor((aabb.minX - 2) / 16.0D);
+            int k2 = Mth.ceil((aabb.maxX + 2) / 16.0D);
+            int l2 = Mth.floor((aabb.minZ - 2) / 16.0D);
+            int i3 = Mth.ceil((aabb.maxZ + 2) / 16.0D);
             chunks = new ArrayList<>();
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
-                    final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
+                    final LevelChunk chunk = level.getChunk(j3, k3);
                     if (!chunks.contains(chunk)) {
                         chunks.add(chunk);
                     }
                 }
             }
-            for (Chunk chunk : chunks) {
-                this.list.add(BeeNetwork.instance.getApiaryFromChunk(world, chunk.getPos()));
+            for (LevelChunk chunk : chunks) {
+                this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk.getPos()));
             }
         }
     }
 
     @Override
-    public ContainerCollectorProductBee getGuiContainer(final EntityPlayer var1) {
+    public ContainerCollectorProductBee getGuiContainer(final Player var1) {
         return new ContainerCollectorProductBee(this, var1);
     }
 
     private void updateBee() {
         list.clear();
-        for (Chunk chunk : chunks) {
-            this.list.add(BeeNetwork.instance.getApiaryFromChunk(world, chunk.getPos()));
+        for (LevelChunk chunk : chunks) {
+            this.list.add(BeeNetwork.instance.getApiaryFromChunk(level, chunk.getPos()));
         }
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCollectorProductBee(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiCollectorProductBee((ContainerCollectorProductBee) menu);
     }
 
     public boolean contains(BlockPos vec) {
@@ -167,10 +167,10 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0) {
+        if (this.getWorld().getGameTime() % 100 == 0) {
             updateBee();
         }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(20)) {
+        if (this.getWorld().getGameTime() % 20 == 0 && this.energy.canUseEnergy(20)) {
             cycle:
             for (List<TileEntityApiary> bees : list) {
                 for (TileEntityApiary bee : bees) {
@@ -178,13 +178,13 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
                         if (this.contains(bee.getPos())) {
                             if (bee.food > 750 && bee.getTickDrainFood() == 20 && tank.getFluidAmount() + 1000 <= tank.getCapacity() && this.energy.getEnergy() >= 20) {
                                 bee.food -= 750;
-                                tank.fill(new FluidStack(FluidName.fluidhoney.getInstance(), 1000), true);
+                                tank.fill(new FluidStack(FluidName.fluidhoney.getInstance().get(), 1000), IFluidHandler.FluidAction.EXECUTE);
                                 this.energy.useEnergy(20);
                                 bee.setTickDrainFood((byte) 0);
                             }
                             if (bee.royalJelly > 50 && bee.getTickDrainJelly() == 20 && tank1.getFluidAmount() + 1000 <= tank1.getCapacity() && this.energy.getEnergy() >= 20) {
                                 bee.royalJelly -= 50;
-                                tank1.fill(new FluidStack(FluidName.fluidroyaljelly.getInstance(), 1000), true);
+                                tank1.fill(new FluidStack(FluidName.fluidroyaljelly.getInstance().get(), 1000), IFluidHandler.FluidAction.EXECUTE);
                                 this.energy.useEnergy(20);
                                 bee.setTickDrainJelly((byte) 0);
                             }
@@ -224,7 +224,7 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
                 this.outputSlot.add(output1.getValue());
             }
         }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+        if (this.getWorld().getGameTime() % 20 == 0) {
             this.upgradeSlot.tickNoMark();
         }
     }

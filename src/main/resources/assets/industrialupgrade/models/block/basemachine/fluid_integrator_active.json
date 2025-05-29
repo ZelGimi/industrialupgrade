@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube",
 	"textures": {
-		"particle": "industrialupgrade:blocks/fluid_integrator_active_top-bottom",
-		"down": "industrialupgrade:blocks/fluid_integrator_active_top-bottom",
-		"up": "industrialupgrade:blocks/fluid_integrator_active_top-bottom",
-		"north": "industrialupgrade:blocks/fluid_integrator_active_front-back-reft-right",
-		"east": "industrialupgrade:blocks/fluid_integrator_active_front-back-reft-right",
-		"south": "industrialupgrade:blocks/fluid_integrator_active_front-back-reft-right",
-		"west": "industrialupgrade:blocks/fluid_integrator_active_front-back-reft-right"
+		"particle": "industrialupgrade:block/fluid_integrator_active_top-bottom",
+		"down": "industrialupgrade:block/fluid_integrator_active_top-bottom",
+		"up": "industrialupgrade:block/fluid_integrator_active_top-bottom",
+		"north": "industrialupgrade:block/fluid_integrator_active_front-back-reft-right",
+		"east": "industrialupgrade:block/fluid_integrator_active_front-back-reft-right",
+		"south": "industrialupgrade:block/fluid_integrator_active_front-back-reft-right",
+		"west": "industrialupgrade:block/fluid_integrator_active_front-back-reft-right"
 	}
 }

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_42_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:ingots/gold"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:ingots/iron"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_650_element"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DBD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_21_element"
+  },
+  "show_notification": true
+}

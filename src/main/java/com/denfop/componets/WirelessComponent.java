@@ -1,17 +1,13 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IDual;
-import com.denfop.api.energy.IEnergySink;
-import com.denfop.api.energy.IEnergySource;
-import com.denfop.api.energy.IEnergyTile;
+import com.denfop.api.energy.*;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -48,7 +44,7 @@ public class WirelessComponent extends AbstractComponent {
         this.hasUpdate = is.readBoolean();
     }
 
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeBoolean(this.hasUpdate);
         buffer.flip();
@@ -81,7 +77,7 @@ public class WirelessComponent extends AbstractComponent {
                     }
 
                     if (connect.getTile() == null) {
-                        connect.setTile(EnergyNetGlobal.instance.getTile(this.getParent().getWorld(), connect.getPos()));
+                        connect.setTile(EnergyNetGlobal.instance.getTile(this.getParent().getLevel(), connect.getPos()));
                     }
                     if (this.isDual && connect.isDual()) {
                         continue;
@@ -99,7 +95,7 @@ public class WirelessComponent extends AbstractComponent {
     }
 
     public void addConnect(BlockPos pos) {
-        connectList.add(new Connect(pos, this.getParent().getWorld()));
+        connectList.add(new Connect(pos, this.getParent().getLevel()));
     }
 
     public void removeConnect(BlockPos pos) {
@@ -107,28 +103,28 @@ public class WirelessComponent extends AbstractComponent {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound nbtTagCompound = super.writeToNbt();
-        NBTTagList nbtTagList = new NBTTagList();
+    public CompoundTag writeToNbt() {
+        CompoundTag nbtTagCompound = super.writeToNbt();
+        ListTag nbtTagList = new ListTag();
         for (Connect connect : this.connectList) {
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setInteger("x", connect.getPos().getX());
-            nbt.setInteger("y", connect.getPos().getY());
-            nbt.setInteger("z", connect.getPos().getZ());
-            nbtTagList.appendTag(nbt);
+            CompoundTag nbt = new CompoundTag();
+            nbt.putInt("x", connect.getPos().getX());
+            nbt.putInt("y", connect.getPos().getY());
+            nbt.putInt("z", connect.getPos().getZ());
+            nbtTagList.add(nbt);
         }
-        nbtTagCompound.setTag("connect", nbtTagList);
+        nbtTagCompound.put("connect", nbtTagList);
         return nbtTagCompound;
     }
 
     @Override
-    public void readFromNbt(final NBTTagCompound nbt) {
+    public void readFromNbt(final CompoundTag nbt) {
         super.readFromNbt(nbt);
-        NBTTagList contentList = nbt.getTagList("Items", 10);
-        for (int i = 0; i < contentList.tagCount(); ++i) {
-            NBTTagCompound connectNbt = contentList.getCompoundTagAt(i);
-            Connect connect = new Connect(new BlockPos(connectNbt.getInteger("x"), connectNbt.getInteger("y"),
-                    connectNbt.getInteger("z")
+        ListTag contentList = nbt.getList("Items", 10);
+        for (int i = 0; i < contentList.size(); ++i) {
+            CompoundTag connectNbt = contentList.getCompound(i);
+            Connect connect = new Connect(new BlockPos(connectNbt.getInt("x"), connectNbt.getInt("y"),
+                    connectNbt.getInt("z")
             ));
             this.connectList.add(connect);
 
@@ -151,7 +147,7 @@ class Connect {
     private boolean isDual;
     private IEnergyTile tile;
 
-    public Connect(BlockPos pos, World world) {
+    public Connect(BlockPos pos, Level world) {
         this.tile = EnergyNetGlobal.instance.getTile(world, pos);
         this.isDual = this.tile instanceof IDual;
         this.pos = pos;

@@ -4,8 +4,8 @@ import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.items.relocator.Point;
 import com.denfop.items.relocator.RelocatorNetwork;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
 
@@ -15,10 +15,10 @@ public class PacketRelocatorTeleportPlayer implements IPacket {
 
     }
 
-    public PacketRelocatorTeleportPlayer(EntityPlayer player, Point point) {
+    public PacketRelocatorTeleportPlayer(Player player, Point point) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(64);
         buffer.writeByte(getId());
-        buffer.writeUniqueId(player.getUniqueID());
+        buffer.writeUUID(player.getUUID());
         point.writeToBuffer(buffer);
         IUCore.network.getClient().sendPacket(buffer);
     }
@@ -29,14 +29,14 @@ public class PacketRelocatorTeleportPlayer implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
-        UUID uuid = customPacketBuffer.readUniqueId();
-        if (entityPlayer.getUniqueID().equals(uuid)) {
+    public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
+        UUID uuid = customPacketBuffer.readUUID();
+        if (entityPlayer.getUUID().equals(uuid)) {
             Point point = new Point(customPacketBuffer);
-            ItemStack stack = entityPlayer.getHeldItemMainhand();
+            ItemStack stack = entityPlayer.getMainHandItem();
             if (ElectricItem.manager.canUse(stack, 1000000)) {
                 ElectricItem.manager.discharge(stack, 1000000, 14, true, false, false);
-                entityPlayer.closeScreen();
+                entityPlayer.closeContainer();
                 RelocatorNetwork.instance.teleportPlayer(entityPlayer, point);
             }
 

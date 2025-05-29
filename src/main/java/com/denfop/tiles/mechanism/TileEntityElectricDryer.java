@@ -1,9 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
@@ -16,7 +16,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerDryer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiDryer;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -24,14 +26,16 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -55,8 +59,8 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
     protected short progress;
     protected double guiProgress;
 
-    public TileEntityElectricDryer() {
-        super(100, 1, 1);
+    public TileEntityElectricDryer(BlockPos pos, BlockState state) {
+        super(100, 1, 1,BlockBaseMachine3.electric_dryer,pos,state);
         this.progress = 0;
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
@@ -93,7 +97,7 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
         return EnumSound.dryer.getSoundEvent();
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
@@ -112,9 +116,9 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -146,7 +150,7 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -257,16 +261,17 @@ public class TileEntityElectricDryer extends TileElectricMachine implements IUpg
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerDryer getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerDryer getGuiContainer(Player entityPlayer) {
         return new ContainerDryer(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiDryer getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiDryer(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiDryer((ContainerDryer) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

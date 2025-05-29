@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/quacore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:glass/reinforced"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_171_element"
+  },
+  "show_notification": true
+}

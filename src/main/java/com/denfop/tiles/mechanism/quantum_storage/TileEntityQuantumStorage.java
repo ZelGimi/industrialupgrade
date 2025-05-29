@@ -1,26 +1,30 @@
 package com.denfop.tiles.mechanism.quantum_storage;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerQuantumStorage;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiQuantumStorage;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,10 +37,11 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
     public final ComponentBaseEnergy qe;
     private final EnumTypeStyle enumTypeStyle;
 
-    public TileEntityQuantumStorage(double maxStorage1, EnumTypeStyle enumTypeStyle) {
+    public TileEntityQuantumStorage(double maxStorage1, EnumTypeStyle enumTypeStyle, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block, pos, state);
         this.qe = this.addComponent((new ComponentBaseEnergy(EnergyType.QUANTUM, this, maxStorage1,
 
-                Arrays.stream(EnumFacing.VALUES).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
+                Arrays.stream(Direction.values()).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
                 Collections.singletonList(this.getFacing()),
                 EnergyNetGlobal.instance.getTierFromPower(14),
                 EnergyNetGlobal.instance.getTierFromPower(14), false
@@ -46,17 +51,17 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.getLevel().isClientSide) {
             this.qe.setDirections(
-                    new HashSet<>(Arrays.stream(EnumFacing.VALUES)
-                            .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                    new HashSet<>(Arrays.stream(Direction.values())
+                            .filter(facing1 -> facing1 != Direction.UP && facing1 != getFacing())
                             .collect(Collectors.toList())), new HashSet<>(Collections.singletonList(this.getFacing())));
         }
     }
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         tooltip.add(Localization.translate("iu.item.tooltip.Capacity") + " " + ModUtils.getString(this.qe.getCapacity()) + " " +
                 "QE");
@@ -68,19 +73,6 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
         }
     }
 
-    public void setFacing(EnumFacing facing) {
-        super.setFacing(facing);
-        this.qe.setDirections(
-
-                new HashSet<>(Arrays
-                        .asList(EnumFacing.VALUES)
-                        .stream()
-                        .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
-                        .collect(Collectors.toList())), new HashSet<>(Collections.singletonList(this.getFacing())));
-
-
-    }
-
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
             switch (this.teBlock.getDefaultDrop()) {
@@ -89,15 +81,15 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
                     final ComponentBaseEnergy component2 = this.qe;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
-                            final NBTTagCompound nbt = ModUtils.nbt(drop);
-                            nbt.setDouble("energy", component2.getEnergy());
+                            final CompoundTag nbt = ModUtils.nbt(drop);
+                            nbt.putDouble("energy", component2.getEnergy());
                         }
                     }
                     return drop;
                 case None:
                     return null;
                 case Generator:
-                    return new ItemStack(IUItem.basemachine2, 1, 78);
+                    return new ItemStack(IUItem.basemachine2.getItem(78), 1);
                 case Machine:
                     return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                 case AdvMachine:
@@ -108,17 +100,17 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
         final ComponentBaseEnergy component2 = this.qe;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
-                final NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy", component2.getEnergy());
+                final CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.putDouble("energy", component2.getEnergy());
             }
         }
 
         return drop;
     }
 
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
             this.qe.addEnergy(energy1);
@@ -126,14 +118,14 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
     }
 
     @Override
-    public ContainerQuantumStorage getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerQuantumStorage getGuiContainer(final Player entityPlayer) {
         return new ContainerQuantumStorage(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiQuantumStorage(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(final Player entityPlayer, final ContainerBase<? extends IAdvInventory> b) {
+        return new GuiQuantumStorage((ContainerQuantumStorage) b);
     }
 
 

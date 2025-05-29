@@ -10,18 +10,20 @@ import com.denfop.container.ContainerSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
+@OnlyIn(Dist.CLIENT)
+public class GuiSolarPanels<T extends ContainerSolarPanels> extends GuiIU<ContainerSolarPanels> {
 
 
     public final TileSolarPanel tileentity;
@@ -30,36 +32,41 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
         super(container);
         this.componentList.clear();
         this.tileentity = container.tileentity;
-        this.xSize = 198;
-        this.ySize = 232;
+        this.imageWidth = 198;
+        this.imageHeight = 232;
         this.componentList.add(new GuiComponent(this, 63, 96, 18, 18,
                 new Component<>(new ComponentButton(tileentity, 1000, "") {
                     @Override
                     public void ClickEvent() {
+                        TileSolarPanel tileSolarPanel =    ((TileSolarPanel)Minecraft.getInstance().player.level().getBlockEntity(tileentity.pos));
+                        tileSolarPanel.twoContainer = true;
                         super.ClickEvent();
-                        tileentity.twoContainer = true;
+
                     }
                 })
         ));
 
     }
 
+    @Override
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
 
-    protected void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    }
+
+    protected void drawForegroundLayer(GuiGraphics poseStack, int mouseX, int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
         String formatPanelName = Localization.translate("blockAdministatorSolarPanel.name");
         if (tileentity.getPanels() != null) {
-            formatPanelName = Localization.translate(container.base.getName());
+            formatPanelName = Localization.translate(this.tileentity.getName());
         }
-        int nmPos = (this.xSize - this.fontRenderer.getStringWidth(formatPanelName)) / 2 + 10;
-        this.fontRenderer.drawString(formatPanelName, nmPos, 15, 7718655);
+        int nmPos = (this.imageWidth - this.getStringWidth(formatPanelName)) / 2 + 10;
+       draw(poseStack, formatPanelName, nmPos, 15, 7718655);
 
         String storageString = Localization.translate("gui.SuperSolarPanel.storage") + ": ";
 
-        new AdvArea(this, 63, 97, 80, 113).withTooltip(Localization.translate("iu.panel_upgrade.info0")).drawForeground(
-                mouseX,
-                mouseY
-        );
+        new AdvArea(this, 63, 97, 80, 113).withTooltip(Localization.translate("iu.panel_upgrade.info0")).drawForeground(poseStack, mouseX, mouseY);
 
 
         String ModulesString6 = Localization.translate("iu.moduletype1");
@@ -83,25 +90,25 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
         if (this.tileentity.solarType != 0) {
 
             if (this.tileentity.solarType == 1) {
-                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString6).drawForeground(mouseX, mouseY);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString6).drawForeground(poseStack, mouseX, mouseY);
             }
             if (this.tileentity.solarType == 2) {
-                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString61).drawForeground(mouseX, mouseY);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString61).drawForeground(poseStack, mouseX, mouseY);
             }
             if (this.tileentity.solarType == 3) {
-                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString62).drawForeground(mouseX, mouseY);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString62).drawForeground(poseStack, mouseX, mouseY);
             }
             if (this.tileentity.solarType == 4) {
-                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString63).drawForeground(mouseX, mouseY);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString63).drawForeground(poseStack, mouseX, mouseY);
             }
             if (this.tileentity.solarType == 5) {
-                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString64).drawForeground(mouseX, mouseY);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString64).drawForeground(poseStack, mouseX, mouseY);
             }
             if (this.tileentity.solarType == 6) {
-                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString65).drawForeground(mouseX, mouseY);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString65).drawForeground(poseStack, mouseX, mouseY);
             }
             if (this.tileentity.solarType == 7) {
-                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString66).drawForeground(mouseX, mouseY);
+                new AdvArea(this, 167, 45, 191, 68).withTooltip(ModulesString66).drawForeground(poseStack, mouseX, mouseY);
             }
 
         }
@@ -128,9 +135,9 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
         handleUpgradeTooltip(mouseX, mouseY);
         handleUpgradeTooltip1(mouseX, mouseY);
 
-        new Area(this, 181, 72, 10, 22).withTooltip(temptime).drawForeground(mouseX, mouseY);
+        new Area(this, 181, 72, 10, 22).withTooltip(temptime).drawForeground(poseStack, mouseX, mouseY);
 
-        new Area(this, 28, 51, 84, 17).withTooltip(tooltip).drawForeground(mouseX, mouseY);
+        new Area(this, 28, 51, 84, 17).withTooltip(tooltip).drawForeground(poseStack, mouseX, mouseY);
 
 
     }
@@ -167,75 +174,74 @@ public class GuiSolarPanels extends GuiIU<ContainerSolarPanels> {
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.bindTexture();
-        int h = (this.width - this.xSize) / 2;
-        int k = (this.height - this.ySize) / 2;
-        drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(h, k, 0, 0, 10, 10);
+        int h = guiLeft;
+        int k = guiTop;
+        drawTexturedModalRect(poseStack, h, k, 0, 0, this.imageWidth, this.imageHeight);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, h, k, 0, 0, 10, 10);
         this.bindTexture();
 
         if (this.tileentity.storage > 0) {
             double l = this.tileentity.gaugeEnergyScaled(84.0F);
-            drawTexturedModalRect(h + 29, k + 52, 18, 238, (int) l, 16);
+            drawTexturedModalRect(poseStack, h + 29, k + 52, 18, 238, (int) l, 16);
         }
         if (this.tileentity.sunIsUp) {
-            drawTexturedModalRect(h + 154, k + 45, 222, 14, (int) 12, 12);
-            drawTexturedModalRect(h + 154, k + 58, 222, 1, (int) 12, 12);
+            drawTexturedModalRect(poseStack, h + 154, k + 45, 222, 14, (int) 12, 12);
+            drawTexturedModalRect(poseStack, h + 154, k + 58, 222, 1, (int) 12, 12);
             if (this.tileentity.rain) {
-                drawTexturedModalRect(h + 141, k + 45, 209, 1, (int) 12, 12);
+                drawTexturedModalRect(poseStack, h + 141, k + 45, 209, 1, (int) 12, 12);
             }
         } else {
-            drawTexturedModalRect(h + 154, k + 45, 222, 1, (int) 12, 12);
-            drawTexturedModalRect(h + 154, k + 58, 222, 14, (int) 12, 12);
+            drawTexturedModalRect(poseStack, h + 154, k + 45, 222, 1, (int) 12, 12);
+            drawTexturedModalRect(poseStack, h + 154, k + 58, 222, 14, (int) 12, 12);
             if (this.tileentity.rain) {
-                drawTexturedModalRect(h + 141, k + 58, 209, 14, (int) 12, 12);
+                drawTexturedModalRect(poseStack, h + 141, k + 58, 209, 14, (int) 12, 12);
             }
         }
         int pollution =
-                (int) Math.min(21F * (this.container.base.pollution.getAllTime() - this.container.base.pollution.getTime())
-                        / (this.container.base.pollution.getAllTime() * 1D), 75F);
+                (int) Math.min(21F * (this.tileentity.pollution.getAllTime() - this.tileentity.pollution.getTime())
+                        / (this.tileentity.pollution.getAllTime() * 1D), 75F);
         if (pollution > 0) {
-            drawTexturedModalRect(h + 182, k + 73 + 21 - pollution, 236,
+            drawTexturedModalRect(poseStack, h + 182, k + 73 + 21 - pollution, 236,
                     2 + 21 - pollution, 8, pollution
             );
         }
         if (this.tileentity.wirelessComponent.isHasUpdate()) {
-            drawTexturedModalRect(h + 154, k + 84, 222, 14, (int) 12, 12);
+            drawTexturedModalRect(poseStack, h + 154, k + 84, 222, 14, (int) 12, 12);
         } else {
-            drawTexturedModalRect(h + 154, k + 84, 222, 1, (int) 12, 12);
+            drawTexturedModalRect(poseStack, h + 154, k + 84, 222, 1, (int) 12, 12);
         }
         if (this.tileentity.pollution.isActive()) {
-            drawTexturedModalRect(h + 154, k + 71, 222, 14, (int) 12, 12);
+            drawTexturedModalRect(poseStack, h + 154, k + 71, 222, 14, (int) 12, 12);
         } else {
-            drawTexturedModalRect(h + 154, k + 71, 222, 1, (int) 12, 12);
+            drawTexturedModalRect(poseStack, h + 154, k + 71, 222, 1, (int) 12, 12);
         }
         if (this.tileentity.solarType != 0) {
 
             if (this.tileentity.solarType == 1) {
-                drawTexturedModalRect(h + 167, k + 45, 209, 80, (int) 25, 25);
+                drawTexturedModalRect(poseStack, h + 167, k + 45, 209, 80, (int) 25, 25);
             }
             if (this.tileentity.solarType == 2) {
-                drawTexturedModalRect(h + 167, k + 45, 209, 184, (int) 25, 25);
+                drawTexturedModalRect(poseStack, h + 167, k + 45, 209, 184, (int) 25, 25);
             }
             if (this.tileentity.solarType == 3) {
-                drawTexturedModalRect(h + 167, k + 45, 209, 132, (int) 25, 25);
+                drawTexturedModalRect(poseStack, h + 167, k + 45, 209, 132, (int) 25, 25);
             }
             if (this.tileentity.solarType == 4) {
-                drawTexturedModalRect(h + 167, k + 45, 209, 158, (int) 25, 25);
+                drawTexturedModalRect(poseStack, h + 167, k + 45, 209, 158, (int) 25, 25);
             }
             if (this.tileentity.solarType == 5) {
-                drawTexturedModalRect(h + 167, k + 45, 209, 54, (int) 25, 25);
+                drawTexturedModalRect(poseStack, h + 167, k + 45, 209, 54, (int) 25, 25);
             }
             if (this.tileentity.solarType == 6) {
-                drawTexturedModalRect(h + 167, k + 45, 209, 28, (int) 25, 25);
+                drawTexturedModalRect(poseStack, h + 167, k + 45, 209, 28, (int) 25, 25);
             }
             if (this.tileentity.solarType == 7) {
-                drawTexturedModalRect(h + 167, k + 45, 209, 106, (int) 25, 25);
+                drawTexturedModalRect(poseStack, h + 167, k + 45, 209, 106, (int) 25, 25);
             }
 
         }

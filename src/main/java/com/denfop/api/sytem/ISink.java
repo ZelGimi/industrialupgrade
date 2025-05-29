@@ -23,5 +23,4 @@ public interface ISink extends IAcceptor {
     boolean isSink();
 
     List<ISource> getEnergyTickList();
-
 }

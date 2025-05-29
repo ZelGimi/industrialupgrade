@@ -5,10 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySteamTurbineCasing extends TileEntityMultiBlockElement implements ICasing {
 
-    public TileEntitySteamTurbineCasing() {
+
+    public TileEntitySteamTurbineCasing(BlockPos pos, BlockState state) {
+        super(BlockSteamTurbine.steam_turbine_casing, pos, state);
     }
 
     @Override
@@ -23,7 +27,7 @@ public class TileEntitySteamTurbineCasing extends TileEntityMultiBlockElement im
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.steam_turbine;
+        return IUItem.steam_turbine.getBlock(getTeBlock());
     }
 
 }

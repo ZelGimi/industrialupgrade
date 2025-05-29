@@ -6,24 +6,22 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.tiles.base.EnumTypeCollector;
 import com.denfop.tiles.base.TileBaseWorldCollector;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEnderAssembler extends TileBaseWorldCollector {
 
-    public TileEnderAssembler() {
-        super(EnumTypeCollector.END);
+    public TileEnderAssembler(BlockPos pos, BlockState state) {
+        super(EnumTypeCollector.END,BlockBaseMachine3.ender_assembler,pos,state);
     }
 
     public void init() {
 
         addRecipe(new ItemStack(Items.MAGMA_CREAM), 32, new ItemStack(Items.ENDER_PEARL));
         addRecipe(new ItemStack(Items.APPLE), 64, new ItemStack(Items.CHORUS_FRUIT));
-        addRecipe(new ItemStack(Items.SKULL), 64, new ItemStack(Items.SKULL, 1, 5));
+        addRecipe(new ItemStack(Items.SKELETON_SKULL), 64, new ItemStack(Items.DRAGON_HEAD));
         addRecipe(new ItemStack(Items.GLASS_BOTTLE), 64, new ItemStack(Items.EXPERIENCE_BOTTLE));
 
     }
@@ -33,32 +31,9 @@ public class TileEnderAssembler extends TileBaseWorldCollector {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
 }

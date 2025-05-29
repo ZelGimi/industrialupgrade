@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/osmium_dust"
+    "layer0" : "industrialupgrade:item/osmium_dust"
   }
 }

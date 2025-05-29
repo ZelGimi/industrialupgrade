@@ -1,7 +1,7 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class PacketKeys implements IPacket {
 
@@ -23,9 +23,9 @@ public class PacketKeys implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer is, final EntityPlayer player) {
+    public void readPacket(final CustomPacketBuffer is, final Player player) {
         final int keyState = is.readInt();
-        IUCore.proxy.requestTick(true, () -> IUCore.keyboard.processKeyUpdate(player, keyState));
+        IUCore.keyboard.processKeyUpdate(player, keyState);
 
     }
 

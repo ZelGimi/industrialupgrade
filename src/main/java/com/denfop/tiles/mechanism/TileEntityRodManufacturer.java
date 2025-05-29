@@ -1,18 +1,11 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -21,7 +14,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRodManufacturer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRodManufacturer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -30,15 +25,14 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -66,7 +60,8 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
     public int operationLength;
     public int operationsPerTick = 1;
 
-    public TileEntityRodManufacturer() {
+    public TileEntityRodManufacturer(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.rods_manufacturer,pos,state);
 
         this.defaultEnergyConsume = this.energyConsume = 2;
         this.defaultOperationLength = this.operationLength = 300;
@@ -83,18 +78,19 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TileEntityRodManufacturer) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TileEntityRodManufacturer) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TileEntityRodManufacturer) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
 
             @Override
@@ -249,146 +245,132 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.rods_manufacturer;
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     public void init() {
-        addRecipe("logWood", "plankWood", new ItemStack(IUItem.windrod, 1, 0));
-        addRecipe1("logWood", "plankWood", new ItemStack(IUItem.water_rod, 1, 0));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 0), "plateBronze", "casingBronze", new ItemStack(IUItem.windrod, 1, 1));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 1), "plateIron", "casingIron", new ItemStack(IUItem.windrod, 1, 2));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 2), "plateSteel", "casingSteel", new ItemStack(IUItem.windrod, 1, 3));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 3), "plateCarbon", "plateCarbon", new ItemStack(IUItem.windrod, 1, 4));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 4), "plateIridium", "casingIridium", new ItemStack(IUItem.windrod, 1, 5));
+        addRecipe("logs", "planks", new ItemStack(IUItem.windrod.getStack(0)));
+        addRecipe1("logs", "planks", new ItemStack(IUItem.water_rod.getStack(0)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(0)), "forge:plates/Bronze", "forge:casings/Bronze", new ItemStack(IUItem.windrod.getStack(1)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(1)), "forge:plates/Iron", "forge:casings/Iron", new ItemStack(IUItem.windrod.getStack(2)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(2)), "forge:plates/Steel", "forge:casings/Steel", new ItemStack(IUItem.windrod.getStack(3)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(3)), "forge:plates/Carbon", "forge:plates/Carbon", new ItemStack(IUItem.windrod.getStack(4)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(4)), "forge:plates/Iridium", "forge:casings/Iridium", new ItemStack(IUItem.windrod.getStack(5)));
         addRecipe(
-                new ItemStack(IUItem.windrod, 1, 5),
+                new ItemStack(IUItem.windrod.getStack(5)),
                 IUItem.iridiumOre,
-                "doubleplateIridium",
-                new ItemStack(IUItem.windrod, 1, 6)
+                "forge:doubleplate/Iridium",
+                new ItemStack(IUItem.windrod.getStack(6))
         );
-        addRecipe(new ItemStack(IUItem.windrod, 1, 6), "plateElectrum", "casingElectrum", new ItemStack(IUItem.windrod, 1, 7));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(6)), "forge:plates/Electrum", "forge:casings/Electrum", new ItemStack(IUItem.windrod.getStack(7)));
 
-        addRecipe(new ItemStack(IUItem.windrod, 1, 7), "crystalProton", "crystalPhoton", new ItemStack(IUItem.windrod, 1, 8));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 8), "crystalPhoton", "crystalingotPhoton", new ItemStack(IUItem.windrod, 1,
-                10
+        addRecipe(new ItemStack(IUItem.windrod.getStack(7)), "forge:crystal/Proton", "forge:crystal/Photon", new ItemStack(IUItem.windrod.getStack(8)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(8)), "forge:crystal/Photon", "forge:crystalingot/Photon", new ItemStack(IUItem.windrod.getStack(10), 1
         ));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 10), "nuggetNeutron", "casingVitalium", new ItemStack(IUItem.windrod, 1, 9));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 9), "plateSpinel", "casingSpinel", new ItemStack(IUItem.windrod, 1, 11));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 11), "plateCobalt", "casingCobalt", new ItemStack(IUItem.windrod, 1, 12));
-        addRecipe(new ItemStack(IUItem.windrod, 1, 12), "plateMikhail", "casingMikhail", new ItemStack(IUItem.windrod, 1, 13));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(10)), "forge:nuggets/Neutron", "forge:casings/Vitalium", new ItemStack(IUItem.windrod.getStack(9)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(9)), "forge:plates/Spinel", "forge:casings/Spinel", new ItemStack(IUItem.windrod.getStack(11)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(11)), "forge:plates/Cobalt", "forge:casings/Cobalt", new ItemStack(IUItem.windrod.getStack(12)));
+        addRecipe(new ItemStack(IUItem.windrod.getStack(12)), "forge:plates/Mikhail", "forge:casings/Mikhail", new ItemStack(IUItem.windrod.getStack(13)));
 
 
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 0), "plateBronze", "casingBronze", new ItemStack(IUItem.water_rod, 1, 1));
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 1), "plateIron", "casingIron", new ItemStack(IUItem.water_rod, 1, 2));
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 2), "plateSteel", "casingSteel", new ItemStack(IUItem.water_rod, 1, 3));
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 3), "plateCarbon", "plateCarbon", new ItemStack(IUItem.water_rod, 1, 4));
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 4), "plateIridium", "casingIridium", new ItemStack(IUItem.water_rod, 1, 5));
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(0)), "forge:plates/Bronze", "forge:casings/Bronze", new ItemStack(IUItem.water_rod.getStack(1)));
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(1)), "forge:plates/Iron", "forge:casings/Iron", new ItemStack(IUItem.water_rod.getStack(2)));
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(2)), "forge:plates/Steel", "forge:casings/Steel", new ItemStack(IUItem.water_rod.getStack(3)));
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(3)), "forge:plates/Carbon", "forge:plates/Carbon", new ItemStack(IUItem.water_rod.getStack(4)));
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(4)), "forge:plates/Iridium", "forge:casings/Iridium", new ItemStack(IUItem.water_rod.getStack(5)));
         addRecipe(
-                new ItemStack(IUItem.water_rod, 1, 5),
+                new ItemStack(IUItem.water_rod.getStack(5)),
                 IUItem.iridiumOre,
-                "doubleplateIridium",
-                new ItemStack(IUItem.water_rod, 1, 6)
+                "forge:doubleplate/Iridium",
+                new ItemStack(IUItem.water_rod.getStack(6))
         );
         addRecipe(
-                new ItemStack(IUItem.water_rod, 1, 6),
-                "plateElectrum",
-                "casingElectrum",
-                new ItemStack(IUItem.water_rod, 1, 7)
+                new ItemStack(IUItem.water_rod.getStack(6)),
+                "forge:plates/Electrum",
+                "forge:casings/Electrum",
+                new ItemStack(IUItem.water_rod.getStack(7))
         );
 
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 7), "crystalProton", "crystalPhoton", new ItemStack(IUItem.water_rod, 1, 8));
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 8), "crystalPhoton", "crystalingotPhoton", new ItemStack(IUItem.water_rod, 1,
-                10
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(7)), "forge:crystal/Proton", "forge:crystal/Photon", new ItemStack(IUItem.water_rod.getStack(8)));
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(8)), "forge:crystal/Photon", "forge:crystalingot/Photon", new ItemStack(IUItem.water_rod.getStack(10), 1
         ));
         addRecipe(
-                new ItemStack(IUItem.water_rod, 1, 10),
-                "nuggetNeutron",
-                "casingVitalium",
-                new ItemStack(IUItem.water_rod, 1, 9)
+                new ItemStack(IUItem.water_rod.getStack(10)),
+                "forge:nuggets/Neutron",
+                "forge:casings/Vitalium",
+                new ItemStack(IUItem.water_rod.getStack(9))
         );
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 9), "plateSpinel", "casingSpinel", new ItemStack(IUItem.water_rod, 1, 11));
-        addRecipe(new ItemStack(IUItem.water_rod, 1, 11), "plateCobalt", "casingCobalt", new ItemStack(IUItem.water_rod, 1, 12));
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(9)), "forge:plates/Spinel", "forge:casings/Spinel", new ItemStack(IUItem.water_rod.getStack(11)));
+        addRecipe(new ItemStack(IUItem.water_rod.getStack(11)), "forge:plates/Cobalt", "forge:casings/Cobalt", new ItemStack(IUItem.water_rod.getStack(12)));
         addRecipe(
-                new ItemStack(IUItem.water_rod, 1, 12),
-                "plateMikhail",
-                "casingMikhail",
-                new ItemStack(IUItem.water_rod, 1, 13)
+                new ItemStack(IUItem.water_rod.getStack(12)),
+                "forge:plates/Mikhail",
+                "forge:casings/Mikhail",
+                new ItemStack(IUItem.water_rod.getStack(13))
         );
 
 
-        addRecipe2("logWood", "plankWood", new ItemStack(IUItem.wood_steam_blade));
+        addRecipe2("logs", "planks", new ItemStack(IUItem.wood_steam_blade.getItem()));
         addRecipe1(
-                new ItemStack(IUItem.bronze_steam_blade, 1),
-                "plateBronze",
-                "casingBronze",
-                new ItemStack(IUItem.wood_steam_blade)
+                new ItemStack(IUItem.bronze_steam_blade.getItem(), 1),
+                "forge:plates/Bronze",
+                "forge:casings/Bronze",
+                new ItemStack(IUItem.wood_steam_blade.getItem())
         );
         addRecipe1(
-                new ItemStack(IUItem.iron_steam_blade, 1),
-                "plateIron",
-                "casingIron",
-                new ItemStack(IUItem.bronze_steam_blade)
+                new ItemStack(IUItem.iron_steam_blade.getItem(), 1),
+                "forge:plates/Iron",
+                "forge:casings/Iron",
+                new ItemStack(IUItem.bronze_steam_blade.getItem())
         );
         addRecipe1(
-                new ItemStack(IUItem.steel_steam_blade, 1),
-                "plateSteel",
-                "casingSteel",
-                new ItemStack(IUItem.iron_steam_blade)
+                new ItemStack(IUItem.steel_steam_blade.getItem(), 1),
+                "forge:plates/Steel",
+                "forge:casings/Steel",
+                new ItemStack(IUItem.iron_steam_blade.getItem())
         );
         addRecipe1(
-                new ItemStack(IUItem.carbon_steam_blade, 1),
-                "plateCarbon",
-                "plateCarbon",
-                new ItemStack(IUItem.steel_steam_blade)
+                new ItemStack(IUItem.carbon_steam_blade.getItem(), 1),
+                "forge:plates/Carbon",
+                "forge:plates/Carbon",
+                new ItemStack(IUItem.steel_steam_blade.getItem())
         );
-        addRecipe1(IUItem.iridium_steam_blade, "plateIridium", "casingIridium", new ItemStack(IUItem.carbon_steam_blade));
+        addRecipe1(IUItem.iridium_steam_blade.getItemStack(), "forge:plates/Iridium", "forge:casings/Iridium", new ItemStack(IUItem.carbon_steam_blade.getItem()));
         addRecipe1(
-                IUItem.iridium_steam_blade,
+                IUItem.iridium_steam_blade.getItemStack(),
                 IUItem.iridiumOre,
-                "doubleplateIridium",
-                IUItem.compressiridium_steam_blade
+                "forge:doubleplate/Iridium",
+                IUItem.compressiridium_steam_blade.getItemStack()
         );
         addRecipe1(
-                IUItem.spectral_steam_blade,
-                "plateElectrum",
-                "casingElectrum",
-                IUItem.compressiridium_steam_blade
+                IUItem.spectral_steam_blade.getItemStack(),
+                "forge:plates/Electrum",
+                "forge:casings/Electrum",
+                IUItem.compressiridium_steam_blade.getItemStack()
         );
 
-        addRecipe1(IUItem.myphical_steam_blade, "crystalProton", "crystalPhoton", IUItem.spectral_steam_blade);
-        addRecipe1(IUItem.photon_steam_blade, "crystalPhoton", "crystalingotPhoton", IUItem.myphical_steam_blade);
+        addRecipe1(IUItem.myphical_steam_blade.getItemStack(), "forge:crystal/Proton", "forge:crystal/Photon", IUItem.spectral_steam_blade.getItemStack());
+        addRecipe1(IUItem.photon_steam_blade.getItemStack(), "forge:crystal/Photon", "forge:crystalingot/Photon", IUItem.myphical_steam_blade.getItemStack());
         addRecipe1(
-                IUItem.neutron_steam_blade,
-                "nuggetNeutron",
-                "casingVitalium",
-                IUItem.photon_steam_blade
+                IUItem.neutron_steam_blade.getItemStack(),
+                "forge:nuggets/Neutron",
+                "forge:casings/Vitalium",
+                IUItem.photon_steam_blade.getItemStack()
         );
-        addRecipe1(IUItem.barion_steam_blade, "plateSpinel", "casingSpinel", IUItem.neutron_steam_blade);
-        addRecipe1(IUItem.hadron_steam_blade, "plateCobalt", "casingCobalt", IUItem.barion_steam_blade);
+        addRecipe1(IUItem.barion_steam_blade.getItemStack(), "forge:plates/Spinel", "forge:casings/Spinel", IUItem.neutron_steam_blade.getItemStack());
+        addRecipe1(IUItem.hadron_steam_blade.getItemStack(), "forge:plates/Cobalt", "forge:casings/Cobalt", IUItem.barion_steam_blade.getItemStack());
         addRecipe1(
-                IUItem.ultramarine_steam_blade,
-                "plateMikhail",
-                "casingMikhail",
-                IUItem.hadron_steam_blade
+                IUItem.ultramarine_steam_blade.getItemStack(),
+                "forge:plates/Mikhail",
+                "forge:casings/Mikhail",
+                IUItem.hadron_steam_blade.getItemStack()
         );
     }
 
@@ -419,7 +401,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         return 1;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
@@ -431,13 +413,13 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             inputSlotA.load();
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
             this.getOutput();
 
@@ -544,9 +526,9 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         return this.output;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -573,14 +555,14 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
 
 
     @Override
-    public ContainerRodManufacturer getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerRodManufacturer getGuiContainer(final Player entityPlayer) {
         return new ContainerRodManufacturer(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiRodManufacturer(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiRodManufacturer((ContainerRodManufacturer) menu);
     }
 
 

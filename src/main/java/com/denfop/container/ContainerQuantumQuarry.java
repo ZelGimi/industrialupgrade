@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerQuantumQuarry extends ContainerFullInv<TileBaseQuantumQuarry> {
 
-    public ContainerQuantumQuarry(EntityPlayer entityPlayer, TileBaseQuantumQuarry tileEntity1) {
+    public ContainerQuantumQuarry(Player entityPlayer, TileBaseQuantumQuarry tileEntity1) {
         this(entityPlayer, tileEntity1, 166 + 60);
         if (tileEntity1.outputSlot != null) {
 
@@ -32,7 +32,7 @@ public class ContainerQuantumQuarry extends ContainerFullInv<TileBaseQuantumQuar
         }
     }
 
-    public ContainerQuantumQuarry(EntityPlayer entityPlayer, TileBaseQuantumQuarry tileEntity1, int height) {
+    public ContainerQuantumQuarry(Player entityPlayer, TileBaseQuantumQuarry tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
     }
 

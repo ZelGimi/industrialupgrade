@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=generator_matter": {
+      "model": "industrialupgrade:block/basemachine/matter_generator"
+    },
+    "facing=south,type=generator_matter": {
+      "model": "industrialupgrade:block/basemachine/matter_generator",
+      "y": 180
+    },
+    "facing=west,type=generator_matter": {
+      "model": "industrialupgrade:block/basemachine/matter_generator",
+      "y": 270
+    },
+    "facing=east,type=generator_matter": {
+      "model": "industrialupgrade:block/basemachine/matter_generator",
+      "y": 90
+    },
+    "facing=down,type=generator_matter": {
+      "model": "industrialupgrade:block/basemachine/matter_generator",
+      "x": 90
+    },
+    "facing=up,type=generator_matter": {
+      "model": "industrialupgrade:block/basemachine/matter_generator",
+      "x": 270
+    },
+    "facing=north,type=generator_matter_invalid": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active"
+    },
+    "facing=south,type=generator_matter_invalid": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "y": 180
+    },
+    "facing=west,type=generator_matter_invalid": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "y": 270
+    },
+    "facing=east,type=generator_matter_invalid": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "y": 90
+    },
+    "facing=down,type=generator_matter_invalid": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "x": 90
+    },
+    "facing=up,type=generator_matter_invalid": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "x": 270
+    },
+    "facing=north,type=generator_matter_active": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active"
+    },
+    "facing=south,type=generator_matter_active": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "y": 180
+    },
+    "facing=west,type=generator_matter_active": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "y": 270
+    },
+    "facing=east,type=generator_matter_active": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "y": 90
+    },
+    "facing=down,type=generator_matter_active": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "x": 90
+    },
+    "facing=up,type=generator_matter_active": {
+      "model": "industrialupgrade:block/basemachine/matter_generator_active",
+      "x": 270
+    }
+  }
+}

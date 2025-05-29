@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/raw_ingot_yttrium"	}
+		"layer0": "industrialupgrade:item/raw_ingot_yttrium"	}
 }

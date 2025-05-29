@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/oberon_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/oberon_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/oberon_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/oberon_boulder"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:spacecobblestone1/oberon_cobblestone"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:logs"
+      }
+    ],
+    "B": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:stone_button"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "ABC",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:barrel/barrel"
+  },
+  "show_notification": true
+}

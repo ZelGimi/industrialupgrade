@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/automatic_mechanism-sides",
-    "down" : "industrialupgrade:blocks/automatic_mechanism-sides",
-    "up" : "industrialupgrade:blocks/automatic_mechanism-sides",
-    "north" : "industrialupgrade:blocks/automatic_mechanism_main",
-    "east" : "industrialupgrade:blocks/automatic_mechanism_left-right",
-    "south" : "industrialupgrade:blocks/automatic_mechanism-sides",
-    "west" : "industrialupgrade:blocks/automatic_mechanism_left-right"
+    "particle" : "industrialupgrade:block/automatic_mechanism-sides",
+    "down" : "industrialupgrade:block/automatic_mechanism-sides",
+    "up" : "industrialupgrade:block/automatic_mechanism-sides",
+    "north" : "industrialupgrade:block/automatic_mechanism_main",
+    "east" : "industrialupgrade:block/automatic_mechanism_left-right",
+    "south" : "industrialupgrade:block/automatic_mechanism-sides",
+    "west" : "industrialupgrade:block/automatic_mechanism_left-right"
   }
 }

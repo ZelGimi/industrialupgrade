@@ -2,6 +2,7 @@ package com.denfop.tiles.cyclotron;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
@@ -10,7 +11,9 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockCyclotron;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCyclotronController;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiCyclotronController;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -21,15 +24,16 @@ import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.List;
@@ -45,18 +49,18 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
     public boolean work = false;
     public int progress;
 
-    public TileEntityCyclotronController() {
-        super(InitMultiBlockSystem.CyclotronMultiBlock);
+    public TileEntityCyclotronController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.CyclotronMultiBlock,BlockCyclotron.cyclotron_controller,pos,state);
         Recipes.recipes.addInitRecipes(this);
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         this.work = !work;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         work = nbttagcompound.getBoolean("work");
     }
@@ -89,26 +93,26 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
         try {
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.coolant.getCoolantTank().readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                this.coolant.getCoolantTank().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
             fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.cryogen.getCryogenTank().readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                this.cryogen.getCryogenTank().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
             positrons.getPositrons().onNetworkUpdate(customPacketBuffer);
             quantum.getQuantum().onNetworkUpdate(customPacketBuffer);
             bombardmentChamber
                     .getInputSlot()
-                    .readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+                    .readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
             boolean empty = customPacketBuffer.readBoolean();
             if (empty && !bombardmentChamber.getInputSlot().isEmpty()) {
-                bombardmentChamber.getInputSlot().put(0, ItemStack.EMPTY);
+                bombardmentChamber.getInputSlot().set(0, ItemStack.EMPTY);
             }
             electrostaticDeflector.getOutputSlot().readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(
-                    new NBTTagCompound()));
+                    new CompoundTag()));
             empty = customPacketBuffer.readBoolean();
             if (empty && !electrostaticDeflector.getOutputSlot().isEmpty()) {
-                electrostaticDeflector.getOutputSlot().put(0, ItemStack.EMPTY);
+                electrostaticDeflector.getOutputSlot().set(0, ItemStack.EMPTY);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -116,14 +120,14 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
     }
 
     @Override
-    public ContainerCyclotronController getGuiContainer(final EntityPlayer var1) {
+    public ContainerCyclotronController getGuiContainer(final Player var1) {
         return new ContainerCyclotronController(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCyclotronController(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiCyclotronController((ContainerCyclotronController) menu);
     }
 
 
@@ -146,9 +150,9 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
                 this.progress += 1;
                 this.quantum.getQuantum().useEnergy(10);
                 this.positrons.getPositrons().useEnergy(this.bombardmentChamber.getPositrons());
-                this.cryogen.getCryogenTank().drain(2 * this.bombardmentChamber.getCryogen(), true);
+                this.cryogen.getCryogenTank().drain(2 * this.bombardmentChamber.getCryogen(), IFluidHandler.FluidAction.EXECUTE);
                 if (this.coolant.getCoolantTank().getFluidAmount() + 1 < this.coolant.getCoolantTank().getCapacity()) {
-                    this.coolant.getCoolantTank().fill(new FluidStack(FluidName.fluidcoolant.getInstance(), 1), true);
+                    this.coolant.getCoolantTank().fill(new FluidStack(FluidName.fluidcoolant.getInstance().get(), 1), IFluidHandler.FluidAction.EXECUTE);
                 }
                 if (this.progress >= 1000) {
                     this.progress = 0;
@@ -179,8 +183,8 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        nbttagcompound.setBoolean("work", work);
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
+        nbttagcompound.putBoolean("work", work);
         return super.writeToNBT(nbttagcompound);
     }
 
@@ -207,37 +211,37 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ICoolant.class
                 );
-        this.coolant = (ICoolant) this.getWorld().getTileEntity(pos1.get(0));
+        this.coolant = (ICoolant) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ICryogen.class
                 );
-        this.cryogen = (ICryogen) this.getWorld().getTileEntity(pos1.get(0));
+        this.cryogen = (ICryogen) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IBombardmentChamber.class
                 );
-        this.bombardmentChamber = (IBombardmentChamber) this.getWorld().getTileEntity(pos1.get(0));
+        this.bombardmentChamber = (IBombardmentChamber) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IPositrons.class
                 );
-        this.positrons = (IPositrons) this.getWorld().getTileEntity(pos1.get(0));
+        this.positrons = (IPositrons) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IQuantum.class
                 );
-        this.quantum = (IQuantum) this.getWorld().getTileEntity(pos1.get(0));
+        this.quantum = (IQuantum) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IElectrostaticDeflector.class
                 );
-        this.electrostaticDeflector = (IElectrostaticDeflector) this.getWorld().getTileEntity(pos1.get(0));
+        this.electrostaticDeflector = (IElectrostaticDeflector) this.getWorld().getBlockEntity(pos1.get(0));
 
     }
 
@@ -253,105 +257,105 @@ public class TileEntityCyclotronController extends TileMultiBlockBase implements
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.cyclotron;
+        return IUItem.cyclotron.getBlock(getTeBlock());
     }
 
     @Override
     public void init() {
         final IInputHandler input_recipe = com.denfop.api.Recipes.inputFactory;
-        NBTTagCompound nbt = ModUtils.nbt();
-        nbt.setInteger("chance", 100);
+        CompoundTag nbt = ModUtils.nbt();
+        nbt.putInt("chance", 100);
         Recipes.recipes.addRecipe(
                 "cyclotron",
-                new BaseMachineRecipe(new Input(input_recipe.getInput("blockPalladium")), new RecipeOutput(
+                new BaseMachineRecipe(new Input(input_recipe.getInput("forge:storage_blocks/Palladium")), new RecipeOutput(
                         nbt,
-                        new ItemStack(IUItem.toriy)
+                        new ItemStack(IUItem.toriy.getItem())
                 ))
         );
         nbt = ModUtils.nbt();
-        nbt.setInteger("chance", 100);
+        nbt.putInt("chance", 100);
         Recipes.recipes.addRecipe(
                 "cyclotron",
-                new BaseMachineRecipe(new Input(input_recipe.getInput("blockUranium")), new RecipeOutput(
+                new BaseMachineRecipe(new Input(input_recipe.getInput("forge:storage_blocks/uranium")), new RecipeOutput(
                         nbt,
-                        new ItemStack(IUItem.radiationresources, 1, 1)
+                        new ItemStack(IUItem.radiationresources.getStack(1), 1)
                 ))
         );
         nbt = ModUtils.nbt();
-        nbt.setInteger("chance", 100);
+        nbt.putInt("chance", 100);
         Recipes.recipes.addRecipe(
                 "cyclotron",
                 new BaseMachineRecipe(
-                        new Input(input_recipe.getInput(new ItemStack(IUItem.nuclear_res, 1, 3))),
+                        new Input(input_recipe.getInput(new ItemStack(IUItem.nuclear_res.getStack(3), 1))),
                         new RecipeOutput(
                                 nbt,
-                                new ItemStack(IUItem.radiationresources, 1, 0)
+                                new ItemStack(IUItem.radiationresources.getStack(0), 1)
                         )
                 )
         );
         nbt = ModUtils.nbt();
-        nbt.setInteger("chance", 100);
+        nbt.putInt("chance", 100);
         Recipes.recipes.addRecipe(
                 "cyclotron",
                 new BaseMachineRecipe(
-                        new Input(input_recipe.getInput(new ItemStack(IUItem.radiationresources, 1, 0))),
+                        new Input(input_recipe.getInput(new ItemStack(IUItem.radiationresources.getStack(0), 1))),
                         new RecipeOutput(
                                 nbt,
-                                new ItemStack(IUItem.radiationresources, 1, 2)
+                                new ItemStack(IUItem.radiationresources.getStack(2), 1)
                         )
                 )
         );
         nbt = ModUtils.nbt();
-        nbt.setInteger("chance", 75);
+        nbt.putInt("chance", 75);
         Recipes.recipes.addRecipe(
                 "cyclotron",
                 new BaseMachineRecipe(
-                        new Input(input_recipe.getInput(new ItemStack(IUItem.radiationresources, 1, 11))),
+                        new Input(input_recipe.getInput(new ItemStack(IUItem.radiationresources.getStack(11), 1))),
                         new RecipeOutput(
                                 nbt,
-                                new ItemStack(IUItem.radiationresources, 1, 5)
+                                new ItemStack(IUItem.radiationresources.getStack(5), 1)
                         )
                 )
         );
         nbt = ModUtils.nbt();
-        nbt.setInteger("chance", 60);
-        nbt.setInteger("cryogen", 2);
+        nbt.putInt("chance", 60);
+        nbt.putInt("cryogen", 2);
         Recipes.recipes.addRecipe(
                 "cyclotron",
                 new BaseMachineRecipe(
-                        new Input(input_recipe.getInput(new ItemStack(IUItem.radiationresources, 1, 5))),
+                        new Input(input_recipe.getInput(new ItemStack(IUItem.radiationresources.getStack(5), 1))),
                         new RecipeOutput(
                                 nbt,
-                                new ItemStack(IUItem.radiationresources, 1, 10)
+                                new ItemStack(IUItem.radiationresources.getStack(10), 1)
                         )
                 )
         );
         nbt = ModUtils.nbt();
-        nbt.setInteger("chance", 50);
-        nbt.setInteger("positrons", 2);
-        nbt.setInteger("cryogen", 2);
+        nbt.putInt("chance", 50);
+        nbt.putInt("positrons", 2);
+        nbt.putInt("cryogen", 2);
         Recipes.recipes.addRecipe(
                 "cyclotron",
                 new BaseMachineRecipe(
-                        new Input(input_recipe.getInput(new ItemStack(IUItem.radiationresources, 1, 10))),
+                        new Input(input_recipe.getInput(new ItemStack(IUItem.radiationresources.getStack(10), 1))),
                         new RecipeOutput(
                                 nbt,
-                                new ItemStack(IUItem.radiationresources, 1, 9)
+                                new ItemStack(IUItem.radiationresources.getStack(9), 1)
                         )
                 )
         );
 
         nbt = ModUtils.nbt();
-        nbt.setInteger("chance", 50);
-        nbt.setInteger("positrons", 2);
-        nbt.setInteger("cryogen", 1);
+        nbt.putInt("chance", 50);
+        nbt.putInt("positrons", 2);
+        nbt.putInt("cryogen", 1);
         Recipes.recipes.addRecipe(
                 "cyclotron",
                 new BaseMachineRecipe(
-                        new Input(input_recipe.getInput(new ItemStack(IUItem.crafting_elements, 1, 641))),
+                        new Input(input_recipe.getInput(new ItemStack(IUItem.crafting_elements.getStack(641), 1))),
                         new RecipeOutput(
                                 nbt,
-                                new ItemStack(IUItem.crafting_elements, 1, 647)
+                                new ItemStack(IUItem.crafting_elements.getStack(647), 1)
                         )
                 )
         );

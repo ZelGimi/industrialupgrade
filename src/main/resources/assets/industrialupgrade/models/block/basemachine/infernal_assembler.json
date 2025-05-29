@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/infernal_assembler",
-    "particle" : "industrialupgrade:models/infernal_assembler"
+    "0" : "industrialupgrade:block/infernal_assembler",
+    "particle" : "industrialupgrade:block/infernal_assembler"
   },
   "elements" : [
     {

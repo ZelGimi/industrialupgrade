@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/thallium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/silver"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tantalum"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CBC",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_734_element"
+  },
+  "show_notification": true
+}

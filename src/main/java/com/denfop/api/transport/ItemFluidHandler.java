@@ -1,13 +1,11 @@
 package com.denfop.api.transport;
 
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemFluidHandler implements IItemHandler, IFluidHandler {
 
@@ -27,59 +25,81 @@ public class ItemFluidHandler implements IItemHandler, IFluidHandler {
         return ItemHandler;
     }
 
-    @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return fluidHandler.getTankProperties();
-    }
 
     @Override
-    public int fill(final FluidStack resource, final boolean doFill) {
-        return fluidHandler.fill(resource, doFill);
+    public int getTanks() {
+        return fluidHandler.getTanks();
     }
 
-    @Nullable
+
     @Override
-    public FluidStack drain(final FluidStack resource, final boolean doDrain) {
-        return fluidHandler.drain(resource, doDrain);
+    public @NotNull FluidStack getFluidInTank(int tank) {
+        return fluidHandler.getFluidInTank(tank);
     }
 
-    @Nullable
+
     @Override
-    public FluidStack drain(final int maxDrain, final boolean doDrain) {
-        return fluidHandler.drain(maxDrain, doDrain);
+    public int getTankCapacity(int tank) {
+        return fluidHandler.getTankCapacity(tank);
     }
+
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return fluidHandler.isFluidValid(tank, stack);
+    }
+
+
+    @Override
+    public int fill(FluidStack resource, FluidAction action) {
+        return fluidHandler.fill(resource, action);
+    }
+
+
+    @Override
+    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+        return fluidHandler.drain(resource, action);
+    }
+
+
+    @Override
+    public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+        return fluidHandler.drain(maxDrain, action);
+    }
+
 
     @Override
     public int getSlots() {
-        return this.ItemHandler.getSlots();
+        return ItemHandler.getSlots();
     }
 
-    @Nonnull
-    @Override
-    public ItemStack getStackInSlot(final int slot) {
-        return this.ItemHandler.getStackInSlot(slot);
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack insertItem(final int slot, @Nonnull final ItemStack stack, final boolean simulate) {
-        return this.ItemHandler.insertItem(slot, stack, simulate);
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack extractItem(final int slot, final int amount, final boolean simulate) {
-        return this.ItemHandler.extractItem(slot, amount, simulate);
-    }
 
     @Override
-    public int getSlotLimit(final int slot) {
-        return this.ItemHandler.getSlotLimit(slot);
+    public @NotNull ItemStack getStackInSlot(int slot) {
+        return ItemHandler.getStackInSlot(slot);
     }
+
 
     @Override
-    public boolean isItemValid(final int slot, @Nonnull final ItemStack stack) {
-        return this.ItemHandler.isItemValid(slot, stack);
+    public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        return ItemHandler.insertItem(slot, stack, simulate);
     }
 
+
+    @Override
+    public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+        return ItemHandler.extractItem(slot, amount, simulate);
+    }
+
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return ItemHandler.getSlotLimit(slot);
+    }
+
+
+    @Override
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        return ItemHandler.isItemValid(slot, stack);
+    }
 }

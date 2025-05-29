@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:dyes/yellow"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_271_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "DAD",
+    "D D"
+  ],
+  "result": {
+    "count": 3,
+    "item": "industrialupgrade:crafting_elements/crafting_478_element"
+  },
+  "show_notification": true
+}

@@ -3,65 +3,66 @@ package com.denfop.integration.jei.bf;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockBlastFurnace;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.Fluids;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class BlastFCategory extends Gui implements IRecipeCategory<BlastFWrapper> {
+public class BlastFCategory extends GuiIU implements IRecipeCategory<BlastFHandler> {
 
     private final IDrawableStatic bg;
     private int progress = 0;
-
+    JeiInform jeiInform;
     public BlastFCategory(
-            final IGuiHelper guiHelper
+            final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiblastfurnace_jei" +
                         ".png"), 5, 5, 168,
                 92
         );
+        this.jeiInform=jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
+
 
     @Nonnull
     @Override
-    public String getUid() {
-        return BlockBlastFurnace.blast_furnace_main.getName() + "1";
+    public String getTitles() {
+        return Localization.translate(new ItemStack(IUItem.blastfurnace.getItem(0), 1).getDescriptionId());
     }
 
-    @Nonnull
+
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.blastfurnace, 1, 0).getUnlocalizedName());
+    public RecipeType<BlastFHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
-
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
-
+    @SuppressWarnings("removal")
     @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(BlastFHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         int xScale = (int) (38.0 * progress / 100D);
 
@@ -69,31 +70,18 @@ public class BlastFCategory extends Gui implements IRecipeCategory<BlastFWrapper
             progress = 0;
         }
 
-        mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(+83, +41, 177, 19, xScale, 11);
-
-
+      bindTexture(getTexture());
+        drawTexturedModalRect(stack,  +83, +41, 177, 19, xScale, 11);
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final BlastFWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 57, 38);
+    public void setRecipe(IRecipeLayoutBuilder builder, BlastFHandler recipes, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 58, 39).addItemStack(recipes.getStack());
+        builder.addSlot(RecipeIngredientRole.INPUT,  5, 17).setFluidRenderer(10000,true, 12,47).addFluidStack(Fluids.WATER,10000);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 133, 39).addItemStack(recipes.getOutput());
 
-        isg.set(0, recipes.getInput());
-
-        IGuiFluidStackGroup fff = layout.getFluidStacks();
-
-        fff.init(1, true, 5, 17, 12, 47, 10000, true, null);
-        fff.set(1, new FluidStack(FluidRegistry.WATER, 1000));
-
-        isg.init(2, false, 133, 39);
-        isg.set(2, recipes.getOutput());
     }
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiblastfurnace_jei.png");

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:upgrades/ejector"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    },
+    "E": [
+      {
+        "item": "industrialupgrade:upgrades/pulling"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "EBC",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/automatic_mechanism"
+  },
+  "show_notification": true
+}

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/manasteel_plate"
+    "layer0" : "industrialupgrade:item/manasteel_plate"
   }
 }

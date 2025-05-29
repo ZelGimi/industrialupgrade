@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/calcium_fluoride"	}
+		"layer0": "industrialupgrade:item/calcium_fluoride"	}
 }

@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/umbriel_pebble"	}
+		"layer0": "industrialupgrade:item/umbriel_pebble"	}
 }

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/adv_bee_frame_template"
+    "layer0" : "industrialupgrade:item/adv_bee_frame_template"
   }
 }

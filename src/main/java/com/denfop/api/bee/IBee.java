@@ -3,8 +3,10 @@ package com.denfop.api.bee;
 import com.denfop.api.agriculture.ICrop;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.INetworkObject;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
@@ -19,13 +21,16 @@ public interface IBee extends INetworkObject {
 
     List<IBee> getUnCompatibleBees();
 
-    void setUnCompatibleBees(List<IBee> bees);
-
     boolean isSun();
 
     boolean isNight();
 
+
+
+
     int getWeatherResistance();
+
+    void setUnCompatibleBees(List<IBee> bees);
 
     int getChance();
 
@@ -33,18 +38,19 @@ public interface IBee extends INetworkObject {
 
     int getId();
 
-    List<Biome> getBiomes();
+    List<ResourceKey<Biome>> getBiomes();
 
 
-    boolean canWorkInBiome(Biome biomeName);
+    boolean canWorkInBiome( ResourceKey<Biome>  biomeName);
+    boolean canWorkInBiome(Biome  biomeName, Level level);
+    void addBiome( ResourceKey<Biome>  biomeName);
 
-    void addBiome(Biome biomeName);
 
 
     int getOffspring();
 
 
-    AxisAlignedBB getSizeTerritory();
+    AABB getSizeTerritory();
 
 
     int getTickLifecycles();

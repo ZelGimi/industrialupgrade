@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/nimonic"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:reactors/adv_neutron_protector"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:reactors/imp_neutron_protector"
+  },
+  "show_notification": true
+}

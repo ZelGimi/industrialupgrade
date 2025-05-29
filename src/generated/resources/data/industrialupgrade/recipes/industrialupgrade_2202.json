@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_684_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_680_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CAE",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/rocket_launch_pad"
+  },
+  "show_notification": true
+}

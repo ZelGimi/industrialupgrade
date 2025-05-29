@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
+    },
+    [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_278_element"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:energy/electric_wrench"
+  }
+}

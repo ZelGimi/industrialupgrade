@@ -1,10 +1,9 @@
 package com.denfop.items.energy;
 
-import com.denfop.Constants;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
@@ -14,142 +13,170 @@ import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
-import com.denfop.utils.KeyboardClient;
+import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.LevelEntityGetter;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, IUpdatableItemStackEvent, IModelRegister,
-        IUpgradeItem {
+import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
-
+public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, IUpdatableItemStackEvent, IUpgradeItem {
     private final int radius;
 
-    public ItemMagnet(String name, double maxCharge, double transferLimit, int tier, int radius) {
-        super(name, maxCharge, transferLimit, tier);
-        setMaxStackSize(1);
+    public ItemMagnet(double maxCharge, double transferLimit, int tier, int radius) {
+        super(maxCharge, transferLimit, tier);
 
         this.radius = radius;
-        IUCore.proxy.addIModelRegister(this);
-        this.name = name;
-        UpgradeSystem.system.addRecipe(this, EnumUpgrades.MAGNET.list);
 
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "energy" + "/" + name;
-
-        return new ModelResourceLocation(loc, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
-
-    public List<EnumInfoUpgradeModules> getUpgradeModules() {
-        return EnumUpgrades.MAGNET.list;
-    }
-
-    public int getItemEnchantability() {
-        return 0;
-    }
-
-    public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {
-        return false;
+        runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.MAGNET.list));
     }
 
     @Override
-    public void registerModels() {
-        registerModels(this.name);
-    }
+    public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu.energy."+pathBuilder.toString().split("\\.")[2];
+        }
 
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
+        return this.nameItem;
     }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
+    @Override
+    public void updateEvent(final int event, final ItemStack stack) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("white", !nbt.getBoolean("white"));
     }
 
     @Override
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            final List<String> tooltip,
-            final ITooltipFlag flagIn
-    ) {
-        int mode = ModUtils.NBTGetInteger(stack, "mode");
-        if (mode > 2 || mode < 0) {
-            mode = 0;
+    public void inventoryTick(ItemStack itemStack, Level p_77663_2_, Entity p_77663_3_, int slotIndex, boolean isCurrentItem) {
+        if (!(p_77663_3_ instanceof Player)) {
+            return;
         }
-
-        tooltip.add(
-                TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
-                        + Localization.translate("message.magnet.mode." + mode)
-        );
-        int radius1 = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SIZE, stack) ?
-                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SIZE, stack).number : 0);
-
-        tooltip.add(Localization.translate("iu.magnet.info") + (radius + radius1) + "x" + (radius + radius1));
-
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("press.lshift"));
+        if (p_77663_2_.isClientSide) {
+            return;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(Math.abs(KeyboardClient.changemode.getKeyCode())) + Localization.translate(
-                    "iu.changemode_rcm"));
+        CompoundTag nbt = ModUtils.nbt(itemStack);
+
+        if (!UpgradeSystem.system.hasInMap(itemStack)) {
+            nbt.putBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventItemLoad(p_77663_2_, this, itemStack));
         }
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+        Player player = (Player) p_77663_3_;
+        int mode = ModUtils.NBTGetInteger(itemStack, "mode");
+        if (mode != 0) {
+            int radius1 = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SIZE, itemStack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SIZE, itemStack).number : 0);
+            double energy = 1 - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, itemStack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, itemStack).number * 0.25 : 0);
+
+            int radius = this.radius + radius1;
+            AABB axisalignedbb = new AABB(player.getX() - radius, player.getY() - radius,
+                    player.getZ() - radius, player.getX() + radius, p_77663_3_.getY() + radius, p_77663_3_.getZ() + radius
+            );
+
+            LevelEntityGetter<Entity> list1 = ((ServerLevel) p_77663_2_).getEntities();
+            List<Entity> list = Lists.newArrayList();
+            list1.get(axisalignedbb, (p_151522_) -> {
+                if (p_151522_ instanceof ItemEntity) {
+                    list.add(p_151522_);
+                }
+            });
+            final ItemStackMagnet inventory = (ItemStackMagnet) this.getInventory(player, itemStack);
+
+            for (Entity entityinlist : list) {
+                if (entityinlist instanceof ItemEntity) {
+                    ItemEntity item = (ItemEntity) entityinlist;
+                    if (ElectricItem.manager.canUse(itemStack, 200 * energy) && canInsert(itemStack,
+                            ((ItemEntity) entityinlist).getItem(), inventory
+                    )) {
+                        if (mode == 1) {
+
+                            item.absMoveTo(p_77663_3_.position().x, p_77663_3_.position().y, p_77663_3_.position().z, 0.0F, 0.0F);
+                            if (!player.level().isClientSide) {
+                                ((ServerPlayer) player).connection.send(new ClientboundTeleportEntityPacket(item));
+
+                            }
+                            item.setPickUpDelay(0);
+                            ElectricItem.manager.use(itemStack, 200 * energy, player);
+                        } else if (mode == 2) {
+                            boolean xcoord = item.position().x + 2 >= p_77663_3_.position().x && item.position().x - 2 <= p_77663_3_.position().x;
+                            boolean zcoord = item.position().z + 2 >= p_77663_3_.position().z && item.position().z - 2 <= p_77663_3_.position().z;
+
+                            if (!xcoord && !zcoord) {
+                                item.absMoveTo(p_77663_3_.position().x, p_77663_3_.position().y - 1, p_77663_3_.position().z);
+                                item.setPickUpDelay(10);
+                            }
+
+                        }
+                    }
+
+                }
+            }
+        }
+        ItemStack stack = itemStack;
+        if (nbt.getBoolean("open")) {
+            int slotId = nbt.getInt("slot_inventory");
+            if (slotId != slotIndex && !p_77663_2_.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMagnet) {
+                ItemStackMagnet toolbox = ((ContainerMagnet) player.containerMenu).base;
+                if (toolbox.isThisContainer(stack)) {
+                    toolbox.saveAsThrown(stack);
+                    player.closeContainer();
+                    nbt.putBoolean("open", false);
+                }
+            }
+        }
     }
 
-    public boolean canInsert(ItemStack itemStack1, ItemStack itemstack, ItemStackMagnet inventory) {
-        final NBTTagCompound nbt = ModUtils.nbt(itemStack1);
+    private boolean canInsert(ItemStack itemstack, ItemStack itemStack1, ItemStackMagnet inventory) {
+        final CompoundTag nbt = ModUtils.nbt(itemstack);
         boolean white = nbt.getBoolean("white");
         boolean can = false;
         if (white) {
             for (ItemStack stack1 : inventory.list) {
-                if (!stack1.isEmpty() && stack1.isItemEqual(itemstack)) {
+                if (!stack1.isEmpty() && stack1.is(itemStack1.getItem())) {
                     can = true;
                     break;
                 }
             }
         } else {
             for (ItemStack stack1 : inventory.list) {
-                if (!stack1.isEmpty() && stack1.isItemEqual(itemstack)) {
+                if (!stack1.isEmpty() && stack1.is(itemStack1.getItem())) {
                     can = false;
                     break;
                 } else {
@@ -161,171 +188,104 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
     }
 
     @Override
-    public void onUpdate(
-            @Nonnull ItemStack itemStack,
-            @Nonnull World p_77663_2_,
-            @Nonnull Entity p_77663_3_,
-            int p_77663_4_,
-            boolean p_77663_5_
-    ) {
-        if (!(p_77663_3_ instanceof EntityPlayer)) {
-            return;
-        }
-        NBTTagCompound nbt = ModUtils.nbt(itemStack);
+    public InteractionResultHolder<ItemStack> use(Level p_41432_, Player player, InteractionHand hand) {
 
-        EntityPlayer player = (EntityPlayer) p_77663_3_;
-        if (nbt.getBoolean("open")) {
-            int slot_id = nbt.getInteger("slot_inventory");
-            if (slot_id != p_77663_4_ && !player.getEntityWorld().isRemote && !ModUtils.isEmpty(itemStack) && player.openContainer instanceof com.denfop.items.energy.ContainerMagnet) {
-                ItemStackMagnet toolbox = ((com.denfop.items.energy.ContainerMagnet) player.openContainer).base;
-                if (toolbox.isThisContainer(itemStack)) {
-                    toolbox.saveAsThrown(itemStack);
-                    player.closeScreen();
-                    nbt.setBoolean("open", false);
-                }
-            } else if (!(player.openContainer instanceof com.denfop.items.energy.ContainerMagnet)) {
-                nbt.setBoolean("open", false);
-            }
-        }
+        if (IUCore.keyboard.isChangeKeyDown(player) && !p_41432_.isClientSide) {
 
-
-        if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.setBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(p_77663_2_, this, itemStack));
-        }
-
-        int mode = ModUtils.NBTGetInteger(itemStack, "mode");
-        if (mode != 0) {
-            int radius1 = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SIZE, itemStack) ?
-                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SIZE, itemStack).number : 0);
-            double energy = 1 - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, itemStack) ?
-                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, itemStack).number * 0.25 : 0);
-
-            int radius = this.radius + radius1;
-            AxisAlignedBB axisalignedbb = new AxisAlignedBB(p_77663_3_.posX - radius, p_77663_3_.posY - radius,
-                    p_77663_3_.posZ - radius, p_77663_3_.posX + radius, p_77663_3_.posY + radius, p_77663_3_.posZ + radius
-            );
-            List<Entity> list = p_77663_2_.getEntitiesWithinAABBExcludingEntity(p_77663_3_, axisalignedbb);
-
-            if (!list.isEmpty() && !player.getEntityWorld().isRemote) {
-                final ItemStackMagnet inventory = this.getInventory(player, itemStack);
-
-                for (Entity entityinlist : list) {
-                    if (entityinlist instanceof EntityItem) {
-                        EntityItem item = (EntityItem) entityinlist;
-                        if (ElectricItem.manager.canUse(itemStack, 200 * energy) && canInsert(itemStack,
-                                ((EntityItem) entityinlist).getItem(), inventory
-                        )) {
-                            if (mode == 1) {
-
-                                item.setLocationAndAngles(p_77663_3_.posX, p_77663_3_.posY, p_77663_3_.posZ, 0.0F, 0.0F);
-                                if (!player.world.isRemote) {
-                                    ((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(item));
-                                }
-                                item.setPickupDelay(0);
-                                ElectricItem.manager.use(itemStack, 200 * energy, player);
-                            } else if (mode == 2) {
-                                boolean xcoord = item.posX + 2 >= p_77663_3_.posX && item.posX - 2 <= p_77663_3_.posX;
-                                boolean zcoord = item.posZ + 2 >= p_77663_3_.posZ && item.posZ - 2 <= p_77663_3_.posZ;
-
-                                if (!xcoord && !zcoord) {
-                                    item.setPosition(p_77663_3_.posX, p_77663_3_.posY - 1, p_77663_3_.posZ);
-                                    item.setPickupDelay(10);
-                                }
-
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-
-
-    }
-
-    public boolean canProvideEnergy(ItemStack stack) {
-        return true;
-    }
-
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
-
-        if (IUCore.keyboard.isChangeKeyDown(player) && IUCore.proxy.isSimulating()) {
-
-            int mode = ModUtils.NBTGetInteger(player.getHeldItem(hand), "mode");
+            int mode = ModUtils.NBTGetInteger(player.getItemInHand(hand), "mode");
             mode++;
             if (mode > 2 || mode < 0) {
                 mode = 0;
             }
 
-            ModUtils.NBTSetInteger(player.getHeldItem(hand), "mode", mode);
+            ModUtils.NBTSetInteger(player.getItemInHand(hand), "mode", mode);
             IUCore.proxy.messagePlayer(
                     player,
-                    TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
+                    ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": "
                             + Localization.translate("message.magnet.mode." + mode)
             );
 
 
-            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
         } else {
-            if (IUCore.proxy.isSimulating()) {
-                save(player.getHeldItem(hand), player);
-                player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-                return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+            if (!p_41432_.isClientSide) {
+                save(player.getItemInHand(hand), player);
 
+                CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+                growingBuffer.writeByte(1);
+
+                growingBuffer.flip();
+                NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+
+
+                return InteractionResultHolder.success(player.getItemInHand(hand));
             }
-            return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
         }
     }
 
-    public void save(ItemStack stack, EntityPlayer player) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("open", true);
-        nbt.setInteger("slot_inventory", player.inventory.currentItem);
+    public void save(ItemStack stack, Player player) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("open", true);
+        nbt.putInt("slot_inventory", player.getInventory().selected);
     }
 
-    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof com.denfop.items.energy.ContainerMagnet) {
-            ItemStackMagnet toolbox = ((com.denfop.items.energy.ContainerMagnet) player.openContainer).base;
+    public IAdvInventory getInventory(Player player, ItemStack stack) {
+        return new ItemStackMagnet(player, stack, 0);
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerMagnet) {
+            ItemStackMagnet toolbox = ((ContainerMagnet) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
-                toolbox.saveAsThrown(stack);
-                player.closeScreen();
+                toolbox.saveAndThrow(stack);
+                player.closeContainer();
             }
         }
-
         return true;
     }
 
     @Override
-    public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        int mode = ModUtils.NBTGetInteger(p_41421_, "mode");
+        if (mode > 2 || mode < 0) {
+            mode = 0;
+        }
 
+        p_41423_.add(Component.literal(
+                ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": "
+                        + Localization.translate("message.magnet.mode." + mode))
+        );
+        int radius1 = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SIZE, p_41421_) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SIZE, p_41421_).number : 0);
+
+        p_41423_.add(Component.literal(Localization.translate("iu.magnet.info") + (radius + radius1) + "x" + (radius + radius1)));
+
+        if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+            p_41423_.add(Component.literal(Localization.translate("press.lshift")));
+        }
+        if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+            p_41423_.add(Component.literal(Localization.translate("iu.changemode_key") + Localization.translate(
+                    "iu.changemode_rcm1")));
+        }
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
     }
 
     @Override
-    public void updateEvent(final int event, final ItemStack stack) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("white", !nbt.getBoolean("white"));
+    public int getEnchantmentValue(ItemStack stack) {
+        return 0;
     }
 
-    public boolean canInsert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
-        ItemStackMagnet box = (ItemStackMagnet) getInventory(player, stack);
-        return box.canAdd(stack1);
+    @Override
+    public boolean isEnchantable(ItemStack p_41456_) {
+        return false;
     }
 
-    public void insert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
-        ItemStackMagnet box = (ItemStackMagnet) getInventory(player, stack);
-        box.add(stack1);
-        box.markDirty();
-    }
 
-    public void insertWithoutSave(EntityPlayer player, ItemStack stack, ItemStack stack1) {
-        ItemStackMagnet box = (ItemStackMagnet) getInventory(player, stack);
-        box.addWithoutSave(stack1);
+    @Override
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.MAGNET.list;
     }
-
-    public ItemStackMagnet getInventory(EntityPlayer player, ItemStack stack) {
-        return new ItemStackMagnet(player, stack, 0);
-    }
-
 }

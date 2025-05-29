@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:machines/ultimate_solar_paneliu"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:modulestype/module63"
+  }
+}

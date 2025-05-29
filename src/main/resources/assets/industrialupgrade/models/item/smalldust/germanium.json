@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/germanium_smalldust"
+    "layer0" : "industrialupgrade:item/germanium_smalldust"
   }
 }

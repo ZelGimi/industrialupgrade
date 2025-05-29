@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:solar_panel_glass/adv"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/osmium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/lead"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_704_element"
+  },
+  "show_notification": true
+}

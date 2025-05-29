@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/io_boulder"
+    "layer0" : "industrialupgrade:item/io_boulder"
   }
 }

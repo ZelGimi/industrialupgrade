@@ -2,7 +2,7 @@ package com.denfop.api.space.fakebody;
 
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -18,8 +18,8 @@ public class Data implements IData {
         this.body = body;
     }
 
-    public Data(NBTTagCompound nbtTagCompound) {
-        this.player = nbtTagCompound.getUniqueId("uuid");
+    public Data(CompoundTag nbtTagCompound) {
+        this.player = nbtTagCompound.getUUID("uuid");
         this.body = SpaceNet.instance.getBodyFromName(nbtTagCompound.getString("nameBody"));
         this.percent = nbtTagCompound.getDouble("percent");
     }
@@ -28,11 +28,11 @@ public class Data implements IData {
         return body;
     }
 
-    public NBTTagCompound writeNBT() {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        nbtTagCompound.setDouble("percent", percent);
-        nbtTagCompound.setUniqueId("uuid", player);
-        nbtTagCompound.setString("nameBody", body.getName());
+    public CompoundTag writeNBT() {
+        CompoundTag nbtTagCompound = new CompoundTag();
+        nbtTagCompound.putDouble("percent", percent);
+        nbtTagCompound.putUUID("uuid", player);
+        nbtTagCompound.putString("nameBody", body.getName());
         return nbtTagCompound;
     }
 
@@ -57,25 +57,22 @@ public class Data implements IData {
     @Override
     public void addInformation() {
         this.percent += 1;
-        if (percent > 100) {
+        if (percent > 100)
             percent = 100;
-        }
     }
 
     @Override
     public void setInformation(final double information) {
         this.percent = information;
-        if (percent > 100) {
+        if (percent > 100)
             percent = 100;
-        }
     }
 
     @Override
     public void addInformation(final double information) {
         this.percent += information;
-        if (percent > 100) {
+        if (percent > 100)
             percent = 100;
-        }
     }
 
 

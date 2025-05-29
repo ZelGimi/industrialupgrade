@@ -5,10 +5,10 @@ import com.denfop.api.gui.Area;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.ImageInterface;
 import com.denfop.container.ContainerVending;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiVending extends GuiIU<ContainerVending> {
+public class GuiVending<T extends ContainerVending> extends GuiIU<ContainerVending> {
 
     private final boolean contains;
 
@@ -17,16 +17,16 @@ public class GuiVending extends GuiIU<ContainerVending> {
         this.contains = contains;
 
         if (contains) {
-            this.ySize = 255;
+            this.imageHeight = 255;
             this.inventory.addY(89);
-            this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+            this.addElement(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         }
 
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         int sizeWorkingSlot = container.base.getStyle().ordinal() + 1;
         int startPosX = -sizeWorkingSlot * 10;
         int dop = 5 - startPosX;
@@ -44,14 +44,14 @@ public class GuiVending extends GuiIU<ContainerVending> {
                     final int finalI = i;
                     new Area(this, xDisplayPosition2, 16, 18, 18).withTooltip(() -> this.container.base.invSlotBuyPrivate
                             .get(finalI)
-                            .getDisplayName()).drawForeground(par1, par2);
+                            .getDisplayName().getString()).drawForeground(poseStack,par1, par2);
                 }
                 if (!this.container.base.invSlotSellPrivate
                         .get(i).isEmpty()) {
                     final int finalI = i;
                     new Area(this, xDisplayPosition2, 60, 18, 18).withTooltip(() -> this.container.base.invSlotSellPrivate
                             .get(finalI)
-                            .getDisplayName()).drawForeground(par1, par2);
+                            .getDisplayName().getString()).drawForeground(poseStack,par1, par2);
 
                 }
             }
@@ -59,8 +59,8 @@ public class GuiVending extends GuiIU<ContainerVending> {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
 
 
         int sizeWorkingSlot = container.base.getStyle().ordinal() + 1;
@@ -77,8 +77,8 @@ public class GuiVending extends GuiIU<ContainerVending> {
 
             int xDisplayPosition2 = dop + (46 - sizeWorkingSlot) * i - sizeWorkingSlot * 10 + 20;
             if (contains) {
-                this.mc.getTextureManager().bindTexture(GuiComponent.commonTexture1);
-                this.drawTexturedModalRect(
+                bindTexture(GuiComponent.commonTexture1);
+                this.drawTexturedModalRect(poseStack,
                         this.guiLeft + xDisplayPosition2 + 13,
                         this.guiTop + 16 + 12,
                         89,
@@ -86,7 +86,7 @@ public class GuiVending extends GuiIU<ContainerVending> {
                         6,
                         6
                 );
-                this.drawTexturedModalRect(
+                this.drawTexturedModalRect(poseStack,
                         this.guiLeft + xDisplayPosition2 + 13,
                         this.guiTop + 60 + 12,
                         89,
@@ -96,24 +96,20 @@ public class GuiVending extends GuiIU<ContainerVending> {
                 );
 
             } else {
-                RenderHelper.enableGUIStandardItemLighting();
+
                 if (!this.container.base.invSlotBuyPrivate.get(i).isEmpty()) {
-                    this.drawItemStack(xDisplayPosition2, 17,
+                    this.drawItemStack(poseStack, xDisplayPosition2, 17,
                             this.container.base.invSlotBuyPrivate.get(i)
                     );
                 }
                 if (!this.container.base.invSlotSellPrivate.get(i).isEmpty()) {
-                    this.drawItemStack(xDisplayPosition2, 61, this.container.base.invSlotSellPrivate.get(i));
+                    this.drawItemStack(poseStack, xDisplayPosition2, 61, this.container.base.invSlotSellPrivate.get(i));
                 }
-                RenderHelper.disableStandardItemLighting();
+
             }
         }
     }
 
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
 
     @Override
     protected ResourceLocation getTexture() {

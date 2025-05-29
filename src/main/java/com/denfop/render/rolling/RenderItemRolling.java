@@ -1,190 +1,113 @@
 package com.denfop.render.rolling;
 
 import com.denfop.tiles.mechanism.TileEntityRollingMachine;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 
-public class RenderItemRolling extends TileEntitySpecialRenderer<TileEntityRollingMachine> {
+import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
+public class RenderItemRolling implements BlockEntityRenderer<TileEntityRollingMachine> {
+    private final ItemRenderer itemRenderer;
+
+    public RenderItemRolling(BlockEntityRendererProvider.Context p_173636_) {
+        this.itemRenderer = Minecraft.getInstance().getItemRenderer();
+    }
+    @Override
     public void render(
             TileEntityRollingMachine tile,
-            double x,
-            double y,
-            double z,
             float partialTicks,
-            int destroyStage,
-            float alpha
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            int packedLight,
+            int packedOverlay
     ) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        ItemStack itemstack = tile.inputSlotA.get();
+        ItemStack itemstack = tile.inputSlotA.get(0);
         if (!itemstack.isEmpty()) {
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.enableBlend();
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.tryBlendFuncSeparate(
-                    GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                    GlStateManager.SourceFactor.ONE,
-                    GlStateManager.DestFactor.ZERO
-            );
-            if (!tile.getActive()) {
-                GlStateManager.translate(0.5, 0.8, 0.4);
-                if (tile.facing == 5 || tile.facing == 4) {
-                    GlStateManager.translate(0, 0, 0.02);
-                }
-                GlStateManager.scale(0.65, 0.65, 0.65);
-            } else {
-                GlStateManager.translate(0.49, 0.8, 0.3);
-                if (tile.facing == 5 || tile.facing == 4) {
-                    GlStateManager.translate(0, 0, 0.15);
-                    GlStateManager.scale(1.5, 0.4, 0.4);
+            poseStack.pushPose();
+            poseStack.translate(0, 0, 0);
 
+            Minecraft mc = Minecraft.getInstance();
+            ItemRenderer itemRenderer = mc.getItemRenderer();
+
+            if (!tile.getActive()) {
+                poseStack.translate(0.5, 0.8, 0.4);
+                if (tile.getFacing() == Direction.EAST || tile.getFacing() == Direction.WEST) {
+                    poseStack.translate(0, 0, 0.02);
+                }
+                poseStack.scale(0.65f, 0.65f, 0.65f);
+            } else {
+                poseStack.translate(0.49, 0.8, 0.3);
+                if (tile.getFacing() == Direction.EAST || tile.getFacing() == Direction.WEST) {
+                    poseStack.translate(0, 0, 0.15);
+                    poseStack.scale(1.5f, 0.4f, 0.4f);
                 } else {
-                    GlStateManager.scale(0.4, 0.4, 1.5);
+                    poseStack.scale(0.4f, 0.4f, 1.5f);
                 }
             }
 
-            GlStateManager.rotate(90, 1, 0, 0);
-            IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                    itemstack,
-                    tile.getWorld(),
-                    null
-            );
+            poseStack.mulPose(Axis.XP.rotationDegrees(90));
 
-            IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                    ibakedmodel,
-                    ItemCameraTransforms.TransformType.GROUND,
-                    false
-            );
-            Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
-
-
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE)
-                    .restoreLastBlurMipmap();
+            itemRenderer.renderStatic(itemstack, GROUND, packedLight, packedOverlay, poseStack, bufferSource,tile.getLevel(),  0);
+            poseStack.popPose();
         }
-        GlStateManager.popMatrix();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
         if (!itemstack.isEmpty()) {
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.enableBlend();
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.tryBlendFuncSeparate(
-                    GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                    GlStateManager.SourceFactor.ONE,
-                    GlStateManager.DestFactor.ZERO
-            );
+            poseStack.pushPose();
+            poseStack.translate(0, 0, 0);
 
-            IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                    itemstack,
-                    tile.getWorld(),
-                    null
-            );
-
-            IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                    ibakedmodel,
-                    ItemCameraTransforms.TransformType.GROUND,
-                    false
-            );
-
+            Minecraft mc = Minecraft.getInstance();
+            ItemRenderer itemRenderer = mc.getItemRenderer();
 
             if (itemstack.getCount() > 1) {
-                if (tile.facing == 5 || tile.facing == 4) {
-                    GlStateManager.translate(1, 1.775, 0.15);
-                    GlStateManager.rotate(90, 1, 0, 0);
+                if (tile.getFacing() == Direction.EAST || tile.getFacing() == Direction.WEST) {
+                    poseStack.translate(0.5, 1.02, -0.1);
+                    poseStack.mulPose(Axis.XP.rotationDegrees(90));
                 } else {
-                    GlStateManager.translate(1.85, 1.775, 1);
-                    GlStateManager.rotate(90, 1, 0, 0);
+                    poseStack.translate(0.05, 1.02, 0.35);
+                    poseStack.mulPose(Axis.XP.rotationDegrees(90));
                 }
+
                 for (int i = 0; i < itemstack.getCount() - 1; i++) {
-                    GlStateManager.translate(0, 0, -0.0075);
-                    Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
-
-
+                    poseStack.translate(0, 0, -0.0075);
+                    itemRenderer.renderStatic(itemstack, GROUND, packedLight, packedOverlay, poseStack, bufferSource,tile.getLevel(), 0);
                 }
             }
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE)
-                    .restoreLastBlurMipmap();
+
+            poseStack.popPose();
         }
-        GlStateManager.popMatrix();
 
-
-        GlStateManager.pushMatrix();
-        final ItemStack itemstack1 = tile.outputSlot.get();
+         ItemStack itemstack1 = tile.outputSlot.get(0);
         if (!itemstack1.isEmpty() && itemstack1.getCount() > 0) {
-            GlStateManager.translate(x, y, z);
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.enableBlend();
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.tryBlendFuncSeparate(
-                    GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                    GlStateManager.SourceFactor.ONE,
-                    GlStateManager.DestFactor.ZERO
-            );
+            poseStack.pushPose();
+            poseStack.translate(0, 0, 0);
 
-            if (tile.facing != 5 && tile.facing != 4) {
-                GlStateManager.translate(0.19, 1.01, 0.5);
+            Minecraft mc = Minecraft.getInstance();
+            ItemRenderer itemRenderer = mc.getItemRenderer();
+
+            if (tile.getFacing() != Direction.EAST && tile.getFacing() != Direction.WEST) {
+                poseStack.translate(0.19, 1.01, 0.5);
             } else {
-                GlStateManager.translate(0.49, 1.01, 0.81);
+                poseStack.translate(0.49, 1.01, 0.81);
             }
 
-            GlStateManager.rotate(90, 1, 0, 0);
-            if (tile.facing != 5 && tile.facing != 4) {
-                GlStateManager.rotate(90, 0, 0, 1);
+            poseStack.mulPose(Axis.XP.rotationDegrees(90));
+            if (tile.getFacing() != Direction.EAST && tile.getFacing() != Direction.WEST) {
+                poseStack.mulPose(Axis.ZP.rotationDegrees(90));
             }
-            IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                    itemstack1,
-                    tile.getWorld(),
-                    null
-            );
 
-            IBakedModel transformedModel1 = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                    ibakedmodel,
-                    ItemCameraTransforms.TransformType.GROUND,
-                    false
-            );
-            for (int i = 0; i < itemstack1.getCount(); i++) {
-                GlStateManager.translate(0, 0, -0.0075);
-
-                Minecraft.getMinecraft().getRenderItem().renderItem(itemstack1, transformedModel1);
-
-
+            for (int i = 0; i <= itemstack1.getCount(); i++) {
+                poseStack.translate(0, 0, -0.0075);
+                itemRenderer.renderStatic(itemstack1, GROUND, packedLight, packedOverlay, poseStack, bufferSource,tile.getLevel(),  0);
             }
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE)
-                    .restoreLastBlurMipmap();
+
+            poseStack.popPose();
         }
-        GlStateManager.popMatrix();
     }
-
 }

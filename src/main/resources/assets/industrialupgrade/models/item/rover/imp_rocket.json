@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "industrialupgrade:models/space/rocket",
-		"particle": "industrialupgrade:models/space/rocket"
+		"0": "industrialupgrade:block/space/rocket",
+		"particle": "industrialupgrade:block/space/rocket"
 	},
 	"elements": [
 		{

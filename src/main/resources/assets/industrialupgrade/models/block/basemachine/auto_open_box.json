@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/auto_open_box_main",
-    "down" : "industrialupgrade:blocks/auto_open_box_other-sides",
-    "up" : "industrialupgrade:blocks/auto_open_box_other-sides",
-    "north" : "industrialupgrade:blocks/auto_open_box_main",
-    "east" : "industrialupgrade:blocks/auto_open_box_other-sides",
-    "south" : "industrialupgrade:blocks/auto_open_box_other-sides",
-    "west" : "industrialupgrade:blocks/auto_open_box_other-sides"
+    "particle" : "industrialupgrade:block/auto_open_box_main",
+    "down" : "industrialupgrade:block/auto_open_box_other-sides",
+    "up" : "industrialupgrade:block/auto_open_box_other-sides",
+    "north" : "industrialupgrade:block/auto_open_box_main",
+    "east" : "industrialupgrade:block/auto_open_box_other-sides",
+    "south" : "industrialupgrade:block/auto_open_box_other-sides",
+    "west" : "industrialupgrade:block/auto_open_box_other-sides"
   }
 }

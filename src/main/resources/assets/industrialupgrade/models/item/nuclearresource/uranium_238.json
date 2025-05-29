@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nuclear/uranium_238"
+		"layer0": "industrialupgrade:item/nuclear/uranium_238"
 	}
 }

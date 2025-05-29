@@ -9,12 +9,13 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiAlloySmelter extends GuiIU<ContainerDoubleElectricMachine> {
+@OnlyIn(Dist.CLIENT)
+public class GuiAlloySmelter<T extends ContainerDoubleElectricMachine> extends GuiIU<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
@@ -46,17 +47,13 @@ public class GuiAlloySmelter extends GuiIU<ContainerDoubleElectricMachine> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
-
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
 
     }
 

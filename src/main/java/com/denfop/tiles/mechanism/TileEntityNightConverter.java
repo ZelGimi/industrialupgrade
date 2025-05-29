@@ -1,14 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -17,16 +12,19 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerNightConverter;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiNightConverter;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -40,8 +38,8 @@ public class TileEntityNightConverter extends TileElectricMachine implements
     public final ComponentProgress progress;
     public MachineRecipe output;
 
-    public TileEntityNightConverter() {
-        super(0, 14, 1);
+    public TileEntityNightConverter(BlockPos pos, BlockState state) {
+        super(0, 14, 1,BlockBaseMachine3.night_converter,pos,state);
         inputSlotA = new InvSlotRecipes(this, "solar_glass_recipe", this);
         inputSlotA.setStackSizeLimit(1);
         this.ne = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.NIGHT, this, 10000));
@@ -54,8 +52,8 @@ public class TileEntityNightConverter extends TileElectricMachine implements
                 "solar_glass_recipe",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(new ItemStack(IUItem.solar_day_glass, 1, container))),
-                        new RecipeOutput(null, new ItemStack(IUItem.solar_night_glass, 1, container))
+                                input.getInput(new ItemStack(IUItem.solar_day_glass.getStack(container), 1))),
+                        new RecipeOutput(null, new ItemStack(IUItem.solar_night_glass.getStack(container), 1))
                 )
         );
     }
@@ -63,7 +61,7 @@ public class TileEntityNightConverter extends TileElectricMachine implements
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -78,7 +76,7 @@ public class TileEntityNightConverter extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -120,14 +118,15 @@ public class TileEntityNightConverter extends TileElectricMachine implements
     }
 
     @Override
-    public ContainerNightConverter getGuiContainer(final EntityPlayer var1) {
+    public ContainerNightConverter getGuiContainer(final Player var1) {
         return new ContainerNightConverter(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiNightConverter(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiNightConverter((ContainerNightConverter) menu);
     }
 
     @Override

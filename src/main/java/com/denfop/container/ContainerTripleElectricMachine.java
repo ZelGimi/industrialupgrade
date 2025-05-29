@@ -3,12 +3,12 @@ package com.denfop.container;
 import com.denfop.tiles.base.EnumTripleElectricMachine;
 import com.denfop.tiles.base.TileTripleElectricMachine;
 import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerTripleElectricMachine extends ContainerFullInv<TileTripleElectricMachine> {
 
     public ContainerTripleElectricMachine(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileTripleElectricMachine tileEntity1,
             EnumTripleElectricMachine type
     ) {
@@ -34,7 +34,7 @@ public class ContainerTripleElectricMachine extends ContainerFullInv<TileTripleE
 
 
     public ContainerTripleElectricMachine(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileTripleElectricMachine tileEntity1,
             int height,
             int dischargeX,

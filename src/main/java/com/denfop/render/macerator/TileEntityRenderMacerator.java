@@ -1,108 +1,61 @@
 package com.denfop.render.macerator;
 
 import com.denfop.tiles.mechanism.TileEntityMacerator;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemStack;
 
-public class TileEntityRenderMacerator extends TileEntitySpecialRenderer<TileEntityMacerator> {
+import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-    public void render(
-            TileEntityMacerator tile,
-            double x,
-            double y,
-            double z,
-            float partialTicks,
-            int destroyStage,
-            float alpha
-    ) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        ItemStack itemstack = tile.inputSlotA.get();
-        if (!itemstack.isEmpty()) {
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.enableBlend();
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.tryBlendFuncSeparate(
-                    GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                    GlStateManager.SourceFactor.ONE,
-                    GlStateManager.DestFactor.ZERO
+public class TileEntityRenderMacerator implements BlockEntityRenderer<TileEntityMacerator> {
+
+    public TileEntityRenderMacerator(BlockEntityRendererProvider.Context context) {}
+
+    @Override
+    public void render(TileEntityMacerator tile, float partialTicks, PoseStack poseStack,
+                       MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+
+        ItemStack input = tile.inputSlotA.get(0);
+        if (!input.isEmpty()) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.55, tile.facing == 4 || tile.facing == 5 ? 0.31 : 0.3);
+            poseStack.mulPose(Axis.XP.rotationDegrees(90));
+
+            itemRenderer.renderStatic(
+                    input,
+                   GROUND,
+                    combinedLight,
+                    combinedOverlay,
+                    poseStack,
+                    buffer,tile.getLevel(),
+                    0
             );
-            if (tile.facing == 4 || tile.facing == 5) {
-                GlStateManager.translate(0.5, 0.55, 0.31);
-            } else {
-                GlStateManager.translate(0.5, 0.55, 0.3);
-            }
-
-            GlStateManager.rotate(90, 1, 0, 0);
-            IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                    itemstack,
-                    tile.getWorld(),
-                    null
-            );
-
-            IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                    ibakedmodel,
-                    ItemCameraTransforms.TransformType.GROUND,
-                    false
-            );
-            Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE)
-                    .restoreLastBlurMipmap();
+            poseStack.popPose();
         }
-        GlStateManager.popMatrix();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        itemstack = tile.outputSlot.get();
-        if (!itemstack.isEmpty()) {
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.enableBlend();
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.tryBlendFuncSeparate(
-                    GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                    GlStateManager.SourceFactor.ONE,
-                    GlStateManager.DestFactor.ZERO
-            );
-            GlStateManager.translate(0.5, 0.55, 0.4);
 
-            GlStateManager.rotate(90, 1, 0, 0);
-            IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                    itemstack,
-                    tile.getWorld(),
-                    null
-            );
+        ItemStack output = tile.outputSlot.get(0);
+        if (!output.isEmpty()) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.55, 0.4);
+            poseStack.mulPose(Axis.XP.rotationDegrees(90));
 
-            IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                    ibakedmodel,
-                    ItemCameraTransforms.TransformType.GROUND,
-                    false
+            itemRenderer.renderStatic(
+                    output,
+                    GROUND,
+                    combinedLight,
+                    combinedOverlay,
+                    poseStack,
+                    buffer,tile.getLevel(),
+                    0
             );
-            Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE)
-                    .restoreLastBlurMipmap();
+            poseStack.popPose();
         }
-        GlStateManager.popMatrix();
     }
-
 }

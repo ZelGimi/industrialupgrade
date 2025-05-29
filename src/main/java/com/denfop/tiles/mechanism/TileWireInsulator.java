@@ -1,42 +1,33 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWireInsulator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWireInsulator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -56,8 +47,8 @@ public class TileWireInsulator extends TileElectricMachine implements
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
 
-    public TileWireInsulator() {
-        super(200, 1, 1);
+    public TileWireInsulator(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.electric_wire_insulator,pos,state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -74,18 +65,19 @@ public class TileWireInsulator extends TileElectricMachine implements
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TileWireInsulator) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TileWireInsulator) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TileWireInsulator) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
 
             @Override
@@ -124,31 +116,32 @@ public class TileWireInsulator extends TileElectricMachine implements
     }
 
     @Override
-    public ContainerWireInsulator getGuiContainer(final EntityPlayer var1) {
+    public ContainerWireInsulator getGuiContainer(final Player var1) {
         return new ContainerWireInsulator(var1, this);
     }
 
-    public ContainerWireInsulator getGuiContainer1(final EntityPlayer var1) {
+    public ContainerWireInsulator getGuiContainer1(final Player var1) {
         return new ContainerWireInsulator(var1, this, false);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiWireInsulator(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiWireInsulator((ContainerWireInsulator) menu);
     }
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.cable, 1, 11), IUItem.rubber, new ItemStack(IUItem.cable, 1, 12));
-        addRecipe(new ItemStack(IUItem.cable, 1, 14), IUItem.rubber, new ItemStack(IUItem.cable, 1, 15));
-        addRecipe(new ItemStack(IUItem.cable, 1, 16), IUItem.rubber, new ItemStack(IUItem.cable, 1, 17));
-        addRecipe(new ItemStack(IUItem.cable, 1, 18), IUItem.rubber, new ItemStack(IUItem.cable, 1, 19));
+        addRecipe(new ItemStack(IUItem.cable.getItem(11)), IUItem.rubber, new ItemStack(IUItem.cable.getItem(12)));
+        addRecipe(new ItemStack(IUItem.cable.getItem(14)), IUItem.rubber, new ItemStack(IUItem.cable.getItem(15)));
+        addRecipe(new ItemStack(IUItem.cable.getItem(16)), IUItem.rubber, new ItemStack(IUItem.cable.getItem(17)));
+        addRecipe(new ItemStack(IUItem.cable.getItem(18)), IUItem.rubber, new ItemStack(IUItem.cable.getItem(19)));
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -163,13 +156,13 @@ public class TileWireInsulator extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
         }
 

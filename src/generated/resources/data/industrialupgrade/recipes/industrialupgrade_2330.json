@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "A A",
+    "A A"
+  ],
+  "result": {
+    "item": "industrialupgrade:lightning_rod/lightning_rod_poles"
+  },
+  "show_notification": true
+}

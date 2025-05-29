@@ -9,12 +9,13 @@ import com.denfop.api.gui.ImageInterface;
 import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMagnet;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiMagnet extends GuiIU<ContainerMagnet> {
+@OnlyIn(Dist.CLIENT)
+public class GuiMagnet<T extends ContainerMagnet> extends GuiIU<ContainerMagnet> {
 
     public final ContainerMagnet container;
 
@@ -32,9 +33,9 @@ public class GuiMagnet extends GuiIU<ContainerMagnet> {
                 EnumTypeComponent.ENERGY_HEIGHT,
                 new Component<>(this.container.base.energy)
         ));
-        this.xSize = 230;
-        this.ySize = 190;
-        this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.imageWidth = 230;
+        this.imageHeight = 190;
+        this.addElement(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         this.componentList.add(new GuiComponent(this, 10, 85, EnumTypeComponent.PLUS_BUTTON,
                 new Component<>(new ComponentButton(this.container.base, 1, "") {
                     @Override
@@ -109,21 +110,21 @@ public class GuiMagnet extends GuiIU<ContainerMagnet> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
-        this.fontRenderer.drawString(String.valueOf(this.container.base.x), 26, 87,
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
+        draw(poseStack, String.valueOf(this.container.base.x), 26, 87,
                 4210752
         );
-        this.fontRenderer.drawString(String.valueOf(this.container.base.y), 76, 87,
+      draw(poseStack, String.valueOf(this.container.base.y), 76, 87,
                 4210752
         );
-        this.fontRenderer.drawString(String.valueOf(this.container.base.z), 126, 87,
+        draw(poseStack, String.valueOf(this.container.base.z), 126, 87,
                 4210752
         );
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
 
     }
 

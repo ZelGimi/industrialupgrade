@@ -4,17 +4,16 @@ import com.denfop.ElectricItem;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentSteamEnergy;
-import com.denfop.componets.Energy;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotCharge;
@@ -25,13 +24,14 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
@@ -52,12 +52,12 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
     private boolean sound = true;
 
-    public TileEntitySteamGenerator() {
-        super();
+    public TileEntitySteamGenerator(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.steam_generator,pos,state);
         this.coef = 1;
         fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank2", 4000, Fluids.fluidPredicate(
-                FluidName.fluidsteam.getInstance()
+                FluidName.fluidsteam.getInstance().get()
         ), InvSlot.TypeItemSlot.NONE);
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.steam.setFluidTank(fluidTank1);
@@ -68,7 +68,7 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
 
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         sound = !sound;
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
@@ -104,7 +104,7 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
 
@@ -115,12 +115,12 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
         return nbttagcompound;
     }
 
@@ -150,10 +150,10 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
             new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.interruptone_steam.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, EnumSound.interruptone_steam.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
             new PacketStopSound(getWorld(), this.pos);
         }
@@ -171,8 +171,8 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
 
         boolean newActive = this.gainEnergy();
 
-        if (this.energy.getEnergy() >= 1.0D && !this.chargeSlot.get().isEmpty()) {
-            double used = ElectricItem.manager.charge(this.chargeSlot.get(), this.energy.getEnergy(), 1, false, false);
+        if (this.energy.getEnergy() >= 1.0D && !this.chargeSlot.get(0).isEmpty()) {
+            double used = ElectricItem.manager.charge(this.chargeSlot.get(0), this.energy.getEnergy(), 1, false, false);
             this.energy.useEnergy(used);
         }
 
@@ -180,7 +180,7 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
         if (this.getActive() != newActive) {
             this.setActive(newActive);
         }
-        if (getWorld().provider.getWorldTime() % 60 == 0) {
+        if (getWorld().getGameTime() % 60 == 0) {
             initiate(2);
         }
     }
@@ -194,7 +194,7 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
         if (this.isConverting()) {
             this.energy.addEnergy(8 * coef);
             this.steam.useEnergy(4);
-            if (getWorld().provider.getWorldTime() % 60 == 0) {
+            if (getWorld().getGameTime() % 60 == 0) {
                 initiate(0);
             }
             return true;
@@ -210,13 +210,15 @@ public class TileEntitySteamGenerator extends TileEntityInventory implements
     }
 
 
-    public ContainerSteamGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSteamGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerSteamGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSteamGenerator(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiSteamGenerator((ContainerSteamGenerator) menu);
     }
 
 

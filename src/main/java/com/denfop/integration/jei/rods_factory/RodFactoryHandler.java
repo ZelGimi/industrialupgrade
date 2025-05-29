@@ -3,7 +3,7 @@ package com.denfop.integration.jei.rods_factory;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,9 +91,7 @@ public class RodFactoryHandler {
 
     public boolean matchesInput(ItemStack is) {
         for (ItemStack input : this.getInputs()) {
-            if (input.isItemEqual(is)) {
-                return true;
-            }
+
         }
         return false;
     }

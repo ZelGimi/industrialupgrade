@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/mov_charge_rf"
+    "layer0" : "industrialupgrade:item/mov_charge_rf"
   }
 }

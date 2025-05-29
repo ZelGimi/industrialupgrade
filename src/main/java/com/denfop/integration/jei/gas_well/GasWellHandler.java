@@ -3,7 +3,7 @@ package com.denfop.integration.jei.gas_well;
 
 import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,23 +40,23 @@ public class GasWellHandler {
 
     public static void initRecipes() {
         addRecipe(
-                FluidName.fluidgas.getInstance(),
+                FluidName.fluidgas.getInstance().get(),
                 Localization.translate("quarry.guide.gas_well7")
         );
         addRecipe(
-                FluidName.fluidiodine.getInstance(),
+                FluidName.fluidiodine.getInstance().get(),
                 Localization.translate("quarry.guide.gas_well7")
         );
         addRecipe(
-                FluidName.fluidfluor.getInstance(),
+                FluidName.fluidfluor.getInstance().get(),
                 Localization.translate("quarry.guide.gas_well7")
         );
         addRecipe(
-                FluidName.fluidbromine.getInstance(),
+                FluidName.fluidbromine.getInstance().get(),
                 Localization.translate("quarry.guide.gas_well7")
         );
         addRecipe(
-                FluidName.fluidchlorum.getInstance(),
+                FluidName.fluidchlorum.getInstance().get(),
                 Localization.translate("quarry.guide.gas_well7")
         );
     }

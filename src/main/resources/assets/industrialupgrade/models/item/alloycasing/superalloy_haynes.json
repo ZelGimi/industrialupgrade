@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/superalloy_haynes_casing"	}
+		"layer0": "industrialupgrade:item/superalloy_haynes_casing"	}
 }

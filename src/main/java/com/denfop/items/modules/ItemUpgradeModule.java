@@ -1,71 +1,41 @@
 package com.denfop.items.modules;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.EnumInfoUpgradeModules;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> implements IModelRegister {
-
-    protected static final String NAME = "upgrademodules";
-
-    public ItemUpgradeModule() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ModuleTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemUpgradeModule(T element) {
+        super(new Item.Properties(), element);
     }
 
-    public static EnumInfoUpgradeModules getType(int meta) {
-        return EnumInfoUpgradeModules.getFromID(meta);
+    public static com.denfop.items.EnumInfoUpgradeModules getType(int meta) {
+        return com.denfop.items.EnumInfoUpgradeModules.getFromID(meta);
 
     }
-
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            final List<String> tooltip,
-            @Nonnull final ITooltipFlag flagIn
-    ) {
-        final UpgradeItemInform upgrade = new UpgradeItemInform(getType(stack.getItemDamage()), 1);
-        tooltip.add(upgrade.getName());
-        tooltip.add(Localization.translate("iu.upgrade_item.info") + upgrade.upgrade.max);
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ModuleTab;
     }
+    @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        final UpgradeItemInform upgrade = new UpgradeItemInform(getType(getElement().getId()), 1);
+        p_41423_.add(Component.literal(upgrade.getName()));
+        p_41423_.add(Component.literal(Localization.translate("iu.upgrade_item.info") + upgrade.upgrade.max));
 
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
     }
 
     public enum Types implements ISubEnum {
@@ -134,9 +104,13 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "upgrademodules";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

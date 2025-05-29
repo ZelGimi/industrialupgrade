@@ -15,27 +15,30 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCompressor;
 import com.denfop.invslot.InvSlot;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -45,7 +48,7 @@ import java.util.UUID;
 
 public class TileEntityCompressor extends TileEntityInventory implements IUpdateTick, IAudioFixer {
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 1, 1.25D,
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(0, 0.0D, 0, 1, 1.25D,
             1
     ));
     public final InvSlotRecipes inputSlotA;
@@ -53,16 +56,15 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     public int progress;
     public MachineRecipe output;
     public int durability = 96;
-    public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.COMPRESSOR);
+    public Map<UUID, Double> data;
 
-    public TileEntityCompressor() {
-
+    public TileEntityCompressor(BlockPos pos, BlockState state) {
+        super(BlockCompressor.compressor, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "compressor", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
-                if (index == 4) {
+                if (index == 4)
                     return super.accepts(itemStack, 0);
-                }
                 return false;
             }
 
@@ -79,29 +81,32 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     }
 
     @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
-        return super.hasCapability(capability, facing) && capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return LazyOptional.empty();
+        return super.getCapability(cap, facing);
     }
+
 
     @Override
     public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
         List<ItemStack> drop = super.getSelfDrops(fortune, wrench);
         ItemStack stack = drop.get(0);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setInteger("durability", durability);
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putInt("durability", durability);
         return drop;
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        if (nbt.hasKey("durability")) {
-            durability = nbt.getInteger("durability");
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        if (nbt.contains("durability")) {
+            durability = nbt.getInt("durability");
         }
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
 
@@ -128,7 +133,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     @Override
     public void initiate(final int soundEvent) {
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 0.2F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 0.2F, 1);
         }
     }
 
@@ -139,7 +144,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.blockCompressor;
+        return IUItem.blockCompressor.getBlock();
     }
 
     @Override
@@ -147,28 +152,15 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
         return BlockCompressor.compressor;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        data = PrimitiveHandler.getPlayersData(EnumPrimitive.COMPRESSOR);
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
         }
+        data = PrimitiveHandler.getPlayersData(EnumPrimitive.COMPRESSOR);
         this.output = inputSlotA.process();
     }
 
@@ -177,23 +169,23 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot3")) {
-            inputSlotA.put(0, ItemStack.EMPTY);
+            inputSlotA.set(0, ItemStack.EMPTY);
         }
         if (name.equals("slot2")) {
-            outputSlot.put(0, ItemStack.EMPTY);
+            outputSlot.set(0, ItemStack.EMPTY);
         }
     }
 
@@ -201,8 +193,8 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -226,96 +218,91 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
 
     @Override
     public boolean onSneakingActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+            final Player player,
+            final InteractionHand hand,
+            final Direction side,
+            final Vec3 hitX
     ) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (durability >= 0 && durability < 96 && stack.getItem() == IUItem.crafting_elements && stack.getItemDamage() == 76) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (durability >= 0 && durability < 96 && stack.getItem() instanceof ItemCraftingElements<?> && IUItem.crafting_elements.getMeta((ItemCraftingElements) stack.getItem()) == 76) {
             durability = 96;
             stack.shrink(1);
             new PacketUpdateFieldTile(this, "durability", this.durability);
         }
-        return super.onSneakingActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onSneakingActivated(player, hand, side, hitX);
     }
 
     @Override
     public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+            final Player player,
+            final InteractionHand hand,
+            final Direction side,
+            final Vec3 hitX
     ) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (!this.getWorld().isRemote) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!this.getWorld().isClientSide) {
             if (stack.isEmpty() && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output) && durability > 0) {
-                progress += (int) (4 + (data.getOrDefault(player.getUniqueID(), 0.0) / 10d));
+                progress += (int) (4 + (data.getOrDefault(player.getUUID(), 0.0) / 10d));
                 this.getCooldownTracker().setTick(15);
                 this.setActive(String.valueOf((int) ((progress * 9D) / 100)));
-                if (!this.getWorld().isRemote) {
+                if (!this.getWorld().isClientSide) {
                     this.initiate(0);
                 }
                 if (progress >= 100) {
                     this.progress = 0;
-                    if (!this.getWorld().isRemote) {
-                        PrimitiveHandler.addExperience(EnumPrimitive.COMPRESSOR, 0.75, player.getUniqueID());
-                    }
+                    if (!this.getWorld().isClientSide)
+                        PrimitiveHandler.addExperience(EnumPrimitive.COMPRESSOR, 0.75, player.getUUID());
                     this.setActive(false);
                     durability--;
                     this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                     this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
                     this.output = null;
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot3", this.inputSlotA);
                         new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
                     }
                 }
 
-                return this.getWorld().isRemote;
+                return this.getWorld().isClientSide;
             } else {
                 if (!stack.isEmpty()) {
                     if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
                         final ItemStack stack1 = stack.copy();
                         stack1.setCount(1);
-                        this.inputSlotA.put(0, stack1);
+                        this.inputSlotA.set(0, stack1);
                         stack.shrink(1);
-                        if (!world.isRemote) {
+                        if (!level.isClientSide) {
                             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                         }
                         return true;
-                    } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).isItemEqual(stack)) {
+                    } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).is(stack.getItem())) {
                         int minCount = this.inputSlotA.getStackSizeLimit() - this.inputSlotA.get(0).getCount();
                         minCount = Math.min(stack.getCount(), minCount);
                         this.inputSlotA.get(0).grow(minCount);
                         stack.grow(-minCount);
-                        if (!world.isRemote) {
+                        if (!level.isClientSide) {
                             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                         }
                         return true;
                     }
                 } else {
                     if (!outputSlot.isEmpty()) {
-                        if (!world.isRemote) {
-                            ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
+                        if (!level.isClientSide) {
+                            ModUtils.dropAsEntity(level, pos, outputSlot.get(0));
                         }
-                        outputSlot.put(0, ItemStack.EMPTY);
-                        if (!world.isRemote) {
+                        outputSlot.set(0, ItemStack.EMPTY);
+                        if (!level.isClientSide) {
                             new PacketUpdateFieldTile(this, "slot2", false);
                         }
                         return true;
                     } else {
                         if (!inputSlotA.isEmpty()) {
-                            if (!world.isRemote) {
-                                ModUtils.dropAsEntity(world, pos, inputSlotA.get(), player);
+                            if (!level.isClientSide) {
+                                ModUtils.dropAsEntity(level, pos, inputSlotA.get(0));
                             }
-                            inputSlotA.put(0, ItemStack.EMPTY);
+                            inputSlotA.set(0, ItemStack.EMPTY);
                             this.output = null;
-                            if (!world.isRemote) {
+                            if (!level.isClientSide) {
                                 new PacketUpdateFieldTile(this, "slot3", false);
                             }
                             return true;
@@ -326,7 +313,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
         }
 
 
-        return this.getWorld().isRemote;
+        return this.getWorld().isClientSide;
     }
 
     @Override
@@ -334,14 +321,15 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-
+        this.durability = nbttagcompound.getInt("durability");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
+        nbttagcompound.putInt("durability", durability);
         return nbttagcompound;
     }
 

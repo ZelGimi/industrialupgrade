@@ -1,45 +1,35 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Energy;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRadioactiveOreHandler;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRadioactiveOreHandler;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -57,8 +47,8 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
     public final InvSlotOutput outputSlot1;
     public MachineRecipe output;
 
-    public TileEntityRadioactiveOreHandler() {
-        super(200, 1, 1);
+    public TileEntityRadioactiveOreHandler(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.radioactive_handler_ore,pos,state);
         Recipes.recipes.addInitRecipes(this);
         this.outputSlot1 = new InvSlotOutput(this, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
@@ -115,19 +105,19 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
                     }
                 }
                 int maxSize = size;
-                int count = this.outputSlot.get().isEmpty() ? output.getRecipe().output.items.get(0).getMaxStackSize() :
-                        this.outputSlot.get().getMaxStackSize() - this.outputSlot.get().getCount();
+                int count = this.outputSlot.get(0).isEmpty() ? output.getRecipe().output.items.get(0).getMaxStackSize() :
+                        this.outputSlot.get(0).getMaxStackSize() - this.outputSlot.get(0).getCount();
                 ItemStack outputStack = this.updateTick.getRecipeOutput().getRecipe().output.items.get(0);
                 count = count / Math.max(outputStack.getCount(), 1);
                 size = Math.min(size, count);
                 size = Math.min(
                         size,
-                        this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getItem().getItemStackLimit()
+                        this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getItem().getMaxStackSize()
                 );
                 if (this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null) {
                     final int size1 = this.invSlotRecipes.getTank().getFluidAmount() / this.updateTick
                             .getRecipeOutput()
-                            .getRecipe().input.getFluid().amount;
+                            .getRecipe().input.getFluid().getAmount();
                     size = Math.min(size, size1);
                 }
                 size = Math.min(size, this.operationsPerTick);
@@ -135,7 +125,7 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
                 this.invSlotRecipes.consume(size, output);
                 this.outputSlot.add(output.getRecipe().getOutput().items.get(0), size);
                 for (int i = 0; i < size; i++) {
-                    if (WorldBaseGen.random.nextInt(100) < output.getRecipe().output.metadata.getInteger("random")) {
+                    if (WorldBaseGen.random.nextInt(100) < output.getRecipe().output.metadata.getInt("random")) {
                         outputSlot1.add(output.getRecipe().getOutput().items.get(1));
                     }
                 }
@@ -165,8 +155,8 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
 
     public static void addRecipe(ItemStack container, ItemStack output, int random, ItemStack itemStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        final NBTTagCompound nbt = ModUtils.nbt();
-        nbt.setInteger("random", random);
+        final CompoundTag nbt = ModUtils.nbt();
+        nbt.putInt("random", random);
 
         Recipes.recipes.addRecipe(
                 "radioactive_handler",
@@ -192,44 +182,44 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
     }
 
     @Override
-    public ContainerRadioactiveOreHandler getGuiContainer(final EntityPlayer var1) {
+    public ContainerRadioactiveOreHandler getGuiContainer(final Player var1) {
         return new ContainerRadioactiveOreHandler(var1, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiRadioactiveOreHandler(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiRadioactiveOreHandler((ContainerRadioactiveOreHandler) menu);
     }
 
     @Override
     public void init() {
 
 
-        addRecipe(new ItemStack(IUItem.classic_ore, 1, 3), new ItemStack(IUItem.nuclear_res, 2, 21), 5,
-                new ItemStack(IUItem.nuclear_res, 1, 16)
+        addRecipe(new ItemStack(IUItem.classic_ore.getItem(3), 1), new ItemStack(IUItem.nuclear_res.getStack(21), 2), 5,
+                new ItemStack(IUItem.nuclear_res.getStack(16), 1)
         );
 
-        addRecipe(new ItemStack(IUItem.toriyore, 1), new ItemStack(IUItem.nuclear_res, 1, 19), 10,
-                new ItemStack(IUItem.nuclear_res, 4, 14)
+        addRecipe(new ItemStack(IUItem.toriyore.getItem(), 1), new ItemStack(IUItem.nuclear_res.getStack(19), 1), 10,
+                new ItemStack(IUItem.nuclear_res.getStack(14), 4)
         );
 
-        addRecipe(new ItemStack(IUItem.radiationore, 1, 1), new ItemStack(IUItem.nuclear_res, 1, 18), 10,
-                new ItemStack(IUItem.nuclear_res, 4, 13)
+        addRecipe(new ItemStack(IUItem.radiationore.getItem(1), 1), new ItemStack(IUItem.nuclear_res.getStack(18), 1), 10,
+                new ItemStack(IUItem.nuclear_res.getStack(13), 4)
         );
 
-        addRecipe(new ItemStack(IUItem.radiationore, 1), new ItemStack(IUItem.nuclear_res, 1, 17), 10,
-                new ItemStack(IUItem.nuclear_res, 4, 15)
+        addRecipe(new ItemStack(IUItem.radiationore.getItem(), 1), new ItemStack(IUItem.nuclear_res.getStack(17), 1), 10,
+                new ItemStack(IUItem.nuclear_res.getStack(15), 4)
         );
 
-        addRecipe(new ItemStack(IUItem.radiationore, 1, 2), new ItemStack(IUItem.nuclear_res, 1, 20), 20,
-                new ItemStack(IUItem.nuclear_res, 4, 15)
+        addRecipe(new ItemStack(IUItem.radiationore.getItem(2), 1), new ItemStack(IUItem.nuclear_res.getStack(20), 1), 20,
+                new ItemStack(IUItem.nuclear_res.getStack(16), 4)
         );
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -244,7 +234,7 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }

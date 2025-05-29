@@ -1,7 +1,8 @@
 package com.denfop.api.windsystem.upgrade;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public interface IRotorUpgradeSystem {
     void write(IRotorUpgradeItem item, List<EnumInfoRotorUpgradeModules> lst, ItemStack stack);
 
 
-    void removeUpdate(ItemStack stack, World world, int index);
+    void removeUpdate(ItemStack stack, Level world, int index);
 
     List<ItemStack> getListStack(ItemStack stack);
 

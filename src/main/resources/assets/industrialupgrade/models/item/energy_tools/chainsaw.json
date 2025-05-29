@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/chainsaw"
+		"layer0": "industrialupgrade:item/chainsaw"
 	}
 }

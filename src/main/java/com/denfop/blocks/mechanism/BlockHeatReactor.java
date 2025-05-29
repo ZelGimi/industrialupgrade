@@ -2,9 +2,9 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.DefaultDrop;
+import com.denfop.blocks.state.HarvestTool;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.reactors.heat.casing.TileEntityAdvCasing;
 import com.denfop.tiles.reactors.heat.casing.TileEntityImpCasing;
@@ -47,20 +47,23 @@ import com.denfop.tiles.reactors.heat.socket.TileEntityImpSocket;
 import com.denfop.tiles.reactors.heat.socket.TileEntityPerSocket;
 import com.denfop.tiles.reactors.heat.socket.TileEntitySimpleSocket;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockHeatReactor implements IMultiTileBlock, IMultiBlockItem {
+public enum BlockHeatReactor implements IMultiTileBlock {
+
+
     heat_pump(TileEntitySimplePump.class, 0),
     heat_adv_pump(TileEntityAdvPump.class, 1),
     heat_imp_pump(TileEntityImpPump.class, 2),
@@ -105,60 +108,82 @@ public enum BlockHeatReactor implements IMultiTileBlock, IMultiBlockItem {
     ;
 
 
-    public static final ResourceLocation IDENTITY = IUCore.getIdentifier("heat_reactors");
-
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    private final Rarity rarity;
     int idBlock;
     private TileEntityBlock dummyTe;
+    private BlockState defaultState;
+    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+
+    ;
 
     BlockHeatReactor(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
-
-    }
-
-    BlockHeatReactor(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
-        this.teClass = teClass;
-        this.itemMeta = itemMeta;
-
-        GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
-
+        this(teClass, itemMeta, Rarity.UNCOMMON);
 
     }
 
     ;
+
+    BlockHeatReactor(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final Rarity rarity) {
+        this.teClass = teClass;
+        this.itemMeta = itemMeta;
+        this.rarity = rarity;
+
+
+    }
+    @Override
+    public CreativeModeTab getCreativeTab() {
+        return IUCore.ReactorsBlockTab;
+    }
 
     public int getIDBlock() {
         return idBlock;
     }
-
-    ;
 
     public void setIdBlock(int id) {
         idBlock = id;
     }
 
     @Override
-    public CreativeTabs getCreativeTab() {
-        return IUCore.ReactorsBlockTab;
+    public MapColor getMaterial() {
+        return MapColor.METAL;
     }
 
     public void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
+        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
-        for (final BlockHeatReactor block : values()) {
-            if (block.teClass != null) {
-                try {
-                    block.dummyTe = block.teClass.newInstance();
-                } catch (Exception ignored) {
+        if (this.getTeClass() != null) {
+            try {
+                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+            } catch (Exception e) {
 
-                }
             }
         }
-
     }
+
+    @Override
+    public void setDefaultState(BlockState blockState) {
+        this.defaultState = blockState;
+    }
+
+    @Override
+    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+        this.blockType = blockEntityType;
+    }
+
+    @Override
+    public BlockEntityType<? extends TileEntityBlock> getBlockType() {
+        return this.blockType.get();
+    }
+
+    @Override
+    public String getMainPath() {
+        return "heat_reactors";
+    }
+
 
     @Override
     public String getName() {
@@ -170,11 +195,6 @@ public enum BlockHeatReactor implements IMultiTileBlock, IMultiBlockItem {
         return this.itemMeta;
     }
 
-    @Override
-    @Nonnull
-    public ResourceLocation getIdentifier() {
-        return IDENTITY;
-    }
 
     @Override
     public boolean hasItem() {
@@ -188,35 +208,36 @@ public enum BlockHeatReactor implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public boolean hasActive() {
-        return false;
+        // TODO Auto-generated method stub
+        return true;
     }
 
     @Override
     @Nonnull
-    public Set<EnumFacing> getSupportedFacings() {
+    public Set<Direction> getSupportedFacings() {
         return ModUtils.horizontalFacings;
     }
 
     @Override
     public float getHardness() {
-        return 3.0f;
+        return 1.0F;
     }
 
     @Override
     @Nonnull
-    public MultiTileBlock.HarvestTool getHarvestTool() {
-        return MultiTileBlock.HarvestTool.Wrench;
+    public HarvestTool getHarvestTool() {
+        return HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public MultiTileBlock.DefaultDrop getDefaultDrop() {
-        return MultiTileBlock.DefaultDrop.Self;
+    public DefaultDrop getDefaultDrop() {
+        return DefaultDrop.Self;
     }
 
     @Override
     public boolean allowWrenchRotating() {
-        return true;
+        return false;
     }
 
     @Override
@@ -225,12 +246,7 @@ public enum BlockHeatReactor implements IMultiTileBlock, IMultiBlockItem {
     }
 
     @Override
-    public boolean hasUniqueRender(final ItemStack itemStack) {
-        return false;
-    }
-
-    @Override
-    public ModelResourceLocation getModelLocation(final ItemStack itemStack) {
-        return null;
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
+        return IMultiTileBlock.super.getMultiModels(teBlock);
     }
 }

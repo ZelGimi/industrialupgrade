@@ -2,33 +2,27 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ItemImage;
-import com.denfop.api.gui.ItemStackImageText;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.api.tesseract.Channel;
 import com.denfop.api.tesseract.TypeChannel;
 import com.denfop.api.tesseract.TypeMode;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerTesseract;
 import com.denfop.network.packet.PacketUpdateServerTile;
-import com.denfop.recipes.BasicRecipeTwo;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GuiTesseract extends GuiIU<ContainerTesseract> {
+import static com.denfop.recipes.BaseRecipes.getBlockStack;
+
+public class GuiTesseract<T extends ContainerTesseract> extends GuiIU<ContainerTesseract> {
 
     private final ItemStack stack;
     private final GuiComponent energy;
@@ -39,10 +33,10 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
 
     public GuiTesseract(ContainerTesseract guiContainer) {
         super(guiContainer);
-        this.xSize = 191;
-        this.ySize = 208;
+        this.imageWidth = 191;
+        this.imageHeight = 208;
         this.componentList.clear();
-        this.stack = BasicRecipeTwo.getBlockStack(BlockBaseMachine3.tesseract);
+        this.stack = getBlockStack(BlockBaseMachine3.tesseract);
         this.energy = new GuiComponent(this, 140, 95, EnumTypeComponent.ENERGY_WEIGHT,
                 new Component<>(this.container.base.getEnergy())
         );
@@ -69,47 +63,47 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
         switch (guiScreenID) {
             case 1:
                 new AdvArea(this, 16, 36, 32, 62).withTooltip(Localization.translate("tesseract.energy")).drawForeground(
-                        par1,
+                        poseStack, par1,
                         par2
                 );
                 new AdvArea(this, 37, 34, 52, 62).withTooltip(Localization.translate("tesseract.fluid")).drawForeground(
-                        par1,
+                        poseStack, par1,
                         par2
                 );
                 new AdvArea(this, 56, 34, 75, 62).withTooltip(Localization.translate("tesseract.item")).drawForeground(
-                        par1,
+                        poseStack,   par1,
                         par2
                 );
                 new AdvArea(this, 20, 91, 30, 101).withTooltip(Localization.translate("tesseract.plus")).drawForeground(
-                        par1,
+                        poseStack, par1,
                         par2
                 );
                 new AdvArea(this, 60, 91, 70, 101).withTooltip(Localization.translate("tesseract.minus")).drawForeground(
-                        par1,
+                        poseStack,  par1,
                         par2
                 );
                 new AdvArea(this, 79, 69, 91, 86).withTooltip(Localization.translate("tesseract.sink")).drawForeground(
-                        par1,
+                        poseStack,  par1,
                         par2
                 );
                 new AdvArea(this, 95, 69, 107, 86).withTooltip(Localization.translate("tesseract.source")).drawForeground(
-                        par1,
+                        poseStack, par1,
                         par2
                 );
                 new AdvArea(this, 112, 67, 122, 89)
                         .withTooltip(Localization.translate("tesseract.private_channel"))
                         .drawForeground(
-                                par1,
+                                poseStack,   par1,
                                 par2
                         );
                 new AdvArea(this, 170, 103, 180, 112).withTooltip(Localization.translate("tesseract.activate")).drawForeground(
-                        par1,
+                        poseStack,    par1,
                         par2
                 );
                 break;
@@ -124,25 +118,23 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
                                     Localization.translate("tesseract.mode") + channel.getMode().name() + "\n" +
                                     Localization.translate("tesseract.private") + (channel.isActive() ? "да" : "нет") + "\n"
 
-                    ).drawForeground(par1, par2);
+                    ).drawForeground(poseStack,par1, par2);
                 }
                 break;
             case 3:
-                this.energy.drawForeground(par1, par2);
-                this.fluid.drawForeground(par1, par2);
+                this.energy.drawForeground(poseStack,par1, par2);
+                this.fluid.drawForeground(poseStack,par1, par2);
                 List<ItemStack> itemStackList =
                         this.container.base
                                 .getSlotItem()
-                                .getContents()
                                 .stream()
                                 .filter(itemStack -> !itemStack.isEmpty())
-                                .collect(
-                                        Collectors.toList());
+                                .toList();
                 for (int i = 0; i < itemStackList.size(); i++) {
                     final int finalI = i;
                     new Area(this, 18 + (i % 6) * 20, 35 + (i / 6) * 22, 18, 18).withTooltip(() -> itemStackList
                             .get(finalI)
-                            .getDisplayName()).drawForeground(par1, par2);
+                            .getDisplayName().getString()).drawForeground(poseStack,par1, par2);
                 }
                 break;
             case 4:
@@ -156,13 +148,13 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
                                     Localization.translate("tesseract.active") + (channel.isActive() ? "да" : "нет") + "\n" +
                                     Localization.translate("tesseract.coordinate") + "x:" + channel
                                     .getTesseract()
-                                    .getBlockPos()
+                                    .getPos()
                                     .getX() + " y: " + channel
                                     .getTesseract()
-                                    .getBlockPos()
-                                    .getY() + " z: " + channel.getTesseract().getBlockPos().getZ() + "\n"
+                                    .getPos()
+                                    .getY() + " z: " + channel.getTesseract().getPos().getZ() + "\n"
 
-                    ).drawForeground(par1, par2);
+                    ).drawForeground(poseStack,par1, par2);
                 }
 
                 break;
@@ -170,33 +162,33 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         switch (guiScreenID) {
             case 0:
-                this.drawXCenteredString(
-                        this.xSize / 2,
+                this.drawXCenteredString(poseStack,
+                        this.imageWidth / 2,
                         25,
                         Localization.translate("tesseract.lists"),
                         ModUtils.convertRGBcolorToInt(13, 229, 34),
                         false
                 );
-                this.drawXCenteredString(
+                this.drawXCenteredString(poseStack,
                         50,
                         65,
                         Localization.translate("tesseract.inventory"),
                         ModUtils.convertRGBcolorToInt(13, 229, 34),
                         false
                 );
-                this.drawXCenteredString(
+                this.drawXCenteredString(poseStack,
                         150,
                         65,
                         Localization.translate("tesseract.create_channel"),
                         ModUtils.convertRGBcolorToInt(13, 229, 34),
                         false
                 );
-                this.drawXCenteredString(
-                        this.xSize / 2,
+                this.drawXCenteredString(poseStack,
+                        this.imageWidth / 2,
                         95,
                         Localization.translate("tesseract.public_channel"),
                         ModUtils.convertRGBcolorToInt(13, 229, 34),
@@ -208,13 +200,13 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
                 if (this.container.base.channel == null) {
                     return;
                 }
-                this.drawXCenteredString(46, 73, String.valueOf(this.container.base.channel.getChannel()),
+                this.drawXCenteredString(poseStack,46, 73, String.valueOf(this.container.base.channel.getChannel()),
                         ModUtils.convertRGBcolorToInt(13,
 
                                 229, 34
                         ), false
                 );
-                this.drawXCenteredString(
+                this.drawXCenteredString(poseStack,
                         105,
                         100,
                         Localization.translate("tesseract.delete"),
@@ -222,53 +214,53 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
                         false
                 );
 
-                this.drawXCenteredString(137, 40, Localization.translate("tesseract.player_channel"),
+                this.drawXCenteredString(poseStack,137, 40, Localization.translate("tesseract.player_channel"),
                         ModUtils.convertRGBcolorToInt(13, 229, 34), false
                 );
-                this.drawXCenteredString(137, 50, this.container.base.channel.getTesseract().getPlayer(),
+                this.drawXCenteredString(poseStack,137, 50, this.container.base.channel.getTesseract().getPlayer(),
                         ModUtils.convertRGBcolorToInt(13, 229, 34), false
                 );
 
 
                 this.bindTexture();
                 if (this.container.base.channel.getMode() == TypeMode.INOUT || this.container.base.channel.getMode() == TypeMode.INPUT) {
-                    drawTexturedModalRect(this.guiLeft + 79, this.guiTop + 69,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 79, this.guiTop + 69,
                             217,
                             59, 13, 27
                     );
                 }
                 if (this.container.base.channel.getMode() == TypeMode.INOUT || this.container.base.channel.getMode() == TypeMode.OUTPUT) {
-                    drawTexturedModalRect(this.guiLeft + 95, this.guiTop + 69,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 95, this.guiTop + 69,
                             230,
                             59, 13, 27
                     );
                 }
                 if (this.container.base.channel.getTypeChannel() == TypeChannel.ENERGY) {
-                    drawTexturedModalRect(this.guiLeft + 20, this.guiTop + 52,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 20, this.guiTop + 52,
                             232,
                             97, 10, 11
                     );
                 }
                 if (this.container.base.channel.getTypeChannel() == TypeChannel.FLUID) {
-                    drawTexturedModalRect(this.guiLeft + 41, this.guiTop + 52,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 41, this.guiTop + 52,
                             232,
                             97, 10, 11
                     );
                 }
                 if (this.container.base.channel.getTypeChannel() == TypeChannel.ITEM) {
-                    drawTexturedModalRect(this.guiLeft + 61, this.guiTop + 52,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 61, this.guiTop + 52,
                             232,
                             97, 10, 11
                     );
                 }
                 if (this.container.base.channel.isPrivate()) {
-                    drawTexturedModalRect(this.guiLeft + 113, this.guiTop + 78,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 113, this.guiTop + 78,
                             232,
                             97, 10, 11
                     );
                 }
                 if (this.container.base.channel.isActive()) {
-                    drawTexturedModalRect(this.guiLeft + 171, this.guiTop + 102,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 171, this.guiTop + 102,
                             232,
                             97, 10, 11
                     );
@@ -276,22 +268,22 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
                 break;
             case 2:
                 this.bindTexture();
-                GlStateManager.color(1, 1, 1, 1);
+               RenderSystem.setShaderColor(1, 1, 1, 1);
                 if (index < this.container.base.getChannels().size()) {
-                    drawTexturedModalRect(this.guiLeft + 156, this.guiTop + 97,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 156, this.guiTop + 97,
                             227,
                             124, 243 - 226, 135 - 123
                     );
                 }
                 if (index - 24 > 0) {
-                    drawTexturedModalRect(this.guiLeft + 15, this.guiTop + 97,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 15, this.guiTop + 97,
                             204,
                             124, 243 - 226, 135 - 123
                     );
                 }
                 for (int i = index - 24; i < Math.min(this.container.base.getChannels().size(), index); i++) {
                     new ItemImage(this, 18 + ((i % 24) % 8) * 20, 31 + ((i % 24) / 8) * 22, () -> this.stack).drawBackground(
-                            this.guiLeft,
+                            poseStack, this.guiLeft,
                             this.guiTop
                     );
                 }
@@ -299,45 +291,44 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
                 break;
             case 3:
                 this.energy.drawBackground(
-                        this.guiLeft,
+                        poseStack,   this.guiLeft,
                         this.guiTop
                 );
                 this.fluid.drawBackground(
-                        this.guiLeft,
+                        poseStack, this.guiLeft,
                         this.guiTop
                 );
                 List<ItemStack> itemStackList =
                         this.container.base
                                 .getSlotItem()
-                                .getContents()
                                 .stream()
                                 .filter(itemStack -> !itemStack.isEmpty())
                                 .collect(
                                         Collectors.toList());
                 for (int i = 0; i < itemStackList.size(); i++) {
-                    RenderHelper.enableGUIStandardItemLighting();
-                    this.drawItemStack(18 + (i % 6) * 20, 35 + (i / 6) * 22, itemStackList.get(i));
-                    RenderHelper.disableStandardItemLighting();
+
+                    this.drawItemStack(poseStack, 18 + (i % 6) * 20, 35 + (i / 6) * 22, itemStackList.get(i));
+
                 }
                 break;
             case 4:
                 bindTexture();
-                GlStateManager.color(1, 1, 1, 1);
+                RenderSystem.setShaderColor(1, 1, 1, 1);
                 if (index1 < this.container.base.getPublicChannel().size()) {
-                    drawTexturedModalRect(this.guiLeft + 156, this.guiTop + 97,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 156, this.guiTop + 97,
                             227,
                             124, 243 - 226, 135 - 123
                     );
                 }
                 if (index1 - 24 > 0) {
-                    drawTexturedModalRect(this.guiLeft + 15, this.guiTop + 97,
+                    drawTexturedModalRect(poseStack,this.guiLeft + 15, this.guiTop + 97,
                             204,
                             124, 243 - 226, 135 - 123
                     );
                 }
                 for (int i = index1 - 24; i < Math.min(this.container.base.getPublicChannel().size(), index1); i++) {
                     new ItemImage(this, 18 + ((i % 24) % 8) * 20, 31 + ((i % 24) / 8) * 22, () -> this.stack).drawBackground(
-                            this.guiLeft,
+                            poseStack,   this.guiLeft,
                             this.guiTop
                     );
                 }
@@ -345,16 +336,13 @@ public class GuiTesseract extends GuiIU<ContainerTesseract> {
         }
     }
 
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
+
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         switch (guiScreenID) {

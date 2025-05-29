@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/steel"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:storage_blocks/iridium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:casings/aluminumbronze"
+      }
+    ]
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:steam_boiler/steam_boiler_casing"
+  },
+  "show_notification": true
+}

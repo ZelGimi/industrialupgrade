@@ -1,8 +1,8 @@
 {
 	"credit": "texnounits",
 	"textures": {
-		"0": "industrialupgrade:items/booze_mug",
-		"particle": "industrialupgrade:items/booze_mug"
+		"0": "industrialupgrade:item/booze_mug",
+		"particle": "industrialupgrade:item/booze_mug"
 	},
 	"elements": [
 		{
@@ -232,6 +232,44 @@
 			"translation": [0.75, 5, 0]
 		}
 	},
+    "overrides": [
+        {
+            "predicate": {
+                "time_variety": 1
+            },
+            "model": "industrialupgrade:item/booze_mug_brew"
+        },
+        {
+            "predicate": {
+                "time_variety": 2
+            },
+            "model": "industrialupgrade:item/booze_mug_youngster"
+        },
+        {
+            "predicate": {
+                "time_variety": 3
+            },
+            "model": "industrialupgrade:item/booze_mug_beer"
+        },
+        {
+            "predicate": {
+                "time_variety": 4
+            },
+            "model": "industrialupgrade:item/booze_mug_ale"
+        },
+        {
+            "predicate": {
+                "time_variety": 5
+            },
+            "model": "industrialupgrade:item/booze_mug_dragonblood"
+        },
+        {
+            "predicate": {
+                "time_variety": 6
+            },
+            "model": "industrialupgrade:item/booze_mug_black_stuff"
+        }
+    ],
 	"groups": [
 		{
 			"name": "Стакан",

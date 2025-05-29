@@ -3,7 +3,7 @@ package com.denfop.integration.jei.apiary;
 
 import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +40,11 @@ public class ApiaryHandler {
 
     public static void initRecipes() {
         addRecipe(
-                FluidName.fluidhoney.getInstance(),
+                FluidName.fluidhoney.getInstance().get(),
                 Localization.translate("iu.apiary.honey")
         );
         addRecipe(
-                FluidName.fluidroyaljelly.getInstance(),
+                FluidName.fluidroyaljelly.getInstance().get(),
                 Localization.translate("iu.apiary.royaljelly")
         );
     }

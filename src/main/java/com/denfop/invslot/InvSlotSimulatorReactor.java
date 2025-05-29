@@ -2,7 +2,6 @@ package com.denfop.invslot;
 
 import com.denfop.api.inv.VirtualSlot;
 import com.denfop.tiles.base.TileEntitySimulatorReactor;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Collections;
@@ -14,11 +13,7 @@ public class InvSlotSimulatorReactor extends InvSlot implements VirtualSlot {
         super(base, typeItemSlot, count);
     }
 
-    @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
 
-    }
 
     @Override
     public boolean isFluid() {

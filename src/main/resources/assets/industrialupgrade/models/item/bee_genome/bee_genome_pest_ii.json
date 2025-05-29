@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/bee_genome_pest_ii"
+    "layer0" : "industrialupgrade:item/bee_genome_pest_ii"
   }
 }

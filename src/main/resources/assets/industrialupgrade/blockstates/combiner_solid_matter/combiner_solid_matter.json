@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "facing=north,type=combiner_solid_matter": {
+      "model": "industrialupgrade:block/basemachine/combiner_solid_matter",
+	  "transform" : "forge:default-block"
+    },
+    "facing=south,type=combiner_solid_matter": {
+      "model": "industrialupgrade:block/basemachine/combiner_solid_matter",
+      "y": 180
+    },
+    "facing=west,type=combiner_solid_matter": {
+      "model": "industrialupgrade:block/basemachine/combiner_solid_matter",
+      "y": 270
+    },
+    "facing=east,type=combiner_solid_matter": {
+      "model": "industrialupgrade:block/basemachine/combiner_solid_matter",
+      "y": 90
+    },
+    "facing=north,type=combiner_solid_matter_active": {
+      "model": "industrialupgrade:block/basemachine/combiner_solid_matter",
+	  "transform" : "forge:default-block"
+    },
+    "facing=south,type=combiner_solid_matter_active": {
+      "model": "industrialupgrade:block/basemachine/combiner_solid_matter",
+      "y": 180
+    },
+    "facing=west,type=combiner_solid_matter_active": {
+      "model": "industrialupgrade:block/basemachine/combiner_solid_matter",
+      "y": 270
+    },
+    "facing=east,type=combiner_solid_matter_active": {
+      "model": "industrialupgrade:block/basemachine/combiner_solid_matter",
+      "y": 90
+    }
+  }
+}

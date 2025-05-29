@@ -1,18 +1,15 @@
 package com.denfop.tiles.transport.tiles;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.cool.ICoolAcceptor;
 import com.denfop.api.cool.ICoolConductor;
 import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
-import com.denfop.api.energy.IEnergyAcceptor;
-import com.denfop.api.energy.IEnergyConductor;
-import com.denfop.api.energy.IEnergyEmitter;
-import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.InfoCable;
+import com.denfop.api.energy.*;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.heat.IHeatAcceptor;
@@ -21,42 +18,29 @@ import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
-import com.denfop.api.sytem.EnergyEvent;
-import com.denfop.api.sytem.EnergyType;
-import com.denfop.api.sytem.EnumTypeEvent;
-import com.denfop.api.sytem.IAcceptor;
-import com.denfop.api.sytem.IConductor;
-import com.denfop.api.sytem.IEmitter;
-import com.denfop.api.sytem.ITile;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.sytem.*;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.mechanism.BlockUniversalCable;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.network.packet.PacketCableSound;
 import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.tiles.transport.types.UniversalType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import com.denfop.utils.ModUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class TileEntityUniversalCable extends TileEntityMultiCable implements IEnergyConductor, IHeatConductor, ICoolConductor,
@@ -66,15 +50,15 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     public boolean addedToEnergyNet;
     protected UniversalType cableType;
     EnumTypeOperation enumTypeOperation = null;
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
-    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
+    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
+    Map<Direction, IHeatTile> energyHeatConductorMap = new HashMap<>();
     boolean updateConnect = false;
     List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
     List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
-    Map<EnergyType, Map<EnumFacing, ITile>> energyTypeConductorMap = new HashMap<>();
+    Map<EnergyType, Map<Direction, ITile>> energyTypeConductorMap = new HashMap<>();
     Map<EnergyType, List<InfoTile<ITile>>> validTypeReceivers = new HashMap<>();
     int hashCodeSource;
-    Map<EnumFacing, ICoolTile> energyCoolConductorMap = new HashMap<>();
+    Map<Direction, ICoolTile> energyCoolConductorMap = new HashMap<>();
     List<InfoTile<ICoolTile>> validColdReceivers = new LinkedList<>();
     List<EnergyType> energies = Arrays.asList(EnergyType.QUANTUM, EnergyType.SOLARIUM, EnergyType.EXPERIENCE,
             EnergyType.RADIATION
@@ -93,29 +77,61 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     private com.denfop.api.sytem.InfoCable typeCable;
     private com.denfop.api.cool.InfoCable typeColdCable;
 
-    public TileEntityUniversalCable(UniversalType cableType) {
-        super(cableType);
+    public TileEntityUniversalCable(UniversalType cableType, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(cableType, block, pos, state);
         this.cableType = cableType;
     }
 
-    public TileEntityUniversalCable() {
-        super(UniversalType.glass);
-        this.cableType = UniversalType.glass;
-        this.connectivity = 0;
-        this.addedToEnergyNet = false;
+    @Override
+    public void addInformation(ItemStack stack, List<String> info) {
+        UniversalType type = cableType;
+        double capacity;
+        double loss;
+
+        capacity = type.capacity;
+        loss = type.loss;
+
+
+        info.add(ModUtils.getString(capacity) + " " + Localization.translate("iu.generic.text.EUt"));
+        info.add(Localization.translate("cable.tooltip.loss", lossFormat.format(loss)));
+        info.add(Localization.translate("iu.transport.cold") + "-" + ModUtils.getString(64) + " °C");
+        info.add(Localization.translate("iu.transport.heat") + ModUtils.getString(16000) + " °C");
 
     }
-
-    public static TileEntityUniversalCable delegate(UniversalType cableType) {
-        return new TileEntityUniversalCable(cableType);
-    }
-
-    public IMultiTileBlock getTeBlock() {
-        return BlockUniversalCable.universal_cable;
-    }
-
-    public BlockTileEntity getBlock() {
-        return IUItem.universalcableblock;
+    @Override
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem() == IUItem.qcable.getItem(0) && !quantum) {
+            stack.shrink(1);
+            this.enumTypeOperation = EnumTypeOperation.QUANTUM;
+            return true;
+        }
+        if (stack.getItem() == IUItem.scable.getItem(0) && !solarium) {
+            stack.shrink(1);
+            this.enumTypeOperation = EnumTypeOperation.SOLARIUM;
+            return true;
+        }
+        if (stack.getItem() == IUItem.radcable_item.getItem(0) && !radiation) {
+            stack.shrink(1);
+            this.enumTypeOperation = EnumTypeOperation.RADIATION;
+            return true;
+        }
+        if (stack.getItem() == IUItem.expcable.getItem(0) && !experience) {
+            stack.shrink(1);
+            this.enumTypeOperation = EnumTypeOperation.EXPERIENCE;
+            return true;
+        }
+        if (stack.getItem() == IUItem.coolpipes.getItem(4) && !cold) {
+            stack.shrink(1);
+            this.enumTypeOperation = EnumTypeOperation.COLD;
+            return true;
+        }
+        if (stack.getItem() == IUItem.pipes.getItem(4) && !heat) {
+            stack.shrink(1);
+            this.enumTypeOperation = EnumTypeOperation.HEAT;
+            return true;
+        }
+        return super.onActivated(player, hand, side, vec3);
     }
 
     public ICableItem getCableItem() {
@@ -137,7 +153,31 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         return this.pos;
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    @Override
+    public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
+        List<ItemStack> stacks = new LinkedList<>(super.getSelfDrops(fortune, wrench));
+        if (quantum) {
+            stacks.add(new ItemStack(IUItem.qcable.getItem(0)));
+        }
+        if (solarium) {
+            stacks.add(new ItemStack(IUItem.scable.getItem()));
+        }
+        if (radiation) {
+            stacks.add(new ItemStack(IUItem.radcable_item.getItem()));
+        }
+        if (experience) {
+            stacks.add(new ItemStack(IUItem.expcable.getItem()));
+        }
+        if (heat) {
+            stacks.add(new ItemStack(IUItem.pipes.getItem(4), 1));
+        }
+        if (cold) {
+            stacks.add(new ItemStack(IUItem.coolpipes.getItem(4), 1));
+        }
+        return stacks;
+    }
+
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         this.cableType = UniversalType.values[nbt.getByte("cableType") & 255];
         heat = nbt.getBoolean("Heat");
@@ -149,8 +189,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void RemoveTile(IEnergyTile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
@@ -165,8 +205,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void AddTile(IEnergyTile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);
                 validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
@@ -175,20 +215,20 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         }
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setByte("cableType", (byte) this.cableType.ordinal());
-        nbt.setBoolean("Heat", heat);
-        nbt.setBoolean("Quantum", quantum);
-        nbt.setBoolean("Experience", experience);
-        nbt.setBoolean("Solarium", solarium);
-        nbt.setBoolean("Radiation", radiation);
-        nbt.setBoolean("Cold", cold);
+        nbt.putByte("cableType", (byte) this.cableType.ordinal());
+        nbt.putBoolean("Heat", heat);
+        nbt.putBoolean("Quantum", quantum);
+        nbt.putBoolean("Experience", experience);
+        nbt.putBoolean("Solarium", solarium);
+        nbt.putBoolean("Radiation", radiation);
+        nbt.putBoolean("Cold", cold);
         return nbt;
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         super.updateTileServer(var1, var2);
         MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
 
@@ -214,8 +254,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public void AddHeatTile(final IHeatTile tile, final EnumFacing dir) {
-        if (!this.getWorld().isRemote) {
+    public void AddHeatTile(final IHeatTile tile, final Direction dir) {
+        if (!this.getWorld().isClientSide) {
             if (!this.energyHeatConductorMap.containsKey(dir)) {
                 this.energyHeatConductorMap.put(dir, tile);
                 validHeatReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
@@ -235,8 +275,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public void RemoveHeatTile(final IHeatTile tile, final EnumFacing dir) {
-        if (!this.getWorld().isRemote) {
+    public void RemoveHeatTile(final IHeatTile tile, final Direction dir) {
+        if (!this.getWorld().isClientSide) {
             this.energyHeatConductorMap.remove(dir);
             final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
             while (iter.hasNext()) {
@@ -251,7 +291,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public Map<EnumFacing, IHeatTile> getHeatTiles() {
+    public Map<Direction, IHeatTile> getHeatTiles() {
         return energyHeatConductorMap;
     }
 
@@ -346,13 +386,13 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         return validReceivers;
     }
 
-    public Map<EnumFacing, IEnergyTile> getTiles() {
+    public Map<Direction, IEnergyTile> getTiles() {
         return energyConductorMap;
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote && !addedToEnergyNet) {
+        if (!this.getWorld().isClientSide && !addedToEnergyNet) {
 
             this.energyConductorMap.clear();
             validReceivers.clear();
@@ -386,51 +426,9 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
 
     }
 
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem() == IUItem.qcable && !quantum) {
-            stack.shrink(1);
-            this.enumTypeOperation = EnumTypeOperation.QUANTUM;
-            return true;
-        }
-        if (stack.getItem() == IUItem.scable && !solarium) {
-            stack.shrink(1);
-            this.enumTypeOperation = EnumTypeOperation.SOLARIUM;
-            return true;
-        }
-        if (stack.getItem() == IUItem.radcable_item && !radiation) {
-            stack.shrink(1);
-            this.enumTypeOperation = EnumTypeOperation.RADIATION;
-            return true;
-        }
-        if (stack.getItem() == IUItem.expcable && !experience) {
-            stack.shrink(1);
-            this.enumTypeOperation = EnumTypeOperation.EXPERIENCE;
-            return true;
-        }
-        if (stack.getItem() == IUItem.coolpipes && stack.getItemDamage() == 4 && !cold) {
-            stack.shrink(1);
-            this.enumTypeOperation = EnumTypeOperation.COLD;
-            return true;
-        }
-        if (stack.getItem() == IUItem.pipes && stack.getItemDamage() == 4 && !heat) {
-            stack.shrink(1);
-            this.enumTypeOperation = EnumTypeOperation.HEAT;
-            return true;
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
 
     public void onUnloaded() {
-        if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
+        if (!this.getWorld().isClientSide && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             if (heat) {
                 MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
@@ -463,40 +461,13 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         super.onUnloaded();
     }
 
-    @Override
-    public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
-        List<ItemStack> stacks = new LinkedList<>(super.getSelfDrops(fortune, wrench));
-        if (quantum) {
-            stacks.add(new ItemStack(IUItem.qcable));
-        }
-        if (solarium) {
-            stacks.add(new ItemStack(IUItem.scable));
-        }
-        if (radiation) {
-            stacks.add(new ItemStack(IUItem.radcable_item));
-        }
-        if (experience) {
-            stacks.add(new ItemStack(IUItem.expcable));
-        }
-        if (heat) {
-            stacks.add(new ItemStack(IUItem.pipes, 1, 4));
-        }
-        if (cold) {
-            stacks.add(new ItemStack(IUItem.coolpipes, 1, 4));
-        }
-        return stacks;
-    }
-
-    public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
-        return new ItemStack(IUItem.universal_cable, 1, this.cableType.ordinal());
-    }
 
     public void updateConnectivity() {
-        World world = this.getWorld();
+        Level world = this.getWorld();
         byte newConnectivity = 0;
-        EnumFacing[] var4 = EnumFacing.VALUES;
+        Direction[] var4 = Direction.values();
 
-        for (EnumFacing dir : var4) {
+        for (Direction dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             if (getBlackList().contains(dir)) {
                 continue;
@@ -505,7 +476,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
             if (tile != null) {
                 newConnectivity = (byte) (newConnectivity + 1);
             } else {
-                Map<EnumFacing, ITile> map = this.energyTypeConductorMap.computeIfAbsent(
+                Map<Direction, ITile> map = this.energyTypeConductorMap.computeIfAbsent(
                         EnergyType.SOLARIUM,
                         k -> new HashMap<>()
                 );
@@ -567,15 +538,15 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         this.cableItem = cableType;
     }
 
-    public boolean wrenchCanRemove(EntityPlayer player) {
+    public boolean wrenchCanRemove(Player player) {
         return false;
     }
 
-    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing direction) {
+    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction direction) {
         return (!getBlackList().contains(direction));
     }
 
-    public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing direction) {
+    public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction direction) {
         return (!getBlackList().contains(direction));
     }
 
@@ -619,8 +590,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public void AddCoolTile(final ICoolTile tile, final EnumFacing dir) {
-        if (!this.getWorld().isRemote) {
+    public void AddCoolTile(final ICoolTile tile, final Direction dir) {
+        if (!this.getWorld().isClientSide) {
             if (!this.energyCoolConductorMap.containsKey(dir)) {
                 this.energyCoolConductorMap.put(dir, tile);
                 validColdReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
@@ -630,8 +601,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public void RemoveCoolTile(final ICoolTile tile, final EnumFacing dir) {
-        if (!this.getWorld().isRemote) {
+    public void RemoveCoolTile(final ICoolTile tile, final Direction dir) {
+        if (!this.getWorld().isClientSide) {
             this.energyCoolConductorMap.remove(dir);
             final Iterator<InfoTile<ICoolTile>> iter = validColdReceivers.iterator();
             while (iter.hasNext()) {
@@ -646,7 +617,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public Map<EnumFacing, ICoolTile> getCoolTiles() {
+    public Map<Direction, ICoolTile> getCoolTiles() {
         return energyCoolConductorMap;
     }
 
@@ -660,7 +631,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         return validTypeReceivers.computeIfAbsent(type, k -> new LinkedList<>());
     }
 
-    public Map<EnumFacing, ITile> getTiles(EnergyType type) {
+    public Map<Direction, ITile> getTiles(EnergyType type) {
         return energyTypeConductorMap.computeIfAbsent(type, k -> new HashMap<>());
     }
 
@@ -675,8 +646,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public void RemoveTile(EnergyType type, ITile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void RemoveTile(EnergyType type, ITile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             this.energyTypeConductorMap.computeIfAbsent(type, k -> new HashMap<>()).remove(facing1);
             final Iterator<InfoTile<ITile>> iter = validTypeReceivers.computeIfAbsent(type, k -> new LinkedList<>()).iterator();
             while (iter.hasNext()) {
@@ -691,9 +662,9 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public void AddTile(EnergyType type, ITile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
-            final Map<EnumFacing, ITile> map = this.energyTypeConductorMap.computeIfAbsent(type, k -> new HashMap<>());
+    public void AddTile(EnergyType type, ITile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
+            final Map<Direction, ITile> map = this.energyTypeConductorMap.computeIfAbsent(type, k -> new HashMap<>());
             if (!map.containsKey(facing1)) {
                 map.put(facing1, tile);
                 validTypeReceivers.computeIfAbsent(type, k -> new LinkedList<>()).add(new InfoTile<>(
@@ -714,13 +685,6 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         return 65;
     }
 
-    public void removeConductor() {
-        this.getWorld().setBlockToAir(this.pos);
-        new PacketCableSound(this.getWorld(), this.pos,
-                0.5F,
-                2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F
-        );
-    }
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
@@ -746,7 +710,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
 
     @Override
     public void update_render() {
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.updateConnectivity();
         }
     }
@@ -777,42 +741,42 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     @Override
-    public boolean acceptsCoolFrom(final ICoolEmitter var1, final EnumFacing var2) {
+    public boolean acceptsCoolFrom(final ICoolEmitter var1, final Direction var2) {
         return (!getBlackList().contains(var2));
     }
 
     @Override
-    public boolean emitsCoolTo(final ICoolAcceptor var1, final EnumFacing var2) {
+    public boolean emitsCoolTo(final ICoolAcceptor var1, final Direction var2) {
         return (!getBlackList().contains(var2));
     }
 
     @Override
-    public boolean acceptsHeatFrom(final IHeatEmitter var1, final EnumFacing var2) {
+    public boolean acceptsHeatFrom(final IHeatEmitter var1, final Direction var2) {
         return (!getBlackList().contains(var2));
     }
 
     @Override
-    public boolean emitsHeatTo(final IHeatAcceptor var1, final EnumFacing var2) {
+    public boolean emitsHeatTo(final IHeatAcceptor var1, final Direction var2) {
         return (!getBlackList().contains(var2));
     }
 
     @Override
-    public boolean acceptsFrom(final IEmitter var1, final EnumFacing var2) {
+    public boolean acceptsFrom(final IEmitter var1, final Direction var2) {
         return (!getBlackList().contains(var2));
     }
 
     @Override
-    public boolean emitsTo(final IAcceptor var1, final EnumFacing var2) {
+    public boolean emitsTo(final IAcceptor var1, final Direction var2) {
         return (!getBlackList().contains(var2));
     }
 
     @Override
-    public TileEntity getTile() {
+    public BlockEntity getTile() {
         return this;
     }
 
     @Override
-    public TileEntity getTileEntity() {
+    public BlockEntity getTileEntity() {
         return this;
     }
 

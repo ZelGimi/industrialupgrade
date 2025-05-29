@@ -1,7 +1,8 @@
 package com.denfop.api.item;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 public interface IDamageItem {
 
@@ -11,6 +12,6 @@ public interface IDamageItem {
 
     void setCustomDamage(ItemStack var1, int var2);
 
-    boolean applyCustomDamage(ItemStack var1, int var2, EntityLivingBase var3);
+    boolean applyCustomDamage(ItemStack var1, int var2, LivingEntity var3);
 
 }

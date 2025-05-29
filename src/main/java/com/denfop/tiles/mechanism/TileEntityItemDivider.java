@@ -1,20 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -24,7 +14,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerItemDivider;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiItemDivider;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -36,17 +28,17 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -76,8 +68,8 @@ public class TileEntityItemDivider extends TileElectricMachine implements
     public double guiProgress;
     protected short progress;
 
-    public TileEntityItemDivider() {
-        super(200, 1, 1);
+    public TileEntityItemDivider(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.item_divider,pos,state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -136,43 +128,43 @@ public class TileEntityItemDivider extends TileElectricMachine implements
 
     }
 
-    public ContainerItemDivider getGuiContainer(final EntityPlayer var1) {
+    public ContainerItemDivider getGuiContainer(final Player var1) {
         return new ContainerItemDivider(var1, this);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiItemDivider(getGuiContainer(var1));
+        return new GuiItemDivider((ContainerItemDivider) menu);
     }
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 456), new ItemStack(IUItem.iudust, 1, 37),
-                new FluidStack(FluidName.fluidazot.getInstance(), 20), new FluidStack(FluidName.fluidoxy.getInstance(), 10)
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(456)), new ItemStack(IUItem.iudust.getStack(37)),
+                new FluidStack(FluidName.fluidazot.getInstance().get(), 20), new FluidStack(FluidName.fluidoxy.getInstance().get(), 10)
         );
 
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 460), new ItemStack(IUItem.iudust, 1, 64),
-                new FluidStack(FluidName.fluidazot.getInstance(), 20), new FluidStack(FluidName.fluidoxy.getInstance(), 10)
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(460)), new ItemStack(IUItem.iudust.getStack(64)),
+                new FluidStack(FluidName.fluidazot.getInstance().get(), 20), new FluidStack(FluidName.fluidoxy.getInstance().get(), 10)
         );
-        addRecipe(new ItemStack(IUItem.iudust, 2, 67), new ItemStack(IUItem.iudust, 2, 41),
-                new FluidStack(FluidName.fluidsulfuroxide.getInstance(), 400), new FluidStack(
-                        FluidName.fluidoxy.getInstance(),
+        addRecipe(new ItemStack(IUItem.iudust.getStack(67), 2), new ItemStack(IUItem.iudust.getStack(41), 2),
+                new FluidStack(FluidName.fluidsulfuroxide.getInstance().get(), 400), new FluidStack(
+                        FluidName.fluidoxy.getInstance().get(),
                         100
                 )
         );
         addRecipe(new ItemStack(Items.MAGMA_CREAM), new ItemStack(Items.BLAZE_POWDER),
-                new FluidStack(FluidRegistry.LAVA, 60),
-                new FluidStack(FluidName.fluidoxy.getInstance(), 15)
+                new FluidStack(net.minecraft.world.level.material.Fluids.LAVA, 60),
+                new FluidStack(FluidName.fluidoxy.getInstance().get(), 15)
         );
 
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -187,24 +179,24 @@ public class TileEntityItemDivider extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
-            this.fluid_handler.load(this.inputSlotA.get());
+            this.fluid_handler.load(this.inputSlotA.get(0));
             this.getOutput();
         }
 
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -275,7 +267,7 @@ public class TileEntityItemDivider extends TileElectricMachine implements
         }
 
         if (check || (this.fluid_handler.output() == null && this.output != null)) {
-            this.fluid_handler.getOutput(this.inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.output == null) {
                 this.fluid_handler.setOutput(null);

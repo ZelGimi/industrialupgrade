@@ -2,42 +2,32 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGeneticTransposer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGeneticTransposer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -59,19 +49,19 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
     public InvSlotRecipes inputSlotA;
     public MachineRecipe output;
 
-    public TileEntityGeneticTransposer() {
+    public TileEntityGeneticTransposer(BlockPos pos, BlockState state) {
         super(
                 300,
                 1,
                 12,
-                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance(), FluidName.fluidcropgenetic.getInstance())
+                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance().get(), FluidName.fluidcropgenetic.getInstance().get()),BlockBaseMachine3.genetic_transposer,pos,state
         );
         this.outputSlot1 = new InvSlotOutput(this, 1);
         this.fluidSlot = new InvSlotFluidByList(
                 this,
                 1,
-                FluidName.fluidbeegenetic.getInstance(),
-                FluidName.fluidcropgenetic.getInstance()
+                FluidName.fluidbeegenetic.getInstance().get(),
+                FluidName.fluidcropgenetic.getInstance().get()
         );
 
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
@@ -95,7 +85,7 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
         Recipes.recipes.addInitRecipes(this);
     }
 
-    public ContainerGeneticTransposer getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGeneticTransposer getGuiContainer(Player entityPlayer) {
         return new ContainerGeneticTransposer(entityPlayer, this);
 
     }
@@ -133,397 +123,397 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     public void init() {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.toriy))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem()))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 0))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(0)))
+                ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 1, 446))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 6))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(6)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 4))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 37))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(37)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 1, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 36))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(36)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 41))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(41)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 24))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(24)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 1, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 38))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(38)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 1))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 33))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(33)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.proton))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem()))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 7))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(7)))
+                ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 0))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 3))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(0)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(3)))
+                        ));
 
 
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.proton))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem()))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 10))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(10)))
+                ));
 
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 47))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(47)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 1, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 44))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(44)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 12))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(12)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 4))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 21))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(21)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.toriy))
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem()))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 30))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(30)))
+                ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 0))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 18))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(0)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(18)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 1))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 27))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(27)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidbeegenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
                         input.getInput(new ItemStack(Items.NETHER_STAR, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 1, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_bee, 1, 15))
-        ));
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_bee.getStack(15)))
+                        ));
         //
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.toriy))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem()))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 0))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(0)))
+                ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 4))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 36))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(36)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 1, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 35))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(35)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 40))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(40)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 28))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(28)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 1, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 37))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(37)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 1))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 13))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(13)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.proton))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem()))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 7))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(7)))
+                ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 0))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 3))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(0)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(3)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 445))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(445), 4))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 7))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(7)))
+                ));
 
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.proton))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.proton.getItem()))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 10))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(10)))
+                ));
 
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 46))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(46)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 1, 3))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 43))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(3)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(43)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 22))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(2)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(22)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 4))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 31))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(4)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(31)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.toriy))
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.toriy.getItem()))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 25))
-        ));
+                new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(25)))
+                ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 0))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 19))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(0)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(19)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 1))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 34))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(1)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(34)))
+                        ));
         Recipes.recipes.addRecipe("genetic_transposer", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcropgenetic.getInstance(), 500),
+                        new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 500),
                         input.getInput(new ItemStack(Items.GLASS_BOTTLE)),
-                        input.getInput(new ItemStack(IUItem.nether_star_ingot, 1)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 4, 446)),
-                        input.getInput(new ItemStack(IUItem.nuclear_res, 1, 2))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.genome_crop, 1, 12))
-        ));
+                        input.getInput(new ItemStack(IUItem.nether_star_ingot.getItem(), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(446), 4)),
+                        input.getInput(new ItemStack(IUItem.nuclear_res.getStack(2)))
+                        ),
+                        new RecipeOutput(null, new ItemStack(IUItem.genome_crop.getStack(12))))
+                        );
     }
 
 
@@ -534,9 +524,11 @@ public class TileEntityGeneticTransposer extends TileElectricLiquidTankInventory
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiGeneticTransposer(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiGeneticTransposer((ContainerGeneticTransposer) menu);
 
     }
 

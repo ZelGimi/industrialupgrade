@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/ghast_dust"	}
+		"layer0": "industrialupgrade:item/ghast_dust"	}
 }

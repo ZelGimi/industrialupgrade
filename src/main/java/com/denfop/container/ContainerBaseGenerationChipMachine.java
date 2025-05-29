@@ -1,17 +1,17 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileGenerationMicrochip;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerBaseGenerationChipMachine
         extends ContainerFullInv<TileGenerationMicrochip> {
 
-    public ContainerBaseGenerationChipMachine(EntityPlayer entityPlayer, TileGenerationMicrochip tileEntity1) {
+    public ContainerBaseGenerationChipMachine(Player entityPlayer, TileGenerationMicrochip tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerBaseGenerationChipMachine(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileGenerationMicrochip tileEntity1,
             int height,
             int upgradeX,

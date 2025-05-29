@@ -1,11 +1,12 @@
 package com.denfop.container;
 
+
 import com.denfop.tiles.mechanism.TileEntityItemManipulator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerItemManipulator extends ContainerFullInv<TileEntityItemManipulator> {
 
-    public ContainerItemManipulator(EntityPlayer entityPlayer, TileEntityItemManipulator tileEntity1) {
+    public ContainerItemManipulator(Player entityPlayer, TileEntityItemManipulator tileEntity1) {
         this(entityPlayer, tileEntity1, 221);
         for (int j = 0; j < 27; ++j) {
 
@@ -27,7 +28,7 @@ public class ContainerItemManipulator extends ContainerFullInv<TileEntityItemMan
         ));
     }
 
-    public ContainerItemManipulator(EntityPlayer entityPlayer, TileEntityItemManipulator tileEntity1, int height) {
+    public ContainerItemManipulator(Player entityPlayer, TileEntityItemManipulator tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
     }
 

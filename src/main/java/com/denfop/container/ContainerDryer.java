@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityElectricDryer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerDryer extends ContainerFullInv<TileEntityElectricDryer> {
 
-    public ContainerDryer(EntityPlayer entityPlayer, TileEntityElectricDryer tileEntity1) {
+    public ContainerDryer(Player entityPlayer, TileEntityElectricDryer tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 45, 99));

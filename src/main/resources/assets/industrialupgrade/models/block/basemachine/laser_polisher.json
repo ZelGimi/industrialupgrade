@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/laser_polisher_main",
-    "down" : "industrialupgrade:blocks/laser_polisher_all",
-    "up" : "industrialupgrade:blocks/laser_polisher_all",
-    "north" : "industrialupgrade:blocks/laser_polisher_main",
-    "east" : "industrialupgrade:blocks/laser_polisher_all",
-    "south" : "industrialupgrade:blocks/laser_polisher_all",
-    "west" : "industrialupgrade:blocks/laser_polisher_all"
+    "particle" : "industrialupgrade:block/laser_polisher_main",
+    "down" : "industrialupgrade:block/laser_polisher_all",
+    "up" : "industrialupgrade:block/laser_polisher_all",
+    "north" : "industrialupgrade:block/laser_polisher_main",
+    "east" : "industrialupgrade:block/laser_polisher_all",
+    "south" : "industrialupgrade:block/laser_polisher_all",
+    "west" : "industrialupgrade:block/laser_polisher_all"
   }
 }

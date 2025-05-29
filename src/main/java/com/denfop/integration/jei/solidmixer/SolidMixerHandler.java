@@ -3,9 +3,10 @@ package com.denfop.integration.jei.solidmixer;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SolidMixerHandler {
@@ -85,7 +86,12 @@ public class SolidMixerHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
-
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1);
+    }
+    public List<ItemStack> getOutputs() {
+        return Arrays.asList(output, output1);
+    }
 }

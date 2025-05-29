@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemsunnariumpanel/psp"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:photoniumglass/photoniyglass5"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:stick/manganese"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:reactors/proton"
+      }
+    ]
+  },
+  "pattern": [
+    "CEC",
+    "ABA",
+    "CEC"
+  ],
+  "result": {
+    "item": "industrialupgrade:photoniumglass/photoniyglass6"
+  },
+  "show_notification": true
+}

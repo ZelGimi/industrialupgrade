@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring_storage/per_mfsu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/sincore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:transformer_iu/umhv"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_23_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:blockresource/reinforced_stone"
+      }
+    ]
+  },
+  "pattern": [
+    "EDE",
+    "BBB",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_93_element"
+  },
+  "show_notification": true
+}

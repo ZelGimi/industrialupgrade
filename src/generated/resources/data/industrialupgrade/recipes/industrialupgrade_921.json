@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:capacitor/adv_capacitor"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:capacitor/imp_capacitor"
+  },
+  "show_notification": true
+}

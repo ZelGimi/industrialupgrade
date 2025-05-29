@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/lawrencium_pellet"
+    "layer0" : "industrialupgrade:item/lawrencium_pellet"
   }
 }

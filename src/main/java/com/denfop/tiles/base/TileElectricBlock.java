@@ -7,13 +7,17 @@ import com.denfop.api.IStorage;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IEnergySource;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
-import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Redstone;
 import com.denfop.componets.WirelessComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerElectricBlock;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiElectricBlock;
 import com.denfop.invslot.InvSlotCharge;
 import com.denfop.invslot.InvSlotDischarge;
@@ -23,28 +27,31 @@ import com.denfop.network.packet.PacketStopSound;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.tiles.wiring.EnumElectricBlock;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class TileElectricBlock extends TileEntityInventory implements
@@ -75,11 +82,11 @@ public class TileElectricBlock extends TileEntityInventory implements
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
     public boolean addedToEnergyNet = false;
     private byte redstoneMode = 0;
-    private EntityPlayer player;
+    private Player player;
 
 
-    public TileElectricBlock(double tier1, double output1, double maxStorage1, boolean chargepad, String name) {
-
+    public TileElectricBlock(double tier1, double output1, double maxStorage1, boolean chargepad, String name, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block, pos, state);
         this.tier = tier1;
         this.output = EnergyNetGlobal.instance.getPowerFromTier((int) tier);
         this.maxStorage2 = maxStorage1 * 4;
@@ -96,7 +103,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         this.energy = this.addComponent((new Energy(
                 this,
                 maxStorage1,
-                Arrays.stream(EnumFacing.VALUES).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
+                Arrays.stream(Direction.values()).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
                 Collections.singletonList(this.getFacing()),
                 EnergyNetGlobal.instance.getTierFromPower(this.output),
                 EnergyNetGlobal.instance.getTierFromPower(this.output),
@@ -109,8 +116,8 @@ public class TileElectricBlock extends TileEntityInventory implements
 
     }
 
-    public TileElectricBlock(EnumElectricBlock electricBlock) {
-        this(electricBlock.tier, electricBlock.producing, electricBlock.maxstorage, electricBlock.chargepad, electricBlock.name1);
+    public TileElectricBlock(EnumElectricBlock electricBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        this(electricBlock.tier, electricBlock.producing, electricBlock.maxstorage, electricBlock.chargepad, electricBlock.name1, block, pos, state);
         electricblock = electricBlock;
     }
 
@@ -120,41 +127,34 @@ public class TileElectricBlock extends TileEntityInventory implements
     }
 
     @Override
-    public boolean onSneakingActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (this.world.isRemote) {
+    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (this.level.isClientSide) {
             return false;
         }
         module_charge(player);
         return true;
     }
 
-    public ItemStack getItem(EntityPlayer player, RayTraceResult target) {
+    public ItemStack getItem(Player player, HitResult target) {
 
 
         return super.getPickBlock(player, target);
     }
 
     @Override
-    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+    public ItemStack getPickBlock(final Player player, final HitResult target) {
         double retainedRatio = 0.8;
         double totalEnergy = this.energy.getEnergy();
         final ItemStack stack = super.getPickBlock(player, target);
         if (totalEnergy > 0.0D) {
-            NBTTagCompound nbt = ModUtils.nbt(stack);
-            nbt.setDouble("energy", Math.round(totalEnergy * retainedRatio));
+            CompoundTag nbt = ModUtils.nbt(stack);
+            nbt.putDouble("energy", Math.round(totalEnergy * retainedRatio));
 
         }
         return super.getPickBlock(player, target);
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -163,7 +163,7 @@ public class TileElectricBlock extends TileEntityInventory implements
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -173,10 +173,10 @@ public class TileElectricBlock extends TileEntityInventory implements
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
             new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
             new PacketStopSound(getWorld(), this.pos);
         }
@@ -197,7 +197,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         info.add(Localization.translate("iu.item.tooltip.Output") + " " + ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(
                 this.energy.getSourceTier())) + " EF/t ");
         info.add(Localization.translate("iu.item.tooltip.Capacity") + " " + ModUtils.getString(this.energy.getCapacity()) + " EF ");
-        NBTTagCompound nbttagcompound = ModUtils.nbt(itemStack);
+        CompoundTag nbttagcompound = ModUtils.nbt(itemStack);
         if (this.energy == null || this.energy.getEnergy() == 0) {
             info.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(nbttagcompound.getDouble("energy"))
                     + " EF ");
@@ -210,20 +210,13 @@ public class TileElectricBlock extends TileEntityInventory implements
 
     }
 
-    public ContainerElectricBlock getGuiContainer(EntityPlayer player) {
+    public ContainerElectricBlock getGuiContainer(Player player) {
         return new ContainerElectricBlock(player, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiElectricBlock(new ContainerElectricBlock(entityPlayer, this));
-    }
-
-    public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-
-
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiElectricBlock((ContainerElectricBlock) isAdmin);
     }
 
     @Override
@@ -234,15 +227,15 @@ public class TileElectricBlock extends TileEntityInventory implements
             if (!this.chargepad) {
                 this.energy.setDirections(
 
-                        Arrays.stream(EnumFacing.VALUES)
+                        Arrays.stream(Direction.values())
                                 .filter(facing -> facing != this.getFacing())
                                 .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
 
             } else {
                 this.energy.setDirections(
 
-                        Arrays.stream(EnumFacing.VALUES)
-                                .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                        Arrays.stream(Direction.values())
+                                .filter(facing1 -> facing1 != Direction.UP && facing1 != getFacing())
                                 .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
 
 
@@ -273,58 +266,57 @@ public class TileElectricBlock extends TileEntityInventory implements
         return this.output;
     }
 
-    protected void getItems(EntityPlayer player) {
+    protected void getItems(Player player) {
         if (!this.canEntityDestroy(player)) {
             IUCore.proxy.messagePlayer(player, Localization.translate("iu.error"));
             return;
         }
 
 
-        for (ItemStack current : player.inventory.armorInventory) {
+        for (ItemStack current : player.getInventory().armor) {
             if (current != null) {
                 chargeitems(current, this.output);
             }
         }
-        for (ItemStack current : player.inventory.mainInventory) {
+        for (ItemStack current : player.getInventory().items) {
             if (current != null) {
                 chargeitems(current, this.output);
             }
         }
-        player.inventoryContainer.detectAndSendChanges();
+        player.containerMenu.broadcastChanges();
 
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
-            World world = this.getWorld();
-            Random rnd = world.rand;
+            Level world = this.getLevel();
+            RandomSource rnd = world.getRandom();
             final int n = 4;
-            final int green = 0;
-            int blue = 1;
+            final float green = 0.0f;
+            final float blue = 1.0f;
+            final float red = 0;
+            final float scale = 1.0f;
+
             for (int i = 0; i < n; ++i) {
-                world.spawnParticle(
-                        EnumParticleTypes.REDSTONE,
-                        (float) pos.getX() + rnd.nextFloat(),
-                        (float) (pos.getY() + 1) + rnd.nextFloat(),
-                        (float) pos.getZ() + rnd.nextFloat(),
-                        -1,
-                        green,
-                        blue
+                world.addParticle(
+                        new DustParticleOptions(new Vector3f(red, green, blue), scale),
+                        pos.getX() + rnd.nextFloat(),
+                        pos.getY() + 1 + rnd.nextFloat(),
+                        pos.getZ() + rnd.nextFloat(),
+                        0.0, 0.0, 0.0
                 );
-                world.spawnParticle(
-                        EnumParticleTypes.REDSTONE,
-                        (float) pos.getX() + rnd.nextFloat(),
-                        (float) (pos.getY() + 2) + rnd.nextFloat(),
-                        (float) pos.getZ() + rnd.nextFloat(),
-                        -1,
-                        green,
-                        blue
+
+                world.addParticle(
+                        new DustParticleOptions(new Vector3f(red, green, blue), scale),
+                        pos.getX() + rnd.nextFloat(),
+                        pos.getY() + 2 + rnd.nextFloat(),
+                        pos.getZ() + rnd.nextFloat(),
+                        0.0, 0.0, 0.0
                 );
             }
         }
-
     }
 
     protected void chargeitems(ItemStack itemstack, double chargefactor) {
@@ -355,17 +347,17 @@ public class TileElectricBlock extends TileEntityInventory implements
     }
 
 
-    public void module_charge(EntityPlayer entityPlayer) {
+    public void module_charge(Player entityPlayer) {
 
         if (this.movementcharge) {
 
-            for (ItemStack armorcharged : entityPlayer.inventory.armorInventory) {
+            for (ItemStack armorcharged : entityPlayer.getInventory().armor) {
                 if (armorcharged != null) {
                     if (armorcharged.getItem() instanceof IEnergyItem && this.energy.getEnergy() > 0) {
                         double sent = ElectricItem.manager.charge(armorcharged, this.energy.getEnergy(), 2147483647, true,
                                 false
                         );
-                        entityPlayer.inventoryContainer.detectAndSendChanges();
+                        entityPlayer.containerMenu.broadcastChanges();
                         this.energy.useEnergy(sent);
 
                         this.needsInvUpdate = (sent > 0.0D);
@@ -373,11 +365,11 @@ public class TileElectricBlock extends TileEntityInventory implements
                             CommonProxy.sendPlayerMessage(
                                     entityPlayer,
                                     Localization.translate("successfully.charged")
-                                            + armorcharged.getDisplayName()
+                                            + armorcharged.getDisplayName().getString()
                                             + Localization.translate("iu.sendenergy")
                                             + ModUtils.getString(sent) + " EF"
                             );
-                            entityPlayer.inventoryContainer.detectAndSendChanges();
+                            entityPlayer.containerMenu.broadcastChanges();
                         }
 
 
@@ -390,7 +382,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         }
 
         if (this.movementchargeitem) {
-            for (ItemStack charged : entityPlayer.inventory.mainInventory) {
+            for (ItemStack charged : entityPlayer.getInventory().items) {
                 if (charged != null) {
                     if (charged.getItem() instanceof IEnergyItem && this.energy.getEnergy() > 0) {
                         double sent = ElectricItem.manager.charge(charged, this.energy.getEnergy(), 2147483647, true, false);
@@ -401,11 +393,11 @@ public class TileElectricBlock extends TileEntityInventory implements
                             CommonProxy.sendPlayerMessage(
                                     entityPlayer,
                                     Localization.translate("successfully.charged")
-                                            + charged.getDisplayName()
+                                            + charged.getDisplayName().getString()
                                             + Localization.translate("iu.sendenergy")
                                             + ModUtils.getString(sent) + " EF"
                             );
-                            entityPlayer.inventoryContainer.detectAndSendChanges();
+                            entityPlayer.containerMenu.broadcastChanges();
                         }
 
 
@@ -418,24 +410,24 @@ public class TileElectricBlock extends TileEntityInventory implements
         }
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         if (chargepad) {
-            return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D));
+            return Collections.singletonList(new AABB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D));
         } else {
             return super.getAabbs(forCollision);
         }
     }
 
-    protected void updatePlayer(EntityPlayer entity) {
+    protected void updatePlayer(Player entity) {
         this.player = entity;
 
     }
 
     public void onEntityCollision(Entity entity) {
         super.onEntityCollision(entity);
-        if (!this.getWorld().isRemote && entity instanceof EntityPlayer) {
+        if (!this.getWorld().isClientSide && entity instanceof Player) {
             if (this.chargepad && this.canEntityDestroy(entity)) {
-                this.updatePlayer((EntityPlayer) entity);
+                this.updatePlayer((Player) entity);
             }
 
         }
@@ -493,15 +485,15 @@ public class TileElectricBlock extends TileEntityInventory implements
     }
 
 
-    public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
+    public void onPlaced(ItemStack stack, LivingEntity placer, Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (!(getWorld()).isRemote) {
-            NBTTagCompound nbt = ModUtils.nbt(stack);
+        if (!(getWorld()).isClientSide) {
+            CompoundTag nbt = ModUtils.nbt(stack);
             this.energy.addEnergy(nbt.getDouble("energy"));
         }
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = new ArrayList<>();
         ret.addAll(this.getSelfDrops(fortune, true));
         ret.addAll(this.getAuxDrops(fortune));
@@ -516,18 +508,18 @@ public class TileElectricBlock extends TileEntityInventory implements
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench, int fortune) {
         drop = super.adjustDrop(drop, wrench, fortune);
-        if (drop.isItemEqual(this.getPickBlock(
+        if (drop.is(this.getPickBlock(
                 null,
                 null
-        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
+        ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
             double retainedRatio = 0.8;
             if (fortune == 100) {
                 retainedRatio = 1;
             }
             double totalEnergy = this.energy.getEnergy();
             if (totalEnergy > 0.0D) {
-                NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy", Math.round(totalEnergy * retainedRatio));
+                CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.putDouble("energy", Math.round(totalEnergy * retainedRatio));
 
             }
         }
@@ -536,12 +528,12 @@ public class TileElectricBlock extends TileEntityInventory implements
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
+        if (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self) {
             double retainedRatio = 0.8;
             double totalEnergy = this.energy.getEnergy();
             if (totalEnergy > 0.0D) {
-                NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy", Math.round(totalEnergy * retainedRatio));
+                CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.putDouble("energy", Math.round(totalEnergy * retainedRatio));
 
             }
         }
@@ -549,19 +541,19 @@ public class TileElectricBlock extends TileEntityInventory implements
     }
 
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.rfeu = nbttagcompound.getBoolean("rfeu");
         this.redstoneMode = nbttagcompound.getByte("redstoneMode");
     }
 
-    public void setFacing(EnumFacing facing) {
+    public void setFacing(Direction facing) {
         super.setFacing(facing);
         if (!this.chargepad) {
             this.energy.setDirections(
 
                     Arrays
-                            .asList(EnumFacing.VALUES)
+                            .asList(Direction.values())
                             .stream()
                             .filter(facing1 -> facing1 != this.getFacing())
                             .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
@@ -569,25 +561,22 @@ public class TileElectricBlock extends TileEntityInventory implements
             this.energy.setDirections(
 
                     Arrays
-                            .asList(EnumFacing.VALUES)
+                            .asList(Direction.values())
                             .stream()
-                            .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                            .filter(facing1 -> facing1 != Direction.UP && facing1 != getFacing())
                             .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
 
 
         }
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("rfeu", this.rfeu);
-        nbttagcompound.setByte("redstoneMode", this.redstoneMode);
+        nbttagcompound.putBoolean("rfeu", this.rfeu);
+        nbttagcompound.putByte("redstoneMode", this.redstoneMode);
         return nbttagcompound;
     }
 
-
-    public void onGuiClosed(EntityPlayer player) {
-    }
 
     public boolean shouldEmitRedstone() {
         switch (this.redstoneMode) {
@@ -604,7 +593,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         }
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
 
         ++this.redstoneMode;
         if (this.redstoneMode >= 7) {

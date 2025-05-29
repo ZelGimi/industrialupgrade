@@ -11,34 +11,40 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerTunerWireless;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.mechanism.TileTunerWireless;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TunerCategory extends GuiIU implements IRecipeCategory<TunerWrapper> {
+public class TunerCategory extends GuiIU implements IRecipeCategory<TunerHandler> {
 
     private final IDrawableStatic bg;
     private final ContainerTunerWireless container1;
-
+    JeiInform jeiInform;
     public TunerCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileTunerWireless) BlockBaseMachine3.tuner.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+        super(((TileTunerWireless) BlockBaseMachine3.tuner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 169,
                 75
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
@@ -47,23 +53,17 @@ public class TunerCategory extends GuiIU implements IRecipeCategory<TunerWrapper
         this.componentList.add(slots);
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine3.tuner.getName();
+    public RecipeType<TunerHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine2, 1, 3).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine2, 1, 3).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -71,26 +71,19 @@ public class TunerCategory extends GuiIU implements IRecipeCategory<TunerWrapper
         return bg;
     }
 
-
     @Override
-    public void drawExtras(final Minecraft mc) {
-
-        this.slots.drawBackground(0, 0);
+    public void draw(TunerHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
+        this.slots.drawBackground(stack, 0, 0);
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final TunerWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
+    public void setRecipe(IRecipeLayoutBuilder builder, TunerHandler recipe, IFocusGroup focuses) {
         final List<SlotInvSlot> slots1 = container1.getSlots();
-        isg.init(0, true, slots1.get(0).getJeiX(), slots1.get(0).getJeiY());
-        isg.set(0, recipes.getOutput());
-
+        builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(0).getJeiX(), slots1.get(0).getJeiY()).addItemStack(recipe.getOutput());
 
     }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guitunerwireless_jei.png");

@@ -4,19 +4,19 @@ import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.container.ContainerSolderingMechanism;
 import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.utils.Keyboard;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiSolderingMechanism extends GuiIU<ContainerSolderingMechanism> {
+@OnlyIn(Dist.CLIENT)
+public class GuiSolderingMechanism<T extends ContainerSolderingMechanism> extends GuiIU<ContainerSolderingMechanism> {
 
     public final ContainerSolderingMechanism container;
     int pointer = 93;
@@ -55,28 +55,15 @@ public class GuiSolderingMechanism extends GuiIU<ContainerSolderingMechanism> {
     }
 
     @Override
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
     }
 
-    @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
-        if (container.base.start) {
-            if (x >= 7 && y >= 62 && x <= 18 && y <= 73) {
 
-            }
-        }
-    }
-
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     public void updateTickInterface() {
@@ -131,14 +118,14 @@ public class GuiSolderingMechanism extends GuiIU<ContainerSolderingMechanism> {
         tick++;
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        int xoffset = (this.width - this.imageWidth) / 2;
+        int yoffset = (this.height - this.imageHeight) / 2;
+        bindTexture(getTexture());
         int progress = (int) (34.0F * this.container.base.componentProgress.getBar());
-        this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 24, 177, 1, progress, 20);
-        this.drawTexturedModalRect(this.guiLeft + 93, this.guiTop + 45, 56, 16, 18, 18);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 85, this.guiTop + 24, 177, 1, progress, 20);
+        this.drawTexturedModalRect(poseStack, this.guiLeft + 93, this.guiTop + 45, 56, 16, 18, 18);
 
 
         if (container.base.start) {
@@ -175,16 +162,16 @@ public class GuiSolderingMechanism extends GuiIU<ContainerSolderingMechanism> {
                 } else {
                     pos = k + prevPointer1;
                 }
-                this.drawTexturedModalRect(this.guiLeft + 10 + pos, this.guiTop + 66, 1 + k, y1, 1, 4);
+                this.drawTexturedModalRect(poseStack, this.guiLeft + 10 + pos, this.guiTop + 66, 1 + k, y1, 1, 4);
                 data[pos] = i;
                 k++;
             }
 
-            this.drawTexturedModalRect(this.guiLeft + pointer - 1, this.guiTop + 68, 177, 25, 4, 4);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + pointer - 1, this.guiTop + 68, 177, 25, 4, 4);
 
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

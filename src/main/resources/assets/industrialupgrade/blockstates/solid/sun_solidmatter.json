@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=sun_solidmatter": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter"
+    },
+    "facing=south,type=sun_solidmatter": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter",
+      "y": 180
+    },
+    "facing=west,type=sun_solidmatter": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter",
+      "y": 270
+    },
+    "facing=east,type=sun_solidmatter": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter",
+      "y": 90
+    },
+    "facing=down,type=sun_solidmatter": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter",
+      "x": 90
+    },
+    "facing=up,type=sun_solidmatter": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter",
+      "x": 270
+    },
+    "facing=north,type=sun_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active"
+    },
+    "facing=south,type=sun_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "y": 180
+    },
+    "facing=west,type=sun_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "y": 270
+    },
+    "facing=east,type=sun_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "y": 90
+    },
+    "facing=down,type=sun_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "x": 90
+    },
+    "facing=up,type=sun_solidmatter_invalid": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "x": 270
+    },
+    "facing=north,type=sun_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active"
+    },
+    "facing=south,type=sun_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "y": 180
+    },
+    "facing=west,type=sun_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "y": 270
+    },
+    "facing=east,type=sun_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "y": 90
+    },
+    "facing=down,type=sun_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "x": 90
+    },
+    "facing=up,type=sun_solidmatter_active": {
+      "model": "industrialupgrade:block/solid/sun_solidmatter_active",
+      "x": 270
+    }
+  }
+}

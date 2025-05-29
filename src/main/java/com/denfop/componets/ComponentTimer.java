@@ -3,9 +3,9 @@ package com.denfop.componets;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.Timer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class ComponentTimer extends AbstractComponent {
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean need = true;
-        if (this.getParent().getWorld().provider.getWorldTime() % getTickFromSecond() == 0 && this.canWork) {
+        if (this.getParent().getLevel().getGameTime() % getTickFromSecond() == 0 && this.canWork) {
             for (int i = 0; i < this.timers.size(); i++) {
                 Timer timer = this.timers.get(i);
                 if (timer.canWork()) {
@@ -107,10 +107,10 @@ public class ComponentTimer extends AbstractComponent {
 
     }
 
-    public NBTTagCompound writeNBTToDrops(NBTTagCompound tagCompound) {
-        tagCompound.setInteger("size", this.timers.size());
+    public CompoundTag writeNBTToDrops(CompoundTag tagCompound) {
+        tagCompound.putInt("size", this.timers.size());
         for (int i = 0; i < this.timers.size(); i++) {
-            tagCompound.setTag("Timer_" + i, this.timers.get(i).writeNBT(new NBTTagCompound()));
+            tagCompound.put("Timer_" + i, this.timers.get(i).writeNBT(new CompoundTag()));
         }
         return tagCompound;
     }
@@ -123,23 +123,23 @@ public class ComponentTimer extends AbstractComponent {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound nbtTagCompound = super.writeToNbt();
-        nbtTagCompound.setInteger("indexWork", indexWork);
-        nbtTagCompound.setInteger("size", this.timers.size());
+    public CompoundTag writeToNbt() {
+        CompoundTag nbtTagCompound = super.writeToNbt();
+        nbtTagCompound.putInt("indexWork", indexWork);
+        nbtTagCompound.putInt("size", this.timers.size());
         for (int i = 0; i < this.timers.size(); i++) {
-            nbtTagCompound.setTag("Timer_" + i, this.timers.get(i).writeNBT(new NBTTagCompound()));
+            nbtTagCompound.put("Timer_" + i, this.timers.get(i).writeNBT(new CompoundTag()));
         }
         return nbtTagCompound;
     }
 
     @Override
-    public void readFromNbt(final NBTTagCompound nbt) {
+    public void readFromNbt(final CompoundTag nbt) {
         super.readFromNbt(nbt);
-        indexWork = nbt.getInteger("indexWork");
-        final int size = nbt.getInteger("size");
+        indexWork = nbt.getInt("indexWork");
+        final int size = nbt.getInt("size");
         for (int i = 0; i < size; i++) {
-            this.timers.get(i).readNBT(nbt.getCompoundTag("Timer_" + i));
+            this.timers.get(i).readNBT(nbt.getCompound("Timer_" + i));
         }
     }
 
@@ -152,7 +152,7 @@ public class ComponentTimer extends AbstractComponent {
     }
 
     @Override
-    public boolean canUsePurifier(final EntityPlayer player) {
+    public boolean canUsePurifier(final Player player) {
         return true;
     }
 
@@ -165,7 +165,7 @@ public class ComponentTimer extends AbstractComponent {
     }
 
     @Override
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(this.timers.size() * 3 + 1);
         this.timers.forEach(timer -> timer.writeBuffer(buffer));
         buffer.writeInt(this.indexWork);

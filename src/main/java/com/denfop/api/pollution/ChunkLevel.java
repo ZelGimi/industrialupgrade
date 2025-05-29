@@ -2,8 +2,8 @@ package com.denfop.api.pollution;
 
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.INetworkObject;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
 
 public class ChunkLevel implements INetworkObject {
 
@@ -19,11 +19,11 @@ public class ChunkLevel implements INetworkObject {
         this.pollution = pollution;
     }
 
-    public ChunkLevel(NBTTagCompound tagCompound) {
+    public ChunkLevel(CompoundTag tagCompound) {
         this.pollution = tagCompound.getDouble("pollution");
         this.levelPollution = LevelPollution.values()[tagCompound.getByte("level")];
-        this.pos = new ChunkPos(tagCompound.getInteger("x"), tagCompound.getInteger("z"));
-        this.defaultPos = new ChunkPos(tagCompound.getInteger("x1"), tagCompound.getInteger("z1"));
+        this.pos = new ChunkPos(tagCompound.getInt("x"), tagCompound.getInt("z"));
+        this.defaultPos = new ChunkPos(tagCompound.getInt("x1"), tagCompound.getInt("z1"));
 
     }
 
@@ -34,14 +34,14 @@ public class ChunkLevel implements INetworkObject {
         this.defaultPos = new ChunkPos(packetBuffer.readInt(), packetBuffer.readInt());
     }
 
-    public NBTTagCompound writeCompound() {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setDouble("pollution", this.pollution);
-        tag.setByte("level", (byte) this.levelPollution.ordinal());
-        tag.setInteger("x", this.pos.x);
-        tag.setInteger("z", this.pos.z);
-        tag.setInteger("x1", this.defaultPos.x);
-        tag.setInteger("z1", this.defaultPos.z);
+    public CompoundTag writeCompound() {
+        CompoundTag tag = new CompoundTag();
+        tag.putDouble("pollution", this.pollution);
+        tag.putByte("level", (byte) this.levelPollution.ordinal());
+        tag.putInt("x", this.pos.x);
+        tag.putInt("z", this.pos.z);
+        tag.putInt("x1", this.defaultPos.x);
+        tag.putInt("z1", this.defaultPos.z);
         return tag;
     }
 
@@ -97,9 +97,8 @@ public class ChunkLevel implements INetworkObject {
         boolean removed;
 
         if (this.levelPollution == LevelPollution.VERY_LOW) {
-            if (this.pollution == 0) {
+            if (this.pollution == 0)
                 return false;
-            }
             if (this.pollution == 124 && pollution == 125) {
                 this.pollution = 0;
                 return true;

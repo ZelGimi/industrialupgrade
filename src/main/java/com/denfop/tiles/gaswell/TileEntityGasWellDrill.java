@@ -5,10 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasWell;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityGasWellDrill extends TileEntityMultiBlockElement implements IDrill {
 
-    public TileEntityGasWellDrill() {
+
+    public TileEntityGasWellDrill(BlockPos pos, BlockState state) {
+        super(BlockGasWell.gas_well_drill, pos, state);
     }
 
     @Override
@@ -18,7 +22,7 @@ public class TileEntityGasWellDrill extends TileEntityMultiBlockElement implemen
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_well;
+        return IUItem.gas_well.getBlock(getTeBlock());
     }
 
 }

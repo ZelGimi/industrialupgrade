@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/germanium"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_504_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:rods/electrum"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "CCC",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_567_element"
+  },
+  "show_notification": true
+}

@@ -1,14 +1,14 @@
 package com.denfop.api.sytem;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public class Path {
 
 
     final ISink target;
-    final EnumFacing targetDirection;
+    final Direction targetDirection;
 
-    Path(ISink sink, EnumFacing facing) {
+    Path(ISink sink, Direction facing) {
         this.target = sink;
         this.targetDirection = facing;
     }

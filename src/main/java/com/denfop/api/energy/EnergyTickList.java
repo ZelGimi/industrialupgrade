@@ -46,5 +46,4 @@ public class EnergyTickList<T extends EnergyTick> extends ArrayList<T> {
         }
         return null;
     }
-
 }

@@ -1,15 +1,11 @@
 package com.denfop.api.gasvein;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class GasVeinSystem implements IGasVeinSystem {
 
@@ -43,9 +39,10 @@ public class GasVeinSystem implements IGasVeinSystem {
     }
 
     @Override
-    public void addVein(final Chunk chunk) {
+    public void addVein(final ChunkAccess chunk) {
 
         int chance = rand.nextInt(100);
+        rand.setSeed(rand.nextLong());
         GasVein vein = new GasVein(TypeGas.NONE, chunk.getPos());
         if (chance < 25) {
             vein.setType(TypeGas.values()[rand.nextInt(4) + 1]);
@@ -58,7 +55,7 @@ public class GasVeinSystem implements IGasVeinSystem {
     }
 
     @Override
-    public void addVein(final NBTTagCompound tag) {
+    public void addVein(final CompoundTag tag) {
         GasVein vein = new GasVein(tag);
         this.list.add(vein);
         this.chunkPos.add(vein.getChunk());

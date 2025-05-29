@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:primal_fluid_heater/primal_fluid_heater"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/fluid_heater"
+  },
+  "show_notification": true
+}

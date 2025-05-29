@@ -3,15 +3,16 @@ package com.denfop.cool;
 
 import com.denfop.api.cool.ICoolNet;
 import com.denfop.api.cool.ICoolTile;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public class CoolNetGlobal implements ICoolNet {
 
-    private static Map<World, CoolNetLocal> worldToEnergyNetMap;
+    private static Map<ResourceKey<Level>, CoolNetLocal> worldToEnergyNetMap;
 
     static {
         CoolNetGlobal.worldToEnergyNetMap = new WeakHashMap<>();
@@ -22,25 +23,25 @@ public class CoolNetGlobal implements ICoolNet {
         return new CoolNetGlobal();
     }
 
-    public static void onWorldUnload(World world) {
-        final CoolNetLocal local = CoolNetGlobal.worldToEnergyNetMap.remove(world);
+    public static void onWorldUnload(Level world) {
+        final CoolNetLocal local = CoolNetGlobal.worldToEnergyNetMap.remove(world.dimension());
         if (local != null) {
             local.onUnload();
         }
     }
 
-    public static CoolNetLocal getForWorld(final World world) {
+    public static CoolNetLocal getForWorld(final Level world) {
         if (world == null) {
             return null;
         }
-        if (!CoolNetGlobal.worldToEnergyNetMap.containsKey(world)) {
-            CoolNetGlobal.worldToEnergyNetMap.put(world, new CoolNetLocal());
+        if (!CoolNetGlobal.worldToEnergyNetMap.containsKey(world.dimension())) {
+            CoolNetGlobal.worldToEnergyNetMap.put(world.dimension(), new CoolNetLocal());
         }
-        return CoolNetGlobal.worldToEnergyNetMap.get(world);
+        return CoolNetGlobal.worldToEnergyNetMap.get(world.dimension());
     }
 
 
-    public static void onTickEnd(final World world) {
+    public static void onTickEnd(final Level world) {
         final CoolNetLocal energyNet = getForWorld(world);
         if (energyNet != null) {
             energyNet.onTickEnd();
@@ -48,7 +49,7 @@ public class CoolNetGlobal implements ICoolNet {
     }
 
     @Override
-    public ICoolTile getSubTile(final World var1, final BlockPos var2) {
+    public ICoolTile getSubTile(final Level var1, final BlockPos var2) {
         final CoolNetLocal local = getForWorld(var1);
         if (local != null) {
             return local.getTileEntity(var2);

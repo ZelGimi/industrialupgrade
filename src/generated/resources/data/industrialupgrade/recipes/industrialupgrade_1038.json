@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:upgrades/overclocker"
+      }
+    ]
+  },
+  "pattern": [
+    " E ",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_459_element"
+  },
+  "show_notification": true
+}

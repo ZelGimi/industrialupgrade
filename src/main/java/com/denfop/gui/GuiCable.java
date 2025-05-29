@@ -7,20 +7,20 @@ import com.denfop.api.gui.ImageInterface;
 import com.denfop.container.ContainerCable;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiCable extends GuiIU<ContainerCable> {
+public class GuiCable<T extends ContainerCable> extends GuiIU<ContainerCable> {
 
 
     public GuiCable(ContainerCable guiContainer) {
         super(guiContainer);
-        this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
+        this.addElement(new ImageInterface(this, 0, 0, imageWidth, imageHeight));
 
         this.addElement(new Area(this, 58, 20 + 18 - 2, 18, 14).withTooltip(Localization.translate("iu.dir.west")));
         this.addElement(new Area(this, 88, 20 + 18 - 2, 18, 14).withTooltip(Localization.translate("iu.dir.east")));
@@ -47,84 +47,78 @@ public class GuiCable extends GuiIU<ContainerCable> {
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 58 && y >= 20 + 18 - 2 && x <= 58 + 18 && y <= 20 + 18 - 2 + 14) {
-            new PacketUpdateServerTile(this.container.base, EnumFacing.WEST.ordinal());
+            new PacketUpdateServerTile(this.container.base, Direction.WEST.ordinal());
         }
         if (x >= 88 && y >= 20 + 18 - 2 && x <= 88 + 18 && y <= 20 + 18 - 2 + 14) {
-            new PacketUpdateServerTile(this.container.base, EnumFacing.EAST.ordinal());
+            new PacketUpdateServerTile(this.container.base, Direction.EAST.ordinal());
         }
         if (x >= 75 && y >= 20 && x <= 75 + 14 && y <= 20 + 18) {
-            new PacketUpdateServerTile(this.container.base, EnumFacing.NORTH.ordinal());
+            new PacketUpdateServerTile(this.container.base, Direction.NORTH.ordinal());
         }
         if (x >= 75 && y >= 48 && x <= 75 + 14 && y <= 48 + 18) {
-            new PacketUpdateServerTile(this.container.base, EnumFacing.SOUTH.ordinal());
+            new PacketUpdateServerTile(this.container.base, Direction.SOUTH.ordinal());
         }
         if (x >= 75 && y >= 6 && x <= 75 + 14 && y <= 6 + 14) {
-            new PacketUpdateServerTile(this.container.base, EnumFacing.UP.ordinal());
+            new PacketUpdateServerTile(this.container.base, Direction.UP.ordinal());
         }
         if (x >= 75 && y >= 66 && x <= 75 + 14 && y <= 66 + 14) {
-            new PacketUpdateServerTile(this.container.base, EnumFacing.DOWN.ordinal());
+            new PacketUpdateServerTile(this.container.base, Direction.DOWN.ordinal());
         }
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
 
 
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-
-
-        this.mc.getTextureManager().bindTexture(getTexture());
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        bindTexture(getTexture());
+        for (Direction facing : Direction.values()) {
             if (facing.ordinal() == 0) {
-                drawTexturedModalRect(xoffset + 75, yoffset + 66, 62, 191, 14, 14);
+                drawTexturedModalRect(poseStack, xoffset + 75, yoffset + 66, 62, 191, 14, 14);
             }
             if (facing.ordinal() == 1) {
-                drawTexturedModalRect(xoffset + 75, yoffset + 6, 62, 119, 14, 14);
+                drawTexturedModalRect(poseStack, xoffset + 75, yoffset + 6, 62, 119, 14, 14);
             }
             if (facing.ordinal() == 2) {
-                drawTexturedModalRect(xoffset + 75, yoffset + 20, 62, 135, 14, 18);
+                drawTexturedModalRect(poseStack, xoffset + 75, yoffset + 20, 62, 135, 14, 18);
             }
             if (facing.ordinal() == 3) {
-                drawTexturedModalRect(xoffset + 75, yoffset + 48, 62, 171, 14, 18);
+                drawTexturedModalRect(poseStack, xoffset + 75, yoffset + 48, 62, 171, 14, 18);
             }
             if (facing.ordinal() == 4) {
-                drawTexturedModalRect(xoffset + 58, yoffset + 20 + 18 - 2, 42, 155, 18, 14);
+                drawTexturedModalRect(poseStack, xoffset + 58, yoffset + 20 + 18 - 2, 42, 155, 18, 14);
             }
             if (facing.ordinal() == 5) {
-                drawTexturedModalRect(xoffset + 88, yoffset + 20 + 18 - 2, 78, 155, 18, 14);
+                drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 20 + 18 - 2, 78, 155, 18, 14);
             }
         }
-        for (EnumFacing facing : this.container.base.getBlackList()) {
+        for (Direction facing : this.container.base.getBlackList()) {
             if (facing.ordinal() == 0) {
-                drawTexturedModalRect(xoffset + 75, yoffset + 66, 120, 191, 14, 14);
+                drawTexturedModalRect(poseStack, xoffset + 75, yoffset + 66, 120, 191, 14, 14);
             }
             if (facing.ordinal() == 1) {
-                drawTexturedModalRect(xoffset + 75, yoffset + 6, 120, 119, 14, 14);
+                drawTexturedModalRect(poseStack, xoffset + 75, yoffset + 6, 120, 119, 14, 14);
             }
             if (facing.ordinal() == 2) {
-                drawTexturedModalRect(xoffset + 75, yoffset + 20, 120, 135, 14, 18);
+                drawTexturedModalRect(poseStack, xoffset + 75, yoffset + 20, 120, 135, 14, 18);
             }
             if (facing.ordinal() == 3) {
-                drawTexturedModalRect(xoffset + 75, yoffset + 48, 120, 171, 14, 18);
+                drawTexturedModalRect(poseStack, xoffset + 75, yoffset + 48, 120, 171, 14, 18);
             }
             if (facing.ordinal() == 4) {
-                drawTexturedModalRect(xoffset + 58, yoffset + 20 + 18 - 2, 100, 155, 18, 14);
+                drawTexturedModalRect(poseStack, xoffset + 58, yoffset + 20 + 18 - 2, 100, 155, 18, 14);
             }
             if (facing.ordinal() == 5) {
-                drawTexturedModalRect(xoffset + 88, yoffset + 20 + 18 - 2, 137, 155, 18, 14);
+                drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 20 + 18 - 2, 137, 155, 18, 14);
             }
         }
     }

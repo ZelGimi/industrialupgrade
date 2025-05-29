@@ -1,0 +1,7 @@
+{
+"variants": {
+    "": {
+      "model" : "industrialupgrade:block/spaceore/asteroid_cadmium_ore"
+    }
+  }
+}

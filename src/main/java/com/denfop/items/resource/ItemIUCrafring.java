@@ -1,47 +1,36 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemIUCrafring extends ItemSubTypes<ItemIUCrafring.Types> implements IModelRegister {
-
-    protected static final String NAME = "ItemIUCrafring".toLowerCase();
-
-    public ItemIUCrafring() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemIUCrafring<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemIUCrafring(T element) {
+        super(new Item.Properties(), element);
     }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("iu.iu", "iu.item"));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item stack, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            int index = pathBuilder.indexOf(targetString);
+            while (index != -1) {
+                pathBuilder.replace(index, index + targetString.length(), replacement);
+                index = pathBuilder.indexOf(targetString, index + replacement.length());
+            }
+            this.nameItem = pathBuilder.toString();
+        }
+        return this.nameItem;
     }
 
     public enum Types implements ISubEnum {
@@ -66,9 +55,14 @@ public class ItemIUCrafring extends ItemSubTypes<ItemIUCrafring.Types> implement
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "itemiucrafring";
+
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

@@ -4,7 +4,7 @@ package com.denfop.integration.jei.fluidintegrator;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -17,13 +17,19 @@ public class FluidIntegratorHandler {
     private final ItemStack output;
     private final FluidStack inputFluid;
     private final FluidStack outputFluid;
+    private final BaseMachineRecipe container;
 
 
-    public FluidIntegratorHandler(ItemStack input, ItemStack output, FluidStack inputFluid, FluidStack outputFluid) {
+    public FluidIntegratorHandler(ItemStack input, ItemStack output, FluidStack inputFluid, FluidStack outputFluid, BaseMachineRecipe baseMachineRecipe) {
         this.input = input;
         this.output = output;
         this.inputFluid = inputFluid;
         this.outputFluid = outputFluid;
+        this.container = baseMachineRecipe;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<FluidIntegratorHandler> getRecipes() {
@@ -55,7 +61,7 @@ public class FluidIntegratorHandler {
 
 
             addRecipe(input, output,
-                    inputFluid, outputFluid
+                    inputFluid, outputFluid,baseMachineRecipe
             );
         }
 
@@ -66,9 +72,9 @@ public class FluidIntegratorHandler {
             ItemStack input,
             ItemStack output,
             FluidStack inputFluid,
-            FluidStack outputFluid
-    ) {
-        FluidIntegratorHandler recipe = new FluidIntegratorHandler(input, output, inputFluid, outputFluid);
+            FluidStack outputFluid,
+            BaseMachineRecipe baseMachineRecipe) {
+        FluidIntegratorHandler recipe = new FluidIntegratorHandler(input, output, inputFluid, outputFluid,baseMachineRecipe);
         if (recipes.contains(recipe)) {
             return null;
         }

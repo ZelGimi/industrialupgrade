@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/modification_station",
-    "particle" : "industrialupgrade:models/modification_station"
+    "0" : "industrialupgrade:block/modification_station",
+    "particle" : "industrialupgrade:block/modification_station"
   },
   "elements" : [
     {

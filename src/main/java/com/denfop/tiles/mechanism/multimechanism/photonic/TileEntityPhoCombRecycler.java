@@ -6,18 +6,20 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksPhotonicMachine;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 
 public class TileEntityPhoCombRecycler extends TileMultiMachine {
 
 
-    public TileEntityPhoCombRecycler() {
-        super(EnumMultiMachine.Pho_RECYCLER.usagePerTick, EnumMultiMachine.Pho_RECYCLER.lenghtOperation);
+    public TileEntityPhoCombRecycler(BlockPos pos, BlockState state) {
+        super(EnumMultiMachine.Pho_RECYCLER.usagePerTick, EnumMultiMachine.Pho_RECYCLER.lenghtOperation, BlocksPhotonicMachine.photonic_comb_recycler, pos, state);
     }
 
 
     public void initiate(int soundEvent) {
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
+        if (this.getWorld().getGameTime() % 40 == 0) {
             super.initiate(soundEvent);
         }
     }
@@ -27,7 +29,7 @@ public class TileEntityPhoCombRecycler extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.pho_machine;
+        return IUItem.pho_machine.getBlock(getTeBlock().getId());
     }
 
     @Override

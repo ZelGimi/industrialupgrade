@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/biomass_cell"
+		"layer0": "industrialupgrade:item/biomass_cell"
 	}
 }

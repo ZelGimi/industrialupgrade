@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_272_element",
+      "nbt": "{level:1}"
+    },
+    "B": [
+      {
+        "tag": "forge:plates/cobalt"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/manganese"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/vanadoalumite"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "BAB",
+    "DCD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_326_element"
+  },
+  "show_notification": true
+}

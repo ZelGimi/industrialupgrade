@@ -1,44 +1,20 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemCoreWater extends ItemSubTypes<ItemCoreWater.Types> implements IModelRegister {
-
-    protected static final String NAME = "corewater";
-
-    public ItemCoreWater() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemCoreWater<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemCoreWater(T element) {
+        super(new Item.Properties(), element);
     }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + "corewind" + "/" + Types.getFromID(meta).getName(), null)
-        );
-    }
-
     public enum Types implements ISubEnum {
         core_wind(0),
         core_wind1(1),
@@ -72,9 +48,13 @@ public class ItemCoreWater extends ItemSubTypes<ItemCoreWater.Types> implements 
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "corewater";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

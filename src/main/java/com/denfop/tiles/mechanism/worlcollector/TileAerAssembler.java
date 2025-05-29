@@ -6,32 +6,31 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.tiles.base.EnumTypeCollector;
 import com.denfop.tiles.base.TileBaseWorldCollector;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileAerAssembler extends TileBaseWorldCollector {
 
-    public TileAerAssembler() {
-        super(EnumTypeCollector.AER);
+    public TileAerAssembler(BlockPos pos, BlockState state) {
+        super(EnumTypeCollector.AER,BlockBaseMachine3.aer_assembler,pos,state);
     }
 
     public void init() {
-        addRecipe(new ItemStack(Blocks.SAPLING, 1, 0), getMatterFromEnergy(500000), new ItemStack(Blocks.SAPLING, 1, 1));
-        addRecipe(new ItemStack(Blocks.SAPLING, 1, 1), getMatterFromEnergy(500000), new ItemStack(Blocks.SAPLING, 1, 2));
-        addRecipe(new ItemStack(Blocks.SAPLING, 1, 2), getMatterFromEnergy(500000), new ItemStack(Blocks.SAPLING, 1, 3));
-        addRecipe(new ItemStack(Blocks.SAPLING, 1, 3), getMatterFromEnergy(500000), new ItemStack(Blocks.SAPLING, 1, 4));
-        addRecipe(new ItemStack(Blocks.SAPLING, 1, 4), getMatterFromEnergy(500000), new ItemStack(Blocks.SAPLING, 1, 5));
-        addRecipe(new ItemStack(Blocks.SAPLING, 1, 5), getMatterFromEnergy(500000), new ItemStack(Blocks.SAPLING, 1, 0));
-        addRecipe(new ItemStack(Items.WHEAT), getMatterFromEnergy(125000), new ItemStack(Blocks.HAY_BLOCK));
-        addRecipe(new ItemStack(Blocks.WOOL, 1, 4), getMatterFromEnergy(4000000), new ItemStack(Blocks.SPONGE));
-        addRecipe(new ItemStack(Items.DYE, 1, 15), getMatterFromEnergy(4000000), new ItemStack(Items.FEATHER));
+        addRecipe(new ItemStack(Items.OAK_SAPLING), getMatterFromEnergy(500000), new ItemStack(Items.SPRUCE_SAPLING));
+        addRecipe(new ItemStack(Items.SPRUCE_SAPLING), getMatterFromEnergy(500000), new ItemStack(Items.BIRCH_SAPLING));
+        addRecipe(new ItemStack(Items.BIRCH_SAPLING), getMatterFromEnergy(500000), new ItemStack(Items.JUNGLE_SAPLING));
+        addRecipe(new ItemStack(Items.JUNGLE_SAPLING), getMatterFromEnergy(500000), new ItemStack(Items.ACACIA_SAPLING));
+        addRecipe(new ItemStack(Items.ACACIA_SAPLING), getMatterFromEnergy(500000), new ItemStack(Items.DARK_OAK_SAPLING));
+        addRecipe(new ItemStack(Items.DARK_OAK_SAPLING), getMatterFromEnergy(500000), new ItemStack(Items.OAK_SAPLING));
+
+        addRecipe(new ItemStack(Items.WHEAT), getMatterFromEnergy(125000), new ItemStack(Items.HAY_BLOCK));
+        addRecipe(new ItemStack(Items.LIGHT_BLUE_WOOL), getMatterFromEnergy(4000000), new ItemStack(Items.SPONGE));
+        addRecipe(new ItemStack(Items.WHITE_DYE), getMatterFromEnergy(4000000), new ItemStack(Items.FEATHER));
         addRecipe(new ItemStack(Items.WHEAT_SEEDS), getMatterFromEnergy(20000000), new ItemStack(Items.MELON_SEEDS));
         addRecipe(new ItemStack(Items.MELON_SEEDS), getMatterFromEnergy(2000000), new ItemStack(Items.PUMPKIN_SEEDS));
+
 
     }
 
@@ -40,32 +39,8 @@ public class TileAerAssembler extends TileBaseWorldCollector {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
 }

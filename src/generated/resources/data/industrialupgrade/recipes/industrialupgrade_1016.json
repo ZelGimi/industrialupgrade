@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_43_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine3/steam_squeezer"
+      }
+    ],
+    "G": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_159_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CBG",
+    "A D"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/electric_squeezer"
+  },
+  "show_notification": true
+}

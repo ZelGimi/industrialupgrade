@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/california_pellet"
+    "layer0" : "industrialupgrade:item/california_pellet"
   }
 }

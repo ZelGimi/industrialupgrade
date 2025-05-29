@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/chicken_farm_main",
-    "down" : "industrialupgrade:blocks/chicken_farm_bottom",
-    "up" : "industrialupgrade:blocks/chicken_farm_top",
-    "north" : "industrialupgrade:blocks/chicken_farm_main",
-    "east" : "industrialupgrade:blocks/chicken_farm_side",
-    "south" : "industrialupgrade:blocks/chicken_farm_side",
-    "west" : "industrialupgrade:blocks/chicken_farm_side"
+    "particle" : "industrialupgrade:block/chicken_farm_main",
+    "down" : "industrialupgrade:block/chicken_farm_bottom",
+    "up" : "industrialupgrade:block/chicken_farm_top",
+    "north" : "industrialupgrade:block/chicken_farm_main",
+    "east" : "industrialupgrade:block/chicken_farm_side",
+    "south" : "industrialupgrade:block/chicken_farm_side",
+    "west" : "industrialupgrade:block/chicken_farm_side"
   }
 }

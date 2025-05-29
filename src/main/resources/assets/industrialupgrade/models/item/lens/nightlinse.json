@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/nightlinse"
+    "layer0" : "industrialupgrade:item/nightlinse"
   }
 }

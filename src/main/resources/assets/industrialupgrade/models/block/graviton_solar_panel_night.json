@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/grasp_side",
-    "down" : "industrialupgrade:blocks/grasp_bottom",
-    "up" : "industrialupgrade:blocks/grasp_topnight",
-    "north" : "industrialupgrade:blocks/grasp_side",
-    "east" : "industrialupgrade:blocks/grasp_side",
-    "south" : "industrialupgrade:blocks/grasp_side",
-    "west" : "industrialupgrade:blocks/grasp_side"
+    "particle" : "industrialupgrade:block/grasp_side",
+    "down" : "industrialupgrade:block/grasp_bottom",
+    "up" : "industrialupgrade:block/grasp_topnight",
+    "north" : "industrialupgrade:block/grasp_side",
+    "east" : "industrialupgrade:block/grasp_side",
+    "south" : "industrialupgrade:block/grasp_side",
+    "west" : "industrialupgrade:block/grasp_side"
   }
 }

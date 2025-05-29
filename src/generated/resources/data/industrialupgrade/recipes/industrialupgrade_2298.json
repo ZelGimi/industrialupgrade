@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gears/muntsa"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:bee_frame_template"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/osmium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/gold"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:frame/producing_1"
+  },
+  "show_notification": true
+}

@@ -1,53 +1,31 @@
 package com.denfop.items.genome;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.bee.genetics.GeneticTraits;
 import com.denfop.api.bee.genetics.IGenomeItem;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Locale;
 
-public class ItemBeeGenome extends ItemSubTypes<ItemBeeGenome.Types> implements IModelRegister, IGenomeItem {
-
-    protected static final String NAME = "bee_genome";
-
-    public ItemBeeGenome() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.GenomeTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
-    }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + "bee_genome_" + Types.getFromID(meta).getName()
-                        , null)
-        );
-
+public class ItemBeeGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements  IGenomeItem {
+    public ItemBeeGenome(T element) {
+        super(new Item.Properties(), element);
     }
 
     @Override
     public GeneticTraits getGenomeTraits(final ItemStack stack) {
-        return GeneticTraits.values()[stack.getItemDamage()];
+        return GeneticTraits.values()[getElement().getId()];
     }
+
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.GenomeTab;
+    }
+
 
     public enum Types implements ISubEnum {
         soil_i(0),
@@ -99,9 +77,7 @@ public class ItemBeeGenome extends ItemSubTypes<ItemBeeGenome.Types> implements 
         genome_resistance_iii(46),
         genome_adaptive_i(47),
         genome_adaptive_ii(48),
-        genome_adaptive_iii(49),
-
-        ;
+        genome_adaptive_iii(49),;
 
         private final String name;
         private final int ID;
@@ -115,8 +91,14 @@ public class ItemBeeGenome extends ItemSubTypes<ItemBeeGenome.Types> implements 
             return values()[ID % values().length];
         }
 
+        @Override
         public String getName() {
-            return this.name;
+            return "bee_genome_"+name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "bee_genome";
         }
 
         public int getId() {

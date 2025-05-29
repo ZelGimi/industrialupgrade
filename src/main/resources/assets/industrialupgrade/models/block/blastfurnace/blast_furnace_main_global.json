@@ -1,13 +1,13 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "industrialupgrade:models/blastfurnace_left",
-		"1": "industrialupgrade:models/blastfurnace_front",
-		"2": "industrialupgrade:models/blastfurnace_back",
-		"3": "industrialupgrade:models/blastfurnace_top",
-		"4": "industrialupgrade:models/blastfurnace_right",
-		"5": "industrialupgrade:models/blastfurnace_bottom",
-		"particle": "industrialupgrade:models/blastfurnace_left"
+		"0": "industrialupgrade:block/blastfurnace_left",
+		"1": "industrialupgrade:block/blastfurnace_front",
+		"2": "industrialupgrade:block/blastfurnace_back",
+		"3": "industrialupgrade:block/blastfurnace_top",
+		"4": "industrialupgrade:block/blastfurnace_right",
+		"5": "industrialupgrade:block/blastfurnace_bottom",
+		"particle": "industrialupgrade:block/blastfurnace_left"
 	},
 	"elements": [
 		{

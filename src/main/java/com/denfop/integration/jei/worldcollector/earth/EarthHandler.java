@@ -3,7 +3,7 @@ package com.denfop.integration.jei.worldcollector.earth;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +58,14 @@ public class EarthHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("earthcollector")) {
+            try {
+                addRecipe(container.input.getInputs().get(0).getInputs().get(0),
 
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
-
-                    container.getOutput().items.get(0), container.getOutput().metadata.getDouble("need")
-            );
-
+                        container.getOutput().items.get(0), container.getOutput().metadata.getDouble("need")
+                );
+            }catch (Exception e){
+                System.out.println(2);
+            }
         }
     }
 
@@ -81,7 +83,7 @@ public class EarthHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

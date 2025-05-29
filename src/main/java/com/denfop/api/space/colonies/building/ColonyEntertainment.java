@@ -8,7 +8,7 @@ import com.denfop.api.space.colonies.enums.EnumEntertainment;
 import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class ColonyEntertainment extends Building implements IEntertainment {
 
@@ -31,7 +31,7 @@ public class ColonyEntertainment extends Building implements IEntertainment {
         this.getColony().addBuilding(this);
     }
 
-    public ColonyEntertainment(final NBTTagCompound tag, IColony colonies) {
+    public ColonyEntertainment(final CompoundTag tag, IColony colonies) {
         super(colonies);
         int id = tag.getByte("id");
         this.type = EnumEntertainment.getID(id);
@@ -60,11 +60,11 @@ public class ColonyEntertainment extends Building implements IEntertainment {
     }
 
     @Override
-    public NBTTagCompound writeTag(final NBTTagCompound tag) {
-        NBTTagCompound nbtTagCompound = super.writeTag(tag);
-        nbtTagCompound.setByte("people", people);
-        nbtTagCompound.setByte("id", (byte) this.type.ordinal());
-        return nbtTagCompound;
+    public CompoundTag writeTag(final CompoundTag tag) {
+        super.writeTag(tag);
+        tag.putByte("people", (byte) (this.people));
+        tag.putByte("id", (byte) (this.type.ordinal()));
+        return tag;
     }
 
     @Override

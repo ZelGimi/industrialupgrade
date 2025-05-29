@@ -1,41 +1,30 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSatelliteAssembler;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSatelliteAssembler;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -45,7 +34,7 @@ import java.util.Set;
 public class TileEntitySatelliteAssembler extends TileElectricMachine implements
         IUpgradableBlock, IUpdateTick, IUpdatableTileEvent, IHasRecipe {
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-0.5, 0.0D, -0.5, 1.5, 2.0D,
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(-0.5, 0.0D, -0.5, 1.5, 2.0D,
             1.5
     ));
     public final InvSlotUpgrade upgradeSlot;
@@ -58,8 +47,8 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
 
-    public TileEntitySatelliteAssembler() {
-        super(800, 1, 1);
+    public TileEntitySatelliteAssembler(BlockPos pos, BlockState state) {
+        super(800, 1, 1,BlockBaseMachine3.satellite_assembler,pos,state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -93,26 +82,26 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
                                 input.getInput(container),
                                 input.getInput(fill1),
                                 input.getInput(container),
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 752)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 766)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(752), 1)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(766), 1)),
                                 input.getInput(fill2),
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(fill3),
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 739)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(739), 1)),
                                 input.getInput(fill2),
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 734)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(734), 1)),
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(fill3),
                                 input.getInput(fill3),
                                 input.getInput(fill2),
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 738)),
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 768)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(738), 1)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(768), 1)),
                                 input.getInput(container),
                                 input.getInput(container),
                                 input.getInput(fill3),
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 731)),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(731), 1)),
                                 input.getInput(fill3),
                                 input.getInput(fill3),
                                 input.getInput(container),
@@ -137,7 +126,7 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -161,14 +150,15 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
     }
 
     @Override
-    public ContainerSatelliteAssembler getGuiContainer(final EntityPlayer var1) {
+    public ContainerSatelliteAssembler getGuiContainer(final Player var1) {
         return new ContainerSatelliteAssembler(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSatelliteAssembler(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiSatelliteAssembler((ContainerSatelliteAssembler) menu);
     }
 
     @Override
@@ -187,56 +177,33 @@ public class TileEntitySatelliteAssembler extends TileElectricMachine implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 726), new ItemStack(IUItem.crafting_elements, 1, 729),
-                new ItemStack(IUItem.crafting_elements, 1, 746), new ItemStack(IUItem.crafting_elements, 1, 740),
-                new ItemStack(IUItem.satellite)
-        );
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 707), new ItemStack(IUItem.crafting_elements, 1, 735),
-                new ItemStack(IUItem.crafting_elements, 1, 730), new ItemStack(IUItem.crafting_elements, 1, 767),
-                new ItemStack(IUItem.adv_satellite)
-        );
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 727), new ItemStack(IUItem.crafting_elements, 1, 728),
-                new ItemStack(IUItem.crafting_elements, 1, 737), new ItemStack(IUItem.crafting_elements, 1, 736),
-                new ItemStack(IUItem.imp_satellite)
-        );
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 711), new ItemStack(IUItem.crafting_elements, 1, 760),
-                new ItemStack(IUItem.crafting_elements, 1, 759), new ItemStack(IUItem.crafting_elements, 1, 741),
-                new ItemStack(IUItem.per_satellite)
-        );
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(726)), new ItemStack(IUItem.crafting_elements.getStack(729)),
+                new ItemStack(IUItem.crafting_elements.getStack(746)), new ItemStack(IUItem.crafting_elements.getStack(740)),
+                        new ItemStack(IUItem.satellite.getItem())
+                );
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(707)), new ItemStack(IUItem.crafting_elements.getStack(735)),
+                new ItemStack(IUItem.crafting_elements.getStack(730)), new ItemStack(IUItem.crafting_elements.getStack(767)),
+                        new ItemStack(IUItem.adv_satellite.getItem())
+                );
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(727)), new ItemStack(IUItem.crafting_elements.getStack(728)),
+                new ItemStack(IUItem.crafting_elements.getStack(737)), new ItemStack(IUItem.crafting_elements.getStack(736)),
+                        new ItemStack(IUItem.imp_satellite.getItem())
+                );
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(711)), new ItemStack(IUItem.crafting_elements.getStack(760)),
+                new ItemStack(IUItem.crafting_elements.getStack(759)), new ItemStack(IUItem.crafting_elements.getStack(741)),
+                        new ItemStack(IUItem.per_satellite.getItem())
+                );
     }
 
 }

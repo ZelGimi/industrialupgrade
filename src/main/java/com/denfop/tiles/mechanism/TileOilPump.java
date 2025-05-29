@@ -1,8 +1,8 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -12,10 +12,12 @@ import com.denfop.api.vein.VeinSystem;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
-import com.denfop.blocks.MultiTileBlock;
 import com.denfop.blocks.mechanism.BlockPetrolQuarry;
+import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerOilPump;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiOilPump;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -27,23 +29,26 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -53,35 +58,35 @@ import java.util.Set;
 
 public class TileOilPump extends TileElectricLiquidTankInventory implements IUpgradableBlock, IManufacturerBlock {
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, -1.0, 1.0, 2.0D,
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(0, 0.0D, -1.0, 1.0, 2.0D,
             2.0
     ));
     public final int defaultTier;
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotFluid containerslot;
-    public int level;
+    public int levelMech;
     public boolean find;
     public int count;
     public int maxcount;
     public Vein vein;
     public int type;
 
-    public TileOilPump() {
-        super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidneft.getInstance(),
-                FluidName.fluidsour_light_oil.getInstance(), FluidName.fluidsour_heavy_oil.getInstance(),
-                FluidName.fluidsour_medium_oil.getInstance(), FluidName.fluidsweet_medium_oil.getInstance(),
-                FluidName.fluidsweet_heavy_oil.getInstance()
-        ));
+    public TileOilPump(BlockPos pos, BlockState state) {
+        super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidneft.getInstance().get(),
+                FluidName.fluidsour_light_oil.getInstance().get(), FluidName.fluidsour_heavy_oil.getInstance().get(),
+                FluidName.fluidsour_medium_oil.getInstance().get(), FluidName.fluidsweet_medium_oil.getInstance().get(),
+                FluidName.fluidsweet_heavy_oil.getInstance().get()
+        ), BlockPetrolQuarry.petrol_quarry, pos, state);
         this.containerslot = new InvSlotFluidByList(this,
                 InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.OUTPUT,
-                FluidName.fluidneft.getInstance(),
-                FluidName.fluidsour_light_oil.getInstance(), FluidName.fluidsour_heavy_oil.getInstance(),
-                FluidName.fluidsour_medium_oil.getInstance(), FluidName.fluidsweet_medium_oil.getInstance(),
-                FluidName.fluidsweet_heavy_oil.getInstance()
+                FluidName.fluidneft.getInstance().get(),
+                FluidName.fluidsour_light_oil.getInstance().get(), FluidName.fluidsour_heavy_oil.getInstance().get(),
+                FluidName.fluidsour_medium_oil.getInstance().get(), FluidName.fluidsweet_medium_oil.getInstance().get(),
+                FluidName.fluidsweet_heavy_oil.getInstance().get()
         );
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.defaultTier = 14;
-        this.level = 0;
+        this.levelMech = 0;
 
         fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
         this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
@@ -97,22 +102,22 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.oilgetter;
+        return IUItem.oilgetter.getBlock();
     }
 
     @Override
-    public int getLevel() {
-        return this.level;
+    public int getLevelMechanism() {
+        return this.levelMech;
     }
 
     @Override
-    public void setLevel(final int level) {
-        this.level = level;
+    public void setLevelMech(final int levelMech) {
+        this.levelMech = levelMech;
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.levelMech -= level;
     }
 
 
@@ -125,28 +130,28 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             tooltip.add(Localization.translate("iu.machines_work_energy") + 2 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) stack.getTagCompound().getTag("fluid"));
+        if (stack.hasTag() && stack.getTag().contains("fluid")) {
+            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getLocalizedName());
-            tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.amount / 1000 + " B");
+            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getString());
+            tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
         super.addInformation(stack, tooltip);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("level", this.level);
-        nbttagcompound.setBoolean("find", this.find);
+        nbttagcompound.putInt("level", this.levelMech);
+        nbttagcompound.putBoolean("find", this.find);
         return nbttagcompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.level = nbttagcompound.getInteger("level");
+        this.levelMech = nbttagcompound.getInt("level");
         this.find = nbttagcompound.getBoolean("find");
     }
 
@@ -157,7 +162,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             count = (int) DecoderHandler.decode(customPacketBuffer);
             find = (boolean) DecoderHandler.decode(customPacketBuffer);
             maxcount = (int) DecoderHandler.decode(customPacketBuffer);
-            level = (int) DecoderHandler.decode(customPacketBuffer);
+            levelMech = (int) DecoderHandler.decode(customPacketBuffer);
             type = (int) DecoderHandler.decode(customPacketBuffer);
             vein = (Vein) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
@@ -173,7 +178,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             EncoderHandler.encode(packet, count);
             EncoderHandler.encode(packet, find);
             EncoderHandler.encode(packet, maxcount);
-            EncoderHandler.encode(packet, level);
+            EncoderHandler.encode(packet, levelMech);
             EncoderHandler.encode(packet, type);
             EncoderHandler.encode(packet, vein);
         } catch (IOException e) {
@@ -187,34 +192,27 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-
-        if (level < 10) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (levelMech < 10) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
-                this.level++;
+                this.levelMech++;
                 return true;
             }
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.level != 0) {
-            ret.add(new ItemStack(IUItem.upgrade_speed_creation, this.level));
-            this.level = 0;
+        if (this.levelMech != 0) {
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.levelMech));
+            this.levelMech = 0;
         }
         return ret;
     }
@@ -225,35 +223,35 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (drop.isItemEqual(this.getPickBlock(
+        if (drop.is(this.getPickBlock(
                 null,
                 null
-        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
-            NBTTagCompound nbt = ModUtils.nbt(drop);
+        ).getItem()) && (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self)) {
+            CompoundTag nbt = ModUtils.nbt(drop);
             if (this.fluidTank.getFluidAmount() > 0) {
-                nbt.setTag("fluid", this.fluidTank.getFluid().writeToNBT(new NBTTagCompound()));
+                nbt.put("fluid", this.fluidTank.getFluid().writeToNBT(new CompoundTag()));
             }
         }
         return drop;
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (this.world.isRemote) {
+        if (this.getLevel().isClientSide) {
             return;
         }
-        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+        this.vein = VeinSystem.system.getVein(new ChunkPos(this.pos));
         if (this.vein != VeinSystem.system.getEMPTY()) {
             this.find = this.vein.get();
             this.count = this.vein.getCol();
             this.maxcount = this.vein.getMaxCol();
             this.type = this.vein.getType().ordinal();
         }
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) stack.getTagCompound().getTag("fluid"));
+        if (stack.hasTag() && stack.getTag().contains("fluid")) {
+            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
             if (fluidStack != null) {
-                this.fluidTank.fill(fluidStack, true);
+                this.fluidTank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
             }
             new PacketUpdateFieldTile(this, "fluidTank", fluidTank);
         }
@@ -265,7 +263,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
         if (name.equals("fluidTank")) {
             try {
                 FluidTank fluidTank = (FluidTank) DecoderHandler.decode(is);
-                this.fluidTank.readFromNBT(fluidTank.writeToNBT(new NBTTagCompound()));
+                this.fluidTank.readFromNBT(fluidTank.writeToNBT(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -285,10 +283,10 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             return;
         }
-        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+        this.vein = VeinSystem.system.getVein(new ChunkPos(pos));
         if (this.vein != VeinSystem.system.getEMPTY()) {
             boolean find = this.vein.get();
             if (this.find != find) {
@@ -302,32 +300,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
 
@@ -365,7 +338,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
 
     private void get_oil() {
         if (vein.getCol() >= 1) {
-            int size = Math.min(this.level + 1, vein.getCol());
+            int size = Math.min(this.levelMech + 1, vein.getCol());
             size = Math.min(size, this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount());
             if (this.fluidTank.getFluidAmount() + size <= this.fluidTank.getCapacity()) {
                 int variety = this.vein.getMeta() / 3;
@@ -374,26 +347,26 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
                     case 0:
                         switch (type) {
                             case 0:
-                                this.fluidTank.fill(new FluidStack(FluidName.fluidneft.getInstance(), size), true);
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidneft.getInstance().get(), size), IFluidHandler.FluidAction.EXECUTE);
                                 break;
                             case 1:
-                                this.fluidTank.fill(new FluidStack(FluidName.fluidsweet_medium_oil.getInstance(), size), true);
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsweet_medium_oil.getInstance().get(), size), IFluidHandler.FluidAction.EXECUTE);
                                 break;
                             case 2:
-                                this.fluidTank.fill(new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance(), size), true);
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance().get(), size), IFluidHandler.FluidAction.EXECUTE);
                                 break;
                         }
                         break;
                     case 1:
                         switch (type) {
                             case 0:
-                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_light_oil.getInstance(), size), true);
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_light_oil.getInstance().get(), size), IFluidHandler.FluidAction.EXECUTE);
                                 break;
                             case 1:
-                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_medium_oil.getInstance(), size), true);
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_medium_oil.getInstance().get(), size), IFluidHandler.FluidAction.EXECUTE);
                                 break;
                             case 2:
-                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_heavy_oil.getInstance(), size), true);
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_heavy_oil.getInstance().get(), size), IFluidHandler.FluidAction.EXECUTE);
                                 break;
                         }
                         break;
@@ -412,9 +385,9 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
     }
 
 
-    public void markDirty() {
-        super.markDirty();
-        if (IUCore.proxy.isSimulating()) {
+    public void setChanged() {
+        super.setChanged();
+        if (!level.isClientSide) {
             setUpgradestat();
         }
     }
@@ -443,19 +416,15 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
         return "Machines/InterruptOne.ogg";
     }
 
-    public boolean canDrain(Fluid fluid) {
-        return true;
-    }
-
 
     @Override
-    public ContainerOilPump getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerOilPump getGuiContainer(Player entityPlayer) {
         return new ContainerOilPump(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiOilPump getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiOilPump(new ContainerOilPump(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiOilPump((ContainerOilPump) isAdmin);
     }
 
 

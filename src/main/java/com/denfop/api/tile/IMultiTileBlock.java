@@ -3,50 +3,38 @@ package com.denfop.api.tile;
 
 import com.denfop.IUCore;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.DefaultDrop;
+import com.denfop.blocks.state.HarvestTool;
 import com.denfop.tiles.base.TileEntityBlock;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-@MethodsReturnNonnullByDefault
+
 public interface IMultiTileBlock extends ISubEnum {
 
-    Material MACHINE = new Material(MapColor.IRON) {
-        {
-            setRequiresTool();
-            setImmovableMobility();
-
-        }
-
-        @Override
-        public boolean isSolid() {
-            return false;
-        }
-    };
-    Material CABLE = new Material(MapColor.IRON) {
-        {
-            setImmovableMobility();
-        }
-
-        @Override
-        public boolean isSolid() {
-            return false;
-        }
-    };
-
-    ResourceLocation getIdentifier();
+    MapColor MACHINE = MapColor.METAL;
+    MapColor CABLE = MapColor.WOOL;
 
     boolean hasItem();
+
+    default boolean hasUniqueName() {
+        return false;
+    }
+
+
+    default String getUniqueName() {
+        return "";
+    }
 
     default boolean hasOtherVersion() {
         return false;
@@ -59,15 +47,17 @@ public interface IMultiTileBlock extends ISubEnum {
     @Nullable
     Class<? extends TileEntityBlock> getTeClass();
 
+    BlockEntityType<? extends TileEntityBlock> getBlockType();
+
     boolean hasActive();
 
-    Set<EnumFacing> getSupportedFacings();
+    Set<Direction> getSupportedFacings();
 
     float getHardness();
 
-    MultiTileBlock.HarvestTool getHarvestTool();
+    HarvestTool getHarvestTool();
 
-    MultiTileBlock.DefaultDrop getDefaultDrop();
+    DefaultDrop getDefaultDrop();
 
     boolean allowWrenchRotating();
 
@@ -76,7 +66,7 @@ public interface IMultiTileBlock extends ISubEnum {
     @Nullable
     TileEntityBlock getDummyTe();
 
-    default CreativeTabs getCreativeTab() {
+    default CreativeModeTab getCreativeTab() {
         return IUCore.IUTab;
     }
 
@@ -84,7 +74,7 @@ public interface IMultiTileBlock extends ISubEnum {
         return new String[0];
     }
 
-    default Material getMaterial() {
+    default MapColor getMaterial() {
         return MACHINE;
     }
 
@@ -94,4 +84,7 @@ public interface IMultiTileBlock extends ISubEnum {
 
     void setIdBlock(int id);
 
+    void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType);
+
+    void setDefaultState(BlockState blockState);
 }

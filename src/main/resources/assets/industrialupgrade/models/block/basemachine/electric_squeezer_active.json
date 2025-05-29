@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/electric_squeezer_sides",
-    "down" : "industrialupgrade:blocks/electric_squeezer_sides",
-    "up" : "industrialupgrade:blocks/electric_squeezer_active_top",
-    "north" : "industrialupgrade:blocks/electric_squeezer_active_front",
-    "east" : "industrialupgrade:blocks/electric_squeezer_sides",
-    "south" : "industrialupgrade:blocks/electric_squeezer_sides",
-    "west" : "industrialupgrade:blocks/electric_squeezer_sides"
+    "particle" : "industrialupgrade:block/electric_squeezer_sides",
+    "down" : "industrialupgrade:block/electric_squeezer_sides",
+    "up" : "industrialupgrade:block/electric_squeezer_active_top",
+    "north" : "industrialupgrade:block/electric_squeezer_active_front",
+    "east" : "industrialupgrade:block/electric_squeezer_sides",
+    "south" : "industrialupgrade:block/electric_squeezer_sides",
+    "west" : "industrialupgrade:block/electric_squeezer_sides"
   }
 }

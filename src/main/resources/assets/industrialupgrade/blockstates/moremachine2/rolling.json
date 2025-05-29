@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=rolling": {
+      "model": "industrialupgrade:block/moremachine2/rolling"
+    },
+    "facing=south,type=rolling": {
+      "model": "industrialupgrade:block/moremachine2/rolling",
+      "y": 180
+    },
+    "facing=west,type=rolling": {
+      "model": "industrialupgrade:block/moremachine2/rolling",
+      "y": 270
+    },
+    "facing=east,type=rolling": {
+      "model": "industrialupgrade:block/moremachine2/rolling",
+      "y": 90
+    },
+    "facing=down,type=rolling": {
+      "model": "industrialupgrade:block/moremachine2/rolling",
+      "x": 90
+    },
+    "facing=up,type=rolling": {
+      "model": "industrialupgrade:block/moremachine2/rolling",
+      "x": 270
+    },
+    "facing=north,type=rolling_invalid": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active"
+    },
+    "facing=south,type=rolling_invalid": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "y": 180
+    },
+    "facing=west,type=rolling_invalid": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "y": 270
+    },
+    "facing=east,type=rolling_invalid": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "y": 90
+    },
+    "facing=down,type=rolling_invalid": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "x": 90
+    },
+    "facing=up,type=rolling_invalid": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "x": 270
+    },
+    "facing=north,type=rolling_active": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active"
+    },
+    "facing=south,type=rolling_active": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "y": 180
+    },
+    "facing=west,type=rolling_active": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "y": 270
+    },
+    "facing=east,type=rolling_active": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "y": 90
+    },
+    "facing=down,type=rolling_active": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "x": 90
+    },
+    "facing=up,type=rolling_active": {
+      "model": "industrialupgrade:block/moremachine2/rolling_active",
+      "x": 270
+    }
+  }
+}

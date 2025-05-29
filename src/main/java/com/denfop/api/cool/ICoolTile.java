@@ -1,36 +1,35 @@
 package com.denfop.api.cool;
 
 import com.denfop.api.sytem.InfoTile;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ICoolTile {
 
-    BlockPos getBlockPos();
+    BlockPos getPos();
 
-    TileEntity getTile();
+    BlockEntity getTile();
 
 
     long getIdNetwork();
 
     void setId(long id);
 
-    void AddCoolTile(ICoolTile tile, final EnumFacing dir);
+    void AddCoolTile(ICoolTile tile, final Direction dir);
 
-    void RemoveCoolTile(ICoolTile tile, final EnumFacing dir);
+    void RemoveCoolTile(ICoolTile tile, final Direction dir);
 
-    Map<EnumFacing, ICoolTile> getCoolTiles();
+    Map<Direction, ICoolTile> getCoolTiles();
 
     List<InfoTile<ICoolTile>> getCoolValidReceivers();
 
-
+    int hashCode();
 
     int getHashCodeSource();
 
     void setHashCodeSource(int hashCode);
-
 }

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=adv_gas_compressor": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor"
+    },
+    "facing=south,type=adv_gas_compressor": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "y": 180
+    },
+    "facing=west,type=adv_gas_compressor": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "y": 270
+    },
+    "facing=east,type=adv_gas_compressor": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "y": 90
+    },
+    "facing=down,type=adv_gas_compressor": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "x": 90
+    },
+    "facing=up,type=adv_gas_compressor": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "x": 270
+    },
+    "facing=north,type=adv_gas_compressor_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor"
+    },
+    "facing=south,type=adv_gas_compressor_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "y": 180
+    },
+    "facing=west,type=adv_gas_compressor_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "y": 270
+    },
+    "facing=east,type=adv_gas_compressor_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "y": 90
+    },
+    "facing=down,type=adv_gas_compressor_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "x": 90
+    },
+    "facing=up,type=adv_gas_compressor_invalid": {
+      "model": "industrialupgrade:block/gas_reactor/gas_adv_compressor",
+      "x": 270
+    }
+  }
+}

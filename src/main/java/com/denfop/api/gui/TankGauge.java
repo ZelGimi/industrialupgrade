@@ -4,12 +4,15 @@ import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.gui.GuiCore;
+import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
@@ -54,18 +57,18 @@ public class TankGauge extends GuiElement<TankGauge> {
         return style;
     }
 
-    public void drawBackground(int mouseX, int mouseY) {
+    public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
         bindCommonTexture();
         FluidStack fs = this.tank.getFluid();
-        if (fs != null && fs.amount > 0) {
+        if (!fs.isEmpty() && fs.getAmount() > 0) {
             if (this.style.withBorder) {
-                this.gui.drawTexturedRect(
-                        this.x,
-                        this.y,
+                this.gui.drawTexturedModalRect(poseStack,
+                        mouseX + this.x,
+                        mouseY + this.y,
+                        70,
+                        100,
                         this.width,
-                        this.height,
-                        6.0D,
-                        100.0D
+                        this.height
                 );
             }
 
@@ -81,24 +84,24 @@ public class TankGauge extends GuiElement<TankGauge> {
             }
 
             Fluid fluid = fs.getFluid();
-            TextureAtlasSprite sprite = fluid != null ? getBlockTextureMap().getAtlasSprite(FluidName
-                    .isFluid(fluid)
-                    .getStill(fs)
-                    .toString()) : null;
-            int color = fluid != null ? fluid.getColor(fs) : -1;
+            if (fluid == net.minecraft.world.level.material.Fluids.WATER)
+                fluid = FluidName.fluidwater.getInstance().get();
+            IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+            int color = extensions.getTintColor();
             double renderHeight = (double) fluidHeight * ModUtils.limit(
-                    (double) fs.amount / (double) this.tank.getCapacity(),
+                    (double) fs.getAmount() / (double) this.tank.getCapacity(),
                     0.0D,
                     1.0D
             );
             bindBlockTexture();
-            this.gui.drawSprite(
-                    fluidX,
-                    (double) (fluidY + fluidHeight) - renderHeight,
+            this.gui.drawSprite(poseStack,
+                    mouseX + fluidX,
+                    mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                     fluidWidth,
                     renderHeight,
                     sprite,
-                    color,
+                    -1,
                     1.0D,
                     false,
                     true
@@ -112,27 +115,25 @@ public class TankGauge extends GuiElement<TankGauge> {
                     gaugeY -= 4;
                 }
 
-                this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D, this.style.mirrorGauge);
+                this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
             }
         } else if (this.style.withBorder) {
-            this.gui.drawTexturedRect(
-                    this.x,
-                    this.y,
+            this.gui.drawTexturedModalRect(poseStack,
+                    mouseX + this.x,
+                    mouseY + this.y,
+                    70,
+                    100,
                     this.width,
-                    this.height,
-                    70.0D,
-                    100.0D,
-                    this.style.mirrorGauge
+                    this.height
             );
         } else if (this.style.withGauge) {
-            this.gui.drawTexturedRect(
-                    this.x,
-                    this.y,
+            this.gui.drawTexturedModalRect(poseStack,
+                    mouseX + this.x,
+                    mouseY + this.y,
+                    74,
+                    104,
                     this.width,
-                    this.height,
-                    74.0D,
-                    104.0D,
-                    this.style.mirrorGauge
+                    this.height
             );
         }
 
@@ -141,16 +142,16 @@ public class TankGauge extends GuiElement<TankGauge> {
     protected List<String> getToolTip() {
         List<String> ret = super.getToolTip();
         FluidStack fs = this.tank.getFluid();
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+        if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
             if (this.tank instanceof Fluids.InternalFluidTank) {
                 Fluids.InternalFluidTank tank1 = (Fluids.InternalFluidTank) this.tank;
                 ret.add(Localization.translate("iu.tank.fluids"));
                 ret.addAll(tank1.getFluidList());
             }
-        } else if (fs != null && fs.amount > 0) {
+        } else if (!fs.isEmpty() && fs.getAmount() > 0) {
             Fluid fluid = fs.getFluid();
             if (fluid != null) {
-                ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
+                ret.add(Localization.translate(fs.getFluid().getFluidType().getDescriptionId()) + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
             } else {
                 ret.add("invalid fluid stack");
             }

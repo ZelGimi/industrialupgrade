@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/supersolarpanels.itemarmorquantumboots_fire"
+    "layer0" : "industrialupgrade:item/supersolarpanels.itemarmorquantumboots_fire"
   }
 }

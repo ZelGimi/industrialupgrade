@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -12,32 +13,30 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSheepFarm;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSheepFarm;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.google.common.collect.Maps;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TileEntitySheepFarm extends TileEntityInventory implements IUpgradableBlock {
 
@@ -50,13 +49,14 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
-    AxisAlignedBB searchArea = new AxisAlignedBB(
-            pos.add(-RADIUS, -RADIUS, -RADIUS),
-            pos.add(RADIUS, RADIUS, RADIUS)
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS, RADIUS, RADIUS)
     );
-    List<Chunk> chunks = new ArrayList<>();
+    List<LevelChunk> chunks = new ArrayList<>();
 
-    public TileEntitySheepFarm() {
+    public TileEntitySheepFarm(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.sheep_farm,pos,state);
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -72,15 +72,7 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
 
-    public <T extends Entity> List<T> getEntitiesWithinAABB(
-            Class<? extends T> clazz,
-            AxisAlignedBB aabb,
-            @Nullable Predicate<? super T> filter
-    ) {
-        List<T> list = Lists.newArrayList();
-        this.chunks.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(clazz, aabb, list, filter));
-        return list;
-    }
+
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
@@ -92,19 +84,20 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
     }
 
     @Override
-    public ContainerSheepFarm getGuiContainer(final EntityPlayer var1) {
+    public ContainerSheepFarm getGuiContainer(final Player var1) {
         return new ContainerSheepFarm(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSheepFarm(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiSheepFarm((ContainerSheepFarm) menu);
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -115,22 +108,7 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            final AxisAlignedBB aabb = searchArea.offset(pos);
-            searchArea = aabb;
-            int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
-            int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
-            int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
-            int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
-            for (int j3 = j2; j3 < k2; ++j3) {
-                for (int k3 = l2; k3 < i3; ++k3) {
-                    final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
-                    if (!chunks.contains(chunk)) {
-                        chunks.add(chunk);
-                    }
-                }
-            }
-        }
+
     }
 
     @Override
@@ -150,9 +128,10 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
+        if (this.getWorld().getGameTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
             this.energy.useEnergy(50);
-            List<EntitySheep> sheepList = getEntitiesWithinAABB(EntitySheep.class, searchArea, EntitySelectors.NOT_SPECTATING);
+            List<Sheep> sheepList = level.getEntitiesOfClass(Sheep.class, searchArea);
+
             shearSheep(sheepList);
 
 
@@ -167,40 +146,63 @@ public class TileEntitySheepFarm extends TileEntityInventory implements IUpgrada
         }
     }
 
-    private void killExcessSheep(List<EntitySheep> sheepList) {
+    private void killExcessSheep(List<Sheep> sheepList) {
         for (int i = sheepList.size() - 1; i >= MAX_SHEEP; i--) {
-            EntitySheep sheep = sheepList.get(i);
-            sheep.setDead();
+            Sheep sheep = sheepList.get(i);
+            sheep.discard(); // Заменяет setDead()
             this.output.add(new ItemStack(Items.MUTTON, 1));
         }
     }
-
-    private void breedSheep(List<EntitySheep> sheepList) {
+    private void breedSheep(List<Sheep> sheepList) {
         for (int i = 0; i < sheepList.size(); i++) {
             for (int j = i + 1; j < sheepList.size(); j++) {
-                EntitySheep sheep1 = sheepList.get(i);
-                EntitySheep sheep2 = sheepList.get(j);
+                Sheep sheep1 = sheepList.get(i);
+                Sheep sheep2 = sheepList.get(j);
 
-                if (sheep1.getGrowingAge() == 0 && this.slotSeeds
-                        .get()
-                        .getCount() >= 2 && !sheep1.isInLove() && !sheep2.isInLove() && sheep2.getGrowingAge() == 0 && sheep1.getLoveCause() == null && sheep2.getLoveCause() == null) {
+                if (sheep1.getAge() == 0 &&
+                        sheep2.getAge() == 0 &&
+                        !sheep1.isInLove() &&
+                        !sheep2.isInLove() &&
+                        !this.slotSeeds.isEmpty() &&
+                        this.slotSeeds.get(0).getCount() >= 2) {
+
                     sheep1.setInLove(null);
                     sheep2.setInLove(null);
-                    slotSeeds.get().shrink(2);
+                    this.slotSeeds.get(0).shrink(2);
                     break;
                 }
             }
         }
     }
 
-    private void shearSheep(List<EntitySheep> sheepList) {
-        for (EntitySheep sheep : sheepList) {
-            if (!sheep.getSheared() && sheep.isEntityAlive()) {
+    private void shearSheep(List<Sheep> sheepList) {
+        for (Sheep sheep : sheepList) {
+            if (!sheep.isSheared() && sheep.isAlive()) {
                 sheep.setSheared(true);
-                ItemStack wool = new ItemStack(Blocks.WOOL, world.rand.nextInt(2) + 1, sheep.getFleeceColor().getMetadata());
-                this.output.add(wool);
+                DyeColor color = sheep.getColor();
+                int count = level.random.nextInt(2) + 1;
+                this.output.add(new ItemStack(ITEM_BY_DYE.get(color), count));
             }
         }
     }
 
+
+    public static final Map<DyeColor, ItemLike> ITEM_BY_DYE = Util.make(Maps.newEnumMap(DyeColor.class), (p_29841_) -> {
+        p_29841_.put(DyeColor.WHITE, Blocks.WHITE_WOOL);
+        p_29841_.put(DyeColor.ORANGE, Blocks.ORANGE_WOOL);
+        p_29841_.put(DyeColor.MAGENTA, Blocks.MAGENTA_WOOL);
+        p_29841_.put(DyeColor.LIGHT_BLUE, Blocks.LIGHT_BLUE_WOOL);
+        p_29841_.put(DyeColor.YELLOW, Blocks.YELLOW_WOOL);
+        p_29841_.put(DyeColor.LIME, Blocks.LIME_WOOL);
+        p_29841_.put(DyeColor.PINK, Blocks.PINK_WOOL);
+        p_29841_.put(DyeColor.GRAY, Blocks.GRAY_WOOL);
+        p_29841_.put(DyeColor.LIGHT_GRAY, Blocks.LIGHT_GRAY_WOOL);
+        p_29841_.put(DyeColor.CYAN, Blocks.CYAN_WOOL);
+        p_29841_.put(DyeColor.PURPLE, Blocks.PURPLE_WOOL);
+        p_29841_.put(DyeColor.BLUE, Blocks.BLUE_WOOL);
+        p_29841_.put(DyeColor.BROWN, Blocks.BROWN_WOOL);
+        p_29841_.put(DyeColor.GREEN, Blocks.GREEN_WOOL);
+        p_29841_.put(DyeColor.RED, Blocks.RED_WOOL);
+        p_29841_.put(DyeColor.BLACK, Blocks.BLACK_WOOL);
+    });
 }

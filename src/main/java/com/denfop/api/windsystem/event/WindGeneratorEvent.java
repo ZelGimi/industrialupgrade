@@ -1,15 +1,15 @@
 package com.denfop.api.windsystem.event;
 
 import com.denfop.api.windsystem.IWindMechanism;
-import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.level.LevelEvent;
 
-public class WindGeneratorEvent extends WorldEvent {
+public class WindGeneratorEvent extends LevelEvent {
 
     private final IWindMechanism windMechanism;
     private final boolean load;
 
-    public WindGeneratorEvent(IWindMechanism windMechanism, final World world, boolean load) {
+    public WindGeneratorEvent(IWindMechanism windMechanism, final Level world, boolean load) {
         super(world);
         this.windMechanism = windMechanism;
         this.load = load;

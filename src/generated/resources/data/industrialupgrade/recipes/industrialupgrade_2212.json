@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/tempered_glass"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/woods"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_678_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/gadolinium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/permalloy"
+      }
+    ]
+  },
+  "pattern": [
+    "BEB",
+    "CAD",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:colonial_building/high_protection"
+  },
+  "show_notification": true
+}

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/itembatchargecrystal0"
+    "layer0" : "industrialupgrade:item/itembatchargecrystal0"
   }
 }

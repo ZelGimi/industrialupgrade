@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism.steam;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.sytem.EnergyType;
@@ -13,22 +13,28 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamElectrolyzer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamElectrolyzer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
@@ -42,10 +48,10 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
     public final ComponentBaseEnergy ampere;
     private final Fluids fluids;
     private final Fluids.InternalFluidTank fluidTank4;
-    private int level;
+    private int levelBlock;
 
-    public TileSteamElectrolyzer() {
-        super(0, 1, 0);
+    public TileSteamElectrolyzer(BlockPos pos, BlockState state) {
+        super(0, 1, 0,BlockBaseMachine3.steam_electrolyzer,pos,state);
         this.fluids = this.addComponent(new Fluids(this));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.ampere = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.AMPERE, this, 4000));
@@ -60,7 +66,7 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
         this.fluidTank3 = fluids.addTank("fluidTank3", 4 * 1000, InvSlot.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("electrolyzer", fluids);
         this.fluidTank4 = fluids.addTank("fluidTank4", 4 * 1000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
-                FluidName.fluidsteam.getInstance()));
+                FluidName.fluidsteam.getInstance().get()));
         this.steam.setFluidTank(fluidTank4);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
@@ -74,44 +80,36 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
 
-            return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
-            );
-        } else {
-
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-        }
-    }
 
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.steam_electrolyzer;
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
-    public ContainerSteamElectrolyzer getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSteamElectrolyzer getGuiContainer(Player entityPlayer) {
         return new ContainerSteamElectrolyzer(entityPlayer, this);
 
+    }
+    @Override
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
+
+            return ModUtils.interactWithFluidHandler(player, hand,
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+            );
+        } else {
+            return super.onActivated(player, hand, side, vec3);
+        }
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -123,13 +121,13 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSteamElectrolyzer(new ContainerSteamElectrolyzer(entityPlayer, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSteamElectrolyzer((ContainerSteamElectrolyzer) menu);
 
     }
 
-    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip) {
 
         super.addInformation(stack, tooltip);
@@ -154,36 +152,36 @@ public class TileSteamElectrolyzer extends TileElectricMachine {
                 4) && this.ampere.canUseEnergy(1)) {
             final BaseFluidMachineRecipe output = this.fluid_handler.output();
             final FluidStack inputFluidStack = output.input.getInputs().get(0);
-            int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.amount;
-            size = Math.min(this.level + 1, size);
+            int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.getAmount();
+            size = Math.min(this.levelBlock + 1, size);
             int cap = this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount();
             FluidStack outputFluidStack = output.output_fluid.get(0);
-            cap /= outputFluidStack.amount;
+            cap /= outputFluidStack.getAmount();
             cap = Math.min(cap, size);
             int cap1 = this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount();
             FluidStack outputFluidStack1 = output.output_fluid.get(1);
-            cap1 /= outputFluidStack1.amount;
+            cap1 /= outputFluidStack1.getAmount();
             size = Math.min(Math.min(size, cap1), cap);
-            if (this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount() >= outputFluidStack.amount) {
+            if (this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount() >= outputFluidStack.getAmount()) {
                 FluidStack fluidStack = new FluidStack(
                         outputFluidStack.getFluid(),
-                        outputFluidStack.amount * size
+                        outputFluidStack.getAmount() * size
                 );
-                this.fluidTank2.fill(fluidStack, true);
+                this.fluidTank2.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                 drain = true;
 
             }
-            if (this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount() >= outputFluidStack1.amount) {
+            if (this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount() >= outputFluidStack1.getAmount()) {
                 FluidStack fluidStack = new FluidStack(
                         outputFluidStack1.getFluid(),
-                        outputFluidStack1.amount * size
+                        outputFluidStack1.getAmount() * size
                 );
-                this.fluidTank3.fill(fluidStack, true);
+                this.fluidTank3.fill(fluidStack,  IFluidHandler.FluidAction.EXECUTE);
                 drain1 = true;
             }
             if (drain || drain1) {
-                int drains = size * inputFluidStack.amount;
-                this.getFluidTank(0).drain(drains, true);
+                int drains = size * inputFluidStack.getAmount();
+                this.getFluidTank(0).drain(drains,  IFluidHandler.FluidAction.EXECUTE);
                 if (!this.getActive()) {
                     this.setActive(true);
                     initiate(0);

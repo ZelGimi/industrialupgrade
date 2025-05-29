@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nuclear/plutonium"
+		"layer0": "industrialupgrade:item/nuclear/plutonium"
 	}
 }

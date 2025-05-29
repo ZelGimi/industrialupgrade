@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/photonic_extractor_main",
-    "down" : "industrialupgrade:blocks/photonic_extractor_sides",
-    "up" : "industrialupgrade:blocks/photonic_extractor_sides",
-    "north" : "industrialupgrade:blocks/photonic_extractor_active_main",
-    "east" : "industrialupgrade:blocks/photonic_extractor_active_left-right",
-    "south" : "industrialupgrade:blocks/photonic_extractor_sides",
-    "west" : "industrialupgrade:blocks/photonic_extractor_active_left-right"
+    "particle" : "industrialupgrade:block/photonic_extractor_main",
+    "down" : "industrialupgrade:block/photonic_extractor_sides",
+    "up" : "industrialupgrade:block/photonic_extractor_sides",
+    "north" : "industrialupgrade:block/photonic_extractor_active_main",
+    "east" : "industrialupgrade:block/photonic_extractor_active_left-right",
+    "south" : "industrialupgrade:block/photonic_extractor_sides",
+    "west" : "industrialupgrade:block/photonic_extractor_active_left-right"
   }
 }

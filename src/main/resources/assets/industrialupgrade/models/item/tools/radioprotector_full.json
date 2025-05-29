@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "industrialupgrade:items/radioprotector_model",
-		"particle": "industrialupgrade:items/radioprotector_model"
+		"0": "industrialupgrade:item/radioprotector_model",
+		"particle": "industrialupgrade:item/radioprotector_model"
 	},
 	"elements": [
 		{

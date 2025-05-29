@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemplates/arsenic"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:ingots/invar"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:rods/silver"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "CCC",
+    " B "
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_568_element"
+  },
+  "show_notification": true
+}

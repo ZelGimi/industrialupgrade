@@ -1,12 +1,13 @@
 {
   "parent" : "block/cube",
+  "render_type": "cutout",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/steam_turbine_casing_glass",
-    "down" : "industrialupgrade:blocks/steam_turbine_casing_glass",
-    "up" : "industrialupgrade:blocks/steam_turbine_casing_glass",
-    "north" : "industrialupgrade:blocks/steam_turbine_casing_glass",
-    "east" : "industrialupgrade:blocks/steam_turbine_casing_glass",
-    "south" : "industrialupgrade:blocks/steam_turbine_casing_glass",
-    "west" : "industrialupgrade:blocks/steam_turbine_casing_glass"
+    "particle" : "industrialupgrade:block/steam_turbine_casing_glass",
+    "down" : "industrialupgrade:block/steam_turbine_casing_glass",
+    "up" : "industrialupgrade:block/steam_turbine_casing_glass",
+    "north" : "industrialupgrade:block/steam_turbine_casing_glass",
+    "east" : "industrialupgrade:block/steam_turbine_casing_glass",
+    "south" : "industrialupgrade:block/steam_turbine_casing_glass",
+    "west" : "industrialupgrade:block/steam_turbine_casing_glass"
   }
 }

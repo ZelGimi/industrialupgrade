@@ -1,8 +1,8 @@
 package com.denfop.api.vein;
 
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
 
 import java.util.Objects;
 
@@ -25,8 +25,8 @@ public class Vein implements IVein {
         oldMineral = false;
     }
 
-    public Vein(NBTTagCompound tagCompound) {
-        int data = tagCompound.getInteger("data");
+    public Vein(CompoundTag tagCompound) {
+        int data = tagCompound.getInt("data");
         int z = data & 2047;
         data = data >> 11;
         int x = data & 2047;
@@ -48,15 +48,15 @@ public class Vein implements IVein {
         this.meta = data & 15;
         this.type = Type.getID(type);
         this.chunk = new ChunkPos(x, z);
-        this.col = tagCompound.getInteger("col");
-        this.maxcol = tagCompound.getInteger("maxcol");
+        this.col = tagCompound.getInt("col");
+        this.maxcol = tagCompound.getInt("maxcol");
         this.find = find == 1;
         if (!this.find) {
             if (this.col != this.maxcol) {
                 this.find = true;
             }
         }
-        int data1 = tagCompound.getInteger("data1");
+        int data1 = tagCompound.getInt("data1");
         this.oldMineral = data1 == 0;
     }
 
@@ -197,8 +197,8 @@ public class Vein implements IVein {
     }
 
     @Override
-    public NBTTagCompound writeTag() {
-        NBTTagCompound tagCompound = new NBTTagCompound();
+    public CompoundTag writeTag() {
+        CompoundTag tagCompound = new CompoundTag();
 
         int m = 0;
         m += this.meta;
@@ -212,10 +212,10 @@ public class Vein implements IVein {
         int z = Math.min(Math.abs(chunk.z), 2047);
         m = (m << 11) + x;
         m = (m << 11) + z;
-        tagCompound.setInteger("data", m);
-        tagCompound.setInteger("col", this.col);
-        tagCompound.setInteger("maxcol", this.maxcol);
-        tagCompound.setInteger("data1", this.oldMineral ? 0 : 1);
+        tagCompound.putInt("data", m);
+        tagCompound.putInt("col", this.col);
+        tagCompound.putInt("maxcol", this.maxcol);
+        tagCompound.putInt("data1", this.oldMineral ? 0 : 1);
 
         return tagCompound;
     }

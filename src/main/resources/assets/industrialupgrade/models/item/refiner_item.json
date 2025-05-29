@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/refiner_item"
+    "layer0" : "industrialupgrade:item/refiner_item"
   }
 }

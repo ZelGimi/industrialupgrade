@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/slag"
+		"layer0": "industrialupgrade:item/slag"
 	}
 }

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "industrialupgrade:blocks/matter_generator",
-		"particle": "industrialupgrade:blocks/matter_generator"
+		"0": "industrialupgrade:block/matter_generator",
+		"particle": "industrialupgrade:block/matter_generator"
 	},
 	"elements": [
 		{

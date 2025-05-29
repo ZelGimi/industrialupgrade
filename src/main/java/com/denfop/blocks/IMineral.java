@@ -1,11 +1,12 @@
 package com.denfop.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface IMineral {
 
-    public IBlockState getStateMeta(int meta);
+    public BlockState getStateMeta(int meta);
 
     Block getBlock();
 

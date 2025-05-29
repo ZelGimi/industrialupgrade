@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/photon_part3"
+    "layer0" : "industrialupgrade:item/photon_part3"
   }
 }

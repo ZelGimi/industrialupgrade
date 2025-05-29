@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/vanady"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:casings/nickel"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/manganese"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:casings/mikhail"
+      }
+    ],
+    "F": [
+      {
+        "tag": "forge:doubleplate/titanium"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    "EFE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_9_element"
+  },
+  "show_notification": true
+}

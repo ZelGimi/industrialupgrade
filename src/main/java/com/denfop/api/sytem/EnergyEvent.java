@@ -1,15 +1,16 @@
 package com.denfop.api.sytem;
 
-import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
 
-public class EnergyEvent extends WorldEvent {
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.level.LevelEvent;
+
+public class EnergyEvent extends LevelEvent {
 
     private final EnumTypeEvent event;
     private final EnergyType energyType;
     private final ITile tile;
 
-    public EnergyEvent(final World world, EnumTypeEvent event, EnergyType energyType, ITile tile) {
+    public EnergyEvent(final Level world, EnumTypeEvent event, EnergyType energyType, ITile tile) {
         super(world);
         this.event = event;
         this.energyType = energyType;

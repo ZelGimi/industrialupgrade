@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:daynight_solar_panel_glass/pro"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:excitednucleus/procore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:machines/spectral_solar_panel"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:excitednucleus/specore"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:machines/proton_solar_panel"
+  },
+  "show_notification": true
+}

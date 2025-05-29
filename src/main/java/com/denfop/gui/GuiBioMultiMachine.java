@@ -13,15 +13,16 @@ import com.denfop.container.ContainerBioMultiMachine;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.utils.ModUtils;
-import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.Slot;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiBioMultiMachine extends GuiIU<ContainerBioMultiMachine> {
+public class GuiBioMultiMachine<T extends ContainerBioMultiMachine> extends GuiIU<ContainerBioMultiMachine> {
 
     private final ContainerBioMultiMachine container;
     private final GuiComponent process;
@@ -35,7 +36,7 @@ public class GuiBioMultiMachine extends GuiIU<ContainerBioMultiMachine> {
         this.addComponent(new GuiComponent(this, 7, 64, EnumTypeComponent.BIO_FLUID,
                 new Component<>(this.container.base.bioFuel)
         ));
-        xSize = 176 + 16;
+        imageWidth = 176 + 16;
         if (this.container.base.tank != null) {
             this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.WATER,
                     new Component<>(this.container.base.tank)
@@ -68,21 +69,21 @@ public class GuiBioMultiMachine extends GuiIU<ContainerBioMultiMachine> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
-        this.drawForeground(mouseX, mouseY);
+protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
+        this.drawForeground(poseStack, mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
         int i = 0;
-        for (Slot slot : this.container.inventorySlots) {
+        for (Slot slot : this.container.slots) {
             if (slot instanceof SlotInvSlot) {
-                int xX = slot.xPos;
-                int yY = slot.yPos;
+                int xX = slot.x;
+                int yY = slot.y;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
                 if (slotInv.invSlot instanceof InvSlotBioMultiRecipes) {
                     this.process.setIndex(i);
                     this.process.setX(xX);
                     this.process.setY(yY + 19);
-                    this.process.drawForeground(mouseX, mouseY);
+                    this.process.drawForeground(poseStack, mouseX, mouseY);
                     i++;
                 }
 
@@ -90,37 +91,37 @@ public class GuiBioMultiMachine extends GuiIU<ContainerBioMultiMachine> {
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
 
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int j = (this.width - this.xSize) / 2;
-        int k = (this.height - this.ySize) / 2;
-        drawTexturedModalRect(j, k, 0, 0, 176, this.ySize);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.drawBackground();
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(getTexture());
+        int j = guiLeft;
+        int k = guiTop;
+        drawTexturedModalRect(poseStack, j, k, 0, 0, 176, this.imageHeight);
+        int xoffset =guiLeft;
+        int yoffset =guiTop;
+        this.drawBackground(poseStack);
         int i = 0;
-        for (Slot slot : this.container.inventorySlots) {
+        for (Slot slot : this.container.slots) {
             if (slot instanceof SlotInvSlot) {
-                int xX = slot.xPos;
-                int yY = slot.yPos;
+                int xX = slot.x;
+                int yY = slot.y;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
                 if (slotInv.invSlot instanceof com.denfop.api.recipe.InvSlotBioMultiRecipes) {
                     this.process.setIndex(i);
                     this.process.setX(xX);
                     this.process.setY(yY + 19);
-                    this.process.drawBackground(xoffset, yoffset);
+                    this.process.drawBackground(poseStack, xoffset, yoffset);
                     i++;
                 }
             }
         }
-        this.mc.getTextureManager().bindTexture(getTexture());
+        bindTexture(getTexture());
         if (!this.isBlack) {
-            this.drawXCenteredString(176 / 2, 6, Localization.translate(this.container.base.getName()), 4210752, false);
+            this.drawXCenteredString(poseStack, 176 / 2, 6, Localization.translate(this.container.base.getName()), 4210752, false);
         } else {
-            this.drawXCenteredString(
+            this.drawXCenteredString(poseStack,
                     176 / 2,
                     6,
                     Localization.translate(this.container.base.getName()),
@@ -131,11 +132,11 @@ public class GuiBioMultiMachine extends GuiIU<ContainerBioMultiMachine> {
 
 
         for (final GuiElement<?> guiElement : this.elements) {
-            guiElement.drawBackground(x - this.guiLeft, y - this.guiTop);
+            guiElement.drawBackground(poseStack, x - this.guiLeft, y - this.guiTop);
 
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

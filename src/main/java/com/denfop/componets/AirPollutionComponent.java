@@ -5,18 +5,22 @@ import com.denfop.Localization;
 import com.denfop.api.pollution.IPollutionMechanism;
 import com.denfop.api.pollution.PollutionAirLoadEvent;
 import com.denfop.api.pollution.PollutionAirUnLoadEvent;
+import com.denfop.api.windsystem.WindSystem;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,22 +38,28 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
         this.default_pollution = pollution;
     }
 
-    @Override
-    public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        super.addInformation(stack, tooltip);
-        if (this.parent != null && this.parent.getWorld() == null) {
-            tooltip.add(Localization.translate("iu.pollution.air.info") + " " + String.format(
-                    "%.2f",
-                    default_pollution
-            ) + Localization.translate("iu" +
-                    ".pollution.air.info1"));
+    @OnlyIn(Dist.CLIENT)
+    public static void spawnCustomPollutionParticle(Level world, double x, double y, double z, double windSpeed) {
+        if (world != null) {
+            Vec3 windDirection = WindSystem.windSystem.getWindSide().getDirectionVector();
+
+
+            double motionX = windDirection.x * windSpeed * 0.5;
+            double motionY = 0.01D;
+            double motionZ = windDirection.z * windSpeed * 0.5;
+
+            world.addParticle(
+                    ParticleTypes.SMOKE,
+                    x, y, z,
+                    motionX, motionY, motionZ
+            );
         }
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound tagCompound = super.writeToNbt();
-        tagCompound.setDouble("percent", percent);
+    public CompoundTag writeToNbt() {
+        CompoundTag tagCompound = super.writeToNbt();
+        tagCompound.putDouble("percent", percent);
         return tagCompound;
     }
 
@@ -58,9 +68,8 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
         return true;
     }
 
-
     @Override
-    public void readFromNbt(final NBTTagCompound nbt) {
+    public void readFromNbt(final CompoundTag nbt) {
         super.readFromNbt(nbt);
         percent = nbt.getDouble("percent");
     }
@@ -70,17 +79,17 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     }
 
     @Override
-    public boolean canUsePurifier(final EntityPlayer player) {
+    public boolean canUsePurifier(final Player player) {
         return this.percent != 1;
     }
 
     public ItemStack getItemStackUpgrade() {
         if (this.percent == 0) {
             this.percent = 0.5;
-            return new ItemStack(IUItem.antiairpollution1);
+            return new ItemStack(IUItem.antiairpollution1.getItem());
         } else {
             this.percent = 1;
-            return new ItemStack(IUItem.antiairpollution);
+            return new ItemStack(IUItem.antiairpollution.getItem());
         }
     }
 
@@ -88,20 +97,20 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     public List<ItemStack> getDrops() {
         final List<ItemStack> ret = super.getDrops();
         if (this.percent == 0) {
-            ret.add(new ItemStack(IUItem.antiairpollution1));
-            ret.add(new ItemStack(IUItem.antiairpollution));
+            ret.add(new ItemStack(IUItem.antiairpollution1.getItem()));
+            ret.add(new ItemStack(IUItem.antiairpollution.getItem()));
         } else if (percent == 0.5) {
-            ret.add(new ItemStack(IUItem.antiairpollution));
+            ret.add(new ItemStack(IUItem.antiairpollution.getItem()));
         }
         return ret;
     }
 
     @Override
-    public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
-        if (!this.parent.getWorld().isRemote) {
-            ItemStack stack = player.getHeldItem(hand);
+    public boolean onBlockActivated(final Player player, final InteractionHand hand) {
+        if (!this.parent.getLevel().isClientSide) {
+            ItemStack stack = player.getItemInHand(hand);
             Item item = stack.getItem();
-            if (percent == 1 && item == IUItem.antiairpollution) {
+            if (percent == 1 && item == IUItem.antiairpollution.getItem()) {
                 stack.shrink(1);
                 percent = 0.5;
                 if (this.parent.getActive()) {
@@ -109,7 +118,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
                 } else {
                     this.setPollution(0);
                 }
-            } else if (percent == 0.5 && item == IUItem.antiairpollution1) {
+            } else if (percent == 0.5 && item == IUItem.antiairpollution1.getItem()) {
                 stack.shrink(1);
                 percent = 0;
                 if (this.parent.getActive()) {
@@ -122,7 +131,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
         return super.onBlockActivated(player, hand);
     }
 
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeDouble(this.pollution);
         buffer.writeDouble(this.default_pollution);
@@ -153,7 +162,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.parent.getActive()) {
@@ -188,9 +197,9 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     public void onLoaded() {
 
 
-        if (!this.parent.getWorld().isRemote && this.parent.getWorld().provider.getDimension() == 0) {
+        if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
 
-            MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getWorld(), this));
+            MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this));
 
 
         }
@@ -203,9 +212,9 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
 
     @Override
     public void onUnloaded() {
-        if (!this.parent.getWorld().isRemote && this.parent.getWorld().provider.getDimension() == 0) {
+        if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
 
-            MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getWorld(), this));
+            MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this));
 
 
         }
@@ -214,7 +223,7 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     @Override
     public ChunkPos getChunkPos() {
         if (this.chunkPos == null) {
-            chunkPos = new ChunkPos(this.getParent().getPos());
+            chunkPos = new ChunkPos(this.getParent().getBlockPos());
         }
         return chunkPos;
     }
@@ -223,13 +232,24 @@ public class AirPollutionComponent extends AbstractComponent implements IPolluti
     public double getPollution() {
         return pollution;
     }
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        if (this.parent != null && this.parent.getWorld() == null) {
+            tooltip.add(Localization.translate("iu.pollution.air.info") + " " + String.format(
+                    "%.2f",
+                    default_pollution
+            ) + Localization.translate("iu" +
+                    ".pollution.air.info1"));
+        }
+    }
 
     public void setPollution(double pollution) {
         if (this.pollution != pollution * percent) {
-            if (!this.parent.getWorld().isRemote && this.parent.getWorld().provider.getDimension() == 0) {
-                MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getWorld(), this));
+            if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
+                MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this));
                 this.pollution = pollution * percent;
-                MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getWorld(), this));
+                MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this));
 
             }
         }

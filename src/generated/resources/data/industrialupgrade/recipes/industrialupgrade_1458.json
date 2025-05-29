@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_72_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:basemachine3/fluid_cooling"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_96_element"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/permalloy"
+      }
+    ]
+  },
+  "pattern": [
+    "BAB",
+    " C ",
+    "EDE"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/cooling"
+  },
+  "show_notification": true
+}

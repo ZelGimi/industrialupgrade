@@ -6,28 +6,30 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerCokeOven;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
+@OnlyIn(Dist.CLIENT)
+public class GuiCokeOven<T extends ContainerCokeOven> extends GuiIU<ContainerCokeOven> {
 
     public final ContainerCokeOven container;
     public boolean highlightedMinus = false;
@@ -37,7 +39,7 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
         super(container1);
         this.container = container1;
         componentList.clear();
-        this.ySize = 182;
+        this.imageHeight = 182;
 
 
         this.addComponent(new GuiComponent(this, 155, 44, EnumTypeComponent.SOUND_BUTTON,
@@ -93,10 +95,10 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
                     ret.add(Localization.translate("iu.generic.text.empty"));
                 } else {
                     FluidStack fs = container.base.tank.getFluid();
-                    if (fs != null && fs.amount > 0) {
+                    if (!fs.isEmpty() && fs.getAmount() > 0) {
                         Fluid fluid = fs.getFluid();
                         if (fluid != null) {
-                            ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate(
+                            ret.add(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + fs.getAmount() + " " + Localization.translate(
                                     "iu.generic.text.mb"));
                         } else {
                             ret.add("invalid fluid stack");
@@ -109,12 +111,12 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
             }
 
             @Override
-            public void drawBackground(final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 if (container.base.tank == null) {
                     return;
                 }
                 FluidStack fs = container.base.tank.getFluid();
-                if (fs != null && fs.amount > 0) {
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
                     int fluidWidth = this.width;
@@ -127,23 +129,24 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
                     }
 
                     Fluid fluid = fs.getFluid();
-                    TextureAtlasSprite sprite = fluid != null
-                            ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                            : null;
-                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
+                        fluid = FluidName.fluidwater.getInstance().get();
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
+                    bindBlockTexture();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
-                            (double) fs.amount / (double) this.tank.getCapacity(),
+                            (double) fs.getAmount() / (double) this.tank.getCapacity(),
                             0.0D,
                             1.0D
                     );
-                    bindBlockTexture();
-                    this.gui.drawSprite(
-                            fluidX,
-                            (double) (fluidY + fluidHeight) - renderHeight,
+                    this.gui.drawSprite(poseStack,
+                            mouseX + fluidX,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
-                            color,
+                            -1,
                             1.0D,
                             false,
                             true
@@ -157,7 +160,7 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
                             gaugeY -= 4;
                         }
 
-                        this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D, this.getStyle().mirrorGauge);
+                        this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
                     }
                 }
             }
@@ -171,11 +174,12 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
                     ret.add(Localization.translate("iu.generic.text.empty"));
                 } else {
                     FluidStack fs = container.base.tank1.getFluid();
-                    if (fs != null && fs.amount > 0) {
+                    if (!fs.isEmpty() && fs.getAmount() > 0) {
                         Fluid fluid = fs.getFluid();
                         if (fluid != null) {
-                            ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate(
+                            ret.add(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + fs.getAmount() + " " + Localization.translate(
                                     "iu.generic.text.mb"));
+
                         } else {
                             ret.add("invalid fluid stack");
                         }
@@ -187,12 +191,12 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
             }
 
             @Override
-            public void drawBackground(final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 if (container.base.tank1 == null) {
                     return;
                 }
                 FluidStack fs = container.base.tank1.getFluid();
-                if (fs != null && fs.amount > 0) {
+                if (!fs.isEmpty()&& fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
                     int fluidWidth = this.width;
@@ -205,23 +209,24 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
                     }
 
                     Fluid fluid = fs.getFluid();
-                    TextureAtlasSprite sprite = fluid != null
-                            ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                            : null;
-                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
+                        fluid = FluidName.fluidwater.getInstance().get();
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
+                    bindBlockTexture();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
-                            (double) fs.amount / (double) this.tank.getCapacity(),
+                            (double) fs.getAmount() / (double) this.tank.getCapacity(),
                             0.0D,
                             1.0D
                     );
-                    bindBlockTexture();
-                    this.gui.drawSprite(
-                            fluidX,
-                            (double) (fluidY + fluidHeight) - renderHeight,
+                    this.gui.drawSprite(poseStack,
+                            mouseX + fluidX,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
-                            color,
+                            -1,
                             1.0D,
                             false,
                             true
@@ -235,7 +240,7 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
                             gaugeY -= 4;
                         }
 
-                        this.gui.drawTexturedRect(gaugeX, gaugeY, 20.0D, 55.0D, 38.0D, 100.0D, this.getStyle().mirrorGauge);
+                        this.gui.drawTexturedModalRect(poseStack, mouseX + gaugeX, mouseY + gaugeY, 38, 100, 20, 55);
                     }
                 }
             }
@@ -258,8 +263,8 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
         highlightedMinus = false;
         highlightedPlus = false;
@@ -272,10 +277,10 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
         }
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
+    protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 34 && x <= 47 && y >= 23 && y <= 36) {
@@ -287,47 +292,46 @@ public class GuiCokeOven extends GuiIU<ContainerCokeOven> {
 
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2 + 20, 6, name, 4210752, false);
+        this.drawXCenteredString(poseStack,this.imageWidth / 2 + 20, 6, net.minecraft.network.chat.Component.nullToEmpty(name), 4210752, false);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+        bindTexture(getTexture());
 
         int progress = (int) (38.0F * this.container.base.getProgress() / 3600D);
 
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
+        int xoffset = (this.width - this.imageWidth) / 2;
+        int yoffset = (this.height - this.imageHeight) / 2;
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(getTexture());
         if (highlightedMinus) {
-            drawTexturedModalRect(xoffset + 34, yoffset + 23, 192, 3, 14, 14);
+            drawTexturedModalRect( poseStack,xoffset + 34, yoffset + 23, 192, 3, 14, 14);
 
         }
         if (highlightedPlus) {
-            drawTexturedModalRect(xoffset + 108, yoffset + 23, 177, 3, 14, 14);
+            drawTexturedModalRect( poseStack,xoffset + 108, yoffset + 23, 177, 3, 14, 14);
 
         }
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 88, yoffset + 46, 177, 19, progress, 11);
+            drawTexturedModalRect(poseStack, xoffset + 88, yoffset + 46, 177, 19, progress, 11);
         }
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect( poseStack,xoffset + 3, yoffset + 3, 0, 0, 10, 10);
 
-        this.mc.getTextureManager().bindTexture(getTexture());
+     bindTexture(getTexture());
 
         int bar = (int) ((Math.min(this.container.base.bar * 1D, 5D) / 5D) * 50D);
         if (bar > 0) {
-            drawTexturedModalRect(this.guiLeft + 53, this.guiTop + 28, 181, 53, bar, 5);
+            drawTexturedModalRect( poseStack,this.guiLeft + 53, this.guiTop + 28, 181, 53, bar, 5);
         }
         if (container.base.heat != null) {
             progress = (int) (50.0F * container.base.heat.getFillRatio());
-            drawTexturedModalRect(this.guiLeft + 66, this.guiTop + 79, 180, 34, progress, 8);
+            drawTexturedModalRect( poseStack,this.guiLeft + 66, this.guiTop + 79, 180, 34, progress, 8);
 
         }
     }

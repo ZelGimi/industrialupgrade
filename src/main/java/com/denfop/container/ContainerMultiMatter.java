@@ -2,11 +2,11 @@ package com.denfop.container;
 
 
 import com.denfop.tiles.base.TileMultiMatter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerMultiMatter extends ContainerFullInv<TileMultiMatter> {
 
-    public ContainerMultiMatter(EntityPlayer entityPlayer, TileMultiMatter tileEntity1) {
+    public ContainerMultiMatter(Player entityPlayer, TileMultiMatter tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         addSlotToContainer(new SlotInvSlot(tileEntity1.amplifierSlot, 0, 72, 40));
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));

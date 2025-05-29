@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/chance_healing_1"
+    "layer0" : "industrialupgrade:item/chance_healing_1"
   }
 }

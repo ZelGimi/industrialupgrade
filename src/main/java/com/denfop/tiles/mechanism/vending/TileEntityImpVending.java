@@ -5,16 +5,18 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.EnumTypeStyle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityImpVending extends TileEntityBaseVending {
 
-    public TileEntityImpVending() {
-        super(EnumTypeStyle.IMPROVED);
+    public TileEntityImpVending(BlockPos pos, BlockState state) {
+        super(EnumTypeStyle.IMPROVED,BlockBaseMachine3.imp_vending,pos,state);
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override

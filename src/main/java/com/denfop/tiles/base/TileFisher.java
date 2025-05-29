@@ -1,10 +1,10 @@
 package com.denfop.tiles.base;
 
-import cofh.redstoneflux.api.IEnergyContainerItem;
-import com.denfop.Config;
+
 import com.denfop.ElectricItem;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -14,74 +14,65 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerFisher;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiFisher;
 import com.denfop.invslot.InvSlotFisher;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import com.google.common.collect.Lists;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityFishHook;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Enchantments;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.LootTable;
-import net.minecraft.world.storage.loot.LootTableList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class TileFisher extends TileElectricMachine
         implements IUpgradableBlock, IManufacturerBlock {
 
-    private static Field _Random_seed = null;
-
-    static {
-        try {
-            Field var0 = Random.class.getDeclaredField("seed");
-            var0.setAccessible(true);
-            _Random_seed = var0;
-        } catch (Throwable ignored) {
-        }
-
-    }
 
     public final int energyconsume;
     public final InvSlotFisher inputslot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public int progress;
-    protected Random _rand = null;
-    protected float _next = (float) (Double.NaN);
     private boolean checkwater;
     private int level = 1;
     private FakePlayerSpawner player;
-    private EntityFishHook energyFishHook;
-    private LootContext.Builder lootcontext$builder;
+    private FishingHook energyFishHook;
+    private LootParams.Builder lootcontext$builder;
     private LootTable table;
     private LootPool listPool;
 
-    public TileFisher() {
-        super(1E4, 14, 9);
+    public TileFisher(BlockPos pos, BlockState state) {
+        super(1E4, 14, 9, BlockBaseMachine2.fisher, pos, state);
         this.progress = 0;
         this.energyconsume = 100;
         this.checkwater = false;
@@ -117,17 +108,17 @@ public class TileFisher extends TileElectricMachine
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     @Override
-    public int getLevel() {
+    public int getLevelMechanism() {
         return this.level;
     }
 
     @Override
-    public void setLevel(final int level) {
-        this.level = level;
+    public void setLevelMech(final int levelMech) {
+        this.level = levelMech;
     }
 
     @Override
@@ -168,39 +159,29 @@ public class TileFisher extends TileElectricMachine
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.getWorld().isRemote) {
+        if (this.getWorld().isClientSide) {
             return;
         }
         checkwater = checkwater();
         this.player = new FakePlayerSpawner(getWorld());
-        this.energyFishHook = new EntityFishHook(getWorld(), player);
-        this.lootcontext$builder = new LootContext.Builder((WorldServer) this.world);
-        this.table = this.world.getLootTableManager().getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING);
+        this.energyFishHook = new FishingHook(player, getWorld(), 0, 0);
+        this.lootcontext$builder = new LootParams.Builder((ServerLevel) this.getWorld());
+        this.table = this.getWorld().getServer().getLootData().getLootTable(BuiltInLootTables.FISHING);
         this.listPool = this.table.getPool("main");
     }
 
     public void updateEntityServer() {
 
         super.updateEntityServer();
-        if (this._rand == null) {
-            this._rand = new Random(super.getWorld().getSeed() ^ super.getWorld().rand.nextLong());
-            this._next = this._rand.nextFloat();
-        }
 
 
-        if (this.getWorld().provider.getWorldTime() % 100 == 0) {
+        if (this.getWorld().getGameTime() % 100 == 0) {
             checkwater = checkwater();
         }
         if (checkwater && !this.inputslot.isEmpty()) {
-            if ((this.inputslot.get().getItem() instanceof IEnergyItem)) {
-                boolean need = ElectricItem.manager.canUse(this.inputslot.get(), 100);
+            if ((this.inputslot.get(0).getItem() instanceof IEnergyItem)) {
+                boolean need = ElectricItem.manager.canUse(this.inputslot.get(0), 100);
                 if (!need) {
-                    return;
-                }
-            } else if ((this.inputslot.get().getItem() instanceof IEnergyContainerItem)) {
-                IEnergyContainerItem item = (IEnergyContainerItem) this.inputslot.get().getItem();
-                int energy = item.getEnergyStored(this.inputslot.get());
-                if (energy < 100 * Config.coefficientrf) {
                     return;
                 }
             }
@@ -234,74 +215,61 @@ public class TileFisher extends TileElectricMachine
                 initiate(2);
             }
             if (!this.inputslot.isEmpty()) {
-                ItemStack stack = this.inputslot.get();
+                ItemStack stack = this.inputslot.get(0);
                 int j = EnchantmentHelper.getFishingSpeedBonus(stack);
-
-                if (j > 0) {
-                    this.energyFishHook.setLureSpeed(j);
-                }
-
                 int k = EnchantmentHelper.getFishingLuckBonus(stack);
-
-                if (k > 0) {
-                    this.energyFishHook.setLuck(k);
-                }
+                BlockPos pos1 = pos.below();
                 lootcontext$builder
-                        .withLuck((float) k + this.energyFishHook.angler.getLuck())
-                        .withPlayer(this.energyFishHook.angler)
-                        .withLootedEntity(this.energyFishHook);
-                List<ItemStack> list = Lists.newArrayList();
-                this.listPool.generateLoot(list, this._rand, lootcontext$builder.build());
+                        .withLuck((float) k)
+                        .withParameter(LootContextParams.THIS_ENTITY, energyFishHook)
+                        .withParameter(LootContextParams.KILLER_ENTITY, this.player).withParameter(LootContextParams.TOOL, stack).withParameter(LootContextParams.ORIGIN, new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()));
 
+                List<ItemStack> list = new ArrayList<>();
+                this.table.getRandomItems(lootcontext$builder.create(LootContextParamSets.FISHING),list::add);
                 for (ItemStack var1 : list) {
                     if (this.outputSlot.add(var1)) {
                         this.energy.useEnergy(this.energyconsume);
                     }
-                    this._next = this._rand.nextFloat();
                     progress = 0;
                 }
-                int damage = stack.getMaxDamage() - stack.getItemDamage();
-                int m = EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack);
-                if (!((stack.getItem() instanceof IEnergyItem) || (stack.getItem() instanceof IEnergyContainerItem))) {
-                    if (this.inputslot.get().getItemDamage() > -1) {
+                int damage = stack.getMaxDamage() - stack.getDamageValue();
+                int m = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, stack);
+                RandomSource rand;
+                if (!((stack.getItem() instanceof IEnergyItem))) {
+                    if (this.inputslot.get(0).getDamageValue() > -1) {
 
-                        Random rand = this.getWorld().rand;
+                        rand = this.getWorld().random;
                         if (rand.nextInt(1 + m) == 0 && damage > -1) {
-                            this.inputslot.get().setItemDamage(this.inputslot.get().getItemDamage() + 1);
+                            this.inputslot.get(0).setDamageValue(this.inputslot.get(0).getDamageValue() + 1);
                         }
 
 
                     }
 
-                    if (this.inputslot.get().getItemDamage() >= this.inputslot.get().getMaxDamage() && damage > -1) {
+                    if (this.inputslot.get(0).getDamageValue() >= this.inputslot.get(0).getMaxDamage() && damage > -1) {
                         this.inputslot.consume(1);
                     }
                 } else {
-                    Random rand = this.getWorld().rand;
+                    rand = this.getWorld().random;
                     if ((stack.getItem() instanceof IEnergyItem)) {
                         if (rand.nextInt(1 + m) == 0) {
                             ElectricItem.manager.use(stack, 100, null);
-                        }
-                    } else {
-                        IEnergyContainerItem item = (IEnergyContainerItem) stack.getItem();
-                        if (rand.nextInt(1 + m) == 0) {
-                            item.extractEnergy(stack, 100 * Config.coefficientrf, false);
                         }
                     }
                 }
             }
         }
         if (getActive()) {
-            if (this.world.getWorldTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
+            if (this.getWorld().getGameTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
                 ModUtils.tick(this.outputSlot, this);
             }
         }
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
         if (this.level != 1) {
-            ret.add(new ItemStack(IUItem.upgrade_speed_creation, this.level));
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.level));
             this.level = 1;
         }
         return ret;
@@ -309,60 +277,47 @@ public class TileFisher extends TileElectricMachine
 
     @Override
     public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+            final Player player,
+            final InteractionHand hand,
+            final Direction side,
+            final Vec3 hit
     ) {
         if (level < 10) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
+                return super.onActivated(player, hand, side, hit);
             } else {
                 stack.shrink(1);
                 this.level++;
                 return true;
             }
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, hit);
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.progress = nbttagcompound.getInteger("progress");
-        if (nbttagcompound.hasKey("seed")) {
-            this._rand = new Random(nbttagcompound.getLong("seed"));
-        }
+        this.progress = nbttagcompound.getInt("progress");
 
-        if (nbttagcompound.hasKey("next")) {
-            this._next = nbttagcompound.getFloat("next");
-        }
-        this.level = nbttagcompound.getInteger("level");
+        this.level = nbttagcompound.getInt("level");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setFloat("next", this._next);
-        nbttagcompound.setInteger("level", this.level);
-        nbttagcompound.setInteger("progress", this.progress);
-        if (_Random_seed != null) {
-            try {
-                nbttagcompound.setLong("seed", ((AtomicLong) _Random_seed.get(this._rand)).get());
-            } catch (Throwable ignored) {
-            }
-        }
+
+        nbttagcompound.putInt("progress", this.progress);
+        nbttagcompound.putInt("level", this.level);
+
         return nbttagcompound;
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiFisher getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiFisher(new ContainerFisher(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiFisher((ContainerFisher) isAdmin);
     }
 
-    public ContainerFisher getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerFisher getGuiContainer(Player entityPlayer) {
         return new ContainerFisher(entityPlayer, this);
     }
 

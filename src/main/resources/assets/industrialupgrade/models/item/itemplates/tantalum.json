@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/tantalum_plate"
+    "layer0" : "industrialupgrade:item/tantalum_plate"
   }
 }

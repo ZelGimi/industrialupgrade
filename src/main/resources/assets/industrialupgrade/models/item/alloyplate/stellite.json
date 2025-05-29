@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/stellite_plate"	}
+		"layer0": "industrialupgrade:item/stellite_plate"	}
 }

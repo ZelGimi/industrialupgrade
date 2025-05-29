@@ -9,14 +9,11 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.tiles.mechanism.dual.heat.TileWeldingMachine;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collections;
 
-@SideOnly(Side.CLIENT)
-public class GuiWelding extends GuiIU<ContainerDoubleElectricMachine> {
+public class GuiWelding<T extends ContainerDoubleElectricMachine> extends GuiIU<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
@@ -41,20 +38,9 @@ public class GuiWelding extends GuiIU<ContainerDoubleElectricMachine> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
 
 
-    }
+
 
     @Override
     protected ResourceLocation getTexture() {

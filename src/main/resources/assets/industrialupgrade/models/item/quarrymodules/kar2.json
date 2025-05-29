@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/kar2"
+    "layer0" : "industrialupgrade:item/kar2"
   }
 }

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=steampressureconverter_active": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter_active"
+    },
+    "facing=south,type=steampressureconverter_active": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter_active",
+      "y": 180
+    },
+    "facing=west,type=steampressureconverter_active": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter_active",
+      "y": 270
+    },
+    "facing=east,type=steampressureconverter_active": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter_active",
+      "y": 90
+    },
+    "facing=down,type=steampressureconverter_active": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter_active",
+      "x": 90
+    },
+    "facing=up,type=steampressureconverter_active": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter_active",
+      "x": 270
+    },
+    "facing=north,type=steampressureconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter"
+    },
+    "facing=south,type=steampressureconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "y": 180
+    },
+    "facing=west,type=steampressureconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "y": 270
+    },
+    "facing=east,type=steampressureconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "y": 90
+    },
+    "facing=down,type=steampressureconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "x": 90
+    },
+    "facing=up,type=steampressureconverter_invalid": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "x": 270
+    },
+    "facing=north,type=steampressureconverter": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter"
+    },
+    "facing=south,type=steampressureconverter": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "y": 180
+    },
+    "facing=west,type=steampressureconverter": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "y": 270
+    },
+    "facing=east,type=steampressureconverter": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "y": 90
+    },
+    "facing=down,type=steampressureconverter": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "x": 90
+    },
+    "facing=up,type=steampressureconverter": {
+      "model": "industrialupgrade:block/basemachine/steampressureconverter",
+      "x": 270
+    }
+  }
+}

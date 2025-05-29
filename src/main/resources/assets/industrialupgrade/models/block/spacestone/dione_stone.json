@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/dione_stone"
+    "all" : "industrialupgrade:block/dione_stone"
   }
 }

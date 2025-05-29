@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:nanobox"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/tantalumtungstenhafnium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:ef/reader"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:voltage_sensor_for_mechanism"
+  },
+  "show_notification": true
+}

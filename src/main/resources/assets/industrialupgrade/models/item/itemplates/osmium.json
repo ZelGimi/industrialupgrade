@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/osmium_plate"
+    "layer0" : "industrialupgrade:item/osmium_plate"
   }
 }

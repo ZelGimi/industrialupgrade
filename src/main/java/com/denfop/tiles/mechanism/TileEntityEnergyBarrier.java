@@ -6,8 +6,10 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
@@ -15,7 +17,8 @@ public class TileEntityEnergyBarrier extends TileEntityInventory {
 
     private final Energy energy;
 
-    public TileEntityEnergyBarrier() {
+    public TileEntityEnergyBarrier(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.energy_barrier,pos,state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 1000, 14));
     }
 
@@ -26,24 +29,23 @@ public class TileEntityEnergyBarrier extends TileEntityInventory {
 
 
         if (this.energy.getEnergy() > 10) {
-            List<EntityLivingBase> targets = this.world.getEntitiesWithinAABB(
-                    EntityLivingBase.class,
-                    new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), (this.pos.getX() + 1),
-                            (this.pos.getY() + 1),
-                            (this.pos.getZ() + 1)
-                    ).expand(0.1D, 0.1D, 0.1D)
-            );
+            AABB aabb = new AABB(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ(),
+                    this.worldPosition.getX() + 1, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 1)
+                    .inflate(0.1D, 0.1D, 0.1D);
+
+            List<LivingEntity> targets = this.level.getEntitiesOfClass(LivingEntity.class, aabb);
+
             if (!targets.isEmpty()) {
-                for (EntityLivingBase e : targets) {
-                    e.setPositionAndUpdate(
-                            e.posX - Math.sin((e.rotationYaw + 180.0F) * 3.1415927F / 180.0F) * 0.2F,
-                            this.pos.getY() + 1,
-                            e.posZ + (Math.cos((e.rotationYaw + 180.0F) * 3.1415927F / 180.0F) * 0.2F)
-                    );
+                for (LivingEntity e : targets) {
+                    double newX = e.getX() - Math.sin((e.getYRot() + 180.0F) * Math.PI / 180.0F) * 0.2F;
+                    double newY = this.worldPosition.getY() + 1;
+                    double newZ = e.getZ() + Math.cos((e.getYRot() + 180.0F) * Math.PI / 180.0F) * 0.2F;
+                    e.teleportTo(newX, newY, newZ);
                 }
                 this.energy.useEnergy(10);
             }
         }
+
 
 
     }
@@ -54,7 +56,7 @@ public class TileEntityEnergyBarrier extends TileEntityInventory {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

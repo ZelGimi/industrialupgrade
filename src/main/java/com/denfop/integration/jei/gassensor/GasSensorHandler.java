@@ -3,7 +3,7 @@ package com.denfop.integration.jei.gassensor;
 
 import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,23 +40,23 @@ public class GasSensorHandler {
 
     public static void initRecipes() {
         addRecipe(
-                FluidName.fluidgas.getInstance(),
+                FluidName.fluidgas.getInstance().get(),
                 Localization.translate("iu.gas_find.info")
         );
         addRecipe(
-                FluidName.fluidiodine.getInstance(),
+                FluidName.fluidiodine.getInstance().get(),
                 Localization.translate("iu.iodine_find.info")
         );
         addRecipe(
-                FluidName.fluidfluor.getInstance(),
+                FluidName.fluidfluor.getInstance().get(),
                 Localization.translate("iu.iodine_find.info")
         );
         addRecipe(
-                FluidName.fluidbromine.getInstance(),
+                FluidName.fluidbromine.getInstance().get(),
                 Localization.translate("iu.bromine_find.info")
         );
         addRecipe(
-                FluidName.fluidchlorum.getInstance(),
+                FluidName.fluidchlorum.getInstance().get(),
                 Localization.translate("iu.chlorine_find.info")
         );
     }

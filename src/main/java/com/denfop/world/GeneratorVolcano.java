@@ -1,29 +1,23 @@
 package com.denfop.world;
 
 import com.denfop.IUItem;
-import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockBasalts;
 import com.denfop.blocks.BlockHeavyOre;
 import com.denfop.blocks.BlockMineral;
 import com.denfop.blocks.FluidName;
-import com.denfop.network.packet.PacketUpdateTile;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.TileEntityVolcanoChest;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -33,7 +27,6 @@ import java.util.Random;
 import static com.denfop.world.WorldBaseGen.veinTypes;
 
 public class GeneratorVolcano {
-
     public static final int[][] protrusionOffsets = {
             {-1, 1, -1},
             {0, 2, -1},
@@ -45,69 +38,42 @@ public class GeneratorVolcano {
             {-1, 8, 0},
             {0, 9, 0}
     };
-    private static IBlockState basalt_smooth = IUItem.basalts.getState(BlockBasalts.Type.basalt_smooth);
-    private static IBlockState basalt_sulfur_ore = IUItem.basalts.getState(BlockBasalts.Type.basalt_sulfur_ore);
-    private static IBlockState basalt_pylon = IUItem.basalts.getState(BlockBasalts.Type.basalt_pylon);
-    private static IBlockState basalt_magma = IUItem.basalts.getState(BlockBasalts.Type.basalt_magma);
-    private static IBlockState basalt_cobblestone = IUItem.basalts.getState(BlockBasalts.Type.basalt_cobblestone);
-    private static IBlockState basalt_melted = IUItem.basalts.getState(BlockBasalts.Type.basalt_melted);
-    private static IBlockState basalt = IUItem.basalts.getState(BlockBasalts.Type.basalt);
-    private static IBlockState basalt_boron_ore = IUItem.basalts.getState(BlockBasalts.Type.basalt_boron_ore);
-    private static IBlockState basalt_spongy = IUItem.basalts.getState(BlockBasalts.Type.basalt_spongy);
-    private static IBlockState basalt_blocked = IUItem.basalts.getState(BlockBasalts.Type.basalt_blocked);
-    private static IBlockState[][] basalts_ores = null;
-    private final World world;
-    private final BlockPos position;
-    private final Random rand;
+    private static BlockState basalt_smooth = IUItem.basalts.getState(BlockBasalts.Type.basalt_smooth);
+    private static BlockState basalt_sulfur_ore = IUItem.basalts.getState(BlockBasalts.Type.basalt_sulfur_ore);
+    private static BlockState basalt_pylon = IUItem.basalts.getState(BlockBasalts.Type.basalt_pylon);
+    private static BlockState basalt_magma = IUItem.basalts.getState(BlockBasalts.Type.basalt_magma);
+    private static BlockState basalt_cobblestone = IUItem.basalts.getState(BlockBasalts.Type.basalt_cobblestone);
+    private static BlockState basalt_melted = IUItem.basalts.getState(BlockBasalts.Type.basalt_melted);
+    private static BlockState basalt = IUItem.basalts.getState(BlockBasalts.Type.basalt);
+    private static BlockState basalt_boron_ore = IUItem.basalts.getState(BlockBasalts.Type.basalt_boron_ore);
+    private static BlockState basalt_spongy = IUItem.basalts.getState(BlockBasalts.Type.basalt_spongy);
+    private static BlockState basalt_blocked = IUItem.basalts.getState(BlockBasalts.Type.basalt_blocked);
+    private static BlockState[][] basalts_ores = null;
+    private final BlockPos position2;
     private final Thread thread;
-    private final LinkedList<BlockPos> blockPosList1;
-    private final LinkedList<BlockPos> blockPosList;
-    private final ChunkPos chunkPos;
-    private final Chunk chunk;
-    private final int baseHeight;
-    private final int baseRadius;
-    private final double protrusionChance;
-    private final double lavaFlowChance;
-    private final double stalagmiteChance;
     boolean genChest = false;
-    private Map<ChunkPos, Chunk> chunkPosChunkMap = new HashMap<>();
+    private Level world;
+    private BlockPos position;
+    private Random rand;
+    private LinkedList<BlockPos> blockPosList1;
+    private LinkedList<BlockPos> blockPosList;
+    private ChunkPos chunkPos;
+    private ChunkAccess chunk;
+    private int baseHeight;
+    private int baseRadius;
+    private double protrusionChance;
+    private double lavaFlowChance;
+    private double stalagmiteChance;
+    private Map<ChunkPos, ChunkAccess> chunkPosChunkMap = new HashMap<>();
     private boolean end;
     private int y;
     private int maxbaseHeight;
 
-    public GeneratorVolcano(World world, BlockPos position1) {
-        this.world = world;
-        BlockPos position2 = new BlockPos(position1.getX(), 30, position1.getZ());
-        this.rand = world.rand;
-        this.end = false;
-        this.chunkPos = new ChunkPos(position2);
-        this.chunk = world.getChunkFromChunkCoords(chunkPos.x, chunkPos.z);
 
-        this.baseHeight = 60 + rand.nextInt(30);
+    public GeneratorVolcano(FeaturePlaceContext<NoneFeatureConfiguration> p159749) {
 
-        this.baseRadius = 25 + rand.nextInt(20);
-        this.protrusionChance = 0.05;
 
-        this.lavaFlowChance = 0.01;
-
-        this.stalagmiteChance = 0.1;
-        this.blockPosList = new LinkedList<>();
-        this.blockPosList1 = new LinkedList<>();
-        this.maxbaseHeight = 0;
-        for (int y = 0; y < baseHeight; y++) {
-            int radius = baseRadius - y / 2;
-            if (radius < 10) {
-                maxbaseHeight = y;
-                break;
-            }
-        }
-        if (basalts_ores == null) {
-            initBasaltsOres();
-        }
-        final int height = chunk.getHeight(position2);
-        this.position = new BlockPos(position1.getX(), height - maxbaseHeight, position1.getZ());
-        this.y = 0;
-        this.end = false;
+        this.position2 = new BlockPos(p159749.origin().getX(), 30, p159749.origin().getZ());
         this.thread = new Thread() {
             @Override
             public void run() {
@@ -117,10 +83,10 @@ public class GeneratorVolcano {
                         if (rand.nextDouble() >= 0.95) {
                             BlockPos pos = blockPosList1.get(index);
                             while (true) {
-                                if (world.getBlockState(pos).getMaterial() != Material.AIR) {
-                                    pos = pos.up();
+                                if (!world.getBlockState(pos).isAir()) {
+                                    pos = pos.above();
                                 }
-                                generateChest(pos);
+                                // generateChest(pos);
                                 break;
                             }
                             genChest = true;
@@ -128,10 +94,10 @@ public class GeneratorVolcano {
                             BlockPos pos = blockPosList1.remove(index);
                             if (blockPosList1.isEmpty()) {
                                 while (true) {
-                                    if (world.getBlockState(pos).getMaterial() != Material.AIR) {
-                                        pos = pos.up();
+                                    if (!world.getBlockState(pos).isAir()) {
+                                        pos = pos.above();
                                     }
-                                    generateChest(pos);
+                                    //   generateChest(pos);
                                     break;
                                 }
                                 genChest = true;
@@ -146,8 +112,8 @@ public class GeneratorVolcano {
                     for (int x = -radius; x <= radius; x++) {
                         for (int z = -radius; z <= radius; z++) {
                             if (x * x + z * z <= radius * radius) {
-                                BlockPos pos = position.add(x, y, z);
-                                setBlockState1(world, pos, Blocks.AIR.getDefaultState(), 3);
+                                BlockPos pos = position.offset(x, y, z);
+                                world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                             }
                         }
                     }
@@ -157,37 +123,37 @@ public class GeneratorVolcano {
                 for (int x = -radius; x <= radius; x++) {
                     for (int z = -radius; z <= radius; z++) {
                         if (x * x + z * z <= radius * radius) {
-                            BlockPos pos = position.add(x, y, z);
+                            BlockPos pos = position.offset(x, y, z);
                             if (y >= baseHeight - 1 || x * x + z * z > (radius - 2) * (radius - 2)) {
-                                world.setBlockState(pos, getBlockState(maxbaseHeight, y, rand), 3);
+                                world.setBlock(pos, getBlockState(maxbaseHeight, y, rand), 3);
                                 if (y < baseHeight - 5 && y > maxbaseHeight * 0.1 && rand.nextDouble() < stalagmiteChance) {
                                     for (int i = 1; i <= rand.nextInt(3); i++) {
-                                        BlockPos belowPos = pos.down(i);
-                                        setBlockState1(world, belowPos, getBlockState(maxbaseHeight, y, rand), 3);
+                                        BlockPos belowPos = pos.below(i);
+                                        world.setBlock(belowPos, getBlockState(maxbaseHeight, y, rand), 3);
                                     }
                                 } else if (y < maxbaseHeight * 0.6 && y > maxbaseHeight * 0.1 && rand.nextDouble() < 0.05) {
-                                    world.setBlockState(pos, getBlockState(maxbaseHeight, y, rand), 3);
+                                    world.setBlock(pos, getBlockState(maxbaseHeight, y, rand), 3);
                                     for (int i = 1; i <= 3 + rand.nextInt(6); i++) {
-                                        BlockPos belowPos = pos.down(i);
-                                        setBlockState1(world, belowPos, getBlockStatePylon(maxbaseHeight, y, rand), 3);
+                                        BlockPos belowPos = pos.below(i);
+                                        world.setBlock(belowPos, getBlockStatePylon(maxbaseHeight, y, rand), 3);
                                     }
                                 } else if (y < maxbaseHeight * 0.25 && y > maxbaseHeight * 0.025 && rand.nextDouble() < lavaFlowChance) {
-                                    BlockPos belowPos = pos.down();
+                                    BlockPos belowPos = pos.below();
                                     setBlockState1(
                                             world,
                                             belowPos,
-                                            FluidName.fluidpahoehoe_lava.getInstance().getBlock().getDefaultState(),
+                                            FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(),
                                             3
                                     );
                                 }
                                 if (rand.nextInt(1000) > 20) {
                                     continue;
                                 }
-                                BlockPos belowPos = pos.up();
+                                BlockPos belowPos = pos.above();
                                 setBlockState1(
                                         world,
                                         belowPos,
-                                        FluidName.fluidpahoehoe_lava.getInstance().getBlock().getDefaultState(),
+                                        FluidName.fluidpahoehoe_lava.getInstance().get().getSource().defaultFluidState().createLegacyBlock(),
                                         3
                                 );
 
@@ -196,13 +162,13 @@ public class GeneratorVolcano {
                                     if (rand.nextDouble() < protrusionChance) {
                                         final int type = rand.nextInt(5);
                                         if (type == 0) {
-                                            BlockPos protrusionPos = pos.up(0);
+                                            BlockPos protrusionPos = pos.above(0);
                                             setBlockState1(world, protrusionPos, getBlockDownState(y, rand), 3);
                                             blockPosList1.add(protrusionPos);
                                         } else if (type == 1) {
                                             int protrusionSize = rand.nextInt(5) + 2;
                                             for (int i = 0; i < protrusionSize; i++) {
-                                                BlockPos protrusionPos = pos.up(i);
+                                                BlockPos protrusionPos = pos.above(i);
                                                 blockPosList.add(protrusionPos);
                                                 setBlockState1(
                                                         world,
@@ -211,11 +177,11 @@ public class GeneratorVolcano {
                                                         3
                                                 );
                                             }
-                                            blockPosList1.add(pos.up(protrusionSize - 1));
+                                            blockPosList1.add(pos.above(protrusionSize - 1));
                                         } else if (type == 2) {
                                             for (int x1 = -1; x1 < 2; x1++) {
                                                 for (int z1 = -1; z1 < 2; z1++) {
-                                                    BlockPos protrusionPos = pos.add(x1, 0, z1);
+                                                    BlockPos protrusionPos = pos.offset(x1, 0, z1);
                                                     blockPosList.add(protrusionPos);
                                                     setBlockState1(
                                                             world,
@@ -230,7 +196,7 @@ public class GeneratorVolcano {
 
                                             for (int[] offset : protrusionOffsets) {
                                                 for (int yy = 0; yy < offset[1]; yy++) {
-                                                    BlockPos protrusionPos = pos.add(offset[0], yy, offset[2]);
+                                                    BlockPos protrusionPos = pos.offset(offset[0], yy, offset[2]);
                                                     blockPosList.add(protrusionPos);
                                                     setBlockState1(
                                                             world,
@@ -245,7 +211,7 @@ public class GeneratorVolcano {
                                         } else if (type == 3) {
                                             for (int x1 = -1; x1 < 2; x1++) {
                                                 for (int z1 = -1; z1 < 2; z1++) {
-                                                    BlockPos protrusionPos = pos.add(x1, 0, z1);
+                                                    BlockPos protrusionPos = pos.offset(x1, 0, z1);
                                                     blockPosList.add(protrusionPos);
                                                     setBlockState1(
                                                             world,
@@ -258,7 +224,7 @@ public class GeneratorVolcano {
                                             }
                                             int protrusionSize = rand.nextInt(5) + 2;
                                             for (int i = 0; i < protrusionSize; i++) {
-                                                BlockPos protrusionPos = pos.up(i);
+                                                BlockPos protrusionPos = pos.above(i);
                                                 blockPosList.add(protrusionPos);
                                                 setBlockState1(
                                                         world,
@@ -269,7 +235,7 @@ public class GeneratorVolcano {
                                             }
                                             protrusionSize = rand.nextInt(protrusionSize);
                                             for (int i = 0; i < protrusionSize; i++) {
-                                                BlockPos protrusionPos = pos.up(i);
+                                                BlockPos protrusionPos = pos.above(i);
                                                 for (int z1 = -1; z1 < 2; z1 += 2) {
                                                     final BlockPos pos1 = protrusionPos.east(z1);
                                                     blockPosList.add(pos1);
@@ -287,7 +253,7 @@ public class GeneratorVolcano {
                                         } else {
                                             for (int x1 = -1; x1 < 2; x1++) {
                                                 for (int z1 = -1; z1 < 2; z1++) {
-                                                    BlockPos protrusionPos = pos.add(x1, 0, z1);
+                                                    BlockPos protrusionPos = pos.offset(x1, 0, z1);
                                                     blockPosList.add(protrusionPos);
                                                     blockPosList1.add(protrusionPos);
                                                     setBlockState1(
@@ -300,13 +266,13 @@ public class GeneratorVolcano {
                                             }
                                             int protrusionSize = rand.nextInt(5) + 2;
                                             for (int i = 0; i < protrusionSize; i++) {
-                                                BlockPos protrusionPos = pos.up(i);
+                                                BlockPos protrusionPos = pos.above(i);
                                                 blockPosList.add(protrusionPos);
                                                 setBlockState1(world, protrusionPos, getBlockState(maxbaseHeight, y, rand), 3);
                                             }
                                             protrusionSize = rand.nextInt(protrusionSize);
                                             for (int i = 0; i < protrusionSize; i++) {
-                                                BlockPos protrusionPos = pos.up(i);
+                                                BlockPos protrusionPos = pos.above(i);
                                                 for (int z1 = -1; z1 < 2; z1 += 2) {
                                                     for (int x1 = -1; x1 < 2; x1 += 2) {
                                                         BlockPos pos1 = protrusionPos.east(z1);
@@ -323,17 +289,17 @@ public class GeneratorVolcano {
                                     } else {
                                         final boolean remove = blockPosList.remove(pos);
                                         if (!remove) {
-                                            setBlockState1(world, pos, Blocks.FLOWING_LAVA.getDefaultState(), 3);
+                                            setBlockState1(world, pos, Fluids.FLOWING_LAVA.getSource().defaultFluidState().createLegacyBlock(), 3);
                                         }
                                     }
                                 } else {
                                     if (blockPosList.isEmpty() || y > 10) {
 
-                                        setBlockState1(world, pos, Blocks.AIR.getDefaultState(), 3);
+                                        setBlockState1(world, pos, Blocks.AIR.defaultBlockState(), 3);
                                     } else {
                                         boolean remove = blockPosList.remove(pos);
                                         if (!remove) {
-                                            setBlockState1(world, pos, Blocks.AIR.getDefaultState(), 3);
+                                            setBlockState1(world, pos, Blocks.AIR.defaultBlockState(), 3);
                                         }
                                     }
                                 }
@@ -348,139 +314,60 @@ public class GeneratorVolcano {
         this.thread.setPriority(1);
     }
 
-    public IBlockState setBlockState(Chunk chunk, BlockPos pos, IBlockState state) {
-        int i = pos.getX() & 15;
-        int j = pos.getY();
-        int k = pos.getZ() & 15;
-        int l = k << 4 | i;
-
-        if (j >= chunk.precipitationHeightMap[l] - 1) {
-            chunk.precipitationHeightMap[l] = -999;
-        }
-
-        int i1 = chunk.heightMap[l];
-        IBlockState iblockstate = chunk.getBlockState(pos);
-
-        if (iblockstate == state) {
-            return null;
-        } else {
-            Block block = state.getBlock();
-            Block block1 = iblockstate.getBlock();
-            int k1 = iblockstate.getLightOpacity(
-                    this.world,
-                    pos
-            );
-            ExtendedBlockStorage extendedblockstorage = chunk.storageArrays[j >> 4];
-            boolean flag = false;
-
-            if (extendedblockstorage == Chunk.NULL_BLOCK_STORAGE) {
-                if (block == Blocks.AIR) {
-                    return null;
-                }
-
-                extendedblockstorage = new ExtendedBlockStorage(j >> 4 << 4, this.world.provider.hasSkyLight());
-                chunk.storageArrays[j >> 4] = extendedblockstorage;
-                flag = j >= i1;
-            }
-
-            extendedblockstorage.set(i, j & 15, k, state);
-
-            {
-                if (!this.world.isRemote) {
-                    if (block1 != block) //Only fire block breaks when the block changes.
-                    {
-                        block1.breakBlock(this.world, pos, iblockstate);
-                    }
-                    TileEntity te = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
-                    if (te != null && te.shouldRefresh(this.world, pos, iblockstate, state)) {
-                        this.world.removeTileEntity(pos);
-                    }
-                } else if (block1.hasTileEntity(iblockstate)) {
-                    TileEntity te = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
-                    if (te != null && te.shouldRefresh(this.world, pos, iblockstate, state)) {
-                        this.world.removeTileEntity(pos);
-                    }
+    public void setWorld(Level world) {
+        if (this.world == null) {
+            this.world = world;
+            this.rand = WorldBaseGen.random;
+            this.end = false;
+            this.chunkPos = new ChunkPos(position2);
+            this.chunk = world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.EMPTY, false);
+            this.baseHeight = 80 + rand.nextInt(30);
+            this.baseRadius = 35 + rand.nextInt(20);
+            this.protrusionChance = 0.05;
+            this.lavaFlowChance = 0.01;
+            this.stalagmiteChance = 0.1;
+            this.blockPosList = new LinkedList<>();
+            this.blockPosList1 = new LinkedList<>();
+            this.maxbaseHeight = 0;
+            for (int y = 0; y < baseHeight; y++) {
+                int radius = baseRadius - y / 2;
+                if (radius < 10) {
+                    maxbaseHeight = y;
+                    break;
                 }
             }
-
-            if (extendedblockstorage.get(i, j & 15, k).getBlock() != block) {
-                return null;
-            } else {
-
-
-                if (!this.world.isRemote && block1 != block && (!this.world.captureBlockSnapshots || block.hasTileEntity(state))) {
-                    block.onBlockAdded(this.world, pos, state);
-                }
-
-                if (block.hasTileEntity(state)) {
-                    TileEntity tileentity1 = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
-
-                    if (tileentity1 == null) {
-                        tileentity1 = block.createTileEntity(this.world, state);
-                        this.world.setTileEntity(pos, tileentity1);
-                    }
-
-                    if (tileentity1 != null) {
-                        tileentity1.updateContainingBlockInfo();
-                    }
-                }
-
-                chunk.markDirty();
-                return iblockstate;
+            if (basalts_ores == null) {
+                initBasaltsOres();
             }
+
+            BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(position2.getX(), world.getMaxBuildHeight(), position2.getZ());
+            while (checkPos.getY() > world.getMinBuildHeight()) {
+                checkPos.move(0, -1, 0);
+                BlockState state = world.getBlockState(checkPos);
+                if (!state.isAir() && !state.liquid()) {
+                    break;
+                }
+            }
+            this.position = checkPos.above(maxbaseHeight / 2);
+            if (position.getY() > 60)
+                position = position.below(position.getY()-60);
+            this.y = 0;
+            this.end = false;
         }
     }
 
-    public boolean setBlockState1(World world, BlockPos pos, IBlockState newState, int flags) {
-        if (world.isOutsideBuildHeight(pos)) {
-            return false;
-        } else if (!world.isRemote && world.getWorldInfo().getTerrainType() == WorldType.DEBUG_ALL_BLOCK_STATES) {
-            return false;
-        } else {
-            ChunkPos chunkPos = new ChunkPos(pos);
-            Chunk chunk = chunkPosChunkMap.get(chunkPos);
-            if (chunk == null) {
-                chunk = world.getChunkFromBlockCoords(pos);
-                chunkPosChunkMap.put(chunkPos, chunk);
-            }
-
-
-            pos = pos.toImmutable(); // Forge - prevent mutable BlockPos leaks
-            net.minecraftforge.common.util.BlockSnapshot blockSnapshot = null;
-            if (world.captureBlockSnapshots && !world.isRemote) {
-                blockSnapshot = net.minecraftforge.common.util.BlockSnapshot.getBlockSnapshot(world, pos, flags);
-                world.capturedBlockSnapshots.add(blockSnapshot);
-            }
-            IBlockState iblockstate = this.setBlockState(chunk, pos, newState);
-
-            if (iblockstate == null) {
-                if (blockSnapshot != null) {
-                    world.capturedBlockSnapshots.remove(blockSnapshot);
-                }
-                return false;
-            } else {
-
-
-                if (blockSnapshot == null) // Don't notify clients or update physics while capturing blockstates
-                {
-                    world.markAndNotifyBlock(pos, chunk, iblockstate, newState, flags);
-                }
-                return true;
-            }
-        }
-    }
 
     private void initBasaltsOres() {
-        basalts_ores = new IBlockState[veinTypes.size()][];
+        basalts_ores = new BlockState[veinTypes.size()][];
         for (int i = 0; i < veinTypes.size(); i++) {
             VeinType type = veinTypes.get(i);
             int mineral = type.getHeavyOre() == null ? 0 : 1;
-            basalts_ores[i] = new IBlockState[mineral + type.getOres().size()];
+            basalts_ores[i] = new BlockState[mineral + type.getOres().size()];
             if (type.getHeavyOre() != null) {
                 if (type.getHeavyOre() instanceof BlockHeavyOre) {
-                    basalts_ores[i][0] = IUItem.basaltheavyore.getStateMeta(type.getMeta());
+                    basalts_ores[i][0] = IUItem.basaltheavyore.getStateFromMeta(type.getMeta());
                 } else if (type.getHeavyOre() instanceof BlockMineral) {
-                    basalts_ores[i][0] = IUItem.basaltheavyore1.getStateMeta(type.getMeta());
+                    basalts_ores[i][0] = IUItem.basaltheavyore1.getStateFromMeta(type.getMeta());
                 }
                 for (int j = 0; j < type.getOres().size(); j++) {
                     ChanceOre chanceOre = type.getOres().get(j);
@@ -496,27 +383,7 @@ public class GeneratorVolcano {
 
     }
 
-
-    public void generateChest(BlockPos pos) {
-
-        IBlockState oldState = world.getBlockState(pos);
-        IBlockState newState = IUItem.invalid.getDefaultState();
-        IMultiTileBlock teBlock = IUItem.volcanoChest.item.getTeBlock(new ItemStack(IUItem.volcanoChest));
-        Class<? extends TileEntityBlock> teClass = teBlock.getTeClass();
-        TileEntityVolcanoChest te = (TileEntityVolcanoChest) TileEntityBlock.instantiate(teClass);
-        if (world.setBlockState(pos, newState, 0)) {
-            world.setTileEntity(pos, te);
-            te.onPlaced(ItemStack.EMPTY, null, EnumFacing.NORTH);
-            world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), oldState, te.getBlockState(), 3);
-            if (!world.isRemote) {
-                new PacketUpdateTile(te);
-            }
-
-        }
-        return;
-    }
-
-    public IBlockState getBlockDownState(int y, Random random) {
+    public BlockState getBlockDownState(int y, Random random) {
 
         final double chance = random.nextDouble();
         if (chance < 0.7) {
@@ -537,7 +404,7 @@ public class GeneratorVolcano {
         }
     }
 
-    public IBlockState getBlockState(int baseHeight, int y, Random random) {
+    public BlockState getBlockState(int baseHeight, int y, Random random) {
         if (y < baseHeight * 0.15) {
             final double chance = random.nextDouble();
             if (chance < 0.65) {
@@ -596,7 +463,7 @@ public class GeneratorVolcano {
                     if (chance1 <= 0.48) {
                         return basalt_sulfur_ore;
                     }
-                    return Blocks.STONE.getDefaultState();
+                    return Blocks.STONE.defaultBlockState();
                 } else {
                     int meta = random.nextInt(veinTypes.size());
                     final VeinType vein = veinTypes.get(meta);
@@ -608,7 +475,7 @@ public class GeneratorVolcano {
         }
     }
 
-    public IBlockState getBlockStatePylon(int baseHeight, int y, Random random) {
+    public BlockState getBlockStatePylon(int baseHeight, int y, Random random) {
         if (y < baseHeight * 0.15) {
             final double chance = random.nextDouble();
             if (chance < 0.65) {
@@ -673,6 +540,10 @@ public class GeneratorVolcano {
         }
     }
 
+    public void setBlockState1(Level level, BlockPos p_46605_, BlockState p_46606_, int p_46607_) {
+        level.setBlock(p_46605_, p_46606_, p_46607_);
+    }
+
     public void generate() {
         thread.run();
     }
@@ -680,5 +551,4 @@ public class GeneratorVolcano {
     public boolean isEnd() {
         return end;
     }
-
 }

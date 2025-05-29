@@ -1,6 +1,5 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
@@ -18,7 +17,9 @@ import com.denfop.blocks.mechanism.BlockRefiner;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerOilRefiner;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiOilRefiner;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -27,33 +28,31 @@ import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
-import com.denfop.render.tank.DataFluid;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import com.denfop.utils.Keyboard;
+import com.denfop.utils.ModUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TileOilRefiner extends TileElectricMachine implements IManufacturerBlock, IUpgradableBlock, IHasRecipe {
 
@@ -68,17 +67,12 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final Fluids fluids;
-    @SideOnly(Side.CLIENT)
-    public DataFluid dataFluid;
-    @SideOnly(Side.CLIENT)
-    public DataFluid dataFluid1;
-    @SideOnly(Side.CLIENT)
-    public DataFluid dataFluid2;
-    private boolean needUpdate;
-    private int level;
 
-    public TileOilRefiner() {
-        super(24000, 14, 2);
+    private boolean needUpdate;
+    private int levelMech;
+
+    public TileOilRefiner(BlockPos pos, BlockState state) {
+        super(24000, 14, 2, BlockRefiner.refiner, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.INPUT);
         this.needUpdate = false;
@@ -101,6 +95,45 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
     }
 
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
+        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
+        if (this.levelMech != 0) {
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.levelMech));
+            this.levelMech = 0;
+        }
+        return ret;
+    }
+    @Override
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
+        CompoundTag compoundTag =  super.writeToNBT(nbttagcompound);
+        compoundTag.putInt("levelMech",levelMech);
+        return compoundTag;
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        levelMech = nbttagcompound.getInt("levelMech");
+    }
+
+    @Override
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (levelMech < 10) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
+                return super.onActivated(player, hand, side, vec3);
+            } else {
+                stack.shrink(1);
+                this.levelMech++;
+                return true;
+            }
+        } else {
+
+            return super.onActivated(player, hand, side, vec3);
+        }
+    }
+
+
     @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);
@@ -108,7 +141,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -118,7 +151,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank2.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -128,7 +161,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank3.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank3.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -136,181 +169,101 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
         }
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2D, 1.0D));
+    public List<AABB> getAabbs(boolean forCollision) {
+        return Collections.singletonList(new AABB(0.0D, 0.0D, 0.0D, 1.0D, 2D, 1.0D));
 
     }
 
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("oil_refiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidneft.getInstance(), 10)), Arrays.asList(
+                new FluidStack(FluidName.fluidneft.getInstance().get(), 10)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluidbenz.getInstance(),
+                        FluidName.fluidbenz.getInstance().get(),
                         8
-                ), new FluidStack(FluidName.fluiddizel.getInstance(), 2))));
+                ), new FluidStack(FluidName.fluiddizel.getInstance().get(), 2))));
         Recipes.recipes.getRecipeFluid().addRecipe("oil_refiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance(), 10)), Arrays.asList(
+                new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance().get(), 10)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluiddizel.getInstance(),
+                        FluidName.fluiddizel.getInstance().get(),
                         8
-                ), new FluidStack(FluidName.fluidbenz.getInstance(), 2))));
+                ), new FluidStack(FluidName.fluidbenz.getInstance().get(), 2))));
         Recipes.recipes.getRecipeFluid().addRecipe("oil_refiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsweet_medium_oil.getInstance(), 10)), Arrays.asList(
+                new FluidStack(FluidName.fluidsweet_medium_oil.getInstance().get(), 10)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluidbenz.getInstance(),
+                        FluidName.fluidbenz.getInstance().get(),
                         6
-                ), new FluidStack(FluidName.fluiddizel.getInstance(), 4))));
+                ), new FluidStack(FluidName.fluiddizel.getInstance().get(), 4))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("oil_refiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsour_light_oil.getInstance(), 10)), Arrays.asList(
+                new FluidStack(FluidName.fluidsour_light_oil.getInstance().get(), 10)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluidbenz.getInstance(),
+                        FluidName.fluidbenz.getInstance().get(),
                         5
-                ), new FluidStack(FluidName.fluiddizel.getInstance(), 1))));
+                ), new FluidStack(FluidName.fluiddizel.getInstance().get(), 1))));
         Recipes.recipes.getRecipeFluid().addRecipe("oil_refiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsour_heavy_oil.getInstance(), 10)), Arrays.asList(
+                new FluidStack(FluidName.fluidsour_heavy_oil.getInstance().get(), 10)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluiddizel.getInstance(),
+                        FluidName.fluiddizel.getInstance().get(),
                         5
-                ), new FluidStack(FluidName.fluidbenz.getInstance(), 1))));
+                ), new FluidStack(FluidName.fluidbenz.getInstance().get(), 1))));
         Recipes.recipes.getRecipeFluid().addRecipe("oil_refiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsour_medium_oil.getInstance(), 10)), Arrays.asList(
+                new FluidStack(FluidName.fluidsour_medium_oil.getInstance().get(), 10)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluidbenz.getInstance(),
+                        FluidName.fluidbenz.getInstance().get(),
                         4
-                ), new FluidStack(FluidName.fluiddizel.getInstance(), 2))));
+                ), new FluidStack(FluidName.fluiddizel.getInstance().get(), 2))));
 
 
     }
 
+
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.getLevel().isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
-            if (this.getWorld().provider.getWorldTime() % 5 == 0) {
-                switch (facing) {
-                    case 2:
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.1, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.1, 0
-                        );
+            Level world = this.getLevel();
+            if (world != null && world.getGameTime() % 5 == 0) {
+                Vec3 pos = Vec3.atLowerCornerOf(this.getBlockPos());
+                double x = pos.x;
+                double y = pos.y;
+                double z = pos.z;
 
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.8, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.8, 0, 0.025, 0
-                        );
+                switch (ModUtils.facings[facing]) {
+                    case NORTH:
+                        spawnParticles(world, x + 0.8, y + 2, z + 0.8, 0, 0.3, 0);
+                        spawnParticles(world, x + 0.2, y + 2, z + 0.8, 0, 0.3, 0);
                         break;
-                    case 3:
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.1, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.1, 0
-                        );
-
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.2, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.2, 0, 0.025, 0
-                        );
+                    case SOUTH:
+                        spawnParticles(world, x + 0.8, y + 2, z + 0.2, 0, 0.3, 0);
+                        spawnParticles(world, x + 0.2, y + 2, z + 0.2, 0, 0.3, 0);
                         break;
-                    case 4:
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.82,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.1, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.1, 0
-                        );
-
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.8, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.2, 0, 0.025, 0
-                        );
+                    case WEST:
+                        spawnParticles(world, x + 0.8, y + 2, z + 0.8, 0, 0.3, 0);
+                        spawnParticles(world, x + 0.8, y + 2, z + 0.2, 0, 0.3, 0);
                         break;
-                    case 5:
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.1, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.1, 0
-                        );
-
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.8, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.2, 0, 0.025, 0
-                        );
+                    case EAST:
+                        spawnParticles(world, x + 0.2, y + 2, z + 0.8, 0, 0.3, 0);
+                        spawnParticles(world, x + 0.2, y + 2, z + 0.2, 0, 0.3, 0);
                         break;
                 }
             }
-
         }
+    }
+
+    private void spawnParticles(Level world, double x, double y, double z, double dx, double dy, double dz) {
+        world.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, dx, dy, dz);
+        world.addParticle(ParticleTypes.SMOKE, x, y, z, dx * 0.1, dy * 0.1, dz * 0.1);
+        world.addParticle(ParticleTypes.FLAME, x, y - 0.1, z, dx * 0.025, dy * 0.025, dz * 0.025);
     }
 
 
@@ -319,57 +272,27 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.oilrefiner;
+        return IUItem.oilrefiner.getBlock();
     }
 
     @Override
-    public int getLevel() {
-        return this.level;
+    public int getLevelMechanism() {
+        return this.levelMech;
     }
 
     @Override
-    public void setLevel(final int level) {
-        this.level = level;
+    public void setLevelMech(final int levelMech) {
+        this.levelMech = levelMech;
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.levelMech -= level;
     }
+
 
     @Override
-    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
-        return new ItemStack(IUItem.oilrefiner);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    @Override
-    public ContainerOilRefiner getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerOilRefiner getGuiContainer(Player entityPlayer) {
         return new ContainerOilRefiner(entityPlayer, this);
 
     }
@@ -385,41 +308,11 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiOilRefiner(new ContainerOilRefiner(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<?>> getGui(Player entityPlayer, ContainerBase<?> isAdmin) {
+        return new GuiOilRefiner((ContainerOilRefiner) isAdmin);
     }
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
-        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.level != 0) {
-            ret.add(new ItemStack(IUItem.upgrade_speed_creation, this.level));
-            this.level = 0;
-        }
-        return ret;
-    }
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (level < 10) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-            } else {
-                stack.shrink(1);
-                this.level++;
-                return true;
-            }
-        } else {
 
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-        }
-    }
     public void updateEntityServer() {
         super.updateEntityServer();
 
@@ -470,36 +363,36 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
                 10)) {
             final BaseFluidMachineRecipe output = this.fluid_handler.output();
             final FluidStack inputFluidStack = output.input.getInputs().get(0);
-            int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.amount;
-            size = Math.min(this.level + 1, size);
+            int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.getAmount();
+            size = Math.min(this.levelMech + 1, size);
             int cap = this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount();
             FluidStack outputFluidStack = output.output_fluid.get(0);
-            cap /= outputFluidStack.amount;
+            cap /= outputFluidStack.getAmount();
             cap = Math.min(cap, size);
             int cap1 = this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount();
             FluidStack outputFluidStack1 = output.output_fluid.get(1);
-            cap1 /= outputFluidStack1.amount;
+            cap1 /= outputFluidStack1.getAmount();
             size = Math.min(Math.min(size, cap1), cap);
-            if (this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount() >= outputFluidStack.amount) {
+            if (this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount() >= outputFluidStack.getAmount()) {
                 FluidStack fluidStack = new FluidStack(
                         outputFluidStack.getFluid(),
-                        outputFluidStack.amount * size
+                        outputFluidStack.getAmount() * size
                 );
-                this.fluidTank2.fill(fluidStack, true);
+                this.fluidTank2.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                 drain = true;
 
             }
-            if (this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount() >= outputFluidStack1.amount) {
+            if (this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount() >= outputFluidStack1.getAmount()) {
                 FluidStack fluidStack = new FluidStack(
                         outputFluidStack1.getFluid(),
-                        outputFluidStack1.amount * size
+                        outputFluidStack1.getAmount() * size
                 );
-                this.fluidTank3.fill(fluidStack, true);
+                this.fluidTank3.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                 drain1 = true;
             }
             if (drain || drain1) {
-                int drains = size * inputFluidStack.amount;
-                this.getFluidTank(0).drain(drains, true);
+                int drains = size * inputFluidStack.getAmount();
+                this.getFluidTank(0).drain(drains, IFluidHandler.FluidAction.EXECUTE);
                 if (!this.getActive()) {
                     this.setActive(true);
                     initiate(0);
@@ -517,7 +410,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             }
         }
 
-        if (this.world.provider.getWorldTime() % 20 == 0 && needUpdate) {
+        if (this.level.getGameTime() % 20 == 0 && needUpdate) {
             needUpdate = false;
             for (int i = 0; i < this.fluids.getManagedTanks().size(); i++) {
                 FluidTank tank = this.fluids.getManagedTanks().get(i);

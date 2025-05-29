@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/moon_boulder"
+    "layer0" : "industrialupgrade:item/moon_boulder"
   }
 }

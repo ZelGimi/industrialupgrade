@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/redbrass"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ]
+  },
+  "pattern": [
+    " AB",
+    "AB ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_519_element"
+  },
+  "show_notification": true
+}

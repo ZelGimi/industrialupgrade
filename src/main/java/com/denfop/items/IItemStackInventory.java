@@ -1,11 +1,11 @@
 package com.denfop.items;
 
 import com.denfop.api.inv.IAdvInventory;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public interface IItemStackInventory {
 
-    IAdvInventory getInventory(EntityPlayer var1, ItemStack var2);
+    IAdvInventory getInventory(Player var1, ItemStack var2);
 
 }

@@ -1,7 +1,7 @@
 package com.denfop.api.solar;
 
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public interface ISolarItem {
 

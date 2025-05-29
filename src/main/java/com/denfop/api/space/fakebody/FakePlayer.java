@@ -1,24 +1,24 @@
 package com.denfop.api.space.fakebody;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class FakePlayer implements IFakePlayer {
 
     private final String name;
-    private final NBTTagCompound tag;
+    private final CompoundTag tag;
 
-    public FakePlayer(String name, NBTTagCompound tag) {
+    public FakePlayer(String name, CompoundTag tag) {
         this.name = name;
         this.tag = tag;
     }
 
-    public FakePlayer(NBTTagCompound tag) {
+    public FakePlayer(CompoundTag tag) {
         this.name = tag.getString("name");
         this.tag = tag;
     }
 
     @Override
-    public NBTTagCompound getTag() {
+    public CompoundTag getTag() {
         return this.tag;
     }
 
@@ -33,18 +33,18 @@ public class FakePlayer implements IFakePlayer {
     }
 
     @Override
-    public NBTTagCompound writeNBT() {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("name", this.getName());
-        tag.setTag("tag", this.getTag());
+    public CompoundTag writeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("name", this.getName());
+        tag.put("tag", this.getTag());
         return tag;
     }
 
     @Override
-    public NBTTagCompound writeNBT(NBTTagCompound nbtTagCompound) {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("name", this.getName());
-        tag.setTag("tag", this.getTag());
+    public CompoundTag writeNBT(CompoundTag nbtTagCompound) {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("name", this.getName());
+        tag.put("tag", this.getTag());
         return tag;
     }
 

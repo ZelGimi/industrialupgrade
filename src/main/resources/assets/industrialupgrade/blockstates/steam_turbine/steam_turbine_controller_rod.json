@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=steam_turbine_controller_rod": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod"
+    },
+    "facing=south,type=steam_turbine_controller_rod": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_controller_rod": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_controller_rod": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "y": 90
+    },
+    "facing=down,type=steam_turbine_controller_rod": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "x": 90
+    },
+    "facing=up,type=steam_turbine_controller_rod": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "x": 270
+    },
+    "facing=north,type=steam_turbine_controller_rod_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod"
+    },
+    "facing=south,type=steam_turbine_controller_rod_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "y": 180
+    },
+    "facing=west,type=steam_turbine_controller_rod_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "y": 270
+    },
+    "facing=east,type=steam_turbine_controller_rod_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "y": 90
+    },
+    "facing=down,type=steam_turbine_controller_rod_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "x": 90
+    },
+    "facing=up,type=steam_turbine_controller_rod_invalid": {
+      "model": "industrialupgrade:block/steam_turbine/steam_turbine_controller_rod",
+      "x": 270
+    }
+  }
+}

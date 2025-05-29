@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/ind_iridium_plate"
+		"layer0": "industrialupgrade:item/ind_iridium_plate"
 	}
 }

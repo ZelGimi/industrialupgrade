@@ -1,19 +1,14 @@
 package com.denfop.invslot;
 
-import com.denfop.Config;
 import com.denfop.IUItem;
-import com.denfop.items.modules.EnumBaseType;
-import com.denfop.items.modules.EnumModule;
-import com.denfop.items.modules.ItemAdditionModule;
-import com.denfop.items.modules.ItemBaseModules;
-import com.denfop.items.modules.ItemModuleType;
+import com.denfop.items.modules.*;
 import com.denfop.tiles.base.TileSintezator;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +24,7 @@ public class InvSlotSintezator extends InvSlot {
         super(base1, TypeItemSlot.INPUT_OUTPUT, count);
         this.type = type;
         if (type == 0) {
-            this.setStackSizeLimit(Config.limit);
+            this.setStackSizeLimit(64);
         } else {
             this.setStackSizeLimit(1);
         }
@@ -38,18 +33,19 @@ public class InvSlotSintezator extends InvSlot {
 
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (this.type == 0) {
             this.tile.inputslotA.update();
         } else {
             this.update();
         }
+        return content;
     }
 
     private EnumSolarPanels getType(ItemStack itemStack) {
         for (Map.Entry<ItemStack, EnumSolarPanels> entry : IUItem.map3.entrySet()) {
-            if (entry.getKey().isItemEqual(itemStack)) {
+            if (entry.getKey().is(itemStack.getItem())) {
                 return entry.getValue();
             }
         }
@@ -63,7 +59,7 @@ public class InvSlotSintezator extends InvSlot {
             for (int i = 0; i < this.size(); i++) {
                 EnumSolarPanels solar = getType(this.get(i));
                 if (!this.get(i).isEmpty() && solar != null) {
-                    int p = Math.min(this.get(i).getCount(), Config.limit);
+                    int p = Math.min(this.get(i).getCount(), 64);
                     myArray1[0] += (solar.genday * p);
                     myArray1[1] += (solar.gennight * p);
                     myArray1[2] += (solar.maxstorage * p);
@@ -71,11 +67,11 @@ public class InvSlotSintezator extends InvSlot {
                     tire_massive[i] = solar.tier;
                 } else if (!this.get(i).isEmpty() && IUItem.panel_list.get(this
                         .get(i)
-                        .getUnlocalizedName()) != null) {
-                    int p = Math.min(this.get(i).getCount(), Config.limit);
+                        .getDescriptionId()) != null) {
+                    int p = Math.min(this.get(i).getCount(), 64);
                     ItemStack stack = this.get(i);
                     List solar1;
-                    solar1 = IUItem.panel_list.get(stack.getUnlocalizedName());
+                    solar1 = IUItem.panel_list.get(stack.getDescriptionId());
 
                     if (solar1 != null) {
 
@@ -116,18 +112,16 @@ public class InvSlotSintezator extends InvSlot {
         tile.wirelessComponent.removeAll();
         tile.wirelessComponent.setUpdate(false);
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
-                    .get(i)
-                    .getItemDamage() == 10) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta(this.get(i)) == 10) {
 
                 int x;
                 int y;
                 int z;
-                NBTTagCompound nbttagcompound = ModUtils.nbt(this.get(i));
+                CompoundTag nbttagcompound = ModUtils.nbt(this.get(i));
 
-                x = nbttagcompound.getInteger("Xcoord");
-                y = nbttagcompound.getInteger("Ycoord");
-                z = nbttagcompound.getInteger("Zcoord");
+                x = nbttagcompound.getInt("Xcoord");
+                y = nbttagcompound.getInt("Ycoord");
+                z = nbttagcompound.getInt("Zcoord");
                 if (!nbttagcompound.getBoolean("change")) {
                     tile.wirelessComponent.setUpdate(true);
                     BlockPos pos = new BlockPos(x, y, z);
@@ -142,13 +136,13 @@ public class InvSlotSintezator extends InvSlot {
 
     public boolean accepts(ItemStack itemStack, final int index) {
         if (this.type == 0) {
-            return getType(itemStack) != null || IUItem.panel_list.containsKey(itemStack.getUnlocalizedName());
+            return getType(itemStack) != null || IUItem.panel_list.containsKey(itemStack.getDescriptionId());
         } else {
             return itemStack.getItem() instanceof ItemBaseModules
-                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 4)
-                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 10)
-                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 1)
-                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 2)
+                    || (itemStack.getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta(itemStack) == 4)
+                    || (itemStack.getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta(itemStack) == 10)
+                    || (itemStack.getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta(itemStack) == 1)
+                    || (itemStack.getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta(itemStack) == 2)
                     || (itemStack.getItem() instanceof ItemModuleType)
                     ;
         }
@@ -162,7 +156,7 @@ public class InvSlotSintezator extends InvSlot {
         for (int i = 0; i < tile.inputslotA.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemModuleType) {
 
-                list1.add(get(i).getItemDamage() + 1);
+                list1.add(IUItem.module5.getMeta((ItemModuleType) get(i).getItem()) + 1);
             } else {
                 list1.add(0);
             }
@@ -179,10 +173,10 @@ public class InvSlotSintezator extends InvSlot {
         double temp_storage = tile.maxStorage;
         double temp_producing = tile.production;
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && EnumModule.getFromID(this.get(i).getItemDamage()) != null && this
+            if (!this.get(i).isEmpty() && this
                     .get(i)
-                    .getItem() instanceof ItemBaseModules) {
-                EnumModule module = EnumModule.getFromID(this.get(i).getItemDamage());
+                    .getItem() instanceof ItemBaseModules && EnumModule.getFromID(IUItem.basemodules.getMeta(this.get(i))) != null) {
+                EnumModule module = EnumModule.getFromID(IUItem.basemodules.getMeta(this.get(i)));
                 EnumBaseType type = module.type;
                 double percent = module.percent;
                 switch (type) {
@@ -203,7 +197,7 @@ public class InvSlotSintezator extends InvSlot {
         }
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule) {
-                int damage = this.get(i).getItemDamage();
+                int damage = IUItem.module7.getMeta(this.get(i));
                 if (damage == 1) {
                     tile.machineTire++;
                 }

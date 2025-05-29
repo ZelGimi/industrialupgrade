@@ -1,262 +1,380 @@
 package com.denfop.world;
 
-import com.denfop.Config;
 import com.denfop.IUItem;
-import com.denfop.blocks.BlockThoriumOre;
-import com.denfop.blocks.BlocksRadiationOre;
-import com.denfop.blocks.FluidName;
+import com.denfop.blocks.BlockHeavyOre;
+import com.denfop.blocks.BlockMineral;
+import com.denfop.blocks.BlockOre;
 import com.denfop.world.vein.AlgorithmVein;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.TypeVein;
 import com.denfop.world.vein.VeinType;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeHills;
-import net.minecraft.world.biome.BiomeOcean;
-import net.minecraft.world.biome.BiomeRiver;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.IChunkGenerator;
-import net.minecraft.world.gen.feature.WorldGenMinable;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
-import net.minecraftforge.fml.common.IWorldGenerator;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import static com.denfop.blocks.BlockClassicOre.BOOL_PROPERTY;
+import static com.denfop.register.Register.FEATURES;
 
-public class WorldBaseGen implements IWorldGenerator {
-
-
+public class WorldBaseGen {
+    public static  RegistryObject<Feature<NoneFeatureConfiguration>> RUB_TREE_GENERATOR;
+    public static  RegistryObject<ConfiguredFeature<?, ?>> RUB_TREE;
+    public static RegistryObject<PlacedFeature> RUB_TREE_PLACER;
+    public static  RegistryObject<Feature<NoneFeatureConfiguration>> VEIN_GENERATOR ;
+    public static  RegistryObject<Feature<NoneFeatureConfiguration>> GEN_GAS_GENERATOR ;
+    public static  RegistryObject<Feature<NoneFeatureConfiguration>> GEN_HIVE_GENERATOR ;
+    public static  RegistryObject<Feature<NoneFeatureConfiguration>> VOLCANO_GENERATOR ;
+    public static  RegistryObject<Feature<NoneFeatureConfiguration>> OIL_GENERATOR ;
+    public static  RegistryObject<ConfiguredFeature<?, ?>> VEIN;
+    public static RegistryObject<PlacedFeature> VEIN_PLACER;
+    public static RegistryObject<ConfiguredFeature<?, ?>> GEN_GAS;
+    public static RegistryObject<ConfiguredFeature<?, ?>> GEN_HIVE;
+    public static RegistryObject<PlacedFeature> GEN_GAS_PLACER;
+    public static RegistryObject<PlacedFeature> GEN_HIVE_PLACER;
+    public static RegistryObject<ConfiguredFeature<?, ?>> VOLCANO;
+    public static RegistryObject<PlacedFeature> VOLCANO_PLACER ;
+    public static RegistryObject<ConfiguredFeature<?, ?>> OIL;
+    public static RegistryObject<PlacedFeature> OIL_PLACER;
+    public static  RegistryObject<ConfiguredFeature<?, ?>> CALCIUM;
+    public static  RegistryObject<ConfiguredFeature<?, ?>> SALTPETER;
+    public static  RegistryObject<ConfiguredFeature<?, ?>> PEAT;
+    public static RegistryObject<PlacedFeature> CALCIUM_PLACER ;
+    public static RegistryObject<PlacedFeature> SALTPETER_PLACER;
+    public static RegistryObject<PlacedFeature> PEAT_PLACER;
     public static List<VeinType> veinTypes = new ArrayList<>();
     public static List<VeinType> veinTypes1 = new ArrayList<>();
     public static Random random = new Random();
-    final FluidName[] fluids = new FluidName[]{FluidName.fluidneft, FluidName.fluidsweet_medium_oil,
-            FluidName.fluidsweet_heavy_oil, FluidName.fluidsour_light_oil, FluidName.fluidsour_medium_oil,
-            FluidName.fluidsour_heavy_oil};
-    ;
 
-    public static void init() {
-        GameRegistry.registerWorldGenerator(new WorldBaseGen(), 0);
-        GameRegistry.registerWorldGenerator(new HiveGenerator(IUItem.hive), 0);
+    public WorldBaseGen() {
+        MinecraftForge.EVENT_BUS.register(this);
         WorldGenGas.registerFluid();
+
+
+         RUB_TREE_GENERATOR = FEATURES.register("rub_tree",
+                () -> new RubTreeFeature(NoneFeatureConfiguration.CODEC));
+        VEIN_GENERATOR = FEATURES.register("vein",
+                () -> new AlgorithmVein(NoneFeatureConfiguration.CODEC));
+        GEN_GAS_GENERATOR = FEATURES.register("gen_gas",
+                () -> new WorldGenGas(NoneFeatureConfiguration.CODEC));
+        GEN_HIVE_GENERATOR = FEATURES.register("gen_hive",
+                () -> new HiveGenerator(NoneFeatureConfiguration.CODEC));
+        VOLCANO_GENERATOR = FEATURES.register("volcano",
+                () -> new WorldGenVolcano(NoneFeatureConfiguration.CODEC));
+        OIL_GENERATOR = FEATURES.register("oil",
+                () -> new WorldGenOil(NoneFeatureConfiguration.CODEC));
+
+
+
+        /*
+        RUB_TREE = CONFIGURED_FEATURES.register("rub_tree",
+                () -> new ConfiguredFeature<>(RUB_TREE_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
+        RUB_TREE_PLACER = PLACED_FEATURES.register(
+                "rub_tree_placed",
+                () -> new PlacedFeature(
+                        RUB_TREE.getHolder().orElseThrow(),
+                        List.of(
+                                InSquarePlacement.spread(),
+                                PlacementUtils.HEIGHTMAP,
+                                BiomeFilter.biome()
+                        )
+                )
+        );
+
+        VEIN = CONFIGURED_FEATURES.register("vein",
+                () -> new ConfiguredFeature<>(VEIN_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
+       VEIN_PLACER = PLACED_FEATURES.register(
+                "vein_placed",
+                () -> new PlacedFeature(
+                        VEIN.getHolder().orElseThrow(),
+                        List.of(
+                                InSquarePlacement.spread(),
+                                PlacementUtils.HEIGHTMAP,
+                                BiomeFilter.biome()
+                        )
+                )
+        );
+         GEN_GAS = CONFIGURED_FEATURES.register("gen_gas",
+                () -> new ConfiguredFeature<>(GEN_GAS_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
+        GEN_HIVE = CONFIGURED_FEATURES.register("gen_hive",
+                () -> new ConfiguredFeature<>(GEN_HIVE_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
+       GEN_GAS_PLACER = PLACED_FEATURES.register(
+                "gen_gas_placed",
+                () -> new PlacedFeature(
+                        GEN_GAS.getHolder().orElseThrow(),
+                        List.of(
+                                InSquarePlacement.spread(),
+                                PlacementUtils.HEIGHTMAP,
+                                BiomeFilter.biome()
+                        )
+                )
+        );
+       GEN_HIVE_PLACER = PLACED_FEATURES.register(
+                "gen_hive_placed",
+                () -> new PlacedFeature(
+                        GEN_HIVE.getHolder().orElseThrow(),
+                        List.of(
+                                InSquarePlacement.spread(),
+                                PlacementUtils.HEIGHTMAP,
+                                BiomeFilter.biome()
+                        )
+                )
+        );
+        VOLCANO = CONFIGURED_FEATURES.register("volcano",
+                () -> new ConfiguredFeature<>(VOLCANO_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
+       VOLCANO_PLACER = PLACED_FEATURES.register(
+                "volcano_placed",
+                () -> new PlacedFeature(
+                        VOLCANO.getHolder().orElseThrow(),
+                        List.of(
+                                InSquarePlacement.spread(),
+                                PlacementUtils.HEIGHTMAP,
+                                BiomeFilter.biome()
+                        )
+                )
+        );
+        OIL = CONFIGURED_FEATURES.register("oil",
+                () -> new ConfiguredFeature<>(OIL_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
+     OIL_PLACER = PLACED_FEATURES.register(
+                "oil_placed",
+                () -> new PlacedFeature(
+                        OIL.getHolder().orElseThrow(),
+                        List.of(
+                                InSquarePlacement.spread(),
+                                PlacementUtils.HEIGHTMAP,
+                                BiomeFilter.biome()
+                        )
+                )
+        );
+        CALCIUM = CONFIGURED_FEATURES.register("calcium", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.ore2.getStateFromMeta(7).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.ore2.getStateFromMeta(7).getBlock())), UniformInt.of(3, 4), 1)));
+       SALTPETER = CONFIGURED_FEATURES.register("saltpeter", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.ore2.getStateFromMeta(6).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.ore2.getStateFromMeta(6).getBlock())), UniformInt.of(3, 4), 1)));
+      PEAT = CONFIGURED_FEATURES.register("peat", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.blockResource.getStateFromMeta(10).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.blockResource.getStateFromMeta(9).getBlock())), UniformInt.of(2, 3), 1)));
+         CALCIUM_PLACER = PLACED_FEATURES.register(
+                "calcium_placed",
+                () -> new PlacedFeature(
+                        CALCIUM.getHolder().orElseThrow(),
+                        List.of(
+                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
+                        )
+                )
+        );
+        SALTPETER_PLACER = PLACED_FEATURES.register(
+                "saltpeter_placed",
+                () -> new PlacedFeature(
+                        SALTPETER.getHolder().orElseThrow(),
+                        List.of(
+                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
+                        )
+                )
+        );
+      PEAT_PLACER = PLACED_FEATURES.register(
+                "peat_placed",
+                () -> new PlacedFeature(
+                        PEAT.getHolder().orElseThrow(),
+                        List.of(
+                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
+                        )
+                )
+        );
+        */
     }
 
     public static void initVein() {
-        veinTypes.add(new VeinType(IUItem.heavyore, 0, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 60, 0),
-                        new ChanceOre(Blocks.GOLD_ORE.getDefaultState(), 25, 0),
-                        new ChanceOre(IUItem.ore2.getStateFromMeta(4), 15, 4),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(0)).get(), 0, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.defaultBlockState(), 60, 0),
+                        new ChanceOre(Blocks.GOLD_ORE.defaultBlockState(), 25, 0),
+                        new ChanceOre(IUItem.ore2.getBlockState(4), 15, 4),
                 }
 
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 1, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(7), 28, 7),
-                        new ChanceOre(Blocks.GOLD_ORE.getDefaultState(), 44, 0),
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(0), 28, 0)}
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(1)).get(), 1, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlock(BlockOre.Type.getFromID(7)).get().defaultBlockState(), 28, 7),
+                        new ChanceOre(Blocks.GOLD_ORE.defaultBlockState(), 44, 0),
+                        new ChanceOre(Blocks.COPPER_ORE.defaultBlockState(), 28, 0)}
 
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 2, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(11), 26, 11),
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(2), 74, 2)}
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(2)).get(), 2, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(11), 26, 11),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(2), 74, 2)}
 
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 3, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(8), 44, 8),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(6), 56, 6)}
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(3)).get(), 3, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(8), 44, 8),
+                        new ChanceOre(IUItem.ore.getBlockState(6), 56, 6)}
 
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 4, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 80, 0),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(4), 20, 4)}
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(4)).get(), 4, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.defaultBlockState(), 80, 0),
+                        new ChanceOre(IUItem.ore.getBlockState(4), 20, 4)}
 
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 5, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(12), 16, 12),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(11), 26, 11),
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(1), 24, 1),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(10), 34, 10),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(5)).get(), 5, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(12), 16, 12),
+                        new ChanceOre(IUItem.ore.getBlockState(11), 26, 11),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(1), 24, 1),
+                        new ChanceOre(IUItem.ore.getBlockState(10), 34, 10),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 6, true, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY, true), 60, 3,
-                        IUItem.classic_ore.getStateFromMeta(3)
-                ),
-                        new ChanceOre(IUItem.toriyore.getDefaultState(), 32, 0,
-                                IUItem.toriyore.getDefaultState().withProperty(BlockThoriumOre.BOOL_PROPERTY, false)
-                        ),
-                        new ChanceOre(IUItem.radiationore.getStateFromMeta(1), 4, 1,
-                                IUItem.radiationore.getStateFromMeta(1).withProperty(BlocksRadiationOre.BOOL_PROPERTY, false)
-                        ),
-                        new ChanceOre(IUItem.radiationore.getStateFromMeta(0), 3, 0,
-                                IUItem.radiationore.getStateFromMeta(0).withProperty(BlocksRadiationOre.BOOL_PROPERTY, false)
-                        ),
-                        new ChanceOre(IUItem.radiationore.getStateFromMeta(2), 1, 2,
-                                IUItem.radiationore.getStateFromMeta(2).withProperty(BlocksRadiationOre.BOOL_PROPERTY, false)
-                        ),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(6)).get(), 6, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getBlockState(3), 60, 3),
+                        new ChanceOre(IUItem.toriyore.getBlockState(0), 32, 0),
+                        new ChanceOre(IUItem.radiationore.getBlockState(1), 4, 1),
+                        new ChanceOre(IUItem.radiationore.getBlockState(0), 3, 0),
+                        new ChanceOre(IUItem.radiationore.getBlockState(2), 1, 2),
                 }
 
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 7, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getStateFromMeta(0), 55, 0),
-                        new ChanceOre(Blocks.LAPIS_ORE.getDefaultState(), 23, 0),
-                        new ChanceOre(Blocks.REDSTONE_ORE.getDefaultState(), 21, 0)
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(7)).get(), 7, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(Blocks.COPPER_ORE.defaultBlockState(), 55, 0),
+                        new ChanceOre(Blocks.LAPIS_ORE.defaultBlockState(), 23, 0),
+                        new ChanceOre(Blocks.REDSTONE_ORE.defaultBlockState(), 21, 0)
                 }
 
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 8, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(13), 44, 13),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(5), 28, 5),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(0), 28, 0),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(8)).get(), 8, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(13), 44, 13),
+                        new ChanceOre(IUItem.ore.getBlockState(5), 28, 5),
+                        new ChanceOre(IUItem.ore.getBlockState(0), 28, 0),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 9, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(4), 50, 4),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(6), 50, 6),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(9)).get(), 9, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(4), 50, 4),
+                        new ChanceOre(IUItem.ore.getBlockState(6), 50, 6),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 10, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(8), 50, 8),
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY, true), 25, 3,
-                                IUItem.classic_ore.getStateFromMeta(3).withProperty(BOOL_PROPERTY, false)
-                        ),
-                        new ChanceOre(
-                                IUItem.toriyore.getDefaultState(),
-                                25,
-                                0,
-                                IUItem.toriyore.getDefaultState().withProperty(BlockThoriumOre.BOOL_PROPERTY, false)
-                        ),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(10)).get(), 10, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(8), 50, 8),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(3), 25, 3),
+                        new ChanceOre(IUItem.toriyore.getDefaultState(), 25, 0),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 11, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(12), 65, 12),
-                        new ChanceOre(Blocks.COAL_ORE.getDefaultState(), 35, 0)
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(11)).get(), 11, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(12), 65, 12),
+                        new ChanceOre(Blocks.COAL_ORE.defaultBlockState(), 35, 0)
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 12, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(8), 47, 8),
-                        new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 33, 0),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(2), 33, 2),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(12)).get(), 12, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(8), 47, 8),
+                        new ChanceOre(Blocks.IRON_ORE.defaultBlockState(), 33, 0),
+                        new ChanceOre(IUItem.ore.getBlockState(2), 33, 2),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 13, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(13), 66, 13),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(5), 17, 5),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(1), 17, 1),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(13)).get(), 13, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getBlockState(13), 66, 13),
+                        new ChanceOre(IUItem.ore.getBlockState(5), 17, 5),
+                        new ChanceOre(IUItem.ore.getBlockState(1), 17, 1),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 14, TypeVein.SMALL,
-                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 30, 0),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(5), 40, 5),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(1), 30, 1),
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(14)).get(), 14, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.defaultBlockState(), 30, 0),
+                        new ChanceOre(IUItem.ore.getBlockState(5), 40, 5),
+                        new ChanceOre(IUItem.ore.getBlockState(1), 30, 1),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.heavyore, 15, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.heavyore.getBlock(BlockHeavyOre.Type.getFromID(15)).get(), 15, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(IUItem.ore.getStateFromMeta(3), 80, 3),
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(1), 20, 1),
+                        new ChanceOre(IUItem.ore.getBlockState(3), 80, 3),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(1), 20, 1),
                 }
         ));
 
         veinTypes.add(new VeinType(null, 16, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(IUItem.ore.getStateFromMeta(14), 70, 14),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(7), 30, 7),
+                        new ChanceOre(IUItem.ore.getBlockState(14), 70, 14),
+                        new ChanceOre(IUItem.ore.getBlockState(7), 30, 7),
                 }
         ));
 
-        veinTypes.add(new VeinType(IUItem.mineral, 3, 17, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(3)).get(), 3, 17, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(IUItem.ore.getStateFromMeta(15), 60, 15),
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(0), 20, 0),
-                        new ChanceOre(IUItem.ore3.getStateFromMeta(4), 20, 4),
+                        new ChanceOre(IUItem.ore.getBlockState(15), 60, 15),
+                        new ChanceOre(Blocks.COPPER_ORE.defaultBlockState(), 20, 0),
+                        new ChanceOre(IUItem.ore3.getBlockState(4), 20, 4),
                 }
         ));
 
         veinTypes.add(new VeinType(null, 18, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(IUItem.ore.getStateFromMeta(2), 50, 2),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(9), 50, 9),
+                        new ChanceOre(IUItem.ore.getBlockState(2), 50, 2),
+                        new ChanceOre(IUItem.ore.getBlockState(9), 50, 9),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 7, 19, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(7)).get(), 7, 19, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(IUItem.ore2.getStateFromMeta(3), 65, 3),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(14), 35, 14),
+                        new ChanceOre(IUItem.ore2.getBlockState(3), 65, 3),
+                        new ChanceOre(IUItem.ore.getBlockState(14), 35, 14),
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 4, 20, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(4)).get(), 4, 20, TypeVein.SMALL,
                 new ChanceOre[]{
 
-                        new ChanceOre(IUItem.ore2.getStateFromMeta(4), 50, 4),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(13), 25, 13),
-                        new ChanceOre(IUItem.ore3.getStateFromMeta(9), 25, 9),
+                        new ChanceOre(IUItem.ore2.getBlockState(4), 50, 4),
+                        new ChanceOre(IUItem.ore.getBlockState(13), 25, 13),
+                        new ChanceOre(IUItem.ore3.getBlockState(9), 25, 9),
                 }
         ));
 
-        veinTypes.add(new VeinType(IUItem.mineral, 8, 21, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(8)).get(), 8, 21, TypeVein.SMALL,
                 new ChanceOre[]{
 
-                        new ChanceOre(IUItem.ore2.getStateFromMeta(5), 70, 5),
-                        new ChanceOre(IUItem.ore3.getStateFromMeta(0), 30, 0),
+                        new ChanceOre(IUItem.ore2.getBlockState(5), 70, 5),
+                        new ChanceOre(IUItem.ore3.getBlockState(0), 30, 0),
                 }
         ));
         veinTypes.add(new VeinType(null, 22, TypeVein.SMALL,
                 new ChanceOre[]{
 
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(0), 72, 0),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(9), 28, 9),
+                        new ChanceOre(Blocks.COPPER_ORE.defaultBlockState(), 72, 0),
+                        new ChanceOre(IUItem.ore.getBlockState(9), 28, 9),
                 }
         ));
 
         veinTypes.add(new VeinType(null, 23, TypeVein.SMALL,
                 new ChanceOre[]{
 
-                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(1), 70, 1),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(11), 30, 11),
+                        new ChanceOre(IUItem.classic_ore.getBlockState(1), 70, 1),
+                        new ChanceOre(IUItem.ore.getBlockState(11), 30, 11),
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 0, 24, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(0)).get(), 0, 24, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(IUItem.ore3.getStateFromMeta(0), 55, 0),
-                        new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 35, 0),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(6), 10, 6),
+                        new ChanceOre(IUItem.ore3.getBlockState(0), 55, 0),
+                        new ChanceOre(Blocks.IRON_ORE.defaultBlockState(), 35, 0),
+                        new ChanceOre(IUItem.ore.getBlockState(6), 10, 6),
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 1, 25, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(1)).get(), 1, 25, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(IUItem.ore3.getStateFromMeta(10), 60, 10),
-                        new ChanceOre(IUItem.ore3.getStateFromMeta(11), 40, 11),
+                        new ChanceOre(IUItem.ore3.getBlockState(10), 60, 10),
+                        new ChanceOre(IUItem.ore3.getBlockState(11), 40, 11),
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 2, 26, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(2)).get(), 2, 26, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(IUItem.ore3.getStateFromMeta(7), 50, 7),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(3), 50, 3),
+                        new ChanceOre(IUItem.ore3.getBlockState(7), 50, 7),
+                        new ChanceOre(IUItem.ore.getBlockState(3), 50, 3),
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 6, 27, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(6)).get(), 6, 27, TypeVein.SMALL,
                 new ChanceOre[]{
                         new ChanceOre(IUItem.ore3.getStateFromMeta(6), 70, 6),
                         new ChanceOre(IUItem.ore3.getStateFromMeta(3), 30, 3)
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 9, 28, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(9)).get(), 9, 28, TypeVein.SMALL,
                 new ChanceOre[]{
                         new ChanceOre(IUItem.ore3.getStateFromMeta(12), 50, 12),
                         new ChanceOre(IUItem.ore3.getStateFromMeta(2), 20, 2),
@@ -264,28 +382,28 @@ public class WorldBaseGen implements IWorldGenerator {
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 5, 29, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(5)).get(), 5, 29, TypeVein.SMALL,
                 new ChanceOre[]{
                         new ChanceOre(IUItem.ore3.getStateFromMeta(13), 50, 13),
                         new ChanceOre(IUItem.classic_ore.getStateFromMeta(2), 50, 2)
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 12, 30, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(12)).get(), 12, 30, TypeVein.SMALL,
                 new ChanceOre[]{
                         new ChanceOre(IUItem.ore3.getStateFromMeta(14), 70, 14),
                         new ChanceOre(IUItem.ore3.getStateFromMeta(5), 30, 5)
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 11, 31, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(11)).get(), 11, 31, TypeVein.SMALL,
                 new ChanceOre[]{
                         new ChanceOre(IUItem.ore3.getStateFromMeta(12), 70, 12),
                         new ChanceOre(IUItem.ore3.getStateFromMeta(1), 30, 1)
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 10, 32, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(10)).get(), 10, 32, TypeVein.SMALL,
                 new ChanceOre[]{
                         new ChanceOre(IUItem.ore3.getStateFromMeta(8), 70, 8),
                         new ChanceOre(IUItem.ore3.getStateFromMeta(9), 30, 9)
@@ -302,275 +420,38 @@ public class WorldBaseGen implements IWorldGenerator {
 
                 }
         ));
-        veinTypes.add(new VeinType(IUItem.mineral, 13, 34, TypeVein.SMALL,
+        veinTypes.add(new VeinType(IUItem.mineral.getBlock(BlockMineral.Type.getFromID(13)).get(), 13, 34, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(Blocks.COAL_ORE.getDefaultState(), 35, 0),
-                        new ChanceOre(IUItem.preciousore.getStateFromMeta(3), 30, 3),
-                        new ChanceOre(IUItem.ore.getStateFromMeta(10), 25, 10),
-                        new ChanceOre(IUItem.ore3.getStateFromMeta(15), 10, 15),
+                        new ChanceOre(Blocks.COAL_ORE.defaultBlockState(), 38, 0),
+                        new ChanceOre(IUItem.preciousore.getStateFromMeta(3), 15, 3),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(10), 15, 10),
+                        new ChanceOre(IUItem.preciousore.getStateFromMeta(0), 9, 0),
+                        new ChanceOre(IUItem.preciousore.getStateFromMeta(1), 9, 1),
+                        new ChanceOre(IUItem.preciousore.getStateFromMeta(2), 9, 2),
+                        new ChanceOre(IUItem.ore3.getStateFromMeta(15), 5, 15),
 
                 }
         ));
         veinTypes.add(new VeinType(null, 0, 35, TypeVein.SMALL,
                 new ChanceOre[]{
-                        new ChanceOre(Blocks.COAL_ORE.getDefaultState(), 100, 0),
-
-                }
-        ));
-        veinTypes.add(new VeinType(null, 0, 36, TypeVein.SMALL,
-                new ChanceOre[]{
-                        new ChanceOre(Blocks.REDSTONE_ORE.getDefaultState(), 61, 0),
-                        new ChanceOre(IUItem.preciousore.getStateFromMeta(0), 13, 0),
-                        new ChanceOre(IUItem.preciousore.getStateFromMeta(1), 13, 1),
-                        new ChanceOre(IUItem.preciousore.getStateFromMeta(2), 13, 2),
+                        new ChanceOre(Blocks.COAL_ORE.defaultBlockState(), 100, 0),
 
                 }
         ));
     }
 
-    private static int randomX(Chunk chunk, Random rnd) {
-        return chunk.x * 16 + rnd.nextInt(16);
-    }
-
-    private static int randomZ(Chunk chunk, Random rnd) {
-        return chunk.z * 16 + rnd.nextInt(16);
-    }
-
-    private static void genRubberTree(Chunk chunk, float baseScale) {
-        Biome[] biomes = new Biome[6];
-
-        int rubberTrees;
-        int i;
-        for (rubberTrees = 0; rubberTrees < 5; ++rubberTrees) {
-            int x = chunk.x * 16 + 8 + (rubberTrees & 2) * 15;
-            i = chunk.z * 16 + 8 + ((rubberTrees & 2) >>> 1) * 15;
-            BlockPos pos = new BlockPos(x, chunk.getWorld().getSeaLevel(), i);
-            biomes[rubberTrees] = chunk.getWorld().getBiomeProvider().getBiome(pos
-                    , Biomes.PLAINS);
-        }
-
-        rubberTrees = 0;
-
-        for (Biome biome : biomes) {
-            if (biome != null) {
-                if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)) {
-                    rubberTrees += random.nextInt(10) + 2;
-                }
-                if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE)) {
-                    rubberTrees += random.nextInt(15) + 5;
-                }
-                if (BiomeDictionary.hasType(
-                        biome,
-                        BiomeDictionary.Type.FOREST
-                )) {
-                    rubberTrees += random.nextInt(5) + 1;
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.LevelTickEvent event) {
+        if (!event.level.isClientSide() && event.level.dimension() == Level.OVERWORLD) {
+            if (!WorldGenVolcano.generatorVolcanoList.isEmpty()) {
+                GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
+                generatorVolcano.setWorld(event.level);
+                generatorVolcano.generate();
+                if (generatorVolcano.isEnd()) {
+                    WorldGenVolcano.generatorVolcanoList.remove(0);
                 }
             }
-        }
-
-        rubberTrees = Math.round((float) rubberTrees * baseScale);
-        rubberTrees /= 2;
-        if (rubberTrees > 0 && random.nextInt(100) < rubberTrees) {
-            WorldGenRubTree gen = new WorldGenRubTree(false);
-            for (i = 0; i < rubberTrees; ++i) {
-                if (net.minecraftforge.event.terraingen.TerrainGen.decorate(chunk.getWorld(), random, chunk.getPos(),
-                        DecorateBiomeEvent.Decorate.EventType.TREE
-                )) {
-                    if (!gen.generate(
-                            chunk.getWorld(),
-                            random,
-                            new BlockPos(randomX(chunk, random), chunk.getWorld().getSeaLevel(), randomZ(chunk, random))
-                    )) {
-                        rubberTrees -= 3;
-                    }
-                }
-            }
-        }
-
-
-    }
-
-    public static void remove(Block block) {
-        final Iterator<VeinType> iter = veinTypes.iterator();
-        while (iter.hasNext()) {
-            final VeinType vein = iter.next();
-            if (vein.getHeavyOre() != null && vein.getHeavyOre().getBlock() == block) {
-                iter.remove();
-            } else {
-                vein.getOres().removeIf(chanceOre -> chanceOre.getBlock().getBlock() == block);
-            }
-        }
-    }
-
-    @Override
-    public void generate(
-            final Random random,
-            final int chunkX,
-            final int chunkZ,
-            final World world,
-            final IChunkGenerator chunkGenerator,
-            final IChunkProvider chunkProvider
-    ) {
-        if (Config.DimensionList.contains(world.provider.getDimension())) {
-            final BlockPos chunkPos = new BlockPos(chunkX << 4, 0,
-                    chunkZ << 4
-            );
-            net.minecraft.util.math.ChunkPos forgeChunkPos = new net.minecraft.util.math.ChunkPos(chunkPos);
-            if (net.minecraftforge.event.terraingen.TerrainGen.decorate(world, random, forgeChunkPos,
-                    net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType.CLAY
-            ) && WorldBaseGen.random.nextInt(100) >= 70) {
-                if (world.getBiome(new BlockPos(chunkX * 16, 0,
-                        chunkZ * 16
-                )) != Biome.getBiome(6)) {
-                    if (WorldBaseGen.random.nextInt(100) > 39) {
-                        for (int i1 = 0; i1 < 1; ++i1) {
-
-                            int l1 = random.nextInt(16) + 8;
-                            int i6 = random.nextInt(16) + 8;
-                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.ore2.getStateFromMeta(7)).generate(world, random,
-                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
-                            );
-                        }
-                    } else {
-                        for (int i1 = 0; i1 < 1; ++i1) {
-
-                            int l1 = random.nextInt(16) + 8;
-                            int i6 = random.nextInt(16) + 8;
-                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.ore2.getStateFromMeta(6)).generate(world, random,
-                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
-                            );
-                        }
-                    }
-                } else {
-                    if (WorldBaseGen.random.nextInt(100) > 39) {
-                        for (int i1 = 0; i1 < 1; ++i1) {
-
-                            int l1 = random.nextInt(16) + 8;
-                            int i6 = random.nextInt(16) + 8;
-                            new WorldGenSandsOres(random.nextInt(4) + 4, IUItem.blockResource.getStateFromMeta(10)).generate(
-                                    world,
-                                    random,
-                                    world.getTopSolidOrLiquidBlock(chunkPos.add(l1, 0, i6))
-                            );
-                        }
-                    }
-                }
-            }
-
-            int var2;
-            int var3;
-            int var4;
-            int var5;
-
-            if (random.nextInt(100) + 1 > 70 && world.getBiome(new BlockPos(chunkX * 16, 0,
-                    chunkZ * 16
-            )) == Biome.getBiome(2)) {
-                for (var2 = 0; var2 < 1; ++var2) {
-                    var3 = chunkX * 16 + random.nextInt(16) + 8;
-                    var4 = random.nextInt(random.nextInt(random.nextInt(112) + 8) + 8) + 60;
-                    var5 = chunkZ * 16 + random.nextInt(16) + 8;
-                    FluidName fluidName = fluids[random.nextInt(fluids.length)];
-                    if (fluidName != null) {
-                        new WorldGenOil(fluidName.getInstance().getBlock(), fluidName.getInstance().getBlock())
-                                .generate(world, random, new BlockPos(var3, var4, var5));
-                    }
-
-                }
-            }
-
-            if (WorldBaseGen.random.nextInt(900) + 1 > 500) {
-                final Biome biome = world.getBiome(new BlockPos(chunkX * 16, 0,
-                        chunkZ * 16
-                ));
-                var3 = chunkX * 16 + random.nextInt(16) + 8;
-                var4 = random.nextInt(random.nextInt(random.nextInt(30) + 20) + 8);
-                var5 = chunkZ * 16 + random.nextInt(16) + 8;
-                if (biome instanceof BiomeOcean || biome instanceof BiomeRiver) {
-                    final int rand = WorldBaseGen.random.nextInt(100);
-                    TypeGas typeGas;
-                    if (rand < 50) {
-                        typeGas = TypeGas.GAS;
-                    } else if (rand < 75) {
-                        typeGas = TypeGas.IODINE;
-                    } else {
-                        typeGas = TypeGas.FLUORINE;
-                    }
-                    new WorldGenGas(typeGas).generate(world, random, new BlockPos(var3, var4, var5));
-
-                } else {
-
-                    TypeGas typeGas;
-                    final int rand = WorldBaseGen.random.nextInt(100);
-                    if (rand < 50) {
-                        typeGas = TypeGas.GAS;
-                    } else if (rand < 75) {
-                        typeGas = TypeGas.BROMIDE;
-                    } else {
-                        typeGas = TypeGas.CHLORINE;
-                    }
-                    new WorldGenGas(typeGas).generate(world, random, new BlockPos(var3, var4, var5));
-
-                }
-            }
-
-
-            Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
-            generateSurface(world, random, chunkX * 16, chunkZ * 16, chunkGenerator, chunkProvider, chunk);
-
-            genRubberTree(chunk, 2);
-        }
-    }
-
-    private void generateSurface(
-            World world, Random random, int x, int y,
-            final IChunkGenerator chunkGenerator,
-            final IChunkProvider chunkProvider,
-            final Chunk chunk
-    ) {
-
-
-        if (WorldBaseGen.random.nextInt(4) <= 2) {
-            if (veinTypes1.isEmpty()) {
-                veinTypes1 = new ArrayList<>(veinTypes);
-            }
-            int meta = WorldBaseGen.random.nextInt(veinTypes1.size());
-            final VeinType veinType = veinTypes1.remove(meta);
-            AlgorithmVein.generate(world, veinType,
-                    new BlockPos(x + random.nextInt(16), 2, y + random.nextInt(16)), chunk, veinType.getDeposits_meta()
-            );
-        }
-
-        final BlockPos pos1 = new BlockPos(x + random.nextInt(16), 2, y + random.nextInt(16));
-        final Biome biome = chunk.getWorld().getBiomeProvider().getBiome(pos1
-                ,
-                Biomes.PLAINS
-        );
-        if (biome instanceof BiomeHills) {
-            if (WorldBaseGen.random.nextInt(100) == 95) {
-                if (WorldBaseGen.random.nextInt(100) >= 60) {
-                    new WorldGenVolcano().generate(world, world.rand, pos1);
-                }
-            }
-        }
-    }
-
-    public void addOreSpawn(
-            IBlockState block, World world, Random random, int blockXPos, int blockZPos, int maxX, int maxZ,
-            int maxVeinSize, int chancesToSpawn, int minY, int maxY
-    ) {
-        for (int i = 0; i < chancesToSpawn; i++) {
-            int posX = blockXPos + random.nextInt(maxX);
-            int posY = minY + random.nextInt(maxY - minY);
-            int posZ = blockZPos + random.nextInt(maxZ);
-            (new WorldGenMinable(block, maxVeinSize)).generate(world, random,
-                    new BlockPos(posX,
-                            posY, posZ
-                    )
-            );
 
         }
     }
-
 }
-
-

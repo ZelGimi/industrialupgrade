@@ -1,10 +1,13 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
+import com.denfop.mixin.access.ExplosionAccessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.phys.Vec3;
+
 
 public class PacketExplosion implements IPacket {
 
@@ -14,21 +17,24 @@ public class PacketExplosion implements IPacket {
     public PacketExplosion(Explosion explosion, int power, boolean flaming, boolean damage) {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeByte(this.getId());
-        buffer.writeBlockPos(new BlockPos(explosion.getPosition()));
+
+        Vec3 vec = explosion.getPosition();
+        BlockPos pos = new BlockPos((int) vec.x, (int) vec.y, (int) vec.z);
+        buffer.writeBlockPos(pos);
         buffer.writeInt(power);
         buffer.writeBoolean(flaming);
         buffer.writeBoolean(damage);
-        for (final EntityPlayer player : explosion.world.playerEntities) {
-            if (!(player instanceof EntityPlayerMP)) {
-                continue;
-            }
-            final double distance = player.getDistanceSq(explosion.getPosition().x, explosion.getPosition().y,
-                    explosion.getPosition().z
-            );
-            if (distance > 1024) {
-                continue;
-            }
-            IUCore.network.getServer().sendPacket(buffer, (EntityPlayerMP) player);
+
+        for (Player player : ((ExplosionAccessor)explosion).getLevel().players()) {
+            if (!(player instanceof ServerPlayer)) continue;
+
+
+            double dx = explosion.getPosition().x - player.getX();
+            double dy = explosion.getPosition().y - player.getY();
+            double dz = explosion.getPosition().z - player.getZ();
+            double distanceSq = dx * dx + dy * dy + dz * dz;
+            if (distanceSq > 1024) continue;
+            IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
         }
     }
 
@@ -38,11 +44,14 @@ public class PacketExplosion implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
+    public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
         BlockPos pos = customPacketBuffer.readBlockPos();
-        new Explosion(entityPlayer.world, entityPlayer, pos.getX(), pos.getY(), pos.getZ(), customPacketBuffer.readInt(),
-                customPacketBuffer.readBoolean(), customPacketBuffer.readBoolean()
-        ).doExplosionB(true);
+        Explosion explosion = new Explosion(entityPlayer.level(), entityPlayer, pos.getX(), pos.getY(), pos.getZ(), customPacketBuffer.readInt(),
+                customPacketBuffer.readBoolean(), customPacketBuffer.readBoolean() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP
+        );
+        explosion.explode();
+        explosion.finalizeExplosion(true);
+        explosion.clearToBlow();
 
     }
 

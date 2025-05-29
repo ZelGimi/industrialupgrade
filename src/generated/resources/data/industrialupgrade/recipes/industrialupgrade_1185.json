@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/hafniumcarbide"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/osmium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:dusts/redstone"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "BCB",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_566_element"
+  },
+  "show_notification": true
+}

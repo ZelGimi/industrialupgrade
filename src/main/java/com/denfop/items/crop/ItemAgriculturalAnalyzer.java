@@ -1,142 +1,147 @@
 package com.denfop.items.crop;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.container.ContainerAgriculturalAnalyzer;
 import com.denfop.items.IItemStackInventory;
-import com.denfop.register.Register;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 
-public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventory, IModelRegister {
+public class ItemAgriculturalAnalyzer extends Item implements IItemStackInventory, IItemTab {
+    private final int slots;
+    private String nameItem;
 
-
-    private final String internalName;
-
-    public ItemAgriculturalAnalyzer(String internalName) {
-
-        this.setCreativeTab(IUCore.EnergyTab);
-        this.setMaxStackSize(1);
-        this.internalName = internalName;
-        IUCore.proxy.addIModelRegister(this);
-        Register.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
+    public ItemAgriculturalAnalyzer() {
+        super(new Properties().stacksTo(1));
+        this.slots = 1;
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "tools" + "/" + name;
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+        }
 
-        return new ModelResourceLocation(loc, null);
+        return this.nameItem;
     }
 
-    public void save(ItemStack stack, EntityPlayer player) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("open", true);
-        nbt.setInteger("slot_inventory", player.inventory.currentItem);
+    public IAdvInventory getInventory(Player player, ItemStack stack) {
+        return new ItemStackAgriculturalAnalyzer(player, stack, 1);
     }
 
-    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerAgriculturalAnalyzer) {
-            ItemStackAgriculturalAnalyzer toolbox = ((ContainerAgriculturalAnalyzer) player.openContainer).base;
-            if (toolbox.isThisContainer(stack)) {
-                toolbox.saveAndThrow(stack);
-                player.closeScreen();
+    public void save(ItemStack stack, Player player) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("open", true);
+        nbt.putInt("slot_inventory", player.getInventory().selected);
+    }
+
+    @Override
+    public void inventoryTick(
+            ItemStack stack,
+            Level world,
+            Entity entity,
+            int itemSlot,
+            boolean isSelected
+    ) {
+        super.inventoryTick(stack, world, entity, itemSlot, isSelected);
+
+        if (!(entity instanceof Player)) {
+            return;
+        }
+        Player player = (Player) entity;
+        CompoundTag nbt = stack.getOrCreateTag();
+
+        if (nbt.getBoolean("open")) {
+            int slotId = nbt.getInt("slot_inventory");
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerAgriculturalAnalyzer) {
+                ItemStackAgriculturalAnalyzer toolbox = ((ContainerAgriculturalAnalyzer) player.containerMenu).base;
+                if (toolbox.isThisContainer(stack)) {
+                    toolbox.saveAsThrown(stack);
+                    player.closeContainer();
+                    nbt.putBoolean("open", false);
+                }
             }
         }
 
+
+    }
+
+
+
+    @Override
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerAgriculturalAnalyzer) {
+            ItemStackAgriculturalAnalyzer toolbox = ((ContainerAgriculturalAnalyzer) player.containerMenu).base;
+            if (toolbox.isThisContainer(stack)) {
+                toolbox.saveAndThrow(stack);
+                player.closeContainer();
+            }
+        }
         return true;
     }
 
     @Override
-    public void onUpdate(
-            @Nonnull final ItemStack stack,
-            @Nonnull final World worldIn,
-            @Nonnull final Entity entityIn,
-            final int itemSlot,
-            final boolean isSelected
-    ) {
-        super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (!(entityIn instanceof EntityPlayer)) {
-            return;
-        }
-        EntityPlayer player = (EntityPlayer) entityIn;
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-
-
-        if (nbt.getBoolean("open")) {
-            int slot_id = nbt.getInteger("slot_inventory");
-            if (slot_id != itemSlot && !player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerAgriculturalAnalyzer) {
-                ItemStackAgriculturalAnalyzer toolbox = ((ContainerAgriculturalAnalyzer) player.openContainer).base;
-                if (toolbox.isThisContainer(stack)) {
-                    toolbox.saveAsThrown(stack);
-                    player.closeScreen();
-                    nbt.setBoolean("open", false);
-                }
-            }
-        }
-    }
-
     @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
-
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
         ItemStack stack = ModUtils.get(player, hand);
-        if (IUCore.proxy.isSimulating() && !player.isSneaking()) {
+        BlockHitResult blockhitresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.SOURCE_ONLY);
+        if (!player.level().isClientSide && world.getBlockEntity(blockhitresult.getBlockPos()) == null) {
             save(stack, player);
-            player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+            growingBuffer.writeByte(1);
+
+            growingBuffer.flip();
+            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
         }
 
-        return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
+        return InteractionResultHolder.success(player.getItemInHand(hand));
+
     }
 
-    public IAdvInventory getInventory(EntityPlayer player, ItemStack stack) {
-        return new ItemStackAgriculturalAnalyzer(player, stack, 1);
+    public boolean canInsert(Player player, ItemStack stack, ItemStack stack1) {
+
+        return true;
     }
 
-    @Nonnull
-    public String getUnlocalizedName() {
-        return "item." + this.internalName + ".name";
-    }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> getModelLocation1(name));
-        ModelBakery.registerItemVariants(this, getModelLocation1(name));
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (allowedIn(p_41391_))
+            p_41392_.add(new ItemStack(this));
     }
 
     @Override
-    public void registerModels() {
-        registerModels(this.internalName);
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
-
-    @Override
-    public void getSubItems(@Nonnull final CreativeTabs p_150895_1_, @Nonnull final NonNullList<ItemStack> var3) {
-        if (this.isInCreativeTab(p_150895_1_)) {
-            final ItemStack var4 = new ItemStack(this, 1);
-            var3.add(var4);
-        }
-    }
-
 }

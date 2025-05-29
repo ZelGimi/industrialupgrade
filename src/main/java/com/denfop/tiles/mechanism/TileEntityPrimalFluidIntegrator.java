@@ -1,19 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -21,7 +11,6 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockPrimalFluidIntegrator;
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerFluidIntegrator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -29,24 +18,24 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
-import com.denfop.render.tank.DataFluid;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -69,16 +58,13 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
     public int operationLength;
     public int operationsPerTick;
     public double guiProgress;
-    @SideOnly(Side.CLIENT)
-    public DataFluid dataFluid;
-    @SideOnly(Side.CLIENT)
-    public DataFluid dataFluid1;
+
     protected short progress;
     private int prevAmount;
     private int prevAmount1;
 
-    public TileEntityPrimalFluidIntegrator() {
-        super(0, 0, 1);
+    public TileEntityPrimalFluidIntegrator(BlockPos pos, BlockState state) {
+        super(0, 0, 1, BlockPrimalFluidIntegrator.primal_fluid_integrator, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -127,29 +113,11 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
 
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        return Collections.singletonList(new AxisAlignedBB(-0.2D, 0.0D, -0.2D, 1.2D, 1D, 1.2D));
+    public List<AABB> getAabbs(boolean forCollision) {
+        return Collections.singletonList(new AABB(-0.2D, 0.0D, -0.2D, 1.2D, 1D, 1.2D));
 
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public ContainerFluidIntegrator getGuiContainer(final EntityPlayer var1) {
-        return null;
-
-    }
 
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -157,19 +125,19 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
             }
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -186,7 +154,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -204,96 +172,89 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
             try {
                 FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank2 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("fluidtank_empty")) {
-            this.fluidTank1.drain(Integer.MAX_VALUE, true);
+            this.fluidTank1.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
         }
         if (name.equals("fluidtank1_empty")) {
-            this.fluidTank2.drain(Integer.MAX_VALUE, true);
+            this.fluidTank2.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
         }
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot3")) {
-            inputSlotA.put(0, ItemStack.EMPTY);
+            inputSlotA.set(0, ItemStack.EMPTY);
         }
         if (name.equals("slot2")) {
-            outputSlot.put(0, ItemStack.EMPTY);
+            outputSlot.set(0, ItemStack.EMPTY);
         }
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player
+                .getItemInHand(hand)) != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-            ItemStack stack = player.getHeldItem(hand);
+            ItemStack stack = player.getItemInHand(hand);
             if (!stack.isEmpty()) {
                 if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
                     ItemStack stack1 = stack.copy();
                     stack1.setCount(1);
-                    this.inputSlotA.put(0, stack1);
+                    this.inputSlotA.set(0, stack1);
                     stack.shrink(1);
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     }
                     return true;
                 }
             } else {
                 if (!outputSlot.isEmpty()) {
-                    if (!world.isRemote) {
-                        ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
+                    if (!level.isClientSide) {
+                        ModUtils.dropAsEntity(level, pos, outputSlot.get(0));
                     }
-                    outputSlot.put(0, ItemStack.EMPTY);
-                    if (!world.isRemote) {
+                    outputSlot.set(0, ItemStack.EMPTY);
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot2", false);
                     }
                     return true;
                 } else {
                     if (!inputSlotA.isEmpty()) {
-                        if (!world.isRemote) {
-                            ModUtils.dropAsEntity(world, pos, inputSlotA.get(), player);
+                        if (!level.isClientSide) {
+                            ModUtils.dropAsEntity(level, pos, inputSlotA.get(0));
                         }
-                        inputSlotA.put(0, ItemStack.EMPTY);
+                        inputSlotA.set(0, ItemStack.EMPTY);
                         this.output = null;
-                        if (!world.isRemote) {
+                        if (!level.isClientSide) {
                             new PacketUpdateFieldTile(this, "slot3", false);
                         }
                         return true;
                     }
                 }
             }
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
+
 
     @Override
     public CustomPacketBuffer writePacket() {
@@ -309,64 +270,58 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         return customPacketBuffer;
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-
-        return null;
-    }
 
     @Override
     public void init() {
 
-        addRecipe(new ItemStack(IUItem.iuingot, 1, 15), new ItemStack(IUItem.iudust, 1, 42),
-                new FluidStack(FluidName.fluiddibromopropane.getInstance(), 200),
-                new FluidStack(FluidName.fluidpropylene.getInstance()
+        addRecipe(new ItemStack(IUItem.iuingot.getStack(15), 1), new ItemStack(IUItem.iudust.getStack(42), 1),
+                new FluidStack(FluidName.fluiddibromopropane.getInstance().get(), 200),
+                new FluidStack(FluidName.fluidpropylene.getInstance().get()
                         , 200)
         );
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 482), new ItemStack(IUItem.iudust, 1, 43),
-                new FluidStack(FluidRegistry.WATER, 200),
-                new FluidStack(FluidName.fluidacetylene.getInstance()
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(482), 1), new ItemStack(IUItem.iudust.getStack(43), 1),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 200),
+                new FluidStack(FluidName.fluidacetylene.getInstance().get()
                         , 200)
         );
 
-        addRecipe(new ItemStack(IUItem.iuingot, 1, 21), new ItemStack(IUItem.smalldust, 3, 20),
-                new FluidStack(FluidName.fluidsulfuricacid.getInstance(), 200),
-                new FluidStack(FluidName.fluidcoppersulfate.getInstance()
+        addRecipe(new ItemStack(Items.COPPER_INGOT, 1), new ItemStack(IUItem.smalldust.getStack(20), 3),
+                new FluidStack(FluidName.fluidsulfuricacid.getInstance().get(), 200),
+                new FluidStack(FluidName.fluidcoppersulfate.getInstance().get()
                         , 200)
         );
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 489), new ItemStack(IUItem.crafting_elements, 1, 487),
-                new FluidStack(FluidName.fluidcoppersulfate.getInstance(), 500),
-                new FluidStack(FluidName.fluidwastesulfuricacid.getInstance()
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(489), 1), new ItemStack(IUItem.crafting_elements.getStack(487), 1),
+                new FluidStack(FluidName.fluidcoppersulfate.getInstance().get(), 500),
+                new FluidStack(FluidName.fluidwastesulfuricacid.getInstance().get()
                         , 500)
         );
-        addRecipe(new ItemStack(IUItem.heavyore, 1, 4), new ItemStack(IUItem.smalldust, 1, 22),
-                new FluidStack(FluidRegistry.WATER, 1000),
-                new FluidStack(FluidName.fluidsulfuroxide.getInstance()
+        addRecipe(new ItemStack(IUItem.heavyore.getItemStack(4), 1), new ItemStack(IUItem.smalldust.getStack(22), 1),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 1000),
+                new FluidStack(FluidName.fluidsulfuroxide.getInstance().get()
                         , 200)
         );
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 492), new ItemStack(IUItem.crafting_elements, 1, 493),
-                new FluidStack(FluidRegistry.WATER, 500),
-                new FluidStack(FluidName.fluidhyd.getInstance()
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(492), 1), new ItemStack(IUItem.crafting_elements.getStack(493), 1),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 500),
+                new FluidStack(FluidName.fluidhyd.getInstance().get()
                         , 50)
         );
 
-        addRecipe(new ItemStack(IUItem.iudust, 1, 21), new ItemStack(IUItem.crafting_elements, 1, 498),
-                new FluidStack(FluidName.fluidhyd.getInstance(), 200),
-                new FluidStack(FluidRegistry.WATER
+        addRecipe(new ItemStack(IUItem.iudust.getStack(21), 1), new ItemStack(IUItem.crafting_elements.getStack(498), 1),
+                new FluidStack(FluidName.fluidhyd.getInstance().get(), 200),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER
                         , 100)
         );
 
         addRecipe(new ItemStack(Blocks.DIRT), new ItemStack(Blocks.MYCELIUM),
-                new FluidStack(FluidName.fluidhoney.getInstance(), 1000),
-                new FluidStack(FluidName.fluidoxy.getInstance()
+                new FluidStack(FluidName.fluidhoney.getInstance().get(), 1000),
+                new FluidStack(FluidName.fluidoxy.getInstance().get()
                         , 75)
         );
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.fluidIntegrator;
+        return IUItem.fluidIntegrator.getBlock();
     }
 
     @Override
@@ -381,9 +336,9 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!getLevel().isClientSide) {
             inputSlotA.load();
-            this.fluid_handler.load(this.inputSlotA.get());
+            this.fluid_handler.load(this.inputSlotA.get(0));
             this.getOutput();
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
@@ -392,15 +347,15 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -447,7 +402,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         super.updateEntityServer();
 
         if ((this.fluid_handler.output() == null && this.output != null && this.fluidTank1.getFluidAmount() > 0)) {
-            this.fluid_handler.getOutput(this.inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.output == null) {
                 this.fluid_handler.setOutput(null);
@@ -490,7 +445,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
                 initiate(2);
                 new PacketUpdateFieldTile(this, "guiProgress", this.guiProgress);
             }
-            if (this.world.getWorldTime() % 20 == 0) {
+            if (this.level.getGameTime() % 20 == 0) {
                 new PacketUpdateFieldTile(this, "guiProgress", this.guiProgress);
             }
         } else {

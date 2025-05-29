@@ -1,88 +1,71 @@
 package com.denfop.render.panel;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.entity.Entity;
 
-public class BottomModel extends ModelBase {
+public class BottomModel<T extends Entity> extends EntityModel<T> {
 
-    private final ModelRenderer glass;
+    private final ModelPart glass;
 
     public BottomModel(int number) {
+        super(RenderType::entityCutoutNoCull);
+        MeshDefinition meshdefinition = new MeshDefinition();
+        PartDefinition partdefinition = meshdefinition.getRoot();
 
-        switch (number) {
-            case 1:
-            case 7:
-                this.textureWidth = 6;
-                this.textureHeight = 5;
-                this.glass = new ModelRenderer(this, 1, 0);
-                break;
-            case 0:
-            case 2:
-            case 6:
-            case 8:
-                this.textureWidth = 5;
-                this.textureHeight = 5;
-                this.glass = new ModelRenderer(this, 0, 0);
-                break;
-            case 3:
-            case 5:
-                this.textureWidth = 5;
-                this.textureHeight = 6;
-                this.glass = new ModelRenderer(this, 9, 0);
-                break;
-            case 4:
-                this.textureWidth = 6;
-                this.textureHeight = 6;
-                this.glass = new ModelRenderer(this, 0, 0);
-                break;
-            default:
-                this.textureWidth = 16;
-                this.textureHeight = 16;
-                this.glass = new ModelRenderer(this, 0, 0);
-                break;
-        }
+        CubeListBuilder builder = CubeListBuilder.create();
 
         switch (number) {
             case 0:
-                this.glass.addBox(0, 15F, 0, 5, 1, 5);
+                builder.addBox(0, 15F, 0, 5, 1, 5);
                 break;
             case 1:
-                this.glass.addBox(5, 15F, 0, 6, 1, 5);
+                builder.addBox(5, 15F, 0, 6, 1, 5);
                 break;
             case 2:
-                this.glass.addBox(11, 15F, 0, 5, 1, 5);
+                builder.addBox(11, 15F, 0, 5, 1, 5);
                 break;
             case 3:
-                this.glass.addBox(0, 15F, 5, 5, 1, 6);
+                builder.addBox(0, 15F, 5, 5, 1, 6);
                 break;
             case 4:
-                this.glass.addBox(5, 15F, 5, 6, 1, 6);
+                builder.addBox(5, 15F, 5, 6, 1, 6);
                 break;
             case 5:
-                this.glass.addBox(11, 15F, 5, 5, 1, 6);
+                builder.addBox(11, 15F, 5, 5, 1, 6);
                 break;
             case 6:
-                this.glass.addBox(0, 15F, 11, 5, 1, 5);
+                builder.addBox(0, 15F, 11, 5, 1, 5);
                 break;
             case 7:
-                this.glass.addBox(5, 15F, 11, 6, 1, 5);
+                builder.addBox(5, 15F, 11, 6, 1, 5);
                 break;
             case 8:
-                this.glass.addBox(11, 15F, 11, 5, 1, 5);
+                builder.addBox(11, 15F, 11, 5, 1, 5);
                 break;
             default:
-                this.glass.addBox(0, 15F, 0, 16, 1, 16);
+                builder.addBox(0, 15F, 0, 16, 1, 16);
                 break;
         }
-        this.glass.mirror = true;
-        this.glass.setRotationPoint(0F, 0.0F, 0.0F);
-        this.glass.mirror = true;
+
+        this.glass =  partdefinition.addOrReplaceChild("glass", builder, PartPose.ZERO).bake(64, 64);
+    }
+
+
+    @Override
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float scale) {
-        this.glass.render(0.0625F);
+    @Override
+    public void renderToBuffer(PoseStack stack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        glass.render(stack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
-
 }

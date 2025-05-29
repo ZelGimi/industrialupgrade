@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/photonic_destiller_sides",
-    "down" : "industrialupgrade:blocks/photonic_destiller_sides",
-    "up" : "industrialupgrade:blocks/photonic_destiller_sides",
-    "north" : "industrialupgrade:blocks/photonic_destiller_sides",
-    "east" : "industrialupgrade:blocks/photonic_destiller_sides",
-    "south" : "industrialupgrade:blocks/photonic_destiller_sides",
-    "west" : "industrialupgrade:blocks/photonic_destiller_sides"
+    "particle" : "industrialupgrade:block/photonic_destiller_sides",
+    "down" : "industrialupgrade:block/photonic_destiller_sides",
+    "up" : "industrialupgrade:block/photonic_destiller_sides",
+    "north" : "industrialupgrade:block/photonic_destiller_sides",
+    "east" : "industrialupgrade:block/photonic_destiller_sides",
+    "south" : "industrialupgrade:block/photonic_destiller_sides",
+    "west" : "industrialupgrade:block/photonic_destiller_sides"
   }
 }

@@ -6,12 +6,9 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerAdvSteamQuarry;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
 
-@SideOnly(Side.CLIENT)
-public class GuiAdvSteamQuarry extends GuiIU<ContainerAdvSteamQuarry> {
+public class GuiAdvSteamQuarry<T extends ContainerAdvSteamQuarry> extends GuiIU<ContainerAdvSteamQuarry> {
 
     public final ContainerAdvSteamQuarry container;
 
@@ -25,17 +22,7 @@ public class GuiAdvSteamQuarry extends GuiIU<ContainerAdvSteamQuarry> {
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
 
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-
-
-    }
 
 
     public ResourceLocation getTexture() {

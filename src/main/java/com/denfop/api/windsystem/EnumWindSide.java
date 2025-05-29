@@ -1,6 +1,7 @@
 package com.denfop.api.windsystem;
 
-import net.minecraft.util.math.Vec3d;
+
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,26 +31,26 @@ public enum EnumWindSide {
         return list;
     }
 
-    public Vec3d getDirectionVector() {
+    public Vec3 getDirectionVector() {
         switch (this) {
             case W:
-                return new Vec3d(-1, 0, 0);
+                return new Vec3(-1, 0, 0);
             case E:
-                return new Vec3d(1, 0, 0);
+                return new Vec3(1, 0, 0);
             case N:
-                return new Vec3d(0, 0, -1);
+                return new Vec3(0, 0, -1);
             case S:
-                return new Vec3d(0, 0, 1);
+                return new Vec3(0, 0, 1);
             case NW:
-                return new Vec3d(-1, 0, -1).normalize();
+                return new Vec3(-1, 0, -1).normalize();
             case NE:
-                return new Vec3d(1, 0, -1).normalize();
+                return new Vec3(1, 0, -1).normalize();
             case SW:
-                return new Vec3d(-1, 0, 1).normalize();
+                return new Vec3(-1, 0, 1).normalize();
             case SE:
-                return new Vec3d(1, 0, 1).normalize();
+                return new Vec3(1, 0, 1).normalize();
             default:
-                return new Vec3d(0, 0, 0);
+                return new Vec3(0, 0, 0);
         }
     }
 }

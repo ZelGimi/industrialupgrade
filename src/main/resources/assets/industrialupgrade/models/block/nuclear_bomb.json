@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/nuclear_bomb_up",
-    "down" : "industrialupgrade:blocks/nuclear_bomb_up",
-    "up" : "industrialupgrade:blocks/nuclear_bomb_up",
-    "north" : "industrialupgrade:blocks/nuclear_bomb_side",
-    "east" : "industrialupgrade:blocks/nuclear_bomb_side",
-    "south" : "industrialupgrade:blocks/nuclear_bomb_side",
-    "west" : "industrialupgrade:blocks/nuclear_bomb_side"
+    "particle" : "industrialupgrade:block/nuclear_bomb_up",
+    "down" : "industrialupgrade:block/nuclear_bomb_up",
+    "up" : "industrialupgrade:block/nuclear_bomb_up",
+    "north" : "industrialupgrade:block/nuclear_bomb_side",
+    "east" : "industrialupgrade:block/nuclear_bomb_side",
+    "south" : "industrialupgrade:block/nuclear_bomb_side",
+    "west" : "industrialupgrade:block/nuclear_bomb_side"
   }
 }

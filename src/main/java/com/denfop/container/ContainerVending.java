@@ -1,14 +1,12 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.vending.TileEntityBaseVending;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 
 public class ContainerVending extends ContainerFullInv<TileEntityBaseVending> {
 
-    public ContainerVending(TileEntityBaseVending tileEntityBaseVending, EntityPlayer var1, final boolean b) {
+    public ContainerVending(TileEntityBaseVending tileEntityBaseVending, Player var1, final boolean b) {
         super(var1, tileEntityBaseVending, b ? 255 : 166);
         int sizeWorkingSlot = tileEntityBaseVending.getStyle().ordinal() + 1;
         int startPosX = -sizeWorkingSlot * 10;
@@ -48,21 +46,15 @@ public class ContainerVending extends ContainerFullInv<TileEntityBaseVending> {
     }
 
     @Override
-    public @NotNull ItemStack slotClick(
-            final int slotId,
-            final int dragType,
-            @NotNull final ClickType clickType,
-            @NotNull final EntityPlayer player
-    ) {
+    public void clicked(int slotId, int dragType, ClickType clickType, Player player) {
         if (clickType == ClickType.QUICK_CRAFT)
-            return ItemStack.EMPTY;
-
-        return super.slotClick(slotId, dragType, clickType, player);
+            return;
+        super.clicked(slotId, dragType, clickType, player);
     }
 
     @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
+    public void broadcastChanges() {
+        super.broadcastChanges();
         this.base.timer = 5;
     }
 

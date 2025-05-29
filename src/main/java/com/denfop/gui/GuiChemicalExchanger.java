@@ -5,46 +5,46 @@ import com.denfop.api.gui.FluidItem;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.container.ContainerDefaultMultiElement;
 import com.denfop.tiles.chemicalplant.TileEntityChemicalPlantExchanger;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class GuiChemicalExchanger extends GuiIU<ContainerDefaultMultiElement> {
+public class GuiChemicalExchanger<T extends ContainerDefaultMultiElement> extends GuiIU<ContainerDefaultMultiElement> {
 
     public GuiChemicalExchanger(ContainerDefaultMultiElement guiContainer) {
         super(guiContainer);
         this.componentList.clear();
         this.addElement((new FluidItem(
                 this,
-                this.xSize / 2 - 10,
+                this.imageWidth / 2 - 10,
                 20,
                 ((TileEntityChemicalPlantExchanger) guiContainer.base).getFluidTank().getFluid()
         ) {
             @Override
-            public void drawBackground(final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 bindCommonTexture();
                 FluidStack fs = ((TileEntityChemicalPlantExchanger) guiContainer.base).getFluidTank().getFluid();
-                if (fs != null && fs.amount > 0) {
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x + 1;
                     int fluidY = this.y + 1;
                     int fluidWidth = 10;
                     int fluidHeight = 45;
                     Fluid fluid = fs.getFluid();
-                    TextureAtlasSprite sprite = fluid != null
-                            ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                            : null;
-                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
                     bindBlockTexture();
-                    this.gui.drawSprite(
-                            fluidX,
-                            fluidY + (45 - fluidHeight * (fs.amount / 10000D)),
+                    this.gui.drawSprite(poseStack,
+                            mouseX+   fluidX,
+                            mouseY+   fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
                             fluidWidth,
-                            fluidHeight * (fs.amount / 10000D),
+                            fluidHeight * (fs.getAmount() / 10000D),
                             sprite,
                             color,
                             1.0,
@@ -52,11 +52,11 @@ public class GuiChemicalExchanger extends GuiIU<ContainerDefaultMultiElement> {
                             false
                     );
                 }
-                Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture1);
+                bindTexture(commonTexture1);
             }
 
             @Override
-            public void drawForeground(final int mouseX, final int mouseY) {
+            public void drawForeground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 if (mouseX >= this.x - 4 && mouseX <= this.x + 15 && mouseY >= this.y - 4 && mouseY <= this.y + 51) {
                     List<String> lines = this.getToolTip();
                     if (this.getTooltipProvider() != null) {
@@ -75,20 +75,20 @@ public class GuiChemicalExchanger extends GuiIU<ContainerDefaultMultiElement> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack,final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         bindTexture();
-        GlStateManager.color(1, 1, 1, 1);
-        drawTexturedModalRect(this.guiLeft + this.xSize / 2 - 10 - 4, guiTop + 20 - 4, 235,
+      RenderSystem.setShaderColor(1, 1, 1, 1);
+        drawTexturedModalRect(poseStack, this.guiLeft + this.imageWidth / 2 - 10 - 4, guiTop + 20 - 4, 235,
                 76, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground(mouseX, mouseY);
+            element.drawBackground(poseStack,mouseX, mouseY);
         }
     }
 

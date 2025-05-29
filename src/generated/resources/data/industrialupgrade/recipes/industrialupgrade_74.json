@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:compresscarbon"
+      }
+    ],
+    "B": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    },
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy_tools/nano_saber",
+      "nbt": "{Damage:0}"
+    },
+    "D": [
+      {
+        "item": "minecraft:glowstone"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:battery/lapotron_crystal"
+      }
+    ]
+  },
+  "pattern": [
+    "AB ",
+    "AC ",
+    "DEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/itemnanosaber1"
+  },
+  "show_notification": true
+}

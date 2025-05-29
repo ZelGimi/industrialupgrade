@@ -3,52 +3,51 @@ package com.denfop.integration.jei.molecular;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockMolecular;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
+import com.denfop.tiles.mechanism.TileModuleMachine;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class MolecularTransformerCategory extends Gui implements IRecipeCategory<MolecularTransformerRecipeWrapper> {
+public class MolecularTransformerCategory extends GuiIU implements IRecipeCategory<MolecularTransformerHandler> {
 
     private final IDrawableStatic bg;
     private int progress = 0;
-
+    private final JeiInform jeiInform;
     public MolecularTransformerCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(((TileModuleMachine) BlockBaseMachine.modulator.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew" +
                         ".png"), 10, 49, 203,
                 73
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
+
 
     @Nonnull
     @Override
-    public String getUid() {
-        return BlockMolecular.molecular.getName();
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.blockmolecular).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.blockmolecular).getUnlocalizedName());
-    }
-
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -56,31 +55,37 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(MolecularTransformerHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         double xScale = 18.0D * progress / 100;
         if (xScale > 18) {
             progress = 0;
         }
-        mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(23 - 10, 75 - 49, 242, 32, 14, (int) xScale);
+        bindTexture();
+        drawTexturedModalRect(stack,23 - 10, 75 - 49, 242, 32, 14, (int) xScale);
+        int y = 5;
+        int x = 49;
+        drawSplitString( stack, recipe.inputText, x, y, 200 - x, 16777215);
+        y += 18;
+        drawSplitString( stack, recipe.outputText, x, y, 200 - x, 16777215);
+        y += 18;
+       draw( stack,recipe.totalEU, x, y, 16777215);
 
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final MolecularTransformerRecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 11, 7);
-        isg.set(0, recipes.getInput());
-        isg.init(1, false, 11, 47);
-        isg.set(1, recipes.getOutput());
+    public RecipeType<MolecularTransformerHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
+
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, MolecularTransformerHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,12,8).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,12,48).addItemStack(recipe.getOutput());
+    }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew.png");

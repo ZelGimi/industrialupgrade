@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/pahoehoelava_cell"
+		"layer0": "industrialupgrade:item/pahoehoelava_cell"
 	}
 }

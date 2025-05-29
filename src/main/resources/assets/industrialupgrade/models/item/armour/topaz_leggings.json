@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/topaz_leggings"
+    "layer0" : "industrialupgrade:item/topaz_leggings"
   }
 }

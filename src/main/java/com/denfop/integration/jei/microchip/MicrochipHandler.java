@@ -3,7 +3,7 @@ package com.denfop.integration.jei.microchip;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +12,13 @@ public class MicrochipHandler {
 
     private static final List<MicrochipHandler> recipes = new ArrayList<>();
     private final short temperature;
-    private final ItemStack input, input1, input2, input3, input4, output;
+    private final ItemStack input, input1, input2, input3, input4, output;;
+    private final BaseMachineRecipe container;
 
     public MicrochipHandler(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3, ItemStack input4,
-            ItemStack output, short temperature
-    ) {
+            ItemStack output, short temperature,
+            BaseMachineRecipe container) {
         this.input = input;
         this.input1 = input1;
         this.input2 = input2;
@@ -25,6 +26,11 @@ public class MicrochipHandler {
         this.input4 = input4;
         this.temperature = temperature;
         this.output = output;
+        this.container = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<MicrochipHandler> getRecipes() {
@@ -36,9 +42,9 @@ public class MicrochipHandler {
 
     public static MicrochipHandler addRecipe(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
-            ItemStack input4, ItemStack output, short temperature
-    ) {
-        MicrochipHandler recipe = new MicrochipHandler(input, input1, input2, input3, input4, output, temperature);
+            ItemStack input4, ItemStack output, short temperature,
+            BaseMachineRecipe container) {
+        MicrochipHandler recipe = new MicrochipHandler(input, input1, input2, input3, input4, output, temperature,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -65,7 +71,7 @@ public class MicrochipHandler {
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
                     container.input.getInputs().get(4).getInputs().get(0),
-                    container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature")
+                    container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature"),container
             );
 
 
@@ -102,8 +108,7 @@ public class MicrochipHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3) || is.isItemEqual(
-                input4);
+        return true;
     }
 
 }

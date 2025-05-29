@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerPalletGenerator extends ContainerFullInv<TileEntityPalletGenerator> {
 
-    public ContainerPalletGenerator(TileEntityPalletGenerator tileEntityPalletGenerator, EntityPlayer var1) {
+    public ContainerPalletGenerator(TileEntityPalletGenerator tileEntityPalletGenerator, Player var1) {
         super(tileEntityPalletGenerator, var1);
         this.addSlotToContainer(new SlotInvSlot(tileEntityPalletGenerator.slot, 0, 50, 18));
         this.addSlotToContainer(new SlotInvSlot(tileEntityPalletGenerator.slot, 1, 68, 18));

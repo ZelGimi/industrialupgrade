@@ -1,20 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -25,7 +15,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSolidFluidMixer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSolidFluidMixer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -37,17 +29,18 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -79,8 +72,8 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
     public double guiProgress;
     protected short progress;
 
-    public TileEntitySolidFluidMixer() {
-        super(200, 1, 1);
+    public TileEntitySolidFluidMixer(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.solid_fluid_mixer,pos,state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -149,69 +142,69 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
         return EnumSound.fluid_mixer.getSoundEvent();
     }
 
-    public ContainerSolidFluidMixer getGuiContainer(final EntityPlayer var1) {
+    public ContainerSolidFluidMixer getGuiContainer(final Player var1) {
         return new ContainerSolidFluidMixer(var1, this);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiSolidFluidMixer(getGuiContainer(var1));
+        return new GuiSolidFluidMixer((ContainerSolidFluidMixer) menu);
     }
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.iudust, 1, 21),
-                new FluidStack(FluidName.fluidnitricoxide.getInstance(), 200),
-                new FluidStack(FluidName.fluidazot.getInstance()
-                        , 200), new FluidStack(FluidName.fluidco2.getInstance()
+        addRecipe(new ItemStack(IUItem.iudust.getStack(21), 1),
+                new FluidStack(FluidName.fluidnitricoxide.getInstance().get(), 200),
+                new FluidStack(FluidName.fluidazot.getInstance().get()
+                        , 200), new FluidStack(FluidName.fluidco2.getInstance().get()
                         , 100)
         );
 
-        addRecipe(new ItemStack(IUItem.iuingot, 1, 21),
-                new FluidStack(FluidName.fluidsulfuricacid.getInstance(), 200),
-                new FluidStack(FluidName.fluidcoppersulfate.getInstance()
-                        , 200), new FluidStack(FluidRegistry.WATER
+        addRecipe(new ItemStack(Items.COPPER_INGOT, 1),
+                new FluidStack(FluidName.fluidsulfuricacid.getInstance().get(), 200),
+                new FluidStack(FluidName.fluidcoppersulfate.getInstance().get()
+                        , 200), new FluidStack(net.minecraft.world.level.material.Fluids.WATER
                         , 50)
         );
-        addRecipe(new ItemStack(IUItem.iudust, 1, 79),
-                new FluidStack(FluidName.fluidbenzene.getInstance(), 200),
-                new FluidStack(FluidName.fluidmonochlorobenzene.getInstance()
-                        , 150), new FluidStack(FluidName.fluidhydrogenchloride.getInstance()
+        addRecipe(new ItemStack(IUItem.iudust.getStack(79), 1),
+                new FluidStack(FluidName.fluidbenzene.getInstance().get(), 200),
+                new FluidStack(FluidName.fluidmonochlorobenzene.getInstance().get()
+                        , 150), new FluidStack(FluidName.fluidhydrogenchloride.getInstance().get()
                         , 50)
         );
-        addRecipe(new ItemStack(IUItem.smalldust, 1, 26),
-                new FluidStack(FluidName.fluidwastesulfuricacid.getInstance(), 100),
-                new FluidStack(FluidName.fluidsulfurtrioxide.getInstance()
-                        , 100), new FluidStack(FluidRegistry.WATER
+        addRecipe(new ItemStack(IUItem.smalldust.getStack(26), 1),
+                new FluidStack(FluidName.fluidwastesulfuricacid.getInstance().get(), 100),
+                new FluidStack(FluidName.fluidsulfurtrioxide.getInstance().get()
+                        , 100), new FluidStack(net.minecraft.world.level.material.Fluids.WATER
                         , 25)
         );
-        addRecipe(new ItemStack(IUItem.iudust, 1, 31),
-                new FluidStack(FluidName.fluidwastesulfuricacid.getInstance(), 1000),
-                new FluidStack(FluidName.fluidsulfurtrioxide.getInstance()
-                        , 1000), new FluidStack(FluidRegistry.WATER
+        addRecipe(new ItemStack(IUItem.iudust.getStack(31), 1),
+                new FluidStack(FluidName.fluidwastesulfuricacid.getInstance().get(), 1000),
+                new FluidStack(FluidName.fluidsulfurtrioxide.getInstance().get()
+                        , 1000), new FluidStack(net.minecraft.world.level.material.Fluids.WATER
                         , 250)
         );
-        addRecipe(new ItemStack(IUItem.iudust, 1, 64),
-                new FluidStack(FluidRegistry.WATER, 500),
-                new FluidStack(FluidName.fluidsodiumhydroxide.getInstance()
-                        , 250), new FluidStack(FluidName.fluidhyd.getInstance()
+        addRecipe(new ItemStack(IUItem.iudust.getStack(64), 1),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 500),
+                new FluidStack(FluidName.fluidsodiumhydroxide.getInstance().get()
+                        , 250), new FluidStack(FluidName.fluidhyd.getInstance().get()
                         , 250)
         );
 
-        addRecipe(new ItemStack(IUItem.crafting_elements, 1, 295),
-                new FluidStack(FluidRegistry.WATER, 1000),
-                new FluidStack(FluidName.fluidsteam_oil.getInstance()
-                        , 500), new FluidStack(FluidName.fluidoxy.getInstance()
+        addRecipe(new ItemStack(IUItem.crafting_elements.getStack(295), 1),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 1000),
+                new FluidStack(FluidName.fluidsteam_oil.getInstance().get()
+                        , 500), new FluidStack(FluidName.fluidoxy.getInstance().get()
                         , 125)
         );
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -226,24 +219,24 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
-            this.fluid_handler.load(this.inputSlotA.get());
+            this.fluid_handler.load(this.inputSlotA.get(0));
             this.getOutput();
         }
 
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -324,7 +317,7 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
             check = true;
         }
         if (check || (this.fluid_handler.output() == null && this.output != null && this.fluidTank1.getFluidAmount() > 0)) {
-            this.fluid_handler.getOutput(this.inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.output == null) {
                 this.fluid_handler.setOutput(null);

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_478_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gems/topaz"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "C C",
+    "B B"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/volcano_rubber_boots"
+  },
+  "show_notification": true
+}

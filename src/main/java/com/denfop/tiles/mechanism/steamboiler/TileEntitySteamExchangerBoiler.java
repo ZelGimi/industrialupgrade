@@ -2,20 +2,24 @@ package com.denfop.tiles.mechanism.steamboiler;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamBoiler;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerDefaultMultiElement;
 import com.denfop.container.SlotInvSlot;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamBoilerExchanger;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.resource.ItemCraftingElements;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -24,11 +28,12 @@ public class TileEntitySteamExchangerBoiler extends TileEntityMultiBlockElement 
     public final InvSlot slot;
     public final InvSlot slot1;
 
-    public TileEntitySteamExchangerBoiler() {
+    public TileEntitySteamExchangerBoiler(BlockPos pos, BlockState state) {
+        super(BlockSteamBoiler.steam_boiler_heat_exchanger,pos,state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() == 599;
+                return stack.getItem() instanceof ItemCraftingElements && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() == 599;
             }
 
             @Override
@@ -39,7 +44,7 @@ public class TileEntitySteamExchangerBoiler extends TileEntityMultiBlockElement 
         this.slot1 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 10) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() == 294;
+                return stack.getItem() instanceof ItemCraftingElements && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() == 294;
             }
 
             @Override
@@ -61,10 +66,10 @@ public class TileEntitySteamExchangerBoiler extends TileEntityMultiBlockElement 
     }
 
     @Override
-    public ContainerDefaultMultiElement getGuiContainer(final EntityPlayer var1) {
+    public ContainerDefaultMultiElement getGuiContainer(final Player var1) {
         return new ContainerDefaultMultiElement(this, var1) {
             @Override
-            public void addSlots(final TileEntityMultiBlockElement multiBlockElement, final EntityPlayer var1) {
+            public void addSlots(final TileEntityMultiBlockElement multiBlockElement, final Player var1) {
                 super.addSlots(multiBlockElement, var1);
 
                 this.addSlotToContainer(new SlotInvSlot(slot, 0, 68, 37));
@@ -83,9 +88,9 @@ public class TileEntitySteamExchangerBoiler extends TileEntityMultiBlockElement 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSteamBoilerExchanger(this.getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSteamBoilerExchanger((ContainerDefaultMultiElement) menu);
     }
 
     @Override
@@ -95,12 +100,12 @@ public class TileEntitySteamExchangerBoiler extends TileEntityMultiBlockElement 
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.steam_boiler;
+        return IUItem.steam_boiler.getBlock(getTeBlock());
     }
 
     @Override
     public boolean isWork() {
-        for (ItemStack stack : slot1.getContents()) {
+        for (ItemStack stack : slot1) {
             if (stack.isEmpty()) {
                 return false;
             }

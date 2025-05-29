@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/controller_wires",
-    "particle" : "industrialupgrade:models/controller_wires"
+    "0" : "industrialupgrade:block/controller_wires",
+    "particle" : "industrialupgrade:block/controller_wires"
   },
   "elements" : [
     {

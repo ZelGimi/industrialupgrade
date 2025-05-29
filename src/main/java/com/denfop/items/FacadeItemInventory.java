@@ -1,15 +1,15 @@
 package com.denfop.items;
 
+import com.denfop.container.ContainerBase;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -23,9 +23,9 @@ public class FacadeItemInventory extends ItemStackInventory {
     public final ItemStack itemStack1;
 
 
-    public FacadeItemInventory(EntityPlayer player, ItemStack stack) {
-        super(player, stack, 1);
-        this.inventorySize = 1;
+    public FacadeItemInventory(Player player, ItemStack stack, int inventorySize) {
+        super(player, stack, inventorySize);
+        this.inventorySize = inventorySize;
         this.itemStack1 = stack;
     }
 
@@ -34,33 +34,25 @@ public class FacadeItemInventory extends ItemStackInventory {
     }
 
     public void saveAndThrow(ItemStack stack) {
-        NBTTagList contentList = new NBTTagList();
+        ListTag contentList = new ListTag();
 
         for (int i = 0; i < this.inventory.length; ++i) {
             if (!ModUtils.isEmpty(this.inventory[i])) {
-                NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setByte("Slot", (byte) i);
-                this.inventory[i].writeToNBT(nbt);
-                contentList.appendTag(nbt);
+                CompoundTag nbt = new CompoundTag();
+                nbt.putByte("Slot", (byte) i);
+                this.inventory[i].save(nbt);
+                contentList.add(nbt);
             }
         }
 
-        ModUtils.nbt(stack).setTag("Items", contentList);
+        ModUtils.nbt(stack).put("Items", contentList);
         this.clear();
     }
 
-    public ContainerFacadeItem getGuiContainer(EntityPlayer player) {
-        return new ContainerFacadeItem(player, this);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiFacadeItem(new ContainerFacadeItem(player, this), itemStack1);
-    }
 
     @Override
-    public TileEntityInventory getParent() {
-        return null;
+    public ItemStackInventory getParent() {
+        return this;
     }
 
 
@@ -72,6 +64,18 @@ public class FacadeItemInventory extends ItemStackInventory {
     @Override
     public int getBaseIndex(final InvSlot var1) {
         return 0;
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public GuiCore<ContainerBase<?>> getGui(Player var1, ContainerBase<?> menu) {
+        ContainerFacadeItem containerLeadBox = (ContainerFacadeItem) menu;
+        return new GuiFacadeItem(containerLeadBox, this.itemStack1);
+    }
+
+    public ContainerFacadeItem getGuiContainer(Player player) {
+        return new ContainerFacadeItem(player, this);
     }
 
 
@@ -162,16 +166,16 @@ public class FacadeItemInventory extends ItemStackInventory {
                         }
                         return true;
                     } else {
-                        if (this.get(i).isItemEqual(stack)) {
+                        if (this.get(i).is(stack.getItem())) {
                             if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTagCompound() == null && this.get(i).getTagCompound() == null) {
+                                if (stack.getTag() == null && this.get(i).getTag() == null) {
                                     if (!simulate) {
                                         this.get(i).grow(stack.getCount());
                                     }
                                     return true;
                                 } else {
-                                    if (stack.getTagCompound() != null &&
-                                            stack.getTagCompound().equals(this.get(i).getTagCompound())) {
+                                    if (stack.getTag() != null &&
+                                            stack.getTag().equals(this.get(i).getTag())) {
                                         if (!simulate) {
                                             this.get(i).grow(stack.getCount());
 

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:bricks"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:casing/adamantite"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_turbine/gas_turbine_casing"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/mikhail"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/vanady"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/vitalium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/chromium"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_681_element"
+  },
+  "show_notification": true
+}

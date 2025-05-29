@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockanalyzer_bootm",
-    "down" : "industrialupgrade:blocks/blockanalyzer_bootm",
-    "up" : "industrialupgrade:blocks/blockanalyzer_bootm",
-    "north" : "industrialupgrade:blocks/blockanalyzer_main",
-    "east" : "industrialupgrade:blocks/blockanalyzer_left",
-    "south" : "industrialupgrade:blocks/blockanalyzer_bootm",
-    "west" : "industrialupgrade:blocks/blockanalyzer_right"
+    "particle" : "industrialupgrade:block/blockanalyzer_bootm",
+    "down" : "industrialupgrade:block/blockanalyzer_bootm",
+    "up" : "industrialupgrade:block/blockanalyzer_bootm",
+    "north" : "industrialupgrade:block/blockanalyzer_main",
+    "east" : "industrialupgrade:block/blockanalyzer_left",
+    "south" : "industrialupgrade:block/blockanalyzer_bootm",
+    "west" : "industrialupgrade:block/blockanalyzer_right"
   }
 }

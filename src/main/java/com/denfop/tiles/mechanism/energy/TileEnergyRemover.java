@@ -2,18 +2,20 @@ package com.denfop.tiles.mechanism.energy;
 
 import com.denfop.IUItem;
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.EnergyNetLocal;
 import com.denfop.api.energy.IEnergyConductor;
 import com.denfop.api.energy.IEnergyController;
 import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.event.EventLoadController;
 import com.denfop.api.energy.event.EventUnloadController;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRemover;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiEnergyRemover;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.IUpdatableTileEvent;
@@ -22,24 +24,18 @@ import com.denfop.tiles.base.FakePlayerSpawner;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TileEnergyRemover extends TileEntityInventory implements
         IUpdatableTileEvent, IEnergyController {
@@ -47,19 +43,20 @@ public class TileEnergyRemover extends TileEntityInventory implements
     public final InvSlot slot;
     public Set<IEnergyConductor> conductorList = new HashSet<>();
     FakePlayerSpawner fakePlayer;
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
     int hashCodeSource;
     List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
     private boolean work;
     private long id;
 
-    public TileEnergyRemover() {
+    public TileEnergyRemover(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.energy_remover, pos,state);
         slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 16);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 
-    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void RemoveTile(IEnergyTile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
@@ -72,14 +69,14 @@ public class TileEnergyRemover extends TileEntityInventory implements
         }
     }
 
-    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void AddTile(IEnergyTile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             this.energyConductorMap.put(facing1, tile);
             validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
         }
     }
 
-    public Map<EnumFacing, IEnergyTile> getTiles() {
+    public Map<Direction, IEnergyTile> getTiles() {
         return energyConductorMap;
     }
 
@@ -88,18 +85,15 @@ public class TileEnergyRemover extends TileEntityInventory implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
-    public TileEntity getTileEntity() {
+    public BlockEntity getTileEntity() {
         return this;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip) {
 
-    }
 
     public long getIdNetwork() {
         return this.id;
@@ -126,7 +120,7 @@ public class TileEnergyRemover extends TileEntityInventory implements
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
@@ -153,32 +147,32 @@ public class TileEnergyRemover extends TileEntityInventory implements
 
     @Override
     public void onUnloaded() {
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             MinecraftForge.EVENT_BUS.post(new EventUnloadController(this));
         }
         super.onUnloaded();
     }
 
     @Override
-    public ContainerRemover getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerRemover getGuiContainer(final Player entityPlayer) {
         return new ContainerRemover(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiEnergyRemover(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiEnergyRemover((ContainerRemover) menu);
     }
 
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        nbt.setBoolean("work", work);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        nbt.putBoolean("work", work);
         return super.writeToNBT(nbt);
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         this.work = nbtTagCompound.getBoolean("work");
 
@@ -197,8 +191,10 @@ public class TileEnergyRemover extends TileEntityInventory implements
             for (final InfoTile<IEnergyTile> validReceiver : validReceivers) {
                 if (validReceiver.tileEntity != tile && validReceiver.tileEntity.getIdNetwork() != id && validReceiver.tileEntity instanceof IEnergyConductor) {
                     validReceiver.tileEntity.setId(id);
-                    tileEntitiesToCheck.push(validReceiver.tileEntity);
-                    reachedTileEntities.add((IEnergyConductor) validReceiver.tileEntity);
+                    if (validReceiver.tileEntity instanceof IEnergyConductor) {
+                        tileEntitiesToCheck.push(validReceiver.tileEntity);
+                        reachedTileEntities.add((IEnergyConductor) validReceiver.tileEntity);
+                    }
                 }
             }
         }
@@ -213,14 +209,13 @@ public class TileEnergyRemover extends TileEntityInventory implements
                 TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
                         conductor);
                 tile.onUnloaded();
-                final List<ItemStack> drops = tile.getBlockType().getDrops(
-                        world,
+                final List<ItemStack> drops = tile.getBlock().getDrops(
+                        level,
                         tile.getPos(),
-                        tile.getBlockState(),
-                        100
+                        tile.getBlockState(),null
                 );
                 if (this.slot.add(drops.get(0))) {
-                    conductor.removeConductor();
+                   this.getWorld().removeBlock( tile.getPos(),false);
                 }
 
             }
@@ -231,8 +226,8 @@ public class TileEnergyRemover extends TileEntityInventory implements
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
-        if (this.world.isRemote) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
+        if (this.level.isClientSide) {
             return;
         }
         if (i == 0) {

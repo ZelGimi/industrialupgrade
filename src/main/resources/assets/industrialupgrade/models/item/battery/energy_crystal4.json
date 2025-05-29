@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/battery/energy_crystal_4"
+    "layer0" : "industrialupgrade:item/battery/energy_crystal_4"
   }
 }

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:stick"
+      }
+    ]
+  },
+  "pattern": [
+    "AA ",
+    "AAB",
+    "AA "
+  ],
+  "result": {
+    "item": "industrialupgrade:booze_mug"
+  },
+  "show_notification": true
+}

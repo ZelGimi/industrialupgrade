@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/phobos_boulder"
+    "layer0" : "industrialupgrade:item/phobos_boulder"
   }
 }

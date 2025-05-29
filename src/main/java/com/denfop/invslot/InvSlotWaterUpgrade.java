@@ -6,8 +6,9 @@ import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
-import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
-import net.minecraft.item.ItemStack;
+import com.denfop.items.modules.ItemWaterRotorsUpgrade;
+import com.denfop.network.IUpdatableTileEvent;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
 
@@ -30,17 +31,17 @@ public class InvSlotWaterUpgrade extends InvSlot implements ITypeSlot {
         if (this.tile.getRotor() == null) {
             return false;
         }
-        if (!(stack.getItem() instanceof com.denfop.items.ItemWaterRotorsUpgrade)) {
+        if (!(stack.getItem() instanceof ItemWaterRotorsUpgrade)) {
             return false;
         }
 
-        EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules = EnumInfoRotorUpgradeModules.getFromID(stack.getItemDamage());
+        EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules = EnumInfoRotorUpgradeModules.getFromID(((ItemWaterRotorsUpgrade<?>) stack.getItem()).getElement().getId());
         int col = 0;
         for (ItemStack stack1 : this.contents) {
             if (stack1.isEmpty()) {
                 continue;
             }
-            if (stack1.isItemEqual(stack)) {
+            if (stack1.is(stack.getItem())) {
                 col++;
             }
         }
@@ -64,13 +65,15 @@ public class InvSlotWaterUpgrade extends InvSlot implements ITypeSlot {
     }
 
     public void put(int index, ItemStack content, boolean updates) {
-        super.put(index, content);
+        super.set(index, content);
+    }
+    @Override
+    public ItemStack set(int i, ItemStack empty) {
+        super.set(i, empty);
+        ((IUpdatableTileEvent) this.base).updateTileServer(null, 0);
+        return empty;
+
     }
 
-    public void put(int index, ItemStack content) {
-        super.put(index, content);
-
-        ((TileEntityWaterRotorModifier) this.base).updateTileServer(null, 0);
-    }
 
 }

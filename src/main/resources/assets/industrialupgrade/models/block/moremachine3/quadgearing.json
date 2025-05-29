@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/per_gearing_side",
-    "down" : "industrialupgrade:blocks/per_gearing_side",
-    "up" : "industrialupgrade:blocks/per_gearing_side",
-    "north" : "industrialupgrade:blocks/per_gearing_main",
-    "east" : "industrialupgrade:blocks/per_gearing_side1",
-    "south" : "industrialupgrade:blocks/per_gearing_side",
-    "west" : "industrialupgrade:blocks/per_gearing_side1"
+    "particle" : "industrialupgrade:block/per_gearing_side",
+    "down" : "industrialupgrade:block/per_gearing_side",
+    "up" : "industrialupgrade:block/per_gearing_side",
+    "north" : "industrialupgrade:block/per_gearing_main",
+    "east" : "industrialupgrade:block/per_gearing_side1",
+    "south" : "industrialupgrade:block/per_gearing_side",
+    "west" : "industrialupgrade:block/per_gearing_side1"
   }
 }

@@ -3,35 +3,27 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.CustomButton;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiVerticalSliderList;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.ImageScreen;
-import com.denfop.api.gui.ItemStackImage;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerAnalyzer;
 import com.denfop.tiles.base.DataOre;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiPageButtonList;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
-public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButtonList.GuiResponder,
+public class GuiAnalyzer<T extends ContainerAnalyzer> extends GuiIU<ContainerAnalyzer> implements GuiPageButtonList.GuiResponder,
         GuiVerticalSliderList.FormatHelper {
 
     public final ContainerAnalyzer container;
@@ -44,13 +36,13 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButt
 
     public GuiAnalyzer(ContainerAnalyzer container1) {
         super(container1);
-        this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiAnalyzer.png");
+        this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiAnalyzer.png".toLowerCase());
         this.container = container1;
-        this.name = Localization.translate("iu.blockAnalyzer.name");
-        this.ySize = 256;
-        this.xSize = 212;
+        this.name = Localization.translate("iu.blockAnalyzer.name".toLowerCase());
+        this.imageHeight = 256;
+        this.imageWidth = 212;
         this.inventory.setY(this.inventory.getY() + 90);
-        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.elements.add(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
 
         this.elements.add(new ImageScreen(this, 6, 13, 90, 18));
         this.elements.add(new ImageScreen(this, 6, 34, 90, 18));
@@ -76,15 +68,15 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButt
                     }
                 })
         ));
-        this.addElement(new ItemStackImage(this, 5, 133, () -> new ItemStack(IUItem.basemachine1, 1, 2)) {
+        this.addElement(new ItemStackImage(this, 5, 133, () -> this.container.base.getPickBlock(null, null)) {
             @Override
-            public void drawForeground(final int mouseX, final int mouseY) {
+            public void drawForeground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
 
             }
         });
-        this.addElement(new ItemStackImage(this, 5, 153, () -> new ItemStack(IUItem.machines, 1, 8)) {
+        this.addElement(new ItemStackImage(this, 5, 153, () -> new ItemStack(IUItem.machines.getItem(8), 1)) {
             @Override
-            public void drawForeground(final int mouseX, final int mouseY) {
+            public void drawForeground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
 
             }
         });
@@ -106,43 +98,41 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButt
                 }
             });
 
-            this.addElement(new ItemStackImage(this, 99 + ((finalI) - (6 * k)) * 18, 13 + k * 18, () -> IUItem.pullingUpgrade) {
+            this.addElement(new ItemStackImage(this, 99 + ((finalI) - (6 * k)) * 18, 13 + k * 18, () -> new ItemStack(IUItem.module7.getItemFromMeta(0))) {
                 @Override
-                public void drawBackground(final int mouseX, final int mouseY) {
+                public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                     if (!visible()) {
                         return;
                     }
                     DataOre dataOre = container.base.getDataOreList().get(finalI + 48 * value);
                     if (!ModUtils.isEmpty(dataOre.getStack())) {
-                        RenderHelper.enableGUIStandardItemLighting();
-                        this.gui.drawItemStack(this.x, this.y, dataOre.getStack());
-                        RenderHelper.disableStandardItemLighting();
+                        this.gui.drawItemStack(poseStack, this.x, this.y, dataOre.getStack());
                     }
 
                 }
 
                 @Override
-                public void drawForeground(final int mouseX, final int mouseY) {
+                public void drawForeground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                     if (!visible()) {
                         return;
                     }
                     if (this.contains(mouseX, mouseY)) {
                         DataOre dataOre = container.base.getDataOreList().get(finalI + 48 * value);
                         String tooltip1 =
-                                TextFormatting.GREEN + Localization.translate("chance.ore") + TextFormatting.WHITE + (dataOre.getNumber()) + ".";
+                                ChatFormatting.GREEN + Localization.translate("chance.ore") + ChatFormatting.WHITE + (dataOre.getNumber()) + ".";
                         double number = dataOre.getNumber();
                         double m = (number / (container.base.numberores * 1D)) * 100;
-                        String tooltip2 = TextFormatting.GREEN + Localization.translate("chance.ore1") + TextFormatting.WHITE + (int) m +
+                        String tooltip2 = ChatFormatting.GREEN + Localization.translate("chance.ore1") + ChatFormatting.WHITE + (int) m +
                                 "%" + ".";
 
                         String tooltip =
-                                TextFormatting.GREEN + Localization.translate("name.ore") + TextFormatting.WHITE + dataOre
+                                ChatFormatting.GREEN + Localization.translate("name.ore") + ChatFormatting.WHITE + dataOre
                                         .getStack()
-                                        .getDisplayName();
-                        String tooltip3 = TextFormatting.GREEN + Localization.translate("middleheight") + TextFormatting.WHITE + ModUtils.getString1(
+                                        .getDisplayName().getString();
+                        String tooltip3 = ChatFormatting.GREEN + Localization.translate("middleheight") + ChatFormatting.WHITE + ModUtils.getString1(
                                 dataOre.getAverage()) +
                                 ".";
-                        String tooltip4 = TextFormatting.GREEN + Localization.translate("cost.name") + TextFormatting.WHITE + ModUtils.getString(
+                        String tooltip4 = ChatFormatting.GREEN + Localization.translate("cost.name") + ChatFormatting.WHITE + ModUtils.getString(
                                 dataOre.getNumber() * container.base.inputslot.getenergycost()) + "EF";
 
                         List<String> text = new ArrayList<>();
@@ -156,7 +146,7 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButt
                         }
                         ItemStack stack = dataOre.getStack();
                         if (!ModUtils.isEmpty(stack)) {
-                            gui.drawTooltip(x + 10, y, text);
+                            gui.drawTooltip(x + 10, y + 4, text);
                         }
                     }
 
@@ -204,30 +194,31 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButt
 
     }
 
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
 
 
-        slider = new GuiVerticalSliderList(this, 2, (this.width - this.xSize) / 2 + 207,
-                (this.height - this.ySize) / 2 + 12,
+        slider = new GuiVerticalSliderList(this, 2, this.guiLeft() + 2 + 207,
+                guiTop() + 12,
                 "",
                 0, this.container.base.getDataOreList().size() / 48, 0,
                 this, 133
         );
-        this.buttonList.add(slider);
+        this.addWidget(slider);
+        this.addRenderableWidget(slider);
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void render(GuiGraphics p_97795_, int p_97796_, int p_97797_, float p_97798_) {
+        super.render(p_97795_, p_97796_, p_97797_, p_97798_);
         slider.visible = this.container.base.getDataOreList().size() > 48;
         slider.setMax(this.container.base.getDataOreList().size() / 48);
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-        xOffset = (this.width - this.xSize) / 2;
-        yOffset = (this.height - this.ySize) / 2;
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+        xOffset = guiLeft();
+        yOffset = guiTop();
 
 
         int chunk = this.container.base.xChunk;
@@ -235,72 +226,72 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButt
         int endchunk = this.container.base.xendChunk;
         int endchunk1 = this.container.base.zendChunk;
 
-        this.fontRenderer.drawString(Localization.translate("startchunk") +
+        poseStack.drawString(Minecraft.getInstance().font, Localization.translate("startchunk") +
                         "X:" + chunk + " Z:" + chunk1,
-                10, +18, ModUtils.convertRGBcolorToInt(13, 229, 34)
+                10, +18, ModUtils.convertRGBcolorToInt(13, 229, 34),false
         );
-        this.fontRenderer.drawString(Localization.translate("endchunk") +
+        poseStack.drawString(Minecraft.getInstance().font, Localization.translate("endchunk") +
                         "X:" + endchunk + " Z:" + endchunk1,
-                10, 39, ModUtils.convertRGBcolorToInt(13, 229, 34)
+                10, 39, ModUtils.convertRGBcolorToInt(13, 229, 34),false
         );
 
-        this.fontRenderer.drawString(
-                TextFormatting.GREEN + Localization.translate("analyze") +
-                        TextFormatting.WHITE + ModUtils.getString(this.container.base.breakblock),
-                10, 80 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
+        poseStack.drawString(Minecraft.getInstance().font,
+                ChatFormatting.GREEN + Localization.translate("analyze") +
+                        ChatFormatting.WHITE + ModUtils.getString(this.container.base.breakblock),
+                10, 80 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217),false
         );
-        this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("ore") +
-                        TextFormatting.WHITE + ModUtils.getString(this.container.base.numberores),
-                10, 80 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
+        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("ore") +
+                        ChatFormatting.WHITE + ModUtils.getString(this.container.base.numberores),
+                10, 80 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217),false
         );
 
-        this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("procent_ore") +
-                        TextFormatting.WHITE + ModUtils.getString1(((this.container.base.numberores / (this.container.base.breakblock * 1D)) * 100)) + "%",
-                10, 80 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
+        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("procent_ore") +
+                        ChatFormatting.WHITE + ModUtils.getString1(((this.container.base.numberores / (this.container.base.breakblock * 1D)) * 100)) + "%",
+                10, 80 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217),false
         );
         int average = 0;
         for (DataOre dataOre : this.container.base.dataOreList) {
             average += dataOre.getAverage();
         }
         average /= Math.max(1, this.container.base.dataOreList.size());
-        this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("middleheight") +
-                        TextFormatting.WHITE + ModUtils.getString1(average),
+        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("middleheight") +
+                        ChatFormatting.WHITE + ModUtils.getString1(average),
                 10, 80 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
-        this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("cost.name") +
-                        TextFormatting.WHITE + ModUtils.getString(this.container.base.numberores * this.container.base.consume) + " EF",
+        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("cost.name") +
+                        ChatFormatting.WHITE + ModUtils.getString(this.container.base.numberores * this.container.base.consume) + " EF",
                 10, 80 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
-        this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("cost.name1") +
-                        TextFormatting.WHITE + ModUtils.getString1(this.container.base.consume) + "EF",
+        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("cost.name1") +
+                        ChatFormatting.WHITE + ModUtils.getString1(this.container.base.consume) + "EF",
                 10, 80 + 8 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
 
 
         if (!(this.container.base.inputslotA.isEmpty())) {
             if (!(this.container.base.getDataOreList().isEmpty())) {
-                int id = OreDictionary.getOreIDs(this.container.base.inputslotA.get(0))[0];
-                String name = OreDictionary.getOreName(id);
+                TagKey<Item> id = this.container.base.inputslotA.get(0).getItemHolder().getTagKeys().toList().get(0);
+                String name = id.location().getPath();
                 if (this.container.base.getDataOreList().contains(name)) {
                     DataOre dataOre = this.container.base.getDataOreList().get(name);
                     ItemStack stack = dataOre.getStack();
 
                     String tooltip1 =
-                            TextFormatting.GREEN + Localization.translate("chance.ore") + TextFormatting.WHITE + (dataOre.getNumber());
+                            ChatFormatting.GREEN + Localization.translate("chance.ore") + ChatFormatting.WHITE + (dataOre.getNumber());
                     double number = dataOre.getNumber();
                     double sum = this.container.base.breakblock;
                     double m = (number / sum) * 100;
-                    String tooltip2 = TextFormatting.GREEN + Localization.translate("chance.ore1") + TextFormatting.WHITE + (int) (
+                    String tooltip2 = ChatFormatting.GREEN + Localization.translate("chance.ore1") + ChatFormatting.WHITE + (int) (
                             m) + "%";
 
-                    String tooltip = TextFormatting.GREEN + Localization.translate("name.ore") + TextFormatting.WHITE + stack.getDisplayName();
-                    String tooltip3 = TextFormatting.GREEN + Localization.translate("middleheight") + TextFormatting.WHITE + ModUtils.getString1(
+                    String tooltip = ChatFormatting.GREEN + Localization.translate("name.ore") + ChatFormatting.WHITE + stack.getDisplayName().getString();
+                    String tooltip3 = ChatFormatting.GREEN + Localization.translate("middleheight") + ChatFormatting.WHITE + ModUtils.getString1(
                             dataOre.getAverage());
-                    String tooltip4 = TextFormatting.GREEN + Localization.translate("cost.name") + TextFormatting.WHITE + ModUtils.getString(
+                    String tooltip4 = ChatFormatting.GREEN + Localization.translate("cost.name") + ChatFormatting.WHITE + ModUtils.getString(
                             dataOre.getNumber() * this.container.base.inputslot.getenergycost()) + "EF";
 
 
-                    handleUpgradeTooltip2(par1, par2 - this.guiTop,
+                    handleUpgradeTooltip2(par1, par2 - this.guiTop(),
                             tooltip, tooltip1, tooltip2, tooltip3, tooltip4
                     );
 
@@ -352,13 +343,6 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButt
         }
     }
 
-
-    protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
-        super.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-
-    }
 
     @Override
     protected ResourceLocation getTexture() {

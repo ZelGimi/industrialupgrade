@@ -3,15 +3,16 @@ package com.denfop.pressure;
 
 import com.denfop.api.pressure.IPressureNet;
 import com.denfop.api.pressure.IPressureTile;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public class PressureNetGlobal implements IPressureNet {
 
-    private static Map<World, PressureNetLocal> worldToEnergyNetMap;
+    private static Map<ResourceKey<Level>, PressureNetLocal> worldToEnergyNetMap;
 
     static {
         PressureNetGlobal.worldToEnergyNetMap = new WeakHashMap<>();
@@ -22,25 +23,25 @@ public class PressureNetGlobal implements IPressureNet {
         return new PressureNetGlobal();
     }
 
-    public static void onWorldUnload(World world) {
-        final PressureNetLocal local = PressureNetGlobal.worldToEnergyNetMap.remove(world);
+    public static void onWorldUnload(Level world) {
+        final PressureNetLocal local = PressureNetGlobal.worldToEnergyNetMap.remove(world.dimension());
         if (local != null) {
             local.onUnload();
         }
     }
 
-    public static PressureNetLocal getForWorld(final World world) {
+    public static PressureNetLocal getForWorld(final Level world) {
         if (world == null) {
             return null;
         }
-        if (!PressureNetGlobal.worldToEnergyNetMap.containsKey(world)) {
-            PressureNetGlobal.worldToEnergyNetMap.put(world, new PressureNetLocal());
+        if (!PressureNetGlobal.worldToEnergyNetMap.containsKey(world.dimension())) {
+            PressureNetGlobal.worldToEnergyNetMap.put(world.dimension(), new PressureNetLocal());
         }
-        return PressureNetGlobal.worldToEnergyNetMap.get(world);
+        return PressureNetGlobal.worldToEnergyNetMap.get(world.dimension());
     }
 
 
-    public static void onTickEnd(final World world) {
+    public static void onTickEnd(final Level world) {
         final PressureNetLocal energyNet = getForWorld(world);
         if (energyNet != null) {
             energyNet.onTickEnd();
@@ -48,10 +49,10 @@ public class PressureNetGlobal implements IPressureNet {
     }
 
     @Override
-    public IPressureTile getSubTile(final World var1, final BlockPos var2) {
+    public IPressureTile getSubTile(final Level var1, final BlockPos var2) {
         final PressureNetLocal local = getForWorld(var1);
         if (local != null) {
-            return local.getTileEntity(var2);
+            return local.getSubTile(var1,var2);
         }
         return null;
     }

@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/single_multi_crop"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_6_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:adv_motors_with_improved_bearings_"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_51_element"
+      }
+    ]
+  },
+  "pattern": [
+    "B B",
+    "FAC",
+    "BDB"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/dual_multi_crop"
+  },
+  "show_notification": true
+}

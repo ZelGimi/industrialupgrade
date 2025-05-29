@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nimonic_dust"	}
+		"layer0": "industrialupgrade:item/nimonic_dust"	}
 }

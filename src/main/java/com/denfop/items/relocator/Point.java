@@ -1,8 +1,8 @@
 package com.denfop.items.relocator;
 
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 
 public class Point {
 
@@ -19,9 +19,9 @@ public class Point {
         pos = buffer.readBlockPos();
     }
 
-    public Point(NBTTagCompound compound) {
+    public Point(CompoundTag compound) {
         this.name = compound.getString("Name");
-        this.pos = BlockPos.fromLong(compound.getLong("Pos"));
+        this.pos = BlockPos.of(compound.getLong("Pos"));
     }
 
     public BlockPos getPos() {
@@ -37,10 +37,9 @@ public class Point {
         buffer.writeBlockPos(pos);
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setString("Name", this.name);
-        compound.setLong("Pos", this.pos.toLong());
+    public CompoundTag writeToNBT(CompoundTag compound) {
+        compound.putString("Name", this.name);
+        compound.putLong("Pos", this.pos.asLong());
         return compound;
     }
-
 }

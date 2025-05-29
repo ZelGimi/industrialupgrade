@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/callisto_lapis_ore"
+    "all" : "industrialupgrade:block/callisto_lapis_ore"
   }
 }

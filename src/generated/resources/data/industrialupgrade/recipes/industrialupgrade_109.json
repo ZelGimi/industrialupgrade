@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/alcled"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/redbrass"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/electrum"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:doubleplate/silver"
+      }
+    ],
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    }
+  },
+  "pattern": [
+    "BCA",
+    "DED",
+    "BCA"
+  ],
+  "result": {
+    "item": "industrialupgrade:quarrymodules/per"
+  },
+  "show_notification": true
+}

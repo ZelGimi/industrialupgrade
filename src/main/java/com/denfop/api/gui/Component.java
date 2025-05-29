@@ -4,24 +4,15 @@ import com.denfop.Localization;
 import com.denfop.api.cool.ICoolSink;
 import com.denfop.api.heat.IHeatSink;
 import com.denfop.blocks.FluidName;
-import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.componets.ComponentBioFuelEnergy;
-import com.denfop.componets.ComponentBioProcessRender;
-import com.denfop.componets.ComponentButton;
-import com.denfop.componets.ComponentProcessRender;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentSteamEnergy;
-import com.denfop.componets.ComponentSteamProcessRender;
-import com.denfop.componets.ComponentTimer;
-import com.denfop.componets.CoolComponent;
-import com.denfop.componets.Energy;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.PressureComponent;
+import com.denfop.componets.*;
 import com.denfop.utils.ModUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import static com.denfop.api.gui.GuiElement.bindBlockTexture;
 import static com.denfop.api.gui.GuiElement.getBlockTextureMap;
@@ -42,7 +33,7 @@ public class Component<T> {
         return true;
     }
 
-    public void drawBackground(int mouseX, int mouseY, final GuiComponent guiComponent) {
+    public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY, final GuiComponent guiComponent) {
         if (visible()) {
             if (this.component instanceof Energy) {
                 Energy component = (Energy) this.component;
@@ -52,7 +43,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getHeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY() + guiComponent
                                     .getType()
                                     .getHeight() - chargeLevel,
@@ -65,7 +56,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getWeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY(),
                             guiComponent.getType().getX1(),
                             guiComponent.getType().getY1(),
@@ -78,20 +69,19 @@ public class Component<T> {
                 ComponentSteamEnergy component = (ComponentSteamEnergy) this.component;
 
                 if (component != null && component.storage >= 1) {
-                    FluidStack fs = new FluidStack(FluidName.fluidsteam.getInstance(), 1);
+                    FluidStack fs = new FluidStack(FluidName.fluidsteam.getInstance().get(), 1);
                     int fluidX = guiComponent.x + 1;
                     int fluidY = guiComponent.y + 1;
                     int fluidWidth = 16;
                     int fluidHeight = 16;
                     Fluid fluid = fs.getFluid();
-                    TextureAtlasSprite sprite = fluid != null
-                            ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                            : null;
-                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
                     bindBlockTexture();
-                    guiComponent.getGui().drawSprite(
-                            fluidX,
-                            fluidY,
+                    guiComponent.getGui().drawSprite(poseStack,
+                          mouseX+  fluidX,
+                        mouseY+    fluidY,
                             fluidWidth,
                             fluidHeight,
                             sprite,
@@ -105,20 +95,19 @@ public class Component<T> {
                 ComponentBioFuelEnergy component = (ComponentBioFuelEnergy) this.component;
 
                 if (component != null && component.storage >= 1) {
-                    FluidStack fs = new FluidStack(FluidName.fluidbiomass.getInstance(), 1);
+                    FluidStack fs = new FluidStack(FluidName.fluidbiomass.getInstance().get(), 1);
                     int fluidX = guiComponent.x + 1;
                     int fluidY = guiComponent.y + 1;
                     int fluidWidth = 16;
                     int fluidHeight = 16;
                     Fluid fluid = fs.getFluid();
-                    TextureAtlasSprite sprite = fluid != null
-                            ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                            : null;
-                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
                     bindBlockTexture();
-                    guiComponent.getGui().drawSprite(
-                            fluidX,
-                            fluidY,
+                    guiComponent.getGui().drawSprite(poseStack,
+                            mouseX+     fluidX,
+                            mouseY+    fluidY,
                             fluidWidth,
                             fluidHeight,
                             sprite,
@@ -135,7 +124,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getHeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY() + guiComponent
                                     .getType()
                                     .getHeight() - chargeLevel,
@@ -148,7 +137,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getWeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY(),
                             guiComponent.getType().getX1(),
                             guiComponent.getType().getY1(),
@@ -163,7 +152,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getHeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY() + guiComponent
                                     .getType()
                                     .getHeight() - chargeLevel,
@@ -176,7 +165,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getWeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY(),
                             guiComponent.getType().getX1(),
                             guiComponent.getType().getY1(),
@@ -191,7 +180,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getHeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY() + guiComponent
                                     .getType()
                                     .getHeight() - chargeLevel,
@@ -204,7 +193,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getWeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX+guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY(),
                             guiComponent.getType().getX1(),
                             guiComponent.getType().getY1(),
@@ -220,7 +209,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getHeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY() + guiComponent
                                     .getType()
                                     .getHeight() - chargeLevel,
@@ -233,7 +222,7 @@ public class Component<T> {
                     fillratio *= guiComponent.getType().getWeight();
                     int chargeLevel = (int) fillratio;
                     guiComponent.getGui().drawTexturedModalRect(
-                            mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
+                            poseStack, mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
                             mouseY + guiComponent.getType().getEndY() + guiComponent.getY(),
                             guiComponent.getType().getX1(),
                             guiComponent.getType().getY1(),
@@ -349,12 +338,9 @@ public class Component<T> {
         } else if (this.component instanceof FluidTank) {
             FluidTank component = (FluidTank) this.component;
             String text1;
-            try {
-                text1 = component.getFluid().getLocalizedName();
-            } catch (Exception e) {
+            text1 = component.getFluid().getDisplayName().getString();
+            if (component.getFluid().getFluid() == Fluids.EMPTY)
                 text1 = "";
-            }
-
             text = "Fluid " + text1 + ": " +
                     ModUtils.getString(component
                             .getFluidAmount()) + "/" + ModUtils.getString(component.getCapacity());

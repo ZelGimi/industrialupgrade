@@ -1,40 +1,40 @@
 package com.denfop.items.energy;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.PickaxeItem;
 
-public class ItemPickaxe extends net.minecraft.item.ItemPickaxe implements IModelRegister {
-
+public class ItemPickaxe extends PickaxeItem implements IItemTab {
     private final String name;
+    private String nameItem;
 
     public ItemPickaxe(String name) {
-        super(ToolMaterial.DIAMOND);
-        setUnlocalizedName(name);
-        this.name = name;
-        this.setMaxDamage((int) (ToolMaterial.IRON.getMaxUses() * 2.5));
-        setCreativeTab(IUCore.EnergyTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-        IUCore.proxy.addIModelRegister(this);
+        super(IUTiers.RUBY, 1, -2.8F,new Properties().stacksTo(1));
+        this.name=name;
+    }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "item."+name;
+        }
+
+        return this.nameItem;
     }
 
-    @SideOnly(Side.CLIENT)
-    public ModelResourceLocation getModelLocation(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' + name;
-
-        return new ModelResourceLocation(loc, null);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, getModelLocation(name));
-    }
-
 }

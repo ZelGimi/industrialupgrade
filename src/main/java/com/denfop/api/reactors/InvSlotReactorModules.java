@@ -2,7 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.invslot.InvSlot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotReactorModules<T extends IAdvReactor & IAdvInventory> extends InvSlot {
 
@@ -25,8 +25,8 @@ public class InvSlotReactorModules<T extends IAdvReactor & IAdvInventory> extend
     }
 
     @Override
-    public void put(int i, final ItemStack content) {
-        super.put(i, content);
+    public ItemStack set(int i, final ItemStack content) {
+        super.set(i, content);
         stableHeat = 1;
         radiation = 1;
         generation = 1;
@@ -51,6 +51,7 @@ public class InvSlotReactorModules<T extends IAdvReactor & IAdvInventory> extend
             this.capacitor *= module.getCapacitor(stack);
         }
         ((IAdvReactor) this.base).setUpdate();
+        return content;
     }
 
     public void load() {

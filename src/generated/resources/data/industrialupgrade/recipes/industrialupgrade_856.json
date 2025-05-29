@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:ores/iron"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:ores/gold"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:ores/emerald"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:ores/diamond"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAD",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_53_element"
+  },
+  "show_notification": true
+}

@@ -1,42 +1,45 @@
 package com.denfop.tiles.mechanism.steamturbine.controller;
 
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.steam.EnumSteamPhase;
 import com.denfop.api.steam.ISteamBlade;
 import com.denfop.api.steam.Steam;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBaseSteamTurbineController;
 import com.denfop.gui.GuiBaseSteamTurbineController;
+import com.denfop.gui.GuiCore;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.render.steam.SteamRod;
+import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import com.denfop.tiles.mechanism.steamturbine.IController;
-import com.denfop.tiles.mechanism.steamturbine.IControllerRod;
-import com.denfop.tiles.mechanism.steamturbine.ICoolant;
-import com.denfop.tiles.mechanism.steamturbine.IExchanger;
-import com.denfop.tiles.mechanism.steamturbine.IPressure;
-import com.denfop.tiles.mechanism.steamturbine.IRod;
-import com.denfop.tiles.mechanism.steamturbine.ISocket;
-import com.denfop.tiles.mechanism.steamturbine.ITank;
+import com.denfop.tiles.mechanism.steamturbine.*;
 import com.denfop.world.WorldBaseGen;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +50,7 @@ import static com.denfop.render.windgenerator.WindGeneratorRenderer.rotorModels;
 
 public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase implements IController, IUpdatableTileEvent {
 
-    private final int level;
+    private final int blocLevel;
     public List<IExchanger> listExchanger = new ArrayList<>();
     public List<ICoolant> listCoolant = new ArrayList<>();
     public ITank tankWater;
@@ -65,14 +68,14 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     private long lastcheck;
     private float angle;
 
-    public TileEntityBaseSteamTurbineController(int level) {
-        super(SteamTurbineMultiBlock);
-        this.level = level;
+    public TileEntityBaseSteamTurbineController(int blocLevel, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
+        super(SteamTurbineMultiBlock, tileBlock, pos, state);
+        this.blocLevel = blocLevel;
     }
 
     @Override
     public int getBlockLevel() {
-        return level;
+        return blocLevel;
     }
 
     @Override
@@ -92,7 +95,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
 
 
     public float getAngle() {
-        if (this.getWorld().provider.getDimension() != 0) {
+        if (this.getWorld().dimension() != Level.OVERWORLD) {
             return 0;
         }
         if (this.work && this.phase > 0) {
@@ -111,7 +114,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     }
 
     @Override
-    public ContainerBaseSteamTurbineController getGuiContainer(final EntityPlayer var1) {
+    public ContainerBaseSteamTurbineController getGuiContainer(final Player var1) {
         return new ContainerBaseSteamTurbineController(this, var1);
     }
 
@@ -171,11 +174,11 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
         try {
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                getSteamFluid().readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                getSteamFluid().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
             fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                getWaterFluid().readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                getWaterFluid().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
             this.energy.getEnergy().onNetworkUpdate(customPacketBuffer);
             this.phase = customPacketBuffer.readInt();
@@ -188,7 +191,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                 ICoolant coolant = listCoolant.get(i);
                 fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
                 if (fluidTank2 != null) {
-                    coolant.getCoolant().readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                    coolant.getCoolant().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
                 }
             }
         } catch (IOException e) {
@@ -197,9 +200,10 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiBaseSteamTurbineController getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiBaseSteamTurbineController(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiBaseSteamTurbineController((ContainerBaseSteamTurbineController) menu);
     }
 
     @Override
@@ -208,13 +212,13 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void render(final TileMultiBlockBase tileEntityMultiBlockBase) {
-        super.render(tileEntityMultiBlockBase);
+    @OnlyIn(Dist.CLIENT)
+    public void render(final TileMultiBlockBase tileEntityMultiBlockBase, RenderLevelStageEvent event) {
+        super.render(tileEntityMultiBlockBase, event);
         if (this.isFull()) {
             int diameter = 2;
             BlockPos prev = pos;
-            ModelBase model = rotorModels.get(diameter);
+            EntityModel model = rotorModels.get(diameter);
             if (model == null) {
                 model = new SteamRod(diameter);
                 rotorModels.put(diameter, model);
@@ -230,66 +234,73 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                                 IRod.class
                         );
                 for (BlockPos pos2 : pos1) {
-                    iRodListMap.add((IRod) this.getWorld().getTileEntity(pos2));
+                    iRodListMap.add((IRod) this.getWorld().getBlockEntity(pos2));
                 }
             }
+            PoseStack poseStack = event.getPoseStack();
             for (IRod rod : this.iRodListMap) {
                 BlockPos pos = rod.getBlockPos();
-                GlStateManager.pushMatrix();
+                poseStack.pushPose();
                 float angle = this.getAngle();
-                GlStateManager.translate(pos.getX() - prev.getX(), pos.getY() - prev.getY(), pos.getZ() - prev.getZ());
-                EnumFacing facing = this.getFacing();
-                switch (facing) {
-                    case NORTH:
-                        GlStateManager.translate(0F, 0.5F, 0F);
-                        GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
-                                facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
-                        );
-                        GL11.glRotatef(-90f, 0, 1, 0);
-                        break;
-                    case EAST:
-                        GlStateManager.translate(0F, 0.5F, 0);
-                        GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
-                                0
-                        );
-                        break;
-                    case SOUTH:
-                        GlStateManager.translate(0F, 0.5F, 0);
-                        GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
-                                facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
-                        );
-                        GL11.glRotatef(-90f, 0, 1, 0);
+                poseStack.translate(pos.getX() - prev.getX(), pos.getY() - prev.getY(), pos.getZ() - prev.getZ());
+                Direction facing = this.getFacing();
 
-                        break;
-                    case WEST:
-                        GlStateManager.translate(0.25F, 0.5F, 0);
-                        GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
-                                facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
-                        );
-                        break;
+                switch (facing) {
+                    case NORTH -> {
+                        poseStack.translate(0F, 0.5F, 0F);
+                        if (facing.getAxis() == Direction.Axis.X)
+                            poseStack.mulPose(Axis.XP.rotationDegrees(angle));
+                        else if (facing.getAxis() == Direction.Axis.Z)
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(angle));
+
+                        poseStack.mulPose(Axis.YP.rotationDegrees(-90f));
+                    }
+                    case EAST -> {
+                        poseStack.translate(0F, 0.5F, 0F);
+                        if (facing.getAxis() == Direction.Axis.X)
+                            poseStack.mulPose(Axis.XP.rotationDegrees(angle));
+                    }
+                    case SOUTH -> {
+                        poseStack.translate(0F, 0.5F, 0F);
+                        if (facing.getAxis() == Direction.Axis.X)
+                            poseStack.mulPose(Axis.XP.rotationDegrees(angle));
+                        else if (facing.getAxis() == Direction.Axis.Z)
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(angle));
+
+                        poseStack.mulPose(Axis.YP.rotationDegrees(-90f));
+                    }
+                    case WEST -> {
+                        poseStack.translate(0.25F, 0.5F, 0F);
+                        if (facing.getAxis() == Direction.Axis.X)
+                            poseStack.mulPose(Axis.XP.rotationDegrees(angle));
+                        else if (facing.getAxis() == Direction.Axis.Z)
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(angle));
+                    }
                 }
 
 
                 for (ISteamBlade steamBlade : rod.getRods()) {
                     ResourceLocation rotorRL = steamBlade.getTexture();
-                    int light = world.getCombinedLight(pos, 0);
-                    int blockLight = light % 65536;
-                    int skyLight = light / 65536;
-                    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) blockLight, (float) skyLight);
-                    if (facing == EnumFacing.EAST || facing == EnumFacing.WEST) {
-                        GL11.glRotatef((90.0F) % 360, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
-                                facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
-                        );
+                    GuiCore.bindTexture(rotorRL);
+                    VertexConsumer consumer = Minecraft.getInstance()
+                            .renderBuffers()
+                            .bufferSource()
+                            .getBuffer(RenderType.entityCutout(rotorRL));
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                    int packedLight = event.getLevelRenderer().getLightColor(getLevel(), pos);
+                    if (facing == Direction.EAST || facing == Direction.WEST) {
+                        if (facing.getAxis() == Direction.Axis.X) {
+                            poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+                        } else if (facing.getAxis() == Direction.Axis.Z) {
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+                        }
                     } else {
-
-                        GL11.glRotatef(90.0F, 1, 0, 0);
-                        ;
-
+                        poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
                     }
-                    Minecraft.getMinecraft().getTextureManager().bindTexture(rotorRL);
-                    model.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, (float) (0.0625F));
+
+                    model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
                 }
-                GlStateManager.popMatrix();
+                poseStack.popPose();
             }
         }
     }
@@ -308,7 +319,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.full && this.work) {
-            if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+            if (this.getWorld().getGameTime() % 20 == 0) {
                 if (this.steam.getCoef() > 0) {
                     this.steam.onTick();
 
@@ -317,14 +328,14 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                             continue;
                         }
                         this.removeHeat(exchanger.getPower());
-                        boolean update = exchanger.getExchanger().damageItem(exchanger.getSlot().get(), -1);
+                        boolean update = exchanger.getExchanger().damageItem(exchanger.getSlot().get(0), -1);
                         if (update) {
-                            exchanger.getSlot().put(0, ItemStack.EMPTY);
+                            exchanger.getSlot().set(0, ItemStack.EMPTY);
                         }
                     }
                 }
-                if (this.getWorld().provider.getWorldTime() % 120 == 0) {
-                    this.removePhase(WorldBaseGen.random.nextInt(this.level + 2));
+                if (this.getWorld().getGameTime() % 120 == 0) {
+                    this.removePhase(WorldBaseGen.random.nextInt(this.blocLevel + 2));
                 }
 
                 this.steam.updateData();
@@ -335,8 +346,8 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
             energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generation));
         } else {
             generation = 0;
-            if (this.getWorld().provider.getWorldTime() % 60 == 0) {
-                this.removePhase(WorldBaseGen.random.nextInt(this.level + 2));
+            if (this.getWorld().getGameTime() % 60 == 0) {
+                this.removePhase(WorldBaseGen.random.nextInt(this.blocLevel + 2));
             }
         }
     }
@@ -414,17 +425,17 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         nbttagcompound = super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("work", work);
-        nbttagcompound.setByte("enumSteamPhase", (byte) enumSteamPhase.ordinal());
-        nbttagcompound.setByte("stableenumSteamPhase", (byte) stableenumSteamPhase.ordinal());
-        nbttagcompound.setShort("phase", (short) phase);
+        nbttagcompound.putBoolean("work", work);
+        nbttagcompound.putByte("enumSteamPhase", (byte) enumSteamPhase.ordinal());
+        nbttagcompound.putByte("stableenumSteamPhase", (byte) stableenumSteamPhase.ordinal());
+        nbttagcompound.putShort("phase", (short) phase);
         return nbttagcompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         work = nbttagcompound.getBoolean("work");
         enumSteamPhase = EnumSteamPhase.values()[nbttagcompound.getByte("enumSteamPhase")];
@@ -500,7 +511,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (var2 == 0) {
             work = !work;
         } else if (var2 == 1) {
@@ -526,22 +537,22 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IPressure.class
                 );
-        this.pressure = (IPressure) this.getWorld().getTileEntity(pos1.get(0));
+        this.pressure = (IPressure) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ISocket.class
                 );
-        this.energy = (ISocket) this.getWorld().getTileEntity(pos1.get(0));
+        this.energy = (ISocket) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ITank.class
                 );
-        this.tankWater = (ITank) this.getWorld().getTileEntity(pos1.get(0));
+        this.tankWater = (ITank) this.getWorld().getBlockEntity(pos1.get(0));
         tankWater.setWaterTank();
         tankWater.clear(false);
-        this.tankSteam = (ITank) this.getWorld().getTileEntity(pos1.get(1));
+        this.tankSteam = (ITank) this.getWorld().getBlockEntity(pos1.get(1));
         tankSteam.setSteamTank();
         tankSteam.clear(true);
         pos1 = this
@@ -550,7 +561,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                         ICoolant.class
                 );
         for (BlockPos pos2 : pos1) {
-            listCoolant.add((ICoolant) this.getWorld().getTileEntity(pos2));
+            listCoolant.add((ICoolant) this.getWorld().getBlockEntity(pos2));
         }
         pos1 = this
                 .getMultiBlockStucture()
@@ -558,7 +569,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                         IExchanger.class
                 );
         for (BlockPos pos2 : pos1) {
-            listExchanger.add((IExchanger) this.getWorld().getTileEntity(pos2));
+            listExchanger.add((IExchanger) this.getWorld().getBlockEntity(pos2));
         }
         pos1 = this
                 .getMultiBlockStucture()
@@ -566,16 +577,56 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                         IRod.class
                 );
         for (BlockPos pos2 : pos1) {
-            iRodListMap.add((IRod) this.getWorld().getTileEntity(pos2));
+            iRodListMap.add((IRod) this.getWorld().getBlockEntity(pos2));
         }
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IControllerRod.class
                 );
-        final IControllerRod controllerRod = (IControllerRod) this.getWorld().getTileEntity(pos1.get(0));
+        final IControllerRod controllerRod = (IControllerRod) this.getWorld().getBlockEntity(pos1.get(0));
         controllerRod.setList(iRodListMap);
         this.steam = new Steam(this);
+    }
+
+    @Override
+    public boolean needUpdate() {
+        return true;
+    }
+
+    @Override
+    public CustomPacketBuffer writeUpdatePacket() {
+        CustomPacketBuffer customPacketBuffer = super.writeUpdatePacket();
+        customPacketBuffer.writeBoolean(isFull());
+        if (isFull()) {
+            for (IRod rod : iRodListMap) {
+                customPacketBuffer.writeBlockPos(rod.getBlockPos());
+                customPacketBuffer.writeBytes(((TileEntityMultiBlockElement)rod).writePacket());
+            }
+        }
+        return customPacketBuffer;
+    }
+
+    @Override
+    public void readUpdatePacket(CustomPacketBuffer packetBuffer) {
+        super.readUpdatePacket(packetBuffer);
+        boolean isFull = packetBuffer.readBoolean();
+        if (isFull){
+            iRodListMap.clear();
+            for (int i = 0;i < 9;i++){
+                TileEntityMultiBlockElement multiBlockElement = (TileEntityMultiBlockElement) this.getWorld().getBlockEntity(packetBuffer.readBlockPos());
+                packetBuffer.readShort();
+                multiBlockElement.readPacket(packetBuffer);
+                iRodListMap.add((IRod)multiBlockElement);
+            }
+            List<BlockPos> pos1 = this
+                    .getMultiBlockStucture()
+                    .getPosFromClass(this.getFacing(), this.getBlockPos(),
+                            IControllerRod.class
+                    );
+            final IControllerRod controllerRod = (IControllerRod) this.getWorld().getBlockEntity(pos1.get(0));
+            controllerRod.setList(iRodListMap);
+        }
     }
 
     @Override

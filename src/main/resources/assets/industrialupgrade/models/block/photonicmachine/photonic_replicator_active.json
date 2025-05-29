@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/photonic_replicator_active_sides",
-    "down" : "industrialupgrade:blocks/photonic_replicator_active_sides",
-    "up" : "industrialupgrade:blocks/photonic_replicator_active_top",
-    "north" : "industrialupgrade:blocks/photonic_replicator_active_sides",
-    "east" : "industrialupgrade:blocks/photonic_replicator_active_sides",
-    "south" : "industrialupgrade:blocks/photonic_replicator_active_sides",
-    "west" : "industrialupgrade:blocks/photonic_replicator_active_sides"
+    "particle" : "industrialupgrade:block/photonic_replicator_active_sides",
+    "down" : "industrialupgrade:block/photonic_replicator_active_sides",
+    "up" : "industrialupgrade:block/photonic_replicator_active_top",
+    "north" : "industrialupgrade:block/photonic_replicator_active_sides",
+    "east" : "industrialupgrade:block/photonic_replicator_active_sides",
+    "south" : "industrialupgrade:block/photonic_replicator_active_sides",
+    "west" : "industrialupgrade:block/photonic_replicator_active_sides"
   }
 }

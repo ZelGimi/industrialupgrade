@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_27_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_43_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine3/steamdryer"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "G": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_159_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "CBG",
+    "E D"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/electric_dryer"
+  },
+  "show_notification": true
+}

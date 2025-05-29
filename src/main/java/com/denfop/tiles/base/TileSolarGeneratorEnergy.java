@@ -6,26 +6,30 @@ import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.SunCoef;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSolarGeneratorEnergy;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSolarGeneratorEnergy;
 import com.denfop.invslot.InvSlotGenSunarrium;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +40,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
 
     public final InvSlotGenSunarrium input;
     public final InvSlotOutput outputSlot;
-    public final ItemStack itemstack = new ItemStack(IUItem.sunnarium, 1, 4);
+    public final ItemStack itemstack = new ItemStack(IUItem.sunnarium.getItemFromMeta(4), 1);
     public final double maxSunEnergy;
     public final double cof;
     public boolean work;
@@ -51,8 +55,8 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     private boolean sunIsUp;
     private SunCoef sunCoef;
 
-    public TileSolarGeneratorEnergy(double cof) {
-
+    public TileSolarGeneratorEnergy(double cof, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block, pos, state);
         this.maxSunEnergy = 6500;
         this.cof = cof;
         this.outputSlot = new InvSlotOutput(this, 1);
@@ -69,9 +73,10 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 1;
     }
+
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
@@ -111,31 +116,6 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
         return packet;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
@@ -160,21 +140,21 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     public void onLoaded() {
         super.onLoaded();
         this.lst = this.input.coefday();
-        this.noSunWorld = this.world.provider.isNether();
+        this.noSunWorld = this.level.dimension() == Level.NETHER;
         this.coef_day = this.lst.get(0);
         this.coef_night = this.lst.get(1);
         this.update_night = this.lst.get(2);
         IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
-        this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
+        this.sunCoef = advEnergyNet.getSunCoefficient(this.getWorld());
         updateVisibility();
 
     }
 
     public void updateVisibility() {
-        this.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
-                (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                        MapColor.AIR) && !this.noSunWorld;
-        this.sunIsUp = this.world.isDaytime();
+        this.skyIsVisible = this.level.canSeeSky(this.worldPosition.above()) &&
+                (this.level.getBlockState(this.worldPosition.above()).getMapColor(this.level, this.worldPosition.above()) ==
+                        MapColor.NONE) && !this.noSunWorld;
+        this.sunIsUp = this.level.isDay();
         this.coef_day = this.lst.get(0);
         this.coef_night = this.lst.get(1);
         this.update_night = this.lst.get(2);
@@ -183,16 +163,16 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     public void updateEntityServer() {
 
         super.updateEntityServer();
-        if (this.world.provider.getWorldTime() % 80 == 0) {
+        if (this.getWorld().getGameTime() % 80 == 0) {
             updateVisibility();
         }
         this.generation = 0;
         if (this.skyIsVisible) {
             energy();
-            if (this.sunenergy.getEnergy() >= 9000) {
-                if (this.outputSlot.get().getCount() < 64 || this.outputSlot.isEmpty()) {
+            if (this.sunenergy.getEnergy() >= 6500) {
+                if (this.outputSlot.get(0).getCount() < 64 || this.outputSlot.isEmpty()) {
                     if (this.outputSlot.add(itemstack)) {
-                        this.sunenergy.addEnergy(-9000);
+                        this.sunenergy.addEnergy(-6500);
                     }
                 }
             }
@@ -217,18 +197,18 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     }
 
 
-    public ContainerSolarGeneratorEnergy getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSolarGeneratorEnergy getGuiContainer(Player entityPlayer) {
         return new ContainerSolarGeneratorEnergy(entityPlayer, this);
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSolarGeneratorEnergy(new ContainerSolarGeneratorEnergy(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSolarGeneratorEnergy((ContainerSolarGeneratorEnergy) menu);
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         this.work = !this.work;
     }
 

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/combiner_solid"
+    "layer0" : "industrialupgrade:item/combiner_solid"
   }
 }

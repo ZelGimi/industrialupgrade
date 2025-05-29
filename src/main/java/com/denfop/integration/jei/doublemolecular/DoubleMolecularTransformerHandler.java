@@ -1,9 +1,12 @@
 package com.denfop.integration.jei.doublemolecular;
 
 
+import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import com.denfop.utils.ModUtils;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +16,32 @@ public class DoubleMolecularTransformerHandler {
     private static final List<DoubleMolecularTransformerHandler> recipes = new ArrayList<>();
     private final double energy;
     private final ItemStack input, input1, output;
+    public final String inputText;
+    public final String inputText1;
+    public final String outputText;
+    public final String totalEU;
 
     public DoubleMolecularTransformerHandler(ItemStack input, ItemStack input1, ItemStack output, double energy) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
         this.energy = energy;
+        String inputText = null;
+        String inputText1 = null;
+        if (!this.input.isEmpty() && !this.input1.isEmpty()) {
+            inputText =input.getDisplayName().getString();
+            inputText1 = input1.getDisplayName().getString();
+        } 
+        
+        this.inputText = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText;
+        this.inputText1 = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText1;
+
+        this.outputText =
+                Localization.translate("gui.MolecularTransformer.output") + ": " + output.getDisplayName().getString();
+        this.totalEU = String.format("%s %s %s", Localization.translate("gui.MolecularTransformer.energyPerOperation") + ":",
+                ModUtils.getString(energy),
+                Localization.translate(Constants.ABBREVIATION + ".generic.text.EF")
+        );
     }
 
     public static List<DoubleMolecularTransformerHandler> getRecipes() {
@@ -85,7 +108,7 @@ public class DoubleMolecularTransformerHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

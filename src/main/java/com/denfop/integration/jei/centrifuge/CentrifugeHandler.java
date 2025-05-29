@@ -3,7 +3,7 @@ package com.denfop.integration.jei.centrifuge;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,17 @@ public class CentrifugeHandler {
     private final ItemStack input;
     private final List<ItemStack> output;
     private final short temperature;
+    private final BaseMachineRecipe container;
 
-    public CentrifugeHandler(ItemStack input, List<ItemStack> output, short temperature) {
+    public CentrifugeHandler(ItemStack input, List<ItemStack> output, short temperature, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
         this.temperature = temperature;
+        this.container=container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<CentrifugeHandler> getRecipes() {
@@ -28,8 +34,8 @@ public class CentrifugeHandler {
         return recipes;
     }
 
-    public static CentrifugeHandler addRecipe(ItemStack input, List<ItemStack> output, short temperature) {
-        CentrifugeHandler recipe = new CentrifugeHandler(input, output, temperature);
+    public static CentrifugeHandler addRecipe(ItemStack input, List<ItemStack> output, short temperature, BaseMachineRecipe container) {
+        CentrifugeHandler recipe = new CentrifugeHandler(input, output, temperature,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -55,7 +61,7 @@ public class CentrifugeHandler {
 
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items, container.getOutput().metadata.getShort("minHeat")
+                    container.getOutput().items, container.getOutput().metadata.getShort("minHeat"),container
             );
 
 

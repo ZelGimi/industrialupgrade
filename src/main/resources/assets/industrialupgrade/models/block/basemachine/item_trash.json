@@ -1,8 +1,8 @@
 {
 	"credit": "texnounits",
 	"textures": {
-		"0": "industrialupgrade:models/trash_can_texture",
-		"particle": "industrialupgrade:models/trash_can_texture"
+		"0": "industrialupgrade:block/trash_can_texture",
+		"particle": "industrialupgrade:block/trash_can_texture"
 	},
 	"elements": [
 		{
@@ -53,5 +53,29 @@
 				"down": {"uv": [6.5, 0, 7, 4], "rotation": 90, "texture": "#0"}
 			}
 		}
-	]
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [20, 41, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }

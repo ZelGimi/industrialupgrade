@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileModuleMachine;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerModuleMachine extends ContainerFullInv<TileModuleMachine> {
 
-    public ContainerModuleMachine(EntityPlayer entityPlayer, TileModuleMachine tileEntity1) {
+    public ContainerModuleMachine(Player entityPlayer, TileModuleMachine tileEntity1) {
         this(entityPlayer, tileEntity1, 179);
         addSlotToContainer(new SlotInvSlot((tileEntity1).inputslotA, 0, 81,
                 14
@@ -33,7 +33,7 @@ public class ContainerModuleMachine extends ContainerFullInv<TileModuleMachine> 
 
     }
 
-    public ContainerModuleMachine(EntityPlayer entityPlayer, TileModuleMachine tileEntity1, int height) {
+    public ContainerModuleMachine(Player entityPlayer, TileModuleMachine tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
     }
 

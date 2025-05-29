@@ -2,10 +2,11 @@ package com.denfop.api.recipe;
 
 import com.denfop.api.Recipes;
 import com.denfop.componets.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -101,7 +102,7 @@ public class FluidHandlerRecipe {
 
     public boolean canOperate() {
         for (int i = 0; i < this.name.getSize(); i++) {
-            if (this.inputTank.get(i).getFluidAmount() < this.output.input.getInputs().get(i).amount) {
+            if (this.inputTank.get(i).getFluidAmount() < this.output.input.getInputs().get(i).getAmount()) {
                 return false;
             }
         }
@@ -110,7 +111,7 @@ public class FluidHandlerRecipe {
 
     public boolean canOperate1(FluidTank fluidTank) {
         for (int i = 0; i < this.name.getSize(); i++) {
-            if (fluidTank.getFluidAmount() < this.output.input.getInputs().get(i).amount) {
+            if (fluidTank.getFluidAmount() < this.output.input.getInputs().get(i).getAmount()) {
                 return false;
             }
         }
@@ -119,13 +120,13 @@ public class FluidHandlerRecipe {
 
     public void consume() {
         for (int i = 0; i < this.name.getSize(); i++) {
-            this.inputTank.get(i).drain(this.output.input.getInputs().get(i), true);
+            this.inputTank.get(i).drain(this.output.input.getInputs().get(i), IFluidHandler.FluidAction.EXECUTE);
         }
     }
 
     public void consume(FluidTank fluidTank) {
         for (int i = 0; i < this.name.getSize(); i++) {
-            fluidTank.drain(this.output.input.getInputs().get(i), true);
+            fluidTank.drain(this.output.input.getInputs().get(i), IFluidHandler.FluidAction.EXECUTE);
         }
     }
 
@@ -275,10 +276,10 @@ public class FluidHandlerRecipe {
             for (int i = 0; i < outputTank.size(); i++) {
                 FluidTank fluidTank = outputTank.get(i);
                 final FluidStack fluid = output.output_fluid.get(i);
-                if (fluidTank.getFluid() != null && !fluid.isFluidEqual(fluidTank.getFluid())) {
+                if (!fluidTank.getFluid().isEmpty() && !fluid.isFluidEqual(fluidTank.getFluid())) {
                     return false;
                 }
-                if (fluidTank.getFluidAmount() + fluid.amount > fluidTank.getCapacity()) {
+                if (fluidTank.getFluidAmount() + fluid.getAmount() > fluidTank.getCapacity()) {
                     return false;
                 }
             }
@@ -291,7 +292,7 @@ public class FluidHandlerRecipe {
         if (this.output != null) {
             for (FluidTank fluidTank : outputTank) {
                 final FluidStack fluid = output.output_fluid.get(0);
-                if ((fluidTank.getFluidAmount() + fluid.amount < fluidTank.getCapacity() && (fluidTank.getFluid() == null || fluidTank
+                if ((fluidTank.getFluidAmount() + fluid.getAmount() < fluidTank.getCapacity() && (fluidTank.getFluid().isEmpty() || fluidTank
                         .getFluid()
                         .getFluid() == fluid.getFluid()))) {
                     return true;
@@ -305,7 +306,7 @@ public class FluidHandlerRecipe {
     public boolean canFillFluid(FluidStack fluidStack) {
 
         for (FluidTank fluidTank : outputTank) {
-            if (!(fluidTank.getFluidAmount() + fluidStack.amount > fluidTank.getCapacity() && (fluidTank.getFluid() == null || fluidTank
+            if (!(fluidTank.getFluidAmount() + fluidStack.getAmount() > fluidTank.getCapacity() && (fluidTank.getFluid().isEmpty() || fluidTank
                     .getFluid()
                     .getFluid() == fluidStack.getFluid()))) {
                 return true;
@@ -320,8 +321,8 @@ public class FluidHandlerRecipe {
             return false;
         }
 
-        return fluidTank.getFluidAmount() >= fluidStack.amount && fluidTank
-                .getFluid() != null && fluidTank
+        return fluidTank.getFluidAmount() >= fluidStack.getAmount() && !fluidTank
+                .getFluid().isEmpty() && fluidTank
                 .getFluid()
                 .getFluid() == fluidStack.getFluid();
 
@@ -331,13 +332,13 @@ public class FluidHandlerRecipe {
         if (fluidStack == null) {
             return;
         }
-        fluidTank.drain(fluidStack.amount, true);
+        fluidTank.drain(fluidStack.getAmount(), IFluidHandler.FluidAction.EXECUTE);
     }
 
     public void fillFluid() {
         if (this.output != null) {
             for (int i = 0; i < outputTank.size(); i++) {
-                outputTank.get(i).fill(output.output_fluid.get(i), true);
+                outputTank.get(i).fill(output.output_fluid.get(i), IFluidHandler.FluidAction.EXECUTE);
             }
         }
     }
@@ -345,10 +346,10 @@ public class FluidHandlerRecipe {
     public void fillFluid(FluidStack fluidStack) {
 
         for (FluidTank tank : outputTank) {
-            if (tank.getFluid() == null || (tank
+            if (tank.getFluid().isEmpty() || (tank
                     .getFluid()
-                    .isFluidEqual(fluidStack) && tank.getFluid().amount + fluidStack.amount <= tank.getCapacity())) {
-                tank.fill(fluidStack, true);
+                    .isFluidEqual(fluidStack) && tank.getFluid().getAmount() + fluidStack.getAmount() <= tank.getCapacity())) {
+                tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                 break;
             }
         }
@@ -358,10 +359,10 @@ public class FluidHandlerRecipe {
     public void fillFluid1() {
         if (this.output != null) {
             for (FluidTank tank : outputTank) {
-                if (tank.getFluid() == null || (tank
+                if (tank.getFluid().isEmpty() || (tank
                         .getFluid()
-                        .isFluidEqual(output.output_fluid.get(0)) && tank.getFluid().amount + output.output_fluid.get(0).amount <= tank.getCapacity())) {
-                    tank.fill(output.output_fluid.get(0), true);
+                        .isFluidEqual(output.output_fluid.get(0)) && tank.getFluid().getAmount() + output.output_fluid.get(0).getAmount() <= tank.getCapacity())) {
+                    tank.fill(output.output_fluid.get(0), IFluidHandler.FluidAction.EXECUTE);
                     break;
                 }
             }

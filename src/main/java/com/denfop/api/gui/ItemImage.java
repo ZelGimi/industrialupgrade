@@ -3,8 +3,9 @@ package com.denfop.api.gui;
 import com.denfop.gui.GuiCore;
 import com.denfop.utils.ModUtils;
 import com.google.common.base.Supplier;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemImage extends GuiElement<ItemImage> {
 
@@ -15,15 +16,14 @@ public class ItemImage extends GuiElement<ItemImage> {
         this.itemSupplier = itemSupplier;
     }
 
-    public void drawBackground(int mouseX, int mouseY) {
-        super.drawBackground(mouseX, mouseY);
+    @Override
+    public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
+        super.drawBackground(poseStack, mouseX, mouseY);
         ItemStack stack = this.itemSupplier.get();
         if (!ModUtils.isEmpty(stack)) {
-            RenderHelper.enableGUIStandardItemLighting();
-            this.gui.drawItem(this.x, this.y, stack);
-            RenderHelper.disableStandardItemLighting();
+            RenderSystem.enableBlend();
+            gui.drawItem(poseStack, mouseX + this.x, mouseY + this.y, stack);
+            RenderSystem.disableBlend();
         }
-
     }
-
 }

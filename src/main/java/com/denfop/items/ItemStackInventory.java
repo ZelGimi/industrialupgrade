@@ -2,43 +2,53 @@ package com.denfop.items;
 
 import com.denfop.IUCore;
 import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.inv.IStackInventory;
+import com.denfop.container.ContainerBase;
+import com.denfop.gui.GuiCore;
+import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStack;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public abstract class ItemStackInventory implements IAdvInventory, IUpdatableItemStack {
+import static com.denfop.register.Register.inventory_container;
 
-    public final EntityPlayer player;
+public abstract class ItemStackInventory implements IAdvInventory<ItemStackInventory>, IUpdatableItemStack, IStackInventory {
+
+    public final Player player;
     protected final ItemStack[] inventory;
     protected ItemStack containerStack;
     protected boolean cleared;
+    private int containerId;
 
-    public ItemStackInventory(EntityPlayer player, ItemStack containerStack, int inventorySize) {
+    public ItemStackInventory(Player player, ItemStack containerStack, int inventorySize) {
         this.containerStack = containerStack;
         this.inventory = new ItemStack[inventorySize];
         Arrays.fill(this.inventory, ItemStack.EMPTY);
         this.player = player;
-        if (IUCore.proxy.isSimulating()) {
-            NBTTagCompound nbt = ModUtils.nbt(containerStack);
-            if (!nbt.hasKey("uid", 3)) {
-                nbt.setInteger("uid", IUCore.random.nextInt());
+        if (!player.level().isClientSide()) {
+            CompoundTag nbt = ModUtils.nbt(containerStack);
+            if (!nbt.contains("uid", 3)) {
+                nbt.putInt("uid", IUCore.random.nextInt());
             }
 
-            NBTTagList contentList = nbt.getTagList("Items", 10);
+            ListTag contentList = nbt.getList("Items", 10);
 
-            for (int i = 0; i < contentList.tagCount(); ++i) {
-                NBTTagCompound slotNbt = contentList.getCompoundTagAt(i);
+            for (int i = 0; i < contentList.size(); ++i) {
+                CompoundTag slotNbt = contentList.getCompound(i);
                 int slot = slotNbt.getByte("Slot");
                 if (slot >= 0 && slot < this.inventory.length) {
-                    this.inventory[slot] = new ItemStack(slotNbt);
+                    this.inventory[slot] = ItemStack.of(slotNbt);
                 }
             }
         }
@@ -59,7 +69,9 @@ public abstract class ItemStackInventory implements IAdvInventory, IUpdatableIte
         return inventory;
     }
 
-    public int getSizeInventory() {
+
+    @Override
+    public int getContainerSize() {
         return this.inventory.length;
     }
 
@@ -74,15 +86,15 @@ public abstract class ItemStackInventory implements IAdvInventory, IUpdatableIte
         return true;
     }
 
-    public ItemStack getContainerStack() {
-        return containerStack;
-    }
 
-    public ItemStack getStackInSlot(int slot) {
+    @Override
+    public ItemStack getItem(int slot) {
         return this.inventory[slot];
     }
 
-    public ItemStack decrStackSize(int index, int amount) {
+
+    @Override
+    public ItemStack removeItem(int index, int amount) {
         ItemStack stack;
         if (index >= 0 && index < this.inventory.length && !ModUtils.isEmpty(stack = this.inventory[index])) {
             ItemStack ret;
@@ -101,7 +113,20 @@ public abstract class ItemStackInventory implements IAdvInventory, IUpdatableIte
         }
     }
 
-    public void setInventorySlotContents(int slot, ItemStack stack) {
+
+    @Override
+    public ItemStack removeItemNoUpdate(int index) {
+        ItemStack ret = this.getItem(index);
+        if (!ModUtils.isEmpty(ret)) {
+            this.setItem(index, ItemStack.EMPTY);
+        }
+
+        return ret;
+    }
+
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
         if (!ModUtils.isEmpty(stack) && ModUtils.getSize(stack) > this.getInventoryStackLimit()) {
             stack = ModUtils.setSize(stack, this.getInventoryStackLimit());
         }
@@ -115,6 +140,27 @@ public abstract class ItemStackInventory implements IAdvInventory, IUpdatableIte
         this.save();
     }
 
+    @Override
+    public boolean canPlaceItem(int p_18952_, ItemStack p_18953_) {
+        return false;
+    }
+
+    @Override
+    public void setChanged() {
+        save();
+    }
+
+
+    @Override
+    public boolean stillValid(Player player) {
+        return player == this.player && this.getPlayerInventoryIndex() >= -1;
+    }
+
+    public ItemStack getContainerStack() {
+        return containerStack;
+    }
+
+
     public int getInventoryStackLimit() {
         return 64;
     }
@@ -123,66 +169,35 @@ public abstract class ItemStackInventory implements IAdvInventory, IUpdatableIte
         return false;
     }
 
-    public void markDirty() {
-        this.save();
-    }
 
-    public boolean isUsableByPlayer(EntityPlayer player) {
-        return player == this.player && this.getPlayerInventoryIndex() >= -1;
-    }
+    protected abstract String getName();
 
-    public void openInventory(EntityPlayer player) {
-    }
-
-    public void closeInventory(EntityPlayer player) {
-    }
-
-    public ItemStack removeStackFromSlot(int index) {
-        ItemStack ret = this.getStackInSlot(index);
-        if (!ModUtils.isEmpty(ret)) {
-            this.setInventorySlotContents(index, ItemStack.EMPTY);
-        }
-
-        return ret;
-    }
-
-    public int getField(int id) {
-        return 0;
-    }
-
-    public void setField(int id, int value) {
-    }
-
-    public int getFieldCount() {
-        return 0;
-    }
-
-    public ITextComponent getDisplayName() {
-        return new TextComponentString(this.getName());
+    public Component getDisplayName() {
+        return Component.literal(this.getName());
     }
 
     public boolean isThisContainer(ItemStack stack) {
         if (!ModUtils.isEmpty(stack) && stack.getItem() == this.containerStack.getItem()) {
-            NBTTagCompound nbt = stack.getTagCompound();
-            return nbt != null && nbt.getInteger("uid") == this.getUid();
+            CompoundTag nbt = stack.getTag();
+            return nbt != null && nbt.getInt("uid") == this.getUid();
         } else {
             return false;
         }
     }
 
     protected int getUid() {
-        NBTTagCompound nbt = ModUtils.nbt(this.containerStack);
-        return nbt.getInteger("uid");
+        CompoundTag nbt = ModUtils.nbt(this.containerStack);
+        return nbt.getInt("uid");
     }
 
-    public NBTTagCompound getNBT() {
-        NBTTagCompound nbt = ModUtils.nbt(this.containerStack);
+    public CompoundTag getNBT() {
+        CompoundTag nbt = ModUtils.nbt(this.containerStack);
         return nbt;
     }
 
     protected int getPlayerInventoryIndex() {
-        for (int i = -1; i < this.player.inventory.getSizeInventory(); ++i) {
-            ItemStack stack = i == -1 ? this.player.inventory.getItemStack() : this.player.inventory.getStackInSlot(i);
+        for (int i = -1; i < this.player.getInventory().getContainerSize(); ++i) {
+            ItemStack stack = i == -1 ? this.player.getInventory().getSelected() : this.player.getInventory().getItem(i);
             if (this.isThisContainer(stack)) {
                 return i;
             }
@@ -192,7 +207,9 @@ public abstract class ItemStackInventory implements IAdvInventory, IUpdatableIte
     }
 
     protected void save() {
-        if (IUCore.proxy.isSimulating()) {
+        if (!player.level().isClientSide()) {
+            if ( this.containerStack.isEmpty())
+                this.containerStack = this.player.getInventory().getSelected();
             if (!this.cleared) {
                 boolean dropItself = false;
 
@@ -203,57 +220,58 @@ public abstract class ItemStackInventory implements IAdvInventory, IUpdatableIte
                     }
                 }
 
-                NBTTagList contentList = new NBTTagList();
+                ListTag contentList = new ListTag();
 
                 int idx;
                 for (idx = 0; idx < this.inventory.length; ++idx) {
                     if (!ModUtils.isEmpty(this.inventory[idx])) {
-                        NBTTagCompound nbt = new NBTTagCompound();
-                        nbt.setByte("Slot", (byte) idx);
-                        this.inventory[idx].writeToNBT(nbt);
-                        contentList.appendTag(nbt);
+                        CompoundTag nbt = new CompoundTag();
+                        this.inventory[idx].save(nbt);
+                        nbt.putByte("Slot", (byte) idx);
+                        contentList.add(nbt);
                     }
                 }
 
-                ModUtils.nbt(this.containerStack).setTag("Items", contentList);
+                ModUtils.nbt(this.containerStack).put("Items", contentList);
 
                 this.containerStack = ModUtils.setSize(this.containerStack, 1);
 
                 if (dropItself) {
-                    ModUtils.dropAsEntity(this.player.getEntityWorld(), this.player.getPosition(), this.containerStack);
+                    ModUtils.dropAsEntity(this.player.level(), this.player.blockPosition(), this.containerStack);
                     this.clear();
                 } else {
                     idx = this.getPlayerInventoryIndex();
                     if (idx < -1) {
                         this.clear();
                     } else if (idx == -1) {
-                        this.player.inventory.setItemStack(this.containerStack);
+                        this.player.getInventory().setPickedItem(this.containerStack);
                     } else {
-                        this.player.inventory.setInventorySlotContents(idx, this.containerStack);
+                        this.player.getInventory().setItem(idx, this.containerStack);
                     }
                 }
 
             }
         }
+        player.containerMenu.broadcastChanges();
     }
 
     public void saveAsThrown(ItemStack stack) {
-        assert IUCore.proxy.isSimulating();
+        assert !player.level().isClientSide();
 
-        NBTTagList contentList = new NBTTagList();
+        ListTag contentList = new ListTag();
 
         for (int i = 0; i < this.inventory.length; ++i) {
             if (!ModUtils.isEmpty(this.inventory[i]) && !this.isThisContainer(this.inventory[i])) {
-                NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setByte("Slot", (byte) i);
-                this.inventory[i].writeToNBT(nbt);
-                contentList.appendTag(nbt);
+                CompoundTag nbt = new CompoundTag();
+                nbt.putByte("Slot", (byte) i);
+                inventory[i].save(nbt);
+                contentList.add(nbt);
             }
         }
 
-        ModUtils.nbt(stack).setTag("Items", contentList);
+        ModUtils.nbt(stack).put("Items", contentList);
 
-        assert ModUtils.nbt(stack).getInteger("uid") == 0;
+        assert ModUtils.nbt(stack).getInt("uid") == 0;
 
         this.clear();
     }
@@ -264,4 +282,58 @@ public abstract class ItemStackInventory implements IAdvInventory, IUpdatableIte
         this.cleared = true;
     }
 
+
+    @Override
+    public ItemStackInventory getParent() {
+        return this;
+    }
+
+
+    @Override
+    public void addInventorySlot(InvSlot var1) {
+
+    }
+
+
+    @Override
+    public int getBaseIndex(InvSlot var1) {
+        return 0;
+    }
+
+
+    @Override
+    public MenuType<?> getMenuType() {
+        return inventory_container.get();
+    }
+
+    @Override
+    public int getContainerId() {
+        return this.containerId;
+    }
+
+
+    @Override
+    public ContainerBase<?> getGuiContainer(Player var1) {
+        return null;
+    }
+
+
+    @Override
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> var2) {
+        return null;
+    }
+
+
+    @Override
+    public void clearContent() {
+
+    }
+
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
+        containerId = p_39954_;
+        return getGuiContainer(p_39956_);
+    }
 }

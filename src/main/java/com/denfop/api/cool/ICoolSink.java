@@ -12,5 +12,4 @@ public interface ICoolSink extends ICoolAcceptor {
     boolean needCooling();
 
     List<ICoolSource> getEnergyTickList();
-
 }

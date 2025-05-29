@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nanoshovel_taiga"	}
+		"layer0": "industrialupgrade:item/nanoshovel_taiga"	}
 }

@@ -6,70 +6,41 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.tiles.mechanism.TileMagnet;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Collections;
 import java.util.List;
 
 public class TileEntityAntiMagnet extends TileEntityInventory {
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, 0, 1, 1.4D, 1));
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(0, 0.0D, 0, 1, 1.4D, 1));
     public String player;
 
-    public TileEntityAntiMagnet() {
+    public TileEntityAntiMagnet(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.antimagnet,pos,state);
         this.player = "";
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         return false;
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
         tooltip.add(Localization.translate("iu.antimagnet.info"));
@@ -77,15 +48,15 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (placer instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) placer;
-            this.player = player.getName();
+        if (placer instanceof Player) {
+            Player player = (Player) placer;
+            this.player = player.getName().getString();
             for (int x = this.pos.getX() - 10; x <= this.pos.getX() + 10; x++) {
                 for (int y = this.pos.getY() - 10; y <= this.pos.getY() + 10; y++) {
                     for (int z = this.pos.getZ() - 10; z <= this.pos.getZ() + 10; z++) {
-                        final TileEntity tileEntity = getWorld().getTileEntity(new BlockPos(x, y, z));
+                        final BlockEntity tileEntity = getWorld().getBlockEntity(new BlockPos(x, y, z));
                         if (tileEntity != null && !(new BlockPos(
                                 x,
                                 y,
@@ -110,17 +81,17 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.player = nbttagcompound.getString("player");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setString("player", this.player);
+        nbttagcompound.putString("player", this.player);
         return nbttagcompound;
     }
 

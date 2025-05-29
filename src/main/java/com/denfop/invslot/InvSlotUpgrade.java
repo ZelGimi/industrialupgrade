@@ -1,6 +1,5 @@
 package com.denfop.invslot;
 
-import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
@@ -13,43 +12,38 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.ItemStackUpgradeModules;
+import com.denfop.tiles.base.FakePlayerSpawner;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
     private final TileEntityInventory tile;
-    private final Map<EnumFacing, HandlerInventory> iItemHandlerMap;
+    private final Map<Direction, HandlerInventory> iItemHandlerMap;
     private final Map<IItemHandler, Integer> slotHandler;
-    private final EnumFacing[] enumFacings = EnumFacing.values();
-    private final Map<EnumFacing, IFluidHandler> iFluidHandlerMap;
+    private final Direction[] enumFacings = Direction.values();
+    private final Map<Direction, IFluidHandler> iFluidHandlerMap;
     private final Fluids fluids;
     private final List<Fluids.InternalFluidTank> fluidTankList = new ArrayList<>();
     private final IItemHandler main_handler;
@@ -69,7 +63,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
     public boolean update = false;
     List<InvSlotOutput> slots = new ArrayList<>();
     List<InvSlot> inv_slots = new ArrayList<>();
-    private EnumFacing[] facings;
+    private Direction[] facings;
     private List<List<ItemStack>> whiteList;
     private List<List<Fluid>> whiteList1;
     private boolean ejectorUpgrade;
@@ -83,7 +77,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
     ) {
         super(base, TypeItemSlot.INPUT, count);
         this.resetRates();
-        this.facings = new EnumFacing[count];
+        this.facings = new Direction[count];
         this.whiteList = new ArrayList<>(Collections.nCopies(count, Collections.emptyList()));
         this.whiteList1 = new ArrayList<>(Collections.nCopies(count, Collections.emptyList()));
 
@@ -97,7 +91,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 inv_slots.add(slot);
             }
         });
-        main_handler = base.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, base.getFacing());
+        main_handler = base.getCapability(ForgeCapabilities.ITEM_HANDLER, base.getFacing()).orElse(null);
         fluids = base.getParent().getComp(Fluids.class);
         if (fluids != null) {
             fluids.getAllTanks().forEach(fluidTankList::add);
@@ -117,9 +111,9 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
         return (double) Math.round((base + extra) * multiplier);
     }
 
-    public static EnumFacing getDirection(ItemStack stack) {
+    public static Direction getDirection(ItemStack stack) {
         int rawDir = ModUtils.nbt(stack).getByte("dir");
-        return rawDir >= 1 && rawDir <= 6 ? EnumFacing.VALUES[rawDir - 1] : null;
+        return rawDir >= 1 && rawDir <= 6 ? Direction.values()[rawDir - 1] : null;
     }
 
     @Override
@@ -180,13 +174,13 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 if (upgrade.getProcessTimeMultiplier(stack) < 1) {
                     this.extraProcessTime += size;
                 } else {
-                    extraProcessTime = 1;
+                    extraProcessTime = 0;
                 }
                 this.processTimeMultiplier *= Math.pow(upgrade.getProcessTimeMultiplier(stack), size);
                 if (upgrade.getProcessTimeMultiplier(stack) < 1) {
                     this.extraEnergyDemand += size;
                 } else {
-                    extraEnergyDemand = 1;
+                    extraEnergyDemand = 0;
                 }
                 this.energyDemandMultiplier *= Math.pow(upgrade.getEnergyDemandMultiplier(stack), size) * operationsPerTick;
                 this.extraEnergyStorage += upgrade.getExtraEnergyStorage(stack) * size;
@@ -196,75 +190,75 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
         }
 
-        for (final AbstractComponent component : this.base.getParent().getComps()) {
+        for (final AbstractComponent component : ((TileEntityInventory) this.base.getParent()).getComps()) {
             if (component instanceof Redstone) {
                 Redstone rs = (Redstone) component;
                 rs.update();
             }
         }
-        for (int i = 0; i < this.size(); ++i) {
-            ItemStack stack = this.get(i);
-            if (stack.isItemEqual(IUItem.ejectorUpgrade)) {
-                this.ejectorUpgrade = true;
-                this.facings[i] = getDirection(stack);
-                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
-                List<ItemStack> stacks =
-                        Arrays.asList(((ItemStackUpgradeModules) (inventory.getInventory(null, stack))).getList());
-                stacks = stacks.stream()
-                        .filter(stack1 -> !stack1.isEmpty())
-                        .collect(Collectors.toList());
-                this.whiteList.set(i, stacks);
-            } else if (stack.isItemEqual(IUItem.fluidEjectorUpgrade)) {
-                this.fluidEjectorUpgrade = true;
-                this.facings[i] = getDirection(stack);
-                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
-                List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(null, stack)).fluidStackList;
-                List<Fluid> fluidStacks1 = new ArrayList<>();
+        if (this.tile.getWorld() instanceof ServerLevel)
+            for (int i = 0; i < this.size(); ++i) {
+                ItemStack stack = this.get(i);
+                if (stack.is(IUItem.ejectorUpgrade.getItem())) {
+                    this.ejectorUpgrade = true;
+                    this.facings[i] = getDirection(stack);
+                    IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                    List<ItemStack> stacks =
+                            Arrays.asList(((ItemStackUpgradeModules) (inventory.getInventory(new FakePlayerSpawner(this.tile.getWorld()), stack))).getInventory());
+                    stacks = stacks.stream()
+                            .filter(stack1 -> !stack1.isEmpty())
+                            .collect(Collectors.toList());
+                    this.whiteList.set(i, stacks);
+                } else if (stack.is(IUItem.fluidEjectorUpgrade.getItem())) {
+                    this.fluidEjectorUpgrade = true;
+                    this.facings[i] = getDirection(stack);
+                    IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                    List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(new FakePlayerSpawner(this.tile.getWorld()), stack)).fluidStackList;
+                    List<Fluid> fluidStacks1 = new ArrayList<>();
 
-                for (FluidStack stacks : fluidStacks) {
-                    if (stacks != null) {
-                        if (stacks.getFluid() == FluidName.fluidwater.getInstance()) {
-                            fluidStacks1.add(FluidRegistry.WATER);
-                        } else if (stacks.getFluid() == FluidName.fluidlava.getInstance()) {
-                            fluidStacks1.add(FluidRegistry.LAVA);
-                        } else {
-                            fluidStacks1.add(stacks.getFluid());
+                    for (FluidStack stacks : fluidStacks) {
+                        if (stacks != null) {
+                            if (stacks.getFluid() == FluidName.fluidwater.getInstance().get()) {
+                                fluidStacks1.add(net.minecraft.world.level.material.Fluids.WATER);
+                            } else if (stacks.getFluid() == FluidName.fluidlava.getInstance().get()) {
+                                fluidStacks1.add(net.minecraft.world.level.material.Fluids.LAVA);
+                            } else {
+                                fluidStacks1.add(stacks.getFluid());
+                            }
                         }
                     }
-                }
-                this.whiteList1.set(i, fluidStacks1);
-            } else if (stack.isItemEqual(IUItem.pullingUpgrade)) {
-                this.pullingUpgrade = true;
-                this.facings[i] = getDirection(stack);
-                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
-                List<ItemStack> stacks =
-                        Arrays.asList(((ItemStackUpgradeModules) (inventory.getInventory(null, stack))).getList());
-                stacks = stacks.stream()
-                        .filter(stack1 -> !stack1.isEmpty())
-                        .collect(Collectors.toList());
-                this.whiteList.set(i, stacks);
-            } else if (stack.isItemEqual(IUItem.fluidpullingUpgrade)) {
-                this.fluidPullingUpgrade = true;
-                this.facings[i] = getDirection(stack);
-                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
-                List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(null, stack)).fluidStackList;
-                List<Fluid> fluidStacks1 = new ArrayList<>();
+                    this.whiteList1.set(i, fluidStacks1);
+                } else if (stack.is(IUItem.pullingUpgrade.getItem())) {
+                    this.pullingUpgrade = true;
+                    this.facings[i] = getDirection(stack);
+                    IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                    List<ItemStack> stacks =
+                            Arrays.asList(((ItemStackUpgradeModules) (inventory.getInventory(new FakePlayerSpawner(this.tile.getWorld()), stack))).getInventory());
+                    stacks = stacks.stream()
+                            .filter(stack1 -> !stack1.isEmpty())
+                            .collect(Collectors.toList());
+                    this.whiteList.set(i, stacks);
+                } else if (stack.is(IUItem.fluidpullingUpgrade.getItem())) {
+                    this.fluidPullingUpgrade = true;
+                    this.facings[i] = getDirection(stack);
+                    IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                    List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(new FakePlayerSpawner(this.tile.getWorld()), stack)).fluidStackList;
+                    List<Fluid> fluidStacks1 = new ArrayList<>();
 
-                for (FluidStack stacks : fluidStacks) {
-                    if (stacks != null) {
-                        if (stacks.getFluid() == FluidName.fluidwater.getInstance()) {
-                            fluidStacks1.add(FluidRegistry.WATER);
-                        } else if (stacks.getFluid() == FluidName.fluidlava.getInstance()) {
-                            fluidStacks1.add(FluidRegistry.LAVA);
-                        } else {
-                            fluidStacks1.add(stacks.getFluid());
+                    for (FluidStack stacks : fluidStacks) {
+                        if (stacks != null) {
+                            if (stacks.getFluid() == FluidName.fluidwater.getInstance().get()) {
+                                fluidStacks1.add(net.minecraft.world.level.material.Fluids.WATER);
+                            } else if (stacks.getFluid() == FluidName.fluidlava.getInstance().get()) {
+                                fluidStacks1.add(net.minecraft.world.level.material.Fluids.LAVA);
+                            } else {
+                                fluidStacks1.add(stacks.getFluid());
+                            }
                         }
                     }
+                    this.whiteList1.set(i, fluidStacks1);
                 }
-                this.whiteList1.set(i, fluidStacks1);
             }
-        }
-
     }
 
     private void resetRates() {
@@ -279,7 +273,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
         this.fluidEjectorUpgrade = false;
         this.fluidPullingUpgrade = false;
         this.pullingUpgrade = false;
-        this.facings = new EnumFacing[this.size()];
+        this.facings = new Direction[this.size()];
     }
 
     public int getOperationsPerTick1(int defaultOperationLength) {
@@ -367,18 +361,18 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
             if (this.ejectorUpgrade || pullingUpgrade) {
                 this.iItemHandlerMap.clear();
                 slotHandler.clear();
-                for (EnumFacing facing : enumFacings) {
-                    BlockPos pos = this.tile.getPos().offset(facing);
-                    final TileEntity tile1 = this.tile.getWorld().getTileEntity(pos);
+                for (Direction facing : enumFacings) {
+                    BlockPos pos = this.tile.getBlockPos().offset(facing.getNormal());
+                    final BlockEntity tile1 = this.tile.getLevel().getBlockEntity(pos);
                     final IItemHandler handler = getItemHandler(tile1, facing.getOpposite());
-                    if (!(tile1 instanceof IInventory)) {
+                    if (!(tile1 instanceof Container)) {
                         if (handler == null) {
                             this.iItemHandlerMap.put(facing, null);
                         } else {
                             this.iItemHandlerMap.put(facing, new HandlerInventory(handler, null));
                         }
                     } else {
-                        this.iItemHandlerMap.put(facing, new HandlerInventory(handler, (IInventory) tile1));
+                        this.iItemHandlerMap.put(facing, new HandlerInventory(handler, (Container) tile1));
                     }
 
                     if (handler != null) {
@@ -388,9 +382,9 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
             }
             if (this.fluidEjectorUpgrade || this.fluidPullingUpgrade) {
                 this.iFluidHandlerMap.clear();
-                for (EnumFacing facing : enumFacings) {
-                    BlockPos pos = this.tile.getPos().offset(facing);
-                    final TileEntity tile1 = this.tile.getWorld().getTileEntity(pos);
+                for (Direction facing : enumFacings) {
+                    BlockPos pos = this.tile.getBlockPos().offset(facing.getNormal());
+                    final BlockEntity tile1 = this.tile.getLevel().getBlockEntity(pos);
                     final IFluidHandler handler = getFluidHandler(tile1, facing.getOpposite());
                     this.iFluidHandlerMap.put(facing, handler);
                 }
@@ -402,13 +396,13 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
             ItemStack stack = this.get(i);
             if (!ModUtils.isEmpty(stack) && stack.getItem() instanceof IUpgradeItem) {
                 update = true;
-                if (this.tick % Config.speed_extract_item == 0 && stack.isItemEqual(IUItem.ejectorUpgrade)) {
+                if (this.tick % 2 == 0 && stack.is(IUItem.ejectorUpgrade.getItem())) {
                     this.tick(i);
-                } else if (this.tick % Config.speed_extract_fluid == 0 && stack.isItemEqual(IUItem.fluidEjectorUpgrade)) {
+                } else if (this.tick % 2 == 0 && stack.is(IUItem.fluidEjectorUpgrade.getItem())) {
                     this.tick_fluid(i);
-                } else if (this.tick % Config.speed_insert_item == 0 && stack.isItemEqual(IUItem.pullingUpgrade)) {
+                } else if (this.tick % 2 == 0 && stack.is(IUItem.pullingUpgrade.getItem())) {
                     this.tickPullIn(i);
-                } else if (this.tick % Config.speed_insert_fluid == 0 && stack.isItemEqual(IUItem.fluidpullingUpgrade)) {
+                } else if (this.tick % 2 == 0 && stack.is(IUItem.fluidpullingUpgrade.getItem())) {
                     this.tickPullIn_fluid(i);
                 }
                 ret = true;
@@ -422,7 +416,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
     }
 
     private void tickPullIn_fluid(int i) {
-        EnumFacing facing = this.facings[i];
+        Direction facing = this.facings[i];
         final List<Fluid> itemStackList = this.whiteList1.get(i);
         if (facing != null) {
 
@@ -433,50 +427,52 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
             if (this.fluids == null) {
                 return;
             }
-            if (handler.drain(Integer.MAX_VALUE, false) == null) {
+            if (handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
                 return;
             }
-            for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
-                if (fluidTankProperties.getContents() != null) {
+            for (int ii = 0; ii < handler.getTanks(); ii++) {
+                @NotNull FluidStack fluidTankProperties = handler.getFluidInTank(ii);
+                if (!fluidTankProperties.copy().isEmpty()) {
                     for (Fluids.InternalFluidTank tank : this.fluidTankList) {
                         if (tank.getFluidAmount() >= tank.getCapacity()) {
                             continue;
                         }
-                        final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
-                        if (fluid != null && fluid.amount > 0 && tank.canFillFluidType(fluid) && (itemStackList.isEmpty() || itemStackList.contains(
+                        final FluidStack fluid = handler.drain(fluidTankProperties.copy(), IFluidHandler.FluidAction.SIMULATE);
+                        if (!fluid.isEmpty() && fluid.getAmount() > 0 && tank.canDrain(facing.getOpposite()) && tank.isFluidValid(fluid) && (itemStackList.isEmpty() || itemStackList.contains(
                                 fluid.getFluid()))) {
                             int amount = tank.getCapacity() - tank.getFluidAmount();
-                            FluidStack fluidStack = handler.drain(amount, true);
-                            tank.fill(fluidStack, true);
+                            FluidStack fluidStack = handler.drain(amount, IFluidHandler.FluidAction.EXECUTE);
+                            tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                         }
                     }
                 }
             }
         } else {
-            for (EnumFacing facing1 : enumFacings) {
+            for (Direction facing1 : enumFacings) {
                 final IFluidHandler handler = this.iFluidHandlerMap.get(facing1);
                 if (handler == null) {
                     continue;
                 }
-                if (handler.drain(Integer.MAX_VALUE, false) == null) {
+                if (handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
                     continue;
                 }
                 if (this.fluids == null) {
                     return;
                 }
 
-                for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
-                    if (fluidTankProperties.getContents() != null) {
+                for (int ii = 0; ii < handler.getTanks(); ii++) {
+                    @NotNull FluidStack fluidTankProperties = handler.getFluidInTank(ii);
+                    if (!fluidTankProperties.copy().isEmpty()) {
                         for (Fluids.InternalFluidTank tank : this.fluidTankList) {
                             if (tank.getFluidAmount() >= tank.getCapacity()) {
                                 continue;
                             }
-                            final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
-                            if (fluid != null && fluid.amount > 0 && tank.acceptsFluid(fluid.getFluid()) && (itemStackList.isEmpty() || itemStackList.contains(
+                            final FluidStack fluid = handler.drain(fluidTankProperties.copy(), IFluidHandler.FluidAction.SIMULATE);
+                            if (!fluid.isEmpty() && fluid.getAmount() > 0 && tank.acceptsFluid(fluid.getFluid()) && (itemStackList.isEmpty() || itemStackList.contains(
                                     fluid.getFluid()))) {
                                 int amount = tank.getCapacity() - tank.getFluidAmount();
-                                FluidStack fluidStack = handler.drain(amount, true);
-                                tank.fill(fluidStack, true);
+                                FluidStack fluidStack = handler.drain(amount, IFluidHandler.FluidAction.EXECUTE);
+                                tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                             }
                         }
                     }
@@ -485,48 +481,45 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
         }
     }
 
-    public IItemHandler getItemHandler(@Nullable TileEntity tile, EnumFacing side) {
+    public IItemHandler getItemHandler(@Nullable BlockEntity tile, Direction side) {
         if (tile == null) {
             return null;
         }
 
-        IItemHandler handler = tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side) ? tile.getCapability(
-                CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                side
-        ) : null;
+        IItemHandler handler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, side).orElse(null);
 
         if (handler == null) {
-            if (side != null && tile instanceof ISidedInventory) {
-                handler = new SidedInvWrapper((ISidedInventory) tile, side);
-            } else if (tile instanceof IInventory) {
-                handler = new InvWrapper((IInventory) tile);
+            if (side != null && tile instanceof WorldlyContainer) {
+                handler = new SidedInvWrapper((WorldlyContainer) tile, side);
+            } else if (tile instanceof Container) {
+                handler = new InvWrapper((Container) tile);
             }
         }
 
         return handler;
     }
 
-    public IFluidHandler getFluidHandler(@Nullable TileEntity tile, EnumFacing side) {
+    public IFluidHandler getFluidHandler(@Nullable BlockEntity tile, Direction side) {
         if (tile == null) {
             return null;
         }
 
-        return tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side) ? tile.getCapability(
-                CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+        return tile.getCapability(
+                ForgeCapabilities.FLUID_HANDLER,
                 side
-        ) : null;
+        ).orElse(null);
     }
 
     public boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
-        if (a.isEmpty() || !a.isItemEqual(b) || a.hasTagCompound() != b.hasTagCompound()) {
+        if (a.isEmpty() || !(a.getItem() == b.getItem()) || a.hasTag() != b.hasTag()) {
             return false;
         }
 
-        return (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
+        return (!a.hasTag() || a.getTag().equals(b.getTag()));
     }
 
     private void tickPullIn(int i) {
-        EnumFacing facing = this.facings[i];
+        Direction facing = this.facings[i];
         final List<ItemStack> itemStackList = this.whiteList.get(i);
         if (facing != null) {
 
@@ -535,7 +528,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 return;
             }
             if (handler.getInventory() != null && handler.getInventory() instanceof TileEntityInventory) {
-                final List<InvSlot> inputs = this.base.getParent().getInputSlots();
+                final List<InvSlot> inputs = ((TileEntityInventory) this.base.getParent()).getInputSlots();
                 TileEntityInventory inventory = (TileEntityInventory) handler.getInventory();
                 final List<InvSlot> outputs = inventory.getOutputSlots();
                 cycle:
@@ -552,7 +545,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                 boolean find = false;
                                 if (!itemStackList.isEmpty()) {
                                     for (ItemStack stack : itemStackList) {
-                                        if (stack.isItemEqual(output)) {
+                                        if (stack.getItem() == output.getItem()) {
                                             find = true;
                                             break;
                                         }
@@ -570,7 +563,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
                                         if (input.isEmpty()) {
                                             if (invSlot.add(output)) {
-                                                slot.put(j, ItemStack.EMPTY);
+                                                slot.set(j, ItemStack.EMPTY);
                                                 output = ItemStack.EMPTY;
                                             }
                                         } else {
@@ -601,7 +594,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                     boolean find = false;
                                     if (!itemStackList.isEmpty()) {
                                         for (ItemStack stack : itemStackList) {
-                                            if (stack.isItemEqual(output)) {
+                                            if (stack.getItem() == output.getItem()) {
                                                 find = true;
                                                 break;
                                             }
@@ -615,12 +608,12 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                     if (input.isEmpty()) {
                                         if (invSlot.accepts(output, j)) {
                                             if (invSlot.add(output)) {
-                                                slot.put(j, ItemStack.EMPTY);
+                                                slot.set(jj, ItemStack.EMPTY);
                                                 output = ItemStack.EMPTY;
                                             }
                                         }
                                     } else {
-                                        if (!output.isItemEqual(input)) {
+                                        if (!(output.getItem() == input.getItem())) {
                                             continue;
                                         }
                                         int maxCount = Math.min(
@@ -650,7 +643,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                         boolean find = false;
                         if (!itemStackList.isEmpty()) {
                             for (ItemStack stack : itemStackList) {
-                                if (stack.isItemEqual(took)) {
+                                if (stack.is(took.getItem())) {
                                     find = true;
                                     break;
                                 }
@@ -674,14 +667,14 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 }
             }
         } else {
-            for (EnumFacing facing1 : enumFacings) {
+            for (Direction facing1 : enumFacings) {
                 final HandlerInventory handler = this.iItemHandlerMap.get(facing1);
 
                 if (handler == null) {
                     continue;
                 }
                 if (handler.getInventory() != null && handler.getInventory() instanceof TileEntityInventory) {
-                    final List<InvSlot> inputs = this.base.getParent().getInputSlots();
+                    final List<InvSlot> inputs = ((TileEntityInventory) this.base.getParent()).getInputSlots();
                     TileEntityInventory inventory = (TileEntityInventory) handler.getInventory();
                     final List<InvSlot> outputs = inventory.getOutputSlots();
                     cycle:
@@ -698,7 +691,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                     boolean find = false;
                                     if (!itemStackList.isEmpty()) {
                                         for (ItemStack stack : itemStackList) {
-                                            if (stack.isItemEqual(output)) {
+                                            if (stack.is(output.getItem())) {
                                                 find = true;
                                                 break;
                                             }
@@ -717,11 +710,11 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
                                             if (input.isEmpty()) {
                                                 if (invSlot.add(output)) {
-                                                    slot.put(j, ItemStack.EMPTY);
+                                                    slot.set(j, ItemStack.EMPTY);
                                                     output = ItemStack.EMPTY;
                                                 }
                                             } else {
-                                                if (!output.isItemEqual(input)) {
+                                                if (!output.is(input.getItem())) {
                                                     continue;
                                                 }
                                                 int maxCount = Math.min(
@@ -748,7 +741,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                         boolean find = false;
                                         if (!itemStackList.isEmpty()) {
                                             for (ItemStack stack : itemStackList) {
-                                                if (stack.isItemEqual(output)) {
+                                                if (stack.is(output.getItem())) {
                                                     find = true;
                                                     break;
                                                 }
@@ -762,12 +755,12 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                         if (input.isEmpty()) {
                                             if (invSlot.accepts(output, j)) {
                                                 if (invSlot.add(output)) {
-                                                    slot.put(jj, ItemStack.EMPTY);
+                                                    slot.set(jj, ItemStack.EMPTY);
                                                     output = ItemStack.EMPTY;
                                                 }
                                             }
                                         } else {
-                                            if (!output.isItemEqual(input)) {
+                                            if (!output.is(input.getItem())) {
                                                 continue;
                                             }
                                             if (input.getCount() == input.getMaxStackSize()) {
@@ -808,7 +801,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                 boolean find = false;
                                 if (!itemStackList.isEmpty()) {
                                     for (ItemStack stack : itemStackList) {
-                                        if (stack.isItemEqual(took)) {
+                                        if (stack.is(took.getItem())) {
                                             find = true;
                                             break;
                                         }
@@ -833,7 +826,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
     }
 
     private void tick(final int i) {
-        EnumFacing facing = this.facings[i];
+        Direction facing = this.facings[i];
         List<ItemStack> itemStackList = this.whiteList.get(i);
         if (facing != null) {
 
@@ -858,7 +851,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                 boolean find = false;
                                 if (!itemStackList.isEmpty()) {
                                     for (ItemStack stack : itemStackList) {
-                                        if (stack.isItemEqual(output)) {
+                                        if (stack.is(output.getItem())) {
                                             find = true;
                                             break;
                                         }
@@ -876,7 +869,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
                                         if (input.isEmpty()) {
                                             if (invSlot.add(output)) {
-                                                slot.put(j, ItemStack.EMPTY);
+                                                slot.set(j, ItemStack.EMPTY);
                                                 output = ItemStack.EMPTY;
                                             }
                                         } else {
@@ -908,7 +901,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                     boolean find = false;
                                     if (!itemStackList.isEmpty()) {
                                         for (ItemStack stack : itemStackList) {
-                                            if (stack.isItemEqual(output)) {
+                                            if (stack.is(output.getItem())) {
                                                 find = true;
                                                 break;
                                             }
@@ -920,12 +913,12 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                     if (input.isEmpty()) {
                                         if (invSlot.accepts(output, j)) {
                                             if (invSlot.add(output)) {
-                                                slot.put(jj, ItemStack.EMPTY);
+                                                slot.set(jj, ItemStack.EMPTY);
                                                 output = ItemStack.EMPTY;
                                             }
                                         }
                                     } else {
-                                        if (!output.isItemEqual(input)) {
+                                        if (!output.is(input.getItem())) {
                                             continue;
                                         }
                                         int maxCount = Math.min(
@@ -957,7 +950,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                             boolean find = false;
                             if (!itemStackList.isEmpty()) {
                                 for (ItemStack stack : itemStackList) {
-                                    if (stack.isItemEqual(took)) {
+                                    if (stack.is(took.getItem())) {
                                         find = true;
                                         break;
                                     }
@@ -968,7 +961,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                             }
                             final ItemStack stack = insertItem1(handler, took, true, slots);
                             if (stack.isEmpty()) {
-                                slot.put(j, ItemStack.EMPTY);
+                                slot.set(j, ItemStack.EMPTY);
                                 insertItem1(handler, took, false, slots);
                             } else if (stack != took) {
                                 int col = slot.get(j).getCount() - stack.getCount();
@@ -990,7 +983,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                             boolean find = false;
                             if (!itemStackList.isEmpty()) {
                                 for (ItemStack stack : itemStackList) {
-                                    if (stack.isItemEqual(took)) {
+                                    if (stack.is(took.getItem())) {
                                         find = true;
                                         break;
                                     }
@@ -1002,7 +995,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                             took = took.copy();
                             final ItemStack stack = ModUtils.insertItem(handler.getHandler(), took, true, slots);
                             if (stack.isEmpty()) {
-                                slot.put(j, ItemStack.EMPTY);
+                                slot.set(j, ItemStack.EMPTY);
                                 ModUtils.insertItem(handler.getHandler(), took, false, slots);
                             } else if (stack != took) {
                                 int col = slot.get(j).getCount() - stack.getCount();
@@ -1016,7 +1009,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 }
             }
         } else {
-            for (EnumFacing facing1 : enumFacings) {
+            for (Direction facing1 : enumFacings) {
                 final HandlerInventory handler = this.iItemHandlerMap.get(facing1);
                 if (handler == null) {
                     continue;
@@ -1039,7 +1032,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                     boolean find = false;
                                     if (!itemStackList.isEmpty()) {
                                         for (ItemStack stack : itemStackList) {
-                                            if (stack.isItemEqual(output)) {
+                                            if (stack.is(output.getItem())) {
                                                 find = true;
                                                 break;
                                             }
@@ -1057,11 +1050,11 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
                                             if (input.isEmpty()) {
                                                 if (invSlot.add(output)) {
-                                                    slot.put(j, ItemStack.EMPTY);
+                                                    slot.set(j, ItemStack.EMPTY);
                                                     output = ItemStack.EMPTY;
                                                 }
                                             } else {
-                                                if (!output.isItemEqual(input)) {
+                                                if (!output.is(input.getItem())) {
                                                     continue;
                                                 }
                                                 int maxCount = Math.min(
@@ -1088,7 +1081,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                         boolean find = false;
                                         if (!itemStackList.isEmpty()) {
                                             for (ItemStack stack : itemStackList) {
-                                                if (stack.isItemEqual(output)) {
+                                                if (stack.is(output.getItem())) {
                                                     find = true;
                                                     break;
                                                 }
@@ -1102,12 +1095,12 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                         if (input.isEmpty()) {
                                             if (invSlot.accepts(output, j)) {
                                                 if (invSlot.add(output)) {
-                                                    slot.put(jj, ItemStack.EMPTY);
+                                                    slot.set(jj, ItemStack.EMPTY);
                                                     output = ItemStack.EMPTY;
                                                 }
                                             }
                                         } else {
-                                            if (!output.isItemEqual(input)) {
+                                            if (!output.is(input.getItem())) {
                                                 continue;
                                             }
                                             int maxCount = Math.min(
@@ -1139,7 +1132,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                 boolean find = false;
                                 if (!itemStackList.isEmpty()) {
                                     for (ItemStack stack : itemStackList) {
-                                        if (stack.isItemEqual(took)) {
+                                        if (stack.is(took.getItem())) {
                                             find = true;
                                             break;
                                         }
@@ -1150,10 +1143,12 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                 }
                                 final ItemStack stack = insertItem1(handler, took, true, slots);
                                 if (stack.isEmpty()) {
-                                    slot.put(j, ItemStack.EMPTY);
+                                    slot.set(j, ItemStack.EMPTY);
                                     insertItem1(handler, took, false, slots);
                                 } else if (stack != took) {
-                                    slot.get(j).shrink(stack.getCount());
+                                   int count =  slot.get(j).getCount()-stack.getCount();
+                                    slot.get(j).shrink( count);
+                                    stack.setCount(count);
                                     insertItem1(handler, stack, false, slots);
                                 }
 
@@ -1171,7 +1166,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                 boolean find = false;
                                 if (!itemStackList.isEmpty()) {
                                     for (ItemStack stack : itemStackList) {
-                                        if (stack.isItemEqual(took)) {
+                                        if (stack.is(took.getItem())) {
                                             find = true;
                                             break;
                                         }
@@ -1183,7 +1178,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                                 took = took.copy();
                                 final ItemStack stack = ModUtils.insertItem(handler.getHandler(), took, true, slots);
                                 if (stack.isEmpty()) {
-                                    slot.put(j, ItemStack.EMPTY);
+                                    slot.set(j, ItemStack.EMPTY);
                                     ModUtils.insertItem(handler.getHandler(), took, false, slots);
                                 } else if (stack != took) {
                                     slot.get(j).shrink(stack.getCount());
@@ -1200,7 +1195,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
     }
 
     private void tick_fluid(final int i) {
-        EnumFacing facing = this.facings[i];
+        Direction facing = this.facings[i];
         final List<Fluid> itemStackList = this.whiteList1.get(i);
         if (facing != null) {
 
@@ -1218,13 +1213,13 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 if (!itemStackList.isEmpty() && !itemStackList.contains(tank.getFluid().getFluid())) {
                     continue;
                 }
-                int amount = handler.fill(tank.getFluid(), false);
+                int amount = handler.fill(tank.getFluid(), IFluidHandler.FluidAction.SIMULATE);
                 if (amount > 0 && tank.canDrain(facing)) {
-                    tank.drain(handler.fill(tank.getFluid(), true), true);
+                    tank.drain(handler.fill(tank.getFluid(), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
                 }
             }
         } else {
-            for (EnumFacing facing1 : enumFacings) {
+            for (Direction facing1 : enumFacings) {
                 final IFluidHandler handler = this.iFluidHandlerMap.get(facing1);
                 if (handler == null) {
                     continue;
@@ -1240,9 +1235,9 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                     if (!itemStackList.isEmpty() && !itemStackList.contains(tank.getFluid().getFluid())) {
                         continue;
                     }
-                    int amount = handler.fill(tank.getFluid(), false);
+                    int amount = handler.fill(tank.getFluid(), IFluidHandler.FluidAction.SIMULATE);
                     if (amount > 0 && tank.canDrain(facing1)) {
-                        tank.drain(handler.fill(tank.getFluid(), true), true);
+                        tank.drain(handler.fill(tank.getFluid(), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
             }
@@ -1276,11 +1271,11 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
         }
 
         final IItemHandler dest = dest1.getHandler();
-        final IInventory inventory = dest1.getInventory();
+        final Container inventory = dest1.getInventory();
         ItemStack stackInSlot;
         int maxSlots = dest.getSlots();
         try {
-            stackInSlot = inventory.getStackInSlot(slot);
+            stackInSlot = inventory.getItem(slot);
         } catch (ArrayIndexOutOfBoundsException e) {
             stackInSlot = dest.getStackInSlot(slot);
         }
@@ -1295,7 +1290,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
             if (simulate) {
 
 
-                if (!inventory.isItemValidForSlot(slot, stack)) {
+                if (!inventory.canPlaceItem(slot, stack)) {
                     return stack;
                 }
             }
@@ -1311,7 +1306,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 if (!simulate) {
                     ItemStack copy = stack.copy();
                     copy.grow(stackInSlot.getCount());
-                    inventory.setInventorySlotContents(slot, copy);
+                    inventory.setItem(slot, copy);
                     return ItemStack.EMPTY;
                 }
                 return ItemStack.EMPTY;
@@ -1319,9 +1314,9 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 // copy the stack to not modify the original one
                 stack = stack.copy();
                 if (!simulate) {
-                    ItemStack copy = stack.splitStack(m);
+                    ItemStack copy = stack.split(m);
                     copy.grow(stackInSlot.getCount());
-                    inventory.setInventorySlotContents(slot, copy);
+                    inventory.setItem(slot, copy);
                     return stack;
                 } else {
                     stack.shrink(m);
@@ -1331,7 +1326,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
         } else {
 
 
-            if (!inventory.isItemValidForSlot(slot, stack)) {
+            if (!inventory.canPlaceItem(slot, stack)) {
                 return stack;
             }
             m = Math.min(stack.getMaxStackSize(), dest.getSlotLimit(slot));
@@ -1339,14 +1334,14 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
                 // copy the stack to not modify the original one
                 stack = stack.copy();
                 if (!simulate) {
-                    inventory.setInventorySlotContents(slot, stack.splitStack(m));
+                    inventory.setItem(slot, stack.split(m));
 
                 }
                 return stack;
             } else {
                 if (!simulate) {
                     try {
-                        inventory.setInventorySlotContents(slot, stack);
+                        inventory.setItem(slot, stack);
                     } catch (ArrayIndexOutOfBoundsException e) {
                         dest.insertItem(slot, stack, false);
                     }

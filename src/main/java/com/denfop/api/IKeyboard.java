@@ -1,32 +1,33 @@
 package com.denfop.api;
 
-import net.minecraft.entity.player.EntityPlayer;
+
+import net.minecraft.world.entity.player.Player;
 
 public interface IKeyboard {
 
-    boolean isChangeKeyDown(final EntityPlayer player);
+    boolean isChangeKeyDown(final Player player);
 
-    boolean isVerticalMode(final EntityPlayer player);
+    boolean isVerticalMode(final Player player);
 
-    boolean isForwardKeyDown(EntityPlayer player);
+    boolean isForwardKeyDown(Player player);
 
-    boolean isJumpKeyDown(EntityPlayer player);
+    boolean isJumpKeyDown(Player player);
 
-    boolean isArmorKey(EntityPlayer player);
+    boolean isArmorKey(Player player);
 
-    boolean isSneakKeyDown(EntityPlayer player);
+    boolean isSneakKeyDown(Player player);
 
-    boolean isFlyModeKeyDown(final EntityPlayer player);
+    boolean isFlyModeKeyDown(final Player player);
 
-    boolean isBlackListModeKeyDown(final EntityPlayer player);
+    boolean isBlackListModeKeyDown(final Player player);
 
-    boolean isBlackListModeViewKeyDown(final EntityPlayer player);
+    boolean isBlackListModeViewKeyDown(final Player player);
 
-    boolean isStreakKeyDown(final EntityPlayer player);
+    boolean isStreakKeyDown(final Player player);
 
-    boolean isBootsMode(EntityPlayer player);
+    boolean isBootsMode(Player player);
 
-    boolean isLeggingsMode(EntityPlayer player);
+    boolean isLeggingsMode(Player player);
 
 
 }

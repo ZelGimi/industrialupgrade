@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/tool/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/sapphire_axe"
+    "layer0" : "industrialupgrade:item/sapphire_axe"
   }
 }

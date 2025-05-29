@@ -4,17 +4,18 @@ import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.container.ContainerApiary;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiApiary extends GuiIU<ContainerApiary> {
+@OnlyIn(Dist.CLIENT)
+public class GuiApiary<T extends ContainerApiary> extends GuiIU<ContainerApiary> {
 
 
     public ContainerApiary container;
@@ -23,7 +24,7 @@ public class GuiApiary extends GuiIU<ContainerApiary> {
         super(container1);
         this.container = container1;
         componentList.clear();
-        this.ySize = 207;
+        this.imageHeight = 207;
         this.addElement(new AdvArea(this, 10, 21, 21, 69).withTooltip(() -> ModUtils.getString(container1.base.food)));
         this.addElement(new AdvArea(this, 154, 21, 165, 69).withTooltip(() -> ModUtils.getString(container1.base.royalJelly)));
         this.addElement(new AdvArea(this, 37, 22, 50, 32).withTooltip(() -> ModUtils.getString(container1.base.workers)));
@@ -58,8 +59,8 @@ public class GuiApiary extends GuiIU<ContainerApiary> {
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer( poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
     }
 
@@ -68,30 +69,30 @@ public class GuiApiary extends GuiIU<ContainerApiary> {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiapiary.png");
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         bindTexture();
         switch (this.container.base.task) {
             case 0:
-                this.drawTexturedModalRect(this.guiLeft + 60, this.guiTop + 24, 249, 1, 6, 6);
+                this.drawTexturedModalRect(poseStack, this.guiLeft + 60, this.guiTop + 24, 249, 1, 6, 6);
                 break;
             case 1:
-                this.drawTexturedModalRect(this.guiLeft + 60, this.guiTop + 71, 249, 1, 6, 6);
+                this.drawTexturedModalRect(poseStack, this.guiLeft + 60, this.guiTop + 71, 249, 1, 6, 6);
                 break;
             case 2:
-                this.drawTexturedModalRect(this.guiLeft + 60, this.guiTop + 39, 249, 1, 6, 6);
+                this.drawTexturedModalRect(poseStack, this.guiLeft + 60, this.guiTop + 39, 249, 1, 6, 6);
                 break;
             case 3:
-                this.drawTexturedModalRect(this.guiLeft + 60, this.guiTop + 55, 249, 1, 6, 6);
+                this.drawTexturedModalRect(poseStack, this.guiLeft + 60, this.guiTop + 55, 249, 1, 6, 6);
                 break;
         }
         if (this.container.base.deathTask == 1) {
-            this.drawTexturedModalRect(this.guiLeft + 60, this.guiTop + 101, 249, 1, 6, 6);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 60, this.guiTop + 101, 249, 1, 6, 6);
         }
 
         if (this.container.base.illTask == 1) {
-            this.drawTexturedModalRect(this.guiLeft + 60, this.guiTop + 86, 249, 1, 6, 6);
+            this.drawTexturedModalRect(poseStack, this.guiLeft + 60, this.guiTop + 86, 249, 1, 6, 6);
         }
         int renderHeight = (int) (49 * ModUtils.limit(
                 this.container.base.food / (this.container.base.maxFood * 1D),
@@ -99,7 +100,7 @@ public class GuiApiary extends GuiIU<ContainerApiary> {
                 1.0D
         ));
         this.drawTexturedModalRect(
-                this.guiLeft + 10,
+                poseStack, this.guiLeft + 10,
                 this.guiTop + 20 + 50 - renderHeight,
                 236,
                 50 - renderHeight,
@@ -112,15 +113,15 @@ public class GuiApiary extends GuiIU<ContainerApiary> {
                 1.0D
         ));
         this.drawTexturedModalRect(
-                this.guiLeft + 154,
+                poseStack, this.guiLeft + 154,
                 this.guiTop + 20 + 50 - renderHeight,
                 223,
                 50 - renderHeight,
                 12,
                 renderHeight
         );
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
 }

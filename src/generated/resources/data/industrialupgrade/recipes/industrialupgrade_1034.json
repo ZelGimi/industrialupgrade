@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/tantalum"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_621_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/arsenic"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_120_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "CDC",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_622_element"
+  },
+  "show_notification": true
+}

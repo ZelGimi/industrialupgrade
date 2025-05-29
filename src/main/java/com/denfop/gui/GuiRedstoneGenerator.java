@@ -7,17 +7,18 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerRedstoneGenerator;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiRedstoneGenerator extends GuiIU<ContainerRedstoneGenerator> {
+@OnlyIn(Dist.CLIENT)
+public class GuiRedstoneGenerator<T extends ContainerRedstoneGenerator> extends GuiIU<ContainerRedstoneGenerator> {
 
     private static final ResourceLocation background;
 
     static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiRedstoneGenerator.png");
+        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiRedstoneGenerator.png".toLowerCase());
     }
 
     public ContainerRedstoneGenerator container;
@@ -41,8 +42,8 @@ public class GuiRedstoneGenerator extends GuiIU<ContainerRedstoneGenerator> {
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
 
     }
@@ -52,8 +53,5 @@ public class GuiRedstoneGenerator extends GuiIU<ContainerRedstoneGenerator> {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-    }
 
 }

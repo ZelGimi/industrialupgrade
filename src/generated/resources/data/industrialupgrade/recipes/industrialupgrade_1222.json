@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:battery/energy_crystal"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/redbrass"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_524_element"
+  },
+  "show_notification": true
+}

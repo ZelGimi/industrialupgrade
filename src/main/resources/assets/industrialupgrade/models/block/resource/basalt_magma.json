@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "industrialupgrade:blocks/basalt_magma"
+		"all": "industrialupgrade:block/basalt_magma"
 	}
 }

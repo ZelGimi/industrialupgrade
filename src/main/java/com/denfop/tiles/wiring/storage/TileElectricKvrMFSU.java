@@ -6,11 +6,13 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockEnergyStorage;
 import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.wiring.EnumElectricBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileElectricKvrMFSU extends TileElectricBlock {
 
-    public TileElectricKvrMFSU() {
-        super(EnumElectricBlock.KVR_MFSU);
+    public TileElectricKvrMFSU(BlockPos pos, BlockState state) {
+        super(EnumElectricBlock.KVR_MFSU, BlockEnergyStorage.qua_mfsu, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -18,7 +20,7 @@ public class TileElectricKvrMFSU extends TileElectricBlock {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.electricblock;
+        return IUItem.electricblock.getBlock(getTeBlock().getId());
     }
 
 }

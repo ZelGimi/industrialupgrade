@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/scanner_iu"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_171_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ]
+  },
+  "pattern": [
+    "D D",
+    "CAB",
+    "D D"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/adv_scanner"
+  },
+  "show_notification": true
+}

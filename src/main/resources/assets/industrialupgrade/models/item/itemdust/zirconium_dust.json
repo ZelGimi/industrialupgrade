@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/zircon_dust"	}
+		"layer0": "industrialupgrade:item/zircon_dust"	}
 }

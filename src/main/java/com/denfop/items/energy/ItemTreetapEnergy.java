@@ -2,69 +2,58 @@ package com.denfop.items.energy;
 
 import com.denfop.ElectricItem;
 import com.denfop.IUItem;
-import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ItemTreetapEnergy extends ItemEnergyTool {
-
     public ItemTreetapEnergy() {
-        super("electric_treetap", 50);
+        super(50);
         this.maxCharge = 10000;
         this.transferLimit = 100;
-        this.efficiency = 0.5F;
         this.tier = 1;
     }
 
-    public EnumActionResult onItemUse(
-            EntityPlayer player,
-            World world,
-            BlockPos pos,
-            EnumHand hand,
-            EnumFacing side,
-            float hitX,
-            float hitY,
-            float hitZ
-    ) {
-        IBlockState state = world.getBlockState(pos);
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-        ItemStack stack = ModUtils.get(player, hand);
-        if (block == IUItem.rubWood && ElectricItem.manager.canUse(stack, this.operationEnergyCost)) {
-            if (ItemTreetap.attemptExtract(player, world, pos, side, state, null)) {
-                ElectricItem.manager.use(stack, this.operationEnergyCost, player);
-                return EnumActionResult.SUCCESS;
+        if (block == IUItem.rubWood.getBlock().get() && ElectricItem.manager.canUse(context.getItemInHand(), this.operationEnergyCost)) {
+            if (ItemTreetap.attemptExtract(context.getPlayer(), world, pos, context.getClickedFace(), state, null)) {
+                if (!world.isClientSide) {
+                    ElectricItem.manager.use(context.getItemInHand(), this.operationEnergyCost, context.getPlayer());
+                }
+
+                return InteractionResult.SUCCESS;
             } else {
-                return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+                return InteractionResult.FAIL;
             }
-        } else if (block == IUItem.swampRubWood && ElectricItem.manager.canUse(stack, this.operationEnergyCost)) {
-            if (ItemTreetap.attemptSwampExtract(player, world, pos, side, state, null)) {
-                ElectricItem.manager.use(stack, this.operationEnergyCost, player);
-                return EnumActionResult.SUCCESS;
+        } else if (block == IUItem.tropicalRubWood.getBlock().get() && ElectricItem.manager.canUse(context.getItemInHand(), this.operationEnergyCost)) {
+            if (ItemTreetap.attemptTropicalExtract(context.getPlayer(), world, pos, context.getClickedFace(), state, null)) {
+                if (!world.isClientSide) {
+                    ElectricItem.manager.use(context.getItemInHand(), this.operationEnergyCost, context.getPlayer());
+                }
+
+                return InteractionResult.SUCCESS;
             } else {
-                return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+                return InteractionResult.FAIL;
             }
-        } else if (block == IUItem.tropicalRubWood && ElectricItem.manager.canUse(stack, this.operationEnergyCost)) {
-            if (ItemTreetap.attemptTropicalExtract(player, world, pos, side, state, null)) {
-                ElectricItem.manager.use(stack, this.operationEnergyCost, player);
-                return EnumActionResult.SUCCESS;
+        } else if (block == IUItem.swampRubWood.getBlock().get() && ElectricItem.manager.canUse(context.getItemInHand(), this.operationEnergyCost)) {
+            if (ItemTreetap.attemptSwampExtract(context.getPlayer(), world, pos, context.getClickedFace(), state, null)) {
+                if (!world.isClientSide) {
+                    ElectricItem.manager.use(context.getItemInHand(), this.operationEnergyCost, context.getPlayer());
+                }
+
+                return InteractionResult.SUCCESS;
             } else {
-                return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+                return InteractionResult.FAIL;
             }
         } else {
-            return EnumActionResult.PASS;
+            return InteractionResult.PASS;
         }
     }
-
-    @Override
-    public void registerModels() {
-        this.registerModels(this.name);
-    }
-
 }

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/plant_collector_main",
-    "down" : "industrialupgrade:blocks/plant_collector_bottom",
-    "up" : "industrialupgrade:blocks/plant_collector_top",
-    "north" : "industrialupgrade:blocks/plant_collector_main",
-    "east" : "industrialupgrade:blocks/plant_collector_side",
-    "south" : "industrialupgrade:blocks/plant_collector_bottom",
-    "west" : "industrialupgrade:blocks/plant_collector_side"
+    "particle" : "industrialupgrade:block/plant_collector_main",
+    "down" : "industrialupgrade:block/plant_collector_bottom",
+    "up" : "industrialupgrade:block/plant_collector_top",
+    "north" : "industrialupgrade:block/plant_collector_main",
+    "east" : "industrialupgrade:block/plant_collector_side",
+    "south" : "industrialupgrade:block/plant_collector_bottom",
+    "west" : "industrialupgrade:block/plant_collector_side"
   }
 }

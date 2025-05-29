@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/tool/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/quantum_bow_2"
+    "layer0" : "industrialupgrade:item/quantum_bow_2"
   }
 }

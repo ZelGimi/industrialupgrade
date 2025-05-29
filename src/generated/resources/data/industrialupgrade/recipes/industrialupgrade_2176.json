@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_64_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_672_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CAE",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/plant_gardener"
+  },
+  "show_notification": true
+}

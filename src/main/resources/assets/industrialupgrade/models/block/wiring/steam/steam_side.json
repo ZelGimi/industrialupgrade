@@ -1,0 +1,6 @@
+{
+	"parent": "industrialupgrade:block/wiring/cable/cable1_connect",
+	"textures": {
+		"texture": "industrialupgrade:block/wiring/spipe/spipe_spipe"
+	}
+}

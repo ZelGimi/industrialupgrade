@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/rhea_vanady_ore"
+    "all" : "industrialupgrade:block/rhea_vanady_ore"
   }
 }

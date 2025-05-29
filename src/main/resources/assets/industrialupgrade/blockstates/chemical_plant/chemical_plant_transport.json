@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=chemical_plant_transport": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport"
+    },
+    "facing=south,type=chemical_plant_transport": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "y": 180
+    },
+    "facing=west,type=chemical_plant_transport": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "y": 270
+    },
+    "facing=east,type=chemical_plant_transport": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "y": 90
+    },
+    "facing=down,type=chemical_plant_transport": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "x": 90
+    },
+    "facing=up,type=chemical_plant_transport": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "x": 270
+    },
+    "facing=north,type=chemical_plant_transport_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport"
+    },
+    "facing=south,type=chemical_plant_transport_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "y": 180
+    },
+    "facing=west,type=chemical_plant_transport_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "y": 270
+    },
+    "facing=east,type=chemical_plant_transport_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "y": 90
+    },
+    "facing=down,type=chemical_plant_transport_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "x": 90
+    },
+    "facing=up,type=chemical_plant_transport_invalid": {
+      "model": "industrialupgrade:block/chemical_plant/chemical_plant_transport",
+      "x": 270
+    }
+  }
+}

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/reactor_safety_doom_active_main-back-left-right",
-    "down" : "industrialupgrade:blocks/reactor_safety_doom_active_down",
-    "up" : "industrialupgrade:blocks/reactor_safety_doom_active_up",
-    "north" : "industrialupgrade:blocks/reactor_safety_doom_active_main-back-left-right",
-    "east" : "industrialupgrade:blocks/reactor_safety_doom_active_main-back-left-right",
-    "south" : "industrialupgrade:blocks/reactor_safety_doom_active_main-back-left-right",
-    "west" : "industrialupgrade:blocks/reactor_safety_doom_active_main-back-left-right"
+    "particle" : "industrialupgrade:block/reactor_safety_doom_active_main-back-left-right",
+    "down" : "industrialupgrade:block/reactor_safety_doom_active_down",
+    "up" : "industrialupgrade:block/reactor_safety_doom_active_up",
+    "north" : "industrialupgrade:block/reactor_safety_doom_active_main-back-left-right",
+    "east" : "industrialupgrade:block/reactor_safety_doom_active_main-back-left-right",
+    "south" : "industrialupgrade:block/reactor_safety_doom_active_main-back-left-right",
+    "west" : "industrialupgrade:block/reactor_safety_doom_active_main-back-left-right"
   }
 }

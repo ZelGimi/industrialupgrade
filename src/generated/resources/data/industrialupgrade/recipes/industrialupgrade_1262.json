@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/aluminiumsilicon"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/nitenol"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "A  "
+  ],
+  "result": {
+    "item": "industrialupgrade:tools/radioprotector"
+  },
+  "show_notification": true
+}

@@ -2,7 +2,7 @@
 	"credit": "texnounits",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "industrialupgrade:models/space/low_fluid_mining_factory"
+		"1": "industrialupgrade:block/space/low_fluid_mining_factory"
 	},
 	"elements": [
 		{

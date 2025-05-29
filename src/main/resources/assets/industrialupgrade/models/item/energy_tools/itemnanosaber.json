@@ -1,0 +1,14 @@
+{
+  "parent" : "industrialupgrade:item/tool/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:item/itemnanosaber.off"
+  },
+	"overrides" : [
+    {
+      "predicate" : {
+        "active" : 1
+      },
+      "model" : "industrialupgrade:item/energy_tools/itemnanosaber_active"
+    }
+	]
+}

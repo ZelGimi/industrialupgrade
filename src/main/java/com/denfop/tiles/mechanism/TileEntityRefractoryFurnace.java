@@ -3,16 +3,7 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
@@ -27,23 +18,23 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -60,8 +51,8 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
     private MachineRecipe output;
     private boolean work;
 
-    public TileEntityRefractoryFurnace() {
-
+    public TileEntityRefractoryFurnace(BlockPos pos, BlockState state) {
+        super(BlockRefractoryFurnace.refractory_furnace, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "refractory_furnace", this);
         this.progress = 0;
         Fluids fluids = this.addComponent(new Fluids(this));
@@ -98,169 +89,172 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
     }
 
     @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
-        return super.hasCapability(capability, facing) && capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return LazyOptional.empty();
+        return super.getCapability(cap, facing);
     }
+
 
     @Override
     public void init() {
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 0), // mikhail
-                new FluidStack(FluidName.fluidmoltenmikhail.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(0)), // mikhail
+                new FluidStack(FluidName.fluidmoltenmikhail.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 1), // aluminium
-                new FluidStack(FluidName.fluidmoltenaluminium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(1)), // aluminium
+                new FluidStack(FluidName.fluidmoltenaluminium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 2), // vanady
-                new FluidStack(FluidName.fluidmoltenvanadium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(2)), // vanady
+                new FluidStack(FluidName.fluidmoltenvanadium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 3), // wolfram
-                new FluidStack(FluidName.fluidmoltentungsten.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(3)), // wolfram
+                new FluidStack(FluidName.fluidmoltentungsten.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 6), // cobalt
-                new FluidStack(FluidName.fluidmoltencobalt.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(6)), // cobalt
+                new FluidStack(FluidName.fluidmoltencobalt.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 7), // magnesium
-                new FluidStack(FluidName.fluidmoltenmagnesium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(7)), // magnesium
+                new FluidStack(FluidName.fluidmoltenmagnesium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 8), // nickel
-                new FluidStack(FluidName.fluidmoltennickel.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(8)), // nickel
+                new FluidStack(FluidName.fluidmoltennickel.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 9), // platium
-                new FluidStack(FluidName.fluidmoltenplatinum.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(9)), // platium
+                new FluidStack(FluidName.fluidmoltenplatinum.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 10), // titanium
-                new FluidStack(FluidName.fluidmoltentitanium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(10)), // titanium
+                new FluidStack(FluidName.fluidmoltentitanium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 11), // chromium
-                new FluidStack(FluidName.fluidmoltenchromium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(11)), // chromium
+                new FluidStack(FluidName.fluidmoltenchromium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 12), // spinel
-                new FluidStack(FluidName.fluidmoltenspinel.getInstance(), 144)
-        );
-
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 14), // silver
-                new FluidStack(FluidName.fluidmoltensilver.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 15), // zinc
-                new FluidStack(FluidName.fluidmoltenzinc.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 16), // manganese
-                new FluidStack(FluidName.fluidmoltenmanganese.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 17), // iridium
-                new FluidStack(FluidName.fluidmolteniridium.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 18), // germanium
-                new FluidStack(FluidName.fluidmoltengermanium.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 19), // copper
-                new FluidStack(FluidName.fluidmoltencopper.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 20), // gold
-                new FluidStack(FluidName.fluidmoltengold.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 21), // iron
-                new FluidStack(FluidName.fluidmolteniron.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 22), // lead
-                new FluidStack(FluidName.fluidmoltenlead.getInstance(), 144)
-        );
-        addRecipe(
-                new ItemStack(IUItem.crushed, 1, 23), // tin
-                new FluidStack(FluidName.fluidmoltentin.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(12)), // spinel
+                new FluidStack(FluidName.fluidmoltenspinel.getInstance().get(), 144)
         );
 
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 25), // osmium
-                new FluidStack(FluidName.fluidmoltenosmium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(14)), // silver
+                new FluidStack(FluidName.fluidmoltensilver.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 26), // tantalum
-                new FluidStack(FluidName.fluidmoltentantalum.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(15)), // zinc
+                new FluidStack(FluidName.fluidmoltenzinc.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 27), // cadmium
-                new FluidStack(FluidName.fluidmoltencadmium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(16)), // manganese
+                new FluidStack(FluidName.fluidmoltenmanganese.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 28), // arsenic
-                new FluidStack(FluidName.fluidmoltenarsenic.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(17)), // iridium
+                new FluidStack(FluidName.fluidmolteniridium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 29), // barium
-                new FluidStack(FluidName.fluidmoltenbarium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(18)), // germanium
+                new FluidStack(FluidName.fluidmoltengermanium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 30), // bismuth
-                new FluidStack(FluidName.fluidmoltenbismuth.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(19)), // copper
+                new FluidStack(FluidName.fluidmoltencopper.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 31), // gadolinium
-                new FluidStack(FluidName.fluidmoltengadolinium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(20)), // gold
+                new FluidStack(FluidName.fluidmoltengold.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 32), // gallium
-                new FluidStack(FluidName.fluidmoltengallium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(21)), // iron
+                new FluidStack(FluidName.fluidmolteniron.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 33), // hafnium
-                new FluidStack(FluidName.fluidmoltenhafnium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(22)), // lead
+                new FluidStack(FluidName.fluidmoltenlead.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 34), // yttrium
-                new FluidStack(FluidName.fluidmoltenyttrium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(23)), // tin
+                new FluidStack(FluidName.fluidmoltentin.getInstance().get(), 144)
+        );
+
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(25)), // osmium
+                new FluidStack(FluidName.fluidmoltenosmium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 35), // molybdenum
-                new FluidStack(FluidName.fluidmoltenmolybdenum.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(26)), // tantalum
+                new FluidStack(FluidName.fluidmoltentantalum.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 36), // neodymium
-                new FluidStack(FluidName.fluidmoltenneodymium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(27)), // cadmium
+                new FluidStack(FluidName.fluidmoltencadmium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 37), // niobium
-                new FluidStack(FluidName.fluidmoltenniobium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(28)), // arsenic
+                new FluidStack(FluidName.fluidmoltenarsenic.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 38), // palladium
-                new FluidStack(FluidName.fluidmoltenpalladium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(29)), // barium
+                new FluidStack(FluidName.fluidmoltenbarium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 39), // polonium
-                new FluidStack(FluidName.fluidmoltenpolonium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(30)), // bismuth
+                new FluidStack(FluidName.fluidmoltenbismuth.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 40), // strontium
-                new FluidStack(FluidName.fluidmoltenstrontium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(31)), // gadolinium
+                new FluidStack(FluidName.fluidmoltengadolinium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 41), // thallium
-                new FluidStack(FluidName.fluidmoltenthallium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(32)), // gallium
+                new FluidStack(FluidName.fluidmoltengallium.getInstance().get(), 144)
         );
         addRecipe(
-                new ItemStack(IUItem.crushed, 1, 42), // zirconium
-                new FluidStack(FluidName.fluidmoltenzirconium.getInstance(), 144)
+                new ItemStack(IUItem.crushed.getStack(33)), // hafnium
+                new FluidStack(FluidName.fluidmoltenhafnium.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(34)), // yttrium
+                new FluidStack(FluidName.fluidmoltenyttrium.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(35)), // molybdenum
+                new FluidStack(FluidName.fluidmoltenmolybdenum.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(36)), // neodymium
+                new FluidStack(FluidName.fluidmoltenneodymium.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(37)), // niobium
+                new FluidStack(FluidName.fluidmoltenniobium.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(38)), // palladium
+                new FluidStack(FluidName.fluidmoltenpalladium.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(39)), // polonium
+                new FluidStack(FluidName.fluidmoltenpolonium.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(40)), // strontium
+                new FluidStack(FluidName.fluidmoltenstrontium.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(41)), // thallium
+                new FluidStack(FluidName.fluidmoltenthallium.getInstance().get(), 144)
+        );
+        addRecipe(
+                new ItemStack(IUItem.crushed.getStack(42)), // zirconium
+                new FluidStack(FluidName.fluidmoltenzirconium.getInstance().get(), 144)
         );
 
 
@@ -269,7 +263,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.refractoryFurnace;
+        return IUItem.refractoryFurnace.getBlock();
     }
 
     @Override
@@ -279,16 +273,14 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             inputSlotA.load();
-            this.fluid_handler.load(this.inputSlotA.get());
+            this.fluid_handler.load(this.inputSlotA.get(0));
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "fluidtank", this.fluidTank1);
-            IBlockState blockState = world.getBlockState(this.pos.down());
-            if (blockState.getMaterial() != Material.AIR) {
-                this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                        .getInstance()
-                        .getBlock();
+            BlockState blockState = level.getBlockState(this.pos.below());
+            if (!blockState.isAir()) {
+                this.work = blockState.getFluidState().is(net.minecraft.world.level.material.Fluids.LAVA);
             } else {
                 work = false;
             }
@@ -298,26 +290,22 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
     }
 
     @Override
-    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+    public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
         if (work) {
-            if (this.pos.down().distanceSq(neighborPos) == 0) {
-                IBlockState blockState = world.getBlockState(this.pos.down());
-                if (blockState.getMaterial() != Material.AIR) {
-                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                            .getInstance()
-                            .getBlock();
+            if (this.pos.below().distSqr(neighborPos) == 0) {
+                BlockState blockState = level.getBlockState(this.pos.below());
+                if (!blockState.isAir()) {
+                    this.work = blockState.getFluidState().is(net.minecraft.world.level.material.Fluids.LAVA);
                 } else {
                     work = false;
                 }
             }
         } else {
-            if (this.pos.down().distanceSq(neighborPos) == 0) {
-                IBlockState blockState = world.getBlockState(this.pos.down());
-                if (blockState.getMaterial() != Material.AIR) {
-                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                            .getInstance()
-                            .getBlock();
+            if (this.pos.below().distSqr(neighborPos) == 0) {
+                BlockState blockState = level.getBlockState(this.pos.below());
+                if (!blockState.isAir()) {
+                    this.work = blockState.getFluidState().is(net.minecraft.world.level.material.Fluids.LAVA);
                 } else {
                     work = false;
                 }
@@ -325,15 +313,15 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -363,10 +351,10 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -378,7 +366,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -387,14 +375,14 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot3")) {
-            inputSlotA.put(0, ItemStack.EMPTY);
+            inputSlotA.set(0, ItemStack.EMPTY);
         }
     }
 
@@ -411,16 +399,9 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (this.world.isRemote) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (this.level.isClientSide) {
             return true;
         }
 
@@ -429,36 +410,32 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
             if (this.inputSlotA.get(0).isEmpty()) {
                 ItemStack stack1 = stack.copy();
                 stack1.setCount(1);
-                this.inputSlotA.put(0, stack1);
+                this.inputSlotA.set(0, stack1);
                 stack.shrink(1);
-                if (!world.isRemote) {
+                if (!level.isClientSide) {
                     new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                 }
                 return true;
             }
         } else {
-            if (!this.getWorld().isRemote && player
-                    .getHeldItem(hand)
-                    .hasCapability(
-                            CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,
-                            null
-                    ) && this.fluidTank1.getFluidAmount() >= 1000) {
+            if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player
+                    .getItemInHand(hand)) != null && this.fluidTank1.getFluidAmount() >= 1000) {
                 ModUtils.interactWithFluidHandler(player, hand,
-                        this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                        this.getComp(Fluids.class).getCapability(ForgeCapabilities.FLUID_HANDLER, side)
                 );
-                if (!world.isRemote) {
+                if (!level.isClientSide) {
                     new PacketUpdateFieldTile(this, "fluidtank", fluidTank1);
                 }
                 return true;
             } else {
                 if (!inputSlotA.isEmpty()) {
-                    if (!world.isRemote) {
-                        ModUtils.dropAsEntity(world, pos, inputSlotA.get(), player);
+                    if (!level.isClientSide) {
+                        ModUtils.dropAsEntity(level, pos, inputSlotA.get(0));
                     }
-                    inputSlotA.put(0, ItemStack.EMPTY);
+                    inputSlotA.set(0, ItemStack.EMPTY);
                     this.output = null;
                     this.setActive(false);
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot3", false);
                     }
                     return true;
@@ -466,9 +443,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
             }
 
         }
-
-
-        return false;
+        return super.onActivated(player, hand, side, vec3);
     }
 
 
@@ -476,7 +451,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
         super.updateEntityServer();
 
         if ((this.fluid_handler.output() == null && !this.inputSlotA.isEmpty())) {
-            this.fluid_handler.getOutput(this.inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.inputSlotA.isEmpty()) {
                 this.fluid_handler.setOutput(null);
@@ -492,7 +467,7 @@ public class TileEntityRefractoryFurnace extends TileEntityInventory implements 
 
                     this.fluid_handler.fillFluid();
                     this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot3", this.inputSlotA);
                         new PacketUpdateFieldTile(this, "fluidtank", this.fluidTank1);
                     }

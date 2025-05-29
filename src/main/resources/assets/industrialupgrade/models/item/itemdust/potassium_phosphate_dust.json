@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/potassium_phosphate"	}
+		"layer0": "industrialupgrade:item/potassium_phosphate"	}
 }

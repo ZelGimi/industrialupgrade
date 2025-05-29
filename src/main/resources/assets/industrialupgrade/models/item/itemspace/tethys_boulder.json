@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/tethys_boulder"
+    "layer0" : "industrialupgrade:item/tethys_boulder"
   }
 }

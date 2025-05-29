@@ -2,7 +2,7 @@ package com.denfop.integration.jei.genpetrol;
 
 
 import com.denfop.blocks.FluidName;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -52,11 +52,11 @@ public class GenPetrolHandler {
 
     public static void initRecipes() {
 
-        addRecipe(50000, new FluidStack(FluidName.fluidbenz.getInstance(), 1000));
-        addRecipe(100000, new FluidStack(FluidName.fluidpetrol90.getInstance(), 1000));
-        addRecipe(200000, new FluidStack(FluidName.fluidpetrol95.getInstance(), 1000));
-        addRecipe(400000, new FluidStack(FluidName.fluidpetrol100.getInstance(), 1000));
-        addRecipe(800000, new FluidStack(FluidName.fluidpetrol105.getInstance(), 1000));
+        addRecipe(50000, new FluidStack(FluidName.fluidbenz.getInstance().get(), 1000));
+        addRecipe(100000, new FluidStack(FluidName.fluidpetrol90.getInstance().get(), 1000));
+        addRecipe(200000, new FluidStack(FluidName.fluidpetrol95.getInstance().get(), 1000));
+        addRecipe(400000, new FluidStack(FluidName.fluidpetrol100.getInstance().get(), 1000));
+        addRecipe(800000, new FluidStack(FluidName.fluidpetrol105.getInstance().get(), 1000));
 
 
     }

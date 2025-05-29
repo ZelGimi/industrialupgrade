@@ -12,7 +12,9 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.multimechanism.IFarmer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileQuadFermer extends TileMultiMachine implements IFarmer {
 
@@ -21,13 +23,14 @@ public class TileQuadFermer extends TileMultiMachine implements IFarmer {
     private final SoilPollutionComponent pollutionSoil;
     int col = 0;
 
-    public TileQuadFermer() {
-        super(EnumMultiMachine.QUAD_Fermer.usagePerTick, EnumMultiMachine.QUAD_Fermer.lenghtOperation
+    public TileQuadFermer(BlockPos pos, BlockState state) {
+        super(EnumMultiMachine.QUAD_Fermer.usagePerTick, EnumMultiMachine.QUAD_Fermer.lenghtOperation,
+                BlockMoreMachine3.quad_farmer, pos, state
         );
         this.fertilizerSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.fertilizer;
+                return stack.getItem() == IUItem.fertilizer.getItem();
             }
 
             public EnumTypeSlot getTypeSlot() {
@@ -45,14 +48,14 @@ public class TileQuadFermer extends TileMultiMachine implements IFarmer {
 
     @Override
     public int getSize(int size) {
-        size = Math.min(super.getSize(size), fertilizerSlot.get().getCount() * 8 + col);
+        size = Math.min(super.getSize(size), fertilizerSlot.get(0).getCount() * 8 + col);
         return size;
 
     }
 
     @Override
     public boolean canoperate(final int size) {
-        return !fertilizerSlot.isEmpty() && fertilizerSlot.get().getCount() * 8 + col >= size;
+        return !fertilizerSlot.isEmpty() && fertilizerSlot.get(0).getCount() * 8 + col >= size;
     }
 
     @Override
@@ -61,7 +64,7 @@ public class TileQuadFermer extends TileMultiMachine implements IFarmer {
         while (size1 > 0) {
             if (col == 0) {
                 col += 16;
-                fertilizerSlot.get().shrink(1);
+                fertilizerSlot.get(0).shrink(1);
             }
             if (size1 <= col) {
                 col -= size1;
@@ -79,7 +82,7 @@ public class TileQuadFermer extends TileMultiMachine implements IFarmer {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base3;
+        return IUItem.machines_base3.getBlock(getTeBlock().getId());
     }
 
     public EnumMultiMachine getMachine() {

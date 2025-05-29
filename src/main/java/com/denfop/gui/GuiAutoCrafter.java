@@ -8,14 +8,14 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerAutoCrafter;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiAutoCrafter extends GuiIU<ContainerAutoCrafter> {
+public class GuiAutoCrafter<T extends ContainerAutoCrafter> extends GuiIU<ContainerAutoCrafter> {
 
     public GuiAutoCrafter(ContainerAutoCrafter guiContainer) {
         super(guiContainer);
-        this.ySize = 200;
+        this.imageHeight = 200;
         componentList.clear();
         inventory = new GuiComponent(this, 7, 119, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
@@ -34,28 +34,21 @@ public class GuiAutoCrafter extends GuiIU<ContainerAutoCrafter> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         if (this.container.base.getRecipe() != null) {
             new Area(this, 74, 52, 18, 18)
-                    .withTooltip(() -> this.container.base.getRecipe().output.items.get(0).getDisplayName())
-                    .drawForeground(par1, par2);
+                    .withTooltip(() -> this.container.base.getRecipe().output.items.get(0).getDisplayName().getString())
+                    .drawForeground(poseStack,par1, par2);
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         if (this.container.base.getRecipe() != null) {
-            RenderHelper.enableGUIStandardItemLighting();
-            this.drawItemStack(74, 52, this.container.base.getRecipe().output.items.get(0));
-            RenderHelper.disableStandardItemLighting();
+            this.drawItemStack(poseStack, 74, 52, this.container.base.getRecipe().output.items.get(0));
         }
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
     }
 
     @Override

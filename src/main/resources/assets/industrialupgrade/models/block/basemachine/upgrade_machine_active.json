@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/upgrade_machine_active_front",
-    "down" : "industrialupgrade:blocks/upgrade_machine_bottom-back",
-    "up" : "industrialupgrade:blocks/upgrade_machine_active_top",
-    "north" : "industrialupgrade:blocks/upgrade_machine_active_front",
-    "east" : "industrialupgrade:blocks/upgrade_machine_active_left-right",
-    "south" : "industrialupgrade:blocks/upgrade_machine_bottom-back",
-    "west" : "industrialupgrade:blocks/upgrade_machine_active_left-right"
+    "particle" : "industrialupgrade:block/upgrade_machine_active_front",
+    "down" : "industrialupgrade:block/upgrade_machine_bottom-back",
+    "up" : "industrialupgrade:block/upgrade_machine_active_top",
+    "north" : "industrialupgrade:block/upgrade_machine_active_front",
+    "east" : "industrialupgrade:block/upgrade_machine_active_left-right",
+    "south" : "industrialupgrade:block/upgrade_machine_bottom-back",
+    "west" : "industrialupgrade:block/upgrade_machine_active_left-right"
   }
 }

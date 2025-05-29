@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=welding": {
+      "model": "industrialupgrade:block/basemachine/welding"
+    },
+    "facing=south,type=welding": {
+      "model": "industrialupgrade:block/basemachine/welding",
+      "y": 180
+    },
+    "facing=west,type=welding": {
+      "model": "industrialupgrade:block/basemachine/welding",
+      "y": 270
+    },
+    "facing=east,type=welding": {
+      "model": "industrialupgrade:block/basemachine/welding",
+      "y": 90
+    },
+    "facing=down,type=welding": {
+      "model": "industrialupgrade:block/basemachine/welding",
+      "x": 90
+    },
+    "facing=up,type=welding": {
+      "model": "industrialupgrade:block/basemachine/welding",
+      "x": 270
+    },
+    "facing=north,type=welding_invalid": {
+      "model": "industrialupgrade:block/basemachine/welding_active"
+    },
+    "facing=south,type=welding_invalid": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "y": 180
+    },
+    "facing=west,type=welding_invalid": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "y": 270
+    },
+    "facing=east,type=welding_invalid": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "y": 90
+    },
+    "facing=down,type=welding_invalid": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "x": 90
+    },
+    "facing=up,type=welding_invalid": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "x": 270
+    },
+    "facing=north,type=welding_active": {
+      "model": "industrialupgrade:block/basemachine/welding_active"
+    },
+    "facing=south,type=welding_active": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "y": 180
+    },
+    "facing=west,type=welding_active": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "y": 270
+    },
+    "facing=east,type=welding_active": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "y": 90
+    },
+    "facing=down,type=welding_active": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "x": 90
+    },
+    "facing=up,type=welding_active": {
+      "model": "industrialupgrade:block/basemachine/welding_active",
+      "x": 270
+    }
+  }
+}

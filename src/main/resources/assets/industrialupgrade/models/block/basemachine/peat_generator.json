@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/peat_generator_front",
-    "down" : "industrialupgrade:blocks/peat_generator_sides",
-    "up" : "industrialupgrade:blocks/peat_generator_top",
-    "north" : "industrialupgrade:blocks/peat_generator_front",
-    "east" : "industrialupgrade:blocks/peat_generator_sides",
-    "south" : "industrialupgrade:blocks/peat_generator_sides",
-    "west" : "industrialupgrade:blocks/peat_generator_sides"
+    "particle" : "industrialupgrade:block/peat_generator_front",
+    "down" : "industrialupgrade:block/peat_generator_sides",
+    "up" : "industrialupgrade:block/peat_generator_top",
+    "north" : "industrialupgrade:block/peat_generator_front",
+    "east" : "industrialupgrade:block/peat_generator_sides",
+    "south" : "industrialupgrade:block/peat_generator_sides",
+    "west" : "industrialupgrade:block/peat_generator_sides"
   }
 }

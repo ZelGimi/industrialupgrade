@@ -2,45 +2,47 @@ package com.denfop.tiles.mechanism.steam;
 
 import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
+import com.denfop.blocks.blockitem.ItemBlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamQuarry;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamQuarry;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.block.ItemBlockTileEntity;
-import com.denfop.items.resource.ItemCraftingElements;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.tiles.base.FakePlayerSpawner;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketBlockChange;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameType;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.event.level.BlockEvent;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,10 +62,11 @@ public class TileSteamQuarry extends TileEntityInventory {
     public FakePlayerSpawner entity;
     public boolean work;
 
-    public TileSteamQuarry() {
+    public TileSteamQuarry(BlockPos pos,BlockState state) {
+        super(BlockBaseMachine3.steam_quarry,pos,state);
         fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank2", 4000, Fluids.fluidPredicate(
-                FluidName.fluidsteam.getInstance()
+                FluidName.fluidsteam.getInstance().get()
         ), InvSlot.TypeItemSlot.NONE);
         this.output = new InvSlotOutput(this, 24);
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
@@ -74,7 +77,7 @@ public class TileSteamQuarry extends TileEntityInventory {
         this.invSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() == 508;
+                return stack.getItem() instanceof ItemCraftingElements && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() == 508;
             }
 
             @Override
@@ -87,11 +90,11 @@ public class TileSteamQuarry extends TileEntityInventory {
                 return 1;
             }
         };
-        this.stackPipe = new ItemStack(IUItem.basemachine2, 1, 197);
+        this.stackPipe = new ItemStack(IUItem.basemachine2.getItem(197), 1);
         this.invSlot1 = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.basemachine2.item && stack.getItemDamage() == 197;
+                return stack.getItem() == IUItem.basemachine2.getItem(197);
             }
 
             @Override
@@ -102,102 +105,94 @@ public class TileSteamQuarry extends TileEntityInventory {
         work = true;
     }
 
-    public static int onBlockBreakEvent(World world, GameType gameType, EntityPlayerMP entityPlayer, BlockPos pos) {
-        // Logic from tryHarvestBlock for pre-canceling the event
-        boolean preCancelEvent = false;
-        ItemStack itemstack = entityPlayer.getHeldItemMainhand();
-        if (gameType.isCreative() && !itemstack.isEmpty()
-                && !itemstack.getItem().canDestroyBlockInCreative(world, pos, itemstack, entityPlayer)) {
+    public static int onBlockBreakEvent(Level level,GameType gameType, ServerPlayer entityPlayer, BlockPos pos) {
+        Boolean preCancelEvent = false;
+        ItemStack itemstack = entityPlayer.getMainHandItem();
+        if (!itemstack.isEmpty() && !itemstack.getItem().canAttackBlock(level.getBlockState(pos), level, pos, entityPlayer))
+        {
             preCancelEvent = true;
         }
-        IBlockState state = world.getBlockState(pos);
-        if (state.getMaterial() != Material.AIR && state.getBlock().getHarvestLevel(state) < 0) {
-            return -1;
-        }
-        if (gameType.hasLimitedInteractions()) {
-            if (gameType == GameType.SPECTATOR) {
+
+        if (gameType.isBlockPlacingRestricted())
+        {
+            if (gameType == GameType.SPECTATOR)
                 preCancelEvent = true;
-            }
 
-            if (!entityPlayer.isAllowEdit()) {
-                if (itemstack.isEmpty() || !itemstack.canDestroy(world.getBlockState(pos).getBlock())) {
+            if (!entityPlayer.mayBuild())
+            {
+                if (itemstack.isEmpty() || !itemstack.hasAdventureModeBreakTagForBlock(level.registryAccess().registryOrThrow(Registries.BLOCK), new BlockInWorld(level, pos, false)))
                     preCancelEvent = true;
-                }
             }
         }
 
 
-        if (world.getTileEntity(pos) == null) {
-            SPacketBlockChange packet = new SPacketBlockChange(world, pos);
-            packet.blockState = Blocks.AIR.getDefaultState();
-        }
 
-
-        state = world.getBlockState(pos);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
+        // Post the block break event
+        BlockState state = level.getBlockState(pos);
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, state, entityPlayer);
         event.setCanceled(preCancelEvent);
         MinecraftForge.EVENT_BUS.post(event);
 
         // Handle if the event is canceled
-        if (event.isCanceled()) {
+        if (event.isCanceled())
+        {
             // Let the client know the block still exists
-
+            entityPlayer.connection.send(new ClientboundBlockUpdatePacket(level, pos));
 
             // Update any tile entity data for this block
-            TileEntity tileentity = world.getTileEntity(pos);
-            if (tileentity != null) {
-                Packet<?> pkt = tileentity.getUpdatePacket();
-                if (pkt != null) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity != null)
+            {
 
-                }
             }
         }
         return event.isCanceled() ? -1 : event.getExpToDrop();
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("x1", x);
-        nbtTagCompound.setInteger("y1", y);
-        nbtTagCompound.setInteger("z1", z);
-        nbtTagCompound.setBoolean("work", work);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("x1", x);
+        nbtTagCompound.putInt("y1", y);
+        nbtTagCompound.putInt("z1", z);
+        nbtTagCompound.putBoolean("work", work);
         return nbtTagCompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        x = nbtTagCompound.getInteger("x1");
-        y = nbtTagCompound.getInteger("y1");
-        z = nbtTagCompound.getInteger("z1");
+        x = nbtTagCompound.getInt("x1");
+        y = nbtTagCompound.getInt("y1");
+        z = nbtTagCompound.getInt("z1");
         work = nbtTagCompound.getBoolean("work");
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
         this.y = this.getPos().getY() - 1;
         this.x = this.getPos().getX() - 1;
         this.z = this.getPos().getZ() - 1;
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiSteamQuarry getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSteamQuarry(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiSteamQuarry((ContainerSteamQuarry) menu);
     }
 
-    public ContainerSteamQuarry getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSteamQuarry getGuiContainer(Player entityPlayer) {
         return new ContainerSteamQuarry(entityPlayer, this);
     }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            entity = new FakePlayerSpawner(this.world);
-            entity.setActiveHand(EnumHand.MAIN_HAND);
-            entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_PICKAXE));
+        if (!this.getWorld().isClientSide) {
+            entity = new FakePlayerSpawner(this.level);
+            entity.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_PICKAXE));
         }
     }
 
@@ -208,33 +203,28 @@ public class TileSteamQuarry extends TileEntityInventory {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (!this.invSlot.isEmpty() && steam.canUseEnergy(2) && work && !invSlot1.isEmpty() && y > 4) {
+        if (!this.invSlot.isEmpty() && steam.canUseEnergy(2) && work && !invSlot1.isEmpty() && y > -30) {
             BlockPos pos1 = new BlockPos(x, y, z);
-            final IBlockState state = world.getBlockState(pos1);
+            final BlockState state = level.getBlockState(pos1);
             Block block1 = state.getBlock();
-            int meta = block1.getMetaFromState(state);
             steam.useEnergy(2);
-            if (state.getMaterial() == Material.AIR && onBlockBreakEvent(world,
+            if ((state.isAir() || state.getDestroySpeed(level,pos1) < 0) && onBlockBreakEvent(level,
                     GameType.SURVIVAL,
                     entity, pos1
             ) != -1) {
                 if (x == pos.getX() && z == pos.getZ()) {
-                    invSlot1.get().shrink(1);
+                    if (state.getDestroySpeed(level,pos1) < 0){
+                        return;
+                    }
+                    invSlot1.get(0).shrink(1);
                     ItemBlockTileEntity blockTileEntity = (ItemBlockTileEntity) stackPipe.getItem();
-                    IBlockState iblockstate1 = blockTileEntity.getBlock().getStateForPlacement(world, pos1,
-                            EnumFacing.NORTH, 0,
-                            0,
-                            0, stackPipe.getItemDamage(), entity, EnumHand.MAIN_HAND
-                    );
-                    blockTileEntity.placeBlockAt(stackPipe, entity, world, pos1, EnumFacing.NORTH, 0,
-                            0, 0, iblockstate1
-                    );
+                    blockTileEntity.placeTeBlock(stackPipe, entity, level, pos1);
 
                 }
                 if (x == this.pos.getX() + 1) {
@@ -249,10 +239,8 @@ public class TileSteamQuarry extends TileEntityInventory {
                 }
                 return;
             }
-            if (onBlockBreakEvent(world, GameType.SURVIVAL, entity, pos1) == -1) {
-                if (x == pos1.getX() && z == pos1.getZ()) {
-                    work = false;
-                }
+            if (onBlockBreakEvent(level, GameType.SURVIVAL, entity, pos1) == -1) {
+
                 if (x == this.pos.getX() + 2) {
                     x = this.pos.getX() - 1;
                     z++;
@@ -267,41 +255,34 @@ public class TileSteamQuarry extends TileEntityInventory {
             }
 
 
-            if (!(block1 instanceof BlockTileEntity) && block1.removedByPlayer(state, world, pos1, entity, true)) {
-                block1.onBlockDestroyedByPlayer(world, pos1, state);
-                block1.harvestBlock(world, entity, pos1, state, null, entity.getHeldItem(EnumHand.MAIN_HAND));
-                List<EntityItem> items = this.getWorld().getEntitiesWithinAABB(
-                        EntityItem.class,
-                        new AxisAlignedBB(pos1.getX() - 1, pos1.getY() - 1, pos1.getZ() - 1, pos1.getX() + 1,
+            if (!(block1 instanceof BlockTileEntity) && block1.onDestroyedByPlayer(state, level, pos1, entity, true, level.getFluidState(pos1))) {
+                block1.destroy(level, pos1, state);
+                block1.playerDestroy(level, entity, pos1, state, null, entity.getMainHandItem());
+                List<ItemEntity> items = entity.level().getEntitiesOfClass(
+                        ItemEntity.class,
+                        new AABB(pos1.getX() - 1, pos1.getY() - 1, pos1.getZ() - 1, pos1.getX() + 1,
                                 pos1.getY() + 1,
                                 pos1.getZ() + 1
                         )
                 );
-                for (EntityItem item : items) {
-                    if (!entity.getEntityWorld().isRemote && !item.isDead) {
+                for (ItemEntity item : items) {
+                    if (!entity.level().isClientSide && !item.isRemoved()) {
                         if (this.output.addWithoutIgnoring(Collections.singletonList(item.getItem()), false)) {
-                            item.setDead();
+                            item.setRemoved(Entity.RemovalReason.KILLED);
                         }
 
                     }
                 }
                 if (x == this.getPos().getX() && z == this.getPos().getZ()) {
                     ItemBlockTileEntity blockTileEntity = (ItemBlockTileEntity) stackPipe.getItem();
-                    IBlockState iblockstate1 = blockTileEntity.getBlock().getStateForPlacement(world, pos1,
-                            EnumFacing.NORTH, 0,
-                            0,
-                            0, stackPipe.getItemDamage(), entity, EnumHand.MAIN_HAND
-                    );
-                    blockTileEntity.placeBlockAt(stackPipe, entity, world, pos1, EnumFacing.NORTH, 0,
-                            0, 0, iblockstate1
-                    );
-                    invSlot1.get().shrink(1);
+                    blockTileEntity.placeTeBlock(stackPipe, entity, level, pos1);
+                    invSlot1.get(0).shrink(1);
                 }
             } else {
                 if (x == this.getPos().getX() && z == this
                         .getPos()
-                        .getZ() && (block1 instanceof BlockTileEntity && meta == 197)) {
-                    this.work = false;
+                        .getZ() && (block1 instanceof BlockTileEntity && ((BlockTileEntity)block1).item == stackPipe.getItem())) {
+
                 }
                 if (x == this.pos.getX() + 1) {
                     x = this.pos.getX() - 1;

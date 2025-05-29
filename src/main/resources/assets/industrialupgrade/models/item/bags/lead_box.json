@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/lead_box"
+    "layer0" : "industrialupgrade:item/lead_box"
   }
 }

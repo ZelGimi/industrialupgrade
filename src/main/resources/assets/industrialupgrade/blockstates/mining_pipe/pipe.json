@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=pipe": {
+      "model": "industrialupgrade:block/mining_pipe"
+    },
+    "facing=south,type=pipe": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "y": 180
+    },
+    "facing=west,type=pipe": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "y": 270
+    },
+    "facing=east,type=pipe": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "y": 90
+    },
+    "facing=down,type=pipe": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "x": 90
+    },
+    "facing=up,type=pipe": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "x": 270
+    },
+    "facing=north,type=pipe_invalid": {
+      "model": "industrialupgrade:block/mining_pipe"
+    },
+    "facing=south,type=pipe_invalid": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "y": 180
+    },
+    "facing=west,type=pipe_invalid": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "y": 270
+    },
+    "facing=east,type=pipe_invalid": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "y": 90
+    },
+    "facing=down,type=pipe_invalid": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "x": 90
+    },
+    "facing=up,type=pipe_invalid": {
+      "model": "industrialupgrade:block/mining_pipe",
+      "x": 270
+    }
+  }
+}

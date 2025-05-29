@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/titania_yttrium"
+    "all" : "industrialupgrade:block/titania_yttrium"
   }
 }

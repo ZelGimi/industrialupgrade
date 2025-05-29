@@ -1,7 +1,0 @@
-{
-    "name": "Притивная эра",
-    "description": "Первая эра в развитии данного мода. Начнётся всё с обычных примитивных механизмов",
-    "icon": "industrialupgrade:primal_soldering_mechanism",
-	"secret": false,
-	"sortnum": 0
-}

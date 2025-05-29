@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube",
 	"textures": {
-		"particle": "industrialupgrade:blocks/mv_transformer_side",
-		"down": "industrialupgrade:blocks/mv_transformer_side",
-		"up": "industrialupgrade:blocks/mv_transformer_side",
-		"north": "industrialupgrade:blocks/mv_transformer_front",
-		"east": "industrialupgrade:blocks/mv_transformer_side",
-		"south": "industrialupgrade:blocks/mv_transformer_side",
-		"west": "industrialupgrade:blocks/mv_transformer_side"
+		"particle": "industrialupgrade:block/mv_transformer_side",
+		"down": "industrialupgrade:block/mv_transformer_side",
+		"up": "industrialupgrade:block/mv_transformer_side",
+		"north": "industrialupgrade:block/mv_transformer_front",
+		"east": "industrialupgrade:block/mv_transformer_side",
+		"south": "industrialupgrade:block/mv_transformer_side",
+		"west": "industrialupgrade:block/mv_transformer_side"
 	}
 }

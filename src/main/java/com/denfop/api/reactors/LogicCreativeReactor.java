@@ -1,12 +1,9 @@
 package com.denfop.api.reactors;
 
-import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.*;
 
 public class LogicCreativeReactor {
 
@@ -94,7 +91,7 @@ public class LogicCreativeReactor {
             ItemStack stack = component.getStack();
             boolean find = false;
             for (ItemStack stack1 : infoStack) {
-                if (stack1.isItemEqual(stack)) {
+                if (stack1.is(stack.getItem())) {
                     stack1.grow(1);
                     find = true;
                     break;

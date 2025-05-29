@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/electric_wire_insulator_other-sides",
-    "down" : "industrialupgrade:blocks/electric_wire_insulator_other-sides",
-    "up" : "industrialupgrade:blocks/electric_wire_insulator_other-sides",
-    "north" : "industrialupgrade:blocks/electric_wire_insulator_front_active",
-    "east" : "industrialupgrade:blocks/electric_wire_insulator_left-right_active",
-    "south" : "industrialupgrade:blocks/electric_wire_insulator_other-sides",
-    "west" : "industrialupgrade:blocks/electric_wire_insulator_left-right_active"
+    "particle" : "industrialupgrade:block/electric_wire_insulator_other-sides",
+    "down" : "industrialupgrade:block/electric_wire_insulator_other-sides",
+    "up" : "industrialupgrade:block/electric_wire_insulator_other-sides",
+    "north" : "industrialupgrade:block/electric_wire_insulator_front_active",
+    "east" : "industrialupgrade:block/electric_wire_insulator_left-right_active",
+    "south" : "industrialupgrade:block/electric_wire_insulator_other-sides",
+    "west" : "industrialupgrade:block/electric_wire_insulator_left-right_active"
   }
 }

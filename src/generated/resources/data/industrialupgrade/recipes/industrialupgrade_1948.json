@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:storage_blocks/bronze"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:water_rotor/water_rotor_wood"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:corewater/core_wind1"
+  },
+  "show_notification": true
+}

@@ -1,23 +1,25 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileSunnariumMaker;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 
 public class ContainerSunnariumMaker extends ContainerFullInv<TileSunnariumMaker> {
 
-    public ContainerSunnariumMaker(EntityPlayer entityPlayer, TileSunnariumMaker tileEntity1) {
+    public ContainerSunnariumMaker(Player entityPlayer, TileSunnariumMaker tileEntity1) {
         this(entityPlayer, tileEntity1, 167, 152, 8);
     }
 
     public ContainerSunnariumMaker(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileSunnariumMaker tileEntity1,
             int height,
             int upgradeX,
             int upgradeY
     ) {
         super(null, tileEntity1, height);
+        this.player = entityPlayer;
+        this.inventory = entityPlayer.getInventory();
         if ((tileEntity1).inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA,
                     0, 32, 21
@@ -59,7 +61,7 @@ public class ContainerSunnariumMaker extends ContainerFullInv<TileSunnariumMaker
         for (col = 0; col < 3; ++col) {
             for (int col1 = 0; col1 < 9; ++col1) {
                 this.addSlotToContainer(new Slot(
-                        entityPlayer.inventory,
+                        entityPlayer.getInventory(),
                         col1 + col * 9 + 9,
                         xStart + col1 * 18,
                         height + -82 + col * 18
@@ -68,7 +70,7 @@ public class ContainerSunnariumMaker extends ContainerFullInv<TileSunnariumMaker
         }
 
         for (col = 0; col < 9; ++col) {
-            this.addSlotToContainer(new Slot(entityPlayer.inventory, col, xStart + col * 18, height + -25));
+            this.addSlotToContainer(new Slot(entityPlayer.getInventory(), col, xStart + col * 18, height + -25));
         }
 
     }

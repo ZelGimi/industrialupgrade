@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/stamp_mechanism_main_active",
-    "down" : "industrialupgrade:blocks/stamp_mechanism_active_all",
-    "up" : "industrialupgrade:blocks/stamp_mechanism_active_all",
-    "north" : "industrialupgrade:blocks/stamp_mechanism_main_active",
-    "east" : "industrialupgrade:blocks/stamp_mechanism_active_all",
-    "south" : "industrialupgrade:blocks/stamp_mechanism_active_all",
-    "west" : "industrialupgrade:blocks/stamp_mechanism_active_all"
+    "particle" : "industrialupgrade:block/stamp_mechanism_main_active",
+    "down" : "industrialupgrade:block/stamp_mechanism_active_all",
+    "up" : "industrialupgrade:block/stamp_mechanism_active_all",
+    "north" : "industrialupgrade:block/stamp_mechanism_main_active",
+    "east" : "industrialupgrade:block/stamp_mechanism_active_all",
+    "south" : "industrialupgrade:block/stamp_mechanism_active_all",
+    "west" : "industrialupgrade:block/stamp_mechanism_active_all"
   }
 }

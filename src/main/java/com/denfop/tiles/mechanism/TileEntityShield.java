@@ -1,12 +1,15 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerShield;
 import com.denfop.events.client.GlobalRenderManager;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiShield;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.modules.ItemEntityModule;
@@ -17,40 +20,37 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.CapturedMobUtils;
 import com.denfop.utils.ModUtils;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
+
+import static com.denfop.render.base.RenderType.LEASH_TRANSPARENT;
 
 public class TileEntityShield extends TileEntityInventory implements IUpdatableTileEvent {
 
@@ -61,10 +61,10 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     public boolean visibleLaser = false;
     Energy energy;
     List<Integer> integerList = new LinkedList<>();
-    AxisAlignedBB shieldBox;
-    AxisAlignedBB shieldDefaultBox = new AxisAlignedBB(-8, -8, -8, 8, 8, 8);
-    Vec3d center;
-    LinkedList<Chunk> chunks = new LinkedList<>();
+    AABB shieldBox;
+    AABB shieldDefaultBox = new AABB(-8, -8, -8, 8, 8, 8);
+    Vec3i center;
+    LinkedList<LevelChunk> chunks = new LinkedList<>();
     List<UUID> uuidList = new LinkedList<>();
     double[] sinLat = new double[latitudeSegments + 1];
     double[] cosLat = new double[latitudeSegments + 1];
@@ -83,13 +83,14 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     double[][] z2 = new double[latitudeSegments][longitudeSegments];
     double[][] z3 = new double[latitudeSegments][longitudeSegments];
     double[][] z4 = new double[latitudeSegments][longitudeSegments];
-    @SideOnly(Side.CLIENT)
-    private Function render;
+    @OnlyIn(Dist.CLIENT)
+    private  Function<RenderLevelStageEvent, Void> render;
     private double laserProgress;
     private byte mode = 0;
     private long lastShotTime = 0;
     private boolean isShooting = false;
-    public TileEntityShield() {
+    public TileEntityShield(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.shield,pos,state);
         energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
         slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 9) {
             @Override
@@ -97,7 +98,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
                 if (!(stack.getItem() instanceof ItemEntityModule)) {
                     return false;
                 }
-                if (stack.getItemDamage() == 0) {
+                if (((ItemEntityModule<?>) stack.getItem()).getElement().getId() == 0) {
                     return false;
                 }
 
@@ -113,8 +114,8 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
                     if (!this.get(i).isEmpty()) {
                         final CapturedMobUtils captured = CapturedMobUtils.create(this.get(i));
                         assert captured != null;
-                        EntityLiving entityLiving = (EntityLiving) captured.getEntity(((TileEntityShield) base).getWorld(), true);
-                        integerList.add(entityLiving.getEntityId());
+                        LivingEntity entityLiving = (LivingEntity) captured.getEntity(((TileEntityShield) base).getWorld(), true);
+                        integerList.add(entityLiving.getId());
                     }
                 }
             }
@@ -122,32 +123,20 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
 
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
     @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public CompoundTag writeToNBT(CompoundTag compound) {
         super.writeToNBT(compound);
-        compound.setBoolean("VisibleShield", this.visibleShield);
-        compound.setBoolean("VisibleLaser", this.visibleLaser);
-        compound.setByte("Mode", this.mode);
+        compound.putBoolean("VisibleShield", this.visibleShield);
+        compound.putBoolean("VisibleLaser", this.visibleLaser);
+        compound.putByte("Mode", this.mode);
 
         return compound;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
+    public void readFromNBT(CompoundTag compound) {
         super.readFromNBT(compound);
         this.visibleShield = compound.getBoolean("VisibleShield");
         this.visibleLaser = compound.getBoolean("VisibleLaser");
@@ -158,21 +147,21 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     public void onLoaded() {
         super.onLoaded();
         this.slot.update();
-        shieldBox = new AxisAlignedBB(this.getPos().add(-8, -8, -8), this.getPos().add(8, 8, 8));
-        center = new Vec3d(this.getPos()).add(new Vec3d(0, 0.5, 0));
-        int j2 = MathHelper.floor((shieldBox.minX - 2) / 16.0D);
-        int k2 = MathHelper.ceil((shieldBox.maxX + 2) / 16.0D);
-        int l2 = MathHelper.floor((shieldBox.minZ - 2) / 16.0D);
-        int i3 = MathHelper.ceil((shieldBox.maxZ + 2) / 16.0D);
+        shieldBox = new AABB(this.getPos().offset(-8, -8, -8), this.getPos().offset(8, 8, 8));
+        center = this.getPos().offset(new Vec3i(0, 0, 0));
+        int j2 = Mth.floor((shieldBox.minX - 2) / 16.0D);
+        int k2 = Mth.ceil((shieldBox.maxX + 2) / 16.0D);
+        int l2 = Mth.floor((shieldBox.minZ - 2) / 16.0D);
+        int i3 = Mth.ceil((shieldBox.maxZ + 2) / 16.0D);
         for (int j3 = j2; j3 < k2; ++j3) {
             for (int k3 = l2; k3 < i3; ++k3) {
-                final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
+                final LevelChunk chunk = level.getChunk(j3, k3);
                 if (!chunks.contains(chunk)) {
                     chunks.add(chunk);
                 }
             }
         }
-        if (this.getWorld().isRemote) {
+        if (this.getWorld().isClientSide) {
             this.render = createFunction();
             GlobalRenderManager.addRender(this.getWorld(), pos, render);
         }
@@ -181,8 +170,8 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        if (this.getWorld().isRemote) {
-            GlobalRenderManager.removeRender(world, pos);
+        if (this.getWorld().isClientSide) {
+            GlobalRenderManager.removeRender(level, pos);
         }
     }
 
@@ -220,18 +209,18 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         }
     }
 
-    private Function createFunction() {
-        Function function = o -> {
+    private  Function<RenderLevelStageEvent, Void> createFunction() {
+        Function<RenderLevelStageEvent, Void> function = o -> {
             if (shieldBox == null) {
-                shieldBox = new AxisAlignedBB(this.getPos().add(-8, -8, -8), this.getPos().add(8, 8, 8));
-                center = new Vec3d(this.getPos()).add(new Vec3d(0, 0.5, 0));
-                int j2 = MathHelper.floor((shieldBox.minX - 2) / 16.0D);
-                int k2 = MathHelper.ceil((shieldBox.maxX + 2) / 16.0D);
-                int l2 = MathHelper.floor((shieldBox.minZ - 2) / 16.0D);
-                int i3 = MathHelper.ceil((shieldBox.maxZ + 2) / 16.0D);
+                shieldBox = new AABB(this.getPos().offset(-8, -8, -8), this.getPos().offset(8, 8, 8));
+                center = this.getPos().offset(new Vec3i(0, 0, 0));
+                int j2 = Mth.floor((shieldBox.minX - 2) / 16.0D);
+                int k2 = Mth.ceil((shieldBox.maxX + 2) / 16.0D);
+                int l2 = Mth.floor((shieldBox.minZ - 2) / 16.0D);
+                int i3 = Mth.ceil((shieldBox.maxZ + 2) / 16.0D);
                 for (int j3 = j2; j3 < k2; ++j3) {
                     for (int k3 = l2; k3 < i3; ++k3) {
-                        final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
+                        final LevelChunk chunk = level.getChunk(j3, k3);
                         if (!chunks.contains(chunk)) {
                             chunks.add(chunk);
                         }
@@ -240,13 +229,13 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
             }
 
 
-            List<Entity> mobs = this.getEntitiesWithinAABB(Entity.class, shieldBox,
+            List<Entity> mobs = level.getEntitiesOfClass(Entity.class, shieldBox,
                     e -> {
-                        boolean hasmob = (e instanceof EntityMob);
+                        boolean hasmob = (e instanceof Mob);
                         if (mode == 0) {
-                            return hasmob && !integerList.contains(e.getEntityId());
+                            return hasmob && !integerList.contains(e.getId());
                         } else {
-                            return hasmob && integerList.contains(e.getEntityId());
+                            return hasmob && integerList.contains(e.getId());
                         }
                     }
             );
@@ -256,28 +245,20 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
 
             int shieldColor = mobNearby ? ModUtils.convertRGBcolorToInt(168, 0, 0) : 0x0000FFFF;
             if (visibleShield) {
-                renderShield(shieldBox, shieldColor);
+                renderShield(o, shieldBox, shieldColor);
             }
 
 
-            if (mobNearby && visibleLaser) {
-                mobs.forEach(this::renderLaserEffect);
-            }
+           /* if (mobNearby && visibleLaser) {
+                mobs.forEach(mob -> renderLaserEffect(o,mob));
+            }*/
             uuidList.clear();
-            return 0;
+            return null;
         };
         return function;
     }
 
-    public <T extends Entity> List<T> getEntitiesWithinAABB(
-            Class<? extends T> clazz,
-            AxisAlignedBB aabb,
-            @Nullable Predicate<? super T> filter
-    ) {
-        List<T> list = Lists.newArrayList();
-        this.chunks.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(clazz, aabb, list, filter));
-        return list;
-    }
+
 
     public InvSlot getSlot() {
         return slot;
@@ -292,13 +273,13 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         super.updateEntityServer();
         if (this.energy.getEnergy() >= 25) {
 
-            List<Entity> mobs = this.getEntitiesWithinAABB(Entity.class, shieldBox,
+            List<Entity> mobs = level.getEntitiesOfClass(Entity.class, shieldBox,
                     e -> {
-                        boolean hasmob = (e instanceof EntityMob);
+                        boolean hasmob = (e instanceof Mob);
                         if (mode == 0) {
-                            return hasmob && !integerList.contains(e.getEntityId());
+                            return hasmob && !integerList.contains(e.getId());
                         } else {
-                            return hasmob && integerList.contains(e.getEntityId());
+                            return hasmob && integerList.contains(e.getId());
                         }
                     }
             );
@@ -307,8 +288,8 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
             if (mobNearby) {
                 for (Entity entity : mobs) {
                     if (this.energy.getEnergy() >= 25) {
-                        new PacketUpdateFieldTile(this, "uuid", entity.getUniqueID());
-                        entity.attackEntityFrom(DamageSource.MAGIC, 4F);
+                        new PacketUpdateFieldTile(this, "uuid", entity.getUUID());
+                        entity.hurt(entity.damageSources().magic(), 4F);
                         this.energy.useEnergy(25);
                     } else {
                         break;
@@ -318,35 +299,43 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
         }
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void updateEntityClient() {
-        super.updateEntityClient();
 
 
-    }
+    @OnlyIn(Dist.CLIENT)
+    private void renderShield(RenderLevelStageEvent event, AABB box, int color) {
 
-    @SideOnly(Side.CLIENT)
-    private void renderShield(AxisAlignedBB box, int color) {
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
+        double camX = event.getCamera().getPosition().x();
+        double camY = event.getCamera().getPosition().y();
+        double camZ = event.getCamera().getPosition().z();
+        PoseStack poseStack = event.getPoseStack();
+        poseStack.pushPose();
+        VertexConsumer bufferSource = Minecraft.getInstance()
+                .renderBuffers()
+                .bufferSource()
+                .getBuffer(LEASH_TRANSPARENT);
         Color color1 = new Color(color);
-        GlStateManager.color(color1.getRed(), color1.getGreen(), color1.getBlue(), 0.5f);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
         if (!write) {
             writeData();
         }
-        drawCircle(buffer, this.pos, tessellator);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+                GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO
+        );
+         RenderSystem.depthMask(false);
+        RenderSystem.disableDepthTest();
+        drawCircle(poseStack, bufferSource, pos, color1.getRed() / 255F, color1.getGreen()/ 255F, color1.getBlue()/ 255F, 0.5F);
 
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+        RenderSystem.enableDepthTest();
+        RenderSystem.depthMask(true);
+        RenderSystem.disableBlend();
+
+        poseStack.popPose();
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void writeData() {
         write = true;
         for (int i = 0; i <= latitudeSegments; i++) {
@@ -385,17 +374,15 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
             }
         }
     }
+    @OnlyIn(Dist.CLIENT)
+    private void drawCircle(PoseStack poseStack, VertexConsumer bufferSource, BlockPos pos, float r, float g, float b, float alpha) {
 
-    @SideOnly(Side.CLIENT)
-    private void drawCircle(BufferBuilder buffer, BlockPos pos, Tessellator tessellator) {
-
-
-        double x = pos.getX() + 0.5;
-        double y = pos.getY() + 0.5;
-        double z = pos.getZ() + 0.5;
-
-        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION);
-
+        float x = pos.getX() + 0.5F;
+        float y = pos.getY() + 0.5F;
+        float z = pos.getZ() + 0.5F;
+        float radius =8F;
+        Matrix4f matrix = poseStack.last().pose();
+        Matrix3f matrix3f = poseStack.last().normal();
         for (int i = 0; i < latitudeSegments; i++) {
             for (int j = 0; j < longitudeSegments; j++) {
 
@@ -419,135 +406,30 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
                 double y4 = this.y4[i][j];
                 double z4 = this.z4[i][j];
 
-                buffer
-                        .pos(x + x1 * shieldDefaultBox.maxX, y + y1 * shieldDefaultBox.maxY, z + z1 * shieldDefaultBox.maxZ)
-                        .endVertex();
-                buffer
-                        .pos(x + x2 * shieldDefaultBox.maxX, y + y2 * shieldDefaultBox.maxY, z + z2 * shieldDefaultBox.maxZ)
-                        .endVertex();
-                buffer
-                        .pos(x + x3 * shieldDefaultBox.maxX, y + y3 * shieldDefaultBox.maxY, z + z3 * shieldDefaultBox.maxZ)
-                        .endVertex();
+               bufferSource.vertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).color(r, g, b, 0.5f).endVertex();
+                bufferSource.vertex(matrix, (float) (x + x2 * radius), (float) (y + y2 * radius), (float) (z + z2 * radius)).color(r, g, b, 0.5f).endVertex();
+                bufferSource.vertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).color(r, g, b, 0.5f).endVertex();
 
-                buffer
-                        .pos(x + x3 * shieldDefaultBox.maxX, y + y3 * shieldDefaultBox.maxY, z + z3 * shieldDefaultBox.maxZ)
-                        .endVertex();
-                buffer
-                        .pos(x + x4 * shieldDefaultBox.maxX, y + y4 * shieldDefaultBox.maxY, z + z4 * shieldDefaultBox.maxZ)
-                        .endVertex();
-                buffer
-                        .pos(x + x1 * shieldDefaultBox.maxX, y + y1 * shieldDefaultBox.maxY, z + z1 * shieldDefaultBox.maxZ)
-                        .endVertex();
+                bufferSource.vertex(matrix, (float) (x + x3 * radius), (float) (y + y3 * radius), (float) (z + z3 * radius)).color(r, g, b, 0.5f).endVertex();
+                bufferSource.vertex(matrix, (float) (x + x4 * radius), (float) (y + y4 * radius), (float) (z + z4 * radius)).color(r, g, b, 0.5f).endVertex();
+                bufferSource.vertex(matrix, (float) (x + x1 * radius), (float) (y + y1 * radius), (float) (z + z1 * radius)).color(r, g, b, 0.5f).endVertex();
             }
 
         }
-
-        tessellator.draw();
     }
 
-    @SideOnly(Side.CLIENT)
-    private void renderLaserEffect(Entity entity) {
-
-        Vec3d start = new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-        Vec3d end = entity.getPositionVector().addVector(0, entity.height / 2.0, 0);
-
-        GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.color(1.0f, 0.0f, 0.0f, 0.8f);
-        GlStateManager.glLineWidth(32.0f);
-
-        GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(start.x, start.y, start.z);
-        GL11.glVertex3d(end.x, end.y, end.z);
-        GL11.glEnd();
-
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
-        if (uuidList.remove(entity.getUniqueID())) {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lastShotTime > 1000) {
-                lastShotTime = currentTime;
-                isShooting = true;
-                laserProgress = 0.0;
-
-                Minecraft.getMinecraft().player.playSound(
-                        SoundEvents.ENTITY_GENERIC_EXPLODE,
-                        1.0f,
-                        1.0f
-                );
-            }
 
 
-            if (isShooting) {
-                GlStateManager.pushMatrix();
-                GlStateManager.disableTexture2D();
-                GlStateManager.enableBlend();
-                GlStateManager.color(1.0f, 0.5f, 0.0f, 1.0f);
-                GlStateManager.glLineWidth(8.0f);
-
-
-                double segmentLength = 0.5;
-                Vec3d direction = end.subtract(start).normalize();
-                double totalDistance = start.distanceTo(end);
-                double currentDistance = laserProgress * totalDistance;
-                Vec3d segmentStart = start.add(direction.scale(currentDistance));
-                Vec3d segmentEnd = start.add(direction.scale(Math.min(currentDistance + segmentLength, totalDistance)));
-
-
-                GL11.glBegin(GL11.GL_LINES);
-                GL11.glVertex3d(segmentStart.x, segmentStart.y, segmentStart.z);
-                GL11.glVertex3d(segmentEnd.x, segmentEnd.y, segmentEnd.z);
-                GL11.glEnd();
-
-                GlStateManager.enableTexture2D();
-                GlStateManager.popMatrix();
-
-
-                spawnLaserParticles(segmentStart, segmentEnd);
-
-
-                laserProgress += 0.1;
-                if (laserProgress >= 1.0) {
-                    isShooting = false;
-                }
-            }
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void spawnLaserParticles(Vec3d start, Vec3d end) {
-
-
-        double step = 0.1;
-        double distance = start.distanceTo(end);
-        Vec3d direction = end.subtract(start).normalize();
-
-        for (double i = 0; i < distance; i += step) {
-            Vec3d particlePos = start.add(direction.scale(i));
-            world.spawnParticle(
-                    EnumParticleTypes.FLAME,
-                    particlePos.x, particlePos.y, particlePos.z,
-                    0.0, 0.0, 0.0
-            );
-            world.spawnParticle(
-                    EnumParticleTypes.REDSTONE,
-                    particlePos.x, particlePos.y, particlePos.z,
-                    0.0, 0.0, 0.0
-            );
-        }
-    }
 
     @Override
-    public ContainerShield getGuiContainer(final EntityPlayer var1) {
+    public ContainerShield getGuiContainer(final Player var1) {
         return new ContainerShield(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiShield(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiShield((ContainerShield) menu);
     }
 
     @Override
@@ -557,11 +439,11 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (var2 == 0) {
             visibleLaser = true;
             new PacketUpdateFieldTile(this, "visibleLaser", visibleLaser);

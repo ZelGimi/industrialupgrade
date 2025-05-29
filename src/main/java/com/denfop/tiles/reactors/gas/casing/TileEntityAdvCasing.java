@@ -6,8 +6,14 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.gas.ICasing;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityAdvCasing extends TileEntityMultiBlockElement implements ICasing {
+
+    public TileEntityAdvCasing(BlockPos pos, BlockState state) {
+        super(BlockGasReactor.adv_gas_casing, pos, state);
+    }
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -16,7 +22,7 @@ public class TileEntityAdvCasing extends TileEntityMultiBlockElement implements 
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_reactor;
+        return IUItem.gas_reactor.getBlock(getTeBlock());
     }
 
     @Override

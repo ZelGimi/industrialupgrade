@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityWirelessMineralQuarry;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerWirelessMineralQuarry extends ContainerFullInv<TileEntityWirelessMineralQuarry> {
 
-    public ContainerWirelessMineralQuarry(TileEntityWirelessMineralQuarry tileEntityWirelessMineralQuarry, EntityPlayer var1) {
+    public ContainerWirelessMineralQuarry(TileEntityWirelessMineralQuarry tileEntityWirelessMineralQuarry, Player var1) {
         super(tileEntityWirelessMineralQuarry, var1);
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(new SlotInvSlot(tileEntityWirelessMineralQuarry.invslot,

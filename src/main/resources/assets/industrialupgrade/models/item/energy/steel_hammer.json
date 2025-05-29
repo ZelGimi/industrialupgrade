@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "industrialupgrade:models/steel_hammer",
-		"particle": "industrialupgrade:models/steel_hammer"
+		"0": "industrialupgrade:block/steel_hammer",
+		"particle": "industrialupgrade:block/steel_hammer"
 	},
 	"elements": [
 		{

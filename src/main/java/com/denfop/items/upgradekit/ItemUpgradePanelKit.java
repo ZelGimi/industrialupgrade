@@ -1,167 +1,119 @@
 package com.denfop.items.upgradekit;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
+import com.denfop.items.ItemMain;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types> implements IModelRegister {
+public class ItemUpgradePanelKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public static int tick = 0;
 
-    protected static final String NAME = "upgradekitpanel";
-
-    public ItemUpgradePanelKit() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.UpgradeTab);
-        IUCore.proxy.addIModelRegister(this);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-
+    public ItemUpgradePanelKit(T element) {
+        super(new Item.Properties(), element);
     }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                item,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + extraName, null)
-        );
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.UpgradeTab;
     }
+    @Override
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        Player player = context.getPlayer();
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Direction side = context.getClickedFace();
+        InteractionHand hand = context.getHand();
 
+        if (player == null || world.isClientSide()) {
+            return InteractionResult.PASS;
+        }
+
+
+        int meta = getElement().getId();
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+
+        if (blockEntity instanceof TileSolarPanel tile) {
+            if (tile.getPanels() == null) {
+                return InteractionResult.PASS;
+            }
+
+            EnumSolarPanels oldPanel = tile.getPanels();
+            EnumSolarPanels kit = EnumSolarPanels.getFromID(meta + 1);
+
+            if (kit.solarold != null && !kit.solarold.equals(oldPanel)) {
+                return InteractionResult.PASS;
+            }
+
+            EnumSolarPanelsKit kit1 = EnumSolarPanelsKit.getFromID(meta);
+            BlockState state = world.getBlockState(pos);
+
+
+            world.removeBlock(pos, false);
+
+
+            state.getBlock().destroy(world, pos, state);
+
+
+            AABB area = new AABB(pos.offset(-1, -1, -1), pos.offset(1, 1, 1));
+            List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, area);
+            for (ItemEntity item : items) {
+                item.discard();
+            }
+
+
+            ItemStack stack1 = new ItemStack(kit1.solarpanel_new.block.getItem(kit1.solarpanel_new.meta), 1);
+
+            ItemEntity itemEntity = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack1);
+            world.addFreshEntity(itemEntity);
+
+
+            List<ItemStack> dropList = tile.getDrop();
+            for (ItemStack drop : dropList) {
+                ItemEntity dropEntity = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), drop);
+                world.addFreshEntity(dropEntity);
+            }
+
+
+            stack.shrink(1);
+
+            return InteractionResult.SUCCESS;
+        }
+
+        return InteractionResult.PASS;
+    }
 
     @Override
-    public void addInformation(
-            @Nonnull final ItemStack p_77624_1_,
-            @Nullable final World p_77624_2_,
-            final List<String> p_77624_3_,
-            @Nonnull final ITooltipFlag p_77624_4_
+    public void appendHoverText(
+            @Nonnull ItemStack stack,
+            @Nullable Level world,
+            @Nonnull List<Component> tooltip,
+            @Nonnull TooltipFlag flag
     ) {
-        p_77624_3_.add(Localization.translate("waring_kit"));
-        super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
+        tooltip.add(Component.translatable("waring_kit"));
 
-    }
-
-    @Nonnull
-    public EnumActionResult onItemUseFirst(
-            @Nonnull EntityPlayer player,
-            @Nonnull World world,
-            @Nonnull BlockPos pos,
-            @Nonnull EnumFacing side,
-            float hitX,
-            float hitY,
-            float hitZ,
-            @Nonnull EnumHand hand
-    ) {
-        if (!IUCore.proxy.isSimulating()) {
-            return EnumActionResult.PASS;
-        } else {
-            final EnumActionResult hooks = ForgeHooks.onItemRightClick(player, hand);
-            if (hooks == EnumActionResult.FAIL) {
-                return hooks;
-            }
-            ItemStack stack = player.getHeldItem(hand);
-            int meta = stack.getItemDamage();
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if ((tileEntity instanceof TileSolarPanel)) {
-
-                TileSolarPanel tile = (TileSolarPanel) tileEntity;
-                if (tile.getPanels() == null) {
-                    return EnumActionResult.PASS;
-                }
-                EnumSolarPanels oldpanel = tile.getPanels();
-                EnumSolarPanels kit = EnumSolarPanels.getFromID(meta + 1);
-                if (kit.solarold != null && !kit.solarold.equals(oldpanel)) {
-                    return EnumActionResult.PASS;
-                }
-
-
-                final EnumSolarPanelsKit kit1 = EnumSolarPanelsKit.getFromID(meta);
-                final IBlockState state = world.getBlockState(pos);
-                state.getBlock().removedByPlayer(state, world, pos, (EntityPlayerMP) player, true);
-                state.getBlock().onBlockDestroyedByPlayer(world, pos, state);
-                state.getBlock().harvestBlock(world, (EntityPlayerMP) player, pos, state, null, stack);
-                List<EntityItem> items = world.getEntitiesWithinAABB(
-                        EntityItem.class,
-                        new AxisAlignedBB(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1, pos.getX() + 1,
-                                pos.getY() + 1,
-                                pos.getZ() + 1
-                        )
-                );
-                for (EntityItem item : items) {
-                    item.setDead();
-                }
-                ItemStack stack1 = new ItemStack(kit1.solarpanel_new.block, 1, kit1.solarpanel_new.meta);
-
-                EntityItem item = new EntityItem(world);
-                item.setItem(stack1);
-                if (!player.getEntityWorld().isRemote) {
-                    item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                    item.setPickupDelay(0);
-                    world.spawnEntity(item);
-
-                }
-                List<ItemStack> list = tile.getDrop();
-                EntityItem[] item1 = new EntityItem[list.size()];
-
-                for (ItemStack stack2 : list) {
-                    item1[list.indexOf(stack2)] = new EntityItem(world);
-                    item1[list.indexOf(stack2)].setItem(stack2);
-
-                    if (!player.getEntityWorld().isRemote) {
-                        item1[list.indexOf(stack2)].setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                        item1[list.indexOf(stack2)].setPickupDelay(0);
-                        world.spawnEntity(item1[list.indexOf(stack2)]);
-                    }
-                }
-                stack.setCount(stack.getCount() - 1);
-                return EnumActionResult.SUCCESS;
-
-
-            }
-        }
-        return EnumActionResult.PASS;
-    }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + extraName, null)
-        );
+        super.appendHoverText(stack, world, tooltip, flag);
     }
 
     public enum Types implements ISubEnum {
@@ -181,16 +133,8 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
         upgradepanelkit12(12),
         upgradepanelkit13(13),
 
-        upgradepanelkit14(14),
-        upgradepanelkit15(15),
-        upgradepanelkit16(16),
-        upgradepanelkit17(17),
-        upgradepanelkit18(18),
-        upgradepanelkit19(19),
-        upgradepanelkit20(20),
-        upgradepanelkit21(21),
-        upgradepanelkit22(22),
-        upgradepanelkit23(23);
+
+        ;
 
         private final String name;
         private final int ID;
@@ -206,6 +150,11 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
 
         public String getName() {
             return this.name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "upgradekitpanel";
         }
 
         public int getId() {
@@ -229,17 +178,7 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
         GRAVITON(EnumSolarPanels.GRAVITON_SOLAR_PANEL, 12, true),
         QUARK(EnumSolarPanels.QUARK_SOLAR_PANEL, 13, true),
 
-        DRACONIC(EnumSolarPanels.DRACONIC_SOLAR_PANEL, 14, true),
-        AWAKANED(EnumSolarPanels.AWAKENED_SOLAR_PANEL, 15, true),
-        CHAOS(EnumSolarPanels.CHAOTIC_SOLAR_PANEL, 16, true),
-        MANASTEEL(EnumSolarPanels.MANASTEEL_SOLAR_PANEL, 17, true),
-        ELEMENTUM(EnumSolarPanels.ELEMENTUM_SOLAR_PANEL, 18, true),
-        TERRASTEEL(EnumSolarPanels.TERRASTEEL_SOLAR_PANEL, 19, true),
-        NEUTRON_AV(EnumSolarPanels.NEUTRONIUM_SOLAR_PANEL_AVARITIA, 20, true
-        ),
-        INFINITY(EnumSolarPanels.INFINITY_SOLAR_PANEL, 21, true),
-        THAUM(EnumSolarPanels.THAUM_SOLAR_PANEL, 22, true),
-        VOID(EnumSolarPanels.VOID_SOLAR_PANEL, 23, true),
+
         ;
 
         public final int item_meta;
@@ -263,5 +202,4 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
             }
         }
     }
-
 }

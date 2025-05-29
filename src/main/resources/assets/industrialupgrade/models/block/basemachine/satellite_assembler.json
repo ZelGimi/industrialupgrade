@@ -4,8 +4,8 @@
     128
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/satellite_assembler",
-    "particle" : "industrialupgrade:models/satellite_assembler"
+    "0" : "industrialupgrade:block/satellite_assembler",
+    "particle" : "industrialupgrade:block/satellite_assembler"
   },
   "elements" : [
     {

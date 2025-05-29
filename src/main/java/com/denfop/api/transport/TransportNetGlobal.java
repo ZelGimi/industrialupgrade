@@ -1,9 +1,10 @@
 package com.denfop.api.transport;
 
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -12,7 +13,7 @@ public class TransportNetGlobal implements ITransportNet {
 
 
     public static TransportNetGlobal instance;
-    private static Map<World, TransportNetLocal> worldToEnergyNetMap;
+    private static Map<ResourceKey<Level>, TransportNetLocal> worldToEnergyNetMap;
 
     static {
         TransportNetGlobal.worldToEnergyNetMap = new WeakHashMap<>();
@@ -24,25 +25,25 @@ public class TransportNetGlobal implements ITransportNet {
         return instance;
     }
 
-    public static void onWorldUnload(World world) {
-        final TransportNetLocal local = TransportNetGlobal.worldToEnergyNetMap.remove(world);
+    public static void onWorldUnload(net.minecraft.world.level.Level world) {
+        final TransportNetLocal local = TransportNetGlobal.worldToEnergyNetMap.remove(world.dimension());
         if (local != null) {
             local.onUnload();
         }
     }
 
-    public static TransportNetLocal getForWorld(final World world) {
+    public static TransportNetLocal getForWorld(final Level world) {
         if (world == null) {
             return null;
         }
-        if (!TransportNetGlobal.worldToEnergyNetMap.containsKey(world)) {
-            TransportNetGlobal.worldToEnergyNetMap.put(world, new TransportNetLocal(world));
+        if (!TransportNetGlobal.worldToEnergyNetMap.containsKey(world.dimension())) {
+            TransportNetGlobal.worldToEnergyNetMap.put(world.dimension(), new TransportNetLocal(world));
         }
-        return TransportNetGlobal.worldToEnergyNetMap.get(world);
+        return TransportNetGlobal.worldToEnergyNetMap.get(world.dimension());
     }
 
 
-    public static void onTickEnd(final World world) {
+    public static void onTickEnd(final Level world) {
         final TransportNetLocal energyNet = getForWorld(world);
         if (energyNet != null) {
             energyNet.onTickEnd();
@@ -51,7 +52,7 @@ public class TransportNetGlobal implements ITransportNet {
 
 
     @Override
-    public ITransportTile getSubTile(final World var1, final BlockPos var2) {
+    public ITransportTile getSubTile(final Level var1, final BlockPos var2) {
         final TransportNetLocal local = getForWorld(var1);
         if (local != null) {
             return local.getTileEntity(var2);
@@ -60,14 +61,14 @@ public class TransportNetGlobal implements ITransportNet {
     }
 
     @Override
-    public <T extends TileEntity & ITransportTile> void addTile(final T var1) {
-        final TransportNetLocal local = getForWorld(var1.getWorld());
+    public <T extends BlockEntity & ITransportTile> void addTile(final T var1) {
+        final TransportNetLocal local = getForWorld(var1.getLevel());
         local.addTile(var1);
     }
 
     @Override
     public void removeTile(final ITransportTile var1) {
-        final TransportNetLocal local = getForWorld(((TileEntity) var1).getWorld());
+        final TransportNetLocal local = getForWorld(((BlockEntity) var1).getLevel());
         local.removeTile(var1);
     }
 

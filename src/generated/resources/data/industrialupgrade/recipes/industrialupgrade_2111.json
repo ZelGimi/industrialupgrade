@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/vitalium"
+      }
+    ],
+    "D": [
+      {
+        "item": "minecraft:porkchop"
+      }
+    ]
+  },
+  "pattern": [
+    "DDD",
+    "CAC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_675_element"
+  },
+  "show_notification": true
+}

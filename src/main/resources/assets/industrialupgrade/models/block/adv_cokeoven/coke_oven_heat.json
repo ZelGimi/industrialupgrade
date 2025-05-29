@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/adv_coke_oven_part",
-    "down" : "industrialupgrade:blocks/adv_coke_oven_part",
-    "up" : "industrialupgrade:blocks/adv_coke_oven_part",
-    "north" : "industrialupgrade:blocks/adv_coke_oven_heat",
-    "east" : "industrialupgrade:blocks/adv_coke_oven_part",
-    "south" : "industrialupgrade:blocks/adv_coke_oven_part",
-    "west" : "industrialupgrade:blocks/adv_coke_oven_part"
+    "particle" : "industrialupgrade:block/adv_coke_oven_part",
+    "down" : "industrialupgrade:block/adv_coke_oven_part",
+    "up" : "industrialupgrade:block/adv_coke_oven_part",
+    "north" : "industrialupgrade:block/adv_coke_oven_heat",
+    "east" : "industrialupgrade:block/adv_coke_oven_part",
+    "south" : "industrialupgrade:block/adv_coke_oven_part",
+    "west" : "industrialupgrade:block/adv_coke_oven_part"
   }
 }

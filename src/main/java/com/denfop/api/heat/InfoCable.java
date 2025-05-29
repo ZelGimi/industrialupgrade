@@ -1,20 +1,20 @@
 package com.denfop.api.heat;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public class InfoCable {
 
     private final IHeatConductor conductor;
-    private final EnumFacing facing;
+    private final Direction facing;
     private final InfoCable cable;
 
-    public InfoCable(IHeatConductor conductor, EnumFacing facing, InfoCable cable) {
+    public InfoCable(IHeatConductor conductor, Direction facing, InfoCable cable) {
         this.conductor = conductor;
         this.facing = facing;
         this.cable = cable;
     }
 
-    public EnumFacing getFacing() {
+    public Direction getFacing() {
         return facing;
     }
 

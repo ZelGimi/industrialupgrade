@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSolarPanels1 extends ContainerFullInv<TileSolarPanel> {
 
     public final TileSolarPanel tileentity;
 
-    public ContainerSolarPanels1(EntityPlayer player, TileSolarPanel tileEntity1) {
+    public ContainerSolarPanels1(Player player, TileSolarPanel tileEntity1) {
         super(player, tileEntity1, 117 + 40 + 19 + 16 + 6 + 18, 229);
         this.tileentity = tileEntity1;
         for (int j = 0; j < 9; ++j) {
@@ -20,5 +20,9 @@ public class ContainerSolarPanels1 extends ContainerFullInv<TileSolarPanel> {
 
     }
 
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
 
+    }
 }

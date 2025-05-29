@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockextractor_side",
-    "down" : "industrialupgrade:blocks/blockextractor_side",
-    "up" : "industrialupgrade:blocks/blockextractor_side",
-    "north" : "industrialupgrade:blocks/blockextractor_main_active",
-    "east" : "industrialupgrade:blocks/blockextractor_side2_active",
-    "south" : "industrialupgrade:blocks/blockextractor_side",
-    "west" : "industrialupgrade:blocks/blockextractor_side2_active"
+    "particle" : "industrialupgrade:block/blockextractor_side",
+    "down" : "industrialupgrade:block/blockextractor_side",
+    "up" : "industrialupgrade:block/blockextractor_side",
+    "north" : "industrialupgrade:block/blockextractor_main_active",
+    "east" : "industrialupgrade:block/blockextractor_side2_active",
+    "south" : "industrialupgrade:block/blockextractor_side",
+    "west" : "industrialupgrade:block/blockextractor_side2_active"
   }
 }

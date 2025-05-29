@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/tool/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/topaz_axe"
+    "layer0" : "industrialupgrade:item/topaz_axe"
   }
 }

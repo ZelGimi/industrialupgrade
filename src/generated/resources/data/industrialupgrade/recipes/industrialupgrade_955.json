@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:reactormodules/vent0"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/cadmium"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_273_element",
+      "nbt": "{level:4}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:reactors/adv_vent"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems6"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "DED",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:reactormodules/vent1"
+  },
+  "show_notification": true
+}

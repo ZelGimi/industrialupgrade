@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/plains_bee"
+    "layer0" : "industrialupgrade:item/plains_bee"
   }
 }

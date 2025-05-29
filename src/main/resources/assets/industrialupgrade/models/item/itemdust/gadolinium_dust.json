@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/gadolinium_dust"	}
+		"layer0": "industrialupgrade:item/gadolinium_dust"	}
 }

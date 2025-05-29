@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=compressor_9": {
+      "model": "industrialupgrade:block/compressor_9"
+    },
+    "facing=south,type=compressor_9": {
+      "model": "industrialupgrade:block/compressor_9",
+      "y": 180
+    },
+    "facing=west,type=compressor_9": {
+      "model": "industrialupgrade:block/compressor_9",
+      "y": 270
+    },
+    "facing=east,type=compressor_9": {
+      "model": "industrialupgrade:block/compressor_9",
+      "y": 90
+    },
+    "facing=down,type=compressor_9": {
+      "model": "industrialupgrade:block/compressor_9",
+      "x": 90
+    },
+    "facing=up,type=compressor_9": {
+      "model": "industrialupgrade:block/compressor_9",
+      "x": 270
+    },
+    "facing=north,type=compressor_9_invalid": {
+      "model": "industrialupgrade:block/compressor_9"
+    },
+    "facing=south,type=compressor_9_invalid": {
+      "model": "industrialupgrade:block/compressor_9",
+      "y": 180
+    },
+    "facing=west,type=compressor_9_invalid": {
+      "model": "industrialupgrade:block/compressor_9",
+      "y": 270
+    },
+    "facing=east,type=compressor_9_invalid": {
+      "model": "industrialupgrade:block/compressor_9",
+      "y": 90
+    },
+    "facing=down,type=compressor_9_invalid": {
+      "model": "industrialupgrade:block/compressor_9",
+      "x": 90
+    },
+    "facing=up,type=compressor_9_invalid": {
+      "model": "industrialupgrade:block/compressor_9",
+      "x": 270
+    }
+  }
+}

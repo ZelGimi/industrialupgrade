@@ -4,52 +4,54 @@ import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.tiles.mechanism.TileImpOilRefiner;
+import com.denfop.utils.ModUtils;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class ReplicatorCategory extends Gui implements IRecipeCategory<ReplicatorWrapper> {
+public class ReplicatorCategory extends GuiIU implements IRecipeCategory<ReplicatorHandler> {
 
     private final IDrawableStatic bg;
+    JeiInform jeiInform;
 
     public ReplicatorCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI" +
+        super(((TileImpOilRefiner) BlockBaseMachine3.imp_refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
                         ".png"), 5, 5, 140,
                 75
         );
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine3.replicator_iu.getName();
+    public RecipeType<ReplicatorHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.replicator_iu).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.replicator_iu).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -57,35 +59,26 @@ public class ReplicatorCategory extends Gui implements IRecipeCategory<Replicato
         return bg;
     }
 
-
     @Override
-    public void drawExtras(final Minecraft mc) {
-
-
-        mc.getTextureManager().bindTexture(getTexture());
-
-
+    public void draw(ReplicatorHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
+        drawSplitString(stack,
+                Localization.translate("cost.name") + "" + ModUtils.getString(recipe.getMatter() / 1000) + "b",
+                10,
+                30,
+                160 - 10,
+                4210752
+        );
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final ReplicatorWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-
-
-        IGuiFluidStackGroup fff = layout.getFluidStacks();
-
-        fff.init(0, false, 95, 21, 12, 47, 10000, true, null);
-        fff.set(0, new FluidStack(FluidName.fluiduu_matter.getInstance(), (int) Math.max(1, recipes.getEnergy())));
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 30, 10);
-        isg.set(0, recipes.getInput2());
+    public void setRecipe(IRecipeLayoutBuilder builder, ReplicatorHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,  95, 21).setFluidRenderer(10000, true,12, 47).addFluidStack(FluidName.fluiduu_matter.getInstance().get(), (int) recipe.getMatter());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,31,11).addItemStack(recipe.getOutput());
     }
+
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
     }
 
 

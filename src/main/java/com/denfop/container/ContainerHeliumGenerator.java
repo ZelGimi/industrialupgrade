@@ -2,11 +2,11 @@ package com.denfop.container;
 
 
 import com.denfop.tiles.mechanism.generator.things.fluid.TileHeliumGenerator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerHeliumGenerator extends ContainerFullInv<TileHeliumGenerator> {
 
-    public ContainerHeliumGenerator(EntityPlayer entityPlayer, TileHeliumGenerator tileEntity1) {
+    public ContainerHeliumGenerator(Player entityPlayer, TileHeliumGenerator tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
 
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));

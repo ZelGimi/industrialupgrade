@@ -2,24 +2,18 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.SteamImageInterface;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSteamDryer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiSteamDryer extends GuiIU<ContainerSteamDryer> {
+public class GuiSteamDryer<T extends ContainerSteamDryer> extends GuiIU<ContainerSteamDryer> {
 
     public final ContainerSteamDryer container;
 
@@ -28,7 +22,7 @@ public class GuiSteamDryer extends GuiIU<ContainerSteamDryer> {
         this.container = container1;
 
 
-        this.addElement(new SteamImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.addElement(new SteamImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         this.addElement(TankGauge.createNormal(this, 43, 21, container.base.fluidTank1));
         this.addComponent(new GuiComponent(this, 7, 64, EnumTypeComponent.STEAM_FLUID,
                 new Component<>(this.container.base.steam)
@@ -67,32 +61,32 @@ public class GuiSteamDryer extends GuiIU<ContainerSteamDryer> {
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
         handleUpgradeTooltip(par1, par2);
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+       bindTexture(getTexture());
 
         int progress = (int) (32 * this.container.base.getProgress());
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
 
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 88, yoffset + 40, 177, 41, progress, 19);
+            drawTexturedModalRect(poseStack,xoffset + 88, yoffset + 40, 177, 41, progress, 19);
         }
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2 + 15, 5, name, 4210752, false);
+        this.drawXCenteredString(poseStack,this.imageWidth / 2 + 15, 5, name, 4210752, false);
 
     }
 

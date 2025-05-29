@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/iridium_shard"
+		"layer0": "industrialupgrade:item/iridium_shard"
 	}
 }

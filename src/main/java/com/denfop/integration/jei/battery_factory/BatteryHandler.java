@@ -3,9 +3,10 @@ package com.denfop.integration.jei.battery_factory;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BatteryHandler {
@@ -81,6 +82,19 @@ public class BatteryHandler {
         }
     }
 
+    public List<ItemStack> getInputs1() {
+        return Arrays.asList(
+                getInput(),
+                getInput1(),
+                getInput2(),
+                getInput3(),
+                getInput4(),
+                getInput5(),
+                getInput6(),
+                getInput7(),
+                getInput8()
+        );
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
@@ -123,12 +137,7 @@ public class BatteryHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3) || is.isItemEqual(
-                input4) || is.isItemEqual(
-                input5) || is.isItemEqual(
-                input6) || is.isItemEqual(
-                input7) || is.isItemEqual(
-                input8);
+        return true;
     }
 
 }

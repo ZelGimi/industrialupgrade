@@ -5,14 +5,7 @@ import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockPrimalLaserPolisher;
@@ -24,18 +17,15 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,8 +41,8 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
     public int tick = 0;
     public Map<UUID, Double> data;
 
-    public TileEntityPrimalLaserPolisher() {
-
+    public TileEntityPrimalLaserPolisher(BlockPos pos, BlockState state) {
+        super(BlockPrimalLaserPolisher.primal_laser_polisher, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "primal_laser_polisher", this);
         this.progress = 0;
         this.outputSlot = new InvSlotOutput(this, 1);
@@ -67,7 +57,7 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.primalPolisher;
+        return IUItem.primalPolisher.getBlock();
     }
 
     @Override
@@ -75,30 +65,12 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
         return BlockPrimalLaserPolisher.primal_laser_polisher;
     }
 
-    @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
-        return super.hasCapability(capability, facing) && capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
         data = PrimitiveHandler.getPlayersData(EnumPrimitive.LASER);
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
         }
@@ -110,23 +82,23 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot3")) {
-            inputSlotA.put(0, ItemStack.EMPTY);
+            inputSlotA.set(0, ItemStack.EMPTY);
         }
         if (name.equals("slot2")) {
-            outputSlot.put(0, ItemStack.EMPTY);
+            outputSlot.set(0, ItemStack.EMPTY);
         }
     }
 
@@ -134,8 +106,8 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -167,31 +139,28 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
 
     @Override
     public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+            final Player player,
+            final InteractionHand hand,
+            final Direction side,
+            final Vec3 hitX
     ) {
-        ItemStack stack = player.getHeldItem(hand);
+        ItemStack stack = player.getItemInHand(hand);
 
-        if (stack.getItem() == IUItem.laser && this.output != null && this.outputSlot.isEmpty() && this.getWorld().isDaytime()) {
-            progress += (short) (5 + (short) (data.getOrDefault(player.getUniqueID(), 0.0) / 10d));
+        if (stack.getItem() == IUItem.laser.getItem() && this.output != null && this.outputSlot.isEmpty() && this.getWorld().isDay()) {
+            progress += (short) (5 + (short) (data.getOrDefault(player.getUUID(), 0.0) / 10d));
             this.getCooldownTracker().setTick(10);
             if (progress >= 100) {
                 this.progress = 0;
-                player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-                if (!this.getWorld().isRemote) {
-                    PrimitiveHandler.addExperience(EnumPrimitive.LASER, 0.5, player.getUniqueID());
-                }
+                player.setItemInHand(hand, stack.getItem().getCraftingRemainingItem(stack));
+                if (!this.getWorld().isClientSide)
+                    PrimitiveHandler.addExperience(EnumPrimitive.LASER, 0.5, player.getUUID());
                 this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                 this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
-                if (this.inputSlotA.isEmpty() || this.outputSlot.get().getCount() >= 64) {
+                if (this.inputSlotA.isEmpty() || this.outputSlot.get(0).getCount() >= 64) {
                     this.output = null;
 
                 }
-                if (!world.isRemote) {
+                if (!level.isClientSide) {
                     new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
                 }
@@ -202,41 +171,41 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
                 if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 0)) {
                     ItemStack stack1 = stack.copy();
                     stack1.setCount(1);
-                    this.inputSlotA.put(0, stack1);
+                    this.inputSlotA.set(0, stack1);
                     this.output = inputSlotA.process();
                     stack.shrink(1);
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     }
                     return true;
                 } else if (!outputSlot.isEmpty()) {
-                    if (!world.isRemote) {
-                        ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
+                    if (!level.isClientSide) {
+                        ModUtils.dropAsEntity(level, pos, outputSlot.get(0));
                     }
-                    outputSlot.put(0, ItemStack.EMPTY);
-                    if (!world.isRemote) {
+                    outputSlot.set(0, ItemStack.EMPTY);
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot2", false);
                     }
                     return true;
                 }
             } else {
                 if (!outputSlot.isEmpty()) {
-                    if (!world.isRemote) {
-                        ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
+                    if (!level.isClientSide) {
+                        ModUtils.dropAsEntity(level, pos, outputSlot.get(0));
                     }
-                    outputSlot.put(0, ItemStack.EMPTY);
-                    if (!world.isRemote) {
+                    outputSlot.set(0, ItemStack.EMPTY);
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot2", false);
                     }
                     return true;
                 } else {
                     if (!inputSlotA.isEmpty()) {
-                        if (!world.isRemote) {
-                            ModUtils.dropAsEntity(world, pos, inputSlotA.get(), player);
+                        if (!level.isClientSide) {
+                            ModUtils.dropAsEntity(level, pos, inputSlotA.get(0));
                         }
-                        inputSlotA.put(0, ItemStack.EMPTY);
+                        inputSlotA.set(0, ItemStack.EMPTY);
                         this.output = null;
-                        if (!world.isRemote) {
+                        if (!level.isClientSide) {
                             new PacketUpdateFieldTile(this, "slot3", false);
                         }
                         return true;
@@ -254,16 +223,6 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-
-
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
-    }
 
     @Override
     public MachineRecipe getRecipeOutput() {
@@ -282,115 +241,115 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
                 "primal_laser_polisher",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 493))),
-                        new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 495))
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(493)))),
+                        new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(495)))
                 )
         );
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 0))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 0))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(0)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(0)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 1))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 1))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(1)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(1)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 2))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 2))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(2)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(2)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 3))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 3))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(3)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(3)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 4))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 6))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(4)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(6)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 5))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 7))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(5)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(7)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 6))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 8))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(6)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(8)))
         ));
 
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 7))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 9))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(7)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(9)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 8))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 10))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(8)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(10)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 9))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 11))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(9)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(11)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 10))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 12))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(10)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(12)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 10))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 12))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(10)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(12)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 11))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 14))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(11)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(14)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 12))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 15))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(12)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(15)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 13))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 16))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(13)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(16)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 14))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 17))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(14)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(17)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 15))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 18))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(15)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(18)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 16))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 21))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(16)))),
+                new RecipeOutput(null, new ItemStack(Items.COPPER_INGOT))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 17))),
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(17)))),
                 new RecipeOutput(null, new ItemStack(Items.GOLD_INGOT, 1))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 18))),
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(18)))),
                 new RecipeOutput(null, new ItemStack(Items.IRON_INGOT, 1))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 19))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 22))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(19)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(22)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 20))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 24))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(20)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(24)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 22))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 25))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(22)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(25)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 23))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 26))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(23)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(26)))
         ));
         Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, 24))),
-                new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, 27))
+                new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(24)))),
+                new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(27)))
         ));
         for (int i = 25; i < 40; i++) {
             Recipes.recipes.addRecipe("primal_laser_polisher", new BaseMachineRecipe(
-                    new Input(input.getInput(new ItemStack(IUItem.rawIngot, 1, i))),
-                    new RecipeOutput(null, new ItemStack(IUItem.iuingot, 1, i + 3))
+                    new Input(input.getInput(new ItemStack(IUItem.rawIngot.getStack(i)))),
+                    new RecipeOutput(null, new ItemStack(IUItem.iuingot.getStack(i + 3)))
             ));
         }
     }

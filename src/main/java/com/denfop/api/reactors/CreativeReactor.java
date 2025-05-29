@@ -3,7 +3,7 @@ package com.denfop.api.reactors;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.invslot.InvSlot;
 import com.denfop.utils.Timer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class CreativeReactor implements IAdvReactor {
 

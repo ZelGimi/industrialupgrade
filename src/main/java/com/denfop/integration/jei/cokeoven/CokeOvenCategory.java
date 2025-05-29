@@ -4,64 +4,63 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
-import com.denfop.blocks.mechanism.BlockCokeOven;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class CokeOvenCategory extends Gui implements IRecipeCategory<CokeOvenWrapper> {
+public class CokeOvenCategory extends GuiIU implements IRecipeCategory<CokeOvenHandler> {
 
     private final IDrawableStatic bg;
     private int progress = 0;
-
+    JeiInform jeiInform;
     public CokeOvenCategory(
-            final IGuiHelper guiHelper
+            final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+        this.jeiInform=jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guicokeoven" +
                         ".png"), 5, 5, 168,
                 92
         );
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockCokeOven.coke_oven_main.getName() + "1";
+    public RecipeType<CokeOvenHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.cokeoven, 1, 0).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(new ItemStack(IUItem.cokeoven.getItem(), 1).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
-
+    @SuppressWarnings("removal")
     @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(CokeOvenHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         int xScale = (int) (38.0 * progress / 100D);
 
@@ -69,31 +68,17 @@ public class CokeOvenCategory extends Gui implements IRecipeCategory<CokeOvenWra
             progress = 0;
         }
 
-        mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(+83, +41, 177, 19, xScale, 11);
-
-
+     bindTexture(getTexture());
+        drawTexturedModalRect( stack,+83, +41, 177, 19, xScale, 11);
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final CokeOvenWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 57, 38);
-
-        isg.set(0, recipes.getInput());
-
-        IGuiFluidStackGroup fff = layout.getFluidStacks();
-
-        fff.init(1, true, 5, 17, 12, 47, 10000, true, null);
-        fff.set(1, new FluidStack(FluidName.fluidsteam.getInstance(), 1000));
-
-        fff.init(2, false, 128, 17, 12, 47, 10000, true, null);
-        fff.set(2, recipes.getOutput());
+    public void setRecipe(IRecipeLayoutBuilder builder, CokeOvenHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,57,38).addItemStack(recipe.getStack());
+        builder.addSlot(RecipeIngredientRole.INPUT,5, 17).setFluidRenderer(10000,true,12,47).addFluidStack(FluidName.fluidsteam.getInstance().get(),1000);
+        builder.addSlot(RecipeIngredientRole.OUTPUT,128, 17).setFluidRenderer(10000,true,12,47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
     }
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guicokeoven.png");

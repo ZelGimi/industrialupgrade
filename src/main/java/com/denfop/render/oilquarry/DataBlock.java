@@ -1,30 +1,31 @@
 package com.denfop.render.oilquarry;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class DataBlock {
 
-    IBakedModel state;
-    private IBlockState blockState;
+    BakedModel state;
+    private BlockState blockState;
 
-    public DataBlock(IBlockState blockState) {
+    public DataBlock(BlockState blockState) {
         this.blockState = blockState;
     }
 
-    public IBakedModel getState() {
+    public BakedModel getState() {
         return state;
     }
 
-    public void setState(final IBakedModel state) {
+    public void setState(final BakedModel state) {
         this.state = state;
     }
 
-    public IBlockState getBlockState() {
+    public BlockState getBlockState() {
         return blockState;
     }
 
-    public void setBlockState(final IBlockState blockState) {
+    public void setBlockState(final BlockState blockState) {
         this.blockState = blockState;
     }
 

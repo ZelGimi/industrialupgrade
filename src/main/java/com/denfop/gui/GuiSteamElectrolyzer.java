@@ -2,31 +2,24 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.SteamImageInterface;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSteamElectrolyzer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiSteamElectrolyzer extends GuiIU<ContainerSteamElectrolyzer> {
+public class GuiSteamElectrolyzer<T extends ContainerSteamElectrolyzer> extends GuiIU<ContainerSteamElectrolyzer> {
 
     private static final ResourceLocation background;
 
     static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png");
+        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png".toLowerCase());
     }
 
     public ContainerSteamElectrolyzer container;
@@ -48,8 +41,8 @@ public class GuiSteamElectrolyzer extends GuiIU<ContainerSteamElectrolyzer> {
         this.addComponent(new GuiComponent(this, 98, 60, EnumTypeComponent.STEAM_ENERGY_HEIGHT,
                 new Component<>(this.container.base.ampere)
         ));
-        this.ySize = 200;
-        this.addElement(new SteamImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.imageHeight = 200;
+        this.addElement(new SteamImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         this.addElement(TankGauge.createNormal(this, 12, 44, container.base.getFluidTank(0)));
         this.addElement(TankGauge.createNormal(this, 74, 6, container.base.getFluidTank(1)));
         this.addElement(TankGauge.createNormal(this, 74, 63, container.base.getFluidTank(2)));
@@ -86,8 +79,8 @@ public class GuiSteamElectrolyzer extends GuiIU<ContainerSteamElectrolyzer> {
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer( poseStack,par1, par2);
 
 
         handleUpgradeTooltip(par1, par2);
@@ -98,17 +91,17 @@ public class GuiSteamElectrolyzer extends GuiIU<ContainerSteamElectrolyzer> {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
 
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+      bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

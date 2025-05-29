@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/polymerizer_active_front",
-    "down" : "industrialupgrade:blocks/polymerizer_sides",
-    "up" : "industrialupgrade:blocks/polymerizer_active_top",
-    "north" : "industrialupgrade:blocks/polymerizer_active_front",
-    "east" : "industrialupgrade:blocks/polymerizer_sides",
-    "south" : "industrialupgrade:blocks/polymerizer_sides",
-    "west" : "industrialupgrade:blocks/polymerizer_sides"
+    "particle" : "industrialupgrade:block/polymerizer_active_front",
+    "down" : "industrialupgrade:block/polymerizer_sides",
+    "up" : "industrialupgrade:block/polymerizer_active_top",
+    "north" : "industrialupgrade:block/polymerizer_active_front",
+    "east" : "industrialupgrade:block/polymerizer_sides",
+    "south" : "industrialupgrade:block/polymerizer_sides",
+    "west" : "industrialupgrade:block/polymerizer_sides"
   }
 }

@@ -1,8 +1,8 @@
 {
 	"credit": "texnounits",
 	"textures": {
-		"2": "industrialupgrade:models/adv_tank_iu",
-		"particle": "industrialupgrade:models/adv_tank_iu"
+		"2": "industrialupgrade:block/adv_tank_iu",
+		"particle": "industrialupgrade:block/adv_tank_iu"
 	},
 	"elements": [
 		{

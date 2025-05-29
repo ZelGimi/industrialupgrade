@@ -4,26 +4,31 @@ import com.denfop.IUItem;
 import com.denfop.api.gasvein.GasVein;
 import com.denfop.api.gasvein.GasVeinSystem;
 import com.denfop.api.gasvein.TypeGas;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockGasWell;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGasWellController;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGasWellController;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,33 +40,33 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
     public ISocket socket;
     public GasVein vein;
 
-    public TileEntityGasWellController() {
-        super(InitMultiBlockSystem.GasWellMultiBlock);
+    public TileEntityGasWellController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.GasWellMultiBlock,BlockGasWell.gas_well_controller,pos,state);
 
     }
 
     @Override
-    public ContainerGasWellController getGuiContainer(final EntityPlayer var1) {
+    public ContainerGasWellController getGuiContainer(final Player var1) {
         return new ContainerGasWellController(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiGasWellController(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiGasWellController((ContainerGasWellController) menu);
     }
 
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             return;
         }
-        if (getWorld().provider.getDimension() != 0) {
+        if (getWorld().dimension() != Level.OVERWORLD) {
             this.vein = GasVeinSystem.system.getEMPTY();
         } else {
-            final Chunk chunk = this.getWorld().getChunkFromBlockCoords(this.pos);
+            final LevelChunk chunk = this.getWorld().getChunkAt(this.pos);
             final ChunkPos chunkpos = chunk.getPos();
             if (!GasVeinSystem.system.getChunkPos().contains(chunkpos)) {
                 GasVeinSystem.system.addVein(chunk);
@@ -79,19 +84,19 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
                 amount = Math.min(Math.min(1, amount), tank.getTank().getCapacity() - tank.getTank().getFluidAmount());
                 Fluid fluid = null;
                 if (vein.getType() == TypeGas.IODINE) {
-                    fluid = FluidName.fluidiodine.getInstance();
+                    fluid = FluidName.fluidiodine.getInstance().get();
                 }
 
 
                 if (vein.getType() == TypeGas.BROMIDE) {
-                    fluid = FluidName.fluidbromine.getInstance();
+                    fluid = FluidName.fluidbromine.getInstance().get();
                 }
 
                 if (vein.getType() == TypeGas.CHLORINE) {
-                    fluid = FluidName.fluidchlorum.getInstance();
+                    fluid = FluidName.fluidchlorum.getInstance().get();
                 }
                 if (vein.getType() == TypeGas.FLORINE) {
-                    fluid = FluidName.fluidfluor.getInstance();
+                    fluid = FluidName.fluidfluor.getInstance().get();
                 }
 
                 if (fluid == null) {
@@ -99,14 +104,14 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
                 }
                 this.getEnergy().useEnergy(2);
                 vein.removeCol(amount);
-                tank.getTank().fill(new FluidStack(fluid, amount), true);
+                tank.getTank().fill(new FluidStack(fluid, amount), IFluidHandler.FluidAction.EXECUTE);
             }
         }
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_well;
+        return IUItem.gas_well.getBlock(getTeBlock());
     }
 
     @Override
@@ -115,7 +120,7 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         work = !work;
     }
 
@@ -172,14 +177,14 @@ public class TileEntityGasWellController extends TileMultiBlockBase implements I
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ISocket.class
                 );
-        this.socket = (ISocket) this.getWorld().getTileEntity(pos1.get(0));
+        this.socket = (ISocket) this.getWorld().getBlockEntity(pos1.get(0));
 
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ITank.class
                 );
-        this.tank = (ITank) this.getWorld().getTileEntity(pos1.get(0));
+        this.tank = (ITank) this.getWorld().getBlockEntity(pos1.get(0));
     }
 
     @Override

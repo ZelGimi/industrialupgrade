@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_chamber/primal_gas_chamber"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_263_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_267_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "EBC",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/gas_combiner"
+  },
+  "show_notification": true
+}

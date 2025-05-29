@@ -1,25 +1,16 @@
 package com.denfop.items.energy;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityTippedArrow;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-public class EntityAdvArrow extends EntityTippedArrow {
-
+public class EntityAdvArrow extends Arrow {
     private ItemStack stack;
+    private ItemStack stack1;
 
-    public EntityAdvArrow(final World p_i46777_1_) {
-        super(p_i46777_1_);
-    }
-
-    public EntityAdvArrow(final World p_i46777_1_, EntityLivingBase p_i46777_2_) {
-        super(p_i46777_1_, p_i46777_2_);
-    }
-
-    @Override
-    protected ItemStack getArrowStack() {
-        return super.getArrowStack();
+    public EntityAdvArrow(Level p_37569_, LivingEntity p_37570_) {
+        super(p_37569_, p_37570_);
     }
 
     public ItemStack getStack() {
@@ -30,4 +21,8 @@ public class EntityAdvArrow extends EntityTippedArrow {
         this.stack = stack;
     }
 
+    @Override
+    protected ItemStack getPickupItem() {
+        return ItemStack.EMPTY;
+    }
 }

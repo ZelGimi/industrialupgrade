@@ -3,35 +3,37 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.agriculture.CropNetwork;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Energy;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerFieldCleaner;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiFieldCleaner;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.crop.TileEntityCrop;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -47,16 +49,17 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
     public final InvSlotUpgrade upgradeSlot;
     private final Fluids fluids;
     private final ComponentUpgradeSlots componentUpgrade;
-    AxisAlignedBB searchArea = new AxisAlignedBB(
-            pos.add(-RADIUS, -RADIUS, -RADIUS),
-            pos.add(RADIUS, RADIUS, RADIUS)
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS, RADIUS, RADIUS)
     );
     List<List<TileEntityCrop>> list = new ArrayList<>();
-    List<Chunk> chunks;
+    List<LevelChunk> chunks;
 
-    public TileEntityFieldCleaner() {
+    public TileEntityFieldCleaner(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.field_cleaner,pos,state);
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = this.fluids.addTankInsert("tank", 10000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance()));
+        this.tank = this.fluids.addTankInsert("tank", 10000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance().get()));
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -71,31 +74,20 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(
-                        CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,
-                        null
-                )) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
+        } else {
+            return super.onActivated(player, hand, side, vec3);
         }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -120,37 +112,37 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            final AxisAlignedBB aabb = searchArea.offset(pos);
-            searchArea = aabb;
-            int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
-            int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
-            int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
-            int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
+        if (!this.getWorld().isClientSide) {
+            final AABB aabb = searchArea;
+            int j2 = Mth.floor((aabb.minX - 2) / 16.0D);
+            int k2 = Mth.ceil((aabb.maxX + 2) / 16.0D);
+            int l2 = Mth.floor((aabb.minZ - 2) / 16.0D);
+            int i3 = Mth.ceil((aabb.maxZ + 2) / 16.0D);
             chunks = new ArrayList<>();
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
-                    final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
+                    final LevelChunk chunk = level.getChunk(j3, k3);
                     if (!chunks.contains(chunk)) {
                         chunks.add(chunk);
                     }
                 }
             }
-            for (Chunk chunk : chunks) {
-                this.list.add(CropNetwork.instance.getCropsFromChunk(world, chunk.getPos()));
+            for (LevelChunk chunk : chunks) {
+                this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk.getPos()));
             }
         }
     }
 
     @Override
-    public ContainerFieldCleaner getGuiContainer(final EntityPlayer var1) {
+    public ContainerFieldCleaner getGuiContainer(final Player var1) {
         return new ContainerFieldCleaner(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiFieldCleaner(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiFieldCleaner((ContainerFieldCleaner) menu);
     }
 
     public boolean contains(BlockPos vec) {
@@ -167,18 +159,18 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
 
     private void updateCrop() {
         list.clear();
-        for (Chunk chunk : chunks) {
-            this.list.add(CropNetwork.instance.getCropsFromChunk(world, chunk.getPos()));
+        for (LevelChunk chunk : chunks) {
+            this.list.add(CropNetwork.instance.getCropsFromChunk(level, chunk.getPos()));
         }
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 100 == 0) {
+        if (this.getWorld().getGameTime() % 100 == 0) {
             updateCrop();
         }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(10)) {
+        if (this.getWorld().getGameTime() % 20 == 0 && this.energy.canUseEnergy(10)) {
             cycle:
             for (List<TileEntityCrop> crops : list) {
                 for (TileEntityCrop crop : crops) {
@@ -186,7 +178,7 @@ public class TileEntityFieldCleaner extends TileEntityInventory implements IUpgr
                         if (crop.getCrop() != null && crop.getTickPest() == 0 && this.contains(crop.getPos()) && crop
                                 .getCrop()
                                 .getId() != 3) {
-                            tank.drain(1, true);
+                            tank.drain(1, IFluidHandler.FluidAction.EXECUTE);
                             crop.setTickPest();
                             this.energy.useEnergy(10);
                         }

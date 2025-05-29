@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -9,23 +10,24 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCombinerSE;
 import com.denfop.gui.GuiCombinerSE;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlotCombinerSEG;
 import com.denfop.invslot.InvSlotGenCombinerSunarrium;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     public final InvSlotOutput outputSlot;
     public final ComponentBaseEnergy sunenergy;
     public final InvSlotGenCombinerSunarrium input;
-    public final ItemStack itemstack = new ItemStack(IUItem.sunnarium, 1, 4);
+    public final ItemStack itemstack;
     public double coef_day;
     public double coef_night;
     public double update_night;
@@ -54,7 +56,9 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     private boolean skyIsVisible;
     private boolean sunIsUp;
 
-    public TileEntityCombinerSEGenerators() {
+    public TileEntityCombinerSEGenerators(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.combiner_se_generators,pos,state);
+        itemstack = new ItemStack(IUItem.sunnarium.getStack(4), 1);
         this.inputSlot = new InvSlotCombinerSEG(this);
         this.input = new InvSlotGenCombinerSunarrium(this);
 
@@ -76,7 +80,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -84,36 +88,10 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         return 4;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
 
-    }
+
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -137,10 +115,6 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         return packet;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
-    }
 
 
     public void onLoaded() {
@@ -150,15 +124,15 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         this.coef_day = this.lst.get(0);
         this.coef_night = this.lst.get(1);
         this.update_night = this.lst.get(2);
-        this.noSunWorld = this.world.provider.isNether();
+        this.noSunWorld = this.level.dimension() == Level.NETHER;
         updateVisibility();
     }
 
     public void updateVisibility() {
-        this.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
-                (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                        MapColor.AIR) && !this.noSunWorld;
-        this.sunIsUp = this.world.isDaytime();
+        this.skyIsVisible = this.getLevel().canSeeSky(this.worldPosition) &&
+                (this.getLevel().getBlockState(this.worldPosition.above()).getMapColor(getLevel(), this.worldPosition.above()) == MapColor.NONE) &&
+                !this.noSunWorld;
+        this.sunIsUp = this.getLevel().isDay();
     }
 
     public void energy(long tick) {
@@ -209,11 +183,11 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.world.provider.getWorldTime() % 80 == 0) {
+        if (this.level.getGameTime() % 80 == 0) {
             updateVisibility();
             this.inputSlot.update();
         }
-        long tick = this.getWorld().provider.getWorldTime() % 24000L;
+        long tick = this.getWorld().getGameTime() % 24000L;
         generation = 0;
         if (this.skyIsVisible) {
             energy(tick);
@@ -231,12 +205,14 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiCombinerSE(new ContainerCombinerSE(entityPlayer, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiCombinerSE((ContainerCombinerSE) menu);
     }
 
-    public ContainerCombinerSE getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerCombinerSE getGuiContainer(Player entityPlayer) {
         return new ContainerCombinerSE(entityPlayer, this);
     }
 
@@ -257,8 +233,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         );
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
+
 
 
     public String getInventoryName() {

@@ -6,29 +6,18 @@ import com.denfop.api.Recipes;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.IType;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerImpAlloySmelter;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiImpAlloySmelter;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
@@ -39,17 +28,18 @@ import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -71,8 +61,8 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     public MachineRecipe output;
     protected boolean sound = true;
 
-    public TileEntityImpAlloySmelter() {
-        super(300, 1, 1);
+    public TileEntityImpAlloySmelter(BlockPos pos, BlockState state) {
+        super(300, 1, 1,BlockBaseMachine3.imp_alloy_smelter,pos,state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.inputSlotA = new InvSlotRecipes(this, "impalloysmelter", this);
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, 1, false);
@@ -91,18 +81,19 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
         Recipes.recipes.addInitRecipes(this);
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TileEntityImpAlloySmelter) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TileEntityImpAlloySmelter) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TileEntityImpAlloySmelter) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
 
             @Override
@@ -119,8 +110,8 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
             int temperature
     ) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        final NBTTagCompound nbt = ModUtils.nbt();
-        nbt.setShort("temperature", (short) temperature);
+        final CompoundTag nbt = ModUtils.nbt();
+        nbt.putShort("temperature", (short) temperature);
         Recipes.recipes.addRecipe("impalloysmelter", new BaseMachineRecipe(
                 new Input(input.getInput(container), input.getInput(fill), input.getInput(fill1), input.getInput(fill2)),
                 new RecipeOutput(nbt, output)
@@ -160,15 +151,15 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
         this.output = output;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
         return nbttagcompound;
     }
 
@@ -183,13 +174,13 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             inputSlotA.load();
             this.getOutput();
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
         }
     }
@@ -199,56 +190,54 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
 
     public void init() {
 
-        addAlloysmelter(new ItemStack(IUItem.iudust, 4, 21), new ItemStack(IUItem.plastic_plate),
-                new ItemStack(IUItem.alloysingot, 1, 20),
-                new ItemStack(IUItem.alloysingot, 1, 10),
-                new ItemStack(IUItem.crafting_elements, 1
-                        , 479)
+        addAlloysmelter(new ItemStack(IUItem.iudust.getStack(21),4), new ItemStack(IUItem.plastic_plate.getItem()),
+                new ItemStack(IUItem.alloysingot.getStack(20)),
+                new ItemStack(IUItem.alloysingot.getStack(10)),
+                new ItemStack(IUItem.crafting_elements.getStack(479), 1)
                 , 6000
         );
 
-        addAlloysmelter("ingotIron", "ingotChromium", "ingotNickel", "ingotManganese", new ItemStack(IUItem.alloysingot, 1, 13)
+        addAlloysmelter("forge:ingots/Iron", "forge:ingots/Chromium", "forge:ingots/Nickel", "forge:ingots/Manganese", new ItemStack(IUItem.alloysingot.getStack(13), 1)
                 , 7000);
 
-        addAlloysmelter("ingotIron", "ingotChromium", "ingotNickel", "ingotMolybdenum", new ItemStack(IUItem.alloysingot, 1, 14)
+        addAlloysmelter("forge:ingots/Iron", "forge:ingots/Chromium", "forge:ingots/Nickel", "forge:ingots/Molybdenum", new ItemStack(IUItem.alloysingot.getStack(14), 1)
                 , 7500);
 
-        addAlloysmelter("ingotCobalt", "ingotChromium", "ingotIron", "ingotTungsten", new ItemStack(IUItem.alloysingot, 1,
-                        16
+        addAlloysmelter("forge:ingots/Cobalt", "forge:ingots/Chromium", "forge:ingots/Iron", "forge:ingots/Tungsten", new ItemStack(IUItem.alloysingot.getStack(16), 1
                 )
                 , 6500);
 
-        addAlloysmelter("ingotTin", "ingotLead", "ingotBismuth", "ingotCadmium", new ItemStack(IUItem.alloysingot, 1,
-                        18
+        addAlloysmelter("forge:ingots/Tin", "forge:ingots/Lead", "forge:ingots/Bismuth", "forge:ingots/Cadmium", new ItemStack(IUItem.alloysingot.getStack(18), 1
                 )
                 , 5000);
 
-        addAlloysmelter(new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.COAL, 3), "ingotNickel", "ingotManganese",
+        addAlloysmelter(new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.COAL, 3), "forge:ingots/Nickel", "forge:ingots/Manganese",
                 IUItem.advIronIngot
                 , 5000
         );
 
-        addAlloysmelter("ingotIron", new ItemStack(IUItem.iudust, 2, 21), "ingotNickel", "ingotMolybdenum",
-                new ItemStack(IUItem.alloysingot, 1, 21)
+        addAlloysmelter("forge:ingots/Iron", new ItemStack(IUItem.iudust.getStack(21), 2), "forge:ingots/Nickel", "forge:ingots/Molybdenum",
+                new ItemStack(IUItem.alloysingot.getStack(21), 1)
                 , 8000
         );
     }
 
-    public ContainerImpAlloySmelter getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerImpAlloySmelter getGuiContainer(Player entityPlayer) {
         return new ContainerImpAlloySmelter(entityPlayer, this);
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiImpAlloySmelter(new ContainerImpAlloySmelter(entityPlayer, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiImpAlloySmelter((ContainerImpAlloySmelter) menu);
     }
 
 
@@ -258,7 +247,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         sound = !sound;
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
@@ -301,10 +290,10 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
             new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
             new PacketStopSound(getWorld(), this.pos);
         }

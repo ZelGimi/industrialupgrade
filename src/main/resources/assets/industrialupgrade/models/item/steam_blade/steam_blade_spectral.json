@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/steam_blade_spectral"
+    "layer0" : "industrialupgrade:item/steam_blade_spectral"
   }
 }

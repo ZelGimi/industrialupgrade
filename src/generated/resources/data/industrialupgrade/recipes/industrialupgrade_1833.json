@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_reactor/gas_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine3/refrigerator_coolant"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_414_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_320_element"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_326_element"
+      }
+    ]
+  },
+  "pattern": [
+    "EFE",
+    "CAC",
+    "DBD"
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_reactor/gas_regenerator"
+  },
+  "show_notification": true
+}

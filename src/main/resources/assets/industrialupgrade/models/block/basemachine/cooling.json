@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "industrialupgrade:models/cooling",
-		"particle": "industrialupgrade:models/cooling"
+		"1": "industrialupgrade:block/cooling",
+		"particle": "industrialupgrade:block/cooling"
 	},
 	"elements": [
 		{

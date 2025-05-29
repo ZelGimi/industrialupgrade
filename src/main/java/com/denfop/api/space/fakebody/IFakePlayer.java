@@ -1,17 +1,16 @@
 package com.denfop.api.space.fakebody;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public interface IFakePlayer {
 
-    NBTTagCompound getTag();
+    CompoundTag getTag();
 
     String getName();
 
     boolean matched(String name);
 
-    NBTTagCompound writeNBT();
+    CompoundTag writeNBT();
 
-    NBTTagCompound writeNBT(NBTTagCompound nbtTagCompound);
-
+    CompoundTag writeNBT(CompoundTag nbtTagCompound);
 }

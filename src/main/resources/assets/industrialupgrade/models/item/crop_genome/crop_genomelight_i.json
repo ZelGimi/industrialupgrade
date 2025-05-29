@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/crop_genomelight_i"
+    "layer0" : "industrialupgrade:item/crop_genomelight_i"
   }
 }

@@ -14,38 +14,45 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerSiliconCrystalHandler;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.mechanism.TileEntitySiliconCrystalHandler;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class SiliconCategory extends GuiIU implements IRecipeCategory<SiliconRecipeWrapper> {
+public class SiliconCategory extends GuiIU implements IRecipeCategory<SiliconHandler> {
 
     private final IDrawableStatic bg;
     private final ContainerSiliconCrystalHandler container1;
     private final GuiComponent progress_bar;
     private int progress = 0;
     private int energy = 0;
-
+    JeiInform jeiInform;
     public SiliconCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntitySiliconCrystalHandler) BlockBaseMachine3.silicon_crystal_handler.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+        super(((TileEntitySiliconCrystalHandler) BlockBaseMachine3.silicon_crystal_handler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
@@ -58,24 +65,18 @@ public class SiliconCategory extends GuiIU implements IRecipeCategory<SiliconRec
         this.componentList.add(progress_bar);
     }
 
-    @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine3.silicon_crystal_handler.getName();
+    public RecipeType<SiliconHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.silicon_crystal_handler).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.silicon_crystal_handler).getDescriptionId());
     }
 
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -83,9 +84,8 @@ public class SiliconCategory extends GuiIU implements IRecipeCategory<SiliconRec
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(SiliconHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         if (this.energy < 100) {
             energy++;
@@ -95,38 +95,30 @@ public class SiliconCategory extends GuiIU implements IRecipeCategory<SiliconRec
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(0, 0);
+        this.slots.drawBackground( stack,0, 0);
 
-        progress_bar.renderBar(0, 0, xScale);
-        mc.getTextureManager().bindTexture(getTexture());
-
-
+        progress_bar.renderBar( stack,0, 0, xScale);
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final SiliconRecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
+    public void setRecipe(IRecipeLayoutBuilder builder, SiliconHandler recipe, IFocusGroup focuses) {
 
         final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
-        final List<ItemStack> inputs = recipes.getInputs1();
+        final List<ItemStack> inputs = recipe.getInputs1();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            isg.init(i, true, slots1.get(i).getJeiX(), slots1.get(i).getJeiY());
-            isg.set(i, inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+
 
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
-        isg.set(i, recipes.getOutput());
-        i++;
-        isg.init(i, false, 29, 42);
-        isg.set(i, new ItemStack(IUItem.iudust, 1, 21));
+        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.getOutput());
+        builder.addSlot(RecipeIngredientRole.INPUT,30,43).addItemStack(ItemStackHelper.fromData(IUItem.iudust, 1, 21));
+
     }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");

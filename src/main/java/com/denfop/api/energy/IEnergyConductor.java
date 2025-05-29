@@ -1,5 +1,6 @@
 package com.denfop.api.energy;
 
+
 public interface IEnergyConductor extends IEnergyAcceptor, IEnergyEmitter {
 
     double getConductionLoss();

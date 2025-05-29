@@ -1,16 +1,22 @@
 package com.denfop.invslot;
 
-import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileEntityAutoDigger;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,37 +32,22 @@ public class InvSlotInput extends InvSlot {
 
     @Override
     public boolean accepts(final ItemStack stack, final int index) {
-        final Block block = Block.getBlockFromItem(stack.getItem());
-        return block != Blocks.AIR;
+        Item item = stack.getItem();
+        Block block = Block.byItem(item);
+
+
+        return block != Blocks.AIR && !(block instanceof AirBlock) && !(block instanceof EntityBlock);
+
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         final IInputHandler input = Recipes.inputFactory;
         if (!this.get(index).isEmpty()) {
-            final Block block = Block.getBlockFromItem(content.getItem());
-            final List<ItemStack> list = block.getDrops(this.tile.getWorld(), new BlockPos(0, 0, 0),
-                    block.getStateFromMeta(content.getItemDamage()), this.tile.chance
-            );
-            if (block == Blocks.IRON_ORE || block == Blocks.GOLD_ORE) {
-                list.clear();
-                if (block == Blocks.GOLD_ORE) {
-                    list.add(new ItemStack(IUItem.rawMetals, Math.min(
-                            4,
-                            1 + tile.getWorld().rand.nextInt(Math.min(4, Math.max(1, this.tile.chance)))
-                    )
-                            , 17));
-                }
-                if (block == Blocks.IRON_ORE) {
-                    list.add(new ItemStack(IUItem.rawMetals, Math.min(
-                            4,
-                            1 + tile.getWorld().rand.nextInt(Math.min(4, Math.max(1, this.tile.chance)))
-                    )
-                            , 18));
-                }
-            }
-
+            final Block block = Block.byItem(content.getItem());
+            LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.tile.getWorld())).withLuck(tile.chance).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(new BlockPos(0,0,0))).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
+            final List<ItemStack> list = new ArrayList<>(block.getDrops(block.defaultBlockState(), lootcontext$builder));
             if (this.tile.comb_mac_enabled) {
                 final List<ItemStack> list1 = new ArrayList<>();
                 final List<ItemStack> list2 = new ArrayList<>();
@@ -127,6 +118,7 @@ public class InvSlotInput extends InvSlot {
         } else {
             this.tile.setBaseMachineRecipe(index, null);
         }
+        return content;
     }
 
     public void update() {
@@ -137,10 +129,9 @@ public class InvSlotInput extends InvSlot {
                 this.tile.setBaseMachineRecipe(i, null);
                 continue;
             }
-            final Block block = Block.getBlockFromItem(content.getItem());
-            final List<ItemStack> list = block.getDrops(this.tile.getWorld(), new BlockPos(0, 0, 0),
-                    block.getStateFromMeta(content.getItemDamage()), this.tile.chance
-            );
+            final Block block = Block.byItem(content.getItem());
+            LootParams.Builder lootcontext$builder = (new LootParams.Builder((ServerLevel) this.tile.getWorld())).withLuck(tile.chance).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(new BlockPos(0,0,0))).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
+            final List<ItemStack> list =  new ArrayList<>(block.getDrops(block.defaultBlockState(), lootcontext$builder));
             if (this.tile.comb_mac_enabled) {
                 final List<ItemStack> list1 = new ArrayList<>();
                 final List<ItemStack> list2 = new ArrayList<>();

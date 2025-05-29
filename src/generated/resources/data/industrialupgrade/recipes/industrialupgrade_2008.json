@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:upgrades/overclocker"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/vanadoalumite"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/tantalum"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/thallium"
+      }
+    ]
+  },
+  "pattern": [
+    "D D",
+    "CBC",
+    "BAB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_692_element"
+  },
+  "show_notification": true
+}

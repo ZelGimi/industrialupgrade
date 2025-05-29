@@ -4,8 +4,8 @@ import com.denfop.IUCore;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ public class PacketUpdateServerTile implements IPacket {
 
     }
 
-    public PacketUpdateServerTile(TileEntity te, double event) {
+    public PacketUpdateServerTile(BlockEntity te, double event) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(32);
         buffer.writeByte(this.getId());
         try {
@@ -34,21 +34,18 @@ public class PacketUpdateServerTile implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
+    public void readPacket(final CustomPacketBuffer is, final Player entityPlayer) {
         final Object teDeferred;
         try {
-            teDeferred = DecoderHandler.decodeDeferred(is, TileEntity.class);
+            teDeferred = DecoderHandler.decodeDeferred(is, BlockEntity.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         final double event = is.readDouble();
-        IUCore.proxy.requestTick(true, () -> {
-            TileEntity te = DecoderHandler.getValue(teDeferred);
-            if (te instanceof IUpdatableTileEvent) {
-                ((IUpdatableTileEvent) te).updateTileServer(entityPlayer, event);
-            }
-
-        });
+        BlockEntity te = DecoderHandler.getValue(teDeferred);
+        if (te instanceof IUpdatableTileEvent) {
+            ((IUpdatableTileEvent) te).updateTileServer(entityPlayer, event);
+        }
     }
 
     @Override

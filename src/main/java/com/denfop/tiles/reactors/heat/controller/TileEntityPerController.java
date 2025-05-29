@@ -5,11 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockHeatReactor;
 import com.denfop.register.InitMultiBlockSystem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityPerController extends TileEntityMainController {
 
-    public TileEntityPerController() {
-        super(InitMultiBlockSystem.perHeatReactorMultiBlock, EnumHeatReactors.P);
+    public TileEntityPerController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.perHeatReactorMultiBlock, EnumHeatReactors.P,BlockHeatReactor.heat_per_controller,pos,state);
     }
 
     @Override
@@ -19,7 +21,7 @@ public class TileEntityPerController extends TileEntityMainController {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.heat_reactor;
+        return IUItem.heat_reactor.getBlock(getTeBlock());
     }
 
 }

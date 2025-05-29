@@ -1,9 +1,9 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
@@ -18,31 +18,34 @@ import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerElectrolyzer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiElectrolyzer;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotElectrolyzer;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.invslot.*;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+;
 
 public class TileElectrolyzer extends TileElectricMachine implements IManufacturerBlock, IUpgradableBlock, IHasRecipe {
 
@@ -59,10 +62,10 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
     private final Fluids fluids;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
-    private int level;
+    private int levelMech;
 
-    public TileElectrolyzer() {
-        super(24000, 1, 2);
+    public TileElectrolyzer(BlockPos pos, BlockState state) {
+        super(24000, 1, 2, BlockBaseMachine2.electrolyzer_iu, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.INPUT);
 
@@ -87,6 +90,18 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
+    @Override
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
+        CompoundTag compoundTag =  super.writeToNBT(nbttagcompound);
+        compoundTag.putInt("levelMech",levelMech);
+        return compoundTag;
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        levelMech = nbttagcompound.getInt("levelMech");
+    }
 
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);
@@ -96,31 +111,31 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("electrolyzer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidRegistry.WATER, 4)), Arrays.asList(
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 4)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluidhyd.getInstance(),
+                        FluidName.fluidhyd.getInstance().get(),
                         2
-                ), new FluidStack(FluidName.fluidoxy.getInstance(), 1))));
+                ), new FluidStack(FluidName.fluidoxy.getInstance().get(), 1))));
         Recipes.recipes.getRecipeFluid().addRecipe("electrolyzer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5)), Arrays.asList(
+                new FluidStack(FluidName.fluidfluorhyd.getInstance().get(), 5)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluidhyd.getInstance(),
+                        FluidName.fluidhyd.getInstance().get(),
                         3
-                ), new FluidStack(FluidName.fluidfluor.getInstance(), 1))));
+                ), new FluidStack(FluidName.fluidfluor.getInstance().get(), 1))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("electrolyzer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidhydrogenbromide.getInstance(), 5)), Arrays.asList(
+                new FluidStack(FluidName.fluidhydrogenbromide.getInstance().get(), 5)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluidhyd.getInstance(),
+                        FluidName.fluidhyd.getInstance().get(),
                         3
-                ), new FluidStack(FluidName.fluidbromine.getInstance(), 1))));
+                ), new FluidStack(FluidName.fluidbromine.getInstance().get(), 1))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("electrolyzer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidwastesulfuricacid.getInstance(), 2)), Arrays.asList(
+                new FluidStack(FluidName.fluidwastesulfuricacid.getInstance().get(), 2)), Arrays.asList(
                 new FluidStack(
-                        FluidName.fluidsulfurtrioxide.getInstance(),
+                        FluidName.fluidsulfurtrioxide.getInstance().get(),
                         1
-                ), new FluidStack(FluidRegistry.WATER, 1))));
+                ), new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 1))));
 
 
     }
@@ -130,18 +145,18 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     @Override
-    public ContainerElectrolyzer getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerElectrolyzer getGuiContainer(Player entityPlayer) {
         return new ContainerElectrolyzer(entityPlayer, this);
 
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!getWorld().isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -153,9 +168,9 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiElectrolyzer(new ContainerElectrolyzer(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiElectrolyzer((ContainerElectrolyzer) isAdmin);
 
     }
 
@@ -231,36 +246,36 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
                     25)) {
                 final BaseFluidMachineRecipe output = this.fluid_handler.output();
                 final FluidStack inputFluidStack = output.input.getInputs().get(0);
-                int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.amount;
-                size = Math.min(this.level + 1, size);
+                int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.getAmount();
+                size = Math.min(this.levelMech + 1, size);
                 int cap = this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount();
                 FluidStack outputFluidStack = output.output_fluid.get(0);
-                cap /= outputFluidStack.amount;
+                cap /= outputFluidStack.getAmount();
                 cap = Math.min(cap, size);
                 int cap1 = this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount();
                 FluidStack outputFluidStack1 = output.output_fluid.get(1);
-                cap1 /= outputFluidStack1.amount;
+                cap1 /= outputFluidStack1.getAmount();
                 size = Math.min(Math.min(size, cap1), cap);
-                if (this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount() >= outputFluidStack.amount) {
+                if (this.getFluidTank(1).getCapacity() - this.getFluidTank(1).getFluidAmount() >= outputFluidStack.getAmount()) {
                     FluidStack fluidStack = new FluidStack(
                             outputFluidStack.getFluid(),
-                            outputFluidStack.amount * size
+                            outputFluidStack.getAmount() * size
                     );
-                    this.fluidTank2.fill(fluidStack, true);
+                    this.fluidTank2.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                     drain = true;
 
                 }
-                if (this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount() >= outputFluidStack1.amount) {
+                if (this.getFluidTank(2).getCapacity() - this.getFluidTank(2).getFluidAmount() >= outputFluidStack1.getAmount()) {
                     FluidStack fluidStack = new FluidStack(
                             outputFluidStack1.getFluid(),
-                            outputFluidStack1.amount * size
+                            outputFluidStack1.getAmount() * size
                     );
-                    this.fluidTank3.fill(fluidStack, true);
+                    this.fluidTank3.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                     drain1 = true;
                 }
                 if (drain || drain1) {
-                    int drains = size * inputFluidStack.amount;
-                    this.getFluidTank(0).drain(drains, true);
+                    int drains = size * inputFluidStack.getAmount();
+                    this.getFluidTank(0).drain(drains, IFluidHandler.FluidAction.EXECUTE);
                     if (!this.getActive()) {
                         this.setActive(true);
                         initiate(0);
@@ -269,18 +284,18 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
 
 
                     setActive(true);
-                    ItemStack cathode = this.cathodeslot.get();
-                    ItemStack anode = this.anodeslot.get();
-                    if (cathode.getItemDamage() < cathode.getMaxDamage()) {
-                        cathode.setItemDamage(cathode.getItemDamage() + 1);
+                    ItemStack cathode = this.cathodeslot.get(0);
+                    ItemStack anode = this.anodeslot.get(0);
+                    if (cathode.getDamageValue() < cathode.getMaxDamage()) {
+                        cathode.setDamageValue(cathode.getDamageValue() + 1);
                     }
-                    if (anode.getItemDamage() < anode.getMaxDamage()) {
-                        anode.setItemDamage(anode.getItemDamage() + 1);
+                    if (anode.getDamageValue() < anode.getMaxDamage()) {
+                        anode.setDamageValue(anode.getDamageValue() + 1);
                     }
-                    if (cathode.getItemDamage() == cathode.getMaxDamage()) {
+                    if (cathode.getDamageValue() == cathode.getMaxDamage()) {
                         this.cathodeslot.consume(1);
                     }
-                    if (anode.getItemDamage() == anode.getMaxDamage()) {
+                    if (anode.getDamageValue() == anode.getMaxDamage()) {
                         this.anodeslot.consume(1);
                     }
                 } else {
@@ -320,40 +335,38 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
 
     @Override
     public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+            final Player player,
+            final InteractionHand hand,
+            final Direction side,
+            final Vec3 hitX
     ) {
-        if (level < 10) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        if (levelMech < 10) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
+                return super.onActivated(player, hand, side, hitX);
             } else {
                 stack.shrink(1);
-                this.level++;
+                this.levelMech++;
                 return true;
             }
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, hitX);
         }
     }
 
     @Override
-    public int getLevel() {
-        return this.level;
+    public int getLevelMechanism() {
+        return this.levelMech;
     }
 
     @Override
-    public void setLevel(final int level) {
-        this.level = level;
+    public void setLevelMech(final int levelMech) {
+        this.levelMech = levelMech;
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.levelMech -= level;
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/uranium"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:blockresource/uranium_block"
+  }
+}

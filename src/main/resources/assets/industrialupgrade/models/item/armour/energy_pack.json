@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/armor/energy_pack"
+    "layer0" : "industrialupgrade:item/armor/energy_pack"
   }
 }

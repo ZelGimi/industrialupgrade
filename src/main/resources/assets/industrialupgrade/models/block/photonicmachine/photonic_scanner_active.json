@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/photonic_scanner_active_main",
-    "down" : "industrialupgrade:blocks/photonic_scanner_top-bottom",
-    "up" : "industrialupgrade:blocks/photonic_scanner_top-bottom",
-    "north" : "industrialupgrade:blocks/photonic_scanner_active_main",
-    "east" : "industrialupgrade:blocks/photonic_scanner_left-right-back",
-    "south" : "industrialupgrade:blocks/photonic_scanner_left-right-back",
-    "west" : "industrialupgrade:blocks/photonic_scanner_left-right-back"
+    "particle" : "industrialupgrade:block/photonic_scanner_active_main",
+    "down" : "industrialupgrade:block/photonic_scanner_top-bottom",
+    "up" : "industrialupgrade:block/photonic_scanner_top-bottom",
+    "north" : "industrialupgrade:block/photonic_scanner_active_main",
+    "east" : "industrialupgrade:block/photonic_scanner_left-right-back",
+    "south" : "industrialupgrade:block/photonic_scanner_left-right-back",
+    "west" : "industrialupgrade:block/photonic_scanner_left-right-back"
   }
 }

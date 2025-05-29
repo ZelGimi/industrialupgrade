@@ -1,6 +1,10 @@
 package com.denfop.recipe;
 
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -10,9 +14,13 @@ public interface IInputItemStack {
 
     int getAmount();
 
-    void growAmount(int col);
-
     List<ItemStack> getInputs();
 
+    boolean hasTag();
 
+    TagKey<Item> getTag();
+
+    void toNetwork(FriendlyByteBuf buffer);
+
+    void growAmount(int count);
 }

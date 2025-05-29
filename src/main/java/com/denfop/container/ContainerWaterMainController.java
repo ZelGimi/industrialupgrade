@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.reactors.water.controller.TileEntityMainController;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerWaterMainController extends ContainerFullInv<TileEntityMainController> {
 
-    public ContainerWaterMainController(TileEntityMainController tileEntityMainController, EntityPlayer entityPlayer) {
+    public ContainerWaterMainController(TileEntityMainController tileEntityMainController, Player entityPlayer) {
         super(entityPlayer, tileEntityMainController, 214, 250);
         switch (this.base.getMaxLevelReactor()) {
             case 1:

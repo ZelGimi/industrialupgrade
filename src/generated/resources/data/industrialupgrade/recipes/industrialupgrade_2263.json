@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:steam_turbine/steam_turbine_adv_tank"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_380_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_48_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_83_element"
+      }
+    ]
+  },
+  "pattern": [
+    "C D",
+    "BAB",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:steam_turbine/steam_turbine_imp_tank"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:itemcell/itemcell"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/iron"
+      }
+    ]
+  },
+  "pattern": [
+    "B  ",
+    " B ",
+    " AB"
+  ],
+  "result": {
+    "item": "industrialupgrade:tools/foam_sprayer"
+  },
+  "show_notification": true
+}

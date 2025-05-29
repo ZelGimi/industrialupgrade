@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/proteus_niobium"
+    "all" : "industrialupgrade:block/proteus_niobium"
   }
 }

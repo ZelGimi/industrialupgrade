@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:crafting_elements/crafting_273_element",
+      "nbt": "{level:4}"
+    },
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_75_element"
+      }
+    ],
+    "M": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ],
+    "X": [
+      {
+        "item": "industrialupgrade:transformer_iu/ev"
+      }
+    ]
+  },
+  "pattern": [
+    "MXM",
+    "ABA",
+    "MXM"
+  ],
+  "result": {
+    "item": "industrialupgrade:molecular/molecular"
+  },
+  "show_notification": true
+}

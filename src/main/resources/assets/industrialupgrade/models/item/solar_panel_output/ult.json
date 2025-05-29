@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/ult_output"
+		"layer0": "industrialupgrade:item/ult_output"
 	}
 }

@@ -1,11 +1,11 @@
 package com.denfop.api.cool;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface ICoolNet {
 
-    ICoolTile getSubTile(World var1, BlockPos var2);
+    ICoolTile getSubTile(Level var1, BlockPos var2);
 
 
 }

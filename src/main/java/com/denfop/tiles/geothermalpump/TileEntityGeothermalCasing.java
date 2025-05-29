@@ -5,10 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGeothermalPump;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityGeothermalCasing extends TileEntityMultiBlockElement implements ICasing {
 
-    public TileEntityGeothermalCasing() {
+
+    public TileEntityGeothermalCasing(BlockPos pos, BlockState state) {
+        super(BlockGeothermalPump.geothermal_casing, pos, state);
     }
 
     @Override
@@ -18,7 +22,7 @@ public class TileEntityGeothermalCasing extends TileEntityMultiBlockElement impl
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.geothermalpump;
+        return IUItem.geothermalpump.getBlock(getTeBlock());
     }
 
 }

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_29_element"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "CBD",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine1/magnet_generator"
+  },
+  "show_notification": true
+}

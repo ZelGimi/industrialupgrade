@@ -4,6 +4,7 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -14,8 +15,10 @@ import com.denfop.blocks.mechanism.BlockCokeOven;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCokeOven;
 import com.denfop.gui.GuiCokeOven;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDrainTank;
 import com.denfop.invslot.InvSlotFluid;
@@ -29,20 +32,24 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -69,7 +76,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     public IHeat blastHeat;
     public IInputFluid blastInputFluid;
     public IOutputFluid blastOutputFluid;
-    public List<EntityPlayer> entityPlayerList;
+    public List<Player> entityPlayerList;
     public double progress = 0;
     public int bar = 1;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
@@ -77,13 +84,13 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
 
     private boolean sound = true;
 
-    public TileCokeOvenMain() {
-        super(InitMultiBlockSystem.cokeOvenMultiBlock);
+    public TileCokeOvenMain(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.cokeOvenMultiBlock,BlockCokeOven.coke_oven_main,pos,state);
         this.full = false;
         this.entityPlayerList = new ArrayList<>();
-        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidsteam.getInstance());
+        this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidsteam.getInstance().get());
         this.fluidSlot1 = new InvSlotDrainTank(this, InvSlot.TypeItemSlot.INPUT, 1,
-                InvSlotFluid.TypeFluidSlot.OUTPUT, FluidName.fluidcreosote.getInstance()
+                InvSlotFluid.TypeFluidSlot.OUTPUT, FluidName.fluidcreosote.getInstance().get()
         );
         ;
         this.output1 = new InvSlotOutput(this, 1);
@@ -98,7 +105,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.cokeoven;
+        return IUItem.cokeoven.getBlock(getTeBlock().getId());
     }
 
     @Override
@@ -137,11 +144,10 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
 
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
 
     }
 
@@ -176,10 +182,10 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
             new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
             new PacketStopSound(getWorld(), this.pos);
         }
@@ -193,19 +199,19 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IInputFluid.class
                 );
-        this.setInputFluid((IInputFluid) this.getWorld().getTileEntity(pos1.get(0)));
+        this.setInputFluid((IInputFluid) this.getWorld().getBlockEntity(pos1.get(0)));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IOutputFluid.class
                 );
-        this.setOutputFluid((IOutputFluid) this.getWorld().getTileEntity(pos1.get(0)));
+        this.setOutputFluid((IOutputFluid) this.getWorld().getBlockEntity(pos1.get(0)));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IHeat.class
                 );
-        this.setHeat((IHeat) this.getWorld().getTileEntity(pos1.get(0)));
+        this.setHeat((IHeat) this.getWorld().getBlockEntity(pos1.get(0)));
     }
 
     @Override
@@ -218,7 +224,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "sound", this.sound);
         }
 
@@ -280,12 +286,12 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
                         this.setActive(true);
                     }
                     progress += 1 + (0.25 * (bar1 - 1));
-                    tank.drain(Math.min(bar1, this.tank.getFluidAmount()), true);
+                    tank.drain(Math.min(bar1, this.tank.getFluidAmount()), IFluidHandler.FluidAction.EXECUTE);
                     if (progress >= 3600) {
                         progress = 0;
                         this.invSlotBlastFurnace.get(0).shrink(1);
                         this.setActive(false);
-                        this.tank1.fill(new FluidStack(FluidName.fluidcreosote.getInstance(), 500), true);
+                        this.tank1.fill(new FluidStack(FluidName.fluidcreosote.getInstance().get(), 500), IFluidHandler.FluidAction.EXECUTE);
                         initiate(2);
                     }
                 }
@@ -349,17 +355,17 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     }
 
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
-        this.bar = nbttagcompound.getInteger("bar");
+        this.bar = nbttagcompound.getInt("bar");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
-        nbttagcompound.setInteger("bar", this.bar);
+        nbttagcompound.putBoolean("sound", this.sound);
+        nbttagcompound.putInt("bar", this.bar);
         return nbttagcompound;
     }
 
@@ -370,7 +376,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
 
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         switch ((int) i) {
             case 0:
                 this.bar = Math.min(this.bar + 1, 5);
@@ -407,34 +413,27 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (this.getWorld().isRemote) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (this.getWorld().isClientSide) {
             return false;
         }
         if (!(!this.full || !this.activate)) {
-            if (!this.getWorld().isRemote && player
-                    .getHeldItem(hand)
-                    .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+            if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
                 return ModUtils.interactWithFluidHandler(player, hand,
                         this.blastInputFluid
                                 .getFluid()
-                                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                                .getCapability(ForgeCapabilities.FLUID_HANDLER, side)
                 );
             }
         }
 
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(player, hand, side, vec3);
     }
 
+
+
     @Override
-    public ContainerCokeOven getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerCokeOven getGuiContainer(final Player entityPlayer) {
         if (!this.entityPlayerList.contains(entityPlayer)) {
             this.entityPlayerList.add(entityPlayer);
         }
@@ -442,10 +441,10 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiCokeOven getGui(final EntityPlayer entityPlayer, final boolean b) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiCokeOven(this.getGuiContainer(entityPlayer));
+        return new GuiCokeOven((ContainerCokeOven) menu);
     }
 
 

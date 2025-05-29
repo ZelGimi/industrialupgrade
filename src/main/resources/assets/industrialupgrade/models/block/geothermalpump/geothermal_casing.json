@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/geothermal_casing",
-    "down" : "industrialupgrade:blocks/geothermal_casing",
-    "up" : "industrialupgrade:blocks/geothermal_casing",
-    "north" : "industrialupgrade:blocks/geothermal_casing",
-    "east" : "industrialupgrade:blocks/geothermal_casing",
-    "south" : "industrialupgrade:blocks/geothermal_casing",
-    "west" : "industrialupgrade:blocks/geothermal_casing"
+    "particle" : "industrialupgrade:block/geothermal_casing",
+    "down" : "industrialupgrade:block/geothermal_casing",
+    "up" : "industrialupgrade:block/geothermal_casing",
+    "north" : "industrialupgrade:block/geothermal_casing",
+    "east" : "industrialupgrade:block/geothermal_casing",
+    "south" : "industrialupgrade:block/geothermal_casing",
+    "west" : "industrialupgrade:block/geothermal_casing"
   }
 }

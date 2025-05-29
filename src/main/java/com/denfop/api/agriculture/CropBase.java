@@ -5,10 +5,13 @@ import com.denfop.api.pollution.LevelPollution;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +28,10 @@ public class CropBase implements ICrop {
     private final byte defaultWeatherResistance;
     private final List<ICrop> unCompatibleCrops;
     private final byte render;
+    private ItemStack stack;
     private final boolean isCombine;
     private final List<ICrop> cropCombine;
     private final int maxTick;
-    private final List<Biome> biomes;
-    private final List<ICrop> compatibleCrops;
-    private final List<ResourceLocation> textures;
-    private final List<ResourceLocation> textures_top;
-    private ItemStack stack;
     private byte genomeResistance;
     private byte genomeAdaptive;
     private byte chance;
@@ -53,10 +52,14 @@ public class CropBase implements ICrop {
     private byte pestResistance;
     private byte lightLevel;
     private LevelPollution soilRequirements;
+    private final List< ResourceKey<Biome> > biomes;
+    private final List<ICrop> compatibleCrops;
     private List<ItemStack> drops;
     private ResourceLocation texture;
     private byte stage;
     private byte maxStage;
+    private final List<ResourceLocation> textures;
+    private final List<ResourceLocation> textures_top;
 
     public CropBase(
             String name, int id, EnumSoil soil, ItemStack stack, int yield, int weatherResistance, int waterRequirement,
@@ -95,8 +98,8 @@ public class CropBase implements ICrop {
         this.soil = soil;
         this.ignoreSoil = false;
         this.stack = stack;
-        final NBTTagCompound nbt = ModUtils.nbt(this.stack);
-        nbt.setInteger("crop_id", id);
+        final CompoundTag nbt = ModUtils.nbt(this.stack);
+        nbt.putInt("crop_id",id);
         this.isCombine = isCombine;
         this.cropCombine = cropCombine;
         this.compatibleCrops = cropCombine;
@@ -114,7 +117,6 @@ public class CropBase implements ICrop {
         this.defaultLightLevel = (byte) lightLevel;
         CropNetwork.instance.addCrop(this);
     }
-
     public CropBase(
             String name, int id, EnumSoil soil, int yield, int weatherResistance, int waterRequirement,
             double growthSpeed,
@@ -149,9 +151,9 @@ public class CropBase implements ICrop {
         this.textures_top = new ArrayList<>();
         this.soil = soil;
         this.ignoreSoil = false;
-        this.stack = new ItemStack(IUItem.crops);
-        final NBTTagCompound nbt = ModUtils.nbt(this.stack);
-        nbt.setInteger("crop_id", id);
+        this.stack = new ItemStack(IUItem.crops.getStack(0));
+        final CompoundTag nbt = ModUtils.nbt(this.stack);
+        nbt.putInt("crop_id",id);
         this.isCombine = isCombine || !cropCombine.isEmpty();
         this.cropCombine = cropCombine;
         this.compatibleCrops = cropCombine;
@@ -201,7 +203,7 @@ public class CropBase implements ICrop {
         cropBase.setGeneration(this.getGeneration());
         cropBase.setGenomeAdaptive(this.genomeAdaptive);
         cropBase.setGenomeResistance(this.genomeResistance);
-        for (Biome biome : biomes) {
+        for ( ResourceKey<Biome>  biome : biomes) {
             cropBase.addBiome(biome);
         }
         return cropBase;
@@ -267,8 +269,8 @@ public class CropBase implements ICrop {
         return tick;
     }
 
-    public void setTick(int tick) {
-        this.tick = tick;
+    public void addTick(int tick) {
+        this.tick += tick;
         if (this.tick >= this.maxTick) {
             this.tick = maxTick;
         }
@@ -276,8 +278,8 @@ public class CropBase implements ICrop {
         this.stage = (byte) Math.max((int) Math.ceil(maxStage * (this.tick * 1D / this.maxTick)) - 1, 0);
     }
 
-    public void addTick(int tick) {
-        this.tick += tick;
+    public void setTick(int tick) {
+        this.tick = tick;
         if (this.tick >= this.maxTick) {
             this.tick = maxTick;
         }
@@ -315,10 +317,6 @@ public class CropBase implements ICrop {
         return stack.copy();
     }
 
-    @Override
-    public void setStack(final ItemStack cropItem) {
-        this.stack = cropItem;
-    }
 
     public boolean isSun() {
         return sun;
@@ -353,9 +351,11 @@ public class CropBase implements ICrop {
         return id;
     }
 
+
     public int getDefaultWaterRequirement() {
         return defaultWaterRequirement;
     }
+
 
     public int getSizeSeed() {
         return sizeSeed;
@@ -403,16 +403,15 @@ public class CropBase implements ICrop {
         this.soilRequirements = pollution;
     }
 
-    public List<Biome> getBiomes() {
+    public List< ResourceKey<Biome> > getBiomes() {
         return biomes;
     }
 
     @Override
     public boolean isCombineWithCrops(final List<ICrop> crops) {
 
-        if (crops.size() != compatibleCrops.size()) {
+        if (crops.size() != compatibleCrops.size())
             return false;
-        }
 
         cycle1:
         for (ICrop crop : crops) {
@@ -473,19 +472,25 @@ public class CropBase implements ICrop {
     }
 
     @Override
-    public boolean canGrowInBiome(Biome biomeName) {
+    public boolean canGrowInBiome(Biome biomeName, Level level) {
+        ResourceKey<Biome> biomeKey = level.registryAccess()
+                .registryOrThrow(Registries.BIOME)
+                .getResourceKey(biomeName).get();
+        return biomes.contains(biomeKey);
+    }
+    @Override
+    public boolean canGrowInBiome(ResourceKey<Biome> biomeName) {
         return biomes.contains(biomeName);
     }
-
     @Override
-    public void addBiome(Biome biomeName) {
+    public void addBiome( ResourceKey<Biome>  biomeName) {
         if (!biomes.contains(biomeName)) {
             biomes.add(biomeName);
         }
     }
 
     @Override
-    public void removeBiome(Biome biomeName) {
+    public void removeBiome( ResourceKey<Biome>  biomeName) {
         biomes.remove(biomeName);
     }
 
@@ -519,11 +524,11 @@ public class CropBase implements ICrop {
         textures.clear();
         textures_top.clear();
         for (int i = 0; i < maxStage; i++) {
-            textures.add(new ResourceLocation(this.texture.getResourceDomain(), this.texture.getResourcePath() + "_" + i));
+            textures.add(new ResourceLocation(this.texture.getNamespace(), this.texture.getPath() + "_" + i));
             if (render >= 3) {
                 textures_top.add(new ResourceLocation(
-                        this.texture.getResourceDomain(),
-                        this.texture.getResourcePath() + "_top_" + i
+                        this.texture.getNamespace(),
+                        this.texture.getPath() + "_top_" + i
                 ));
             }
         }
@@ -546,12 +551,7 @@ public class CropBase implements ICrop {
 
     @Override
     public int getStage() {
-        return stage;
-    }
-
-    @Override
-    public void setStage(final int stage) {
-        this.stage = (byte) stage;
+        return (int) (this.getMaxStage() *(getTick() * 1F/this.getMaxTick()));
     }
 
     @Override
@@ -604,6 +604,11 @@ public class CropBase implements ICrop {
     }
 
     @Override
+    public void setStack(final ItemStack cropItem) {
+        this.stack = cropItem;
+    }
+
+    @Override
     public int getRender() {
         return this.render;
     }
@@ -611,6 +616,11 @@ public class CropBase implements ICrop {
     @Override
     public List<ResourceLocation> getTopTexture() {
         return textures_top;
+    }
+
+    @Override
+    public void setStage(final int stage) {
+        this.stage = (byte) stage;
     }
 
     @Override

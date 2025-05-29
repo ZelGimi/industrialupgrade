@@ -1,0 +1,6 @@
+{
+	"parent": "industrialupgrade:block/wiring/cable/cable_base1",
+	"textures": {
+		"texture": "industrialupgrade:block/wiring/item_pipes/itemcable24_pipes"
+	}
+}

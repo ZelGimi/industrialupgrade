@@ -1,5 +1,6 @@
 {
-	"parent": "industrialupgrade:item/tool/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/quantumaxe"	}
+  "parent" : "industrialupgrade:item/tool/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:item/quantumaxe"
+  }
 }

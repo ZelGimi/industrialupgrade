@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:blocks/stick"
+    "layer0" : "industrialupgrade:block/stick"
   }
 }

@@ -8,7 +8,7 @@ import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumProtectionLevel;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class ProtectionBuilding extends Building implements IProtectionBuilding {
 
@@ -18,12 +18,11 @@ public class ProtectionBuilding extends Building implements IProtectionBuilding 
     public ProtectionBuilding(EnumProtectionLevel enums, final IColony colonie, boolean simulate) {
         super(colonie);
         this.protection = enums;
-        if (!simulate) {
+        if (!simulate)
             this.getColony().addBuilding(this);
-        }
     }
 
-    public ProtectionBuilding(final NBTTagCompound tag, final IColony colonie) {
+    public ProtectionBuilding(final CompoundTag tag, final IColony colonie) {
         super(colonie);
         this.protection = EnumProtectionLevel.values()[tag.getByte("id")];
         this.getColony().addProtection(this.getProtection());
@@ -54,10 +53,10 @@ public class ProtectionBuilding extends Building implements IProtectionBuilding 
 
 
     @Override
-    public NBTTagCompound writeTag(final NBTTagCompound tag) {
+    public CompoundTag writeTag(final CompoundTag tag) {
         super.writeTag(tag);
-        tag.setByte("id", (byte) protection.ordinal());
-        tag.setByte("people", people);
+        tag.putByte("id", (byte) protection.ordinal());
+        tag.putByte("people", people);
         return tag;
     }
 

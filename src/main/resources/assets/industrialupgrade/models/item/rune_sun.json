@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/rune_sun"
+    "layer0" : "industrialupgrade:item/rune_sun"
   }
 }

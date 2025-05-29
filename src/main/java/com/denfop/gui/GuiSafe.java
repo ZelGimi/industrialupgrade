@@ -3,15 +3,15 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.api.gui.ImageInterface;
 import com.denfop.container.ContainerSafe;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiSafe extends GuiIU<ContainerSafe> {
+public class GuiSafe<T extends ContainerSafe> extends GuiIU<ContainerSafe> {
 
     public GuiSafe(ContainerSafe guiContainer) {
         super(guiContainer);
-        this.ySize = 232;
+        this.imageHeight = 232;
         this.inventory.setY(150);
-        this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.addElement(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
     }
 
     @Override

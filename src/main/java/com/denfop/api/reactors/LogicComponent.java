@@ -2,7 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.api.item.IDamageItem;
 import com.denfop.items.reactors.ItemComponentVent;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,10 +39,9 @@ public class LogicComponent {
         this.count = 0;
         this.reactor = reactor;
         this.componentVent = this.getItem() instanceof ItemComponentVent;
-        if (stack != null && stack.getItem() instanceof IDamageItem) {
-            IDamageItem damageItem = (IDamageItem) stack.getItem();
+        if (stack != null && stack.getItem() instanceof IDamageItem damageItem) {
             this.maxDamage = (damageItem).getMaxCustomDamage(stack);
-            this.maxDamageItem = maxDamage - damageItem.getCustomDamage(stack);
+            this.maxDamageItem =damageItem.getCustomDamage(stack);
         } else {
             this.maxDamage = 0;
             this.maxDamageItem = 0;
@@ -153,24 +152,27 @@ public class LogicComponent {
                 .getItem()
                 .getType() == EnumTypeComponent.NEUTRON_PROTECTOR) {
             this.item.damageItem(this.stack, 1);
-            this.maxDamageItem -= 1;
+            this.maxDamageItem += 1;
         } else {
             if (damage != 0) {
                 if (!componentVent) {
-                    if (this.maxDamageItem < this.maxDamage) {
-                        this.item.damageItem(this.stack, -1 * damage);
+                    if (this.maxDamageItem > 0) {
+                        this.item.damageItem(this.stack, damage);
                     }
-                    if (this.maxDamageItem < this.maxDamage && this.getItem().getType() == EnumTypeComponent.COOLANT_ROD) {
-                        this.item.damageItem(this.stack, -1 * damage);
+                    if (this.maxDamageItem > 0 && this.getItem().getType() == EnumTypeComponent.COOLANT_ROD) {
+                        this.item.damageItem(this.stack,  damage);
                     }
-                    this.maxDamageItem -= damage;
+                    this.maxDamageItem -= damage * -1;
 
                     if (this.maxDamageItem > this.maxDamage) {
                         this.maxDamageItem = this.maxDamage;
                     }
+                    if (this.maxDamageItem < 0) {
+                        this.maxDamageItem = 0;
+                    }
                 } else {
                     if (this.damage >= 150 * getItem().getLevel()) {
-                        this.item.damageItem(this.stack, -1 * damage);
+                        this.item.damageItem(this.stack,  damage);
                         this.maxDamageItem = 0;
                     }
                 }
@@ -183,7 +185,7 @@ public class LogicComponent {
             reactor.setHeat(heat);
         }
 
-        return maxDamageItem <= 0;
+        return maxDamageItem == maxDamage;
     }
 
     public double getHeat() {

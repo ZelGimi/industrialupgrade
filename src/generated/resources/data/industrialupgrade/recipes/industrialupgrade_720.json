@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems7"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:rotorupgrade_schemes"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:doubleplate/vitalium"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:itemcore/specore"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:rotors_upgrade/rotorupgrade14"
+  },
+  "show_notification": true
+}

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/advanced_solar_helmet_ender"
+    "layer0" : "industrialupgrade:item/advanced_solar_helmet_ender"
   }
 }

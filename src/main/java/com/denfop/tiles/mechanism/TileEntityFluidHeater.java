@@ -1,9 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
@@ -18,7 +18,9 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeatFluids;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiFluidHeater;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -28,15 +30,16 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -63,8 +66,8 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
     protected short progress;
     protected double guiProgress;
 
-    public TileEntityFluidHeater() {
-        super(100, 1, 2);
+    public TileEntityFluidHeater(BlockPos pos, BlockState state) {
+        super(100, 1, 2,BlockBaseMachine3.fluid_heater,pos,state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 200;
@@ -101,24 +104,24 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidRegistry.WATER, 100)), Collections.singletonList(new FluidStack(
-                FluidName.fluidsteam.getInstance(),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 100)), Collections.singletonList(new FluidStack(
+                FluidName.fluidsteam.getInstance().get(),
                 25
         ))));
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsteam.getInstance(), 100)), Collections.singletonList(new FluidStack(
-                FluidName.fluidsuperheated_steam.getInstance(),
+                new FluidStack(FluidName.fluidsteam.getInstance().get(), 100)), Collections.singletonList(new FluidStack(
+                FluidName.fluidsuperheated_steam.getInstance().get(),
                 50
         ))));
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidtertbutylalcohol.getInstance(), 100)), Collections.singletonList(new FluidStack(
-                FluidName.fluidisobutylene.getInstance(),
+                new FluidStack(FluidName.fluidtertbutylalcohol.getInstance().get(), 100)), Collections.singletonList(new FluidStack(
+                FluidName.fluidisobutylene.getInstance().get(),
                 100
         ))));
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
@@ -137,9 +140,9 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -171,7 +174,7 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -247,7 +250,7 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
                 setActive(false);
             }
         }
-        if (this.world.getWorldTime() % 20 == 0) {
+        if (this.level.getGameTime() % 20 == 0) {
             this.heat.useEnergy(1);
         }
         if (this.upgradeSlot.tickNoMark()) {
@@ -292,16 +295,16 @@ public class TileEntityFluidHeater extends TileElectricMachine implements IUpgra
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerHeatFluids getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerHeatFluids getGuiContainer(Player entityPlayer) {
         return new ContainerHeatFluids(entityPlayer, this);
     }
-
-    @SideOnly(Side.CLIENT)
-    public GuiFluidHeater getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiFluidHeater(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiFluidHeater((ContainerHeatFluids) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

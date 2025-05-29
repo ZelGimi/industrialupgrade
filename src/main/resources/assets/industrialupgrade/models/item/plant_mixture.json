@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/plant_mixture"
+    "layer0" : "industrialupgrade:item/plant_mixture"
   }
 }

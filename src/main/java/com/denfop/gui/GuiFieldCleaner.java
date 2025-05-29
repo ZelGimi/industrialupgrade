@@ -6,9 +6,9 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerFieldCleaner;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiFieldCleaner extends GuiIU<ContainerFieldCleaner> {
+public class GuiFieldCleaner<T extends ContainerFieldCleaner> extends GuiIU<ContainerFieldCleaner> {
 
     public GuiFieldCleaner(ContainerFieldCleaner guiContainer) {
         super(guiContainer);
@@ -18,20 +18,6 @@ public class GuiFieldCleaner extends GuiIU<ContainerFieldCleaner> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
 
     @Override
     protected ResourceLocation getTexture() {

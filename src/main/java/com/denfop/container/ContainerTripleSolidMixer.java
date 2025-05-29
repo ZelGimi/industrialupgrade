@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityTripleSolidMixer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerTripleSolidMixer extends ContainerFullInv<TileEntityTripleSolidMixer> {
 
-    public ContainerTripleSolidMixer(EntityPlayer var1, TileEntityTripleSolidMixer tileEntity1) {
+    public ContainerTripleSolidMixer(Player var1, TileEntityTripleSolidMixer tileEntity1) {
         super(var1, tileEntity1);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 108, 44));

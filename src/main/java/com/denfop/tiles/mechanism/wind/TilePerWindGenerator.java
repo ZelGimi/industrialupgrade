@@ -5,19 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.windsystem.EnumLevelGenerators;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.EnumTypeStyle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TilePerWindGenerator extends TileWindGenerator {
 
 
-    public TilePerWindGenerator() {
-        super(EnumLevelGenerators.FOUR);
-    }
-
-
-    @Override
-    public EnumTypeStyle getStyle() {
-        return EnumTypeStyle.PERFECT;
+    public TilePerWindGenerator(BlockPos pos, BlockState state) {
+        super(EnumLevelGenerators.FOUR,BlockBaseMachine3.per_wind_generator,pos,state);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -25,7 +20,7 @@ public class TilePerWindGenerator extends TileWindGenerator {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

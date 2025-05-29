@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=primal_soldering_mechanism": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism"
+    },
+    "facing=south,type=primal_soldering_mechanism": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 180
+    },
+    "facing=west,type=primal_soldering_mechanism": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 270
+    },
+    "facing=east,type=primal_soldering_mechanism": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 90
+    },
+    "facing=down,type=primal_soldering_mechanism": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "x": 90
+    },
+    "facing=up,type=primal_soldering_mechanism": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "x": 270
+    },
+    "facing=north,type=primal_soldering_mechanism_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism"
+    },
+    "facing=south,type=primal_soldering_mechanism_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 180
+    },
+    "facing=west,type=primal_soldering_mechanism_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 270
+    },
+    "facing=east,type=primal_soldering_mechanism_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 90
+    },
+    "facing=down,type=primal_soldering_mechanism_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "x": 90
+    },
+    "facing=up,type=primal_soldering_mechanism_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "x": 270
+    },
+    "facing=north,type=primal_soldering_mechanism_active": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism"
+    },
+    "facing=south,type=primal_soldering_mechanism_active": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 180
+    },
+    "facing=west,type=primal_soldering_mechanism_active": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 270
+    },
+    "facing=east,type=primal_soldering_mechanism_active": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "y": 90
+    },
+    "facing=down,type=primal_soldering_mechanism_active": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "x": 90
+    },
+    "facing=up,type=primal_soldering_mechanism_active": {
+      "model": "industrialupgrade:block/basemachine/primal_soldering_mechanism",
+      "x": 270
+    }
+  }
+}

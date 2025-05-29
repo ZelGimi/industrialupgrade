@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/lightning_rod_casing_1",
-    "down" : "industrialupgrade:blocks/lightning_rod_casing_1",
-    "up" : "industrialupgrade:blocks/lightning_rod_casing_1",
-    "north" : "industrialupgrade:blocks/lightning_rod_casing_3",
-    "east" : "industrialupgrade:blocks/lightning_rod_casing_3",
-    "south" : "industrialupgrade:blocks/lightning_rod_casing_3",
-    "west" : "industrialupgrade:blocks/lightning_rod_casing_3"
+    "particle" : "industrialupgrade:block/lightning_rod_casing_1",
+    "down" : "industrialupgrade:block/lightning_rod_casing_1",
+    "up" : "industrialupgrade:block/lightning_rod_casing_1",
+    "north" : "industrialupgrade:block/lightning_rod_casing_3",
+    "east" : "industrialupgrade:block/lightning_rod_casing_3",
+    "south" : "industrialupgrade:block/lightning_rod_casing_3",
+    "west" : "industrialupgrade:block/lightning_rod_casing_3"
   }
 }

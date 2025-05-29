@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/ammonium_chloride"	}
+		"layer0": "industrialupgrade:item/ammonium_chloride"	}
 }

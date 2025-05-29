@@ -1,9 +1,9 @@
 package com.denfop.api.energy;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public interface IEnergyEmitter extends IEnergyTile {
 
-    boolean emitsEnergyTo(IEnergyAcceptor var1, EnumFacing var2);
+    boolean emitsEnergyTo(IEnergyAcceptor var1, Direction var2);
 
 }

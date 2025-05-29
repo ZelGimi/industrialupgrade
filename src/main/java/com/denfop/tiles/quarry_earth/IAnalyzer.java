@@ -1,7 +1,7 @@
 package com.denfop.tiles.quarry_earth;
 
 import com.denfop.api.multiblock.IMultiElement;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.level.ChunkPos;
 
 import java.util.List;
 import java.util.Map;

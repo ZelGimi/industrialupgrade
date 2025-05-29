@@ -3,7 +3,6 @@ package com.denfop.componets;
 import java.util.function.Supplier;
 
 public class ComponentValue<T> {
-
     Supplier<T> value;
 
     public ComponentValue() {

@@ -5,11 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.EnumTypeStyle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityImpSolariumStorage extends TileEntitySolariumStorage {
 
-    public TileEntityImpSolariumStorage() {
-        super(1600000, EnumTypeStyle.IMPROVED);
+    public TileEntityImpSolariumStorage(BlockPos pos, BlockState state) {
+        super(1600000, EnumTypeStyle.IMPROVED,BlockBaseMachine3.imp_solarium_storage,pos,state);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -17,7 +19,7 @@ public class TileEntityImpSolariumStorage extends TileEntitySolariumStorage {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

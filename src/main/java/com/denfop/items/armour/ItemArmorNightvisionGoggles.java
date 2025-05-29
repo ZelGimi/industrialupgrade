@@ -3,76 +3,84 @@ package com.denfop.items.armour;
 import com.denfop.Constants;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IEnergyItem;
-import com.denfop.register.Register;
-import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
-public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IModelRegister, IEnergyItem {
+public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IEnergyItem {
 
     public ItemArmorNightvisionGoggles() {
-        super("nightvision", EntityEquipmentSlot.HEAD);
+        super("nightvision", Type.HELMET);
         this.armorName = "nightvision_goggles";
-        setUnlocalizedName(armorName);
-        setCreativeTab(IUCore.EnergyTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(armorName)).setUnlocalizedName(armorName);
-        IUCore.proxy.addIModelRegister(this);
-        this.setNoRepair();
     }
 
-    public boolean showDurabilityBar(final ItemStack stack) {
+    public boolean isBarVisible(final ItemStack stack) {
         return true;
     }
-
-    public int getRGBDurabilityForDisplay(ItemStack stack) {
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            final ItemStack var4 = new ItemStack(this, 1);
+            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
+            p_41392_.add(var4);
+            p_41392_.add(new ItemStack(this, 1));
+        }
+    }
+    public int getBarColor(ItemStack stack) {
         return ModUtils.convertRGBcolorToInt(33, 91, 199);
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem ="iu."+ pathBuilder.toString().split("\\.")[2];
+        }
 
-    public double getDurabilityForDisplay(ItemStack stack) {
-        return Math.min(
+        return this.nameItem;
+    }
+
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
                 Math.max(
                         1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
                         0.0
                 ),
                 1.0
-        );
+        ));
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(
-            final ItemStack p_77624_1_,
-            @Nullable final World p_77624_2_,
-            final List<String> p_77624_3_,
-            final ITooltipFlag p_77624_4_
-    ) {
-        p_77624_3_.add("Nightvision Key: " + Keyboard.getKeyName(Math.abs(KeyboardClient.armormode.getKeyCode())));
-        super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal("Nightvision Key: " + KeyboardClient.armormode.getKey().getDisplayName().getString()));
     }
+
 
     public boolean canProvideEnergy(ItemStack stack) {
         return false;
@@ -91,56 +99,28 @@ public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IMo
     }
 
 
-    @Override
-    public void registerModels() {
-        registerModels(this.armorName);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> {
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
-
-            String mode = nbt.getString("mode");
-            if (nbt.getString("mode").equals("")) {
-                return getModelLocation1(name, "");
-            } else {
-                return getModelLocation1("armor", "_" + this.armorType.ordinal() + "_" + mode);
-            }
-        });
-        String[] mode = {"", "_Zelen", "_Demon", "_Dark", "_Cold", "_Ender", "_Ukraine", "_Fire", "_Snow", "_Taiga", "_Desert",
-                "_Emerald"};
-        for (final String s : mode) {
-            if (s.equals("")) {
-                ModelBakery.registerItemVariants(this, getModelLocation1(name, s));
-            } else {
-                ModelBakery.registerItemVariants(this, getModelLocation1("nightvision", "_" + this.armorType.ordinal() + s));
-            }
-
-        }
-
-    }
-
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        int suffix = (this.armorType == EntityEquipmentSlot.LEGS) ? 2 : 1;
-        NBTTagCompound nbtData = ModUtils.nbt(stack);
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+        int suffix = (slot == EquipmentSlot.LEGS) ? 2 : 1;
+        CompoundTag nbtData = ModUtils.nbt(stack);
         if (!nbtData.getString("mode").isEmpty()) {
-            return Constants.TEXTURES + ":textures/armor/" + "armor" + this.armorType.ordinal() + "_" + nbtData.getString("mode") + ".png";
+            return Constants.TEXTURES + ":textures/armor/" + "armor" + slot.ordinal() + "_" + nbtData.getString("mode") + ".png";
         }
 
 
         return Constants.TEXTURES + ":textures/armor/" + this.armorName + "_" + suffix + ".png";
     }
 
-    public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
-        NBTTagCompound nbtData = ModUtils.nbt(stack);
+    public void onArmorTick(ItemStack stack, Level world, Player player) {
+        if (world.isClientSide)
+            return;
+        CompoundTag nbtData = ModUtils.nbt(stack);
         boolean active = nbtData.getBoolean("active");
         byte toggleTimer = nbtData.getByte("toggleTimer");
         if (IUCore.keyboard.isArmorKey(player) && toggleTimer == 0) {
             toggleTimer = 10;
             active = !active;
-            if (IUCore.proxy.isSimulating()) {
-                nbtData.setBoolean("active", active);
+            if (!player.level().isClientSide()) {
+                nbtData.putBoolean("active", active);
                 if (active) {
                     IUCore.proxy.messagePlayer(player, "Nightvision enabled.");
                 } else {
@@ -149,39 +129,32 @@ public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IMo
             }
         }
 
-        if (IUCore.proxy.isSimulating() && toggleTimer > 0) {
+        if (!player.level().isClientSide() && toggleTimer > 0) {
             --toggleTimer;
-            nbtData.setByte("toggleTimer", toggleTimer);
+            nbtData.putByte("toggleTimer", toggleTimer);
         }
 
         boolean ret = false;
-        if (active && IUCore.proxy.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
-            int skylight = player.getEntityWorld().getLightFromNeighbors(new BlockPos(player));
+        if (active && !player.level().isClientSide() && ElectricItem.manager.use(stack, 1.0, player)) {
+            int skylight = player.level().getMaxLocalRawBrightness(player.blockPosition());
             if (skylight > 8) {
                 IUCore.proxy.removePotion(player, MobEffects.NIGHT_VISION);
-                player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0, true, true));
+                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 0, true, true));
             } else {
                 IUCore.proxy.removePotion(player, MobEffects.BLINDNESS);
-                player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0, true, true));
+                player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 300, 0, true, true));
             }
 
             ret = true;
         }
 
         if (ret) {
-            player.inventoryContainer.detectAndSendChanges();
+            player.containerMenu.broadcastChanges();
         }
 
     }
 
-    public void getSubItems(CreativeTabs tab, @NotNull NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
-            ElectricItemManager.addChargeVariants(this, subItems);
-        }
-    }
 
-    public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
-        return false;
-    }
+
 
 }

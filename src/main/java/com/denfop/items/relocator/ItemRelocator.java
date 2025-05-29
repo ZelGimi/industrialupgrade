@@ -1,136 +1,100 @@
 package com.denfop.items.relocator;
 
-import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.inv.IAdvInventory;
-import com.denfop.container.ContainerBags;
+import com.denfop.container.ContainerLeadBox;
 import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.IItemStackInventory;
-import com.denfop.items.bags.ItemStackBags;
+import com.denfop.items.bags.ItemStackLeadBox;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 
-public class ItemRelocator extends BaseEnergyItem implements IModelRegister, IItemStackInventory, IUpdatableItemStackEvent {
+public class ItemRelocator extends BaseEnergyItem implements IItemStackInventory, IUpdatableItemStackEvent {
+    public ItemRelocator() {
+        super(10000000, 8192, 3);
 
-    public ItemRelocator(String name) {
-        super(name, 10000000, 8192, 3);
-        setMaxStackSize(1);
-
-        IUCore.proxy.addIModelRegister(this);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "energy" + "/" + name;
-
-        return new ModelResourceLocation(loc, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(5);
-    }
-
-    public String getUnlocalizedName(ItemStack itemStack) {
-        return this.getUnlocalizedName();
-    }
-
-    public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {
-        return false;
-    }
-
-    @Override
-    public void registerModels() {
-        registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
-    }
-
-    public boolean canProvideEnergy(ItemStack stack) {
-        return true;
-    }
-
-
-    @Override
-    public IAdvInventory getInventory(final EntityPlayer var1, final ItemStack var2) {
-        return new ItemStackRelocator(var1, var2);
     }
 
     @Override
     public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
 
     }
-
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
-
-        if (IUCore.proxy.isSimulating()) {
-            save(player.getHeldItem(hand), player);
-            player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu.relocator.name";
         }
-        if (!player.isSneaking()) {
-            player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-        }
-        return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+
+        return this.nameItem;
+    }
+    @Override
+    public void updateEvent(final int event, final ItemStack stack) {
+
     }
 
-    public void save(ItemStack stack, EntityPlayer player) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("open", true);
-        nbt.setInteger("slot_inventory", player.inventory.currentItem);
-    }
-
-    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
-            ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
+    @Override
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerLeadBox) {
+            ItemStackLeadBox toolbox = ((ContainerLeadBox) player.containerMenu).base;
             if (toolbox.isThisContainer(stack)) {
-                toolbox.saveAsThrown(stack);
-                player.closeScreen();
+                toolbox.saveAndThrow(stack);
+                player.closeContainer();
             }
         }
         return true;
     }
 
     @Override
-    public void updateEvent(final int event, final ItemStack stack) {
+    @Nonnull
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
+        ItemStack stack = ModUtils.get(player, hand);
+        if (!world.isClientSide) {
+            save(stack, player);
 
+            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+            growingBuffer.writeByte(1);
+
+            growingBuffer.flip();
+            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+
+
+            return InteractionResultHolder.success(player.getItemInHand(hand));
+
+
+        }
+
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
+    public IAdvInventory getInventory(Player player, ItemStack stack) {
+        return new ItemStackRelocator(player, stack);
+    }
+
+    public void save(ItemStack stack, Player player) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("open", true);
+        nbt.putInt("slot_inventory", player.getInventory().selected);
+    }
 }

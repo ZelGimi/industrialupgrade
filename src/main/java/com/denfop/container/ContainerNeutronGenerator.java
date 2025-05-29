@@ -2,11 +2,11 @@ package com.denfop.container;
 
 
 import com.denfop.tiles.base.TileNeutronGenerator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerNeutronGenerator extends ContainerFullInv<TileNeutronGenerator> {
 
-    public ContainerNeutronGenerator(EntityPlayer entityPlayer, TileNeutronGenerator tileEntity1) {
+    public ContainerNeutronGenerator(Player entityPlayer, TileNeutronGenerator tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
 
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));

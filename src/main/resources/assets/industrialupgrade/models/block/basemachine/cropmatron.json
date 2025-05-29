@@ -1,8 +1,8 @@
 {
 	"parent": "block/cube_bottom_top",
 	"textures": {
-		"side": "industrialupgrade:blocks/cropmatron_sides",
-		"bottom": "industrialupgrade:blocks/cropmatron_bottom",
-		"top": "industrialupgrade:blocks/cropmatron_top"
+		"side": "industrialupgrade:block/cropmatron_sides",
+		"bottom": "industrialupgrade:block/cropmatron_bottom",
+		"top": "industrialupgrade:block/cropmatron_top"
 	}
 }

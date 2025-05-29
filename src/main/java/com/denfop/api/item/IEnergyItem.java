@@ -2,7 +2,7 @@ package com.denfop.api.item;
 
 import com.denfop.ElectricItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IEnergyItem {
 
@@ -14,22 +14,24 @@ public interface IEnergyItem {
 
     double getTransferEnergy(ItemStack var1);
 
-    default boolean showDurabilityBar(final ItemStack stack) {
+    default boolean isBarVisible(final ItemStack stack) {
         return true;
     }
 
-    default int getRGBDurabilityForDisplay(ItemStack stack) {
+    default int getBarColor(ItemStack stack) {
         return ModUtils.convertRGBcolorToInt(33, 91, 199);
     }
 
-    default double getDurabilityForDisplay(ItemStack stack) {
-        return Math.min(
+
+    default int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
                 Math.max(
                         1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
                         0.0
                 ),
                 1.0
-        );
+        ));
     }
 
 }

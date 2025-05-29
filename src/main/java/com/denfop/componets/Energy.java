@@ -1,13 +1,6 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IDual;
-import com.denfop.api.energy.IEnergyAcceptor;
-import com.denfop.api.energy.IEnergyEmitter;
-import com.denfop.api.energy.IEnergySink;
-import com.denfop.api.energy.IEnergySource;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.IMultiDual;
+import com.denfop.api.energy.*;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.sytem.InfoTile;
@@ -18,28 +11,20 @@ import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Energy extends AbstractComponent {
 
@@ -54,8 +39,8 @@ public class Energy extends AbstractComponent {
 
     public int defaultSinkTier;
     public int defaultSourceTier;
-    public Set<EnumFacing> sinkDirections;
-    public Set<EnumFacing> sourceDirections;
+    public Set<Direction> sinkDirections;
+    public Set<Direction> sourceDirections;
     public List<InvSlot> managedSlots = new ArrayList<>();
     public boolean multiSource;
     public int sourcePackets;
@@ -70,7 +55,7 @@ public class Energy extends AbstractComponent {
     protected double pastEnergy1;
     protected double perenergy1;
     Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
     List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
     private ChunkPos chunkPos;
     private long id;
@@ -82,8 +67,8 @@ public class Energy extends AbstractComponent {
     public Energy(
             TileEntityInventory parent,
             double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
+            Set<Direction> sinkDirections,
+            Set<Direction> sourceDirections,
             int tier
     ) {
         this(parent, capacity, sinkDirections, sourceDirections, tier, tier, false);
@@ -92,8 +77,8 @@ public class Energy extends AbstractComponent {
     public Energy(
             TileEntityInventory parent,
             double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
+            Set<Direction> sinkDirections,
+            Set<Direction> sourceDirections,
             int sinkTier,
             int sourceTier,
             boolean fullEnergy
@@ -120,8 +105,8 @@ public class Energy extends AbstractComponent {
     public Energy(
             TileEntityInventory parent,
             double capacity,
-            List<EnumFacing> sinkDirections,
-            List<EnumFacing> sourceDirections,
+            List<Direction> sinkDirections,
+            List<Direction> sourceDirections,
             int sinkTier,
             int sourceTier,
             boolean fullEnergy
@@ -166,8 +151,8 @@ public class Energy extends AbstractComponent {
     }
 
     @Override
-    public void onNeighborChange(final Block srcBlock, final BlockPos srcPos) {
-
+    public void onNeighborChange(BlockState srcBlock, BlockPos srcPos) {
+        super.onNeighborChange(srcBlock, srcPos);
     }
 
     @Override
@@ -178,12 +163,14 @@ public class Energy extends AbstractComponent {
                 if (slot instanceof InvSlotDischarge) {
                     InvSlotDischarge discharge = (InvSlotDischarge) slot;
                     if (!discharge.isEmpty()) {
-                        if (discharge.get().getItem() == Items.REDSTONE) {
+                        if (discharge.get(0).getItem() == Items.REDSTONE) {
                             double energy = discharge.dischargeWithRedstone(this.capacity, this.getFreeEnergy());
                             this.addEnergy(energy);
                         } else {
-                            double energy = discharge.discharge(this.getFreeEnergy(), false);
-                            this.addEnergy(energy);
+                            if (this.getFreeEnergy() > 0) {
+                                 double energy = discharge.discharge(this.getFreeEnergy(), false);
+                                this.addEnergy(energy);
+                            }
                         }
                     }
                 } else if (slot instanceof InvSlotCharge) {
@@ -199,7 +186,7 @@ public class Energy extends AbstractComponent {
 
     public ChunkPos getChunkPos() {
         if (this.chunkPos == null) {
-            this.chunkPos = new ChunkPos(getParent().getPos().getX() >> 4, getParent().getPos().getZ() >> 4);
+            this.chunkPos = new ChunkPos(getParent().getBlockPos());
         }
         return chunkPos;
     }
@@ -218,12 +205,12 @@ public class Energy extends AbstractComponent {
         return this;
     }
 
-    public Map<EnumFacing, IEnergyTile> getConductors() {
+    public Map<Direction, IEnergyTile> getConductors() {
         return energyConductorMap;
     }
 
-    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
-        if (!this.parent.getWorld().isRemote) {
+    public void RemoveTile(IEnergyTile tile, final Direction facing1) {
+        if (!this.parent.getLevel().isClientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
@@ -240,8 +227,8 @@ public class Energy extends AbstractComponent {
         return validReceivers;
     }
 
-    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
-        if (!this.parent.getWorld().isRemote) {
+    public void AddTile(IEnergyTile tile, final Direction facing1) {
+        if (!this.parent.getLevel().isClientSide) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);
                 validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
@@ -249,15 +236,15 @@ public class Energy extends AbstractComponent {
         }
     }
 
-    public void readFromNbt(NBTTagCompound nbt) {
+    public void readFromNbt(CompoundTag nbt) {
         this.storage = nbt.getDouble("storage");
         this.limit_amount = nbt.getDouble("limit_amount");
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound ret = new NBTTagCompound();
-        ret.setDouble("storage", this.storage);
-        ret.setDouble("limit_amount", this.limit_amount);
+    public CompoundTag writeToNbt() {
+        CompoundTag ret = new CompoundTag();
+        ret.putDouble("storage", this.storage);
+        ret.putDouble("limit_amount", this.limit_amount);
 
         return ret;
     }
@@ -267,12 +254,12 @@ public class Energy extends AbstractComponent {
 
         assert this.delegate == null;
 
-        if (!this.parent.getWorld().isRemote) {
+        if (!this.parent.getLevel().isClientSide) {
             if (!(this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty())) {
                 this.createDelegate();
                 this.energyConductorMap.clear();
                 validReceivers.clear();
-                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
+                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
             }
             this.loaded = true;
         }
@@ -303,20 +290,19 @@ public class Energy extends AbstractComponent {
             }
 
 
-            this.delegate.setWorld(this.parent.getWorld());
-            this.delegate.setPos(this.parent.getPos());
+            this.delegate.setLevel(this.parent.getLevel());
         }
     }
 
     public void onUnloaded() {
         if (this.delegate != null) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
             this.delegate = null;
         }
         this.loaded = false;
     }
 
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
@@ -487,12 +473,12 @@ public class Energy extends AbstractComponent {
 
     }
 
-    public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
+    public void setDirections(Set<Direction> sinkDirections, Set<Direction> sourceDirections) {
         if (this.delegate != null) {
 
-            assert !this.parent.getWorld().isRemote;
+            assert !this.parent.getLevel().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
         this.sinkDirections = sinkDirections;
@@ -505,10 +491,10 @@ public class Energy extends AbstractComponent {
         if (this.delegate != null) {
 
 
-            assert !this.parent.getWorld().isRemote;
+            assert !this.parent.getLevel().isClientSide;
             this.energyConductorMap.clear();
             validReceivers.clear();
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
 
@@ -522,12 +508,12 @@ public class Energy extends AbstractComponent {
         this.id = id;
     }
 
-    public void setDirections(List<EnumFacing> sinkDirections, List<EnumFacing> sourceDirections) {
+    public void setDirections(List<Direction> sinkDirections, List<Direction> sourceDirections) {
         if (this.delegate != null) {
 
-            assert !this.parent.getWorld().isRemote;
+            assert !this.parent.getLevel().isClientSide;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
         this.sinkDirections = new HashSet<>(sinkDirections);
@@ -536,26 +522,24 @@ public class Energy extends AbstractComponent {
             this.delegate = null;
         } else if (this.delegate == null && this.loaded) {
             this.energyConductorMap.clear();
-            validReceivers.clear();
             this.createDelegate();
         }
         if (this.delegate != null) {
 
 
             this.energyConductorMap.clear();
-            validReceivers.clear();
-            assert !this.parent.getWorld().isRemote;
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
+            assert !this.parent.getLevel().isClientSide;
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getLevel(), this.delegate));
         }
 
 
     }
 
-    public Set<EnumFacing> getSourceDirs() {
+    public Set<Direction> getSourceDirs() {
         return Collections.unmodifiableSet(this.sourceDirections);
     }
 
-    public Set<EnumFacing> getSinkDirs() {
+    public Set<Direction> getSinkDirs() {
         return Collections.unmodifiableSet(this.sinkDirections);
     }
 
@@ -573,9 +557,11 @@ public class Energy extends AbstractComponent {
     }
 
 
-    private abstract static class EnergyNetDelegate extends TileEntity implements IEnergyTile {
+    private abstract class EnergyNetDelegate extends BlockEntity implements IEnergyTile {
 
         private EnergyNetDelegate() {
+            super(Energy.this.parent.getType(), Energy.this.parent.getBlockPos(), Energy.this.parent.getBlockState());
+
         }
 
     }
@@ -592,8 +578,8 @@ public class Energy extends AbstractComponent {
             super();
         }
 
-        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing dir) {
-            for (EnumFacing facing1 : Energy.this.sinkDirections) {
+        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
+            for (Direction facing1 : Energy.this.sinkDirections) {
                 if (facing1.ordinal() == dir.ordinal()) {
                     return true;
                 }
@@ -623,10 +609,8 @@ public class Energy extends AbstractComponent {
             return validReceivers;
         }
 
-
-
-        public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing dir) {
-            for (EnumFacing facing1 : Energy.this.sourceDirections) {
+        public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
+            for (Direction facing1 : Energy.this.sourceDirections) {
                 if (facing1.ordinal() == dir.ordinal()) {
                     return true;
                 }
@@ -635,27 +619,27 @@ public class Energy extends AbstractComponent {
         }
 
         @Override
-        public @NotNull BlockPos getBlockPos() {
-            return Energy.this.parent.getPos();
+        public @NotNull BlockPos getPos() {
+            return Energy.this.parent.getBlockPos();
         }
 
         @Override
-        public void AddTile(final IEnergyTile tile, final EnumFacing dir) {
+        public void AddTile(final IEnergyTile tile, final Direction dir) {
             Energy.this.AddTile(tile, dir);
         }
 
         @Override
-        public void RemoveTile(final IEnergyTile tile, final EnumFacing dir) {
+        public void RemoveTile(final IEnergyTile tile, final Direction dir) {
             Energy.this.RemoveTile(tile, dir);
         }
 
         @Override
-        public Map<EnumFacing, IEnergyTile> getTiles() {
+        public Map<Direction, IEnergyTile> getTiles() {
             return Energy.this.energyConductorMap;
         }
 
         @Override
-        public TileEntity getTileEntity() {
+        public BlockEntity getTileEntity() {
             return Energy.this.parent;
         }
 
@@ -773,8 +757,8 @@ public class Energy extends AbstractComponent {
             super();
         }
 
-        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing dir) {
-            for (EnumFacing facing1 : Energy.this.sinkDirections) {
+        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
+            for (Direction facing1 : Energy.this.sinkDirections) {
                 if (facing1.ordinal() == dir.ordinal()) {
                     return true;
                 }
@@ -804,24 +788,23 @@ public class Energy extends AbstractComponent {
             return validReceivers;
         }
 
-
         @Override
-        public void AddTile(final IEnergyTile tile, final EnumFacing dir) {
+        public void AddTile(final IEnergyTile tile, final Direction dir) {
             Energy.this.AddTile(tile, dir);
         }
 
         @Override
-        public void RemoveTile(final IEnergyTile tile, final EnumFacing dir) {
+        public void RemoveTile(final IEnergyTile tile, final Direction dir) {
             Energy.this.RemoveTile(tile, dir);
         }
 
         @Override
-        public Map<EnumFacing, IEnergyTile> getTiles() {
+        public Map<Direction, IEnergyTile> getTiles() {
             return Energy.this.energyConductorMap;
         }
 
-        public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing dir) {
-            for (EnumFacing facing1 : Energy.this.sourceDirections) {
+        public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
+            for (Direction facing1 : Energy.this.sourceDirections) {
                 if (facing1.ordinal() == dir.ordinal()) {
                     return true;
                 }
@@ -830,12 +813,12 @@ public class Energy extends AbstractComponent {
         }
 
         @Override
-        public @NotNull BlockPos getBlockPos() {
-            return Energy.this.parent.getPos();
+        public @NotNull BlockPos getPos() {
+            return Energy.this.parent.getBlockPos();
         }
 
         @Override
-        public TileEntity getTileEntity() {
+        public BlockEntity getTileEntity() {
             return Energy.this.parent;
         }
 
@@ -956,8 +939,8 @@ public class Energy extends AbstractComponent {
             return Energy.this.sinkTier;
         }
 
-        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing dir) {
-            for (EnumFacing facing1 : Energy.this.sinkDirections) {
+        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction dir) {
+            for (Direction facing1 : Energy.this.sinkDirections) {
                 if (facing1.ordinal() == dir.ordinal()) {
                     return true;
                 }
@@ -987,21 +970,18 @@ public class Energy extends AbstractComponent {
             hashCodeSource = hashCode;
         }
 
-
-
-
         @Override
-        public void AddTile(final IEnergyTile tile, final EnumFacing dir) {
+        public void AddTile(final IEnergyTile tile, final Direction dir) {
             Energy.this.AddTile(tile, dir);
         }
 
         @Override
-        public void RemoveTile(final IEnergyTile tile, final EnumFacing dir) {
+        public void RemoveTile(final IEnergyTile tile, final Direction dir) {
             Energy.this.RemoveTile(tile, dir);
         }
 
         @Override
-        public Map<EnumFacing, IEnergyTile> getTiles() {
+        public Map<Direction, IEnergyTile> getTiles() {
             return Energy.this.energyConductorMap;
         }
 
@@ -1054,13 +1034,13 @@ public class Energy extends AbstractComponent {
         }
 
         @Override
-        public TileEntity getTileEntity() {
+        public BlockEntity getTileEntity() {
             return Energy.this.parent;
         }
 
         @Override
-        public @NotNull BlockPos getBlockPos() {
-            return Energy.this.parent.getPos();
+        public @NotNull BlockPos getPos() {
+            return Energy.this.parent.getBlockPos();
         }
 
     }
@@ -1087,38 +1067,36 @@ public class Energy extends AbstractComponent {
             hashCodeSource = hashCode;
         }
 
-
-
         public List<InfoTile<IEnergyTile>> getValidReceivers() {
             return validReceivers;
         }
 
         @Override
-        public void AddTile(final IEnergyTile tile, final EnumFacing dir) {
+        public void AddTile(final IEnergyTile tile, final Direction dir) {
             Energy.this.AddTile(tile, dir);
         }
 
         @Override
-        public void RemoveTile(final IEnergyTile tile, final EnumFacing dir) {
+        public void RemoveTile(final IEnergyTile tile, final Direction dir) {
             Energy.this.RemoveTile(tile, dir);
         }
 
         @Override
-        public Map<EnumFacing, IEnergyTile> getTiles() {
+        public Map<Direction, IEnergyTile> getTiles() {
             return Energy.this.energyConductorMap;
         }
 
         @Override
-        public @NotNull BlockPos getBlockPos() {
-            return Energy.this.parent.getPos();
+        public @NotNull BlockPos getPos() {
+            return Energy.this.parent.getBlockPos();
         }
 
         public int getSourceTier() {
             return Energy.this.sourceTier;
         }
 
-        public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing dir) {
-            for (EnumFacing facing1 : Energy.this.sourceDirections) {
+        public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction dir) {
+            for (Direction facing1 : Energy.this.sourceDirections) {
                 if (facing1.ordinal() == dir.ordinal()) {
                     return true;
                 }
@@ -1173,7 +1151,7 @@ public class Energy extends AbstractComponent {
         }
 
         @Override
-        public TileEntity getTileEntity() {
+        public BlockEntity getTileEntity() {
             return this;
         }
 

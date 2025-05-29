@@ -1,51 +1,45 @@
 package com.denfop.blocks;
 
-
+import com.denfop.DataBlock;
 import com.denfop.IUItem;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.BlockHitResult;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
-
-public class BlockFoam extends BlockBase {
-
-    public static final PropertyEnum<FoamType> VARIANT = PropertyEnum.create("state", FoamType.class);
+public class BlockFoam<T extends Enum<T> & ISubEnum> extends BlockCore<T> {
 
 
-    public BlockFoam() {
-        super("foam", Material.CLOTH);
-        this.setTickRandomly(true);
-        this.setHardness(0.01F);
-        this.setResistance(10.0F);
-        this.setSoundType(SoundType.CLOTH);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, FoamType.reinforced));
+    public BlockFoam(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
+        super(Properties.of().mapColor(MapColor.WOOL).destroyTime(0.01f).noOcclusion().noCollission().explosionResistance(10F).sound(SoundType.WOOL).randomTicks(), elements, element, dataBlock);
+
 
     }
 
-    public static float getHardenChance(World world, BlockPos pos, IBlockState state, FoamType type) {
-        int light = world.getLightFromNeighbors(pos);
-        if (!state.useNeighborBrightness() && state.getBlock().getLightOpacity(state, world, pos) == 0) {
-            EnumFacing[] var5 = EnumFacing.VALUES;
+    public static float getHardenChance(Level world, BlockPos pos, BlockState state, FoamType type) {
+        int light = world.getMaxLocalRawBrightness(pos);
+        if (!state.supportsExternalFaceHiding() && state.getBlock().getLightEmission(state, world, pos) == 0) {
+            Direction[] var5 = Direction.values();
 
-            for (EnumFacing side : var5) {
-                light = Math.max(light, world.getLight(pos.offset(side), false));
+            for (Direction side : var5) {
+                light = Math.max(light, world.getMaxLocalRawBrightness(pos.offset(side.getNormal())));
             }
         }
 
@@ -53,90 +47,51 @@ public class BlockFoam extends BlockBase {
         return 1.0F / (float) (avgTime * 20);
     }
 
-    @Nonnull
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
-    }
-
-    @Nonnull
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(VARIANT, FoamType.values()[meta]);
-    }
-
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT).getId();
-    }
-
-    public IBlockState getState(FoamType type) {
-        if (type == null) {
-            throw new IllegalArgumentException("invalid type: " + type);
-        } else {
-            return this.getDefaultState().withProperty(VARIANT, type);
-        }
-    }
-
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
-    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return true;
-    }
-
-    @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess world, BlockPos pos) {
-        return null;
-    }
-
-    public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return false;
-    }
-
-    public void randomTick(World world, BlockPos pos, IBlockState state, Random random) {
-        int tickSpeed = world.getGameRules().getInt("randomTickSpeed");
+    @Override
+    public void randomTick(BlockState p_222954_, ServerLevel p_222955_, BlockPos p_222956_, RandomSource p_222957_) {
+        int tickSpeed = p_222955_.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
         if (tickSpeed <= 0) {
-            throw new IllegalStateException("Foam was randomly ticked when world " + world + " isn't ticking?");
+            throw new IllegalStateException("Foam was randomly ticked when world " + p_222955_ + " isn't ticking?");
         } else {
-            FoamType type = state.getValue(VARIANT);
-            float chance = getHardenChance(world, pos, state, type) * 4096.0F / (float) tickSpeed;
-            if (random.nextFloat() < chance) {
-                world.setBlockState(pos, state.getValue(VARIANT).getResult());
+            FoamType type = (FoamType) getElement();
+            float chance = getHardenChance(p_222955_, p_222956_, p_222954_, type) * 4096.0F / (float) tickSpeed;
+            if (p_222957_.nextFloat() < chance) {
+                p_222955_.setBlock(p_222956_, FoamType.values()[getMetaFromState(p_222954_)].getResult(), 3);
             }
 
         }
     }
 
-    public boolean onBlockActivated(
-            World world,
-            BlockPos pos,
-            IBlockState state,
-            EntityPlayer player,
-            EnumHand hand,
-            EnumFacing side,
-            float hitX,
-            float hitY,
-            float hitZ
-    ) {
-        final ItemStack handItem = player.getHeldItem(hand);
-        if (!handItem.isEmpty() && handItem.isItemEqual(new ItemStack(Blocks.SAND))) {
-            world.setBlockState(pos, state.getValue(VARIANT).getResult());
+    @Override
+    public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
+        final ItemStack handItem = p_60506_.getItemInHand(p_60507_);
+        if (!handItem.isEmpty() && handItem.is(new ItemStack(Blocks.SAND).getItem())) {
+            p_60504_.setBlock(p_60505_, FoamType.values()[getMetaFromState(p_60503_)].getResult(), 3);
             handItem.shrink(1);
-            return true;
+            return InteractionResult.SUCCESS;
         } else {
-            return false;
+            return InteractionResult.FAIL;
         }
-
     }
 
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        return super.getDrops(world, pos, state, fortune);
-    }
-
-    public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos, EntityLiving.SpawnPlacementType type) {
+    @Override
+    public boolean isValidSpawn(BlockState state, BlockGetter level, BlockPos pos, SpawnPlacements.Type type, EntityType<?> entityType) {
         return false;
     }
 
-    public enum FoamType implements IStringSerializable, ISubEnum {
+
+    @Override
+    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+        return stateDefinition.any();
+    }
+
+    @Override
+    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+        p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
+    }
+
+
+    public enum FoamType implements ISubEnum {
         reinforced(600);
 
         public final int hardenTime;
@@ -149,14 +104,23 @@ public class BlockFoam extends BlockBase {
             return this.name();
         }
 
+        @Override
+        public boolean registerOnlyBlock() {
+            return true;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "foam";
+        }
+
         public int getId() {
             return this.ordinal();
         }
 
 
-        public IBlockState getResult() {
-            return IUItem.blockResource.getStateFromMeta(BlockResource.Type.reinforced_stone.getMetadata());
+        public BlockState getResult() {
+            return IUItem.blockResource.getBlock(6).defaultBlockState();
         }
     }
-
 }

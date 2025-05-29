@@ -1,121 +1,87 @@
 package com.denfop.items.modules;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
+import com.denfop.items.ItemMain;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemQuarryModule extends ItemSubTypes<ItemQuarryModule.CraftingTypes> implements IModelRegister {
-
-    protected static final String NAME = "quarrymodules";
-
-    public ItemQuarryModule() {
-        super(CraftingTypes.class);
-        this.setCreativeTab(IUCore.ModuleTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemQuarryModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemQuarryModule(T element) {
+        super(new Properties(), element);
     }
-
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":quarrymodules/" + CraftingTypes.getFromID(meta).getName(), null)
-        );
-    }
-
-
     @Override
-    public void addInformation(
-            @Nonnull final ItemStack itemStack,
-            @Nullable final World worldIn,
-            @Nonnull final List<String> info,
-            @Nonnull final ITooltipFlag flagIn
-    ) {
-        super.addInformation(itemStack, worldIn, info, flagIn);
-        int meta = itemStack.getItemDamage();
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ModuleTab;
+    }
+    @Override
+    public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(itemStack, p_41422_, p_41423_, p_41424_);
+        int meta = getElement().getId();
         switch (meta) {
             case 0:
-                info.add(Localization.translate("iu.quarry"));
-                info.add(Localization.translate("iu.quarry1"));
+                p_41423_.add(Component.literal(Localization.translate("iu.quarry")));
+                p_41423_.add(Component.literal(Localization.translate("iu.quarry1")));
                 break;
             case 1:
             case 2:
             case 3:
             case 4:
             case 5:
-                info.add(Localization.translate("iu.quarry"));
-                info.add(Localization.translate("iu.quarry2"));
+                p_41423_.add(Component.literal(Localization.translate("iu.quarry")));
+                p_41423_.add(Component.literal(Localization.translate("iu.quarry2")));
                 break;
             case 12:
-                info.add(Localization.translate("iu.blacklist"));
-                NBTTagCompound nbt = ModUtils.nbt(itemStack);
-                int size = nbt.getInteger("size");
+                p_41423_.add(Component.literal(Localization.translate("iu.blacklist")));
+                CompoundTag nbt = ModUtils.nbt(itemStack);
+                int size = nbt.getInt("size");
                 for (int i = 0; i < size; i++) {
                     String l = "number_" + i;
                     String ore = ModUtils.NBTGetString(itemStack, l);
-                    ItemStack stack = OreDictionary.getOres(ore).get(0);
-                    info.add(stack.getDisplayName());
+                    ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation(ore))).iterator().next().get());
+                    p_41423_.add(stack.getDisplayName());
                 }
                 break;
             case 13:
-                info.add(Localization.translate("iu.whitelist"));
+                p_41423_.add(Component.literal(Localization.translate("iu.whitelist")));
                 nbt = ModUtils.nbt(itemStack);
-                size = nbt.getInteger("size");
+                size = nbt.getInt("size");
                 for (int i = 0; i < size; i++) {
                     String l = "number_" + i;
                     String ore = ModUtils.NBTGetString(itemStack, l);
-                    ItemStack stack = OreDictionary.getOres(ore).get(0);
-                    info.add(stack.getDisplayName());
+                    ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation(ore))).iterator().next().get());
+                    p_41423_.add(stack.getDisplayName());
                 }
 
                 break;
             case 14:
-                info.add(TextFormatting.DARK_PURPLE + Localization.translate("iu.macerator"));
+                p_41423_.add(Component.literal(ChatFormatting.DARK_PURPLE + Localization.translate("iu.macerator")));
                 break;
             case 15:
-                info.add(TextFormatting.DARK_PURPLE + Localization.translate("iu.comb_macerator"));
-                break;
-            case 16:
-                info.add(TextFormatting.DARK_RED + Localization.translate("iu.polisher"));
+                p_41423_.add(Component.literal(ChatFormatting.DARK_PURPLE + Localization.translate("iu.comb_macerator")));
                 break;
         }
         EnumQuarryModules enumQuarryModules = EnumQuarryModules.values()[meta];
         if (enumQuarryModules.cost < 0) {
-            info.add(TextFormatting.GREEN + Localization.translate("iu.quarry_energy1") + (int) (Math.abs(enumQuarryModules.cost) * 100) +
-                    "%");
+            p_41423_.add(Component.literal(ChatFormatting.GREEN + Localization.translate("iu.quarry_energy1") + (int) (Math.abs(enumQuarryModules.cost) * 100) +
+                    "%"));
         } else if (enumQuarryModules.cost > 0) {
-            info.add(TextFormatting.RED + Localization.translate("iu.quarry_energy") + (int) (enumQuarryModules.cost * 100) + "%");
+            p_41423_.add(Component.literal(ChatFormatting.RED + Localization.translate("iu.quarry_energy") + (int) (enumQuarryModules.cost * 100) + "%"));
         }
-
-    }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     public enum CraftingTypes implements ISubEnum {
@@ -135,7 +101,6 @@ public class ItemQuarryModule extends ItemSubTypes<ItemQuarryModule.CraftingType
         whitemodule(13),
         macerator(14),
         comb_macerator(15),
-        polisher(16),
         ;
 
         private final String name;
@@ -154,9 +119,13 @@ public class ItemQuarryModule extends ItemSubTypes<ItemQuarryModule.CraftingType
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "quarrymodules";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

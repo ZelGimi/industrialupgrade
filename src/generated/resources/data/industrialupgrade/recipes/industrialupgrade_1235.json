@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:nuclearresource/curium_dust"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemdust/stone_dust"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:nuclearresource/unprocessed_radioactive_curium"
+  },
+  "show_notification": true
+}

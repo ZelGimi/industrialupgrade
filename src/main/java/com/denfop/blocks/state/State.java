@@ -10,7 +10,7 @@ public class State implements Comparable<State> {
     public final IMultiTileBlock teBlock;
     public final String state;
 
-    State(IMultiTileBlock teBlock, String state) {
+    public State(IMultiTileBlock teBlock, String state) {
         this.teBlock = teBlock;
         this.state = state;
     }
@@ -33,7 +33,7 @@ public class State implements Comparable<State> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(teBlock, state);
+        return Objects.hash(state);
     }
 
     public int compareTo(State o) {

@@ -10,12 +10,12 @@ import com.denfop.tiles.mechanism.dual.TileSynthesis;
 import com.denfop.tiles.mechanism.dual.TileUpgradeBlock;
 import com.denfop.tiles.mechanism.dual.heat.TileAlloySmelter;
 import com.denfop.tiles.mechanism.dual.heat.TileWeldingMachine;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricMachine {
 
     public ContainerDoubleElectricMachine(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileDoubleElectricMachine tileEntity1,
             EnumDoubleElectricMachine type
     ) {
@@ -39,7 +39,7 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
 
 
     public ContainerDoubleElectricMachine(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileDoubleElectricMachine tileEntity1,
             int height,
             int dischargeX,
@@ -84,11 +84,15 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
                 addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
                         i, upgradeX + 5, upgradeY + 1 + i * 18
                 ));
-            } else if (tileEntity1 instanceof TileWeldingMachine) {
-                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
-                        i, upgradeX + 5, upgradeY + i * 18
-                ));
-            } else if (tileEntity1 instanceof TileUpgradeBlock || tileEntity1 instanceof TileEntityUpgradeRover) {
+            }
+            else if (tileEntity1 instanceof TileWeldingMachine) {
+                  addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                           i, upgradeX + 5, upgradeY + i * 18
+                 ));
+                }
+            else if (tileEntity1 instanceof TileUpgradeBlock
+                || tileEntity1 instanceof TileEntityUpgradeRover
+            ) {
                 addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
                         i, upgradeX + 5, upgradeY + 1 + i * 18
                 ));

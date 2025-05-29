@@ -1,12 +1,12 @@
 {
 	"parent": "industrialupgrade:block/wiring/chargepad/chargepad_base",
 	"textures": {
-		"particle": "industrialupgrade:blocks/chargepad_mfsu_leftrightback",
-		"down": "industrialupgrade:blocks/chargepad_mfsu_bottom",
-		"up": "industrialupgrade:blocks/chargepad_mfsu_top_active",
-		"north": "industrialupgrade:blocks/chargepad_mfsu_front",
-		"east": "industrialupgrade:blocks/chargepad_mfsu_leftrightback",
-		"south": "industrialupgrade:blocks/chargepad_mfsu_leftrightback",
-		"west": "industrialupgrade:blocks/chargepad_mfsu_leftrightback"
+		"particle": "industrialupgrade:block/chargepad_mfsu_leftrightback",
+		"down": "industrialupgrade:block/chargepad_mfsu_bottom",
+		"up": "industrialupgrade:block/chargepad_mfsu_top_active",
+		"north": "industrialupgrade:block/chargepad_mfsu_front",
+		"east": "industrialupgrade:block/chargepad_mfsu_leftrightback",
+		"south": "industrialupgrade:block/chargepad_mfsu_leftrightback",
+		"west": "industrialupgrade:block/chargepad_mfsu_leftrightback"
 	}
 }

@@ -47,5 +47,4 @@ public class CoolTickList<T extends CoolTick<ICoolSource, Path>> extends ArrayLi
         }
         return null;
     }
-
 }

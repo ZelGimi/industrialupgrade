@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/itemcellneutron"
+    "layer0" : "industrialupgrade:item/itemcellneutron"
   }
 }

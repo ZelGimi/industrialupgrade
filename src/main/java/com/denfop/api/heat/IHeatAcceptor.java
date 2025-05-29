@@ -1,9 +1,9 @@
 package com.denfop.api.heat;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public interface IHeatAcceptor extends IHeatTile {
 
-    boolean acceptsHeatFrom(IHeatEmitter var1, EnumFacing var2);
+    boolean acceptsHeatFrom(IHeatEmitter var1, Direction var2);
 
 }

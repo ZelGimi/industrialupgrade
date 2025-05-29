@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.generator.things.fluid;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -12,21 +13,25 @@ import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeliumGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiHeliumGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -43,8 +48,8 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
     private final AirPollutionComponent pollutionAir;
     private double lastEnergy;
 
-    public TileHeliumGenerator() {
-        super(50000, 1, 1);
+    public TileHeliumGenerator(BlockPos pos, BlockState state) {
+        super(50000, 1, 1, BlockBaseMachine2.helium_generator, pos, state);
 
         this.energycost = 1000;
         this.outputSlot = new InvSlotOutput(this, 1);
@@ -54,11 +59,11 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
                 1,
 
                 InvSlotFluid.TypeFluidSlot.OUTPUT,
-                FluidName.fluidHelium.getInstance()
+                FluidName.fluidHelium.getInstance().get()
         );
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.TypeItemSlot.OUTPUT,
-                Fluids.fluidPredicate(FluidName.fluidHelium.getInstance())
+                Fluids.fluidPredicate(FluidName.fluidHelium.getInstance().get())
         );
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
@@ -75,7 +80,7 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     @Override
@@ -83,20 +88,20 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
         return EnumSound.hydrogen_generator.getSoundEvent();
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         this.lastEnergy = nbt.getDouble("lastEnergy");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setDouble("lastEnergy", this.lastEnergy);
+        nbt.putDouble("lastEnergy", this.lastEnergy);
         return nbt;
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.setUpgradestat();
         }
 
@@ -142,7 +147,7 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
             return false;
         }
         m = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
-        this.fluidTank.fillInternal(new FluidStack(FluidName.fluidHelium.getInstance(), Math.min(m, k)), true);
+        this.fluidTank.fill(new FluidStack(FluidName.fluidHelium.getInstance().get(), Math.min(m, k)), IFluidHandler.FluidAction.EXECUTE);
         this.energy.useEnergy(this.energycost * Math.min(m, k));
         return true;
     }
@@ -152,13 +157,13 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
         return "" + p + "%";
     }
 
-    public ContainerHeliumGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerHeliumGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerHeliumGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiHeliumGenerator(new ContainerHeliumGenerator(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiHeliumGenerator((ContainerHeliumGenerator) isAdmin);
     }
 
 

@@ -1,7 +1,7 @@
 {
 	"parent": "block/cube_column",
 	"textures": {
-		"side": "industrialupgrade:blocks/tropical_rubber_wood_sides",
-		"end": "industrialupgrade:blocks/tropical_rubber_wood_bottomtop"
+		"side": "industrialupgrade:block/tropical_rubber_wood_sides",
+		"end": "industrialupgrade:block/tropical_rubber_wood_bottomtop"
 	}
 }

@@ -2,7 +2,7 @@ package com.denfop.componets;
 
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.io.IOException;
 
@@ -76,7 +76,7 @@ public class ComponentProgress extends AbstractComponent {
     }
 
     @Override
-    public void onContainerUpdate(final EntityPlayerMP player) {
+    public void onContainerUpdate(final ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeShort(progress.length);
         for (final short value : progress) {

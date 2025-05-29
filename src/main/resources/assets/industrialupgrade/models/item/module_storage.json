@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/module_storage"
+    "layer0" : "industrialupgrade:item/module_storage"
   }
 }

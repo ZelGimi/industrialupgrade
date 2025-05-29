@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=heev": {
+      "model": "industrialupgrade:block/basemachine/heev"
+    },
+    "facing=south,type=heev": {
+      "model": "industrialupgrade:block/basemachine/heev",
+      "y": 180
+    },
+    "facing=west,type=heev": {
+      "model": "industrialupgrade:block/basemachine/heev",
+      "y": 270
+    },
+    "facing=east,type=heev": {
+      "model": "industrialupgrade:block/basemachine/heev",
+      "y": 90
+    },
+    "facing=down,type=heev": {
+      "model": "industrialupgrade:block/basemachine/heev",
+      "x": 90
+    },
+    "facing=up,type=heev": {
+      "model": "industrialupgrade:block/basemachine/heev",
+      "x": 270
+    },
+    "facing=north,type=heev_invalid": {
+      "model": "industrialupgrade:block/basemachine/heev_active"
+    },
+    "facing=south,type=heev_invalid": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "y": 180
+    },
+    "facing=west,type=heev_invalid": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "y": 270
+    },
+    "facing=east,type=heev_invalid": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "y": 90
+    },
+    "facing=down,type=heev_invalid": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "x": 90
+    },
+    "facing=up,type=heev_invalid": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "x": 270
+    },
+    "facing=north,type=heev_active": {
+      "model": "industrialupgrade:block/basemachine/heev_active"
+    },
+    "facing=south,type=heev_active": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "y": 180
+    },
+    "facing=west,type=heev_active": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "y": 270
+    },
+    "facing=east,type=heev_active": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "y": 90
+    },
+    "facing=down,type=heev_active": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "x": 90
+    },
+    "facing=up,type=heev_active": {
+      "model": "industrialupgrade:block/basemachine/heev_active",
+      "x": 270
+    }
+  }
+}

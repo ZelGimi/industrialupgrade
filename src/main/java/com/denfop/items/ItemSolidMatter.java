@@ -1,83 +1,45 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
 
-public class ItemSolidMatter extends ItemSubTypes<ItemSolidMatter.Types> implements IModelRegister {
-
-    protected static final String NAME = "solidmatter";
-
-    public ItemSolidMatter() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemSolidMatter<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemSolidMatter(T element) {
+        super(new Item.Properties(), element);
     }
-
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
+    }
     public static EnumSolidMatter getsolidmatter(int meta) {
-        switch (meta) {
-            case 0:
-                return EnumSolidMatter.AER;
-            case 1:
-                return EnumSolidMatter.AQUA;
-            case 2:
-                return EnumSolidMatter.EARTH;
-            case 3:
-                return EnumSolidMatter.END;
-            case 5:
-                return EnumSolidMatter.NETHER;
-            case 6:
-                return EnumSolidMatter.NIGHT;
-            case 7:
-                return EnumSolidMatter.SUN;
-            default:
-                return EnumSolidMatter.MATTER;
-
-        }
+        return switch (meta) {
+            case 0 -> EnumSolidMatter.AER;
+            case 1 -> EnumSolidMatter.AQUA;
+            case 2 -> EnumSolidMatter.EARTH;
+            case 3 -> EnumSolidMatter.END;
+            case 5 -> EnumSolidMatter.NETHER;
+            case 6 -> EnumSolidMatter.NIGHT;
+            case 7 -> EnumSolidMatter.SUN;
+            default -> EnumSolidMatter.MATTER;
+        };
 
     }
 
     @Override
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            final List<String> tooltip,
-            final ITooltipFlag flagIn
-    ) {
-        tooltip.add(Localization.translate("iu.matter.info"));
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-    }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        p_41423_.add(Component.literal(Localization.translate("iu.matter.info")));
     }
 
     public enum Types implements ISubEnum {
@@ -106,9 +68,13 @@ public class ItemSolidMatter extends ItemSubTypes<ItemSolidMatter.Types> impleme
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "solidmatter";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

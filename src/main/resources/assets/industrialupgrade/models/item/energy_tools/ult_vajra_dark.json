@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/ult_vajra_dark"	}
+		"layer0": "industrialupgrade:item/ult_vajra_dark"	}
 }

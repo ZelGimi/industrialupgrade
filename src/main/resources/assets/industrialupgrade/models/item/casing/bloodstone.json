@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/bloodstone_casing"
+    "layer0" : "industrialupgrade:item/bloodstone_casing"
   }
 }

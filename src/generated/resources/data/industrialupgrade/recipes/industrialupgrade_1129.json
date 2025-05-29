@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_274_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:radiationresources/rad_toriy"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/bronze"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "EDE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_176_element"
+  },
+  "show_notification": true
+}

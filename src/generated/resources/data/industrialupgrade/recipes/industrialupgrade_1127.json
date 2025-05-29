@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gears/mikhail"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/platinum"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:doubleplate/redbrass"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "DAD",
+    "EEE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_90_element"
+  },
+  "show_notification": true
+}

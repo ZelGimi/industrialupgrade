@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=crystallize": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2"
+    },
+    "facing=south,type=crystallize": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 180
+    },
+    "facing=west,type=crystallize": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 270
+    },
+    "facing=east,type=crystallize": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 90
+    },
+    "facing=down,type=crystallize": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "x": 90
+    },
+    "facing=up,type=crystallize": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "x": 270
+    },
+    "facing=north,type=crystallize_invalid": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2"
+    },
+    "facing=south,type=crystallize_invalid": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 180
+    },
+    "facing=west,type=crystallize_invalid": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 270
+    },
+    "facing=east,type=crystallize_invalid": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 90
+    },
+    "facing=down,type=crystallize_invalid": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "x": 90
+    },
+    "facing=up,type=crystallize_invalid": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "x": 270
+    },
+    "facing=north,type=crystallize_active": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2"
+    },
+    "facing=south,type=crystallize_active": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 180
+    },
+    "facing=west,type=crystallize_active": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 270
+    },
+    "facing=east,type=crystallize_active": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "y": 90
+    },
+    "facing=down,type=crystallize_active": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "x": 90
+    },
+    "facing=up,type=crystallize_active": {
+      "model": "industrialupgrade:block/basemachine/crystallizer_2",
+      "x": 270
+    }
+  }
+}

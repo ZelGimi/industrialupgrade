@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityBrewingPlant;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerBrewingPlant extends ContainerFullInv<TileEntityBrewingPlant> {
 
-    public ContainerBrewingPlant(final EntityPlayer player, final TileEntityBrewingPlant base) {
+    public ContainerBrewingPlant(final Player player, final TileEntityBrewingPlant base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 20, 35));
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 1, 50, 35));

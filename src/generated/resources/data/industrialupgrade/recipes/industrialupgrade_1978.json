@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "A A",
+    "A A"
+  ],
+  "result": {
+    "count": 16,
+    "item": "industrialupgrade:basemachine3/quarry_pipe"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/duralumin"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:rods/cadmium"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "AB ",
+    " AA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_735_element"
+  },
+  "show_notification": true
+}

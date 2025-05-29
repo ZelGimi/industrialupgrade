@@ -5,8 +5,7 @@ import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotCombinerSEG extends InvSlot implements ITypeSlot {
 
@@ -31,12 +30,11 @@ public class InvSlotCombinerSEG extends InvSlot implements ITypeSlot {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 this.tile.count += Math.min(this.get(i).getCount(), 4);
-                Item item = this.get(i).getItem();
-                if (Item.getItemFromBlock(IUItem.adv_se_generator).equals(item)) {
+                if (this.get(i).is(IUItem.adv_se_generator.getItem())) {
                     this.tile.coef += 2 * Math.min(this.get(i).getCount(), 4);
-                } else if (Item.getItemFromBlock(IUItem.blockSE).equals(item)) {
+                } else if (this.get(i).is(IUItem.blockSE.getItem())) {
                     this.tile.coef += Math.min(this.get(i).getCount(), 4);
-                } else if (Item.getItemFromBlock(IUItem.imp_se_generator).equals(item)) {
+                } else if (this.get(i).is(IUItem.imp_se_generator.getItem())) {
                     this.tile.coef += 4 * Math.min(this.get(i).getCount(), 4);
                 }
             }
@@ -45,31 +43,31 @@ public class InvSlotCombinerSEG extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.tile.sunenergy.setCapacity(this.getMaxEnergy());
         this.tile.count = 0;
         this.tile.coef = 0;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 this.tile.count += Math.min(this.get(i).getCount(), 4);
-                Item item = this.get(i).getItem();
-                if (Item.getItemFromBlock(IUItem.adv_se_generator).equals(item)) {
+                if (this.get(i).is(IUItem.adv_se_generator.getItem())) {
                     this.tile.coef += 2 * Math.min(this.get(i).getCount(), 4);
-                } else if (Item.getItemFromBlock(IUItem.blockSE).equals(item)) {
+                } else if (this.get(i).is(IUItem.blockSE.getItem())) {
                     this.tile.coef += Math.min(this.get(i).getCount(), 4);
-                } else if (Item.getItemFromBlock(IUItem.imp_se_generator).equals(item)) {
+                } else if (this.get(i).is(IUItem.imp_se_generator.getItem())) {
                     this.tile.coef += 4 * Math.min(this.get(i).getCount(), 4);
                 }
             }
         }
+        return content;
     }
 
 
     public boolean accepts(ItemStack itemStack, final int index) {
-        return itemStack.getItem().equals(Item.getItemFromBlock(IUItem.adv_se_generator))
-                || itemStack.getItem().equals(Item.getItemFromBlock(IUItem.blockSE))
-                || itemStack.getItem().equals(Item.getItemFromBlock(IUItem.imp_se_generator))
+        return itemStack.is((IUItem.adv_se_generator.getItem()))
+                || itemStack.is((IUItem.blockSE.getItem()))
+                || itemStack.is((IUItem.imp_se_generator.getItem()))
                 ;
     }
 

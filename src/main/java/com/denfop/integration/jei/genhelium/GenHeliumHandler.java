@@ -2,7 +2,7 @@ package com.denfop.integration.jei.genhelium;
 
 
 import com.denfop.blocks.FluidName;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class GenHeliumHandler {
 
     public static void initRecipes() {
 
-        addRecipe(1000000, new FluidStack(FluidName.fluidHelium.getInstance(), 1000));
+        addRecipe(1000000, new FluidStack(FluidName.fluidHelium.getInstance().get(), 1000));
 
 
     }

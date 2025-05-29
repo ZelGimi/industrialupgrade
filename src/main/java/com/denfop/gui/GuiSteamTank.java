@@ -3,24 +3,24 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.blocks.FluidName;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSteamTank;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
+public class GuiSteamTank<T extends ContainerSteamTank> extends GuiIU<ContainerSteamTank> {
 
     public final ContainerSteamTank container;
 
@@ -46,10 +46,10 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
                         ret.add(Localization.translate("iu.tank.fluids"));
                         ret.addAll(tank1.getFluidList());
                     }
-                } else if (fs != null && fs.amount > 0) {
+                } else if (!fs.isEmpty() && fs.getAmount() > 0) {
                     Fluid fluid = fs.getFluid();
                     if (fluid != null) {
-                        ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
+                        ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                     } else {
                         ret.add("invalid fluid stack");
                     }
@@ -61,10 +61,10 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
             }
 
             @Override
-            public void drawBackground(final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
 
                 FluidStack fs = container.base.getFluidTank().getFluid();
-                if (fs != null && fs.amount > 0) {
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
                     int fluidWidth = this.width;
@@ -77,19 +77,20 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
                     }
 
                     Fluid fluid = fs.getFluid();
-                    TextureAtlasSprite sprite = fluid != null
-                            ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                            : null;
-                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
+                        fluid = FluidName.fluidwater.getInstance().get();
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
-                            (double) fs.amount / (double) this.tank.getCapacity(),
+                            (double) fs.getAmount() / (double) this.tank.getCapacity(),
                             0.0D,
                             1.0D
                     );
                     bindBlockTexture();
-                    this.gui.drawSprite(
+                    this.gui.drawSprite(poseStack,mouseX+
                             fluidX,
-                            (double) (fluidY + fluidHeight) - renderHeight,
+                             mouseY+(double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
@@ -98,9 +99,9 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
                             false,
                             true
                     );
-                    GlStateManager.color(1, 1, 1, 1);
+                   RenderSystem.setShaderColor(1, 1, 1, 1);
                     this.gui.bindTexture();
-                    this.gui.drawTexturedModalRect(this.gui.guiLeft + 99, this.gui.guiTop + 23, 177, 1, 12, 46);
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + 99, this.gui.guiTop + 23, 177, 1, 12, 46);
                 }
 
 
@@ -108,18 +109,7 @@ public class GuiSteamTank extends GuiIU<ContainerSteamTank> {
         });
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
 
-        super.drawForegroundLayer(par1, par2);
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
-
-
-    }
 
 
     public ResourceLocation getTexture() {

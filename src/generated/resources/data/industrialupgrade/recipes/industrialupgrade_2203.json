@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:glass"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/cobalt"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:research_lens/lens_1"
+  },
+  "show_notification": true
+}

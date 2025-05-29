@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/graphite_reactor/core/per_core_left-right-back-front",
-    "down" : "industrialupgrade:blocks/graphite_reactor/core/per_core_top-bottom",
-    "up" : "industrialupgrade:blocks/graphite_reactor/core/per_core_top-bottom",
-    "north" : "industrialupgrade:blocks/graphite_reactor/core/per_core_left-right-back-front",
-    "east" : "industrialupgrade:blocks/graphite_reactor/core/per_core_left-right-back-front",
-    "south" : "industrialupgrade:blocks/graphite_reactor/core/per_core_left-right-back-front",
-    "west" : "industrialupgrade:blocks/graphite_reactor/core/per_core_left-right-back-front"
+    "particle" : "industrialupgrade:block/graphite_reactor/core/per_core_left-right-back-front",
+    "down" : "industrialupgrade:block/graphite_reactor/core/per_core_top-bottom",
+    "up" : "industrialupgrade:block/graphite_reactor/core/per_core_top-bottom",
+    "north" : "industrialupgrade:block/graphite_reactor/core/per_core_left-right-back-front",
+    "east" : "industrialupgrade:block/graphite_reactor/core/per_core_left-right-back-front",
+    "south" : "industrialupgrade:block/graphite_reactor/core/per_core_left-right-back-front",
+    "west" : "industrialupgrade:block/graphite_reactor/core/per_core_left-right-back-front"
   }
 }

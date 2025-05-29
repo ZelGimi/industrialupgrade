@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/vitalium"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    },
+    "E": [
+      {
+        "item": "industrialupgrade:armour/imp_lappack"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CEC",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:armour/per_lappack"
+  },
+  "show_notification": true
+}

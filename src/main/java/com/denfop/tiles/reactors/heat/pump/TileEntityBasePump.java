@@ -1,26 +1,32 @@
 package com.denfop.tiles.reactors.heat.pump;
 
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeatPump;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiHeatPump;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.resource.ItemCraftingElements;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.heat.IPump;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityBasePump extends TileEntityMultiBlockElement implements IPump {
 
-    private final int level;
+    private final int levelBlock;
     private final InvSlot slot;
     private int power;
     private int energy;
 
-    public TileEntityBasePump(int level) {
-        this.level = level;
+    public TileEntityBasePump(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
+        this.levelBlock = levelBlock;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public int getStackSizeLimit() {
@@ -32,7 +38,7 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
                 if (!(stack.getItem() instanceof ItemCraftingElements)) {
                     return false;
                 }
-                final int itemDamage = stack.getItemDamage();
+                final int itemDamage = ((ItemCraftingElements<?>)stack.getItem()).getElement().getId();
                 switch (itemDamage) {
                     case 276:
                         return ((TileEntityBasePump) this.base).getBlockLevel() >= 0;
@@ -47,13 +53,13 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 if (content.isEmpty()) {
                     ((TileEntityBasePump) this.base).setEnergy(0);
                     ((TileEntityBasePump) this.base).setPower(0);
                 } else {
-                    final int itemDamage = content.getItemDamage();
+                    final int itemDamage = ((ItemCraftingElements<?>)content.getItem()).getElement().getId();
                     switch (itemDamage) {
                         case 276:
                             ((TileEntityBasePump) this.base).setEnergy(5);
@@ -73,30 +79,32 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
                             break;
                     }
                 }
+                return content;
             }
         };
     }
 
     @Override
-    public ContainerHeatPump getGuiContainer(final EntityPlayer var1) {
+    public ContainerHeatPump getGuiContainer(final Player var1) {
         return new ContainerHeatPump(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiHeatPump(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiHeatPump((ContainerHeatPump) menu);
     }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            if (this.getSlot().get().isEmpty()) {
+        if (!this.getWorld().isClientSide) {
+            if (this.getSlot().get(0).isEmpty()) {
                 this.setEnergy(0);
                 this.setPower(0);
             } else {
-                final int itemDamage = this.getSlot().get().getItemDamage();
+                final int itemDamage =((ItemCraftingElements<?>)this.getSlot().get(0).getItem()).getElement().getId();
                 switch (itemDamage) {
                     case 276:
                         this.setEnergy(5);
@@ -127,7 +135,7 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
 
     @Override
     public int getBlockLevel() {
-        return level;
+        return levelBlock;
     }
 
     public int getEnergy() {

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/iron"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ]
+  },
+  "pattern": [
+    " BB",
+    " BB",
+    "A  "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_595_element"
+  },
+  "show_notification": true
+}

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/rad_toriy_pellet"
+    "layer0" : "industrialupgrade:item/rad_toriy_pellet"
   }
 }

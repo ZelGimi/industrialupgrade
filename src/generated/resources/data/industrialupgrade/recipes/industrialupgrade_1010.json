@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/tempered_glass"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:redstone"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:casings/inconel"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "CBC",
+    "C C"
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_653_element"
+  },
+  "show_notification": true
+}

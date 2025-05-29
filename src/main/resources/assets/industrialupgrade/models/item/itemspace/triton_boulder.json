@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/triton_boulder"
+    "layer0" : "industrialupgrade:item/triton_boulder"
   }
 }

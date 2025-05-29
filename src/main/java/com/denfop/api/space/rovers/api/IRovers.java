@@ -1,7 +1,7 @@
 package com.denfop.api.space.rovers.api;
 
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IRovers {
 

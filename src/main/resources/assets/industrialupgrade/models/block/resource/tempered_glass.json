@@ -1,6 +1,7 @@
 {
 	"parent": "block/cube_all",
+	"render_type": "cutout",
 	"textures": {
-		"all": "industrialupgrade:blocks/tempered_glass"
+		"all": "industrialupgrade:block/tempered_glass"
 	}
 }

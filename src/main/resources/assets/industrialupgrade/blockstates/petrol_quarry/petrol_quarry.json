@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=petrol_quarry": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry"
+    },
+    "facing=south,type=petrol_quarry": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "y": 180
+    },
+    "facing=west,type=petrol_quarry": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "y": 270
+    },
+    "facing=east,type=petrol_quarry": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "y": 90
+    },
+    "facing=down,type=petrol_quarry": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "x": 90
+    },
+    "facing=up,type=petrol_quarry": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "x": 270
+    },
+    "facing=north,type=petrol_quarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry"
+    },
+    "facing=south,type=petrol_quarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "y": 180
+    },
+    "facing=west,type=petrol_quarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "y": 270
+    },
+    "facing=east,type=petrol_quarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "y": 90
+    },
+    "facing=down,type=petrol_quarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "x": 90
+    },
+    "facing=up,type=petrol_quarry_invalid": {
+      "model": "industrialupgrade:block/basemachine/petrol_quarry",
+      "x": 270
+    }
+  }
+}

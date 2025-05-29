@@ -1,24 +1,22 @@
 package com.denfop.items;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerUpgrade;
 import com.denfop.gui.GUIUpgrade;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -34,48 +32,47 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
     public final int inventorySize;
     public List<FluidStack> fluidStackList;
 
-    public ItemStackUpgradeModules(EntityPlayer player, ItemStack stack) {
+    public ItemStackUpgradeModules(Player player, ItemStack stack) {
         super(player, stack, 0);
         this.itemStack1 = stack;
         inventorySize = 0;
         this.list = new ItemStack[9];
         Arrays.fill(this.list, ItemStack.EMPTY);
-        if (IUCore.proxy.isSimulating()) {
-            NBTTagCompound nbt = ModUtils.nbt(containerStack);
-            NBTTagList contentList = nbt.getTagList("Items1", 10);
+        if (!player.level().isClientSide) {
+            CompoundTag nbt = ModUtils.nbt(containerStack);
+            ListTag contentList = nbt.getList("Items1", 10);
 
-            for (int i = 0; i < contentList.tagCount(); ++i) {
-                NBTTagCompound slotNbt = contentList.getCompoundTagAt(i);
+            for (int i = 0; i < contentList.size(); ++i) {
+                CompoundTag slotNbt = contentList.getCompound(i);
                 int slot = slotNbt.getByte("Slot");
                 if (slot >= 0 && slot < this.list.length) {
-                    this.list[slot] = new ItemStack(slotNbt);
+                    this.list[slot] = ItemStack.of(slotNbt);
                 }
             }
         }
         this.fluidStackList = new ArrayList<>(Collections.nCopies(9, null));
-        if (!(IUItem.ejectorUpgrade.isItemEqual(itemStack1) || IUItem.pullingUpgrade.isItemEqual(itemStack1))) {
+        if (!(IUItem.ejectorUpgrade.is(itemStack1.getItem()) || IUItem.pullingUpgrade.is(itemStack1.getItem()))) {
             for (int i = 0; i < 9; i++) {
                 if (!this.list[i].isEmpty()) {
-                    Block block = Block.getBlockFromItem(this.list[i].getItem());
-                    if (block != Blocks.AIR) {
-                        if (block instanceof IFluidBlock) {
-                            fluidStackList.set(i, new FluidStack(((IFluidBlock) block).getFluid(), 1));
-                        }
+                    IFluidHandlerItem handler = this.list[i].getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((CapabilityFluidHandlerItem) this.list[i].getItem().initCapabilities(this.list[i], this.list[i].getTag()));
+                    final FluidStack containerFluid = handler.drain(2147483647, IFluidHandler.FluidAction.SIMULATE);
+                    if (!containerFluid.isEmpty() && containerFluid.getAmount() > 0) {
+                        fluidStackList.set(i, new FluidStack(containerFluid.getFluid(), 1));
                     }
                 }
             }
         }
     }
 
-    public ContainerBase<ItemStackUpgradeModules> getGuiContainer(EntityPlayer player) {
-        return new ContainerUpgrade(this);
+    public ContainerBase<ItemStackUpgradeModules> getGuiContainer(Player player) {
+        return new ContainerUpgrade(this, player);
     }
 
-    public ItemStack getStackInSlot(int slot) {
+    public ItemStack getItem(int slot) {
         return slot >= inventorySize ? this.list[slot - inventorySize] : this.inventory[slot];
     }
 
-    public ItemStack decrStackSize(int index, int amount) {
+    public ItemStack removeItem(int index, int amount) {
         if (index < this.inventory.length) {
             ItemStack stack;
             if (index >= 0 && index < this.inventory.length && !ModUtils.isEmpty(stack = this.inventory[index])) {
@@ -114,7 +111,7 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
         }
     }
 
-    public void setInventorySlotContents(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         if (slot < this.inventory.length) {
             if (!ModUtils.isEmpty(stack) && ModUtils.getSize(stack) > this.getInventoryStackLimit()) {
                 stack = ModUtils.setSize(stack, this.getInventoryStackLimit());
@@ -141,7 +138,7 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
 
     protected void save() {
         super.save();
-        if (IUCore.proxy.isSimulating()) {
+        if (!player.level().isClientSide) {
             if (!this.cleared) {
                 boolean dropItself = false;
 
@@ -152,33 +149,33 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
                     }
                 }
 
-                NBTTagList contentList = new NBTTagList();
+                ListTag contentList = new ListTag();
 
                 int idx;
                 for (idx = 0; idx < this.list.length; ++idx) {
                     if (!ModUtils.isEmpty(this.list[idx])) {
-                        NBTTagCompound nbt = new NBTTagCompound();
-                        nbt.setByte("Slot", (byte) idx);
-                        this.list[idx].writeToNBT(nbt);
-                        contentList.appendTag(nbt);
+                        CompoundTag nbt = new CompoundTag();
+                        nbt.putByte("Slot", (byte) idx);
+                        this.list[idx].save(nbt);
+                        contentList.add(nbt);
                     }
                 }
 
-                ModUtils.nbt(this.containerStack).setTag("Items1", contentList);
+                ModUtils.nbt(this.containerStack).put("Items1", contentList);
 
                 this.containerStack = ModUtils.setSize(this.containerStack, 1);
 
                 if (dropItself) {
-                    ModUtils.dropAsEntity(this.player.getEntityWorld(), this.player.getPosition(), this.containerStack);
+                    ModUtils.dropAsEntity(this.player.level(), this.player.blockPosition(), this.containerStack);
                     this.clear();
                 } else {
                     idx = this.getPlayerInventoryIndex();
                     if (idx < -1) {
                         this.clear();
                     } else if (idx == -1) {
-                        this.player.inventory.setItemStack(this.containerStack);
+                        this.player.getInventory().setPickedItem(this.containerStack);
                     } else {
-                        this.player.inventory.setInventorySlotContents(idx, this.containerStack);
+                        this.player.getInventory().setItem(idx, this.containerStack);
                     }
                 }
 
@@ -190,18 +187,18 @@ public class ItemStackUpgradeModules extends ItemStackInventory {
         return list;
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        if (this.itemStack1.isItemEqual(IUItem.ejectorUpgrade) || this.itemStack1.isItemEqual(IUItem.pullingUpgrade)) {
-            return new GUIUpgrade(new ContainerUpgrade(this), itemStack1);
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
+        if (this.itemStack1.is(IUItem.ejectorUpgrade.getItem()) || this.itemStack1.is(IUItem.pullingUpgrade.getItem())) {
+            return new GUIUpgrade((ContainerUpgrade) isAdmin, itemStack1);
         } else {
-            return new GUIUpgrade(new ContainerUpgrade(this), itemStack1);
+            return new GUIUpgrade((ContainerUpgrade) isAdmin, itemStack1);
         }
     }
 
     @Override
-    public TileEntityInventory getParent() {
-        return null;
+    public ItemStackInventory getParent() {
+        return this;
     }
 
     @Override

@@ -14,23 +14,15 @@ import com.denfop.container.SlotInvSlot;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.reactors.graphite.controller.TileEntityMainController;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.Slot;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
+public class GuiGraphiteController<T extends ContainerGraphiteReactor> extends GuiIU<ContainerGraphiteReactor> {
 
     private boolean visible;
     private boolean visible1;
@@ -40,8 +32,8 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
     public GuiGraphiteController(ContainerGraphiteReactor guiContainer) {
         super(guiContainer);
         this.componentList.clear();
-        this.xSize = 225;
-        this.ySize = 254;
+        this.imageWidth = 225;
+        this.imageHeight = 254;
         this.componentList.add(new GuiComponent(this, 160, 135, 186 - 160, 38 - 12,
                 new Component<>(new ComponentButton(this.container.base, 0, "") {
                     @Override
@@ -93,131 +85,24 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
         }
     }
 
-    public void drawItemStack(ItemStack stack, int x, int y, String altText) {
-        GlStateManager.translate(0.0F, 0.0F, 32.0F);
-        this.zLevel = 200.0F;
-        this.itemRender.zLevel = 200.0F;
-        net.minecraft.client.gui.FontRenderer font = stack.getItem().getFontRenderer(stack);
-        if (font == null) {
-            font = fontRenderer;
-        }
-        this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
-        this.itemRender.renderItemOverlayIntoGUI(font, stack, x, y - (this.draggedStack.isEmpty() ? 0 : 8), altText);
-        this.zLevel = 0.0F;
-        this.itemRender.zLevel = 0.0F;
-    }
 
-    private boolean isMouseOverSlot(Slot slotIn, int mouseX, int mouseY) {
-        return this.isPointInRegion(slotIn.xPos, slotIn.yPos, 16, 16, mouseX, mouseY);
-    }
-
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
-        int i = this.guiLeft;
-        int j = this.guiTop;
-        this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        GlStateManager.disableRescaleNormal();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
-
-        RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate((float) i, (float) j, 0.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableRescaleNormal();
-        this.hoveredSlot = null;
-        int k = 240;
-        int l = 240;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        for (int i1 = 0; i1 < this.inventorySlots.inventorySlots.size(); ++i1) {
-            Slot slot = this.inventorySlots.inventorySlots.get(i1);
-            if (this.container.base.heat_sensor || this.container.base.stable_sensor) {
-                if (slot instanceof SlotInvSlot) {
-                    SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
-                    if (slotInvSlot.invSlot == this.container.base.reactorsElements) {
-                        continue;
-                    }
+    public void renderSlot(GuiGraphics p_97800_, Slot p_97801_) {
+        if (this.container.base.heat_sensor || this.container.base.stable_sensor) {
+            if (p_97801_ instanceof SlotInvSlot) {
+                SlotInvSlot slotInvSlot = (SlotInvSlot) p_97801_;
+                if (slotInvSlot.invSlot == this.container.base.reactorsElements) {
+                    return;
                 }
             }
-            if (slot.isEnabled()) {
-                this.drawSlot(slot);
-            }
-
-            if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.isEnabled()) {
-                this.hoveredSlot = slot;
-                GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                int j1 = slot.xPos;
-                int k1 = slot.yPos;
-                GlStateManager.colorMask(true, true, true, false);
-                this.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
-                GlStateManager.colorMask(true, true, true, true);
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
-            }
         }
-
-        RenderHelper.disableStandardItemLighting();
-        this.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        RenderHelper.enableGUIStandardItemLighting();
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiContainerEvent.DrawForeground(
-                this,
-                mouseX,
-                mouseY
-        ));
-        InventoryPlayer inventoryplayer = this.mc.player.inventory;
-        ItemStack itemstack = this.draggedStack.isEmpty() ? inventoryplayer.getItemStack() : this.draggedStack;
-
-        if (!itemstack.isEmpty()) {
-            int j2 = 8;
-            int k2 = this.draggedStack.isEmpty() ? 8 : 16;
-            String s = null;
-
-            if (!this.draggedStack.isEmpty() && this.isRightMouseClick) {
-                itemstack = itemstack.copy();
-                itemstack.setCount(MathHelper.ceil((float) itemstack.getCount() / 2.0F));
-            } else if (this.dragSplitting && this.dragSplittingSlots.size() > 1) {
-                itemstack = itemstack.copy();
-                itemstack.setCount(this.dragSplittingRemnant);
-
-                if (itemstack.isEmpty()) {
-                    s = "" + TextFormatting.YELLOW + "0";
-                }
-            }
-
-            this.drawItemStack(itemstack, mouseX - i - 8, mouseY - j - k2, s);
-        }
-
-        if (!this.returningStack.isEmpty()) {
-            float f = (float) (Minecraft.getSystemTime() - this.returningStackTime) / 100.0F;
-
-            if (f >= 1.0F) {
-                f = 1.0F;
-                this.returningStack = ItemStack.EMPTY;
-            }
-
-            int l2 = this.returningStackDestSlot.xPos - this.touchUpX;
-            int i3 = this.returningStackDestSlot.yPos - this.touchUpY;
-            int l1 = this.touchUpX + (int) ((float) l2 * f);
-            int i2 = this.touchUpY + (int) ((float) i3 * f);
-            this.drawItemStack(this.returningStack, l1, i2, (String) null);
-        }
-
-        GlStateManager.popMatrix();
-        GlStateManager.enableLighting();
-        GlStateManager.enableDepth();
-        RenderHelper.enableStandardItemLighting();
-        this.renderHoveredToolTip(mouseX, mouseY);
+        super.renderSlot(p_97800_,p_97801_);
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
 
@@ -227,8 +112,8 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         if (!this.container.base.work) {
             this.visible = par1 >= 160 && par1 <= 186 && par2 >= 135 && par2 <= 161;
         } else {
@@ -241,18 +126,18 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
             if (this.container.base.work) {
                 if (this.container.base.getReactor() != null) {
                     for (LogicComponent component : this.container.base.reactor.getListComponent()) {
-                        for (int i1 = 0; i1 < this.inventorySlots.inventorySlots.size(); ++i1) {
-                            Slot slot = this.inventorySlots.inventorySlots.get(i1);
+                        for (int i1 = 0; i1 < this.container.slots.size(); ++i1) {
+                            Slot slot = this.container.slots.get(i1);
                             {
                                 if (slot instanceof SlotInvSlot) {
                                     SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
                                     if (slotInvSlot.invSlot == this.container.base.reactorsElements) {
                                         if (slotInvSlot.index == component.getY() * this.container.base.getWidth() + component.getX()) {
                                             if (this.container.base.heat_sensor) {
-                                                this.fontRenderer.drawString(
+                                               draw(poseStack,
                                                         String.valueOf((int) component.getHeat()),
-                                                        slotInvSlot.xPos + 3,
-                                                        slotInvSlot.yPos + 4,
+                                                        slotInvSlot.x + 3,
+                                                        slotInvSlot.y + 4,
                                                         ModUtils.convertRGBcolorToInt(195,
                                                                 64, 0
                                                         )
@@ -261,10 +146,10 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
                                             if (this.container.base.stable_sensor && component
                                                     .getItem()
                                                     .getType() != EnumTypeComponent.ROD) {
-                                                this.fontRenderer.drawString(
+                                               draw(poseStack,
                                                         String.valueOf(-1 * component.getDamage()),
-                                                        slotInvSlot.xPos + 4 + (component.getDamage() > 0 ? -3 : 0),
-                                                        slotInvSlot.yPos + 4,
+                                                        slotInvSlot.x + 4 + (component.getDamage() > 0 ? -3 : 0),
+                                                        slotInvSlot.y + 4,
                                                         ModUtils.convertRGBcolorToInt(14,
                                                                 50, 86
                                                         )
@@ -300,18 +185,18 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
                 Localization.translate("reactor.canupgrade")
                 : Localization.translate("reactor.notcanupgrade")) + "\n" + Localization.translate(
                 "gui.SuperSolarPanel.generating") + ": " + ModUtils.getString(
-                this.container.base.output) + " EF/t" + (!time.isEmpty() ? ("\n" + time) : time)).drawForeground(par1, par2);
+                this.container.base.output) + " EF/t" + (!time.isEmpty() ? ("\n" + time) : time)).drawForeground(poseStack, par1, par2);
         String name = this.container.base.security.name().toLowerCase().equals("") ? "none" :
                 this.container.base.security.name().toLowerCase();
         new AdvArea(this, 200, 88, 217, 105)
                 .withTooltip(Localization.translate("iu.reactor_info.upgrade"))
-                .drawForeground(
+                .drawForeground(poseStack,
                         par1,
                         par2
                 );
 
         new AdvArea(this, 127, 134, 156, 162).withTooltip(Localization.translate("waterreactor.security." + name)).drawForeground(
-                par1,
+                poseStack, par1,
                 par2
         );
         new AdvArea(this, 47, 106, 169, 129)
@@ -319,100 +204,96 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
                         "/" + ModUtils.getString(this.container.base.getMaxHeat()) + "°C" + "\n" + Localization.translate(
                         "iu.reactor_info.stable_heat") + ": " + this.container.base.getStableMaxHeat() + "°C")
                 .drawForeground(
-                        par1,
+                        poseStack, par1,
                         par2
                 );
         if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
             new AdvArea(this, 201, 10, 215, 85)
                     .withTooltip(Localization.translate("iu.reactor_info.energy") + ": " + ModUtils.getString(this.container.base.energy.getEnergy()) +
                             "/" + ModUtils.getString(this.container.base.energy.getCapacity()))
-                    .drawForeground(par1, par2);
+                    .drawForeground(poseStack,par1, par2);
         } else {
             new AdvArea(this, 201, 10, 215, 85)
                     .withTooltip(Localization.translate("iu.reactor_info.upgrade1"))
-                    .drawForeground(par1, par2);
+                    .drawForeground(poseStack,par1, par2);
         }
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         if (this.visible) {
-            drawTexturedModalRect(this.guiLeft + 160,
+            drawTexturedModalRect(poseStack, this.guiLeft + 160,
                     this.guiTop + 135
                     , 228, 159, 27, 27
             );
         }
         if (this.visible1) {
-            drawTexturedModalRect(this.guiLeft + 172,
+            drawTexturedModalRect(poseStack, this.guiLeft + 172,
                     this.guiTop + 109
                     , 235, 215, 20, 20
             );
         }
         if (this.visible2) {
-            drawTexturedModalRect(this.guiLeft + 20,
+            drawTexturedModalRect(poseStack, this.guiLeft + 20,
                     this.guiTop + 109
                     , 235, 236, 20, 20
             );
         }
         if (this.visible3) {
-            drawTexturedModalRect(this.guiLeft + 29,
+            drawTexturedModalRect(poseStack, this.guiLeft + 29,
                     this.guiTop + 142
                     , 225, 121, 30, 14
             );
         }
         if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
-            drawTexturedModalRect(this.guiLeft + 201,
+            drawTexturedModalRect(poseStack, this.guiLeft + 201,
                     this.guiTop + 89
                     , 239, 104, 16, 16
             );
         }
         switch (this.container.base.getLevelReactor()) {
             case 0:
-                drawTexturedModalRect(this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 7
                         , 241, 1, 14, 14
                 );
                 break;
             case 1:
-                drawTexturedModalRect(this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 20
                         , 241, 14, 14, 14
                 );
                 break;
             case 2:
-                drawTexturedModalRect(this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 33
                         , 241, 27, 14, 14
                 );
                 break;
             case 3:
-                drawTexturedModalRect(this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 46
                         , 241, 40, 14, 14
                 );
                 break;
             case 4:
-                drawTexturedModalRect(this.guiLeft + 0,
+                drawTexturedModalRect(poseStack, this.guiLeft + 0,
                         this.guiTop + 59
                         , 241, 53, 14, 14
                 );
                 break;
         }
         if (this.container.base.work) {
-            drawTexturedModalRect(this.guiLeft + 160, this.guiTop + 135
+            drawTexturedModalRect(poseStack, this.guiLeft + 160, this.guiTop + 135
                     , 228, 187, 27, 27);
         }
         if (this.container.base.typeWork == EnumTypeWork.LEVEL_INCREASE) {
             double bar = this.container.base.energy.getFillRatio();
             bar = Math.min(1, bar);
-            drawTexturedModalRect(this.guiLeft + 204, (int) (this.guiTop + 84 - (bar * 70))
+            drawTexturedModalRect(poseStack, this.guiLeft + 204, (int) (this.guiTop + 84 - (bar * 70))
                     , 228, (int) (72 - (bar * 70)), 9, (int) (bar * 70));
 
         }
@@ -421,19 +302,19 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
                 break;
             case ERROR:
             case UNSTABLE:
-                drawTexturedModalRect(this.guiLeft + 133, this.guiTop + 140
+                drawTexturedModalRect(poseStack, this.guiLeft + 133, this.guiTop + 140
                         , 238, 68, 5, 11);
                 break;
             case STABLE:
-                drawTexturedModalRect(this.guiLeft + 133, this.guiTop + 140
+                drawTexturedModalRect(poseStack, this.guiLeft + 133, this.guiTop + 140
                         , 238, 86, 17, 17);
                 break;
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common1.png"));
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common1.png"));
 
         double bar = this.container.base.heat / this.container.base.getMaxHeat();
         bar = Math.min(bar, 1);
-        drawTexturedModalRect(this.guiLeft + 47, this.guiTop + 110
+        drawTexturedModalRect(poseStack, this.guiLeft + 47, this.guiTop + 110
                 , 6, 165, (int) (bar * 118), 16);
 
     }

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=water_imp_controller": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller"
+    },
+    "facing=south,type=water_imp_controller": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "y": 180
+    },
+    "facing=west,type=water_imp_controller": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "y": 270
+    },
+    "facing=east,type=water_imp_controller": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "y": 90
+    },
+    "facing=down,type=water_imp_controller": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "x": 90
+    },
+    "facing=up,type=water_imp_controller": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "x": 270
+    },
+    "facing=north,type=water_imp_controller_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller"
+    },
+    "facing=south,type=water_imp_controller_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "y": 180
+    },
+    "facing=west,type=water_imp_controller_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "y": 270
+    },
+    "facing=east,type=water_imp_controller_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "y": 90
+    },
+    "facing=down,type=water_imp_controller_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "x": 90
+    },
+    "facing=up,type=water_imp_controller_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_imp_controller",
+      "x": 270
+    }
+  }
+}

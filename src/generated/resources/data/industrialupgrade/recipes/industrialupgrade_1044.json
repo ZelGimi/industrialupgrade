@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:converter_matter/converter_matter"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:photoniy"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    }
+  },
+  "pattern": [
+    "   ",
+    "DAD",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/neutronseparator"
+  },
+  "show_notification": true
+}

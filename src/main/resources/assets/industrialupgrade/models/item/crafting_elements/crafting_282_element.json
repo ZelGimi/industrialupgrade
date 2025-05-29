@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/carbon_plate"
+		"layer0": "industrialupgrade:item/carbon_plate"
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/ef_meter"
+		"layer0": "industrialupgrade:item/ef_meter"
 	}
 }

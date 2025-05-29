@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/terra_wart"
+    "layer0" : "industrialupgrade:item/terra_wart"
   }
 }

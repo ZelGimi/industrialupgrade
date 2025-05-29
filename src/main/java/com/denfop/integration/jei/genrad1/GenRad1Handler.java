@@ -2,7 +2,8 @@ package com.denfop.integration.jei.genrad1;
 
 
 import com.denfop.IUItem;
-import net.minecraft.item.ItemStack;
+import com.denfop.recipes.ItemStackHelper;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class GenRad1Handler {
 
     public static void initRecipes() {
 
-        addRecipe(150, new ItemStack(IUItem.crafting_elements, 1, 443));
+        addRecipe(150, ItemStackHelper.fromData(IUItem.crafting_elements, 1, 443));
 
 
     }

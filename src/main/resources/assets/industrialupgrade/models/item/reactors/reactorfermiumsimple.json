@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/reactorfermiumsimple"
+    "layer0" : "industrialupgrade:item/reactorfermiumsimple"
   }
 }

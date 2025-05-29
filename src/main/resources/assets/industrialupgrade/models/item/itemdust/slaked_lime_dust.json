@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/slaked_lime"
+		"layer0": "industrialupgrade:item/slaked_lime"
 	}
 }

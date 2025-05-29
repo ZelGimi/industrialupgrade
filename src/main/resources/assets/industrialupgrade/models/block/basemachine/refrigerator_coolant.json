@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/refrigerator_coolant",
-    "down" : "industrialupgrade:blocks/refrigerator_coolant_down",
-    "up" : "industrialupgrade:blocks/refrigerator_coolant_top",
-    "north" : "industrialupgrade:blocks/refrigerator_coolant",
-    "east" : "industrialupgrade:blocks/battery_factory_back-down",
-    "south" : "industrialupgrade:blocks/battery_factory_back-down",
-    "west" : "industrialupgrade:blocks/battery_factory_back-down"
+    "particle" : "industrialupgrade:block/refrigerator_coolant",
+    "down" : "industrialupgrade:block/refrigerator_coolant_down",
+    "up" : "industrialupgrade:block/refrigerator_coolant_top",
+    "north" : "industrialupgrade:block/refrigerator_coolant",
+    "east" : "industrialupgrade:block/battery_factory_back-down",
+    "south" : "industrialupgrade:block/battery_factory_back-down",
+    "west" : "industrialupgrade:block/battery_factory_back-down"
   }
 }

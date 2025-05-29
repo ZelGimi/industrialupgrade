@@ -2,7 +2,7 @@ package com.denfop.integration.jei.tuner;
 
 
 import com.denfop.IUItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class TunerHandler {
 
     public static void initRecipes() {
 
-        addRecipe(new ItemStack(IUItem.module7, 1, 10));
+        addRecipe(new ItemStack(IUItem.module7.getStack(10), 1));
 
 
     }
@@ -57,7 +57,7 @@ public class TunerHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.getItem() == output.getItem();
+        return true;
     }
 
 }

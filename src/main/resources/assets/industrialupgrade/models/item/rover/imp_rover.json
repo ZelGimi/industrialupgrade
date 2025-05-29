@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "industrialupgrade:models/space/imp_rover",
-		"particle": "industrialupgrade:models/space/imp_rover"
+		"1": "industrialupgrade:block/space/imp_rover",
+		"particle": "industrialupgrade:block/space/imp_rover"
 	},
 	"elements": [
 		{

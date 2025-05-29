@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityIncubator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerIncubator extends ContainerFullInv<TileEntityIncubator> {
 
-    public ContainerIncubator(EntityPlayer var1, TileEntityIncubator tileEntity1) {
+    public ContainerIncubator(Player var1, TileEntityIncubator tileEntity1) {
         super(var1, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 36, 99));

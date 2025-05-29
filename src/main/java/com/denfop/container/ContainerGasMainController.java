@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.reactors.gas.controller.TileEntityMainController;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGasMainController extends ContainerFullInv<TileEntityMainController> {
 
-    public ContainerGasMainController(TileEntityMainController tileEntityMainController, EntityPlayer entityPlayer) {
+    public ContainerGasMainController(TileEntityMainController tileEntityMainController, Player entityPlayer) {
         super(entityPlayer, tileEntityMainController, 214, 250);
         addSlotToContainer(new SlotInvSlot(
                 tileEntityMainController.scheduleReactor,

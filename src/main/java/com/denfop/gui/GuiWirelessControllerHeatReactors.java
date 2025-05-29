@@ -7,16 +7,16 @@ import com.denfop.api.gui.ItemStackImage;
 import com.denfop.container.ContainerWirelessControllerHeatReactors;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.reactors.heat.graphite_controller.TileEntityGraphiteController;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiWirelessControllerHeatReactors extends GuiIU<ContainerWirelessControllerHeatReactors> {
+public class GuiWirelessControllerHeatReactors<T extends ContainerWirelessControllerHeatReactors> extends GuiIU<ContainerWirelessControllerHeatReactors> {
 
 
     public GuiWirelessControllerHeatReactors(ContainerWirelessControllerHeatReactors guiContainer) {
@@ -25,12 +25,13 @@ public class GuiWirelessControllerHeatReactors extends GuiIU<ContainerWirelessCo
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = guiLeft;
+        int yMin = guiTop;
         int x = i - xMin;
         int y = j - yMin;
+
         for (int index = 0; index < this.container.base.itemStacks.size(); index++) {
             if (x >= 8 + (index) * 18 && x < 26 + (index) * 18 && y >= 25 && y <= 43) {
                 if (!this.container.base.itemStacks.get(index).isEmpty()) {
@@ -38,8 +39,7 @@ public class GuiWirelessControllerHeatReactors extends GuiIU<ContainerWirelessCo
                             index);
                     if (tileMultiBlockBase != null && tileMultiBlockBase.getMain() != null && tileMultiBlockBase
                             .getMain()
-                            .isFull() && !tileMultiBlockBase.isInvalid()) {
-
+                            .isFull() && !tileMultiBlockBase.isRemoved()) {
                         new PacketUpdateServerTile(this.container.base, index);
                     }
                 }
@@ -68,8 +68,8 @@ public class GuiWirelessControllerHeatReactors extends GuiIU<ContainerWirelessCo
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
         for (int i = 0; i < this.container.base.itemStacks.size(); i++) {
             if (!this.container.base.invslot.get(0).isEmpty()) {
@@ -78,31 +78,31 @@ public class GuiWirelessControllerHeatReactors extends GuiIU<ContainerWirelessCo
                     final TileEntityGraphiteController tileMultiBlockBase = this.container.base.graphiteControllers.get(
                             i);
                     BlockPos pos = tileMultiBlockBase.getPos();
-                    new Area(this, 8 + i * 18, 25, 18, 18).withTooltip(stack.getDisplayName() + "\n" + "x" +
-                            ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(par1, par2);
+                    new Area(this, 8 + i * 18, 25, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
+                            ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack,par1, par2);
                 }
             }
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         this.bindTexture();
+
         for (int i = 0; i < this.container.base.itemStacks.size(); i++) {
             if (!this.container.base.invslot.get(0).isEmpty()) {
                 ItemStack stack = this.container.base.itemStacks.get(i);
                 if (!stack.isEmpty()) {
                     new ItemStackImage(this, 8 + i * 18, 25, () -> stack).drawBackground(
-                            this.guiLeft,
+                            poseStack,   this.guiLeft,
                             this.guiTop
                     );
                 }
             }
         }
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack,this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
     }
 
     public ResourceLocation getTexture() {

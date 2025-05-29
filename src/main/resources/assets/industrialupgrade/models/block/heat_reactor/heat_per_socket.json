@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/heat_reactor/socket/per_socket_side"
+    "all" : "industrialupgrade:block/heat_reactor/socket/per_socket_side"
   }
 }

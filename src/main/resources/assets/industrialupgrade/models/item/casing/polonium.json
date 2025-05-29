@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/polonium_casing"	}
+		"layer0": "industrialupgrade:item/polonium_casing"	}
 }

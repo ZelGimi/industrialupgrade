@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/end_matter"
+    "layer0" : "industrialupgrade:item/end_matter"
   }
 }

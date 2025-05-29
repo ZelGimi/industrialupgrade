@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=quantum_miner": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner"
+    },
+    "facing=south,type=quantum_miner": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 180
+    },
+    "facing=west,type=quantum_miner": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 270
+    },
+    "facing=east,type=quantum_miner": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 90
+    },
+    "facing=down,type=quantum_miner": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "x": 90
+    },
+    "facing=up,type=quantum_miner": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "x": 270
+    },
+    "facing=north,type=quantum_miner_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner"
+    },
+    "facing=south,type=quantum_miner_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 180
+    },
+    "facing=west,type=quantum_miner_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 270
+    },
+    "facing=east,type=quantum_miner_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 90
+    },
+    "facing=down,type=quantum_miner_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "x": 90
+    },
+    "facing=up,type=quantum_miner_invalid": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "x": 270
+    },
+    "facing=north,type=quantum_miner_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner"
+    },
+    "facing=south,type=quantum_miner_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 180
+    },
+    "facing=west,type=quantum_miner_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 270
+    },
+    "facing=east,type=quantum_miner_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "y": 90
+    },
+    "facing=down,type=quantum_miner_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "x": 90
+    },
+    "facing=up,type=quantum_miner_active": {
+      "model": "industrialupgrade:block/basemachine/quantum_miner",
+      "x": 270
+    }
+  }
+}

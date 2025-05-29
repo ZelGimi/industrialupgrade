@@ -7,18 +7,13 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerGenerator;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiGenerator extends GuiIU<ContainerGenerator> {
+@OnlyIn(Dist.CLIENT)
+public class GuiGenerator<T extends ContainerGenerator> extends GuiIU<ContainerGenerator> {
 
-    private static final ResourceLocation background;
-
-    static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenerator.png");
-    }
 
     public ContainerGenerator container;
     public String name;
@@ -41,19 +36,11 @@ public class GuiGenerator extends GuiIU<ContainerGenerator> {
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-
-
-    }
 
     @Override
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-    }
 
 }

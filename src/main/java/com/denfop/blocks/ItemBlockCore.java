@@ -1,52 +1,95 @@
 package com.denfop.blocks;
 
-import com.denfop.Localization;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
+import com.denfop.IItemTab;
+import com.denfop.IUCore;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.datagen.itemtag.ItemTagProvider;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
+import java.util.Map;
 
-public class ItemBlockCore extends ItemBlock {
+public class ItemBlockCore<T extends Enum<T> & ISubEnum> extends BlockItem implements IItemTab {
+    private final T element;
+    private final ResourceLocation registryName;
+    private final CreativeModeTab modeTab;
+    protected String nameItem;
 
-    protected BlockCore blockCore;
-
-
-    public ItemBlockCore(BlockCore block) {
-        super(block);
-        this.setHasSubtypes(true);
-        this.setMaxDamage(0);
-        this.setNoRepair();
-        this.blockCore = block;
+    public ItemBlockCore(Block p_40565_, T element, Properties property,CreativeModeTab modeTab) {
+        super(p_40565_, property);
+        this.element = element;
+        this.modeTab=modeTab;
+        this.registryName = new ResourceLocation(IUCore.MODID, element.getMainPath() + "/" + element.getSerializedName());
+        if (this instanceof IItemTag)
+            ItemTagProvider.list.add((IItemTag) this);
+        ;
+    }
+    public ItemBlockCore(Block p_40565_, T element, Properties property) {
+        super(p_40565_, property);
+        this.element = element;
+        this.modeTab=null;
+        this.registryName = new ResourceLocation(IUCore.MODID, element.getMainPath() + "/" + element.getSerializedName());
+        if (this instanceof IItemTag)
+            ItemTagProvider.list.add((IItemTag) this);
+        ;
+    }
+    public ResourceLocation getRegistryName() {
+        return registryName;
     }
 
-    @Nonnull
-    public String getUnlocalizedName(@Nonnull ItemStack stack) {
-        return this.blockCore.getUnlocalizedName(stack);
+    @Override
+    public void fillItemCategory(CreativeModeTab p_40569_, NonNullList<ItemStack> p_40570_) {
+        if (this.allowedIn(p_40569_) && element.canAddToTab()) {
+            p_40570_.add(new ItemStack(this));
+        }
     }
 
-    @Nonnull
-    public EnumRarity getRarity(@Nonnull ItemStack stack) {
-        return this.blockCore.getRarity(stack);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return modeTab;
     }
 
-    @Nonnull
-    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
-        return Localization.translate(this.getUnlocalizedName(stack));
+    public T getElement() {
+        return element;
     }
 
-    public int getMetadata(int i) {
-        return i;
+    public void removeFromBlockToItemMap(Map<Block, Item> blockToItemMap, Item itemIn) {
+        blockToItemMap.remove(this.getBlock());
+    }
+
+    public String getDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade."+getElement().getMainPath()+".";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
+        }
+
+        return this.nameItem + ".name";
     }
 
 
-    public boolean hasEffect(ItemStack stack) {
-        return stack.isItemEnchanted();
+    @Override
+    protected BlockState getPlacementState(BlockPlaceContext p_40613_) {
+
+        BlockState blockstate = ((BlockCore) this.getBlock()).getStateForPlacement(this.element, p_40613_);
+        return blockstate != null && this.canPlace(p_40613_, blockstate) ? blockstate : null;
+
     }
-
-    public boolean isEnchantable(@Nonnull ItemStack stack) {
-        return false;
-    }
-
-
 }

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=plant_collector": {
+      "model": "industrialupgrade:block/basemachine/plant_collector"
+    },
+    "facing=south,type=plant_collector": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "y": 180
+    },
+    "facing=west,type=plant_collector": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "y": 270
+    },
+    "facing=east,type=plant_collector": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "y": 90
+    },
+    "facing=down,type=plant_collector": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "x": 90
+    },
+    "facing=up,type=plant_collector": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "x": 270
+    },
+    "facing=north,type=plant_collector_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_collector"
+    },
+    "facing=south,type=plant_collector_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "y": 180
+    },
+    "facing=west,type=plant_collector_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "y": 270
+    },
+    "facing=east,type=plant_collector_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "y": 90
+    },
+    "facing=down,type=plant_collector_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "x": 90
+    },
+    "facing=up,type=plant_collector_invalid": {
+      "model": "industrialupgrade:block/basemachine/plant_collector",
+      "x": 270
+    }
+  }
+}

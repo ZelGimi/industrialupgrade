@@ -1,14 +1,15 @@
 package com.denfop.invslot;
 
+import com.denfop.IUItem;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,9 @@ public class InvSlotElectricBlock extends InvSlot {
 
     public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 3) {
-            return ((itemStack.getItemDamage() > 4 && itemStack.getItem() instanceof ItemAdditionModule)
-                    || (EnumModule.getFromID(itemStack.getItemDamage()) != null && EnumModule.getFromID(itemStack.getItemDamage()) ==
-                    EnumModule.OUTPUT && itemStack.getItem() instanceof ItemBaseModules));
+            return ((itemStack.getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta((ItemAdditionModule) itemStack.getItem()) > 4)
+                    || (itemStack.getItem() instanceof ItemBaseModules && EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) itemStack.getItem())) != null && EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) itemStack.getItem())) ==
+                    EnumModule.OUTPUT));
         }
         return false;
     }
@@ -51,14 +52,20 @@ public class InvSlotElectricBlock extends InvSlot {
 
 
             ItemStack stack = this.get(i);
-            if (stack.getItemDamage() == 5) {
-                list.add(true);
-            } else {
+            if (stack.getItem() instanceof ItemAdditionModule<?>) {
+                int meta = IUItem.module7.getMeta((ItemAdditionModule) stack.getItem());
+                if (meta == 5) {
+                    list.add(true);
+                } else {
+                    list.add(false);
+                }
+                if (meta == 6) {
+                    list.add(true);
+                } else {
+                    list.add(false);
+                }
+            }else {
                 list.add(false);
-            }
-            if (stack.getItemDamage() == 6) {
-                list.add(true);
-            } else {
                 list.add(false);
             }
 
@@ -76,8 +83,8 @@ public class InvSlotElectricBlock extends InvSlot {
 
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         TileElectricBlock tile = (TileElectricBlock) base;
         if (this.type == 3) {
             tile.output_plus = this.output_plus(tile.l);
@@ -86,6 +93,7 @@ public class InvSlotElectricBlock extends InvSlot {
             tile.movementchargeitem = this.getstats().get(1);
             this.wirelessmodule();
         }
+        return content;
     }
 
     public void wirelessmodule() {
@@ -95,18 +103,16 @@ public class InvSlotElectricBlock extends InvSlot {
 
         tile.wirelessComponent.removeAll();
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
-                    .get(i)
-                    .getItemDamage() == 10) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && IUItem.module7.getMeta((ItemAdditionModule) this.get(i).getItem()) == 10) {
 
                 int x;
                 int y;
                 int z;
-                NBTTagCompound nbttagcompound = ModUtils.nbt(this.get(i));
+                CompoundTag nbttagcompound = ModUtils.nbt(this.get(i));
 
-                x = nbttagcompound.getInteger("Xcoord");
-                y = nbttagcompound.getInteger("Ycoord");
-                z = nbttagcompound.getInteger("Zcoord");
+                x = nbttagcompound.getInt("Xcoord");
+                y = nbttagcompound.getInt("Ycoord");
+                z = nbttagcompound.getInt("Zcoord");
                 if (nbttagcompound.getBoolean("change")) {
                     BlockPos pos = new BlockPos(x, y, z);
                     tile.wirelessComponent.setUpdate(true);
@@ -126,8 +132,8 @@ public class InvSlotElectricBlock extends InvSlot {
                 continue;
             }
             ItemStack stack = this.get(i);
-            if (EnumModule.getFromID(stack.getItemDamage()) != null && stack.getItem() instanceof ItemBaseModules) {
-                output += l * EnumModule.getFromID(stack.getItemDamage()).percent;
+            if (stack.getItem() instanceof ItemBaseModules && EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) stack.getItem())) != null) {
+                output += l * EnumModule.getFromID(IUItem.basemodules.getMeta((ItemBaseModules) stack.getItem())).percent;
             }
         }
         return output;

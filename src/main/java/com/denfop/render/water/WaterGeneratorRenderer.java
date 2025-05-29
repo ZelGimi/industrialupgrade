@@ -3,102 +3,85 @@ package com.denfop.render.water;
 import com.denfop.api.windsystem.IWindMechanism;
 import com.denfop.render.windgenerator.RotorModel;
 import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileBaseWaterGenerator> {
+public class WaterGeneratorRenderer implements BlockEntityRenderer<TileBaseWaterGenerator> {
 
-    private static final Map<Integer, ModelBase> rotorModels = new HashMap<>();
+    private static final Map<Integer, RotorModel> rotorModels = new HashMap<>();
 
-    public WaterGeneratorRenderer() {
+    public WaterGeneratorRenderer(BlockEntityRendererProvider.Context context) {
+
     }
 
-    protected void renderBlockRotor(IWindMechanism windGen, World world, BlockPos pos) {
-        int diameter = windGen.getRotorDiameter();
-
-        if (diameter != 0) {
-            diameter = 3;
-            float angle = windGen.getAngle();
-            ResourceLocation rotorRL = windGen.getRotorRenderTexture();
-            ModelBase model = rotorModels.get(diameter);
-            if (model == null) {
-                model = new RotorModel(diameter);
-                rotorModels.put(diameter, model);
-            }
-
-            EnumFacing facing = windGen.getFacing();
-            pos = pos.offset(facing);
-            int light = world.getCombinedLight(pos, 0);
-            int blockLight = light % 65536;
-            int skyLight = light / 65536;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) blockLight, (float) skyLight);
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(0.5F, 0.5F, 0.5F);
-            switch (facing) {
-                case NORTH:
-                    GlStateManager.translate(0F, 0F, -0.25F);
-                    break;
-                case EAST:
-                    GlStateManager.translate(0.25F, 0F, 0);
-                    break;
-                case SOUTH:
-                    GlStateManager.translate(0F, 0F, 0.25F);
-                    break;
-                case WEST:
-                    GlStateManager.translate(-0.25F, 0F, 0);
-                    break;
-            }
-            switch (facing) {
-                case NORTH:
-                    GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-                    break;
-                case EAST:
-                    GL11.glRotatef(-180.0F, 0.0F, 1.0F, 0.0F);
-                    break;
-                case SOUTH:
-                    GL11.glRotatef(-270.0F, 0.0F, 1.0F, 0.0F);
-                    break;
-                case UP:
-                    GL11.glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
-            }
-            if (windGen.getSpace()) {
-                if (!Minecraft.getMinecraft().isGamePaused()) {
-                    GlStateManager.rotate(angle, 1.0F, 0.0F, 0.0F);
-                }
-            }
-            GlStateManager.translate(-0.2F, 0.0F, 0.0F);
-            this.bindTexture(rotorRL);
-            model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-            GlStateManager.popMatrix();
-        }
-    }
-
+    @Override
     public void render(
-            @Nonnull TileBaseWaterGenerator te,
-            double x,
-            double y,
-            double z,
+            TileBaseWaterGenerator tile,
             float partialTicks,
-            int destroyStage,
-            float alpha
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            int packedLight,
+            int packedOverlay
     ) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef((float) x, (float) y, (float) z);
-        this.renderBlockRotor(te, te.getWorld(), te.getBlockPos());
+        IWindMechanism windGen = tile;
+        Level world = tile.getLevel();
+         BlockPos pos = tile.getBlockPos();
+        if (tile.getRotor() == null)
+            return;
+        int diameter = 3;
+        if (diameter == 0) return;
 
-        GL11.glPopMatrix();
+        float angle = windGen.getAngle();
+        ResourceLocation rotorTexture = windGen.getRotorRenderTexture();
+        RotorModel model = rotorModels.computeIfAbsent(diameter, RotorModel::new);
+
+        Direction facing = windGen.getFacing();
+
+        poseStack.pushPose();
+        poseStack.translate(0D, 0.5D, 0D);
+
+        switch (facing) {
+            case NORTH -> poseStack.translate(0.5, 0, 0);
+            case EAST -> poseStack.translate(1, 0, 0.5);
+            case SOUTH -> poseStack.translate(0.5, 0, 1);
+            case WEST -> poseStack.translate(0, 0, 0.5);
+        }
+
+        switch (facing) {
+            case NORTH -> poseStack.mulPose(Axis.YP.rotationDegrees(-90));
+            case EAST -> poseStack.mulPose(Axis.YP.rotationDegrees(-180));
+            case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(-270));
+            case UP -> poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
+        }
+
+        if (windGen.getSpace()) {
+            angle = windGen.getAngle();
+            poseStack.mulPose(Axis.XP.rotationDegrees(angle));
+        }
+
+        poseStack.translate(-0.2F, 0.0F, 0.0F);
+
+        VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(rotorTexture));
+        model.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
+
+        poseStack.popPose();
     }
 
+    @Override
+    public boolean shouldRenderOffScreen(TileBaseWaterGenerator tile) {
+        return true;
+    }
 }

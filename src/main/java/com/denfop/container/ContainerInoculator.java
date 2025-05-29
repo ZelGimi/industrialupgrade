@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityInoculator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerInoculator extends ContainerFullInv<TileEntityInoculator> {
 
-    public ContainerInoculator(final EntityPlayer player, final TileEntityInoculator base) {
+    public ContainerInoculator(final Player player, final TileEntityInoculator base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 1, 20, 35));

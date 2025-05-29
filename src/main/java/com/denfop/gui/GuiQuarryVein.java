@@ -3,43 +3,41 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.ImageScreen;
+import com.denfop.api.gui.*;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerQuarryVein;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeHills;
-import net.minecraft.world.biome.BiomeSnow;
-import net.minecraft.world.biome.BiomeTaiga;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import static net.minecraft.tags.BiomeTags.IS_HILL;
+import static net.minecraft.tags.BiomeTags.IS_TAIGA;
 
-public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
+
+public class GuiQuarryVein<T extends ContainerQuarryVein> extends GuiIU<ContainerQuarryVein> {
 
     public final ContainerQuarryVein container;
     public int[][] colors = new int[39][66];
@@ -52,13 +50,13 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 int y2 = getCoord(y1, this.container.base.getBlockPos().getY());
                 int x2 = getCoordX(x1, this.container.base.getBlockPos().getX(), 88);
                 final BlockPos pos = new BlockPos(x2, y2, this.container.base.getBlockPos().getZ());
-                IBlockState state = this.container.base.getWorld().getBlockState(pos);
+                BlockState state = this.container.base.getWorld().getBlockState(pos);
                 colors[x1 - 74][y1 - 14] = this.getColor(state, this.container.base.getWorld(), pos);
             }
         }
-        this.ySize += 30;
+        this.imageHeight += 30;
         this.inventory.setY(this.inventory.getY() + 30);
-        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.elements.add(new ImageInterface(this, 0, 0, this.imageHeight, this.imageHeight));
         this.elements.add(new ImageScreen(this, 7, 30, 60, 15));
         this.addComponent(new GuiComponent(this, 69, 28, EnumTypeComponent.BIGGEST_FRAME,
                 new Component<>(new ComponentEmpty())
@@ -68,20 +66,16 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         ));
     }
 
-    int getChance(Biome biome) {
-        if (Biome.getIdForBiome(biome) == 2) {
+    int getChance(final Holder<Biome> biome) {
+        if (biome.is(Tags.Biomes.IS_DESERT)) {
             return 65;
-        } else if (Biome.getIdForBiome(biome) == 0) {
-            return 40;
-        } else if (Biome.getIdForBiome(biome) == 24) {
+        } else if (biome.is(BiomeTags.IS_OCEAN)) {
+            return 60;
+        } else if (biome.is(BiomeTags.IS_DEEP_OCEAN)) {
             return 65;
-        } else if (Biome.getIdForBiome(biome) == 10) {
-            return 40;
-        } else if (Biome.getIdForBiome(biome) == 17) {
-            return 65;
-        } else if (Biome.getIdForBiome(biome) == 7) {
+        } else if (biome.is(BiomeTags.IS_RIVER)) {
             return 50;
-        } else if (Biome.getIdForBiome(biome) == 35) {
+        } else if (biome.is(BiomeTags.IS_SAVANNA)) {
             return 50;
         } else {
             return 10;
@@ -90,10 +84,13 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     List<String> getList() {
         List<String> lst = new ArrayList<>();
-        final Biome biome = this.container.base.getWorld().getBiomeForCoordsBody(this.container.base.getBlockPos());
-        lst.add(Localization.translate("iu.biome") + biome.getBiomeName());
-        int col = biome instanceof BiomeHills ? 25 : 0;
-        int col1 = (biome instanceof BiomeTaiga || biome instanceof BiomeSnow) ? 15 : 0;
+        Holder<Biome> biome = this.container.base.getWorld().getBiome(this.container.base.getBlockPos());
+        ResourceLocation biomeKey = this.container.base.getWorld().registryAccess()
+                .registryOrThrow(Registries.BIOME)
+                .getKey(biome.get());
+        lst.add(Localization.translate("iu.biome") + Localization.translate("biome." + biomeKey.getNamespace() + "." + biomeKey.getPath()));
+        int col = biome.is(IS_HILL) ? 25 : 0;
+        int col1 = (biome.is(IS_TAIGA) || biome.is(Tags.Biomes.IS_SNOWY)) ? 15 : 0;
         lst.add(Localization.translate("iu.gettingvein") + ((int) (Math.max(0, getChance(biome) - col - col1) * 0.85) + "%"));
         lst.add(Localization.translate("iu.gettingvein1") + String.valueOf(15 + col) + "%");
         lst.add(Localization.translate("iu.gettingvein2") + String.valueOf(15 + col + col1) + "%");
@@ -154,7 +151,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.canupdate"));
             String m = "";
-            switch (this.container.base.level) {
+            switch (this.container.base.levelMech) {
                 case 2:
                     m = Localization.translate("iu.upgradekitmachine" +
                             ".upgradepanelkitmachine1");
@@ -182,44 +179,44 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         String name = Localization.translate(this.container.base.getName());
-        switch (this.container.base.level) {
+        switch (this.container.base.levelMech) {
             case 2:
-                name = TextFormatting.GOLD + Localization.translate("iu.advanced_name") + " " + name.toLowerCase();
+                name = ChatFormatting.GOLD + Localization.translate("iu.advanced_name") + " " + name.toLowerCase();
                 break;
             case 3:
-                name = TextFormatting.BLUE + Localization.translate("iu.improved_name") + " " + name.toLowerCase();
+                name = ChatFormatting.BLUE + Localization.translate("iu.improved_name") + " " + name.toLowerCase();
                 break;
             case 4:
-                name = TextFormatting.DARK_PURPLE + Localization.translate("iu.perfect_name") + " " + name.toLowerCase();
+                name = ChatFormatting.DARK_PURPLE + Localization.translate("iu.perfect_name") + " " + name.toLowerCase();
                 break;
             default:
                 break;
         }
-        int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
-        this.fontRenderer.drawString(name, nmPos, 4, 4210752);
-        this.fontRenderer.drawString(Localization.translate("iu.level"), 122, 23, 4210752);
+        int nmPos = (this.imageWidth - this.getStringWidth(name)) / 2;
+       draw(poseStack, name, nmPos, 4, 4210752);
+        draw(poseStack, Localization.translate("iu.level"), 122, 23, 4210752);
 
-        switch (this.container.base.level) {
+        switch (this.container.base.levelMech) {
             case 2:
-                this.fontRenderer.drawString(TextFormatting.GOLD + Localization.translate("iu.advanced"), 122, 31, 4210752);
+               draw(poseStack, ChatFormatting.GOLD + Localization.translate("iu.advanced"), 122, 31, 4210752);
                 break;
             case 3:
-                this.fontRenderer.drawString(TextFormatting.BLUE + Localization.translate("iu.improved"), 122, 31, 4210752);
+              draw(poseStack, ChatFormatting.BLUE + Localization.translate("iu.improved"), 122, 31, 4210752);
                 break;
             case 4:
-                this.fontRenderer.drawString(TextFormatting.DARK_PURPLE + Localization.translate("iu.perfect"), 122, 31, 4210752);
+              draw(poseStack, ChatFormatting.DARK_PURPLE + Localization.translate("iu.perfect"), 122, 31, 4210752);
                 break;
             default:
-                this.fontRenderer.drawString(Localization.translate("iu.simply"), 122, 31, 4210752);
+               draw(poseStack, Localization.translate("iu.simply"), 122, 31, 4210752);
                 break;
         }
         handleUpgradeTooltip1(par1, par2);
 
         if (this.container.base.vein == null || this.container.base.progress < 1200) {
-            this.fontRenderer.drawString(
+            draw(poseStack,
                     (this.container.base.progress * 100 / 1200) + "%",
                     29,
                     34,
@@ -232,16 +229,16 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
         if (this.container.base.vein != VeinSystem.system.getEMPTY() && this.container.base.vein.get()) {
             if (this.container.base.vein.getType() == Type.EMPTY || this.container.base.vein.getMaxCol() == 0) {
-                this.fontRenderer.drawString(
+               draw(poseStack,
                         Localization.translate("iu.empty"),
-                        27,
+                        20,
                         34,
                         ModUtils.convertRGBcolorToInt(13, 229, 34)
                 );
             } else {
-                this.fontRenderer.drawString(
+               draw(poseStack,
                         Localization.translate("iu.find"),
-                        19,
+                        11,
                         34,
                         ModUtils.convertRGBcolorToInt(13, 229, 34)
                 );
@@ -252,13 +249,13 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 if (!isOil) {
                     if (this.container.base.vein.getType() != Type.GAS) {
                         if (container.base.vein.isOldMineral()) {
-                            name_vein = new ItemStack(IUItem.heavyore, 1, this.container.base.vein.getMeta()).getDisplayName();
+                            name_vein = new ItemStack(IUItem.heavyore.getItem(this.container.base.vein.getMeta()), 1).getDisplayName().getString();
                         } else {
-                            name_vein = new ItemStack(IUItem.mineral, 1, this.container.base.vein.getMeta()).getDisplayName();
+                            name_vein = new ItemStack(IUItem.mineral.getItem(this.container.base.vein.getMeta()), 1).getDisplayName().getString();
                         }
 
                     } else {
-                        name_vein = new ItemStack(FluidName.fluidgas.getInstance().getBlock()).getDisplayName();
+                        name_vein = Localization.translate(FluidName.fluidgas.getInstance().get().getFluidType().getDescriptionId());
                         isOil = true;
                     }
                 } else {
@@ -268,96 +265,76 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                         isOil
                                 ?
                                 "mb"
-                                : "")).drawForeground(par1, par2);
+                                : "")).drawForeground(poseStack, par1, par2);
             }
         }
 
 
     }
 
-    private int getColor(IBlockState state, World world, BlockPos pos) {
-        if (state.getMaterial() == Material.AIR) {
-            return (int) this.container.base.getWorld().provider.getCloudColor(0).x;
-        }
+    private int getColor(BlockState state, Level world, BlockPos pos) {
         MapColor color = state.getMapColor(world, pos);
-        return color.colorValue | -16777216;
+        return color.col | -16777216;
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int h = (this.width - this.xSize) / 2;
-        int k = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        int h = guiLeft;
+        int k = guiTop;
+        bindTexture(getTexture());
         int m = this.container.base.progress * 34 / 1200;
-
-
+        ShaderInstance shader = RenderSystem.getShader();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         for (int x1 = 74; x1 <= 112; x1++) {
             for (int y1 = 14; y1 <= 79; y1++) {
 
-                this.drawColoredRect(x1, y1 + 20, 1, 1, colors[x1 - 74][y1 - 14]);
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                this.drawColoredRect(poseStack, x1, y1 + 20, 1, 1, colors[x1 - 74][y1 - 14], bufferBuilder);
 
             }
         }
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        BufferUploader.drawWithShader(bufferBuilder.end());
+        RenderSystem.setShader(() -> shader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        drawTexturedModalRect(h + 88, k + 42, 183, 50, 1, m);
-        switch (this.container.base.level) {
+        drawTexturedModalRect(poseStack, h + 88, k + 42, 183, 50, 1, m);
+        switch (this.container.base.levelMech) {
             case 2:
-                drawTexturedModalRect(h + 88, k + 41, 184, 48, 1, 1);
+                drawTexturedModalRect(poseStack, h + 88, k + 41, 184, 48, 1, 1);
                 break;
             case 3:
-                drawTexturedModalRect(h + 88, k + 41, 185, 48, 1, 1);
+                drawTexturedModalRect(poseStack, h + 88, k + 41, 185, 48, 1, 1);
                 break;
             case 4:
-                drawTexturedModalRect(h + 88, k + 41, 186, 48, 1, 1);
+                drawTexturedModalRect(poseStack, h + 88, k + 41, 186, 48, 1, 1);
                 break;
             default:
                 break;
         }
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(h + 3, k + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, h + 3, k + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
 
 
         if (this.container.base.vein != null && this.container.base.vein.get()) {
             if (this.container.base.vein.getType() != Type.EMPTY) {
-                RenderHelper.enableGUIStandardItemLighting();
-                GL11.glPushMatrix();
-                GL11.glColor4f(0.1F, 1, 0.1F, 1);
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-                GlStateManager.disableLighting();
-                GlStateManager.enableDepth();
-                this.zLevel = 100.0F;
-                mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 ItemStack stack;
                 if (this.container.base.vein.getType() == Type.VEIN) {
                     if (this.container.base.vein.isOldMineral()) {
-                        stack = new ItemStack(IUItem.heavyore, 1, this.container.base.vein.getMeta());
+                        stack = new ItemStack(IUItem.heavyore.getItem(this.container.base.vein.getMeta()), 1);
                     } else {
-                        stack = new ItemStack(IUItem.mineral, 1, this.container.base.vein.getMeta());
+                        stack = new ItemStack(IUItem.mineral.getItem(this.container.base.vein.getMeta()), 1);
                     }
 
                 } else {
                     if (this.container.base.vein.getType() == Type.OIL) {
-                        stack = new ItemStack(IUItem.oilblock);
+                        stack = new ItemStack(IUItem.oilblock.getItem());
                     } else {
-                        stack = new ItemStack(IUItem.gasBlock);
+                        stack = new ItemStack(IUItem.gasBlock.getItem());
                     }
                 }
-                itemRender.renderItemAndEffectIntoGUI(
-                        stack,
-                        h + 32,
-                        k + 54
-                );
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GlStateManager.enableLighting();
-
-                RenderHelper.enableStandardItemLighting();
-                GL11.glColor4f(0.1F, 1, 0.1F, 1);
-                GL11.glPopMatrix();
+                new ItemImage(this, 32, 54, () -> stack).drawBackground(poseStack, guiLeft, guiTop);
             }
         }
 

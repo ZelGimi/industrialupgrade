@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "blocks",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "industrialupgrade:spacecobblestone1/pluto_cobblestone"
+  },
+  "result": "industrialupgrade:spacestone1/pluto_stone"
+}

@@ -4,9 +4,29 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:items/katana_cyberpunk",
-    "particle" : "industrialupgrade:items/katana_cyberpunk"
+    "0" : "industrialupgrade:item/katana_cyberpunk",
+    "particle" : "industrialupgrade:item/katana_cyberpunk"
   },
+	"overrides" : [
+    {
+      "predicate" : {
+        "type" : 0.25
+      },
+      "model" : "industrialupgrade:item/energy_tools/katana_yellow"
+    },
+	{
+      "predicate" : {
+        "type" : 0.5
+      },
+      "model" : "industrialupgrade:item/energy_tools/katana_green"
+    },
+	{
+      "predicate" : {
+        "type" : 0.75
+      },
+      "model" : "industrialupgrade:item/energy_tools/katana_pink"
+    }
+	],
   "elements" : [
     {
       "from" : [

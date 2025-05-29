@@ -1,12 +1,33 @@
 package com.denfop.api.pressure;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+
+import com.denfop.api.sytem.InfoTile;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.List;
+import java.util.Map;
 
 public interface IPressureTile {
 
-    BlockPos getBlockPos();
+    BlockPos getPos();
 
-    TileEntity getTile();
+    BlockEntity getTile();
+    long getIdNetwork();
+
+    void setId(long id);
+
+    void AddTile(IPressureTile tile, final Direction dir);
+
+    void RemoveTile(IPressureTile tile, final Direction dir);
+
+    Map<Direction, IPressureTile> getTiles();
+
+    List<InfoTile<IPressureTile>> getValidReceivers();
+
+    int getHashCodeSource();
+
+    void setHashCodeSource(int hashCode);
 
 }

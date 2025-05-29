@@ -1,9 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
@@ -18,7 +18,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGasCombiner;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGasCombiner;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -28,18 +30,17 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -67,8 +68,8 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
     protected short progress;
     protected double guiProgress;
 
-    public TileEntityGasCombiner() {
-        super(100, 1, 3);
+    public TileEntityGasCombiner(BlockPos pos, BlockState state) {
+        super(100, 1, 3,BlockBaseMachine3.gas_combiner,pos,state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;
@@ -112,267 +113,267 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000), new FluidStack(
-                FluidName.fluidneft.getInstance(),
+                new FluidStack(FluidName.fluidcreosote.getInstance().get(), 1000), new FluidStack(
+                FluidName.fluidneft.getInstance().get(),
                 1000
-        )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance().get(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000), new FluidStack(
-                FluidName.fluidsweet_medium_oil.getInstance(),
+                new FluidStack(FluidName.fluidcreosote.getInstance().get(), 1000), new FluidStack(
+                FluidName.fluidsweet_medium_oil.getInstance().get(),
                 800
-        )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance().get(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000), new FluidStack(
-                FluidName.fluidsweet_heavy_oil.getInstance(),
+                new FluidStack(FluidName.fluidcreosote.getInstance().get(), 1000), new FluidStack(
+                FluidName.fluidsweet_heavy_oil.getInstance().get(),
                 600
-        )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance().get(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000), new FluidStack(
-                FluidName.fluidsour_light_oil.getInstance(),
+                new FluidStack(FluidName.fluidcreosote.getInstance().get(), 1000), new FluidStack(
+                FluidName.fluidsour_light_oil.getInstance().get(),
                 1100
-        )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance().get(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000),
+                new FluidStack(FluidName.fluidcreosote.getInstance().get(), 1000),
                 new FluidStack(
-                        FluidName.fluidsour_medium_oil.getInstance(),
+                        FluidName.fluidsour_medium_oil.getInstance().get(),
                         1300
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance().get(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(
-                        FluidName.fluidfluor.getInstance(),
+                        FluidName.fluidfluor.getInstance().get(),
                         200
                 ),
-                new FluidStack(FluidName.fluidhyd.getInstance(), 1000)
-        ), Collections.singletonList(new FluidStack(FluidName.fluidfluorhyd.getInstance(), 200))));
+                new FluidStack(FluidName.fluidhyd.getInstance().get(), 1000)
+        ), Collections.singletonList(new FluidStack(FluidName.fluidfluorhyd.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000),
+                new FluidStack(FluidName.fluidcreosote.getInstance().get(), 1000),
                 new FluidStack(
-                        FluidName.fluidsour_heavy_oil.getInstance(),
+                        FluidName.fluidsour_heavy_oil.getInstance().get(),
                         1500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance().get(), 1000))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidbiomass.getInstance(), 500),
+                new FluidStack(FluidName.fluidbiomass.getInstance().get(), 500),
                 new FluidStack(
-                        FluidRegistry.WATER,
+                        net.minecraft.world.level.material.Fluids.WATER,
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidglucose.getInstance(), 1000))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidglucose.getInstance().get(), 1000))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidpropane.getInstance(), 400), new FluidStack(
-                FluidName.fluidbromine.getInstance(),
+                new FluidStack(FluidName.fluidpropane.getInstance().get(), 400), new FluidStack(
+                FluidName.fluidbromine.getInstance().get(),
                 800
-        )), Collections.singletonList(new FluidStack(FluidName.fluiddibromopropane.getInstance(), 400))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluiddibromopropane.getInstance().get(), 400))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidacetylene.getInstance(), 400), new FluidStack(
-                FluidName.fluidhyd.getInstance(),
+                new FluidStack(FluidName.fluidacetylene.getInstance().get(), 400), new FluidStack(
+                FluidName.fluidhyd.getInstance().get(),
                 1000
-        )), Collections.singletonList(new FluidStack(FluidName.fluidethylene.getInstance(), 400))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidethylene.getInstance().get(), 400))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidhydrogensulfide.getInstance(), 200),
+                new FluidStack(FluidName.fluidhydrogensulfide.getInstance().get(), 200),
                 new FluidStack(
-                        FluidName.fluidoxy.getInstance(),
+                        FluidName.fluidoxy.getInstance().get(),
                         300
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfuroxide.getInstance(), 200))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfuroxide.getInstance().get(), 200))));
 
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsulfuroxide.getInstance(), 200),
+                new FluidStack(FluidName.fluidsulfuroxide.getInstance().get(), 200),
                 new FluidStack(
-                        FluidName.fluidoxy.getInstance(),
+                        FluidName.fluidoxy.getInstance().get(),
                         100
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfurtrioxide.getInstance(), 200))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfurtrioxide.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsulfurtrioxide.getInstance(), 500),
+                new FluidStack(FluidName.fluidsulfurtrioxide.getInstance().get(), 500),
                 new FluidStack(
-                        FluidRegistry.WATER,
+                        net.minecraft.world.level.material.Fluids.WATER,
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfuricacid.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfuricacid.getInstance().get(), 500))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidazot.getInstance(), 100), new FluidStack(
-                FluidName.fluidhyd.getInstance(),
+                new FluidStack(FluidName.fluidazot.getInstance().get(), 100), new FluidStack(
+                FluidName.fluidhyd.getInstance().get(),
                 300
-        )), Collections.singletonList(new FluidStack(FluidName.fluidnitrogenhydride.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidnitrogenhydride.getInstance().get(), 200))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidnitrogenoxy.getInstance(), 200), new FluidStack(
-                FluidName.fluidoxy.getInstance(),
+                new FluidStack(FluidName.fluidnitrogenoxy.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidoxy.getInstance().get(),
                 100
-        )), Collections.singletonList(new FluidStack(FluidName.fluidnitrogendioxide.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidnitrogendioxide.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidnitrogendioxide.getInstance(), 400), new FluidStack(
-                FluidRegistry.WATER,
+                new FluidStack(FluidName.fluidnitrogendioxide.getInstance().get(), 400), new FluidStack(
+                net.minecraft.world.level.material.Fluids.WATER,
                 300
-        )), Collections.singletonList(new FluidStack(FluidName.fluidnitricacid.getInstance(), 400))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 400))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidtoluene.getInstance(), 400), new FluidStack(
-                FluidName.fluidnitricacid.getInstance(),
+                new FluidStack(FluidName.fluidtoluene.getInstance().get(), 400), new FluidStack(
+                FluidName.fluidnitricacid.getInstance().get(),
                 600
-        )), Collections.singletonList(new FluidStack(FluidName.fluidtrinitrotoluene.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidtrinitrotoluene.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidethylene.getInstance(), 200), new FluidStack(
-                FluidName.fluidhyd.getInstance(),
+                new FluidStack(FluidName.fluidethylene.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidhyd.getInstance().get(),
                 200
-        )), Collections.singletonList(new FluidStack(FluidName.fluidethane.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidethane.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidethylene.getInstance(), 200), new FluidStack(
-                FluidRegistry.WATER,
+                new FluidStack(FluidName.fluidethylene.getInstance().get(), 200), new FluidStack(
+                net.minecraft.world.level.material.Fluids.WATER,
                 200
-        )), Collections.singletonList(new FluidStack(FluidName.fluidethanol.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidethanol.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidpolybutadiene.getInstance(), 200), new FluidStack(
-                FluidName.fluidpolyacrylonitrile.getInstance(),
+                new FluidStack(FluidName.fluidpolybutadiene.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidpolyacrylonitrile.getInstance().get(),
                 200
-        )), Collections.singletonList(new FluidStack(FluidName.fluidbutadiene_nitrile.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidbutadiene_nitrile.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidethylene.getInstance(), 200), new FluidStack(
-                FluidName.fluidhydrogenchloride.getInstance(),
+                new FluidStack(FluidName.fluidethylene.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidhydrogenchloride.getInstance().get(),
                 200
-        )), Collections.singletonList(new FluidStack(FluidName.fluidchloroethane.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidchloroethane.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(new FluidStack(
-                FluidName.fluidchlorum.getInstance(),
+                FluidName.fluidchlorum.getInstance().get(),
                 200
-        ),   new FluidStack(FluidName.fluidhyd.getInstance(), 200)), Collections.singletonList(new FluidStack(FluidName.fluidhydrogenchloride.getInstance(), 400))));
+        ),   new FluidStack(FluidName.fluidhyd.getInstance().get(), 200)), Collections.singletonList(new FluidStack(FluidName.fluidhydrogenchloride.getInstance().get(), 400))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidbenz.getInstance(), 500), new FluidStack(
-                FluidName.fluidtetraethyllead.getInstance(),
+                new FluidStack(FluidName.fluidbenz.getInstance().get(), 500), new FluidStack(
+                FluidName.fluidtetraethyllead.getInstance().get(),
                 500
-        )), Collections.singletonList(new FluidStack(FluidName.fluidpetrol90.getInstance(), 500))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidpetrol90.getInstance().get(), 500))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidpetrol90.getInstance(), 500), new FluidStack(
-                FluidName.fluidtetraethyllead.getInstance(),
+                new FluidStack(FluidName.fluidpetrol90.getInstance().get(), 500), new FluidStack(
+                FluidName.fluidtetraethyllead.getInstance().get(),
                 500
-        )), Collections.singletonList(new FluidStack(FluidName.fluidpetrol95.getInstance(), 500))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidpetrol95.getInstance().get(), 500))));
 
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcarbonmonoxide.getInstance(), 200), new FluidStack(
-                FluidName.fluidhyd.getInstance(),
+                new FluidStack(FluidName.fluidcarbonmonoxide.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidhyd.getInstance().get(),
                 400
-        )), Collections.singletonList(new FluidStack(FluidName.fluidmethanol.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidmethanol.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidbutadiene.getInstance(), 200), new FluidStack(
-                FluidName.fluidhyd.getInstance(),
+                new FluidStack(FluidName.fluidbutadiene.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidhyd.getInstance().get(),
                 200
-        )), Collections.singletonList(new FluidStack(FluidName.fluidbutene.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidbutene.getInstance().get(), 200))));
 
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidbutene.getInstance(), 200), new FluidStack(
-                FluidName.fluidsulfuricacid.getInstance(),
+                new FluidStack(FluidName.fluidbutene.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidsulfuricacid.getInstance().get(),
                 200
-        )), Collections.singletonList(new FluidStack(FluidName.fluidtertbutylsulfuricacid.getInstance(), 200))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidtertbutylsulfuricacid.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidisobutylene.getInstance(), 200), new FluidStack(
-                FluidName.fluidmethanol.getInstance(),
+                new FluidStack(FluidName.fluidisobutylene.getInstance().get(), 200), new FluidStack(
+                FluidName.fluidmethanol.getInstance().get(),
                 100
-        )), Collections.singletonList(new FluidStack(FluidName.fluidtertbutylmethylether.getInstance(), 100))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidtertbutylmethylether.getInstance().get(), 100))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidpetrol95.getInstance(), 500),
+                new FluidStack(FluidName.fluidpetrol95.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluidtertbutylmethylether.getInstance(),
+                        FluidName.fluidtertbutylmethylether.getInstance().get(),
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidpetrol100.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidpetrol100.getInstance().get(), 500))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidpetrol100.getInstance(), 500),
+                new FluidStack(FluidName.fluidpetrol100.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluidtertbutylmethylether.getInstance(),
+                        FluidName.fluidtertbutylmethylether.getInstance().get(),
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidpetrol105.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidpetrol105.getInstance().get(), 500))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethylpentanal.getInstance(), 500),
+                new FluidStack(FluidName.fluidmethylpentanal.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluidhyd.getInstance(),
+                        FluidName.fluidhyd.getInstance().get(),
                         1000
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidethylhexanol.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidethylhexanol.getInstance().get(), 500))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethylcyclohexylnitrate.getInstance(), 500),
+                new FluidStack(FluidName.fluidmethylcyclohexylnitrate.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluiddizel.getInstance(),
+                        FluidName.fluiddizel.getInstance().get(),
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluida_diesel.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluida_diesel.getInstance().get(), 500))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmethylcyclohexylnitrate.getInstance(), 500),
+                new FluidStack(FluidName.fluidmethylcyclohexylnitrate.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluida_diesel.getInstance(),
+                        FluidName.fluida_diesel.getInstance().get(),
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidaa_diesel.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidaa_diesel.getInstance().get(), 500))));
 
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidbenzene.getInstance(), 300),
+                new FluidStack(FluidName.fluidbenzene.getInstance().get(), 300),
                 new FluidStack(
-                        FluidName.fluidhyd.getInstance(),
+                        FluidName.fluidhyd.getInstance().get(),
                         900
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidcyclohexane.getInstance(), 300))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidcyclohexane.getInstance().get(), 300))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcyclohexane.getInstance(), 300),
+                new FluidStack(FluidName.fluidcyclohexane.getInstance().get(), 300),
                 new FluidStack(
-                        FluidName.fluidnitricacid.getInstance(),
+                        FluidName.fluidnitricacid.getInstance().get(),
                         300
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidmethylcyclohexylnitrate.getInstance(), 300))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidmethylcyclohexylnitrate.getInstance().get(), 300))));
 
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidethylhexylnitrate.getInstance(), 500),
+                new FluidStack(FluidName.fluidethylhexylnitrate.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluidaa_diesel.getInstance(),
+                        FluidName.fluidaa_diesel.getInstance().get(),
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidaaa_diesel.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidaaa_diesel.getInstance().get(), 500))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidethylhexylnitrate.getInstance(), 500),
+                new FluidStack(FluidName.fluidethylhexylnitrate.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluidaaa_diesel.getInstance(),
+                        FluidName.fluidaaa_diesel.getInstance().get(),
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidaaaa_diesel.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidaaaa_diesel.getInstance().get(), 500))));
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -418,7 +419,7 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -540,46 +541,25 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
         this.fluid_handler.fillFluid();
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.gas_combiner;
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerGasCombiner getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGasCombiner getGuiContainer(Player entityPlayer) {
         return new ContainerGasCombiner(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiGasCombiner getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiGasCombiner(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiGasCombiner((ContainerGasCombiner) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

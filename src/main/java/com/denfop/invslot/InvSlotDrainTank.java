@@ -3,7 +3,7 @@ package com.denfop.invslot;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.inv.IAdvInventory;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.Arrays;
 import java.util.HashSet;

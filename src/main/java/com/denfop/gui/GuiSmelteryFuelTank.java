@@ -3,19 +3,22 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSmelteryFuelTank;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
+public class GuiSmelteryFuelTank<T extends ContainerSmelteryFuelTank> extends GuiIU<ContainerSmelteryFuelTank> {
 
     public GuiSmelteryFuelTank(ContainerSmelteryFuelTank guiContainer) {
         super(guiContainer);
@@ -32,10 +35,10 @@ public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
                         ret.add(Localization.translate("iu.tank.fluids"));
                         ret.addAll(tank1.getFluidList());
                     }
-                } else if (fs != null && fs.amount > 0) {
+                } else if (!fs.isEmpty() && fs.getAmount() > 0) {
                     Fluid fluid = fs.getFluid();
                     if (fluid != null) {
-                        ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
+                        ret.add(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                     } else {
                         ret.add("invalid fluid stack");
                     }
@@ -47,10 +50,10 @@ public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
             }
 
             @Override
-            public void drawBackground(final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
 
                 FluidStack fs = this.tank.getFluid();
-                if (fs != null && fs.amount > 0) {
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x;
                     int fluidY = this.y;
                     int fluidWidth = this.width;
@@ -63,19 +66,20 @@ public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
                     }
 
                     Fluid fluid = fs.getFluid();
-                    TextureAtlasSprite sprite = fluid != null
-                            ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                            : null;
-                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    if (fluid == net.minecraft.world.level.material.Fluids.WATER)
+                        fluid = FluidName.fluidwater.getInstance().get();
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
-                            (double) fs.amount / (double) this.tank.getCapacity(),
+                            (double) fs.getAmount() / (double) this.tank.getCapacity(),
                             0.0D,
                             1.0D
                     );
                     bindBlockTexture();
-                    this.gui.drawSprite(
-                            fluidX,
-                            (double) (fluidY + fluidHeight) - renderHeight,
+                    this.gui.drawSprite(poseStack,
+                            mouseX + fluidX,
+                            mouseY + (double) (fluidY + fluidHeight) - renderHeight,
                             fluidWidth,
                             renderHeight,
                             sprite,
@@ -85,7 +89,7 @@ public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
                             true
                     );
                     this.gui.bindTexture();
-                    this.gui.drawTexturedModalRect(this.gui.guiLeft + 95, this.gui.guiTop + 21, 177, 1, 19, 46);
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + 95, this.gui.guiTop + 21, 177, 1, 19, 46);
 
                 }
             }
@@ -93,20 +97,20 @@ public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
     }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack,final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
 
     }
 

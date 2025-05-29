@@ -1,43 +1,23 @@
 package com.denfop.tiles.transport.tiles;
 
 
-import com.denfop.IUCore;
-import com.denfop.IUItem;
-import com.denfop.api.sytem.EnergyEvent;
-import com.denfop.api.sytem.EnergyType;
-import com.denfop.api.sytem.EnumTypeEvent;
-import com.denfop.api.sytem.IAcceptor;
-import com.denfop.api.sytem.IConductor;
-import com.denfop.api.sytem.IEmitter;
-import com.denfop.api.sytem.ITile;
-import com.denfop.api.sytem.InfoCable;
-import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.sytem.*;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.mechanism.BlockSteamPipe;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.tiles.transport.types.SteamType;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class TileEntitySteamPipe extends TileEntityMultiCable implements IConductor {
@@ -45,7 +25,7 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
 
     public boolean addedToEnergyNet;
     protected SteamType cableType;
-    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
+    Map<Direction, ITile> energyConductorMap = new HashMap<>();
     List<InfoTile<ITile>> validReceivers = new LinkedList<>();
     int hashCodeSource;
     boolean updateConnect = false;
@@ -53,23 +33,11 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
     private long id;
     private InfoCable cable;
 
-    public TileEntitySteamPipe(SteamType cableType) {
-        super(cableType);
+    public TileEntitySteamPipe(SteamType cableType, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(cableType, block, pos, state);
         this.cableType = cableType;
     }
 
-
-    public TileEntitySteamPipe() {
-        super(SteamType.spipe);
-        this.cableType = SteamType.spipe;
-        this.connectivity = 0;
-        this.addedToEnergyNet = false;
-
-    }
-
-    public static TileEntitySteamPipe delegate(SteamType cableType) {
-        return new TileEntitySteamPipe(cableType);
-    }
 
     public long getIdNetwork() {
         return this.id;
@@ -94,7 +62,7 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         return validReceivers;
     }
 
-    public Map<EnumFacing, ITile> getTiles(EnergyType type) {
+    public Map<Direction, ITile> getTiles(EnergyType type) {
         return energyConductorMap;
     }
 
@@ -109,8 +77,8 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
     }
 
     @Override
-    public void RemoveTile(EnergyType type, ITile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void RemoveTile(EnergyType type, ITile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<ITile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
@@ -125,8 +93,8 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
     }
 
     @Override
-    public void AddTile(EnergyType type, ITile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void AddTile(EnergyType type, ITile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);
                 validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
@@ -135,13 +103,6 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         }
     }
 
-    public IMultiTileBlock getTeBlock() {
-        return BlockSteamPipe.spipe;
-    }
-
-    public BlockTileEntity getBlock() {
-        return IUItem.steamPipeBlock;
-    }
 
     public ICableItem getCableItem() {
         return cableType;
@@ -152,19 +113,19 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
         return this.pos;
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         this.cableType = SteamType.values[nbt.getByte("cableType") & 255];
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setByte("cableType", (byte) this.cableType.ordinal());
+        nbt.putByte("cableType", (byte) this.cableType.ordinal());
         return nbt;
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         super.updateTileServer(var1, var2);
         MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.STEAM, this));
         this.needUpdate = true;
@@ -188,7 +149,7 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote && !addedToEnergyNet) {
+        if (!this.getWorld().isClientSide && !addedToEnergyNet) {
             this.energyConductorMap.clear();
             this.validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.STEAM, this));
@@ -200,7 +161,7 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
     }
 
     public void onUnloaded() {
-        if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
+        if (!this.getWorld().isClientSide && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.STEAM, this));
             this.addedToEnergyNet = false;
         }
@@ -210,14 +171,9 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
     }
 
 
-    public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
-        return new ItemStack(IUItem.steamPipe, 1, 0);
-    }
-
-
-    public void onNeighborChange(Block neighbor, BlockPos neighborPos) {
+    public void onNeighborChange(BlockState neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.updateConnectivity();
         }
 
@@ -226,9 +182,9 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
 
     public void updateConnectivity() {
         byte newConnectivity = 0;
-        EnumFacing[] var4 = EnumFacing.VALUES;
-        final Map<EnumFacing, ITile> map = this.energyConductorMap;
-        for (EnumFacing dir : var4) {
+        Direction[] var4 = Direction.values();
+        final Map<Direction, ITile> map = this.energyConductorMap;
+        for (Direction dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             final ITile tile = map.get(dir);
             if (dir != null && !getBlackList().contains(dir)) {
@@ -251,15 +207,15 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
     }
 
 
-    public boolean wrenchCanRemove(EntityPlayer player) {
+    public boolean wrenchCanRemove(Player player) {
         return false;
     }
 
-    public boolean acceptsFrom(IEmitter emitter, EnumFacing direction) {
+    public boolean acceptsFrom(IEmitter emitter, Direction direction) {
         return (!getBlackList().contains(direction));
     }
 
-    public boolean emitsTo(IAcceptor receiver, EnumFacing direction) {
+    public boolean emitsTo(IAcceptor receiver, Direction direction) {
         return (!getBlackList().contains(direction));
     }
 
@@ -270,19 +226,6 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
 
     public double getConductorBreakdownEnergy(EnergyType type) {
         return this.cableType.capacity + 1;
-    }
-
-
-    public void removeConductor() {
-        this.getWorld().setBlockToAir(this.pos);
-        world.playSound(
-                null,
-                this.pos,
-                SoundEvents.ENTITY_GENERIC_BURN,
-                SoundCategory.BLOCKS,
-                0.5F,
-                2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F
-        );
     }
 
 
@@ -326,7 +269,7 @@ public class TileEntitySteamPipe extends TileEntityMultiCable implements IConduc
 
 
     @Override
-    public TileEntity getTile() {
+    public BlockEntity getTile() {
         return this;
     }
 

@@ -1,130 +1,125 @@
 package com.denfop.items.energy;
 
-
-import com.denfop.Constants;
-import com.denfop.ElectricItem;
-import com.denfop.IUCore;
-import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
+import com.denfop.*;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.tile.IWrenchable;
-import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.items.IProperties;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.register.Register;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirt;
-import net.minecraft.block.BlockDirt.DirtType;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegister, IUpgradeItem {
+import static com.denfop.api.upgrade.EnumUpgrades.GRAVITOOL;
 
+public class ItemGraviTool extends TieredItem implements IEnergyItem, IUpgradeItem, IProperties, IItemTab {
     protected static final double ROTATE = 50.0D;
     protected static final double HOE = 50.0D;
     protected static final double TAP = 50.0D;
-    protected final String name;
+    private String nameItem;
 
-    public ItemGraviTool(String name) {
-        super(ToolMaterial.IRON, Collections.emptySet());
-        this.setMaxDamage(27);
-        setCreativeTab(IUCore.EnergyTab);
-        this.efficiency = 16.0F;
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-        IUCore.proxy.addIModelRegister(this);
-        this.name = name;
-        UpgradeSystem.system.addRecipe(this, EnumUpgrades.GRAVITOOL.list);
+    public ItemGraviTool() {
+        super(Tiers.IRON, new Properties().stacksTo(1).setNoRepair());
+        IUCore.proxy.addProperties(this);
+        IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, getUpgradeModules()));
+
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "item.GraviTool";
+        }
 
+        return this.nameItem;
+    }
     public static GraviToolMode readToolMode(ItemStack stack) {
-        return GraviToolMode.getFromID(ModUtils.nbt(stack).getInteger("toolMode"));
+        return GraviToolMode.getFromID(ModUtils.nbt(stack).getInt("toolMode"));
     }
 
     public static GraviToolMode readNextToolMode(ItemStack stack) {
-        return GraviToolMode.getFromID(ModUtils.nbt(stack).getInteger("toolMode") + 1);
+        return GraviToolMode.getFromID(ModUtils.nbt(stack).getInt("toolMode") + 1);
     }
 
     public static void saveToolMode(ItemStack stack, ItemGraviTool.GraviToolMode mode) {
-        ModUtils.nbt(stack).setInteger("toolMode", mode.ordinal());
+        ModUtils.nbt(stack).putInt("toolMode", mode.ordinal());
     }
 
-    public static boolean hasNecessaryPower(ItemStack stack, double usage, EntityPlayer player) {
+    public static boolean hasNecessaryPower(ItemStack stack, double usage, Player player) {
         double coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number * 0.25D : 0);
 
         return ElectricItem.manager.canUse(stack, usage * coef);
     }
 
-    protected static boolean checkNecessaryPower(ItemStack stack, double usage, EntityPlayer player) {
+    protected static boolean checkNecessaryPower(ItemStack stack, double usage, Player player) {
         return checkNecessaryPower(stack, usage, player, false);
     }
 
-    protected static boolean checkNecessaryPower(ItemStack stack, double usage, EntityPlayer player, boolean supressSound) {
+    protected static boolean checkNecessaryPower(ItemStack stack, double usage, Player player, boolean supressSound) {
         double coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number * 0.25D : 0);
 
         if (ElectricItem.manager.use(stack, usage * coef, player)) {
-            if (!supressSound && player.world.isRemote) {
+            if (!supressSound && player.level().isClientSide) {
 
             }
 
@@ -137,429 +132,262 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
     }
 
     public static boolean hasToolMode(ItemStack stack) {
-        if (!stack.hasTagCompound()) {
+        if (!stack.hasTag()) {
             return false;
         }
-        assert stack.getTagCompound() != null;
-        return stack.getTagCompound().hasKey("toolMode", 4);
+        assert stack.getTag() != null;
+        return stack.getTag().contains("toolMode", 4);
     }
 
-    public List<EnumInfoUpgradeModules> getUpgradeModules() {
-        return EnumUpgrades.GRAVITOOL.list;
+    @Override
+    public String[] properties() {
+        return new String[]{"mode"};
     }
 
-    public boolean showDurabilityBar(final ItemStack stack) {
-        return true;
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
+        return readToolMode(itemStack).ordinal() * 0.25f;
     }
 
-    public int getRGBDurabilityForDisplay(ItemStack stack) {
-        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+        return ToolActions.DEFAULT_HOE_ACTIONS.contains(toolAction) && readToolMode(stack) == GraviToolMode.HOE;
     }
 
-    public double getDurabilityForDisplay(ItemStack stack) {
-        return Math.min(
-                Math.max(
-                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
-                        0.0
-                ),
-                1.0
-        );
-    }
-
-    public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        ModelLoader.setCustomMeshDefinition(this, stack -> {
-            GraviToolMode mode;
-            mode = ItemGraviTool.readToolMode(stack);
-
-            return mode.model;
-        });
-
-        for (ItemGraviTool.GraviToolMode mode : ItemGraviTool.GraviToolMode.VALUES) {
-            ModelBakery.registerItemVariants(this, mode.model);
-        }
-
-    }
-
+    @Override
     @Nonnull
-    @Override
-    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
-        return hasToolMode(stack) ? Localization.translate(
-                "gravisuite.graviTool.set",
-                Localization.translate(this.getUnlocalizedName(stack)),
-                Localization.translate(readToolMode(stack).translationName)
-        ) : Localization.translate(this.getUnlocalizedName(stack));
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isFull3D() {
-        return true;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void addInformation(
-            @Nonnull final ItemStack par1ItemStack,
-            @Nullable final World worldIn,
-            @Nonnull final List<String> par3List,
-            @Nonnull final ITooltipFlag flagIn
-    ) {
-        ItemGraviTool.GraviToolMode mode = readToolMode(par1ItemStack);
-        par3List.add(Localization.translate("message.text.mode") + ": " + mode.colour + Localization.translate(mode.translationName));
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            par3List.add(Localization.translate("press.lshift"));
-        }
-
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            par3List.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(Math.abs(KeyboardClient.changemode.getKeyCode())) + Localization.translate(
-                    "iu.changemode_rcm"));
-
-        }
-
-        super.addInformation(par1ItemStack, worldIn, par3List, flagIn);
-    }
-
-    @Nonnull
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
         if (IUCore.keyboard.isChangeKeyDown(player)) {
             ItemStack stack = ModUtils.get(player, hand);
-            if (world.isRemote) {
-                player.playSound(EnumSound.toolchange.getSoundEvent(), 1F, 1);
+
+            if (world.isClientSide) {
+                player.playSound(EnumSound.toolchange.getSoundEvent(), 1F, 1F);
             } else {
                 ItemGraviTool.GraviToolMode mode = readNextToolMode(stack);
                 saveToolMode(stack, mode);
                 CommonProxy.sendPlayerMessage(player, mode.colour + Localization.translate(mode.translationName));
-
             }
 
-            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
-        return super.onItemRightClick(world, player, hand);
+
+        return super.use(world, player, hand);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void appendHoverText(
+            @Nonnull ItemStack stack,
+            @Nullable Level world,
+            @Nonnull List<Component> tooltip,
+            @Nonnull TooltipFlag flag
+    ) {
+        ItemGraviTool.GraviToolMode mode = readToolMode(stack);
+
+        tooltip.add(Component.translatable("message.text.mode")
+                .append(": " + mode.colour)
+                .append(Component.translatable(mode.translationName)));
+
+        if (!Screen.hasShiftDown()) {
+            tooltip.add(Component.translatable("press.lshift"));
+        } else {
+            tooltip.add(Component.translatable("iu.changemode_key")
+                    .append(" " + KeyboardClient.changemode.getKey().getDisplayName().getString())
+                    .append(Component.translatable("iu.changemode_rcm")));
+        }
+
+        super.appendHoverText(stack, world, tooltip, flag);
     }
 
     @Nonnull
     @Override
-    public EnumActionResult onItemUseFirst(
-            @Nonnull EntityPlayer player,
-            @Nonnull World world,
-            @Nonnull BlockPos pos,
-            @Nonnull EnumFacing side,
-            float hitX,
-            float hitY,
-            float hitZ,
-            @Nonnull EnumHand hand
-    ) {
-        ItemStack stack = ModUtils.get(player, hand);
+    public InteractionResult onItemUseFirst(@Nonnull ItemStack stack, @Nonnull UseOnContext context) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Player player = context.getPlayer();
+        InteractionHand hand = context.getHand();
+        return switch (readToolMode(stack)) {
+            case WRENCH ->
+                    this.onWrenchUse(stack, player, level, pos, context.getClickedFace()) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+            case SCREWDRIVER ->
+                    this.onScrewdriverUse(stack, player, level, pos) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+            default -> super.onItemUseFirst(stack, context);
+        };
+    }
+
+    @Nonnull
+    @Override
+    public InteractionResult useOn(@Nonnull UseOnContext context) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Player player = context.getPlayer();
+        InteractionHand hand = context.getHand();
+        ItemStack stack = player.getItemInHand(hand);
+        BlockHitResult hitResult = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos, context.isInside());
+
+        if (player == null) {
+            return InteractionResult.PASS;
+        }
+
         switch (readToolMode(stack)) {
-            case WRENCH:
-                return this.onWrenchUse(stack, player, world, pos, side) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
-            case SCREWDRIVER:
-                return this.onScrewdriverUse(stack, player, world, pos) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
-
-
-            default:
-                return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
-        }
-    }
-
-    @Nonnull
-    @Override
-    public EnumActionResult onItemUse(
-            @Nonnull EntityPlayer player,
-            @Nonnull World world,
-            @Nonnull BlockPos pos,
-            @Nonnull EnumHand hand,
-            @Nonnull EnumFacing facing,
-            float hitX,
-            float hitY,
-            float hitZ
-    ) {
-        ItemStack stack4 = ModUtils.get(player, hand);
-        switch (readToolMode(stack4)) {
             case HOE:
-                return this.onHoeUse(stack4, player, world, pos, facing) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+                return this.onHoeUse(stack, player, level, pos, hitResult.getDirection()) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
             case TREETAP:
-                return this.onTreeTapUse(stack4, player, world, pos, facing) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+                return this.onTreeTapUse(stack, player, level, pos, hitResult.getDirection()) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
             case PURIFIER:
-                TileEntity tile = world.getTileEntity(pos);
-                ItemStack itemstack = player.getHeldItem(hand);
+                BlockEntity tile = level.getBlockEntity(pos);
                 if (!(tile instanceof TileEntityInventory) && !(tile instanceof IManufacturerBlock)) {
-                    return EnumActionResult.PASS;
+                    return InteractionResult.PASS;
                 }
-                double coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, player.getHeldItem(hand))
-                        ?
-                        UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, player.getHeldItem(hand)).number * 0.25D
+
+                double coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
+                        UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number * 0.25D
                         : 0);
 
                 if (tile instanceof TileEntityInventory) {
                     TileEntityInventory base = (TileEntityInventory) tile;
                     double energy = 10000;
-                    if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PURIFIER, itemstack)) {
+
+                    if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PURIFIER, stack)) {
                         energy = 0;
                     }
+
                     if (!base.canEntityDestroy(player)) {
-                        return EnumActionResult.FAIL;
+                        return InteractionResult.FAIL;
                     }
+
                     for (AbstractComponent component : base.getComponentList()) {
-                        if (component.canUsePurifier(player) && ElectricItem.manager.canUse(itemstack, energy * coef)) {
+                        if (component.canUsePurifier(player) && ElectricItem.manager.canUse(stack, energy * coef)) {
                             component.workPurifier();
-                            return EnumActionResult.SUCCESS;
+                            return InteractionResult.SUCCESS;
                         }
                     }
                 }
+
                 if (tile instanceof TileMultiMachine) {
-                    if (!ElectricItem.manager.canUse(itemstack, 500 * coef)) {
-                        return EnumActionResult.PASS;
-                    }
-                    if (!player.isSneaking()) {
-                        TileMultiMachine base = (TileMultiMachine) tile;
-                        ItemStack stack_quickly = ItemStack.EMPTY;
-                        ItemStack stack_modulesize = ItemStack.EMPTY;
-                        ItemStack panel = ItemStack.EMPTY;
-                        ItemStack stack_modulestorage = ItemStack.EMPTY;
-                        ItemStack module_infinity_water = ItemStack.EMPTY;
-                        ItemStack module_separate = ItemStack.EMPTY;
-                        if (base.multi_process.quickly) {
-                            stack_quickly = new ItemStack(IUItem.module_quickly);
-                        }
-                        if (base.multi_process.modulesize) {
-                            stack_modulesize = new ItemStack(IUItem.module_stack);
-                        }
-                        if (base.solartype != null) {
-                            panel = new ItemStack(IUItem.module6, 1, base.solartype.meta);
-                        }
-                        if (base.multi_process.modulestorage) {
-                            stack_modulestorage = new ItemStack(IUItem.module_storage);
-                        }
-                        if (base.multi_process.module_infinity_water) {
-                            module_infinity_water = new ItemStack(IUItem.module_infinity_water);
-                        }
-                        if (base.multi_process.module_separate) {
-                            module_separate = new ItemStack(IUItem.module_separate);
-                        }
-                        if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
-                            final EntityItem item = new EntityItem(world);
-                            if (!stack_quickly.isEmpty()) {
-                                item.setItem(stack_quickly);
-                                base.multi_process.shrinkModule(1);
-                                base.multi_process.setQuickly(false);
-                            } else if (!stack_modulesize.isEmpty()) {
-                                item.setItem(stack_modulesize);
-                                base.multi_process.setModulesize(false);
-                                base.multi_process.shrinkModule(1);
-                            } else if (!module_separate.isEmpty()) {
-                                item.setItem(module_separate);
-                                base.multi_process.module_separate = false;
-                                base.multi_process.shrinkModule(1);
-                            } else if (!module_infinity_water.isEmpty()) {
-                                item.setItem(module_infinity_water);
-                                base.multi_process.module_infinity_water = false;
-                                base.multi_process.shrinkModule(1);
-                            } else if (!panel.isEmpty()) {
-                                item.setItem(panel);
-                                base.solartype = null;
-                            } else if (!stack_modulestorage.isEmpty()) {
-                                item.setItem(stack_modulestorage);
-                                base.multi_process.setModulestorage(false);
-                                base.multi_process.shrinkModule(1);
-                            }
-                            if (!player.getEntityWorld().isRemote) {
-                                item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                                item.setPickupDelay(0);
-                                world.spawnEntity(item);
-                                ElectricItem.manager.use(itemstack, 500 * coef, player);
-                                if (IUCore.proxy.isRendering()) {
-                                    player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
-                                }
-                                return EnumActionResult.SUCCESS;
-                            }
-                        }
-                    } else {
-                        TileMultiMachine base = (TileMultiMachine) tile;
-                        List<ItemStack> stack_list = new ArrayList<>();
-                        if (base.multi_process.quickly) {
-                            stack_list.add(new ItemStack(IUItem.module_quickly));
-                            base.multi_process.setQuickly(false);
-                            base.multi_process.shrinkModule(1);
-                        }
-                        if (base.multi_process.modulesize) {
-                            stack_list.add(new ItemStack(IUItem.module_stack));
-                            base.multi_process.setModulesize(false);
-                            base.multi_process.shrinkModule(1);
-                        }
-                        if (base.multi_process.module_separate) {
-                            stack_list.add(new ItemStack(IUItem.module_separate));
-                            base.multi_process.module_separate = false;
-                            base.multi_process.shrinkModule(1);
-                        }
-                        if (base.solartype != null) {
-                            stack_list.add(new ItemStack(IUItem.module6, 1, base.solartype.meta));
-                            base.solartype = null;
-                        }
-                        if (base.multi_process.modulestorage) {
-                            stack_list.add(new ItemStack(IUItem.module_storage));
-                            base.multi_process.setModulestorage(false);
-                            base.multi_process.shrinkModule(1);
-
-                        }
-                        if (base.multi_process.module_infinity_water) {
-                            stack_list.add(new ItemStack(IUItem.module_infinity_water));
-                            base.multi_process.module_infinity_water = false;
-                            base.multi_process.shrinkModule(1);
-
-                        }
-                        for (ItemStack stack : stack_list) {
-                            final EntityItem item = new EntityItem(world);
-                            if (!player.getEntityWorld().isRemote) {
-                                item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                                item.setPickupDelay(0);
-                                item.setItem(stack);
-                                world.spawnEntity(item);
-                                if (IUCore.proxy.isRendering()) {
-                                    player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
-                                }
-
-                            }
-                        }
-                        ElectricItem.manager.use(itemstack, 500 * coef, player);
-                        return EnumActionResult.SUCCESS;
-                    }
-                } else {
-                    if (!(tile instanceof IManufacturerBlock)) {
-                        return EnumActionResult.FAIL;
-                    }
-                    IManufacturerBlock base = (IManufacturerBlock) tile;
-                    if (player.isSneaking()) {
-                        int level = base.getLevel();
-                        if (level == 0) {
-                            return EnumActionResult.PASS;
-                        }
-                        final ItemStack stack = new ItemStack(IUItem.upgrade_speed_creation, level);
-                        base.setLevel(0);
-                        final EntityItem item = new EntityItem(world);
-                        item.setItem(stack);
-                        if (!player.getEntityWorld().isRemote) {
-                            item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                            item.setPickupDelay(0);
-                            world.spawnEntity(item);
-                            ElectricItem.manager.use(itemstack, 500, player);
-                            if (IUCore.proxy.isRendering()) {
-                                player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
-
-                            }
-                            return EnumActionResult.SUCCESS;
-                        }
-                    } else {
-                        int level = base.getLevel();
-                        if (level == 0) {
-                            return EnumActionResult.PASS;
-                        }
-                        final ItemStack stack = new ItemStack(IUItem.upgrade_speed_creation, 1);
-                        base.removeLevel(1);
-                        final EntityItem item = new EntityItem(world);
-                        item.setItem(stack);
-                        if (!player.getEntityWorld().isRemote) {
-                            item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                            item.setPickupDelay(0);
-                            world.spawnEntity(item);
-                            ElectricItem.manager.use(itemstack, 500, player);
-                            if (IUCore.proxy.isRendering()) {
-                                player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
-
-                            }
-                            return EnumActionResult.SUCCESS;
-                        }
-
+                    if (!ElectricItem.manager.canUse(stack, 500 * coef)) {
+                        return InteractionResult.PASS;
                     }
 
+                    TileMultiMachine base = (TileMultiMachine) tile;
+                    List<ItemStack> stackList = new ArrayList<>();
+
+                    if (base.multi_process.quickly) {
+                        stackList.add(new ItemStack(IUItem.module_quickly.getItem()));
+                        base.multi_process.setQuickly(false);
+                        base.multi_process.shrinkModule(1);
+                    }
+                    if (base.multi_process.modulesize) {
+                        stackList.add(new ItemStack(IUItem.module_stack.getItem()));
+                        base.multi_process.setModulesize(false);
+                        base.multi_process.shrinkModule(1);
+                    }
+                    if (base.multi_process.module_separate) {
+                        stackList.add(new ItemStack(IUItem.module_separate.getItem()));
+                        base.multi_process.module_separate = false;
+                        base.multi_process.shrinkModule(1);
+                    }
+                    if (base.solartype != null) {
+                        stackList.add(new ItemStack(IUItem.module6.getStack(base.solartype.meta), 1));
+                        base.solartype = null;
+                    }
+                    if (base.multi_process.modulestorage) {
+                        stackList.add(new ItemStack(IUItem.module_storage.getItem()));
+                        base.multi_process.setModulestorage(false);
+                        base.multi_process.shrinkModule(1);
+                    }
+                    if (base.multi_process.module_infinity_water) {
+                        stackList.add(new ItemStack(IUItem.module_infinity_water.getItem()));
+                        base.multi_process.module_infinity_water = false;
+                        base.multi_process.shrinkModule(1);
+                    }
+
+                    for (ItemStack dropStack : stackList) {
+                        if (!level.isClientSide) {
+                            ItemEntity itemEntity = new ItemEntity((ServerLevel) level, player.getX(), player.getY(), player.getZ(), dropStack);
+                            itemEntity.setPickUpDelay(0);
+                            level.addFreshEntity(itemEntity);
+                            player.playNotifySound(EnumSound.purifier.getSoundEvent(), SoundSource.PLAYERS, 1F, 1);
+                        }
+                    }
+
+                    ElectricItem.manager.use(stack, 500 * coef, player);
+                    return InteractionResult.SUCCESS;
                 }
+                return InteractionResult.PASS;
 
             default:
-                return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
+                return super.onItemUseFirst(stack, context);
         }
     }
 
-    protected boolean onHoeUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
-        if (player.canPlayerEdit(pos.offset(side), side, stack) && hasNecessaryPower(stack, HOE, player)) {
-            UseHoeEvent event = new UseHoeEvent(player, stack, world, pos);
-            if (MinecraftForge.EVENT_BUS.post(event)) {
-                return false;
-            }
-            if (event.getResult() == Result.ALLOW) {
-                return checkNecessaryPower(stack, HOE, player, true);
-            }
-            IBlockState state = world.getBlockState(pos);
-            state = state.getActualState(world, pos);
+    protected boolean onHoeUse(ItemStack stack, Player player, Level world, BlockPos pos, Direction side) {
+        if (player.mayUseItemAt(pos.relative(side), side, stack) && hasNecessaryPower(stack, HOE, player)) {
+            BlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
-            IBlockState state1 = world.getBlockState(pos.up());
-            state1 = state1.getActualState(world, pos.up());
-            if (side != EnumFacing.DOWN && state1.getMaterial() == Material.AIR) {
-                if (block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
-                    return this.setHoedBlock(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
+            BlockState state1 = world.getBlockState(pos.below());
+
+            if (side != Direction.DOWN && state1.isAir()) {
+                if (block == Blocks.GRASS_BLOCK || block == Blocks.DIRT_PATH) {
+                    return this.setHoedBlock(stack, player, world, pos, Blocks.FARMLAND.defaultBlockState());
                 }
 
                 if (block == Blocks.DIRT) {
-                    switch (state.getValue(BlockDirt.VARIANT)) {
-                        case DIRT:
-                            return this.setHoedBlock(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
-                        case COARSE_DIRT:
-                            return this.setHoedBlock(
-                                    stack,
-                                    player,
-                                    world,
-                                    pos,
-                                    Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, DirtType.DIRT)
-                            );
-                    }
+                    return this.setHoedBlock(stack, player, world, pos, Blocks.FARMLAND.defaultBlockState());
+                } else if (block == Blocks.COARSE_DIRT) {
+                    return this.setHoedBlock(stack, player, world, pos, Blocks.DIRT.defaultBlockState());
                 }
-            }
 
+            }
             return false;
         }
         return false;
     }
 
-    protected boolean setHoedBlock(ItemStack stack, EntityPlayer player, World world, BlockPos pos, IBlockState state) {
+    protected boolean setHoedBlock(ItemStack stack, Player player, Level world, BlockPos pos, BlockState state) {
         if (checkNecessaryPower(stack, HOE, player, true)) {
-            world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            if (!world.isRemote) {
-                world.setBlockState(pos, state, 11);
+            world.playSound(null, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+            if (!world.isClientSide) {
+                world.setBlock(pos, state, 11);
             }
-
             return true;
         }
         return false;
     }
 
-    protected boolean onTreeTapUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
-        IBlockState state = world.getBlockState(pos);
-        state = state.getActualState(world, pos);
+    @Override
+    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
+        if (!world.isClientSide) {
+            CompoundTag nbt = itemStack.getOrCreateTag();
+
+            if (!UpgradeSystem.system.hasInMap(itemStack)) {
+                nbt.putBoolean("hasID", false);
+                MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+            }
+        }
+    }
+
+    protected boolean onTreeTapUse(ItemStack stack, Player player, Level world, BlockPos pos, Direction side) {
+        BlockState state = world.getBlockState(pos);
         return hasNecessaryPower(
                 stack,
                 TAP,
                 player
-        ) && (state.getBlock() == IUItem.rubWood && ItemTreetap.attemptExtract(
+        ) && (state.getBlock() == IUItem.rubWood.getBlock().get() && ItemTreetap.attemptExtract(
                 player,
                 world,
                 pos,
                 side,
                 state,
                 null
-        ) || state.getBlock() == IUItem.swampRubWood && ItemTreetap.attemptSwampExtract(
+        ) || state.getBlock() == IUItem.swampRubWood.getBlock().get() && ItemTreetap.attemptSwampExtract(
                 player,
                 world,
                 pos,
                 side,
                 state,
                 null
-        ) || state.getBlock() == IUItem.tropicalRubWood && ItemTreetap.attemptTropicalExtract(
+        ) || state.getBlock() == IUItem.tropicalRubWood.getBlock().get() && ItemTreetap.attemptTropicalExtract(
                 player,
                 world,
                 pos,
@@ -569,30 +397,30 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
         )) && checkNecessaryPower(stack, TAP, player);
     }
 
-    protected boolean onWrenchUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
-        IBlockState state = world.getBlockState(pos);
-        state = state.getActualState(world, pos);
+    protected boolean onWrenchUse(ItemStack stack, Player player, Level world, BlockPos pos, Direction side) {
+        BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-        if (block.isAir(state, world, pos)) {
+
+        if (state.isAir()) {
             return false;
         }
+
         if (block instanceof IWrenchable) {
             IWrenchable wrenchable = (IWrenchable) block;
-            EnumFacing current = wrenchable.getFacing(world, pos);
-            EnumFacing newFacing;
+            Direction current = wrenchable.getFacing(world, pos);
+            Direction newFacing;
 
             if (!IUCore.keyboard.isChangeKeyDown(player)) {
-                if (player.isSneaking()) {
-                    newFacing = side.getOpposite();
-                } else {
-                    newFacing = side;
-                }
+                newFacing = player.isShiftKeyDown() ? side.getOpposite() : side;
             } else {
-                Axis axis = side.getAxis();
-                if ((player.isSneaking() || side.getAxisDirection() != AxisDirection.POSITIVE) && (!player.isSneaking() || side.getAxisDirection() != AxisDirection.NEGATIVE)) {
-                    newFacing = current.rotateAround(axis).rotateAround(axis).rotateAround(axis);
+                Direction.Axis axis = side.getAxis();
+                if ((player.isShiftKeyDown() || side.getAxisDirection() != Direction.AxisDirection.POSITIVE) &&
+                        (!player.isShiftKeyDown() || side.getAxisDirection() != Direction.AxisDirection.NEGATIVE)) {
+                    newFacing = current.getCounterClockWise(axis)
+                            .getCounterClockWise(axis)
+                            .getCounterClockWise(axis);
                 } else {
-                    newFacing = current.rotateAround(axis);
+                    newFacing = current.getClockWise(axis);
                 }
             }
 
@@ -606,19 +434,22 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                     return checkNecessaryPower(stack, ROTATE, player);
                 }
             }
+
             if (wrenchable.wrenchCanRemove(world, pos, player)) {
                 if (!hasNecessaryPower(stack, ROTATE, player)) {
                     return false;
                 }
+
                 player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
-                if (!world.isRemote) {
-                    TileEntity te = world.getTileEntity(pos);
+                if (!world.isClientSide) {
+                    BlockEntity te = world.getBlockEntity(pos);
                     int experience;
-                    if (player instanceof EntityPlayerMP) {
+
+                    if (player instanceof ServerPlayer) {
                         experience = ForgeHooks.onBlockBreakEvent(
                                 world,
-                                ((EntityPlayerMP) player).interactionManager.getGameType(),
-                                (EntityPlayerMP) player,
+                                ((ServerPlayer) player).gameMode.getGameModeForPlayer(),
+                                (ServerPlayer) player,
                                 pos
                         );
                         if (experience < 0) {
@@ -628,16 +459,13 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                         experience = 0;
                     }
 
+                    block.playerWillDestroy(world, pos, state, player);
 
-                    block.onBlockHarvested(world, pos, state, player);
-
-                    if (!block.removedByPlayer(state, world, pos, player, true)) {
+                    if (!block.onDestroyedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
                         return false;
                     }
 
-                    block.onBlockDestroyedByPlayer(world, pos, state);
-
-                    int fortune = player.getEntityWorld().rand.nextInt(100);
+                    int fortune = world.random.nextInt(100);
                     if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WRENCH, stack)) {
                         fortune = 100;
                     }
@@ -645,107 +473,35 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                     for (ItemStack drop : wrenchable.getWrenchDrops(world, pos, state, te, player, fortune)) {
                         ModUtils.dropAsEntity(world, pos, drop);
                     }
+
                     wrenchable.wrenchBreak(world, pos);
-                    if (!player.capabilities.isCreativeMode && experience > 0) {
-                        block.dropXpOnBlockBreak(world, pos, experience);
+
+                    if (!player.isCreative() && experience > 0) {
+                        block.popExperience((ServerLevel) world, pos, experience);
                     }
                 }
-
                 return checkNecessaryPower(stack, ROTATE, player);
             }
         }
-
         return false;
     }
 
-    public void onUpdate(
-            @Nonnull ItemStack itemStack,
-            @Nonnull World p_77663_2_,
-            @Nonnull Entity p_77663_3_,
-            int p_77663_4_,
-            boolean p_77663_5_
-    ) {
-        NBTTagCompound nbt = ModUtils.nbt(itemStack);
-
-        if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.setBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(p_77663_2_, this, itemStack));
-        }
-    }
-
-    protected boolean onScrewdriverUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos) {
-        IBlockState state = world.getBlockState(pos);
-        state = state.getActualState(world, pos);
+    protected boolean onScrewdriverUse(ItemStack stack, Player player, Level world, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-        if (!block.isAir(state, world, pos) && block instanceof BlockHorizontal && checkNecessaryPower(stack, 500.0D, player)) {
-            EnumFacing facing = state.getValue(BlockHorizontal.FACING);
-            if (player.isSneaking()) {
-                facing = facing.rotateYCCW();
-            } else {
-                facing = facing.rotateY();
-            }
 
-            world.setBlockState(pos, state.withProperty(BlockHorizontal.FACING, facing));
+        if (!state.isAir() && block instanceof HorizontalDirectionalBlock && checkNecessaryPower(stack, 500.0D, player)) {
+            Direction facing = state.getValue(HorizontalDirectionalBlock.FACING);
+
+            facing = player.isShiftKeyDown() ? facing.getCounterClockWise() : facing.getClockWise();
+
+            world.setBlock(pos, state.setValue(HorizontalDirectionalBlock.FACING, facing), 3);
             return true;
         }
         return false;
     }
 
-    @Override
-    public boolean hitEntity(@Nonnull ItemStack stack, @Nonnull EntityLivingBase target, @Nonnull EntityLivingBase attacker) {
-        return false;
-    }
 
-    @Override
-    public boolean onBlockDestroyed(
-            @Nonnull ItemStack stack,
-            @Nonnull World world,
-            @Nonnull IBlockState state,
-            @Nonnull BlockPos pos,
-            @Nonnull EntityLivingBase entityLiving
-    ) {
-        return true;
-    }
-
-    @Override
-    public boolean doesSneakBypassUse(
-            @Nonnull ItemStack stack,
-            @Nonnull IBlockAccess world,
-            @Nonnull BlockPos pos,
-            @Nonnull EntityPlayer player
-    ) {
-        return true;
-    }
-
-    @Override
-    public boolean isRepairable() {
-        return false;
-    }
-
-    @Override
-    public int getItemEnchantability() {
-        return 0;
-    }
-
-    @Override
-    public boolean getIsRepairable(@Nonnull ItemStack toRepair, @Nonnull ItemStack repair) {
-        return false;
-    }
-
-    @Nonnull
-    @Override
-    public Multimap<String, AttributeModifier> getItemAttributeModifiers(@Nonnull EntityEquipmentSlot slot) {
-        return HashMultimap.create();
-    }
-
-
-    @Override
-    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
-        if (this.isInCreativeTab(tab)) {
-            ElectricItemManager.addChargeVariants(this, items);
-        }
-
-    }
 
     @Override
     public boolean canProvideEnergy(ItemStack stack) {
@@ -767,21 +523,32 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
         return 10000.0D;
     }
 
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return GRAVITOOL.list;
+    }
+
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
+    }
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+         if (this.allowedIn(p_41391_)) {
+            ElectricItemManager.addChargeVariants(this, p_41392_);
+        }
+    }
     public enum GraviToolMode {
-        HOE(TextFormatting.GOLD),
-        TREETAP(TextFormatting.LIGHT_PURPLE),
-        WRENCH(TextFormatting.AQUA),
-        SCREWDRIVER(TextFormatting.YELLOW),
-        PURIFIER(TextFormatting.DARK_AQUA);
+        HOE(ChatFormatting.GOLD),
+        TREETAP(ChatFormatting.LIGHT_PURPLE),
+        WRENCH(ChatFormatting.AQUA),
+        SCREWDRIVER(ChatFormatting.YELLOW),
+        PURIFIER(ChatFormatting.DARK_AQUA);
         private static final ItemGraviTool.GraviToolMode[] VALUES = values();
         public final String translationName = "iu.graviTool.snap." + this.name().toLowerCase(Locale.ENGLISH);
-        public final TextFormatting colour;
-        private final ModelResourceLocation model =
-                new ModelResourceLocation(Constants.MOD_ID + ":" + "gravitool/gravitool".toLowerCase(Locale.ENGLISH) + this
-                        .name()
-                        .toLowerCase(Locale.ENGLISH), null);
+        public final ChatFormatting colour;
 
-        GraviToolMode(TextFormatting colour) {
+
+        GraviToolMode(ChatFormatting colour) {
             this.colour = colour;
         }
 
@@ -791,3 +558,4 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
     }
 
 }
+

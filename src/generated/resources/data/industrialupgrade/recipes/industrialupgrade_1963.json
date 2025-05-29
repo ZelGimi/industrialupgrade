@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:adv_spectral_box"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade1"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/muntsa"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade2"
+  },
+  "show_notification": true
+}

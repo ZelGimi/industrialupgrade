@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/dione_lead_ore"
+    "all" : "industrialupgrade:block/dione_lead_ore"
   }
 }

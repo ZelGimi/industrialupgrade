@@ -1,9 +1,9 @@
 package com.denfop.api.transport;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public interface ITransportEmitter<T, E> extends ITransportTile<T, E> {
 
-    boolean emitsTo(ITransportAcceptor<T, E> var1, EnumFacing var2);
+    boolean emitsTo(ITransportAcceptor<T, E> var1, Direction var2);
 
 }

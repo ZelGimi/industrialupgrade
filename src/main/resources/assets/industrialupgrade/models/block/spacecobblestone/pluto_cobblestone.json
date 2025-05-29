@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/pluto_cobblestone"
+    "all" : "industrialupgrade:block/pluto_cobblestone"
   }
 }

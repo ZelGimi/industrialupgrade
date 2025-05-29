@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/agricultural_analyzer"
+    "layer0" : "industrialupgrade:item/agricultural_analyzer"
   }
 }

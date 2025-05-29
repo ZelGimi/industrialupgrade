@@ -1,13 +1,15 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileMolecularTransformer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 
 public class ContainerBaseMolecular extends ContainerBase<TileMolecularTransformer> {
 
-    public ContainerBaseMolecular(EntityPlayer entityPlayer, TileMolecularTransformer tileEntity1) {
-        super(tileEntity1);
+    public ContainerBaseMolecular(Player entityPlayer, TileMolecularTransformer tileEntity1) {
+        super(tileEntity1, entityPlayer);
+        this.player = entityPlayer;
+        this.inventory = entityPlayer.getInventory();
         if (tileEntity1.maxAmount == 1) {
             addSlotToContainer(
                     new SlotInvSlot(tileEntity1.inputSlot[0], 0, 22, 57));
@@ -44,11 +46,11 @@ public class ContainerBaseMolecular extends ContainerBase<TileMolecularTransform
         for (int i = 0; i < 3; ++i) {
             for (int k = 0; k < 9; ++k) {
                 this.addSlotToContainer(
-                        new Slot(entityPlayer.inventory, k + i * 9 + 9, 20 + k * 21 + dopX, 128 + i * 21));
+                        new Slot(entityPlayer.getInventory(), k + i * 9 + 9, 20 + k * 21 + dopX, 128 + i * 21));
             }
         }
         for (int j = 0; j < 9; ++j) {
-            this.addSlotToContainer(new Slot(entityPlayer.inventory, j, 20 + j * 21 + dopX, 195));
+            this.addSlotToContainer(new Slot(entityPlayer.getInventory(), j, 20 + j * 21 + dopX, 195));
         }
     }
 

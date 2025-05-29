@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/overclockerupgrade2"
+    "layer0" : "industrialupgrade:item/overclockerupgrade2"
   }
 }

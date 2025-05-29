@@ -2,13 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiVerticalSliderList;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.ImageResearchTableInterface;
-import com.denfop.api.gui.ItemStackImage;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerVeinSensor;
@@ -19,39 +13,33 @@ import com.denfop.utils.Vector2;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.ChanceOre;
 import com.denfop.world.vein.VeinType;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiPageButtonList;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.denfop.items.ItemVeinSensor.getOreColor;
+import static com.denfop.items.ItemVeinSensor.getDataChunk;
+import static com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR;
 
-@SideOnly(Side.CLIENT)
-public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPageButtonList.GuiResponder,
+@OnlyIn(Dist.CLIENT)
+public class GuiVeinSensor<T extends ContainerVeinSensor> extends GuiIU<ContainerVeinSensor> implements GuiPageButtonList.GuiResponder,
         GuiVerticalSliderList.FormatHelper {
 
-    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png");
+    private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png".toLowerCase());
     private final String name;
     int[][] colors;
     List<ItemStack> itemStackList;
@@ -64,15 +52,15 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
     public GuiVeinSensor(ContainerVeinSensor container, final ItemStack itemStack1) {
         super(container);
 
-        this.name = Localization.translate(itemStack1.getUnlocalizedName());
-        this.ySize = 242;
-        this.xSize += 50;
+        this.name = Localization.translate(itemStack1.getDescriptionId());
+        this.imageHeight = 242;
+        this.imageWidth += 50;
         this.componentList.clear();
         this.slots = new GuiComponent(this, 0, 0, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.DEFAULT))
         );
         colors = new int[9 * 16][9 * 16];
-        final NBTTagCompound nbt = ModUtils.nbt(itemStack1);
+        final CompoundTag nbt = ModUtils.nbt(itemStack1);
         integerList = Arrays.stream(nbt.getIntArray("list"))
                 .boxed()
                 .collect(Collectors.toList());
@@ -80,13 +68,13 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
         final List<VeinType> veins = WorldBaseGen.veinTypes;
         for (VeinType veinType : veins) {
             if (veinType.getHeavyOre() != null) {
-                itemStackList.add(new ItemStack(veinType.getHeavyOre().getBlock(), 1, veinType.getMeta()));
+                itemStackList.add(new ItemStack(veinType.getHeavyOre().getBlock(), 1));
             }
             for (ChanceOre chanceOre : veinType.getOres()) {
                 boolean find = false;
-                ItemStack stack1 = new ItemStack(chanceOre.getBlock().getBlock(), 1, chanceOre.getMeta());
+                ItemStack stack1 = new ItemStack(chanceOre.getBlock().getBlock(), 1);
                 for (ItemStack stack : itemStackList) {
-                    if (stack.isItemEqual(stack1)) {
+                    if (stack.is(stack1.getItem())) {
                         find = true;
                         break;
                     }
@@ -102,12 +90,11 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                 colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
                         .getVector()
                         .getZ()] = entry.getValue().getColor();
-                int meta = entry.getValue().getBlockState().getBlock().getMetaFromState(entry.getValue().getBlockState());
-                ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1, meta);
+                ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1);
                 if (!integerList.isEmpty()) {
                     boolean find = false;
                     for (Integer integer : integerList) {
-                        if (itemStackList.get(integer).isItemEqual(stack)) {
+                        if (itemStackList.get(integer).is(stack.getItem())) {
                             find = true;
                             this.addElement(new Area(
                                     this,
@@ -117,7 +104,7 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                                             .getZ(),
                                     1,
                                     1
-                            ).withTooltip(() -> stack.getDisplayName() + "\n" + "X: " + entry
+                            ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry
                                     .getKey()
                                     .getX() + "\n" + "Z: " + entry
                                     .getKey()
@@ -130,7 +117,7 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                                 .getKey()
                                 .getZ() - container.base
                                 .getVector()
-                                .getZ()] = MapColor.STONE.colorValue | -16777216;
+                                .getZ()] = MapColor.STONE.col | -16777216;
                     }
                 } else if (entry.getValue().getColor() != 0xFFFFFFFF) {
                     this.addElement(new Area(
@@ -141,14 +128,14 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                                     .getZ(),
                             1,
                             1
-                    ).withTooltip(() -> stack.getDisplayName() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
+                    ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
                             .getKey()
                             .getZ()));
                 }
             }
         }
         componentList.add(slots);
-        this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
+        this.addElement(new ImageInterface(this, 0, 0, imageWidth, imageHeight));
 
 
     }
@@ -174,35 +161,36 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
 
     }
 
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
 
 
-        slider = new GuiVerticalSliderList(this, 2, (this.width - this.xSize) / 2 + 201,
-                (this.height - this.ySize) / 2 + 8 + 10,
+        slider = new GuiVerticalSliderList(this, 2, (this.width - this.imageWidth) / 2 + 201,
+                (this.height - this.imageHeight) / 2 + 8 + 10,
                 "",
                 0, 0, 0,
                 this, 210
         );
-        this.buttonList.add(slider);
+        this.addWidget(slider);
+        this.addRenderableWidget(slider);
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         for (int i = value, j = 0; i < Math.min(
                 itemStackList.size(),
                 value + 12
         ); i++, j++) {
             final int finalI = i;
-            new ItemStackImage(this, 175, 5 + 10 + 18 * j, () -> itemStackList.get(finalI)).drawForeground(par1, par2);
+            new ItemStackImage(this, 175, 5 + 10 + 18 * j, () -> itemStackList.get(finalI)).drawForeground(poseStack, par1, par2);
         }
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         for (int ii = value, jj = 0; ii < Math.min(
@@ -215,28 +203,28 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                 } else {
                     integerList.remove((Object) ii);
                 }
-                new PacketItemStackEvent(ii, mc.player);
-                final NBTTagCompound nbt = ModUtils.nbt(this.container.base.itemStack1);
-                nbt.setIntArray("list", integerList.stream().mapToInt(Integer::intValue).toArray());
+                new PacketItemStackEvent(ii, minecraft.player);
+                final CompoundTag nbt = ModUtils.nbt(this.container.base.itemStack1);
+                nbt.putIntArray("list", integerList);
                 update = true;
             }
         }
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
         slider.setMax(itemStackList.size() - 12);
         if (tick == 400 || update) {
             tick = 0;
             update = false;
             Map<Integer, Map<Vector2, DataOres>> map = new HashMap<>();
-            ChunkPos pos = new ChunkPos(new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ));
+            ChunkPos pos = new ChunkPos(new BlockPos((int) minecraft.player.getX(), (int) minecraft.player.getY(), (int) minecraft.player.getZ()));
             int i = 0;
             for (int x = -4; x < 5; x++) {
                 for (int z = -4; z < 5; z++) {
                     ChunkPos chunkPos = new ChunkPos(pos.x + x, pos.z + z);
-                    Chunk chunk = mc.player.getEntityWorld().getChunkFromChunkCoords(chunkPos.x, chunkPos.z);
+                    LevelChunk chunk = minecraft.player.level().getChunk(chunkPos.x, chunkPos.z);
                     Map<Vector2, DataOres> map1 = getDataChunk(chunk);
                     map.put(i, map1);
                     i++;
@@ -253,12 +241,11 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                     colors[entry.getKey().getX() - container.base.getVector().getX()][entry.getKey().getZ() - container.base
                             .getVector()
                             .getZ()] = entry.getValue().getColor();
-                    int meta = entry.getValue().getBlockState().getBlock().getMetaFromState(entry.getValue().getBlockState());
-                    ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1, meta);
+                    ItemStack stack = new ItemStack(entry.getValue().getBlockState().getBlock(), 1);
                     if (!integerList.isEmpty()) {
                         boolean find = false;
                         for (Integer integer : integerList) {
-                            if (itemStackList.get(integer).isItemEqual(stack)) {
+                            if (itemStackList.get(integer).is(stack.getItem())) {
                                 find = true;
                                 this.addElement(new Area(
                                         this,
@@ -268,7 +255,7 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                                                 .getZ(),
                                         1,
                                         1
-                                ).withTooltip(() -> stack.getDisplayName() + "\n" + "X: " + entry
+                                ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry
                                         .getKey()
                                         .getX() + "\n" + "Z: " + entry
                                         .getKey()
@@ -281,7 +268,7 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                                     .getKey()
                                     .getZ() - container.base
                                     .getVector()
-                                    .getZ()] = MapColor.STONE.colorValue | -16777216;
+                                    .getZ()] = MapColor.STONE.col | -16777216;
                         }
                     } else if (entry.getValue().getColor() != 0xFFFFFFFF) {
                         this.addElement(new Area(
@@ -292,117 +279,61 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                                         .getZ(),
                                 1,
                                 1
-                        ).withTooltip(() -> stack.getDisplayName() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
+                        ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
                                 .getKey()
                                 .getZ()));
                     }
                 }
             }
             componentList.add(slots);
-            this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
+            this.addElement(new ImageInterface(this, 0, 0, imageWidth, imageHeight));
         } else {
             tick++;
         }
     }
 
-    public Map<Vector2, DataOres> getDataChunk(Chunk chunk) {
-
-        Map<Vector2, DataOres> map = new HashMap<>();
-        List<Vector2> list = new ArrayList<>();
-        for (int x = chunk.x * 16; x < chunk.x * 16 + 16; x++) {
-            for (int z = chunk.z * 16; z < chunk.z * 16 + 16; z++) {
-                for (int y = 40; y < chunk.getHeight(new BlockPos(x, 0, z)); y++) {
-                    IBlockState blockState = chunk.getBlockState(x, y, z);
-                    int color = getOreColor(blockState);
-                    Vector2 vector2 = new Vector2(x, z);
-                    if (color != 0xFFFFFFFF) {
-                        int meta = blockState.getBlock().getMetaFromState(blockState);
-                        ItemStack stack = new ItemStack(blockState.getBlock(), 1, meta);
-
-                        if (!integerList.isEmpty()) {
-                            boolean find = false;
-                            for (Integer integer : integerList) {
-                                if (itemStackList.get(integer).isItemEqual(stack)) {
-                                    if (!map.containsKey(vector2)) {
-                                        map.put(vector2, new DataOres(blockState, color));
-                                    } else {
-                                        map.replace(vector2, new DataOres(blockState, color));
-                                    }
-                                    list.add(vector2);
-                                    find = true;
-                                    break;
-                                }
-                            }
-                            if (!find) {
-                                if (!list.contains(vector2)) {
-                                    if (!map.containsKey(vector2)) {
-                                        map.put(vector2, new DataOres(blockState, MapColor.STONE.colorValue | -16777216));
-                                    } else {
-                                        map.replace(vector2, new DataOres(blockState, MapColor.STONE.colorValue | -16777216));
-                                    }
-                                }
-                            }
-                        } else {
-                            if (!map.containsKey(vector2)) {
-                                map.put(vector2, new DataOres(blockState, color));
-                            } else {
-                                map.replace(vector2, new DataOres(blockState, color));
-                            }
-                        }
-                    } else {
-
-                        if (!map.containsKey(vector2)) {
-                            map.put(vector2, new DataOres(blockState, blockState.getMapColor(
-                                    chunk.getWorld(),
-                                    new BlockPos(x, y, z)
-                            ).colorValue | -16777216));
-                        }
-                    }
-                }
-            }
-        }
-        return map;
-    }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, POSITION_COLOR);
         for (int i = 0; i < 9 * 16; i++) {
             for (int j = 0; j < 9 * 16; j++) {
-                this.drawColoredRect(20 + i,
+                this.drawColoredRect(poseStack, 20 + i,
                         10 + j, 1, 1,
-                        colors[i][j]
+                        colors[i][j], bufferBuilder
                 );
             }
         }
+        BufferUploader.drawWithShader(bufferBuilder.end());
         int centerX = 20 + (9 * 16) / 2;
         int centerY = 10 + (9 * 16) / 2;
 
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
-        GlStateManager.glLineWidth(1.0F);
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder buffer = tessellator.getBuilder();
+        PoseStack pose = poseStack.pose();
+        pose.pushPose();
+        Matrix4f martix = pose.last().pose();
+
+        buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, POSITION_COLOR);
+        buffer.vertex(martix,this.guiLeft + centerX, this.guiTop + 10, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        buffer.vertex(martix,this.guiLeft + centerX, this.guiTop + 10 + (9 * 16), 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        tessellator.end();
 
 
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(this.guiLeft + centerX, this.guiTop + 10, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(this.guiLeft + centerX, this.guiTop + 10 + (9 * 16), 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        tessellator.draw();
+        buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, POSITION_COLOR);
+        buffer.vertex(martix,this.guiLeft + 20, this.guiTop + centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        buffer.vertex(martix,this.guiLeft + 20 + (9 * 16), this.guiTop + centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
+        tessellator.end();
 
 
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(this.guiLeft + 20, this.guiTop + centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(this.guiLeft + 20 + (9 * 16), this.guiTop + centerY, 0).color(1.0F, 0.0F, 0.0F, 1.0F).endVertex();
-        tessellator.draw();
 
-
-        GlStateManager.enableTexture2D();
-        GlStateManager.popMatrix();
-        GlStateManager.pushMatrix();
-        GlStateManager.glLineWidth(4.0F);
+        pose.popPose();
+        pose.pushPose();
         int chunkSize = 16;
         int numChunks = 9;
 
@@ -411,30 +342,28 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
                 int offsetX = 20 + (x * chunkSize);
                 int offsetY = 10 + (y * chunkSize);
 
-
-                buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
-                buffer
-                        .pos(this.guiLeft + offsetX, this.guiTop + offsetY, 0)
+                martix = pose.last().pose();
+                buffer.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, POSITION_COLOR);
+                buffer.vertex(martix,this.guiLeft + offsetX, this.guiTop + offsetY, 0)
                         .color(0.0F, 1.0F, 0.0F, 1.0F)
                         .endVertex(); // Нижний левый угол
-                buffer
-                        .pos(this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY, 0)
+                buffer.vertex(martix,this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY, 0)
                         .color(0.0F, 1.0F, 0.0F, 1.0F)
                         .endVertex(); // Нижний правый угол
-                buffer
-                        .pos(this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY + chunkSize, 0)
+                buffer.vertex(martix,this.guiLeft + offsetX + chunkSize, this.guiTop + offsetY + chunkSize, 0)
                         .color(0.0F, 1.0F, 0.0F, 1.0F)
                         .endVertex(); // Верхний правый угол
-                buffer
-                        .pos(this.guiLeft + offsetX, this.guiTop + offsetY + chunkSize, 0)
+                buffer.vertex(martix,this.guiLeft + offsetX, this.guiTop + offsetY + chunkSize, 0)
                         .color(0.0F, 1.0F, 0.0F, 1.0F)
-                        .endVertex(); // Верхний левый угол
-                tessellator.draw();
+                        .endVertex();
+                tessellator.end();
             }
         }
 
-        GlStateManager.popMatrix();
-        new ImageResearchTableInterface(this, 171, 11, 40, (int) (18 * 12.4)).drawBackground(this.guiLeft, guiTop);
+        pose.popPose();
+
+
+        new ImageResearchTableInterface(this, 171, 11, 40, (int) (18 * 12.4)).drawBackground(poseStack, this.guiLeft, guiTop);
 
         for (int i = value, j = 0; i < Math.min(
                 itemStackList.size(),
@@ -442,17 +371,17 @@ public class GuiVeinSensor extends GuiIU<ContainerVeinSensor> implements GuiPage
         ); i++, j++) {
             final int finalI = i;
             if (integerList.contains(i)) {
-                new ImageResearchTableInterface(this, 175, 5 + 10 + 18 * j, 16, 16).drawBackground(this.guiLeft, guiTop);
+                new ImageResearchTableInterface(this, 175, 5 + 10 + 18 * j, 16, 16).drawBackground(poseStack, this.guiLeft, guiTop);
             }
-            new ItemStackImage(this, 175, 5 + 10 + 18 * j, () -> itemStackList.get(finalI)).drawBackground(this.guiLeft, guiTop);
+            new ItemStackImage(this, 175, 5 + 10 + 18 * j, () -> itemStackList.get(finalI)).drawBackground(poseStack, this.guiLeft, guiTop);
 
         }
 
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
 

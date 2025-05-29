@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:stick"
+      }
+    ]
+  },
+  "pattern": [
+    "A A",
+    "A A",
+    "   "
+  ],
+  "result": {
+    "count": 4,
+    "item": "industrialupgrade:crop/crop"
+  },
+  "show_notification": true
+}

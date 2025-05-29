@@ -6,16 +6,16 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Fluids;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class TileEntityFluidTrash extends TileEntityInventory {
 
     private final Fluids.InternalFluidTank tank;
 
-    public TileEntityFluidTrash() {
+    public TileEntityFluidTrash(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.fluid_trash,pos,state);
         final Fluids fluids = this.addComponent(new Fluids(this));
         tank = fluids.addTankInsert("tank", Integer.MAX_VALUE);
     }
@@ -24,13 +24,13 @@ public class TileEntityFluidTrash extends TileEntityInventory {
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.tank.getFluidAmount() > 0) {
-            this.tank.drain(this.tank.getFluidAmount(), true);
+            this.tank.drain(this.tank.getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
         }
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -38,29 +38,6 @@ public class TileEntityFluidTrash extends TileEntityInventory {
         return BlockBaseMachine3.fluid_trash;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
 }

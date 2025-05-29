@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/quantum_boots_taiga"
+		"layer0": "industrialupgrade:item/quantum_boots_taiga"
 	}
 }

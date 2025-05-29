@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=creator_schedules": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules"
+    },
+    "facing=south,type=creator_schedules": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "y": 180
+    },
+    "facing=west,type=creator_schedules": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "y": 270
+    },
+    "facing=east,type=creator_schedules": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "y": 90
+    },
+    "facing=down,type=creator_schedules": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "x": 90
+    },
+    "facing=up,type=creator_schedules": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "x": 270
+    },
+    "facing=north,type=creator_schedules_invalid": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules"
+    },
+    "facing=south,type=creator_schedules_invalid": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "y": 180
+    },
+    "facing=west,type=creator_schedules_invalid": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "y": 270
+    },
+    "facing=east,type=creator_schedules_invalid": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "y": 90
+    },
+    "facing=down,type=creator_schedules_invalid": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "x": 90
+    },
+    "facing=up,type=creator_schedules_invalid": {
+      "model": "industrialupgrade:block/basemachine/creator_schedules",
+      "x": 270
+    }
+  }
+}

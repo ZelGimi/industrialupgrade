@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockelecfurnace1_side",
-    "down" : "industrialupgrade:blocks/blockelecfurnace1_side",
-    "up" : "industrialupgrade:blocks/blockelecfurnace1_side2_active",
-    "north" : "industrialupgrade:blocks/blockelecfurnace1_main_active",
-    "east" : "industrialupgrade:blocks/blockelecfurnace1_side",
-    "south" : "industrialupgrade:blocks/blockelecfurnace1_side",
-    "west" : "industrialupgrade:blocks/blockelecfurnace1_side"
+    "particle" : "industrialupgrade:block/blockelecfurnace1_side",
+    "down" : "industrialupgrade:block/blockelecfurnace1_side",
+    "up" : "industrialupgrade:block/blockelecfurnace1_side2_active",
+    "north" : "industrialupgrade:block/blockelecfurnace1_main_active",
+    "east" : "industrialupgrade:block/blockelecfurnace1_side",
+    "south" : "industrialupgrade:block/blockelecfurnace1_side",
+    "west" : "industrialupgrade:block/blockelecfurnace1_side"
   }
 }

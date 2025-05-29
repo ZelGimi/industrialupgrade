@@ -1,14 +1,10 @@
 package com.denfop.api;
 
-import com.denfop.api.energy.IEnergySink;
-import com.denfop.api.energy.IEnergyTile;
-import com.denfop.api.energy.NodeStats;
-import com.denfop.api.energy.Path;
-import com.denfop.api.energy.SunCoef;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
+import com.denfop.api.energy.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +16,11 @@ public interface IAdvEnergyNet {
 
     int getTierFromPower(double var1);
 
-    SunCoef getSunCoefficient(World world);
+    SunCoef getSunCoefficient(Level world);
 
     boolean getTransformerMode();
 
-    Map<ChunkPos, List<IEnergySink>> getChunkPosListMap(World world);
+    Map<ChunkPos, List<IEnergySink>> getChunkPosListMap(Level world);
 
     boolean getLosing();
 
@@ -34,16 +30,16 @@ public interface IAdvEnergyNet {
 
     boolean hasRestrictions();
 
-    TileEntity getBlockPosFromEnergyTile(IEnergyTile tile);
+    BlockEntity getBlockPosFromEnergyTile(IEnergyTile tile);
 
-    List<Path> getEnergyPaths(World world, BlockPos pos);
+    List<Path> getEnergyPaths(Level world, BlockPos pos);
 
     void update();
 
-    IEnergyTile getTile(World var1, BlockPos var2);
+    IEnergyTile getTile(Level var1, BlockPos var2);
 
 
-    World getWorld(IEnergyTile var1);
+    Level getWorld(IEnergyTile var1);
 
     BlockPos getPos(IEnergyTile var1);
 

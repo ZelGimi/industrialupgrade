@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube",
 	"textures": {
-		"particle": "industrialupgrade:blocks/energy_remover",
-		"down": "industrialupgrade:blocks/energy_remover",
-		"up": "industrialupgrade:blocks/energy_remover",
-		"north": "industrialupgrade:blocks/energy_remover",
-		"east": "industrialupgrade:blocks/energy_remover",
-		"south": "industrialupgrade:blocks/energy_remover",
-		"west": "industrialupgrade:blocks/energy_remover"
+		"particle": "industrialupgrade:block/energy_remover",
+		"down": "industrialupgrade:block/energy_remover",
+		"up": "industrialupgrade:block/energy_remover",
+		"north": "industrialupgrade:block/energy_remover",
+		"east": "industrialupgrade:block/energy_remover",
+		"south": "industrialupgrade:block/energy_remover",
+		"west": "industrialupgrade:block/energy_remover"
 	}
 }

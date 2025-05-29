@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:research_lens/lens_3"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemplates/bloodstone"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:research_lens/lens_4"
+  },
+  "show_notification": true
+}

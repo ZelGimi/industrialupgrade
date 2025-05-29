@@ -1,15 +1,8 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -17,7 +10,9 @@ import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.blocks.mechanism.BlockDoubleMolecularTransfomer;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBaseDoubleMolecular;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiDoubleMolecularTransformer;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -26,32 +21,32 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
-import net.minecraft.init.PotionTypes;
-import net.minecraft.item.ItemEnchantedBook;
-import net.minecraft.item.ItemPotion;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
 
 public class TileDoubleMolecular extends TileElectricMachine implements
@@ -72,21 +67,21 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     protected double guiProgress;
     protected int size_recipe = 0;
     protected ItemStack output_stack;
-    @SideOnly(Side.CLIENT)
-    private IBakedModel bakedModel;
-    @SideOnly(Side.CLIENT)
-    private IBakedModel transformedModel;
+    @OnlyIn(Dist.CLIENT)
+    private BakedModel bakedModel;
+    @OnlyIn(Dist.CLIENT)
+    private BakedModel transformedModel;
 
-    public TileDoubleMolecular() {
-        super(0, 14, 1);
+    public TileDoubleMolecular(BlockPos pos, BlockState state) {
+        super(0, 14, 1, BlockDoubleMolecularTransfomer.double_transformer, pos, state);
         this.progress = 0;
         this.time = new ArrayList<>();
         this.queue = false;
         this.redstoneMode = 0;
         this.inputSlot = new InvSlotRecipes(this, "doublemolecular", this) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 if (((TileDoubleMolecular) this.tile).getOutput() == null) {
                     if (!content.isEmpty()) {
                         final MachineRecipe recipe1 = Recipes.recipes.getRecipeMachineRecipeOutput(
@@ -131,6 +126,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 } else {
                     ((TileDoubleMolecular) this.tile).need_put_check = false;
                 }
+                return content;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
@@ -140,8 +136,8 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     }
 
     public static void addrecipe(ItemStack stack, ItemStack stack2, ItemStack stack1, double energy) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setDouble("energy", energy);
+        CompoundTag nbt = new CompoundTag();
+        nbt.putDouble("energy", energy);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("doublemolecular", new BaseMachineRecipe(
                 new Input(input.getInput(stack), input.getInput(stack2)),
@@ -150,8 +146,8 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     }
 
     public static void addrecipe(ItemStack stack, String stack2, ItemStack stack1, double energy) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setDouble("energy", energy);
+        CompoundTag nbt = new CompoundTag();
+        nbt.putDouble("energy", energy);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("doublemolecular", new BaseMachineRecipe(
                 new Input(input.getInput(stack), input.getInput(stack2)),
@@ -164,7 +160,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.blockdoublemolecular;
+        return IUItem.blockdoublemolecular.getBlock();
     }
 
     @Override
@@ -178,8 +174,8 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getBakedModel() {
+    @OnlyIn(Dist.CLIENT)
+    public BakedModel getBakedModel() {
         return bakedModel;
     }
 
@@ -187,207 +183,205 @@ public class TileDoubleMolecular extends TileElectricMachine implements
 
 
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_REGENERATION),
-                new ItemStack(IUItem.upgrademodule
-                        , 1, 17),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_REGENERATION),
+                new ItemStack(IUItem.upgrademodule.getStack(17)
+                        , 1),
                 4000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_INVISIBILITY),
-                new ItemStack(IUItem.upgrademodule, 1, 22),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_INVISIBILITY),
+                new ItemStack(IUItem.upgrademodule.getStack(22), 1),
                 4000000
         );
-        addrecipe(new ItemStack(IUItem.module_schedule, 1), new ItemStack(Items.GOLDEN_APPLE, 1, 1),
-                new ItemStack(IUItem.upgrademodule, 1, 18), 4000000
+        addrecipe(new ItemStack(IUItem.module_schedule.getItem(), 1), new ItemStack(Items.ENCHANTED_GOLDEN_APPLE),
+                new ItemStack(IUItem.upgrademodule.getStack(18)), 4000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_POISON),
-                new ItemStack(IUItem.upgrademodule, 1, 19),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_POISON),
+                new ItemStack(IUItem.upgrademodule.getStack(19)),
                 4000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
                 new ItemStack(Items.NETHER_STAR, 1),
                 new ItemStack(
-                        IUItem.upgrademodule, 1,
-                        20
+                        IUItem.upgrademodule.getStack(20), 1
                 ),
                 4000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.spawnermodules, 1),
-                new ItemStack(IUItem.upgrademodule, 1, 23),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.spawnermodules.getStack(0), 1),
+                new ItemStack(IUItem.upgrademodule.getStack(23)),
                 4000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
                 new ItemStack(Items.BLAZE_ROD, 4),
                 new ItemStack(
-                        IUItem.upgrademodule, 1,
-                        24
+                        IUItem.upgrademodule.getStack(24), 1
                 ),
                 4000000
         );
-        addrecipe(new ItemStack(IUItem.module_schedule, 1), new ItemStack(Blocks.WEB, 1), new ItemStack(
-                IUItem.upgrademodule, 1,
-                21
+        addrecipe(new ItemStack(IUItem.module_schedule.getItem(), 1), new ItemStack(Blocks.COBWEB, 1), new ItemStack(
+                IUItem.upgrademodule.getStack(21), 1
         ), 4000000);
 
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.perBatChargeCrystal, 1, OreDictionary.WILDCARD_VALUE),
-                new ItemStack(IUItem.upgrademodule, 1, 25),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.perBatChargeCrystal.getItem(), 1),
+                new ItemStack(IUItem.upgrademodule.getStack(25)),
                 4000000
         );
 
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
                 IUItem.module1,
-                new ItemStack(IUItem.upgrademodule, 1, 0),
+                new ItemStack(IUItem.upgrademodule.getStack(0)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
                 IUItem.module2,
-                new ItemStack(IUItem.upgrademodule, 1, 1),
+                new ItemStack(IUItem.upgrademodule.getStack(1)),
                 2500000
         );
 
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.alloysdoubleplate, 1, 8),
-                new ItemStack(IUItem.upgrademodule, 1, 2),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.alloysdoubleplate.getStack(8)),
+                new ItemStack(IUItem.upgrademodule.getStack(2)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.alloysdoubleplate, 1, 0),
-                new ItemStack(IUItem.upgrademodule, 1, 3),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.alloysdoubleplate.getStack(0)),
+                new ItemStack(IUItem.upgrademodule.getStack(3)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.alloysdoubleplate, 1, 4),
-                new ItemStack(IUItem.upgrademodule, 1, 4),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.alloysdoubleplate.getStack(4)),
+                new ItemStack(IUItem.upgrademodule.getStack(4)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.radiationresources, 4, 1),
-                new ItemStack(IUItem.upgrademodule, 1, 5),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.radiationresources.getStack(1), 4),
+                new ItemStack(IUItem.upgrademodule.getStack(5)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.radiationresources, 4, 2),
-                new ItemStack(IUItem.upgrademodule, 1, 6),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.radiationresources.getStack(2), 4),
+                new ItemStack(IUItem.upgrademodule.getStack(6)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_FIRE_RESISTANCE),
-                new ItemStack(IUItem.upgrademodule, 1, 7),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_FIRE_RESISTANCE),
+                new ItemStack(IUItem.upgrademodule.getStack(7)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_WATER_BREATHING),
-                new ItemStack(IUItem.upgrademodule, 1, 8),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_WATER_BREATHING),
+                new ItemStack(IUItem.upgrademodule.getStack(8)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_SWIFTNESS),
-                new ItemStack(IUItem.upgrademodule, 1, 9),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_SWIFTNESS),
+                new ItemStack(IUItem.upgrademodule.getStack(9)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.alloysdoubleplate, 1, 6),
-                new ItemStack(IUItem.upgrademodule, 1, 10),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.alloysdoubleplate.getStack(6)),
+                new ItemStack(IUItem.upgrademodule.getStack(10)),
                 2500000
         );
 
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_STRENGTH),
-                new ItemStack(IUItem.upgrademodule, 1, 11),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_STRENGTH),
+                new ItemStack(IUItem.upgrademodule.getStack(11)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.compressIridiumplate),
-                new ItemStack(IUItem.upgrademodule, 1, 12),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.compressIridiumplate.getItem()),
+                new ItemStack(IUItem.upgrademodule.getStack(12)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.radiationresources, 2, 3),
-                new ItemStack(IUItem.upgrademodule, 1, 13),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.radiationresources.getStack(3), 2),
+                new ItemStack(IUItem.upgrademodule.getStack(13)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.SWIFTNESS),
-                new ItemStack(IUItem.upgrademodule, 1, 14),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SWIFTNESS),
+                new ItemStack(IUItem.upgrademodule.getStack(14)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
                 IUItem.module3,
-                new ItemStack(IUItem.upgrademodule, 1, 15),
+                new ItemStack(IUItem.upgrademodule.getStack(15)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.energy_crystal, 1, OreDictionary.WILDCARD_VALUE),
-                new ItemStack(IUItem.upgrademodule, 1, 16),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.energy_crystal.getItem(), 1),
+                new ItemStack(IUItem.upgrademodule.getStack(16)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.core, 1, 4),
-                new ItemStack(IUItem.upgrademodule, 1, 40),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.core.getStack(4)),
+                new ItemStack(IUItem.upgrademodule.getStack(40)),
                 3500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.core, 1, 7),
-                new ItemStack(IUItem.upgrademodule, 1, 41),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.core.getStack(7)),
+                new ItemStack(IUItem.upgrademodule.getStack(41)),
                 15000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.core, 1, 3),
-                new ItemStack(IUItem.upgrademodule, 1, 42),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.core.getStack(3)),
+                new ItemStack(IUItem.upgrademodule.getStack(42)),
                 3000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.upgrademodule, 1, 25),
-                new ItemStack(IUItem.upgrademodule, 1, 43),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.upgrademodule.getStack(25)),
+                new ItemStack(IUItem.upgrademodule.getStack(43)),
                 10000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.purifier, 1, OreDictionary.WILDCARD_VALUE),
-                new ItemStack(IUItem.upgrademodule, 1, 44),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.purifier.getItem(), 1),
+                new ItemStack(IUItem.upgrademodule.getStack(44)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.electric_treetap, 1, OreDictionary.WILDCARD_VALUE),
-                new ItemStack(IUItem.upgrademodule, 1, 45),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.electric_treetap.getItem(), 1),
+                new ItemStack(IUItem.upgrademodule.getStack(45)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.electric_wrench, 1, OreDictionary.WILDCARD_VALUE),
-                new ItemStack(IUItem.upgrademodule, 1, 46),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.electric_wrench.getItem(), 1),
+                new ItemStack(IUItem.upgrademodule.getStack(46)),
                 15000000
         );
         addrecipe(IUItem.module1, IUItem.module1, IUItem.genmodule, 7500000);
@@ -434,15 +428,15 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 10000000
         );
         addrecipe(
-                new ItemStack(IUItem.entitymodules, 1, 1),
-                new ItemStack(IUItem.entitymodules, 1, 1),
-                new ItemStack(IUItem.spawnermodules, 1, 6),
+                new ItemStack(IUItem.entitymodules.getStack(1), 1),
+                new ItemStack(IUItem.entitymodules.getStack(1), 1),
+                new ItemStack(IUItem.spawnermodules.getStack(6)),
                 20000000
         );
         addrecipe(
-                new ItemStack(IUItem.spawnermodules, 1, 6),
-                new ItemStack(IUItem.spawnermodules, 1, 6),
-                new ItemStack(IUItem.spawnermodules, 1, 7),
+                new ItemStack(IUItem.spawnermodules.getStack(6)),
+                new ItemStack(IUItem.spawnermodules.getStack(6)),
+                new ItemStack(IUItem.spawnermodules.getStack(7)),
                 20000000
         );
 
@@ -471,116 +465,102 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 10000000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
                 new ItemStack(Blocks.LAPIS_BLOCK, 1),
-                new ItemStack(IUItem.upgrademodule, 1, 26),
+                new ItemStack(IUItem.upgrademodule.getStack(26)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
                 new ItemStack(Blocks.REDSTONE_BLOCK, 1),
-                new ItemStack(IUItem.upgrademodule, 1, 27),
+                new ItemStack(IUItem.upgrademodule.getStack(27)),
                 2500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.module9, 1),
-                new ItemStack(IUItem.upgrademodule, 1, 28),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.module9.getStack(0), 1),
+                new ItemStack(IUItem.upgrademodule.getStack(28)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.NIGHT_VISION),
-                new ItemStack(IUItem.upgrademodule, 1, 29),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.NIGHT_VISION),
+                new ItemStack(IUItem.upgrademodule.getStack(29)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(Enchantments.THORNS, 1)),
-                new ItemStack(IUItem.upgrademodule, 1, 30),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(Enchantments.THORNS, 1)),
+                new ItemStack(IUItem.upgrademodule.getStack(30)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.spawnermodules, 1, 5),
-                new ItemStack(IUItem.upgrademodule, 1, 31),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.spawnermodules.getStack(5)),
+                new ItemStack(IUItem.upgrademodule.getStack(31)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.STRONG_HARMING),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRONG_HARMING),
 
-                new ItemStack(IUItem.upgrademodule, 1, 32),
+                new ItemStack(IUItem.upgrademodule.getStack(32)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(Enchantments.PROJECTILE_PROTECTION, 1)),
-                new ItemStack(IUItem.upgrademodule, 1, 33),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(Enchantments.PROJECTILE_PROTECTION, 1)),
+                new ItemStack(IUItem.upgrademodule.getStack(33)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(Enchantments.FEATHER_FALLING, 1)),
-                new ItemStack(IUItem.upgrademodule, 1, 34),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                EnchantedBookItem.createForEnchantment(new EnchantmentInstance(Enchantments.FALL_PROTECTION, 1)),
+                new ItemStack(IUItem.upgrademodule.getStack(34)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.machines_base, 1, 2),
-                new ItemStack(IUItem.upgrademodule, 1, 35),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.machines_base.getItem(2)),
+                new ItemStack(IUItem.upgrademodule.getStack(35)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.machines_base1, 1, 9),
-                new ItemStack(IUItem.upgrademodule, 1, 36),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(IUItem.machines_base1.getItem(9)),
+                new ItemStack(IUItem.upgrademodule.getStack(36)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                "doubleplateInvar",
-                new ItemStack(IUItem.upgrademodule, 1, 37),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                "forge:doubleplate/Invar",
+                new ItemStack(IUItem.upgrademodule.getStack(37)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(Items.FISH, 1, 3),
-                new ItemStack(IUItem.upgrademodule, 1, 38),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                new ItemStack(Items.SALMON),
+                new ItemStack(IUItem.upgrademodule.getStack(38)),
                 1500000
         );
         addrecipe(
-                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
                 getBlockStack(BlockBaseMachine3.generator_iu),
-                new ItemStack(IUItem.upgrademodule, 1, 39),
+                new ItemStack(IUItem.upgrademodule.getStack(39), 1),
                 1500000
         );
 
     }
 
     public ItemStack getBlockStack(IMultiTileBlock block) {
-        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack(block);
+        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
     }
 
     @Override
-    public ContainerBaseDoubleMolecular getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerBaseDoubleMolecular getGuiContainer(Player entityPlayer) {
         return new ContainerBaseDoubleMolecular(entityPlayer, this);
     }
 
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
@@ -601,14 +581,14 @@ public class TileDoubleMolecular extends TileElectricMachine implements
             energy.onNetworkUpdate(customPacketBuffer);
             output_stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
 
-            this.bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
+            this.bakedModel = Minecraft.getInstance().getItemRenderer().getModel(
                     output_stack,
                     this.getWorld(),
-                    null
+                    null, 0
             );
-            this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+            this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
                     this.bakedModel,
-                    ItemCameraTransforms.TransformType.GROUND,
+                    GROUND,
                     false
             );
         } catch (IOException e) {
@@ -654,7 +634,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         return "Molecular Transformer";
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
 
 
@@ -666,7 +646,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!getLevel().isClientSide) {
             inputSlot.load();
             this.setOverclockRates();
             this.onUpdate();
@@ -681,22 +661,22 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         return EnumSound.molecular.getSoundEvent();
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setByte("redstoneMode", this.redstoneMode);
-        nbttagcompound.setDouble("progress", this.progress);
-        nbttagcompound.setBoolean("queue", this.queue);
+        nbttagcompound.putByte("redstoneMode", this.redstoneMode);
+        nbttagcompound.putDouble("progress", this.progress);
+        nbttagcompound.putBoolean("queue", this.queue);
         return nbttagcompound;
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiDoubleMolecularTransformer(new ContainerBaseDoubleMolecular(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<?>> getGui(Player entityPlayer, ContainerBase<?> isAdmin) {
+        return new GuiDoubleMolecularTransformer((ContainerBaseDoubleMolecular) isAdmin);
     }
 
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         if (event == 0) {
             this.redstoneMode = (byte) (this.redstoneMode + 1);
             if (this.redstoneMode >= 8) {
@@ -734,14 +714,14 @@ public class TileDoubleMolecular extends TileElectricMachine implements
             try {
                 this.output_stack = (ItemStack) DecoderHandler.decode(is);
                 if (!output_stack.isEmpty()) {
-                    this.bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
+                    this.bakedModel = Minecraft.getInstance().getItemRenderer().getModel(
                             output_stack,
                             this.getWorld(),
-                            null
+                            null, 0
                     );
-                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(new PoseStack(),
                             this.bakedModel,
-                            ItemCameraTransforms.TransformType.GROUND,
+                           GROUND,
                             false
                     );
                 }
@@ -753,14 +733,14 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public IBakedModel getTransformedModel() {
+    @OnlyIn(Dist.CLIENT)
+    public BakedModel getTransformedModel() {
         return transformedModel;
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IUCore.proxy.isSimulating()) {
+    public void setChanged() {
+        super.setChanged();
+        if (!level.isClientSide) {
             setOverclockRates();
         }
     }
@@ -884,7 +864,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 size2 = (int) Math.floor((float) this.inputSlot.get(1).getCount() / size2);
                 size = Math.min(size, size2);
                 int size1 = !this.outputSlot.isEmpty()
-                        ? (64 - this.outputSlot.get().getCount()) / output1.getCount()
+                        ? (64 - this.outputSlot.get(0).getCount()) / output1.getCount()
                         : 64 / output1.getCount();
                 size = Math.min(size1, size);
                 size = Math.min(output1.getMaxStackSize(), size);
@@ -909,14 +889,14 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                     this.inputSlot.get(0).shrink(count);
                     ItemStack stack = this.inputSlot.get(0).copy();
                     stack.setCount(count);
-                    this.inputSlot.put(1, stack);
+                    this.inputSlot.set(1, stack);
                 } else if (!this.inputSlot.get(1).isEmpty()) {
                     if (this.inputSlot.get(1).getCount() > 1) {
                         int count = this.inputSlot.get(1).getCount() / 2;
                         this.inputSlot.get(1).shrink(count);
                         ItemStack stack = this.inputSlot.get(1).copy();
                         stack.setCount(count);
-                        this.inputSlot.put(0, stack);
+                        this.inputSlot.set(0, stack);
 
                     }
                 }
@@ -973,7 +953,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 final List<ItemStack> list = this.output.getRecipe().input.getInputs().get(0).getInputs();
                 boolean is = false;
                 for (ItemStack stack : list) {
-                    if (stack.isItemEqual(this.inputSlot.get(0))) {
+                    if (stack.is(this.inputSlot.get(0).getItem())) {
                         is = true;
                         size = stack.getCount();
                         size2 = this.output.getRecipe().input.getInputs().get(1).getInputs().get(0).getCount();
@@ -989,7 +969,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 size2 = (int) Math.floor((float) this.inputSlot.get(1).getCount() / size2);
                 size = Math.min(size, size2);
                 int size1 = !this.outputSlot.isEmpty()
-                        ? (64 - this.outputSlot.get().getCount()) / output1.getCount()
+                        ? (64 - this.outputSlot.get(0).getCount()) / output1.getCount()
                         : 64 / output1.getCount();
                 size = Math.min(size1, size);
                 size = Math.min(output1.getMaxStackSize(), size);
@@ -1055,11 +1035,11 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     @Override
     public void onUpdate() {
         for (int i = 0; i < this.inputSlot.size(); i++) {
-            if (this.inputSlot.get(i).getItem() instanceof ItemEnchantedBook) {
+            if (this.inputSlot.get(i).getItem() instanceof EnchantedBookItem) {
                 this.need = true;
                 return;
             }
-            if (this.inputSlot.get(i).getItem() instanceof ItemPotion) {
+            if (this.inputSlot.get(i).getItem() instanceof PotionItem) {
                 this.need = true;
                 return;
             }

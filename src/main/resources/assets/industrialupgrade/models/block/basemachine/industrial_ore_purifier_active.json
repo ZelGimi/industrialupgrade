@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/industrial_ore_purifier_front_active",
-    "down" : "industrialupgrade:blocks/industrial_ore_purifier_sides",
-    "up" : "industrialupgrade:blocks/industrial_ore_purifier_top_active",
-    "north" : "industrialupgrade:blocks/industrial_ore_purifier_front_active",
-    "east" : "industrialupgrade:blocks/industrial_ore_purifier_sides",
-    "south" : "industrialupgrade:blocks/industrial_ore_purifier_sides",
-    "west" : "industrialupgrade:blocks/industrial_ore_purifier_sides"
+    "particle" : "industrialupgrade:block/industrial_ore_purifier_front_active",
+    "down" : "industrialupgrade:block/industrial_ore_purifier_sides",
+    "up" : "industrialupgrade:block/industrial_ore_purifier_top_active",
+    "north" : "industrialupgrade:block/industrial_ore_purifier_front_active",
+    "east" : "industrialupgrade:block/industrial_ore_purifier_sides",
+    "south" : "industrialupgrade:block/industrial_ore_purifier_sides",
+    "west" : "industrialupgrade:block/industrial_ore_purifier_sides"
   }
 }

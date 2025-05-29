@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/imp_solar_energy"
+    "layer0" : "industrialupgrade:item/imp_solar_energy"
   }
 }

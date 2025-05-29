@@ -1,89 +1,91 @@
 package com.denfop.container;
 
 import com.denfop.invslot.InvSlot;
-import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class SlotInvSlot extends Slot {
-
     public final InvSlot invSlot;
     public final int index;
+    private int dragType;
 
-    public SlotInvSlot(InvSlot invSlot, int index, int x, int y) {
-        super(invSlot.base.getParent(), invSlot.base.getBaseIndex(invSlot) + index, x, y);
+    public SlotInvSlot(InvSlot invSlot, int index, int xPosition, int yPosition) {
+        super((Container) invSlot.base.getParent(), invSlot.base.getBaseIndex(invSlot) + index, xPosition, yPosition);
         this.invSlot = invSlot;
         this.index = index;
     }
 
+    public ItemStack safeInsert(ItemStack itemstack11, int i3) {
+        return super.safeInsert(itemstack11, i3);
+    }
+
+    public boolean mayPlace(@NotNull ItemStack itemStack) {
+        return this.invSlot.accepts(itemStack, this.index);
+    }
+
     public int getJeiX() {
-        return this.xPos - 1;
+        return this.x;
     }
 
     public int getJeiY() {
-        return this.yPos - 1;
+        return this.y;
     }
 
-    public boolean isItemValid(ItemStack stack) {
-        return this.invSlot.accepts(stack, this.index);
-    }
-
-    public ItemStack getStack() {
+    public @NotNull ItemStack getItem() {
         return this.invSlot.get(this.index);
     }
 
-    public void putStack(ItemStack stack) {
-        this.invSlot.put(this.index, stack);
-        this.onSlotChanged();
+    @Override
+    public void set(@NotNull ItemStack itemStack) {
+        this.invSlot.set(this.index, itemStack);
+        this.setChanged();
     }
 
 
-    public ItemStack decrStackSize(int amount) {
+    @Override
+    public @NotNull ItemStack remove(int amount) {
         if (amount <= 0) {
-            return ModUtils.emptyStack;
-        } else {
-            ItemStack stack = this.invSlot.get(this.index);
-            if (ModUtils.isEmpty(stack)) {
-                return ModUtils.emptyStack;
-            } else {
-                amount = Math.min(amount, ModUtils.getSize(stack));
-                ItemStack ret;
-                if (ModUtils.getSize(stack) == amount) {
-                    ret = stack;
-                    this.invSlot.clear(this.index);
-                } else {
-                    ret = ModUtils.setSize(stack, amount);
-                    this.invSlot.put(this.index, ModUtils.decSize(stack, amount));
-                }
-
-                this.onSlotChanged();
-                return ret;
-            }
+            return ItemStack.EMPTY;
         }
+        ItemStack stack = this.invSlot.get(this.index);
+        if (stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        return stack.split(amount);
     }
 
-    public boolean isHere(IInventory inventory, int index) {
-        if (inventory != this.invSlot.base) {
+
+    @Override
+    public boolean isSameInventory(Slot other) {
+        if (other.container != this.invSlot.base) {
+            return false;
+        }
+        int baseIndex = this.invSlot.base.getBaseIndex(this.invSlot);
+        if (baseIndex == -1) {
             return false;
         } else {
-            int baseIndex = this.invSlot.base.getBaseIndex(this.invSlot);
-            if (baseIndex == -1) {
-                return false;
-            } else {
-                return baseIndex + this.index == index;
-            }
+            return baseIndex + this.index == other.index;
         }
     }
 
-    public int getSlotStackLimit() {
+    @Override
+    public int getMaxStackSize(ItemStack pStack) {
         return this.invSlot.getStackSizeLimit();
     }
 
-    public ItemStack onTake(EntityPlayer player, ItemStack stack) {
-        stack = super.onTake(player, stack);
-        return stack;
+    public int getMaxStackSize() {
+        return this.invSlot.getStackSizeLimit();
     }
 
+    public void onTake(@NotNull Player player, @NotNull ItemStack itemStack) {
+        super.onTake(player, itemStack);
+
+    }
+
+    public void setDragType(int dragType) {
+        this.dragType = dragType;
+    }
 }

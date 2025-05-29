@@ -1,12 +1,12 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileDoubleElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public abstract class ContainerBaseDoubleElectricMachine extends ContainerFullInv<TileDoubleElectricMachine> {
 
     public ContainerBaseDoubleElectricMachine(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileDoubleElectricMachine base1,
             int height,
             int dischargeX,

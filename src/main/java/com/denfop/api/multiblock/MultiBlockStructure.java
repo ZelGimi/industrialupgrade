@@ -4,16 +4,15 @@ import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +25,8 @@ public class MultiBlockStructure {
     public final Map<BlockPos, ItemStack> ItemStackMap = new HashMap<>();
     public final List<ItemStack> itemStackList = new ArrayList<>();
 
-    public final Map<BlockPos, EnumFacing> RotationMap = new HashMap<>();
-    public final Map<BlockPos, IBakedModel> bakedModelMap = new HashMap<>();
+    public final Map<BlockPos, Direction> RotationMap = new HashMap<>();
+    public final Map<BlockPos, BakedModel> bakedModelMap = new HashMap<>();
     public final BlockPos pos;
     private final Map<Class<? extends IMultiElement>, String> reportLaskBlock = new HashMap<>();
     public boolean hasActivatedItem = false;
@@ -48,7 +47,7 @@ public class MultiBlockStructure {
     private Class<? extends IMainMultiBlock> main;
 
     public MultiBlockStructure() {
-        this.pos = BlockPos.ORIGIN;
+        this.pos = BlockPos.ZERO;
         // TODO: EAST -> (z -> x) (x -> z) z < 0 x < 0
         // TODO: NORTH DEFAULT z > 0
         // TODO: WEST -> (z -> x) (x -> z)
@@ -97,7 +96,7 @@ public class MultiBlockStructure {
     public boolean isActivateItem(ItemStack stack) {
         assert stack != null;
         assert !stack.isEmpty();
-        return this.ignoreMetadata ? this.activateItem.getItem() == stack.getItem() : this.activateItem.isItemEqual(stack);
+        return this.activateItem.getItem() == stack.getItem();
     }
 
     public boolean isHasActivatedItem() {
@@ -115,7 +114,7 @@ public class MultiBlockStructure {
         }
         boolean found = false;
         for (ItemStack stack1 : this.itemStackList) {
-            if (stack1.isItemEqual(stack)) {
+            if (stack1.getItem() == stack.getItem()) {
                 stack1.grow(stack.getCount());
                 found = true;
                 break;
@@ -156,13 +155,13 @@ public class MultiBlockStructure {
         return itemStackList;
     }
 
-    public void add(BlockPos pos, Class<? extends IMultiElement> class1, ItemStack stack, EnumFacing rotation) {
+    public void add(BlockPos pos, Class<? extends IMultiElement> class1, ItemStack stack, Direction rotation) {
         if (this.blockPosMap.containsKey(pos)) {
             return;
         }
         boolean found = false;
         for (ItemStack stack1 : this.itemStackList) {
-            if (stack1.isItemEqual(stack)) {
+            if (stack1.getItem() == stack.getItem()) {
                 stack1.grow(stack.getCount());
                 found = true;
                 break;
@@ -200,26 +199,16 @@ public class MultiBlockStructure {
         this.length = this.maxLength - this.minLength;
     }
 
-    public List<BlockPos> getPosFromClass(EnumFacing facing, BlockPos pos, Class<? extends IMultiElement> class1) {
+    public List<BlockPos> getPosFromClass(Direction facing, BlockPos pos, Class<? extends IMultiElement> class1) {
         List<BlockPos> blockPosList = new ArrayList<>();
         for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
-            BlockPos pos1;
-            switch (facing) {
-                case NORTH:
-                    pos1 = pos.add(entry.getKey());
-                    break;
-                case EAST:
-                    pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
-                    break;
-                case WEST:
-                    pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
-                    break;
-                case SOUTH:
-                    pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + facing);
-            }
+            BlockPos pos1 = switch (facing) {
+                case NORTH -> pos.offset(entry.getKey());
+                case EAST -> pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                case WEST -> pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                case SOUTH -> pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                default -> throw new IllegalStateException("Unexpected value: " + facing);
+            };
             if (entry.getValue() == class1) {
                 blockPosList.add(pos1);
             }
@@ -228,22 +217,22 @@ public class MultiBlockStructure {
         return blockPosList;
     }
 
-    public List<BlockPos> getPoses(EnumFacing facing, BlockPos pos) {
+    public List<BlockPos> getPoses(Direction facing, BlockPos pos) {
         List<BlockPos> blockPosList = new ArrayList<>();
         for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
             BlockPos pos1;
             switch (facing) {
                 case NORTH:
-                    pos1 = pos.add(entry.getKey());
+                    pos1 = pos.offset(entry.getKey());
                     break;
                 case EAST:
-                    pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                    pos1 = pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
                     break;
                 case WEST:
-                    pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                    pos1 = pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
                     break;
                 case SOUTH:
-                    pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                    pos1 = pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + facing);
@@ -254,8 +243,8 @@ public class MultiBlockStructure {
         return blockPosList;
     }
 
-    public boolean getFull(EnumFacing facing, BlockPos pos, World world, EntityPlayer player) {
-        final IMainMultiBlock mainTile = (IMainMultiBlock) world.getTileEntity(pos);
+    public boolean getFull(Direction facing, BlockPos pos, Level world, Player player) {
+        final IMainMultiBlock mainTile = (IMainMultiBlock) world.getBlockEntity(pos);
         if (mainTile == null) {
             return false;
         }
@@ -267,31 +256,31 @@ public class MultiBlockStructure {
             BlockPos pos1;
             switch (facing) {
                 case NORTH:
-                    pos1 = pos.add(entry.getKey());
+                    pos1 = pos.offset(entry.getKey());
                     break;
                 case EAST:
-                    pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                    pos1 = pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
                     break;
                 case WEST:
-                    pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                    pos1 = pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
                     break;
                 case SOUTH:
-                    pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                    pos1 = pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + facing);
             }
-            final TileEntity tile = world.getTileEntity(pos1);
+            final BlockEntity tile = world.getBlockEntity(pos1);
             if (entry.getValue() == null) {
-                final IBlockState blockstate = world.getBlockState(pos1);
-                if (blockstate.getMaterial() != Material.AIR) {
+                final BlockState blockstate = world.getBlockState(pos1);
+                if (!blockstate.isAir()) {
                     return false;
                 }
             } else if (!entry.getValue().isInstance(tile)) {
                 String report = this.reportLaskBlock.get(entry.getValue());
 
                 if (report != null && !report.isEmpty()) {
-                    if (!world.isRemote) {
+                    if (!world.isClientSide) {
                         IUCore.proxy.messagePlayer(
                                 player,
                                 Localization.translate("iu.not.found") + "x: " + pos1.getX() + " y: " + pos1.getY() + " z: " + pos1.getZ() + " " + Localization.translate(
@@ -299,12 +288,12 @@ public class MultiBlockStructure {
                         );
                     }
                 } else {
-                    if (!world.isRemote) {
+                    if (!world.isClientSide) {
                         IUCore.proxy.messagePlayer(
                                 player,
                                 Localization.translate("iu.not.found") + "x: " + pos1.getX() + " y: " + pos1.getY() + " z: " + pos1.getZ() + " " + this.ItemStackMap
                                         .get(entry.getKey())
-                                        .getDisplayName()
+                                        .getDisplayName().getString()
                         );
                     }
                 }
@@ -330,8 +319,8 @@ public class MultiBlockStructure {
         return true;
     }
 
-    public boolean getFull(EnumFacing facing, BlockPos pos, World world) {
-        final IMainMultiBlock mainTile = (IMainMultiBlock) world.getTileEntity(pos);
+    public boolean getFull(Direction facing, BlockPos pos, Level world) {
+        final IMainMultiBlock mainTile = (IMainMultiBlock) world.getBlockEntity(pos);
         for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
             if (entry.getValue() == main) {
                 continue;
@@ -339,24 +328,24 @@ public class MultiBlockStructure {
             BlockPos pos1;
             switch (facing) {
                 case NORTH:
-                    pos1 = pos.add(entry.getKey());
+                    pos1 = pos.offset(entry.getKey());
                     break;
                 case EAST:
-                    pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                    pos1 = pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
                     break;
                 case WEST:
-                    pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                    pos1 = pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
                     break;
                 case SOUTH:
-                    pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                    pos1 = pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + facing);
             }
-            final TileEntity tile = world.getTileEntity(pos1);
+            final BlockEntity tile = world.getBlockEntity(pos1);
             if (entry.getValue() == null) {
-                final IBlockState blockstate = world.getBlockState(pos1);
-                if (blockstate.getMaterial() != Material.AIR) {
+                final BlockState blockstate = world.getBlockState(pos1);
+                if (!blockstate.isAir()) {
                     return false;
                 }
             } else if (!entry.getValue().isInstance(tile)) {
@@ -393,30 +382,23 @@ public class MultiBlockStructure {
                 if (entry.getValue() == main) {
                     continue;
                 }
-                final World world = tileMultiBlockBase.getWorld();
+                final Level world = tileMultiBlockBase.getLevel();
                 BlockPos pos1 = null;
                 BlockPos pos = tileMultiBlockBase.getBlockPos();
-                switch (tileMultiBlockBase.getFacing()) {
-                    case NORTH:
-                        pos1 = pos.add(entry.getKey());
-                        break;
-                    case EAST:
-                        pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
-                        break;
-                    case WEST:
-                        pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
-                        break;
-                    case SOUTH:
-                        pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
-                        break;
-                }
-                TileEntity tile = world.getTileEntity(pos1);
+                pos1 = switch (tileMultiBlockBase.getFacing()) {
+                    case NORTH -> pos.offset(entry.getKey());
+                    case EAST -> pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                    case WEST -> pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                    case SOUTH ->
+                            pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                    default -> pos1;
+                };
+                BlockEntity tile = world.getBlockEntity(pos1);
                 if (tile instanceof TileEntityMultiBlockElement) {
-                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getTileEntity(pos1);
+                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getBlockEntity(pos1);
                     te.setMainMultiElement(tileMultiBlockBase);
                     ChunkPos chunkPos = new ChunkPos(pos1);
                     if (!passedChunk.contains(chunkPos)) {
-                        world.markChunkDirty(pos1, null);
                         passedChunk.add(chunkPos);
                     }
                 }
@@ -426,30 +408,29 @@ public class MultiBlockStructure {
                 if (entry.getValue() == main) {
                     continue;
                 }
-                final World world = tileMultiBlockBase.getWorld();
+                final Level world = tileMultiBlockBase.getLevel();
                 BlockPos pos1 = null;
                 BlockPos pos = tileMultiBlockBase.getBlockPos();
                 switch (tileMultiBlockBase.getFacing()) {
                     case NORTH:
-                        pos1 = pos.add(entry.getKey());
+                        pos1 = pos.offset(entry.getKey());
                         break;
                     case EAST:
-                        pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                        pos1 = pos.offset(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
                         break;
                     case WEST:
-                        pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                        pos1 = pos.offset(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
                         break;
                     case SOUTH:
-                        pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                        pos1 = pos.offset(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
                         break;
                 }
-                TileEntity tile = world.getTileEntity(pos1);
+                BlockEntity tile = world.getBlockEntity(pos1);
                 if (tile instanceof TileEntityMultiBlockElement) {
-                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getTileEntity(pos1);
+                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getBlockEntity(pos1);
                     te.setMainMultiElement(null);
                     ChunkPos chunkPos = new ChunkPos(pos1);
                     if (!passedChunk.contains(chunkPos)) {
-                        world.markChunkDirty(pos1, null);
                         passedChunk.add(chunkPos);
                     }
                 }

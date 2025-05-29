@@ -1,19 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
@@ -23,7 +14,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBioFuelEnergy;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerElectricBioGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiElectricBioGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -31,18 +24,22 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -69,8 +66,8 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
     protected double guiProgress;
     private MachineRecipe output;
 
-    public TileEntityBioGenerator() {
-        super(0, 1, 0);
+    public TileEntityBioGenerator(BlockPos pos, BlockState state) {
+        super(0, 1, 0,BlockBaseMachine3.bio_generator,pos,state);
         this.progress = 0;
         this.inputSlotA = new InvSlotRecipes(this, "biomass", this);
         this.defaultEnergyConsume = this.energyConsume = 1;
@@ -80,7 +77,7 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
         this.defaultEnergyStorage = 20;
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE,
-                Fluids.fluidPredicate(FluidName.fluidbiomass.getInstance())
+                Fluids.fluidPredicate(FluidName.fluidbiomass.getInstance().get())
         );
         this.fluid_handler = new FluidHandlerRecipe("biomass", fluids);
 
@@ -117,11 +114,11 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
     public void init() {
         addRecipe(
                 IUItem.biochaff,
-                new FluidStack(FluidName.fluidbiomass.getInstance(), 800)
+                new FluidStack(FluidName.fluidbiomass.getInstance().get(), 800)
         );
         addRecipe(
                 IUItem.plantBall,
-                new FluidStack(FluidName.fluidbiomass.getInstance(), 400)
+                new FluidStack(FluidName.fluidbiomass.getInstance().get(), 400)
         );
 
     }
@@ -131,13 +128,13 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
         return EnumSound.steam.getSoundEvent();
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    @SideOnly(Side.CLIENT)
+
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -150,9 +147,9 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -184,9 +181,9 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
-            this.fluid_handler.load(this.inputSlotA.get());
+            this.fluid_handler.load(this.inputSlotA.get(0));
             this.getOutput();
         }
     }
@@ -222,7 +219,7 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
         super.updateEntityServer();
 
         if ((this.fluid_handler.output() == null && !this.inputSlotA.isEmpty())) {
-            this.fluid_handler.getOutput(this.inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.inputSlotA.isEmpty()) {
                 this.fluid_handler.setOutput(null);
@@ -284,7 +281,7 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
     }
 
     public void operateOnce() {
-        this.bioEnergy.addEnergy(this.fluid_handler.output().output_fluid.get(0).amount);
+        this.bioEnergy.addEnergy(this.fluid_handler.output().output_fluid.get(0).getAmount());
         this.inputSlotA.consume();
     }
 
@@ -294,16 +291,18 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerElectricBioGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerElectricBioGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerElectricBioGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiElectricBioGenerator getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiElectricBioGenerator(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiElectricBioGenerator((ContainerElectricBioGenerator) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
@@ -314,26 +313,17 @@ public class TileEntityBioGenerator extends TileElectricMachine implements IHasR
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
+
 
 
 }

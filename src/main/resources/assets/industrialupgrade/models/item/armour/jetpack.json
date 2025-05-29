@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/jetpack_electric"
+    "layer0" : "industrialupgrade:item/jetpack_electric"
   }
 }

@@ -1,77 +1,60 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.IItemTab;
+import com.denfop.IUCore;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-public class ItemArmorBase extends ItemArmor implements IModelRegister {
+public class ItemArmorBase extends ArmorItem implements IItemTab {
+    String armorName;
+    String nameItem;
 
-
-    private final String name = "";
-    public String armorName;
-
-    public ItemArmorBase(
-            ItemArmor.ArmorMaterial armorMaterial,
-            String armorName,
-            EntityEquipmentSlot armorType
-    ) {
-        super(armorMaterial, -1, armorType);
+    public ItemArmorBase(ArmorMaterial p_40386_, String armorName, Type p_40387_) {
+        super(p_40386_, p_40387_, new Properties().stacksTo(1).setNoRepair());
         this.armorName = armorName;
-        this.setNoRepair();
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "armour" + "/" + name + extraName;
-
-        return new ModelResourceLocation(loc, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, getModelLocation1(this.name, ""));
-    }
-
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        int suffix1 = this.armorType == EntityEquipmentSlot.LEGS ? 2 : 1;
+    @Override
+    public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+        int suffix1 = slot == EquipmentSlot.LEGS ? 2 : 1;
         return Constants.MOD_ID + ":textures/armor/" + this.armorName + '_' + suffix1 + ".png";
     }
 
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
+        }
 
-    public String getUnlocalizedName() {
-        return Constants.ABBREVIATION + "." + super.getUnlocalizedName().substring(5);
+        return this.nameItem;
     }
 
-    public String getUnlocalizedName(ItemStack stack) {
-        return this.getUnlocalizedName();
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (allowedIn(p_41391_))
+            p_41392_.add(new ItemStack(this));
     }
 
-    public String getUnlocalizedNameInefficiently(ItemStack stack) {
-        return this.getUnlocalizedName(stack);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return Localization.translate(this.getUnlocalizedName(stack));
-    }
-
-    protected boolean isInCreativeTab(CreativeTabs tab) {
-        return super.isInCreativeTab(tab);
-    }
-
-    public boolean isMetalArmor(ItemStack itemstack, EntityPlayer player) {
-        return true;
-    }
-
 }

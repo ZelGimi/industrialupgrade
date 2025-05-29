@@ -3,22 +3,27 @@ package com.denfop.tiles.base;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.ITransformer;
+import com.denfop.api.energy.Mode;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Redstone;
 import com.denfop.componets.RedstoneHandler;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTransformer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiTransformer;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -29,10 +34,10 @@ import java.util.stream.Collectors;
 public abstract class TileTransformer extends TileEntityInventory implements
         IUpdatableTileEvent, ITransformer {
 
-    private static final TileTransformer.Mode defaultMode;
+    private static final Mode defaultMode;
 
     static {
-        defaultMode = TileTransformer.Mode.redstone;
+        defaultMode = Mode.redstone;
     }
 
     protected final Energy energy;
@@ -41,10 +46,11 @@ public abstract class TileTransformer extends TileEntityInventory implements
     private boolean hasRedstone = false;
     private double inputFlow = 0.0D;
     private double outputFlow = 0.0D;
-    private TileTransformer.Mode configuredMode;
-    private TileTransformer.Mode transformMode;
+    private Mode configuredMode;
+    private Mode transformMode;
 
-    public TileTransformer(int tier) {
+    public TileTransformer(int tier, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
+        super(tileBlock,pos,state);
         this.configuredMode = defaultMode;
         this.transformMode = null;
         this.defaultTier = tier;
@@ -66,33 +72,7 @@ public abstract class TileTransformer extends TileEntityInventory implements
         });
     }
 
-    public String getType() {
-        switch (this.energy.getSourceTier()) {
-            case 1:
-                return "LV";
-            case 2:
-                return "MV";
-            case 3:
-                return "HV";
-            case 4:
-                return "EV";
-            case 5:
-                return "UMV";
-            case 6:
-                return "UHV";
-            case 7:
-                return "UEV";
-            case 8:
-                return "UMHV";
-            case 9:
-                return "UMEV";
-            case 10:
-                return "UHEV";
-            case 11:
-                return "HEEV";
-        }
-        return "";
-    }
+
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -120,38 +100,38 @@ public abstract class TileTransformer extends TileEntityInventory implements
         return packet;
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
-        int mode = nbt.getInteger("mode");
-        if (mode >= 0 && mode < TileTransformer.Mode.VALUES.length) {
-            this.configuredMode = TileTransformer.Mode.VALUES[mode];
+        int mode = nbt.getInt("mode");
+        if (mode >= 0 && mode < Mode.values().length) {
+            this.configuredMode = Mode.values()[mode];
         } else {
             this.configuredMode = defaultMode;
         }
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setInteger("mode", this.configuredMode.ordinal());
+        nbt.putInt("mode", this.configuredMode.ordinal());
         return nbt;
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.updateRedstone(true);
         }
 
     }
 
-    public TileTransformer.Mode getMode() {
+    public Mode getMode() {
         return this.configuredMode;
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
-        if (event >= 0 && event < TileTransformer.Mode.VALUES.length) {
-            this.configuredMode = TileTransformer.Mode.VALUES[(int) event];
+    public void updateTileServer(Player player, double event) {
+        if (event >= 0 && event < Mode.values().length) {
+            this.configuredMode = Mode.values()[(int) event];
             this.updateRedstone(false);
         } else if (event == 3) {
             this.outputFlow = EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSinkTier());
@@ -168,14 +148,14 @@ public abstract class TileTransformer extends TileEntityInventory implements
     }
 
     private void updateRedstone(boolean force) {
-        assert !this.getWorld().isRemote;
+        assert !this.getWorld().isClientSide;
 
-        TileTransformer.Mode newMode;
+        Mode newMode;
         switch (this.configuredMode) {
             case redstone:
                 newMode = this.hasRedstone
-                        ? TileTransformer.Mode.stepup
-                        : TileTransformer.Mode.stepdown;
+                        ? Mode.stepup
+                        : Mode.stepdown;
                 break;
             case stepdown:
             case stepup:
@@ -195,7 +175,7 @@ public abstract class TileTransformer extends TileEntityInventory implements
                 this.energy.setPacketOutput(1);
                 this.energy.setDirections(
                         Arrays
-                                .asList(EnumFacing.VALUES)
+                                .asList(Direction.values())
                                 .stream()
                                 .filter(facing -> facing != this.getFacing())
                                 .collect(Collectors.toList()),
@@ -208,7 +188,7 @@ public abstract class TileTransformer extends TileEntityInventory implements
                 this.energy.setPacketOutput(4);
                 this.energy.setDirections(
                         Collections.singletonList(this.getFacing()),
-                        Arrays.stream(EnumFacing.VALUES)
+                        Arrays.stream(Direction.values())
                                 .filter(facing -> facing != this.getFacing())
                                 .collect(Collectors.toList())
                 );
@@ -221,9 +201,9 @@ public abstract class TileTransformer extends TileEntityInventory implements
 
     }
 
-    public void setFacing(EnumFacing facing) {
+    public void setFacing(Direction facing) {
         super.setFacing(facing);
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.updateRedstone(true);
         }
 
@@ -239,17 +219,16 @@ public abstract class TileTransformer extends TileEntityInventory implements
 
     }
 
-    public ContainerTransformer getGuiContainer(EntityPlayer player) {
+    public ContainerTransformer getGuiContainer(Player player) {
         return new ContainerTransformer(player, this, 202);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiTransformer(new ContainerTransformer(player, this, 202));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
+        return new GuiTransformer((ContainerTransformer) isAdmin);
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
+
 
     public double getinputflow() {
         return !this.isStepUp() ? this.inputFlow : this.outputFlow;
@@ -260,17 +239,9 @@ public abstract class TileTransformer extends TileEntityInventory implements
     }
 
     public boolean isStepUp() {
-        return this.transformMode == TileTransformer.Mode.stepup;
+        return this.transformMode == Mode.stepup;
     }
 
-    public enum Mode {
-        redstone,
-        stepdown,
-        stepup;
 
-        static final TileTransformer.Mode[] VALUES = values();
-
-
-    }
 
 }

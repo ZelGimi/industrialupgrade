@@ -1,8 +1,9 @@
 package com.denfop.api.gasvein;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 import java.util.List;
 
@@ -10,9 +11,9 @@ public interface IGasVeinSystem {
 
     List<GasVein> getVeinsList();
 
-    void addVein(Chunk chunk);
+    void addVein(ChunkAccess chunk);
 
-    void addVein(NBTTagCompound tag);
+    void addVein(CompoundTag tag);
 
     GasVein getVein(ChunkPos pos);
 

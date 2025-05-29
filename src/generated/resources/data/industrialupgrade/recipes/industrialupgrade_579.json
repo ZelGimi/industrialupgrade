@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/nichrome"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quarrymodules/ef2"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "   ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:spawnermodules/spawner_module3"
+  },
+  "show_notification": true
+}

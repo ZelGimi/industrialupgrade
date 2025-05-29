@@ -7,39 +7,19 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockAdminPanel;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileAdminSolarPanel extends TileSolarPanel {
 
-    public TileAdminSolarPanel() {
+    public TileAdminSolarPanel(BlockPos pos, BlockState state) {
         super(14, EnumSolarPanels.QUARK_SOLAR_PANEL.genday * 4, EnumSolarPanels.QUARK_SOLAR_PANEL.producing * 4,
-                EnumSolarPanels.QUARK_SOLAR_PANEL.maxstorage * 16, null
+                EnumSolarPanels.QUARK_SOLAR_PANEL.maxstorage * 16, null,BlockAdminPanel.admpanel,pos,state
         );
     }
 
-
     @Override
-    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
-        return new ItemStack(IUItem.blockadmin);
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
+    public boolean canRender() {
         return false;
     }
 
@@ -48,7 +28,7 @@ public class TileAdminSolarPanel extends TileSolarPanel {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.blockadmin;
+        return IUItem.blockadmin.getBlock();
     }
 
 }

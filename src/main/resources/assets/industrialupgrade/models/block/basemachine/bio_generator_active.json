@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/bio_generator_main",
-    "down" : "industrialupgrade:blocks/bio_generator_left-right-bottom",
-    "up" : "industrialupgrade:blocks/bio_generator_top_active",
-    "north" : "industrialupgrade:blocks/bio_generator_main_active",
-    "east" : "industrialupgrade:blocks/bio_generator_left-right-bottom",
-    "south" : "industrialupgrade:blocks/bio_generator_left-right-bottom",
-    "west" : "industrialupgrade:blocks/bio_generator_left-right-bottom"
+    "particle" : "industrialupgrade:block/bio_generator_main",
+    "down" : "industrialupgrade:block/bio_generator_left-right-bottom",
+    "up" : "industrialupgrade:block/bio_generator_top_active",
+    "north" : "industrialupgrade:block/bio_generator_main_active",
+    "east" : "industrialupgrade:block/bio_generator_left-right-bottom",
+    "south" : "industrialupgrade:block/bio_generator_left-right-bottom",
+    "west" : "industrialupgrade:block/bio_generator_left-right-bottom"
   }
 }

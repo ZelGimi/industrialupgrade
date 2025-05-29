@@ -1,47 +1,35 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerNuclearWasteRecycler;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiNuclearWasteRecycler;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TileEntityNuclearWasteRecycler extends TileElectricMachine implements IUpgradableBlock, IUpdateTick,
         IUpdatableTileEvent, IHasRecipe {
@@ -55,8 +43,8 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
     public MachineRecipe output;
 
 
-    public TileEntityNuclearWasteRecycler() {
-        super(500, 8, 1);
+    public TileEntityNuclearWasteRecycler(BlockPos pos, BlockState state) {
+        super(500, 8, 1,BlockBaseMachine3.nuclear_waste_recycler,pos,state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -86,7 +74,7 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
                 EnergyType.RADIATION, this, 10000,
 
                 new ArrayList<>(ModUtils.noFacings),
-                Arrays.asList(EnumFacing.values()),
+                Arrays.asList(Direction.values()),
                 0,
                 EnergyNetGlobal.instance.getTierFromPower(14), false
         )));
@@ -95,7 +83,7 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -104,14 +92,14 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
     }
 
     @Override
-    public ContainerNuclearWasteRecycler getGuiContainer(final EntityPlayer var1) {
+    public ContainerNuclearWasteRecycler getGuiContainer(final Player var1) {
         return new ContainerNuclearWasteRecycler(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiNuclearWasteRecycler(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiNuclearWasteRecycler((ContainerNuclearWasteRecycler) menu);
     }
 
     @Override
@@ -122,7 +110,7 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
                 "waste_recycler",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 443))),
+                                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(443), 1))),
                         new RecipeOutput(null, ItemStack.EMPTY)
                 )
         );
@@ -131,7 +119,7 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
 

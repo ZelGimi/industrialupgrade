@@ -3,21 +3,19 @@ package com.denfop.tiles.base;
 import com.denfop.Localization;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,12 +35,9 @@ public abstract class TileBaseGenerationMicrochip extends TileElectricMachine
     public InvSlotRecipes inputSlotA;
     public MachineRecipe output;
 
-    public TileBaseGenerationMicrochip(int energyPerTick, int length, int outputSlots) {
-        this(energyPerTick, length, outputSlots, 1);
-    }
 
-    public TileBaseGenerationMicrochip(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
-        super(energyPerTick * length, 1, outputSlots);
+    public TileBaseGenerationMicrochip(int energyPerTick, int length, int outputSlots, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(energyPerTick * length, 1, outputSlots, block, pos, state);
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.output = null;
         this.heat = this.addComponent(HeatComponent

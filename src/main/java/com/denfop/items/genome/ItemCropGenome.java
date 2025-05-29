@@ -1,55 +1,30 @@
 package com.denfop.items.genome;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.agriculture.genetics.GeneticTraits;
 import com.denfop.api.agriculture.genetics.IGenomeItem;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Locale;
 
-public class ItemCropGenome extends ItemSubTypes<ItemCropGenome.Types> implements IModelRegister, IGenomeItem {
-
-    protected static final String NAME = "crop_genome";
-
-    public ItemCropGenome() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.GenomeTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
-    }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(
-                        Constants.MOD_ID + ":" + NAME + "/" + "crop_genome" + Types.getFromID(meta).getName(),
-                        null
-                )
-        );
+public class ItemCropGenome<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IGenomeItem {
+    public ItemCropGenome(T element) {
+        super(new Item.Properties(), element);
     }
 
     @Override
     public GeneticTraits getGenomeTraits(final ItemStack stack) {
-        return GeneticTraits.values()[stack.getItemDamage()];
+        return GeneticTraits.values()[getElement().getId()];
     }
 
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.GenomeTab;
+    }
     public enum Types implements ISubEnum {
         soil_i(0),
         soil_ii(1),
@@ -99,9 +74,7 @@ public class ItemCropGenome extends ItemSubTypes<ItemCropGenome.Types> implement
         genome_resistance_iii(45),
         genome_adaptive_i(46),
         genome_adaptive_ii(47),
-        genome_adaptive_iii(48),
-
-        ;
+        genome_adaptive_iii(48),;
 
         private final String name;
         private final int ID;
@@ -115,8 +88,14 @@ public class ItemCropGenome extends ItemSubTypes<ItemCropGenome.Types> implement
             return values()[ID % values().length];
         }
 
+        @Override
         public String getName() {
-            return this.name;
+            return "crop_genome"+name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "crop_genome";
         }
 
         public int getId() {

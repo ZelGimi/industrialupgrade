@@ -5,14 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbine;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySteamTurbineGlass extends TileEntityMultiBlockElement implements IGlass {
 
-    public TileEntitySteamTurbineGlass() {
+
+    public TileEntitySteamTurbineGlass(BlockPos pos, BlockState state) {
+        super(BlockSteamTurbine.steam_turbine_casing_glass, pos, state);
     }
 
     @Override
@@ -27,22 +27,10 @@ public class TileEntitySteamTurbineGlass extends TileEntityMultiBlockElement imp
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.steam_turbine;
+        return IUItem.steam_turbine.getBlock(getTeBlock());
     }
 
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return !(world.getTileEntity(otherPos) instanceof IGlass);
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
 }

@@ -1,6 +1,14 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nano_saber"
-	}
+		"layer0": "industrialupgrade:item/nano_saber"
+	},
+	"overrides" : [
+    {
+      "predicate" : {
+        "active" : 1
+      },
+      "model" : "industrialupgrade:item/energy_tools/nano_saber_active"
+    }
+	]
 }

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=wireless_oil_pump": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump"
+    },
+    "facing=south,type=wireless_oil_pump": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump",
+      "y": 180
+    },
+    "facing=west,type=wireless_oil_pump": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump",
+      "y": 270
+    },
+    "facing=east,type=wireless_oil_pump": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump",
+      "y": 90
+    },
+    "facing=down,type=wireless_oil_pump": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump",
+      "x": 90
+    },
+    "facing=up,type=wireless_oil_pump": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump",
+      "x": 270
+    },
+    "facing=north,type=wireless_oil_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active"
+    },
+    "facing=south,type=wireless_oil_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "y": 180
+    },
+    "facing=west,type=wireless_oil_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "y": 270
+    },
+    "facing=east,type=wireless_oil_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "y": 90
+    },
+    "facing=down,type=wireless_oil_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "x": 90
+    },
+    "facing=up,type=wireless_oil_pump_invalid": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "x": 270
+    },
+    "facing=north,type=wireless_oil_pump_active": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active"
+    },
+    "facing=south,type=wireless_oil_pump_active": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "y": 180
+    },
+    "facing=west,type=wireless_oil_pump_active": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "y": 270
+    },
+    "facing=east,type=wireless_oil_pump_active": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "y": 90
+    },
+    "facing=down,type=wireless_oil_pump_active": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "x": 90
+    },
+    "facing=up,type=wireless_oil_pump_active": {
+      "model": "industrialupgrade:block/basemachine/wireless_oil_pump_active",
+      "x": 270
+    }
+  }
+}

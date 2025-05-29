@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=fisher": {
+      "model": "industrialupgrade:block/basemachine/fisher"
+    },
+    "facing=south,type=fisher": {
+      "model": "industrialupgrade:block/basemachine/fisher",
+      "y": 180
+    },
+    "facing=west,type=fisher": {
+      "model": "industrialupgrade:block/basemachine/fisher",
+      "y": 270
+    },
+    "facing=east,type=fisher": {
+      "model": "industrialupgrade:block/basemachine/fisher",
+      "y": 90
+    },
+    "facing=down,type=fisher": {
+      "model": "industrialupgrade:block/basemachine/fisher",
+      "x": 90
+    },
+    "facing=up,type=fisher": {
+      "model": "industrialupgrade:block/basemachine/fisher",
+      "x": 270
+    },
+    "facing=north,type=fisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/fisher_active"
+    },
+    "facing=south,type=fisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "y": 180
+    },
+    "facing=west,type=fisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "y": 270
+    },
+    "facing=east,type=fisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "y": 90
+    },
+    "facing=down,type=fisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "x": 90
+    },
+    "facing=up,type=fisher_invalid": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "x": 270
+    },
+    "facing=north,type=fisher_active": {
+      "model": "industrialupgrade:block/basemachine/fisher_active"
+    },
+    "facing=south,type=fisher_active": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "y": 180
+    },
+    "facing=west,type=fisher_active": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "y": 270
+    },
+    "facing=east,type=fisher_active": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "y": 90
+    },
+    "facing=down,type=fisher_active": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "x": 90
+    },
+    "facing=up,type=fisher_active": {
+      "model": "industrialupgrade:block/basemachine/fisher_active",
+      "x": 270
+    }
+  }
+}

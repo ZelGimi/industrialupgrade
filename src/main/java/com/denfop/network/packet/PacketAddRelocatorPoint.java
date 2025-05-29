@@ -3,18 +3,17 @@ package com.denfop.network.packet;
 import com.denfop.IUCore;
 import com.denfop.items.relocator.Point;
 import com.denfop.items.relocator.RelocatorNetwork;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class PacketAddRelocatorPoint implements IPacket {
-
     public PacketAddRelocatorPoint() {
 
     }
 
-    public PacketAddRelocatorPoint(EntityPlayer player, Point point) {
+    public PacketAddRelocatorPoint(Player player, Point point) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(60);
         buffer.writeByte(this.getId());
-        buffer.writeString(player.getName());
+        buffer.writeString(player.getName().getString());
         point.writeToBuffer(buffer);
         IUCore.network.getClient().sendPacket(buffer);
     }
@@ -25,8 +24,8 @@ public class PacketAddRelocatorPoint implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
-        if (!entityPlayer.getName().equals(customPacketBuffer.readString())) {
+    public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
+        if (!entityPlayer.getName().getString().equals(customPacketBuffer.readString())) {
             return;
         }
         RelocatorNetwork.instance.addPoint(entityPlayer, new Point(customPacketBuffer));

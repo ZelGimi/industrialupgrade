@@ -3,37 +3,38 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBaseGenerationChipMachine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGenerationMicrochip;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.resource.ItemIngots;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileBaseGenerationMicrochip;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class TileGenerationMicrochip extends TileBaseGenerationMicrochip implements IUpdateTick, IHasRecipe {
@@ -43,25 +44,26 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileGenerationMicrochip() {
-        super(1, 300, 1);
+    public TileGenerationMicrochip(BlockPos pos, BlockState blockState) {
+        super(1, 300, 1, BlockBaseMachine.generator_microchip, pos, blockState);
         this.inputSlotA = new InvSlotRecipes(this, "microchip", this);
         Recipes.recipes.addInitRecipes(this);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TileGenerationMicrochip) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TileGenerationMicrochip) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TileGenerationMicrochip) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
 
             @Override
@@ -84,38 +86,16 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         IInputItemStack four1;
         IInputItemStack five1;
 
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", (short) 4000);
+        CompoundTag nbt = new CompoundTag();
+        nbt.putShort("temperature", (short) 4000);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        first1 = input.getInput("ingotAluminum");
-        if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                .getOreName(OreDictionary.getOreIDs(second)[0])
-                .isEmpty() && second.getItem() instanceof ItemIngots) {
-            second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
-        } else {
-            second1 = input.getInput(second);
-        }
-        if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                .getOreName(OreDictionary.getOreIDs(three)[0])
-                .isEmpty() && three.getItem() instanceof ItemIngots) {
-            three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
-        } else {
-            three1 = input.getInput(three);
-        }
-        if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
-                .getOreName(OreDictionary.getOreIDs(four)[0])
-                .isEmpty() && four.getItem() instanceof ItemIngots) {
-            four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]));
-        } else {
-            four1 = input.getInput(four);
-        }
-        if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
-                .getOreName(OreDictionary.getOreIDs(five)[0])
-                .isEmpty() && five.getItem() instanceof ItemIngots) {
-            five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]));
-        } else {
-            five1 = input.getInput(five);
-        }
+        first1 = input.getInput("forge:ingots/aluminium");
+
+        second1 = input.getInput(second);
+        three1 = input.getInput(three);
+        four1 = input.getInput(four);
+        five1 = input.getInput(five);
+
         Recipes.recipes.addRecipe(
                 "microchip",
                 new BaseMachineRecipe(
@@ -141,65 +121,45 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         IInputItemStack four1;
         IInputItemStack five1;
 
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", temperatures);
+        CompoundTag nbt = new CompoundTag();
+        nbt.putShort("temperature", temperatures);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+
         if (check) {
-            if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(first)[0])
-                    .isEmpty() && first.getItem() instanceof ItemIngots) {
-                first1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(first)[0]), first.getCount());
-            } else {
-                first1 = input.getInput(first);
-            }
-            if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(second)[0])
-                    .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]), second.getCount());
-            } else {
-                second1 = input.getInput(second);
-            }
-            if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(three)[0])
-                    .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]), three.getCount());
-            } else {
-                three1 = input.getInput(three);
-            }
-            if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(four)[0])
-                    .isEmpty() && four.getItem() instanceof ItemIngots) {
-                four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]), four.getCount());
-            } else {
-                four1 = input.getInput(four);
-            }
-            if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(five)[0])
-                    .isEmpty() && five.getItem() instanceof ItemIngots) {
-                five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]), five.getCount());
-            } else {
-                five1 = input.getInput(five);
-            }
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
+            first1 = getInputFromTagOrStack(first, input);
+            second1 = getInputFromTagOrStack(second, input);
+            three1 = getInputFromTagOrStack(three, input);
+            four1 = getInputFromTagOrStack(four, input);
+            five1 = getInputFromTagOrStack(five, input);
         } else {
-            Recipes.recipes.addRecipe("microchip", new BaseMachineRecipe(
-                    new Input(
-                            input.getInput(first),
-                            input.getInput(second),
-                            input.getInput(three),
-                            input.getInput(four),
-                            input.getInput(five)
-                    ),
-                    new RecipeOutput(nbt, output)
-            ));
+            first1 = input.getInput(first, first.getCount());
+            second1 = input.getInput(second, second.getCount());
+            three1 = input.getInput(three, three.getCount());
+            four1 = input.getInput(four, four.getCount());
+            five1 = input.getInput(five, five.getCount());
+        }
+
+        Recipes.recipes.addRecipe(
+                "microchip",
+                new BaseMachineRecipe(
+                        new Input(first1, second1, three1, four1, five1),
+                        new RecipeOutput(nbt, output)
+                )
+        );
+    }
+
+    private static IInputItemStack getInputFromTagOrStack(ItemStack stack, IInputHandler input) {
+        Optional<TagKey<Item>> tag = stack.getTags()
+                .filter(loc -> loc.location().getNamespace().equals("forge") && loc.location().getPath().contains("/"))
+                .findFirst();
+
+        if (tag.isPresent() && stack.getItem() instanceof Item) {
+            return input.getInput(tag.get(), stack.getCount());
+        } else {
+            return input.getInput(stack);
         }
     }
+
 
     public static void add(
             ItemStack first,
@@ -217,98 +177,17 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         IInputItemStack four1;
         IInputItemStack five1;
 
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", temperatures);
+        CompoundTag nbt = new CompoundTag();
+        nbt.putShort("temperature", temperatures);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+
         if (check) {
-            if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(first)[0])
-                    .isEmpty() && first.getItem() instanceof ItemIngots) {
+            first1 = getInputFromTagOrStack(first, input);
+            second1 = getInputFromTagOrStack(second, input);
+            three1 = getInputFromTagOrStack(three, input);
+            four1 = getInputFromTagOrStack(four, input);
+            five1 = input.getInput(ItemTags.create(new ResourceLocation(five)));
 
-                first1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(first)[0]));
-            } else {
-                first1 = input.getInput(first);
-            }
-            if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(second)[0])
-                    .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
-            } else {
-                second1 = input.getInput(second);
-            }
-            if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(three)[0])
-                    .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
-            } else {
-                three1 = input.getInput(three);
-            }
-            if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(four)[0])
-                    .isEmpty() && four.getItem() instanceof ItemIngots) {
-                four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]));
-            } else {
-                four1 = input.getInput(four);
-            }
-            five1 = input.getInput(five);
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
-        }
-    }
-
-    public static void add(
-            String first,
-            ItemStack second,
-            ItemStack three,
-            ItemStack four,
-            ItemStack five,
-            ItemStack output,
-            boolean check
-    ) {
-        IInputItemStack first1;
-        IInputItemStack second1;
-        IInputItemStack three1;
-        IInputItemStack four1;
-        IInputItemStack five1;
-
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", (short) 4500);
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        if (check) {
-            first1 = input.getInput(first);
-            if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(second)[0])
-                    .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
-            } else {
-                second1 = input.getInput(second);
-            }
-            if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(three)[0])
-                    .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
-            } else {
-                three1 = input.getInput(three);
-            }
-            if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(four)[0])
-                    .isEmpty() && four.getItem() instanceof ItemIngots) {
-                four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]));
-            } else {
-                four1 = input.getInput(four);
-            }
-            if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(five)[0])
-                    .isEmpty() && five.getItem() instanceof ItemIngots) {
-                five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]));
-            } else {
-                five1 = input.getInput(five);
-            }
             Recipes.recipes.addRecipe(
                     "microchip",
                     new BaseMachineRecipe(
@@ -327,10 +206,9 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
                     ),
                     new RecipeOutput(nbt, output)
             ));
-
-
         }
     }
+
 
     public static void add(
             ItemStack first,
@@ -347,85 +225,53 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         IInputItemStack four1;
         IInputItemStack five1;
 
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", (short) 2000);
+        CompoundTag nbt = new CompoundTag();
+        nbt.putShort("temperature", (short) 4500);
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+
         if (check) {
-            if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(first)[0])
-                    .isEmpty() && first.getItem() instanceof ItemIngots) {
-                first1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(first)[0]));
-            } else {
-                first1 = input.getInput(first);
-            }
-            if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(second)[0])
-                    .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
-            } else {
-                second1 = input.getInput(second);
-            }
-            if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(three)[0])
-                    .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
-            } else {
-                three1 = input.getInput(three);
-            }
-            four1 = input.getInput(four);
-            if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
-                    .getOreName(OreDictionary.getOreIDs(five)[0])
-                    .isEmpty() && five.getItem() instanceof ItemIngots) {
-                five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]));
-            } else {
-                five1 = input.getInput(five);
-            }
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(first1, second1, three1, four1, five1),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
+            first1 = getInputFromTagOrStack(first, input);
+            second1 = getInputFromTagOrStack(second, input);
+            three1 = getInputFromTagOrStack(three, input);
+            four1 =input.getInput(ItemTags.create(new ResourceLocation(four)));
+            five1 = getInputFromTagOrStack(five, input);
         } else {
-            Recipes.recipes.addRecipe(
-                    "microchip",
-                    new BaseMachineRecipe(
-                            new Input(
-                                    input.getInput(first),
-                                    input.getInput(second),
-                                    input.getInput(three),
-                                    input.getInput(four),
-                                    input.getInput(five)
-                            ),
-                            new RecipeOutput(nbt, output)
-                    )
-            );
-
-
+            first1 = input.getInput(first);
+            second1 = input.getInput(second);
+            three1 = input.getInput(three);
+            four1 = input.getInput(four);
+            five1 = input.getInput(five);
         }
+
+        Recipes.recipes.addRecipe(
+                "microchip",
+                new BaseMachineRecipe(
+                        new Input(first1, second1, three1, four1, five1),
+                        new RecipeOutput(nbt, output)
+                )
+        );
     }
 
     public static ItemStack getLevelCircuit(ItemStack stack, int level) {
         stack = stack.copy();
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setInteger("level", level);
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putInt("level", level);
         return stack;
     }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
         }
     }
 
-    public ContainerBaseGenerationChipMachine getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerBaseGenerationChipMachine getGuiContainer(Player entityPlayer) {
         return new ContainerBaseGenerationChipMachine(
                 entityPlayer, this);
     }
@@ -435,22 +281,21 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines;
+        return IUItem.machines.getBlock(getTeBlock().getId());
     }
 
     public void init() {
-        add(new ItemStack(Items.FLINT), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.IRON_INGOT),
-                new ItemStack(IUItem.iuingot, 1
-                        , 11), new ItemStack(IUItem.iuingot, 1, 15), new ItemStack(IUItem.basecircuit), (short) 3000, false
+        add(new ItemStack(Items.FLINT), new ItemStack(Items.LAPIS_LAZULI), new ItemStack(Items.IRON_INGOT),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(11), 1), new ItemStack(IUItem.iuingot.getItemFromMeta(15)), new ItemStack(IUItem.basecircuit.getItemFromMeta(0)), (short) 3000, false
         );
 
         add(
-                new ItemStack(IUItem.iuingot, 1, 39),
-                new ItemStack(IUItem.iuingot, 1, 30),
-                new ItemStack(IUItem.iuingot, 1, 41),
-                new ItemStack(IUItem.alloysingot, 1, 14),
-                new ItemStack(IUItem.alloysingot, 1, 23),
-                new ItemStack(IUItem.basecircuit, 1, 18),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(39)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(30)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(41)),
+                new ItemStack(IUItem.alloysingot.getItemFromMeta(14)),
+                new ItemStack(IUItem.alloysingot.getItemFromMeta(23)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(18)),
                 (short) 5000, true
         );
 
@@ -459,221 +304,221 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
                 new ItemStack(Items.REDSTONE),
                 new ItemStack(Items.GOLD_INGOT),
                 new ItemStack(Items.FLINT),
-                new ItemStack(IUItem.iuingot, 1, 14),
-                new ItemStack(IUItem.basecircuit, 1, 15),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(14)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(15)),
                 (short) 1000, true
         );
 
         add(
-                new ItemStack(IUItem.iuingot, 1, 1),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(1)),
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.GOLD_INGOT),
-                new ItemStack(IUItem.iuingot, 1, 7),
-                "ingotCopper",
-                new ItemStack(IUItem.basecircuit, 1, 1),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(7)),
+                "forge:ingots/copper",
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(1)),
                 (short) 4000, true
         );
         add(
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.GOLD_INGOT),
-                new ItemStack(IUItem.iuingot, 1, 7),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(7)),
                 IUItem.copperIngot,
-                new ItemStack(IUItem.basecircuit, 1, 1)
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(1))
         );
         add(
-                new ItemStack(IUItem.iuingot, 1, 18),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(18)),
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.DIAMOND),
-                new ItemStack(IUItem.iuingot, 1, 0),
-                new ItemStack(IUItem.iuingot, 1, 5),
-                new ItemStack(IUItem.basecircuit, 1, 2),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(0)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(5)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(2)),
                 (short) 5000, true
         );
         add(
-                new ItemStack(IUItem.iuingot, 1, 18),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(18)),
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.EMERALD),
-                new ItemStack(IUItem.iuingot, 1, 0),
-                new ItemStack(IUItem.iuingot, 1, 5),
-                new ItemStack(IUItem.basecircuit, 1, 2),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(0)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(5)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(2)),
                 (short) 5000, true
         );
 
 
         add(
                 new ItemStack(Items.FLINT),
-                new ItemStack(Items.DYE, 1, 4),
-                new ItemStack(IUItem.iuingot, 1, 9),
-                "ingotSteel", new ItemStack(Items.GOLD_INGOT),
+                new ItemStack(Items.LAPIS_LAZULI),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(9)),
+                "forge:ingots/steel", new ItemStack(Items.GOLD_INGOT),
 
-                new ItemStack(IUItem.basecircuit, 1, 12),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(12)),
                 true
         );
         add(
-                new ItemStack(IUItem.basecircuit, 1, 15),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(15)),
                 new ItemStack(Items.IRON_INGOT, 2),
-                new ItemStack(IUItem.iuingot, 1, 4),
-                new ItemStack(IUItem.iuingot, 1, 25),
-                new ItemStack(IUItem.iuingot, 1, 3),
-                new ItemStack(IUItem.crafting_elements, 1, 414),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(4)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(25)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(3)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(414)),
                 (short) 1000, true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 414),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(414)),
                 new ItemStack(Items.GOLD_INGOT, 1),
-                new ItemStack(IUItem.iuingot, 1, 24),
-                new ItemStack(IUItem.iuingot, 1, 26),
-                new ItemStack(IUItem.iuingot, 1, 13),
-                new ItemStack(IUItem.crafting_elements, 1, 426),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(24)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(26)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(13)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(426)),
                 (short) 2000, true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 426),
-                new ItemStack(IUItem.iuingot, 1, 2),
-                new ItemStack(IUItem.iuingot, 2, 0),
-                new ItemStack(IUItem.iuingot, 3, 20),
-                new ItemStack(IUItem.crafting_elements, 1, 274),
-                new ItemStack(IUItem.crafting_elements, 1, 373),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(426)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(2)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(0), 2),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(20), 3),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(274)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(373)),
                 (short) 3000, true
         );
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 373),
-                new ItemStack(IUItem.iuingot, 2, 12),
-                new ItemStack(IUItem.iuingot, 2, 14),
-                new ItemStack(IUItem.iuingot, 1, 16),
-                new ItemStack(IUItem.iuingot, 1, 7),
-                new ItemStack(IUItem.crafting_elements, 1, 402),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(373)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(12), 2),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(14), 2),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(16)),
+                new ItemStack(IUItem.iuingot.getItemFromMeta(7)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(402)),
                 (short) 4000, true
         );
 
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 488),
-                new ItemStack(IUItem.crafting_elements, 1, 539),
-                new ItemStack(IUItem.crafting_elements, 1, 538),
-                new ItemStack(IUItem.crafting_elements, 1, 533),
-                new ItemStack(IUItem.basecircuit, 1, 17),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(488)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(539)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(538)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(533)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(17)),
                 getLevelCircuit(IUItem.electronicCircuit, 1),
                 (short) 1000,
                 true
         );
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 488),
-                new ItemStack(IUItem.crafting_elements, 1, 547),
-                new ItemStack(IUItem.crafting_elements, 1, 538),
-                new ItemStack(IUItem.crafting_elements, 1, 541),
-                new ItemStack(IUItem.basecircuit, 1, 17),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(488)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(547)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(538)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(541)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(17)),
                 getLevelCircuit(IUItem.electronicCircuit, 2),
                 (short) 1000,
                 true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 491),
-                new ItemStack(IUItem.crafting_elements, 1, 547),
-                new ItemStack(IUItem.crafting_elements, 1, 557),
-                new ItemStack(IUItem.crafting_elements, 1, 543),
-                new ItemStack(IUItem.basecircuit, 1, 14),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(491)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(547)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(557)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(543)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(14)),
                 getLevelCircuit(IUItem.advancedCircuit, 3),
                 (short) 2000,
                 true
         );
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 491),
-                new ItemStack(IUItem.crafting_elements, 1, 535),
-                new ItemStack(IUItem.crafting_elements, 1, 557),
-                new ItemStack(IUItem.crafting_elements, 1, 545),
-                new ItemStack(IUItem.basecircuit, 1, 14),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(491)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(535)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(557)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(545)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(14)),
                 getLevelCircuit(IUItem.advancedCircuit, 4),
                 (short) 2000,
                 true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 486),
-                new ItemStack(IUItem.crafting_elements, 1, 535),
-                new ItemStack(IUItem.crafting_elements, 1, 557),
-                new ItemStack(IUItem.crafting_elements, 1, 549),
-                new ItemStack(IUItem.basecircuit, 1, 6),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(486)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(535)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(557)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(549)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(6)),
                 getLevelCircuit(IUItem.circuitNano, 5),
                 (short) 3000,
                 true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 486),
-                new ItemStack(IUItem.crafting_elements, 1, 544),
-                new ItemStack(IUItem.crafting_elements, 1, 552),
-                new ItemStack(IUItem.crafting_elements, 1, 551),
-                new ItemStack(IUItem.basecircuit, 1, 6),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(486)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(544)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(552)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(551)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(6)),
                 getLevelCircuit(IUItem.circuitNano, 6),
                 (short) 3000,
                 true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 485),
-                new ItemStack(IUItem.crafting_elements, 1, 553),
-                new ItemStack(IUItem.crafting_elements, 1, 542),
-                new ItemStack(IUItem.crafting_elements, 1, 555),
-                new ItemStack(IUItem.basecircuit, 1, 7),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(485)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(553)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(542)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(555)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(7)),
                 getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 (short) 4000,
                 true
         );
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 485),
-                new ItemStack(IUItem.crafting_elements, 1, 553),
-                new ItemStack(IUItem.crafting_elements, 1, 540),
-                new ItemStack(IUItem.crafting_elements, 1, 556),
-                new ItemStack(IUItem.basecircuit, 1, 7),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(485)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(553)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(540)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(556)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(7)),
                 getLevelCircuit(IUItem.cirsuitQuantum, 8),
                 (short) 4000,
                 true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 490),
-                new ItemStack(IUItem.crafting_elements, 1, 550),
-                new ItemStack(IUItem.crafting_elements, 1, 548),
-                new ItemStack(IUItem.crafting_elements, 1, 558),
-                new ItemStack(IUItem.basecircuit, 1, 8),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(490)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(550)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(548)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(558)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(8)),
                 getLevelCircuit(IUItem.circuitSpectral, 9),
                 (short) 5000,
                 true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 490),
-                new ItemStack(IUItem.crafting_elements, 1, 537),
-                new ItemStack(IUItem.crafting_elements, 1, 536),
-                new ItemStack(IUItem.crafting_elements, 1, 558),
-                new ItemStack(IUItem.basecircuit, 1, 8),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(490)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(537)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(536)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(558)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(8)),
                 getLevelCircuit(IUItem.circuitSpectral, 10),
                 (short) 5000,
                 true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 490),
-                new ItemStack(IUItem.crafting_elements, 1, 537),
-                new ItemStack(IUItem.crafting_elements, 1, 536),
-                new ItemStack(IUItem.crafting_elements, 1, 534),
-                new ItemStack(IUItem.basecircuit, 1, 20),
-                getLevelCircuit(new ItemStack(IUItem.basecircuit, 1, 21), 11),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(490)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(537)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(536)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(534)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(20)),
+                getLevelCircuit(new ItemStack(IUItem.basecircuit.getItemFromMeta(21)), 11),
                 (short) 5000,
                 true
         );
 
         add(
-                new ItemStack(IUItem.crafting_elements, 1, 490),
-                new ItemStack(IUItem.crafting_elements, 1, 546),
-                new ItemStack(IUItem.crafting_elements, 1, 554),
-                new ItemStack(IUItem.crafting_elements, 1, 534),
-                new ItemStack(IUItem.basecircuit, 1, 20),
-                getLevelCircuit(new ItemStack(IUItem.basecircuit, 1, 21), 12),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(490)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(546)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(554)),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(534)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(20)),
+                getLevelCircuit(new ItemStack(IUItem.basecircuit.getItemFromMeta(21)), 12),
                 (short) 5000,
                 true
         );
@@ -699,22 +544,11 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
         return "Generation Microchip";
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiGenerationMicrochip(new ContainerBaseGenerationChipMachine(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiGenerationMicrochip((ContainerBaseGenerationChipMachine) menu);
     }
 
-    public String getStartSoundFile() {
-        return "Machines/genmirc.ogg";
-    }
-
-    public String getInterruptSoundFile() {
-        return "Machines/InterruptOne.ogg";
-    }
-
-    public float getWrenchDropRate() {
-        return 0.85F;
-    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,

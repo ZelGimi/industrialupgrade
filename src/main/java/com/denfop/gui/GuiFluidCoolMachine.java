@@ -11,15 +11,15 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerFluidCoolMachine;
 import com.denfop.tiles.mechanism.cooling.TileFluidCooling;
 import com.denfop.utils.ListInformationUtils;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiFluidCoolMachine extends GuiIU<ContainerFluidCoolMachine> {
+public class GuiFluidCoolMachine<T extends ContainerFluidCoolMachine> extends GuiIU<ContainerFluidCoolMachine> {
 
     public ContainerFluidCoolMachine container;
     public String name;
@@ -86,33 +86,24 @@ public class GuiFluidCoolMachine extends GuiIU<ContainerFluidCoolMachine> {
         }
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
 
-    }
-
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
-        TankGauge.createNormal(this, 112, 20, this.container.base.tank).drawForeground(par1, par2);
+        TankGauge.createNormal(this, 112, 20, this.container.base.tank).drawForeground(poseStack, par1, par2);
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xOffset + 3, yOffset + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
-        TankGauge.createNormal(this, 112, 20, this.container.base.tank).drawBackground(this.guiLeft, this.guiTop);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(getTexture());
+        int xOffset = guiLeft;
+        int yOffset =guiTop;
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, xOffset + 3, yOffset + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
+        TankGauge.createNormal(this, 112, 20, this.container.base.tank).drawBackground(poseStack, this.guiLeft, this.guiTop);
 
     }
 

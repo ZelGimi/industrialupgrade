@@ -11,18 +11,22 @@ import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.recipe.IInputHandler;
-import com.denfop.register.RegisterOreDictionary;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TileGearMachine extends TileMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileGearMachine() {
-        super(EnumMultiMachine.Gearing.usagePerTick, EnumMultiMachine.Gearing.lenghtOperation);
+    public TileGearMachine(BlockPos pos, BlockState state) {
+        super(EnumMultiMachine.Gearing.usagePerTick, EnumMultiMachine.Gearing.lenghtOperation, BlockMoreMachine3.gearing, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
@@ -36,9 +40,90 @@ public class TileGearMachine extends TileMultiMachine {
                         new Input(
                                 input1.getInput(input, 4)
                         ),
-                        new RecipeOutput(null, OreDictionary.getOres(output).get(0))
+                        new RecipeOutput(null, input1.getInput(output).getInputs().get(0))
                 )
         );
+    }
+
+    public static List<String> itemNames() {
+        List<String> list = new ArrayList<>();
+        list.add("Mikhail");//0
+        list.add("Aluminium");//1
+        list.add("Vanady");//2
+        list.add("Tungsten");//3
+        list.add("Invar");//4
+        list.add("Caravky");//5
+        list.add("Cobalt");//6
+        list.add("Magnesium");//7
+        list.add("Nickel");//8
+        list.add("Platinum");//9
+        list.add("Titanium");//10
+        list.add("Chromium");//11
+        list.add("Spinel");//12
+        list.add("Electrum");//13
+        list.add("Silver");//14
+        list.add("Zinc");//15
+        list.add("Manganese");//16
+        list.add("Iridium");//17
+        list.add("Germanium");//18
+        return list;
+    }
+
+    public static List<String> itemNames7() {
+        return Arrays.asList(
+                "Arsenic",
+                "Barium",
+                "Bismuth",
+                "Gadolinium",
+                "Gallium",
+                "Hafnium",
+                "Yttrium",
+                "Molybdenum",
+                "Neodymium",
+                "Niobium",
+                "Palladium",
+                "Polonium",
+                "Strontium",
+                "Thallium",
+                "Zirconium"
+        );
+    }
+
+    public static List<String> itemNames1() {
+        List<String> list = new ArrayList<>();
+        list.add("Aluminumbronze");//0
+        list.add("Alumel");//1
+        list.add("Redbrass");//2
+        list.add("Muntsa");//3
+        list.add("Nichrome");//4
+        list.add("Alcled");//5
+        list.add("Vanadoalumite");//6
+        list.add("Vitalium");//7
+        list.add("Duralumin");//8
+        list.add("Ferromanganese");//9
+        list.add("AluminiumSilicon");//10
+        list.add("BerylliumBronze");//11
+        list.add("Zeliber");//12
+        list.add("StainlessSteel");//13
+        list.add("Inconel");//14
+        list.add("Nitenol");//15
+        list.add("Stellite");//16
+        list.add("HafniumBoride");//17
+        list.add("Woods");//18
+        list.add("Nimonic");//19
+        list.add("TantalumTungstenHafnium");//20
+        list.add("Permalloy");//21
+        list.add("AluminiumLithium");//22
+        list.add("CobaltChrome");//23
+        list.add("HafniumCarbide");//24
+        list.add("MolybdenumSteel");//25
+        list.add("NiobiumTitanium");//26
+        list.add("Osmiridium");//27
+        list.add("SuperalloyHaynes");//28
+        list.add("SuperalloyRene");//29
+        list.add("YttriumAluminiumGarnet");//30
+        list.add("GalliumArsenic");//31
+        return list;
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -46,48 +131,48 @@ public class TileGearMachine extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base3;
+        return IUItem.machines_base3.getBlock(getTeBlock().getId());
     }
 
     public void init() {
-        for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
+        for (int i = 0; i < itemNames().size(); i++) {
 
             addrecipe(
-                    "ingot" + RegisterOreDictionary.itemNames().get(i),
-                    "gear" + RegisterOreDictionary.itemNames().get(i)
+                    "forge:ingots/" + itemNames().get(i).toLowerCase(),
+                    "forge:gears/" + itemNames().get(i).toLowerCase()
             );
 
 
         }
-        for (int i = 0; i < RegisterOreDictionary.itemNames7().size(); i++) {
+        for (int i = 0; i < itemNames7().size(); i++) {
 
             addrecipe(
-                    "ingot" + RegisterOreDictionary.itemNames7().get(i),
-                    "gear" + RegisterOreDictionary.itemNames7().get(i)
+                    "forge:ingots/" + itemNames7().get(i).toLowerCase(),
+                    "forge:gears/" + itemNames7().get(i).toLowerCase()
             );
 
 
         }
-        for (int i = 0; i < RegisterOreDictionary.itemNames1().size(); i++) {
+        for (int i = 0; i < itemNames1().size(); i++) {
 
             addrecipe(
-                    "ingot" + RegisterOreDictionary.itemNames1().get(i),
-                    "gear" + RegisterOreDictionary.itemNames1().get(i)
+                    "forge:ingots/" + itemNames1().get(i).toLowerCase(),
+                    "forge:gears/" + itemNames1().get(i).toLowerCase()
             );
 
 
         }
         addrecipe(
-                "ingotOsmium",
-                "gearOsmium"
+                "forge:ingots/Osmium".toLowerCase(),
+                "forge:gears/Osmium".toLowerCase()
         );
         addrecipe(
-                "ingotTantalum",
-                "gearTantalum"
+                "forge:ingots/Tantalum".toLowerCase(),
+                "forge:gears/Tantalum".toLowerCase()
         );
         addrecipe(
-                "ingotCadmium",
-                "gearCadmium"
+                "forge:ingots/Cadmium".toLowerCase(),
+                "forge:gears/Cadmium".toLowerCase()
         );
     }
 

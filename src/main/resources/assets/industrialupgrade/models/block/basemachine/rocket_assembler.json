@@ -4,8 +4,8 @@
     128
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/rocket_assembler",
-    "particle" : "industrialupgrade:models/rocket_assembler"
+    "0" : "industrialupgrade:block/rocket_assembler",
+    "particle" : "industrialupgrade:block/rocket_assembler"
   },
   "elements" : [
     {

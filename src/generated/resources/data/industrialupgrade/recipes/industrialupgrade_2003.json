@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/mikhail"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_121_element"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/lapis"
+      }
+    ]
+  },
+  "pattern": [
+    " AA",
+    "BCA",
+    " DD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_722_element"
+  },
+  "show_notification": true
+}

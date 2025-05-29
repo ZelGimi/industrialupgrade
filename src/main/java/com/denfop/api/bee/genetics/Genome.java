@@ -1,49 +1,47 @@
 package com.denfop.api.bee.genetics;
 
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Genome implements IGenome {
 
-    Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new HashMap<>();
     private ItemStack stack;
+    Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new HashMap<>();
 
     public Genome(ItemStack stack) {
-        final NBTTagCompound nbt1 = ModUtils.nbt(stack);
-        if (!nbt1.hasKey("genome")) {
-            final NBTTagCompound nbt = new NBTTagCompound();
-            nbt1.setTag("genome", nbt);
+        final CompoundTag nbt1 = ModUtils.nbt(stack);
+        if (!nbt1.contains("genome")){
+            final CompoundTag nbt = new CompoundTag();
+            nbt1.put("genome",nbt);
         }
 
-        NBTTagCompound nbt = nbt1.getCompoundTag("genome");
-        NBTTagList tagList = nbt.getTagList("genomeList", 10);
-        for (int i = 0; i < tagList.tagCount(); ++i) {
-            NBTTagCompound genomeNbt = tagList.getCompoundTagAt(i);
+        CompoundTag  nbt = nbt1.getCompound("genome");
+        ListTag tagList = nbt.getList("genomeList", 10);
+        for (int i = 0; i < tagList.size(); ++i) {
+            CompoundTag genomeNbt = tagList.getCompound(i);
             int meta = genomeNbt.getByte("meta");
             GeneticTraits geneticTraits = GeneticTraits.values()[meta];
             geneticTraitsMap.put(geneticTraits.getGenetic(), geneticTraits);
         }
-        this.stack = stack;
-    }
-
-    public Genome(Map<EnumGenetic, GeneticTraits> geneticTraitsMap) {
-        this.geneticTraitsMap = new HashMap<>(geneticTraitsMap);
+        this.stack=stack;
     }
 
     public Map<EnumGenetic, GeneticTraits> getGeneticTraitsMap() {
         return geneticTraitsMap;
     }
 
+
+
     public ItemStack getStack() {
         return stack;
+    }
+
+    public Genome(Map<EnumGenetic, GeneticTraits> geneticTraitsMap) {
+        this.geneticTraitsMap = new HashMap<>(geneticTraitsMap);
     }
 
     @Override
@@ -76,21 +74,18 @@ public class Genome implements IGenome {
             writeNBT(ModUtils.nbt(stack));
         }
     }
-
     public void addGenome(GeneticTraits geneticTraits) {
         if (!geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
             geneticTraitsMap.put(geneticTraits.getGenetic(), geneticTraits);
             writeNBT(ModUtils.nbt(stack));
         }
     }
-
     public void removeGenome(GeneticTraits geneticTraits, ItemStack stack) {
         if (geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
             geneticTraitsMap.remove(geneticTraits.getGenetic(), geneticTraits);
             writeNBT(ModUtils.nbt(stack));
         }
     }
-
     public GeneticTraits removeGenome(EnumGenetic genetic, ItemStack stack) {
         if (geneticTraitsMap.containsKey(genetic)) {
             final GeneticTraits value = geneticTraitsMap.remove(genetic);
@@ -99,17 +94,16 @@ public class Genome implements IGenome {
         }
         return null;
     }
-
-    public NBTTagCompound writeNBT(NBTTagCompound nbtTagCompound) {
-        NBTTagList genomeNBT = new NBTTagList();
+    public CompoundTag writeNBT(CompoundTag nbtTagCompound) {
+        ListTag genomeNBT = new ListTag();
         for (GeneticTraits geneticTraits : geneticTraitsMap.values()) {
-            NBTTagCompound nbtTagCompound1 = new NBTTagCompound();
-            nbtTagCompound1.setByte("meta", (byte) geneticTraits.ordinal());
-            genomeNBT.appendTag(nbtTagCompound1);
+            CompoundTag nbtTagCompound1 = new CompoundTag();
+            nbtTagCompound1.putByte("meta", (byte) geneticTraits.ordinal());
+            genomeNBT.add(nbtTagCompound1);
         }
-        NBTTagCompound nbt = nbtTagCompound.getCompoundTag("genome");
-        nbt.setTag("genomeList", genomeNBT);
-        nbtTagCompound.setTag("genome", nbt);
+        CompoundTag nbt = nbtTagCompound.getCompound("genome");
+        nbt.put("genomeList", genomeNBT);
+        nbtTagCompound.put("genome",nbt);
         return nbtTagCompound;
     }
 
@@ -122,16 +116,15 @@ public class Genome implements IGenome {
     public <T> T getLevelGenome(final EnumGenetic genome, Class<T> tClass) {
         return geneticTraitsMap.get(genome).getValue(tClass);
     }
-
     public GeneticTraits getGenome(final EnumGenetic genome) {
         return geneticTraitsMap.get(genome);
     }
-
     public Genome copy() {
         Genome genome = new Genome(this.geneticTraitsMap);
         genome.stack = this.stack.copy();
         return genome;
     }
+
 
 
 }

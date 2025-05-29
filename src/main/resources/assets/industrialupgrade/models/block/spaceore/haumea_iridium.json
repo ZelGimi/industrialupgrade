@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/haumea_iridium"
+    "all" : "industrialupgrade:block/haumea_iridium"
   }
 }

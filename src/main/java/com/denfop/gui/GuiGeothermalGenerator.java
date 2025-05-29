@@ -1,52 +1,49 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.FluidItem;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.*;
 import com.denfop.container.ContainerGeothermalgenerator;
 import com.denfop.tiles.geothermalpump.TileEntityGeothermalGenerator;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class GuiGeothermalGenerator extends GuiIU<ContainerGeothermalgenerator> {
+public class GuiGeothermalGenerator<T extends ContainerGeothermalgenerator> extends GuiIU<ContainerGeothermalgenerator> {
 
     public GuiGeothermalGenerator(ContainerGeothermalgenerator guiContainer) {
         super(guiContainer);
-        this.addComponent(new GuiComponent(this, 110, (this.ySize - 80) / 2, EnumTypeComponent.QUANTUM_ENERGY_WEIGHT,
+        this.componentList.clear();
+        this.addComponent(new GuiComponent(this, 110, (this.imageHeight - 80) / 2, EnumTypeComponent.QUANTUM_ENERGY_WEIGHT,
                 new Component<>(this.container.base.getEnergy())
         ));
-        this.addElement((new FluidItem(this, this.xSize / 2 - 10, 20,
+        this.addElement((new FluidItem(this, this.imageWidth / 2 - 10, 20,
                 ((TileEntityGeothermalGenerator) guiContainer.base).getFluidTank().getFluid()
         ) {
             @Override
-            public void drawBackground(final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 bindCommonTexture();
                 FluidStack fs = ((TileEntityGeothermalGenerator) guiContainer.base).getFluidTank().getFluid();
-                if (fs != null && fs.amount > 0) {
+                if (!fs.isEmpty() && fs.getAmount() > 0) {
                     int fluidX = this.x + 1;
                     int fluidY = this.y + 1;
                     int fluidWidth = 10;
                     int fluidHeight = 45;
                     Fluid fluid = fs.getFluid();
-                    TextureAtlasSprite sprite = fluid != null
-                            ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                            : null;
-                    int color = fluid != null ? fluid.getColor(fs) : -1;
+                    IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    int color = extensions.getTintColor();
                     bindBlockTexture();
-                    this.gui.drawSprite(
-                            fluidX,
-                            fluidY + (45 - fluidHeight * (fs.amount / 10000D)),
+                    this.gui.drawSprite(poseStack,
+                            mouseX+ fluidX,
+                            mouseY+fluidY + (45 - fluidHeight * (fs.getAmount() / 10000D)),
                             fluidWidth,
-                            fluidHeight * (fs.amount / 10000D),
+                            fluidHeight * (fs.getAmount() / 10000D),
                             sprite,
                             color,
                             1.0,
@@ -54,11 +51,11 @@ public class GuiGeothermalGenerator extends GuiIU<ContainerGeothermalgenerator> 
                             false
                     );
                 }
-                Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture1);
+                bindTexture(commonTexture1);
             }
 
             @Override
-            public void drawForeground(final int mouseX, final int mouseY) {
+            public void drawForeground(GuiGraphics poseStack,final int mouseX, final int mouseY) {
                 if (mouseX >= this.x - 4 && mouseX <= this.x + 15 && mouseY >= this.y - 4 && mouseY <= this.y + 51) {
                     List<String> lines = this.getToolTip();
                     if (this.getTooltipProvider() != null) {
@@ -77,15 +74,15 @@ public class GuiGeothermalGenerator extends GuiIU<ContainerGeothermalgenerator> 
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer( poseStack,partialTicks, mouseX, mouseY);
         bindTexture();
-        GlStateManager.color(1, 1, 1, 1);
-        drawTexturedModalRect(this.guiLeft + this.xSize / 2 - 10 - 4, guiTop + 20 - 4, 235,
+       RenderSystem.setShaderColor(1, 1, 1, 1);
+        drawTexturedModalRect( poseStack,this.guiLeft + this.imageWidth / 2 - 10 - 4, guiTop + 20 - 4, 235,
                 98, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground(mouseX, mouseY);
+            element.drawBackground( poseStack,mouseX, mouseY);
         }
     }
 

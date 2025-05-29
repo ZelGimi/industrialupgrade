@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/controller/adv_controller_front",
-    "down" : "industrialupgrade:blocks/gas_reactor/controller/adv_controller_side",
-    "up" : "industrialupgrade:blocks/gas_reactor/controller/adv_controller_side",
-    "north" : "industrialupgrade:blocks/gas_reactor/controller/adv_controller_front",
-    "east" : "industrialupgrade:blocks/gas_reactor/controller/adv_controller_side",
-    "south" : "industrialupgrade:blocks/gas_reactor/controller/adv_controller_side",
-    "west" : "industrialupgrade:blocks/gas_reactor/controller/adv_controller_side"
+    "particle" : "industrialupgrade:block/gas_reactor/controller/adv_controller_front",
+    "down" : "industrialupgrade:block/gas_reactor/controller/adv_controller_side",
+    "up" : "industrialupgrade:block/gas_reactor/controller/adv_controller_side",
+    "north" : "industrialupgrade:block/gas_reactor/controller/adv_controller_front",
+    "east" : "industrialupgrade:block/gas_reactor/controller/adv_controller_side",
+    "south" : "industrialupgrade:block/gas_reactor/controller/adv_controller_side",
+    "west" : "industrialupgrade:block/gas_reactor/controller/adv_controller_side"
   }
 }

@@ -2,18 +2,15 @@ package com.denfop.componets;
 
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.blocks.FluidName;
-import com.denfop.effects.SteamParticle;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,8 +27,8 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     public ComponentSteamEnergy(
             EnergyType type, TileEntityInventory parent,
             double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
+            Set<Direction> sinkDirections,
+            Set<Direction> sourceDirections,
             int tier
     ) {
         this(type, parent, capacity, sinkDirections, sourceDirections, tier, tier, false);
@@ -40,8 +37,8 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     public ComponentSteamEnergy(
             EnergyType type, TileEntityInventory parent,
             double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
+            Set<Direction> sinkDirections,
+            Set<Direction> sourceDirections,
             int sinkTier,
             int sourceTier,
             boolean fullEnergy
@@ -52,8 +49,8 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     public ComponentSteamEnergy(
             EnergyType type, TileEntityInventory parent,
             double capacity,
-            List<EnumFacing> sinkDirections,
-            List<EnumFacing> sourceDirections,
+            List<Direction> sinkDirections,
+            List<Direction> sourceDirections,
             int sinkTier,
             int sourceTier,
             boolean fullEnergy
@@ -78,23 +75,9 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(ItemStack stack, LivingEntity placer, Direction facing) {
         super.onPlaced(stack, placer, facing);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        final NBTTagCompound nbt1 = nbt.getCompoundTag("steam");
-        this.addEnergy(nbt1.getDouble("energy"));
-    }
-
-    @Override
-    public List<ItemStack> getAuxDrops(List<ItemStack> ret) {
-        if (ret.get(0).isItemEqual(this.getParent().getPickBlock(null, null))) {
-            final NBTTagCompound nbt = ModUtils.nbt(ret.get(0));
-            final NBTTagCompound nbt1 = new NBTTagCompound();
-            nbt1.setDouble("energy", this.storage);
-            nbt.setTag("steam", nbt1);
-        }
-        return ret;
-
+        CompoundTag nbt = ModUtils.nbt(stack);
     }
 
     public void setFluidTank(final FluidTank fluidTank) {
@@ -104,10 +87,10 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
     @Override
     public double addEnergy(final double amount) {
         super.addEnergy(amount);
-        if (fluidTank.getFluid() == null && amount >= 1) {
-            fluidTank.fill(new FluidStack(FluidName.fluidsteam.getInstance(), (int) this.storage), true);
-        } else if (fluidTank.getFluid() != null) {
-            fluidTank.getFluid().amount = (int) this.storage;
+        if (fluidTank.getFluid().isEmpty() && amount >= 1) {
+            fluidTank.fill(new FluidStack(FluidName.fluidsteam.getInstance().get(), (int) this.storage), IFluidHandler.FluidAction.EXECUTE);
+        } else if (!fluidTank.getFluid().isEmpty()) {
+            fluidTank.getFluid().setAmount((int) this.storage);
         }
         return amount;
     }
@@ -117,27 +100,14 @@ public class ComponentSteamEnergy extends ComponentBaseEnergy {
         return true;
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void updateEntityClient() {
-        super.updateEntityClient();
-        if (this.parent.getActive() && this.parent.getWorld().getWorldTime() % 4 == 0) {
-            Minecraft.getMinecraft().effectRenderer.addEffect(new SteamParticle(
-                    this.parent.getWorld(),
-                    this.parent.getPos().getX(),
-                    this.parent.getPos().getY() + 1,
-                    this.parent.getPos().getZ()
-            ));
-        }
-    }
 
     @Override
     public boolean useEnergy(final double amount) {
         super.useEnergy(amount);
-        if (fluidTank.getFluid() != null) {
-            fluidTank.getFluid().amount = (int) this.storage;
-            if (fluidTank.getFluid().amount == 0) {
-                fluidTank.setFluid(null);
+        if (!fluidTank.getFluid().isEmpty()) {
+            fluidTank.getFluid().setAmount((int) this.storage);
+            if (fluidTank.getFluid().getAmount() == 0) {
+                fluidTank.setFluid(FluidStack.EMPTY);
             }
         }
         return true;

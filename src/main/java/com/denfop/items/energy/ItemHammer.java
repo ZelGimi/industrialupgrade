@@ -1,18 +1,11 @@
 package com.denfop.items.energy;
 
-import java.util.HashSet;
+import net.minecraft.tags.BlockTags;
 
 public class ItemHammer extends ItemToolIU {
-
     public ItemHammer() {
-        super("molot", 2, 1, new HashSet<>());
-        this.setHarvestLevel("pickaxe", 1);
-        setNoRepair();
+        super(2, 1, BlockTags.MINEABLE_WITH_PICKAXE);
     }
 
-    @Override
-    public void registerModels() {
-        this.registerModels(this.name);
-    }
 
 }

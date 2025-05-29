@@ -9,17 +9,19 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileDoubleCombRecycler extends TileMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileDoubleCombRecycler() {
+    public TileDoubleCombRecycler(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.DOUBLE_COMB_RECYCLER.usagePerTick,
-                EnumMultiMachine.DOUBLE_COMB_RECYCLER.lenghtOperation
+                EnumMultiMachine.DOUBLE_COMB_RECYCLER.lenghtOperation, BlockMoreMachine1.double_comb_recycler, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
@@ -30,11 +32,11 @@ public class TileDoubleCombRecycler extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base1;
+        return IUItem.machines_base1.getBlock(getTeBlock().getId());
     }
 
     public void initiate(int soundEvent) {
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
+        if (this.getWorld().getGameTime() % 40 == 0) {
             super.initiate(soundEvent);
         }
     }

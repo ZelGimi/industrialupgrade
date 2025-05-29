@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityRocketLaunchPad;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerRocketLaunchPad extends ContainerFullInv<TileEntityRocketLaunchPad> {
 
-    public ContainerRocketLaunchPad(TileEntityRocketLaunchPad tileEntityRocketLaunchPad, EntityPlayer var1) {
+    public ContainerRocketLaunchPad(TileEntityRocketLaunchPad tileEntityRocketLaunchPad, Player var1) {
         super(var1, tileEntityRocketLaunchPad, 222);
         for (int i = 0; i < 27; i++) {
             this.addSlotToContainer(new SlotInvSlot(tileEntityRocketLaunchPad.outputSlot,

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:dirt"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:apatite_cube"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "ABA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:apatite/humus"
+  },
+  "show_notification": true
+}

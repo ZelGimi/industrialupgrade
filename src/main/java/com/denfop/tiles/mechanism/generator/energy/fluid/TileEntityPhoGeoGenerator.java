@@ -6,12 +6,14 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksPhotonicMachine;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.tiles.mechanism.generator.energy.TileEntityGeoGenerator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityPhoGeoGenerator extends TileEntityGeoGenerator {
 
 
-    public TileEntityPhoGeoGenerator() {
-        super(64, 6, 8);
+    public TileEntityPhoGeoGenerator(BlockPos pos, BlockState state) {
+        super(64, 6, 8, BlocksPhotonicMachine.photonic_geogenerator, pos, state);
 
     }
 
@@ -25,7 +27,7 @@ public class TileEntityPhoGeoGenerator extends TileEntityGeoGenerator {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.pho_machine;
+        return IUItem.pho_machine.getBlock(getTeBlock().getId());
     }
 
 }

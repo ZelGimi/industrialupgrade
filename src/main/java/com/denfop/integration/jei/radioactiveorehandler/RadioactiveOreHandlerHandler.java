@@ -3,7 +3,7 @@ package com.denfop.integration.jei.radioactiveorehandler;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class RadioactiveOreHandlerHandler {
     private static final List<RadioactiveOreHandlerHandler> recipes = new ArrayList<>();
     private final ItemStack input, output;
     private final ItemStack input1;
-    private final int chance;
+    public final int chance;
 
     public RadioactiveOreHandlerHandler(
             ItemStack input,
@@ -61,7 +61,7 @@ public class RadioactiveOreHandlerHandler {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("radioactive_handler")) {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0), container.getOutput().items.get(1),
-                    container.getOutput().items.get(0), container.getOutput().metadata.getInteger("random")
+                    container.getOutput().items.get(0), container.getOutput().metadata.getInt("random")
             );
 
 
@@ -86,7 +86,7 @@ public class RadioactiveOreHandlerHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

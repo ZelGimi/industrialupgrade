@@ -2,10 +2,10 @@ package com.denfop.componets;
 
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class ComponentUpgrade extends AbstractComponent {
     }
 
     @Override
-    public boolean canUsePurifier(final EntityPlayer player) {
+    public boolean canUsePurifier(final Player player) {
         return !this.listActiveUpgrade.isEmpty();
     }
 
@@ -65,10 +65,10 @@ public class ComponentUpgrade extends AbstractComponent {
     }
 
     @Override
-    public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
-        final ItemStack stack = player.getHeldItem(hand);
+    public boolean onBlockActivated(final Player player, final InteractionHand hand) {
+        final ItemStack stack = player.getItemInHand(hand);
         for (TypeUpgrade upgrade : this.listUpgrade) {
-            if (upgrade.getStack().isItemEqual(stack)) {
+            if (upgrade.getStack().getItem() == stack.getItem()) {
                 if (!this.listActiveUpgrade.contains(upgrade)) {
                     this.listActiveUpgrade.add(upgrade);
                     stack.shrink(1);
@@ -81,12 +81,12 @@ public class ComponentUpgrade extends AbstractComponent {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
-        final NBTTagCompound nbt = super.writeToNbt();
-        nbt.setInteger("max", this.listActiveUpgrade.size());
+    public CompoundTag writeToNbt() {
+        final CompoundTag nbt = super.writeToNbt();
+        nbt.putInt("max", this.listActiveUpgrade.size());
         int i = 0;
         for (TypeUpgrade upgrade : this.listActiveUpgrade) {
-            nbt.setInteger(String.valueOf(i), upgrade.ordinal());
+            nbt.putInt(String.valueOf(i), upgrade.ordinal());
             i++;
         }
         return nbt;
@@ -113,12 +113,12 @@ public class ComponentUpgrade extends AbstractComponent {
     }
 
     @Override
-    public void readFromNbt(final NBTTagCompound nbt) {
+    public void readFromNbt(final CompoundTag nbt) {
         super.readFromNbt(nbt);
-        int size = nbt.getInteger("max");
+        int size = nbt.getInt("max");
         final TypeUpgrade[] values = TypeUpgrade.values();
         for (int i = 0; i < size; i++) {
-            this.listActiveUpgrade.add(values[nbt.getInteger(String.valueOf(i))]);
+            this.listActiveUpgrade.add(values[nbt.getInt(String.valueOf(i))]);
         }
     }
 

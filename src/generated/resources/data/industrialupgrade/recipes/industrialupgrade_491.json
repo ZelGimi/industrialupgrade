@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:transformer_iu/uhev"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_216_element"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:transformer_iu/heev"
+  }
+}

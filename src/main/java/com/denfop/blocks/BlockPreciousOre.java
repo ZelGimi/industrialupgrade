@@ -1,170 +1,117 @@
 package com.denfop.blocks;
 
-
-import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.DataBlock;
 import com.denfop.IUItem;
-import com.denfop.api.IModelRegister;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.blocktags.BlockTagsProvider;
+import com.denfop.datagen.blocktags.IBlockTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import org.jetbrains.annotations.Nullable;
+import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.Random;
 
-public class BlockPreciousOre extends BlockCore implements IModelRegister {
-
-    public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("type", Type.class);
+public class BlockPreciousOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
 
 
-    public BlockPreciousOre() {
-        super(Material.ROCK, Constants.MOD_ID);
-        setUnlocalizedName("blockpreciousore");
-        setCreativeTab(IUCore.OreTab);
-        setHardness(1.0F);
-        setResistance(5.0F);
-        setSoundType(SoundType.STONE);
-        setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.topaz_ore));
-        setHarvestLevel("pickaxe", 2);
+    public BlockPreciousOre(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
+        super(Properties.of().mapColor(MapColor.STONE).destroyTime(1f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
+        BlockTagsProvider.list.add(this);
+
     }
 
-    @Nonnull
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
-    }
-
-    public void getSubBlocks(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
-        for (int i = 0; i < (Type.values()).length; i++) {
-            items.add(new ItemStack(this, 1, i));
-        }
-    }
-
-    @Nonnull
-    public IBlockState getStateMeta(int meta) {
-        return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
-    }
-
-    public String getUnlocalizedName(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        if (meta >= (Type.values()).length) {
-            meta = 0;
-        }
-        return "iu." + Type.values()[meta].getName() + ".name";
+    @Override
+    int getMetaFromState(BlockState state) {
+        return getElement().getId();
     }
 
 
     @Override
-    public void getDrops(
-            @Nonnull final NonNullList<ItemStack> drops,
-            @Nonnull final IBlockAccess world,
-            @Nonnull final BlockPos pos,
-            @Nonnull final IBlockState state,
-            final int fortune
-    ) {
-        Random rand = world instanceof World ? ((World) world).rand : RANDOM;
-
-
-        int count = quantityDropped(fortune, rand);
-        for (int i = 0; i < count; i++) {
-            int meta = state.getBlock().getMetaFromState(state);
-            if (meta != 3) {
-                drops.add(new ItemStack(IUItem.preciousgem, 1, meta));
-            } else {
-                drops.add(new ItemStack(Items.QUARTZ));
-            }
-
-        }
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_49915_) {
 
     }
 
+    @Override
+    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+        return this.stateDefinition.any();
+    }
 
-    public int quantityDropped(int fortune, Random random) {
+    @Override
+    public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
+        RandomSource rand = p_60538_.getLevel().random;
+
+        List<ItemStack> list = new ArrayList<>();
+        ItemStack stack = p_60538_.getOptionalParameter(LootContextParams.TOOL);
+        int fortune = 0;
+        if (stack != null)
+            fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
+        int count = quantityDropped(fortune, rand);
+        for (int i = 0; i < count; i++) {
+            if (this.getElement().getId() != 3) {
+                list.add(new ItemStack(IUItem.preciousgem.getItemFromMeta(this.getElement().getId())));
+            } else {
+                list.add(new ItemStack(Items.QUARTZ));
+            }
+
+        }
+        return list;
+    }
+
+    public int quantityDropped(int fortune, RandomSource random) {
 
         return quantityDroppedWithBonus(fortune, random);
     }
 
-    public int quantityDroppedWithBonus(int fortune, @Nonnull Random random) {
-        return (fortune == 0) ? quantityDropped(random)
-                : (quantityDropped(random) + fortune);
+    public int quantityDroppedWithBonus(int fortune, @Nonnull RandomSource random) {
+        return (fortune == 0) ? 1
+                : (1 + random.nextInt(fortune));
     }
 
-    public EnumRarity getRarity(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        if (meta >= (Type.values()).length) {
-            return EnumRarity.COMMON;
-        }
-        return Type.values()[meta].getRarity();
+    @Override
+    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+        p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
-    @Nonnull
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
+    @Override
+    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
+        final int meta = this.getMetaFromState(state);
+        return super.getSoundType(state, level, pos, entity);
     }
 
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT).getMetadata();
+    @Override
+    public Block getBlock() {
+        return this;
     }
 
-    public int damageDropped(IBlockState state) {
-        return state.getValue(VARIANT).getMetadata();
+    @Override
+    public Pair<String, Integer> getHarvestLevel() {
+        return new Pair<>("pickaxe", 1);
     }
 
-    public int getLightValue(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
-        return state.getValue(VARIANT).getLight();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        for (int i = 0; i < (Type.values()).length; i++) {
-            ModelLoader.setCustomModelResourceLocation(
-                    Item.getItemFromBlock(this),
-                    i,
-                    new ModelResourceLocation(this.modName + ":" + this.name, "type=" + Type.values()[i].getName())
-            );
-        }
-    }
-
-    public boolean preInit() {
-        setRegistryName("blockpreciousore");
-        ForgeRegistries.BLOCKS.register(this);
-        ItemBlockCore itemBlock = new ItemBlockCore(this);
-        itemBlock.setRegistryName(Objects.requireNonNull(getRegistryName()));
-        ForgeRegistries.ITEMS.register(itemBlock);
-        IUCore.proxy.addIModelRegister(this);
-
-        return true;
-    }
-
-    public boolean initialize() {
-
-        return true;
-    }
-
-    public enum Type implements IStringSerializable {
+    public enum Type implements ISubEnum {
         ruby_ore(0),
         sapphire_ore(1),
         topaz_ore(2),
         quartz_ore(3),
-
 
         ;
 
@@ -184,20 +131,30 @@ public class BlockPreciousOre extends BlockCore implements IModelRegister {
             return this.metadata;
         }
 
+        @Override
+        public int getId() {
+            return this.metadata;
+        }
+
+        @Override
+        public String getOtherPart() {
+            return "type=";
+        }
+
         @Nonnull
         public String getName() {
             return this.name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "blockpreciousore";
         }
 
         public int getLight() {
             return 0;
         }
 
-        public EnumRarity getRarity() {
-            return EnumRarity.COMMON;
-        }
-
 
     }
-
 }

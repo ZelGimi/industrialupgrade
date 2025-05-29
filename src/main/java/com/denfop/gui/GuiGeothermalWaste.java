@@ -2,10 +2,11 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerGeothermalWaste;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiGeothermalWaste extends GuiIU<ContainerGeothermalWaste> {
+public class GuiGeothermalWaste<T extends ContainerGeothermalWaste> extends GuiIU<ContainerGeothermalWaste> {
 
     public GuiGeothermalWaste(ContainerGeothermalWaste guiContainer) {
         super(guiContainer);
@@ -13,12 +14,12 @@ public class GuiGeothermalWaste extends GuiIU<ContainerGeothermalWaste> {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
         bindTexture();
-        GlStateManager.color(1, 1, 1, 1);
+      RenderSystem.setShaderColor(1, 1, 1, 1);
         for (int i = 0; i < 4; i++) {
-            drawTexturedModalRect(this.guiLeft + 176 / 2 - 37 + i * 18, guiTop + 29, 237,
+            drawTexturedModalRect(poseStack, this.guiLeft + 176 / 2 - 37 + i * 18, guiTop + 29, 237,
                     76, 18, 18
             );
         }

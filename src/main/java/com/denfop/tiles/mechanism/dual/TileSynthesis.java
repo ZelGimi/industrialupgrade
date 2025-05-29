@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism.dual;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -14,31 +15,34 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerDoubleElectricMachine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSynthesis;
 import com.denfop.invslot.InvSlot;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
-import java.util.Random;
 
 public class TileSynthesis extends TileDoubleElectricMachine implements IHasRecipe {
 
     public final ComponentBaseEnergy rad_energy;
     public final InvSlot input_slot;
 
-    public TileSynthesis() {
-        super(1, 300, 1, EnumDoubleElectricMachine.SYNTHESIS, false);
+    public TileSynthesis(BlockPos pos, BlockState state) {
+        super(1, 300, 1, EnumDoubleElectricMachine.SYNTHESIS, false, BlockBaseMachine1.synthesis, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -71,15 +75,15 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
             }
 
             protected int getRadiationSize(int size) {
-                final int amount = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getInteger("rad_amount");
+                final int amount = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getInt("rad_amount");
                 return (int) Math.min(size, rad_energy.getEnergy() / amount);
             }
 
             public void operateOnce(List<ItemStack> processResult) {
                 this.invSlotRecipes.consume();
-                NBTTagCompound nbt = this.updateTick.getRecipeOutput().getRecipe().output.metadata;
-                int procent = nbt.getInteger("percent");
-                Random rand = this.getParent().getWorld().rand;
+                CompoundTag nbt = this.updateTick.getRecipeOutput().getRecipe().output.metadata;
+                int procent = nbt.getInt("percent");
+                RandomSource rand = this.getParent().getWorld().random;
                 if ((rand.nextInt(100) + 1) > (100 - procent)) {
                     this.outputSlot.add(this.updateTick.getRecipeOutput().getRecipe().output.items.get(0));
 
@@ -93,18 +97,19 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TileSynthesis) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TileSynthesis) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TileSynthesis) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
 
             @Override
@@ -115,9 +120,9 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
     }
 
     public static void addsynthesis(ItemStack container, ItemStack fill, int number, ItemStack output, int rad) {
-        NBTTagCompound nbt = ModUtils.nbt();
-        nbt.setInteger("percent", number);
-        nbt.setInteger("rad_amount", rad);
+        CompoundTag nbt = ModUtils.nbt();
+        nbt.putInt("percent", number);
+        nbt.putInt("rad_amount", rad);
 
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("synthesis", new BaseMachineRecipe(
@@ -132,11 +137,11 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
         }
     }
@@ -146,7 +151,7 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine;
+        return IUItem.basemachine.getBlock(getTeBlock().getId());
     }
 
     @Override
@@ -156,51 +161,39 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
 
     public void init() {
         addsynthesis(
-                new ItemStack(IUItem.radiationresources, 1, 2),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(2), 1),
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()),
                 32,
-                new ItemStack(IUItem.radiationresources, 1, 3), 200
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(3), 1), 200
         );
         addsynthesis(
-                new ItemStack(IUItem.radiationresources, 1, 3),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(3), 1),
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()),
                 27,
-                new ItemStack(IUItem.radiationresources, 1, 6), 400
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(6), 1), 400
         );
         addsynthesis(
-                new ItemStack(IUItem.radiationresources, 1, 6),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(6), 1),
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()),
                 22,
-                new ItemStack(IUItem.radiationresources, 1, 7), 500
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(7), 1), 500
         );
         addsynthesis(
-                new ItemStack(IUItem.radiationresources, 1, 7),
-                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(7), 1),
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance().get()),
                 19,
-                new ItemStack(IUItem.radiationresources, 1, 11), 750
+                new ItemStack(IUItem.radiationresources.getItemFromMeta(11), 1), 750
         );
 
-        addsynthesis(IUItem.uraniumBlock, new ItemStack(IUItem.toriy), 22, new ItemStack(IUItem.radiationresources, 1, 8), 150);
-        addsynthesis(new ItemStack(IUItem.radiationresources, 1, 1), new ItemStack(IUItem.toriy), 20, IUItem.Plutonium, 100);
+        addsynthesis(IUItem.uraniumBlock, new ItemStack(IUItem.toriy.getItem()), 22, new ItemStack(IUItem.radiationresources.getItemFromMeta(8), 1), 150);
+        addsynthesis(new ItemStack(IUItem.radiationresources.getItemFromMeta(1), 1), new ItemStack(IUItem.toriy.getItem()), 20, new ItemStack(IUItem.Plutonium), 100);
 
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSynthesis(new ContainerDoubleElectricMachine(entityPlayer, this, type));
-    }
-
-    public String getStartSoundFile() {
-        return "Machines/synthesys.ogg";
-    }
-
-    public String getInterruptSoundFile() {
-        return "Machines/InterruptOne.ogg";
-    }
-
-    public float getWrenchDropRate() {
-        return 0.85F;
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiSynthesis((ContainerDoubleElectricMachine) isAdmin);
     }
 
 

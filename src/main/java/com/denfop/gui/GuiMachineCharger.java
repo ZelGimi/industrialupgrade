@@ -5,13 +5,13 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerMachineCharger;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiMachineCharger extends GuiIU<ContainerMachineCharger> {
+public class GuiMachineCharger<T extends ContainerMachineCharger> extends GuiIU<ContainerMachineCharger> {
 
     public GuiMachineCharger(ContainerMachineCharger guiContainer) {
         super(guiContainer);
-        this.addComponent(new GuiComponent(this, this.xSize / 2 - 20, 40, EnumTypeComponent.ENERGY_WEIGHT,
+        this.addComponent(new GuiComponent(this, this.imageWidth / 2 - 20, 40, EnumTypeComponent.ENERGY_WEIGHT,
                 new Component<>(this.container.base.getEnergy())
         ));
     }

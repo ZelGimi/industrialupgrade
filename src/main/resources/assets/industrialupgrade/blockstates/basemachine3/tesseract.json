@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=tesseract": {
+      "model": "industrialupgrade:block/basemachine/tesseract"
+    },
+    "facing=south,type=tesseract": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "y": 180
+    },
+    "facing=west,type=tesseract": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "y": 270
+    },
+    "facing=east,type=tesseract": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "y": 90
+    },
+    "facing=down,type=tesseract": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "x": 90
+    },
+    "facing=up,type=tesseract": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "x": 270
+    },
+    "facing=north,type=tesseract_invalid": {
+      "model": "industrialupgrade:block/basemachine/tesseract"
+    },
+    "facing=south,type=tesseract_invalid": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "y": 180
+    },
+    "facing=west,type=tesseract_invalid": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "y": 270
+    },
+    "facing=east,type=tesseract_invalid": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "y": 90
+    },
+    "facing=down,type=tesseract_invalid": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "x": 90
+    },
+    "facing=up,type=tesseract_invalid": {
+      "model": "industrialupgrade:block/basemachine/tesseract",
+      "x": 270
+    }
+  }
+}

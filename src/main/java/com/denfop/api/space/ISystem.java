@@ -7,5 +7,4 @@ public interface ISystem {
     String getName();
 
     List<IStar> getStarList();
-
 }

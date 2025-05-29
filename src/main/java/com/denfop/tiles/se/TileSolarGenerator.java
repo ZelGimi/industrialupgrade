@@ -5,16 +5,15 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSolarEnergy;
 import com.denfop.tiles.base.TileSolarGeneratorEnergy;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileSolarGenerator extends TileSolarGeneratorEnergy {
 
 
-    public TileSolarGenerator() {
+    public TileSolarGenerator(BlockPos pos, BlockState state) {
 
-        super(1);
+        super(1, BlockSolarEnergy.se_gen, pos, state);
 
     }
 
@@ -23,12 +22,8 @@ public class TileSolarGenerator extends TileSolarGeneratorEnergy {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.blockSE;
+        return IUItem.blockSE.getBlock();
     }
 
-    @Override
-    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
-        return new ItemStack(IUItem.blockSE);
-    }
 
 }

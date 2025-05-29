@@ -1,9 +1,13 @@
 package com.denfop.tiles.base;
 
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeatMachine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiHeatMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -12,15 +16,16 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -38,17 +43,17 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
     public int coef = 1;
     public boolean work = true;
 
-    public TileBaseHeatMachine(boolean hasFluid) {
-        super(hasFluid ? 0D : 10000D, 14, 1);
+    public TileBaseHeatMachine(boolean hasFluid, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(hasFluid ? 0D : 10000D, 14, 1,block,pos,state);
         this.hasFluid = hasFluid;
         if (this.hasFluid) {
             this.fluids = this.addComponent(new Fluids(this));
             this.fluidTank = this.fluids.addTank("fluidTank", 12000, InvSlot.TypeItemSlot.INPUT, Fluids.fluidPredicate(
-                    FluidName.fluidpahoehoe_lava.getInstance(),
-                    FluidRegistry.LAVA, FluidName.fluiddizel.getInstance(),
-                    FluidName.fluidbenz.getInstance(),
-                    FluidName.fluidbiogas.getInstance(),
-                    FluidName.fluidbiomass.getInstance()
+                    FluidName.fluidpahoehoe_lava.getInstance().get(),
+                    net.minecraft.world.level.material.Fluids.LAVA, FluidName.fluiddizel.getInstance().get(),
+                    FluidName.fluidbenz.getInstance().get(),
+                    FluidName.fluidbiogas.getInstance().get(),
+                    FluidName.fluidbiomass.getInstance().get()
             ));
             this.fluidSlot = new InvSlotFluidByList(
                     this,
@@ -56,11 +61,11 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
                     1,
 
                     InvSlotFluid.TypeFluidSlot.INPUT,
-                    FluidName.fluidpahoehoe_lava.getInstance(),
-                    FluidRegistry.LAVA, FluidName.fluiddizel.getInstance(),
-                    FluidName.fluidbenz.getInstance(),
-                    FluidName.fluidbiogas.getInstance(),
-                    FluidName.fluidbiomass.getInstance()
+                    FluidName.fluidpahoehoe_lava.getInstance().get(),
+                    net.minecraft.world.level.material.Fluids.LAVA, FluidName.fluiddizel.getInstance().get(),
+                    FluidName.fluidbenz.getInstance().get(),
+                    FluidName.fluidbiogas.getInstance().get(),
+                    FluidName.fluidbiomass.getInstance().get()
             );
         }
 
@@ -104,7 +109,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         if (i == 0) {
             this.maxtemperature = (short) (this.maxtemperature + 1000);
             if (this.maxtemperature > 10000) {
@@ -126,26 +131,26 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
     }
 
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         if (this.hasFluid) {
-            this.fluidTank.readFromNBT(nbttagcompound.getCompoundTag("fluidTank"));
+            this.fluidTank.readFromNBT(nbttagcompound.getCompound("fluidTank"));
         }
         this.maxtemperature = nbttagcompound.getShort("maxtemperature");
         this.auto = nbttagcompound.getBoolean("auto");
         this.work = nbttagcompound.getBoolean("work");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         if (this.hasFluid) {
-            NBTTagCompound fluidTankTag = new NBTTagCompound();
+            CompoundTag fluidTankTag = new CompoundTag();
             this.fluidTank.writeToNBT(fluidTankTag);
-            nbttagcompound.setTag("fluidTank", fluidTankTag);
+            nbttagcompound.put("fluidTank", fluidTankTag);
         }
-        nbttagcompound.setShort("maxtemperature", this.maxtemperature);
-        nbttagcompound.setBoolean("auto", this.auto);
-        nbttagcompound.setBoolean("work", this.work);
+        nbttagcompound.putShort("maxtemperature", this.maxtemperature);
+        nbttagcompound.putBoolean("auto", this.auto);
+        nbttagcompound.putBoolean("work", this.work);
         return nbttagcompound;
 
     }
@@ -156,7 +161,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
                 return false;
             }
         } else {
-            if (this.fluidTank.getFluid() == null || this.fluidTank.getFluidAmount() == 0) {
+            if (this.fluidTank.getFluid().isEmpty() || this.fluidTank.getFluidAmount() == 0) {
                 return false;
             }
         }
@@ -168,7 +173,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
             if (this.hasFluid) {
                 if (this.getFluidTank().getFluidAmount() >= 1) {
                     this.heat.addEnergy(5);
-                    this.getFluidTank().drain(this.coef, true);
+                    this.getFluidTank().drain(this.coef, IFluidHandler.FluidAction.EXECUTE);
                     return true;
                 }
             } else {
@@ -202,7 +207,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
         if (active != this.getActive()) {
             setActive(active);
         }
-        if (this.world.provider.getWorldTime() % 60 == 0) {
+        if (this.level.getGameTime() % 60 == 0) {
             if (this.heat.getEnergy() > 0) {
                 this.heat.useEnergy(1);
             }
@@ -216,14 +221,15 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
 
 
     @Override
-    public ContainerHeatMachine getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerHeatMachine getGuiContainer(final Player entityPlayer) {
         return new ContainerHeatMachine(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiHeatMachine(getGuiContainer(entityPlayer), b);
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiHeatMachine((ContainerHeatMachine) menu);
     }
 
 

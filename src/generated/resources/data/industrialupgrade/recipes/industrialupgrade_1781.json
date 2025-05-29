@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:heat_reactors/heat_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_414_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_356_element"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:doubleplate/tungsten"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "EAE",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:heat_reactors/heat_pump"
+  },
+  "show_notification": true
+}

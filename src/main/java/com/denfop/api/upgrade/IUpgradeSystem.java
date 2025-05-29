@@ -1,17 +1,16 @@
 package com.denfop.api.upgrade;
 
 import com.denfop.items.EnumInfoUpgradeModules;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
 public interface IUpgradeSystem {
 
-
-    List<Integer> getPositiveUpgradeFromLevel(ItemStack stack);
+    void updateLevel(ItemStack stack);
 
     void addModification();
 
@@ -33,8 +32,6 @@ public interface IUpgradeSystem {
 
     List<UpgradeItemInform> getInformation(ItemStack item);
 
-    List<String> getAvailableUpgrade(IUpgradeItem iUpgradeItem, final ItemStack item);
-
     UpgradeItemInform getModules(EnumInfoUpgradeModules module, ItemStack item);
 
     UpgradeItemInform getModules(final EnumInfoUpgradeModules module, final ItemStack item, List<UpgradeItemInform> list);
@@ -45,15 +42,13 @@ public interface IUpgradeSystem {
 
     void updateListFromNBT(IUpgradeItem item, ItemStack stack);
 
-    List<Integer> getUpgradeFromList(ItemStack stack);
-
     void setInformation(IUpgradeItem item, List<EnumInfoUpgradeModules> lst, ItemStack stack);
 
     void write(IUpgradeItem item, List<EnumInfoUpgradeModules> lst, ItemStack stack);
 
-    void updateBlackListFromNBT(IUpgradeWithBlackList item, ItemStack stack, NBTTagCompound nbt);
+    void updateBlackListFromNBT(IUpgradeWithBlackList item, ItemStack stack, CompoundTag nbt);
 
-    void removeUpdate(ItemStack stack, World world, int index);
+    void removeUpdate(ItemStack stack, Level world, int index);
 
     List<ItemStack> getListStack(ItemStack stack);
 
@@ -63,6 +58,7 @@ public interface IUpgradeSystem {
 
     void updateBlackListFromStack(final ItemStack stack);
 
-    void updateLevel(ItemStack stack);
+    List<Integer> getUpgradeFromList(ItemStack stack);
 
+    List<String> getAvailableUpgrade(IUpgradeItem iUpgradeItem, ItemStack stack);
 }

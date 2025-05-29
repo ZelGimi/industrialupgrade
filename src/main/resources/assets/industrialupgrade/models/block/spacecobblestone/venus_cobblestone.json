@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/venus_cobblestone"
+    "all" : "industrialupgrade:block/venus_cobblestone"
   }
 }

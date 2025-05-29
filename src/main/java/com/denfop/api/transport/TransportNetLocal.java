@@ -4,33 +4,28 @@ package com.denfop.api.transport;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TransportNetLocal {
 
     final TransportTickList<TransportTick<ITransportSource, Path>> senderPath = new TransportTickList<>();
-    private final World world;
+    private final Level world;
     private final Map<BlockPos, ITransportTile> chunkCoordinatesITransportTileMap;
     List<ITransportSource> sourceToUpdateList = new LinkedList<>();
     byte tick;
     List<ITransportSource> delete = new ArrayList<>();
 
-    TransportNetLocal(World world) {
+    TransportNetLocal(Level world) {
         this.world = world;
         this.chunkCoordinatesITransportTileMap = new HashMap<>();
     }
@@ -85,17 +80,17 @@ public class TransportNetLocal {
         for (TransportTick<ITransportSource, Path> entry : this.senderPath) {
             if (entry.getEnergyItemPaths() != null) {
                 for (Path path : entry.getEnergyItemPaths()) {
-                    if (path.first.getBlockPos().equals(par1.getBlockPos()) || path.end
-                            .getBlockPos()
-                            .equals(par1.getBlockPos())) {
+                    if (path.first.getPos().equals(par1.getPos()) || path.end
+                            .getPos()
+                            .equals(par1.getPos())) {
                         return true;
                     }
                 }
             } else if (entry.getEnergyFluidPaths() != null) {
                 for (Path path : entry.getEnergyFluidPaths()) {
-                    if (path.first.getBlockPos().equals(par1.getBlockPos()) || path.end
-                            .getBlockPos()
-                            .equals(par1.getBlockPos())) {
+                    if (path.first.getPos().equals(par1.getPos()) || path.end
+                            .getPos()
+                            .equals(par1.getPos())) {
                         return true;
                     }
                 }
@@ -128,7 +123,7 @@ public class TransportNetLocal {
     }
 
     public void addTile(ITransportTile tile1) {
-        addTileEntity(tile1.getBlockPos(), tile1);
+        addTileEntity(tile1.getPos(), tile1);
     }
 
     public boolean containsKey(final TransportTick<ITransportSource, Path> par1) {
@@ -152,12 +147,12 @@ public class TransportNetLocal {
     }
 
     private void updateAdd(BlockPos pos, ITransportTile tile) {
-        for (final EnumFacing dir : EnumFacing.values()) {
+        for (final Direction dir : Direction.values()) {
             BlockPos pos1 = pos
-                    .offset(dir);
+                    .offset(dir.getNormal());
             final ITransportTile tile1 = this.chunkCoordinatesITransportTileMap.get(pos1);
             if (tile1 != null) {
-                final EnumFacing inverseDirection2 = dir.getOpposite();
+                final Direction inverseDirection2 = dir.getOpposite();
                 if (tile1 instanceof ITransportEmitter && tile instanceof ITransportAcceptor) {
                     final ITransportEmitter sender2 = (ITransportEmitter) tile1;
                     final ITransportAcceptor receiver2 = (ITransportAcceptor) tile;
@@ -215,23 +210,23 @@ public class TransportNetLocal {
     }
 
     public void removeTileEntity(ITransportTile tile) {
-        if (!this.chunkCoordinatesITransportTileMap.containsKey(tile.getBlockPos())) {
+        if (!this.chunkCoordinatesITransportTileMap.containsKey(tile.getPos())) {
             return;
         }
-        this.chunkCoordinatesITransportTileMap.remove(tile.getBlockPos());
+        this.chunkCoordinatesITransportTileMap.remove(tile.getPos());
         if (tile instanceof ITransportAcceptor) {
             this.removeAll(this.getSources((ITransportAcceptor) tile));
         }
         if (tile instanceof ITransportSource) {
             this.remove((ITransportSource) tile);
         }
-        this.updateRemove(tile.getBlockPos(), tile);
+        this.updateRemove(tile.getPos(), tile);
     }
 
     private void updateRemove(BlockPos pos, ITransportTile tile) {
-        for (final EnumFacing dir : EnumFacing.values()) {
+        for (final Direction dir : Direction.values()) {
             BlockPos pos1 = pos
-                    .offset(dir);
+                    .offset(dir.getNormal());
             final ITransportTile tile1 = this.chunkCoordinatesITransportTileMap.get(pos1);
             if (tile1 != null) {
                 tile1.RemoveTile(tile, dir.getOpposite());
@@ -240,13 +235,13 @@ public class TransportNetLocal {
         }
     }
 
-    public boolean canInsertOrExtract(ITransportConductor transportConductor, ItemStack stack, EnumFacing facing) {
+    public boolean canInsertOrExtract(ITransportConductor transportConductor, ItemStack stack, Direction facing) {
         List<ItemStack> BlackItemStacks = transportConductor.getBlackListItems(facing);
         if (BlackItemStacks.isEmpty()) {
             List<ItemStack> WhiteItemStacks = transportConductor.getWhiteListItems(facing);
             if (!WhiteItemStacks.isEmpty()) {
                 for (ItemStack stack1 : WhiteItemStacks) {
-                    if (stack1.isItemEqual(stack)) {
+                    if (ModUtils.checkItemEquality(stack1, stack)) {
                         return true;
                     }
 
@@ -256,7 +251,7 @@ public class TransportNetLocal {
             return true;
         } else {
             for (ItemStack stack1 : BlackItemStacks) {
-                if (stack1.isItemEqual(stack)) {
+                if (ModUtils.checkItemEquality(stack1, stack)) {
                     return false;
                 }
 
@@ -265,7 +260,7 @@ public class TransportNetLocal {
         return true;
     }
 
-    public boolean canInsertOrExtract(ITransportConductor transportConductor, FluidStack stack, EnumFacing facing) {
+    public boolean canInsertOrExtract(ITransportConductor transportConductor, FluidStack stack, Direction facing) {
         List<FluidStack> BlackItemStacks = transportConductor.getBlackListFluids(facing);
         if (BlackItemStacks.isEmpty()) {
             List<FluidStack> WhiteItemStacks = transportConductor.getWhiteListFluids(facing);
@@ -349,7 +344,7 @@ public class TransportNetLocal {
                         path.end.setMax(transferredAmount);
                         path.first.setMax(transferredAmount);
                         if (transferredAmount > 0) {
-                            ItemStack drawnStack = currentItem.splitStack(transferredAmount);
+                            ItemStack drawnStack = currentItem.split(transferredAmount);
                             transportSource.draw(drawnStack, indices.get(i), path.firstSide);
                         }
 
@@ -365,15 +360,15 @@ public class TransportNetLocal {
         }
     }
 
-    public TileEntity getTileFromITransport(ITransportTile tile) {
+    public BlockEntity getTileFromITransport(ITransportTile tile) {
         if (tile == null) {
             return null;
         }
-        if (tile instanceof TileEntity) {
-            return (TileEntity) tile;
+        if (tile instanceof BlockEntity) {
+            return (BlockEntity) tile;
         }
 
-        return this.world.getTileEntity(tile.getBlockPos());
+        return this.world.getBlockEntity(tile.getPos());
     }
 
     public Tuple<List<Path>, LinkedList<ITransportConductor>> discover(
@@ -426,7 +421,7 @@ public class TransportNetLocal {
         for (Path energyPath : energyPaths) {
             ITransportTile tileEntity = energyPath.target;
 
-            EnumFacing energyBlockLink = energyPath.targetDirection;
+            Direction energyBlockLink = energyPath.targetDirection;
             tileEntity = (ITransportTile) tileEntity.getTiles().get(energyBlockLink);
             if (!(tileEntity instanceof ITransportConductor)) {
                 continue;
@@ -454,7 +449,7 @@ public class TransportNetLocal {
                 }
             }
             if (energyPath.first != null) {
-                energyPath.firstSide = ModUtils.getFacingFromTwoPositions(emitter.getBlockPos(), energyPath.first.getBlockPos());
+                energyPath.firstSide = ModUtils.getFacingFromTwoPositions(emitter.getPos(), energyPath.first.getPos());
             }
         }
         return new Tuple<>(energyPaths, set);
@@ -483,11 +478,11 @@ public class TransportNetLocal {
                 if (tick.getSource().getValidReceivers().isEmpty() || tick.getSource().getTiles().isEmpty() || tick
                         .getSource()
                         .getTileEntity()
-                        .isInvalid()) {
+                        .isRemoved()) {
                     delete.add(tick.getSource());
                     continue;
                 }
-                if (this.world.getWorldTime() % 2L == 0L) {
+                if (this.world.getGameTime() % 2L == 0L) {
                     if (tick.getSource().isItem()) {
                         ITransportSource<ItemStack, IItemHandler> entry = (ITransportSource<ItemStack, IItemHandler>) tick.getSource();
 
@@ -496,7 +491,7 @@ public class TransportNetLocal {
                             if (tick.getEnergyItemPaths() == null) {
 
                                 Tuple<List<Path>, LinkedList<ITransportConductor>> tuple = discover(entry);
-                                final List<Path> list = tuple.getFirst();
+                                final List<Path> list = tuple.getA();
                                 final List<Path> removePath = new LinkedList<>();
                                 for (Path transportPaths : list) {
 
@@ -516,6 +511,10 @@ public class TransportNetLocal {
                                         removePath.add(transportPaths);
                                         continue;
                                     }
+                                    if (!transportPaths.first.isItem() || !transportPaths.end.isItem()) {
+                                        removePath.add(transportPaths);
+                                        continue;
+                                    }
                                     if (!transportPaths.end.isInput() && !transportPaths.end.isOutput()) {
                                         removePath.add(transportPaths);
                                         continue;
@@ -528,7 +527,7 @@ public class TransportNetLocal {
                                 }
                                 list.removeAll(removePath);
                                 tick.setItemList(list);
-                                tick.setConductors(tuple.getSecond());
+                                tick.setConductors(tuple.getB());
 
 
                             }
@@ -545,7 +544,7 @@ public class TransportNetLocal {
                     if (entry != null) {
                         if (tick.getEnergyFluidPaths() == null) {
                             Tuple<List<Path>, LinkedList<ITransportConductor>> tuple = discover(entry);
-                            final List<Path> list = tuple.getFirst();
+                            final List<Path> list = tuple.getA();
                             final List<Path> removePath = new LinkedList<>();
                             for (Path transportPaths : list) {
 
@@ -569,6 +568,10 @@ public class TransportNetLocal {
                                     removePath.add(transportPaths);
                                     continue;
                                 }
+                                if (transportPaths.first.isItem() || transportPaths.end.isItem()) {
+                                    removePath.add(transportPaths);
+                                    continue;
+                                }
                                 if (!(tick.getSource().getHandler(transportPaths.firstSide) instanceof IFluidHandler)) {
                                     removePath.add(transportPaths);
                                     continue;
@@ -578,7 +581,7 @@ public class TransportNetLocal {
                             }
                             list.removeAll(removePath);
                             tick.setFluidList(list);
-                            tick.setConductors(tuple.getSecond());
+                            tick.setConductors(tuple.getB());
                         }
                         if (!tick.getEnergyFluidPaths().isEmpty()) {
 
@@ -614,21 +617,21 @@ public class TransportNetLocal {
             }
             IFluidHandler handler = TransportPath.getFluidHandler();
             for (FluidStack fluidStack : list) {
-                if (!canInsertOrExtract(TransportPath.first, fluidStack, TransportPath.firstSide.getOpposite())) {
+                if (!canInsertOrExtract(TransportPath.first, fluidStack, TransportPath.firstSide)) {
                     continue;
                 }
-                if (!canInsertOrExtract(TransportPath.end, fluidStack, TransportPath.targetDirection.getOpposite())) {
+                if (!canInsertOrExtract(TransportPath.end, fluidStack, TransportPath.targetDirection)) {
                     continue;
                 }
-                if (fluidStack.amount <= 0) {
+                if (fluidStack.getAmount() <= 0) {
                     continue;
                 }
-                int amount = handler.fill(fluidStack, false);
+                int amount = handler.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
                 amount = Math.min(amount, Math.min(TransportPath.first.getMax(tick), TransportPath.end.getMax(tick)));
                 fluidStack = fluidStack.copy();
-                fluidStack.amount = amount;
+                fluidStack.setAmount(amount);
                 if (amount > 0) {
-                    handler.fill(fluidStack, true);
+                    handler.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                     TransportPath.first.setMax(amount);
                     TransportPath.end.setMax(amount);
                     TransportSource.draw(fluidStack, amount, TransportPath.firstSide);

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileBioMultiMachine;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerBioMultiMachine extends ContainerFullInv<TileBioMultiMachine> {
 
-    public ContainerBioMultiMachine(EntityPlayer entityPlayer, TileBioMultiMachine tileEntity1, int sizeWorkingSlot) {
+    public ContainerBioMultiMachine(Player entityPlayer, TileBioMultiMachine tileEntity1, int sizeWorkingSlot) {
         super(entityPlayer, tileEntity1, 166);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             int xDisplayPosition1 = 80 + (32 - sizeWorkingSlot) * i - sizeWorkingSlot * 10;
@@ -34,7 +34,7 @@ public class ContainerBioMultiMachine extends ContainerFullInv<TileBioMultiMachi
     }
 
     public ContainerBioMultiMachine(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileBioMultiMachine tileEntity1,
             int sizeWorkingSlot,
             boolean jei

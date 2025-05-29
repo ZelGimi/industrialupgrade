@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerCombinerSE extends ContainerFullInv<TileEntityCombinerSEGenerators> {
 
-    public ContainerCombinerSE(EntityPlayer entityPlayer, TileEntityCombinerSEGenerators tileEntity1) {
+    public ContainerCombinerSE(Player entityPlayer, TileEntityCombinerSEGenerators tileEntity1) {
         super(entityPlayer, tileEntity1, 202);
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot, i, 152, 28 + i * 18));

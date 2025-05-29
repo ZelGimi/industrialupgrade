@@ -13,8 +13,8 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockPrimalSiliconCrystalHandler;
 import com.denfop.componets.ComponentTimer;
-import com.denfop.container.ContainerSiliconCrystalHandler;
 import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.items.resource.ItemDust;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -23,19 +23,19 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -50,11 +50,10 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
     public final InvSlotUpgrade upgradeSlot;
     public int col;
     private MachineRecipe output;
-    private int level;
     private boolean checkState;
 
-    public TileEntityPrimalSiliconCrystalHandler() {
-        super(0, 0, 1);
+    public TileEntityPrimalSiliconCrystalHandler(BlockPos pos, BlockState state) {
+        super(0, 0, 1, BlockPrimalSiliconCrystalHandler.primal_silicon_crystal_handler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InvSlotRecipes(this, "silicon_recipe", this) {
             @Override
@@ -65,7 +64,6 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
 
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 12, 30)));
-        this.level = 0;
     }
 
     @Override
@@ -94,43 +92,30 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
 
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             inputSlotA.load();
-            this.getOutput();
+
         }
         this.output = inputSlotA.process();
+        if (this.output == null)
+            this.timer.resetTime();
     }
 
 
     @Override
     public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+            final Player player,
+            final InteractionHand hand,
+            final Direction side,
+            final Vec3 hitX
     ) {
-        ItemStack stack = player.getHeldItem(hand);
+        ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty() && outputSlot.isEmpty()) {
-            if (stack.getItem() == IUItem.iudust && stack.getItemDamage() == 60) {
+            if (stack.getItem() instanceof ItemDust<?> && IUItem.iudust.getMeta((ItemDust) stack.getItem()) == 60) {
                 if (this.inputSlotA.get(1).isEmpty()) {
                     final ItemStack stack1 = stack.copy();
                     if (stack1.getCount() > 3) {
@@ -139,17 +124,17 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
                     } else {
                         stack.shrink(stack1.getCount());
                     }
-                    this.inputSlotA.put(1, stack1);
-                    if (!world.isRemote) {
+                    this.inputSlotA.set(1, stack1);
+                    if (!level.isClientSide) {
                         getOutput();
                     }
                     return true;
-                } else if (!this.inputSlotA.get(1).isEmpty() && this.inputSlotA.get(1).isItemEqual(stack)) {
+                } else if (!this.inputSlotA.get(1).isEmpty() && this.inputSlotA.get(1).is(stack.getItem())) {
                     int minCount = 3 - this.inputSlotA.get(1).getCount();
                     minCount = Math.min(stack.getCount(), minCount);
                     this.inputSlotA.get(1).grow(minCount);
                     stack.grow(-minCount);
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         getOutput();
                     }
                     return true;
@@ -164,8 +149,8 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
                         } else {
                             stack.shrink(stack1.getCount());
                         }
-                        this.inputSlotA.put(0, stack1);
-                        if (!world.isRemote) {
+                        this.inputSlotA.set(0, stack1);
+                        if (!level.isClientSide) {
                             getOutput();
                         }
                         return true;
@@ -175,10 +160,10 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
             }
         } else {
             if (!outputSlot.isEmpty()) {
-                if (!world.isRemote) {
-                    ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
+                if (!level.isClientSide) {
+                    ModUtils.dropAsEntity(level, pos, outputSlot.get(0));
                 }
-                outputSlot.put(0, ItemStack.EMPTY);
+                outputSlot.set(0, ItemStack.EMPTY);
                 return true;
             }
 
@@ -202,7 +187,7 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.primalSiliconCrystal;
+        return IUItem.primalSiliconCrystal.getBlock();
     }
 
     @Override
@@ -217,21 +202,9 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
 
 
     @Override
-    public ContainerSiliconCrystalHandler getGuiContainer(final EntityPlayer var1) {
-        return null;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return null;
-    }
-
-
-    @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+        if (this.getWorld().getGameTime() % 20 == 0) {
             new PacketUpdateFieldTile(this, "timer", timer);
             checkState = false;
             ItemStack stack1 = this.inputSlotA.get(0);
@@ -277,7 +250,7 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
             }
         }
 
-        if (this.inputSlotA.get().isEmpty() || this.output == null || !this.outputSlot.get().isEmpty()) {
+        if (this.inputSlotA.get(0).isEmpty() || this.output == null || !this.outputSlot.get(0).isEmpty()) {
             this.timer.setCanWorkWithOut(false);
             return;
         }
@@ -319,23 +292,20 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
         return this.output;
     }
 
-    @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("level", this.level);
-        return nbttagcompound;
-    }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
 
         return ret;
     }
 
     @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
-        return super.hasCapability(capability, facing) && capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return LazyOptional.empty();
+        return super.getCapability(cap, facing);
     }
+
 
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -347,10 +317,6 @@ public class TileEntityPrimalSiliconCrystalHandler extends TileElectricMachine i
         }
     }
 
-    @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-    }
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {

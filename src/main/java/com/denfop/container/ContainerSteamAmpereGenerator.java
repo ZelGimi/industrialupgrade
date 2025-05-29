@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.steam.TileEntitySteamAmpereGenerator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSteamAmpereGenerator extends ContainerFullInv<TileEntitySteamAmpereGenerator> {
 
-    public ContainerSteamAmpereGenerator(EntityPlayer entityPlayer, TileEntitySteamAmpereGenerator tileEntityBaseHeatMachine) {
+    public ContainerSteamAmpereGenerator(Player entityPlayer, TileEntitySteamAmpereGenerator tileEntityBaseHeatMachine) {
         super(entityPlayer, tileEntityBaseHeatMachine, 166);
 
 

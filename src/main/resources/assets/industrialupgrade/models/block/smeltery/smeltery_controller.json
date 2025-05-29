@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/smeltery_controller_front",
-    "down" : "industrialupgrade:blocks/smeltery_controller_sides",
-    "up" : "industrialupgrade:blocks/smeltery_controller_sides",
-    "north" : "industrialupgrade:blocks/smeltery_controller_front",
-    "east" : "industrialupgrade:blocks/smeltery_controller_sides",
-    "south" : "industrialupgrade:blocks/smeltery_controller_sides",
-    "west" : "industrialupgrade:blocks/smeltery_controller_sides"
+    "particle" : "industrialupgrade:block/smeltery_controller_front",
+    "down" : "industrialupgrade:block/smeltery_controller_sides",
+    "up" : "industrialupgrade:block/smeltery_controller_sides",
+    "north" : "industrialupgrade:block/smeltery_controller_front",
+    "east" : "industrialupgrade:block/smeltery_controller_sides",
+    "south" : "industrialupgrade:block/smeltery_controller_sides",
+    "west" : "industrialupgrade:block/smeltery_controller_sides"
   }
 }

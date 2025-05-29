@@ -1,17 +1,18 @@
 package com.denfop.items.energy;
 
-import java.util.HashSet;
+import net.minecraft.tags.BlockTags;
 
 public class ItemNet extends ItemToolIU {
-
     public ItemNet() {
-        super("net", 0, 0, new HashSet<>());
-        this.efficiency = 1f;
+        super(0, 0, BlockTags.MINEABLE_WITH_AXE);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(name);
-    }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
 
+            this.nameItem = "iu.net";
+        }
+
+        return this.nameItem;
+    }
 }

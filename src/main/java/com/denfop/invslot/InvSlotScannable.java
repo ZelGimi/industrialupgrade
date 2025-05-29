@@ -6,7 +6,7 @@ import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.IRecipeInputStack;
 import com.denfop.api.recipe.RecipeInputStack;
 import com.denfop.tiles.base.TileScanner;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -32,14 +32,15 @@ public class InvSlotScannable extends InvSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (content.isEmpty()) {
             this.tile.recipe = null;
         } else {
             this.tile.recipe = Recipes.recipes.getRecipeOutput(this.recipe, this.recipes, false, content);
             this.tile.pattern = this.tile.recipe.output.items.get(0);
         }
+        return content;
     }
 
 }

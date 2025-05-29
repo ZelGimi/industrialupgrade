@@ -1,8 +1,9 @@
 package com.denfop.api.recipe;
 
+
 import com.denfop.api.Recipes;
 import com.denfop.recipe.IInputItemStack;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Arrays;
@@ -17,20 +18,13 @@ public class InputFluid implements IInputFluid {
     public InputFluid(FluidStack... inputs) {
         this.inputsfluid = Arrays.asList(inputs);
     }
-
-    public InputFluid(ItemStack stack) {
-        this.stack = Recipes.inputFactory.getInput(stack);
-        inputsfluid = Collections.emptyList();
-    }
-
     public InputFluid(String stack) {
         this.stack = Recipes.inputFactory.getInput(stack);
         inputsfluid = Collections.emptyList();
     }
-
-    public InputFluid(String stack, FluidStack... inputs) {
+    public InputFluid(ItemStack stack) {
         this.stack = Recipes.inputFactory.getInput(stack);
-        inputsfluid = Arrays.asList(inputs);
+        inputsfluid = Collections.emptyList();
     }
 
     public InputFluid(ItemStack stack, FluidStack... inputs) {

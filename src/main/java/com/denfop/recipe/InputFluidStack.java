@@ -1,66 +1,70 @@
 package com.denfop.recipe;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
+
+import com.denfop.utils.FluidHandlerFix;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.LoaderState;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class InputFluidStack implements IInputItemStack {
 
     private static volatile FluidHandlerInfo fluidHandlerInfo;
 
     static {
-        fluidHandlerInfo = new FluidHandlerInfo(Collections.emptyList(), LoaderState.PREINITIALIZATION);
+        fluidHandlerInfo = new FluidHandlerInfo(Collections.emptyList());
     }
 
     private final Fluid fluid;
     private final int amount;
 
-    InputFluidStack(Fluid fluid) {
+    public InputFluidStack(Fluid fluid) {
         this(fluid, 1000);
     }
 
-    InputFluidStack(Fluid fluid, int amount) {
+    public InputFluidStack(FluidStack fluid) {
+        this(fluid.getFluid(), fluid.getAmount());
+    }
+
+    public InputFluidStack(Fluid fluid, int amount) {
         this.fluid = fluid;
         this.amount = amount;
+    }
+
+    public InputFluidStack(FriendlyByteBuf buffer) {
+        this(buffer.readFluidStack());
     }
 
     public static List<ItemStack> getFluidContainer(Fluid fluid) {
         FluidHandlerInfo info = fluidHandlerInfo;
         ArrayList<ItemStack> ret;
         Iterator<Item> var3;
-        if (info.loaderState != LoaderState.AVAILABLE && info.loaderState != Loader.instance().getLoaderState()) {
-            ret = new ArrayList<>();
-            var3 = ForgeRegistries.ITEMS.iterator();
+        ret = new ArrayList<>();
+        var3 = ForgeRegistries.ITEMS.iterator();
 
-            while (var3.hasNext()) {
-                Item item = var3.next();
-                ItemStack stack = new ItemStack(item);
-                IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
-                if (handler != null) {
-                    handler.drain(Integer.MAX_VALUE, true);
-                    ItemStack container = handler.getContainer();
-                    if (FluidUtil.getFluidContained(container) == null) {
-                        ret.add(stack);
-                    }
+        while (var3.hasNext()) {
+            Item item = var3.next();
+            ItemStack stack = new ItemStack(item);
+            IFluidHandlerItem handler = FluidHandlerFix.getFluidHandler(stack);
+            if (handler != null) {
+                handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
+                ItemStack container = handler.getContainer();
+                if (FluidUtil.getFluidContained(container).orElse(null) == null) {
+                    ret.add(stack);
                 }
             }
-
-            LoaderState state = Loader.instance().hasReachedState(LoaderState.AVAILABLE)
-                    ? LoaderState.AVAILABLE
-                    : Loader.instance().getLoaderState();
-            fluidHandlerInfo = info = new FluidHandlerInfo(Collections.unmodifiableList(ret), state);
         }
+
+
+        fluidHandlerInfo = info = new FluidHandlerInfo(Collections.unmodifiableList(ret));
 
         if (fluid == null) {
             return info.items;
@@ -68,10 +72,10 @@ public class InputFluidStack implements IInputItemStack {
             ret = new ArrayList<>();
 
             for (final ItemStack stack : info.items) {
-                IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack.copy());
-                if (handler != null && handler.fill(new FluidStack(fluid, Integer.MAX_VALUE), true) > 0) {
+                IFluidHandlerItem handler = FluidHandlerFix.getFluidHandler(stack);
+                if (handler != null && handler.fill(new FluidStack(fluid, Integer.MAX_VALUE), IFluidHandler.FluidAction.EXECUTE) > 0) {
                     ItemStack container = handler.getContainer();
-                    if (FluidUtil.getFluidContained(container) != null) {
+                    if (!handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
                         ret.add(container);
                     }
                 }
@@ -82,21 +86,39 @@ public class InputFluidStack implements IInputItemStack {
     }
 
     public boolean matches(ItemStack subject) {
-        FluidStack fs = FluidUtil.getFluidContained(subject);
-        return fs == null && this.fluid == null || fs != null && fs.getFluid() == this.fluid && fs.amount >= this.amount;
+        Optional<FluidStack> fs1 = FluidUtil.getFluidContained(subject);
+        FluidStack fs = fs1.orElse(null);
+        return fs == null && this.fluid == null || fs != null && fs.getFluid() == this.fluid && fs.getAmount() >= this.amount;
     }
 
     public int getAmount() {
         return 1;
     }
 
-    @Override
-    public void growAmount(final int col) {
-
-    }
-
     public List<ItemStack> getInputs() {
         return getFluidContainer(this.fluid);
+    }
+
+    @Override
+    public boolean hasTag() {
+        return false;
+    }
+
+    @Override
+    public TagKey<Item> getTag() {
+        return null;
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buffer) {
+        buffer.writeInt(2);
+        buffer.writeFluidStack(new FluidStack(this.fluid, 1000));
+    }
+
+
+    @Override
+    public void growAmount(int count) {
+
     }
 
     public boolean equals(Object obj) {
@@ -107,11 +129,9 @@ public class InputFluidStack implements IInputItemStack {
     private static class FluidHandlerInfo {
 
         final List<ItemStack> items;
-        final LoaderState loaderState;
 
-        FluidHandlerInfo(List<ItemStack> items, LoaderState loaderState) {
+        FluidHandlerInfo(List<ItemStack> items) {
             this.items = items;
-            this.loaderState = loaderState;
         }
 
     }

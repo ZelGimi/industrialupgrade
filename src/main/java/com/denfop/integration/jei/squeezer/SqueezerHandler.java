@@ -3,8 +3,8 @@ package com.denfop.integration.jei.squeezer;
 
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -46,20 +46,20 @@ public class SqueezerHandler {
 
     public static void initRecipes() {
         addRecipe(
-                new ItemStack(IUItem.rawLatex),
-                new FluidStack(FluidName.fluidrawlatex.getInstance(), 100)
+                new ItemStack(IUItem.rawLatex.getItem()),
+                new FluidStack(FluidName.fluidrawlatex.getInstance().get(), 100)
         );
         addRecipe(
                 new ItemStack(Items.MELON_SEEDS),
-                new FluidStack(FluidName.fluidseedoil.getInstance(), 35)
+                new FluidStack(FluidName.fluidseedoil.getInstance().get(), 35)
         );
         addRecipe(
                 new ItemStack(Items.PUMPKIN_SEEDS),
-                new FluidStack(FluidName.fluidseedoil.getInstance(), 35)
+                new FluidStack(FluidName.fluidseedoil.getInstance().get(), 35)
         );
         addRecipe(
-                new ItemStack(IUItem.crops),
-                new FluidStack(FluidName.fluidseedoil.getInstance(), 50)
+                new ItemStack(IUItem.crops.getStack(0)),
+                new FluidStack(FluidName.fluidseedoil.getInstance().get(), 50)
         );
     }
 

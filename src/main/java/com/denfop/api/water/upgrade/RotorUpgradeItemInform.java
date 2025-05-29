@@ -2,7 +2,7 @@ package com.denfop.api.water.upgrade;
 
 import com.denfop.Localization;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
 
 public class RotorUpgradeItemInform {
 
@@ -31,31 +31,31 @@ public class RotorUpgradeItemInform {
             case STRENGTH_I:
             case STRENGTH_II:
             case STRENGTH_III:
-                return TextFormatting.YELLOW + Localization.translate("wind.strength_info") + TextFormatting.GREEN + ModUtils.getString(
+                return ChatFormatting.YELLOW + Localization.translate("wind.strength_info") + ChatFormatting.GREEN + ModUtils.getString(
                         (this.upgrade.getCoef() * this.number) * 100) + "%";
             case POWER_I:
             case POWER_II:
             case POWER_III:
-                return TextFormatting.AQUA + Localization.translate("wind.power_info") + TextFormatting.GREEN + ModUtils.getString(
+                return ChatFormatting.AQUA + Localization.translate("wind.power_info") + ChatFormatting.GREEN + ModUtils.getString(
                         this.upgrade.getCoef() * this.number * 100) + "%";
             case EFFICIENCY_I:
             case EFFICIENCY_II:
             case EFFICIENCY_III:
-                return TextFormatting.GOLD + Localization.translate("wind.efficiency_info") + TextFormatting.GREEN + ModUtils.getString(
+                return ChatFormatting.GOLD + Localization.translate("wind.efficiency_info") + ChatFormatting.GREEN + ModUtils.getString(
                         this.upgrade.getCoef() * this.number * 100) + "%";
             case AUTO:
-                return TextFormatting.LIGHT_PURPLE + Localization.translate("water.auto_info");
+                return ChatFormatting.LIGHT_PURPLE + Localization.translate("water.auto_info");
             case WIND_I:
             case WIND_II:
             case WIND_III:
-                return TextFormatting.BLUE + Localization.translate("water.water_speed_info") + TextFormatting.GREEN + (int) this.upgrade.getCoef() + " m/s";
+                return ChatFormatting.BLUE + Localization.translate("water.water_speed_info") + ChatFormatting.GREEN + (int) this.upgrade.getCoef() + " m/s";
             case REPAIR_II:
             case REPAIR_I:
             case REPAIR_III:
-                return TextFormatting.DARK_PURPLE + Localization.translate("wind.rotor_repair_info") + TextFormatting.GREEN + (int) this.upgrade.getCoef() + " " + Localization.translate(
+                return ChatFormatting.DARK_PURPLE + Localization.translate("wind.rotor_repair_info") + ChatFormatting.GREEN + (int) this.upgrade.getCoef() + " " + Localization.translate(
                         "iu.seconds");
             case OCEAN:
-                return TextFormatting.LIGHT_PURPLE + Localization.translate("water.ocean_info");
+                return ChatFormatting.LIGHT_PURPLE + Localization.translate("water.ocean_info");
 
 
         }

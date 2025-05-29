@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:water_reactors/water_imp_tank"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_405_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_396_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_50_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_398_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    "EAE",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:water_reactors/water_per_tank"
+  },
+  "show_notification": true
+}

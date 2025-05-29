@@ -1,12 +1,12 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityNeutronSeparator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerNeutronSeparator extends ContainerFullInv<TileEntityNeutronSeparator> {
 
 
-    public ContainerNeutronSeparator(final EntityPlayer player, final TileEntityNeutronSeparator base) {
+    public ContainerNeutronSeparator(final Player player, final TileEntityNeutronSeparator base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.outputSlot, 0, 100, 35));

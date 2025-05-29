@@ -12,12 +12,11 @@ import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.utils.Timer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +30,8 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
     public Energy energy;
     public BlockPos AntennaMasPos;
 
-    public TileEntityLightningRodController() {
-        super(InitMultiBlockSystem.LightningRodMultiBlock);
+    public TileEntityLightningRodController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.LightningRodMultiBlock,BlockLightningRod.lightning_rod_controller,pos,state);
         this.energy = this.addComponent(Energy.asBasicSource(this, 500000, 2));
         this.timer = new Timer(0, 5, 0);
         this.componentTimer = this.addComponent(new ComponentTimer(this, timer));
@@ -40,17 +39,14 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
 
     }
 
-    @SubscribeEvent
-    public void onLightningStrike(EntityStruckByLightningEvent event) {
 
-    }
 
     @Override
-    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final Level world) {
         for (int x = -7; x <= 7; x++) {
             for (int z = -7; z <= 7; z++) {
                 for (int y = -14; y <= 14; y++) {
-                    TileEntity tile = world.getTileEntity(pos.add(x, y, z));
+                    BlockEntity tile = world.getBlockEntity(pos.offset(x, y, z));
                     if (tile instanceof TileEntityLightningRodController || tile instanceof IBase) {
                         return false;
                     }
@@ -63,7 +59,7 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             return;
         }
         controllerMap.put(this.getPos(), this);
@@ -72,7 +68,7 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             return;
         }
         controllerMap.remove(this.getPos());
@@ -88,7 +84,7 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.lightning_rod;
+        return IUItem.lightning_rod.getBlock(getTeBlock());
     }
 
     @Override
@@ -97,7 +93,7 @@ public class TileEntityLightningRodController extends TileMultiBlockBase impleme
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
 
     }
 

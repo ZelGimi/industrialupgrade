@@ -1,12 +1,15 @@
 package com.denfop.api.crafting;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RecipeGrid {
 
 
     private final List<List<String>> grids;
+    private List<Character> charactersList;
     private int x2;
     private int y2;
     private int index;
@@ -18,7 +21,17 @@ public class RecipeGrid {
         while (3 - args.size() > 0) {
             args.add("   ");
         }
+        Set<Character> characters = new HashSet<>();
 
+        for (String s : args) {
+            for (char c : s.toCharArray()) {
+                if (c != ' ') {
+                    characters.add(c);
+                }
+            }
+        }
+
+        this.charactersList = new ArrayList<>(characters);
 
         for (int i = 0; i < 3; i++) {
             final StringBuilder stringBuilder = new StringBuilder(args.get(i));
@@ -175,6 +188,10 @@ public class RecipeGrid {
             hasTwoY = hasTwoY || yEmpty;
         }
         grids = list;
+    }
+
+    public List<Character> getCharactersList() {
+        return charactersList;
     }
 
     public boolean isHasTwoX() {

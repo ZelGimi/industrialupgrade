@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/water_barionrotor"
+    "layer0" : "industrialupgrade:item/water_barionrotor"
   }
 }

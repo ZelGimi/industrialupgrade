@@ -7,48 +7,48 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCokeOven;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class TileEntityCokeOvenInputItem extends TileEntityMultiBlockElement implements IInputItem {
 
 
+    public TileEntityCokeOvenInputItem( BlockPos pos, BlockState state) {
+        super(BlockCokeOven.coke_oven_input, pos, state);
+    }
+
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
 
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
 
     }
 
     @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
-        if (this.getMain() != null) {
-            return ((TileMultiBlockBase) this.getMain()).hasCapability(capability, facing);
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+        if (this.getMain() != null){
+            return ((TileMultiBlockBase) this.getMain()).getCapability(cap, facing);
         }
-        return super.hasCapability(capability, facing);
+            return super.getCapability(cap, facing);
     }
 
-    @Override
-    public <T> T getCapability(@NotNull final Capability<T> capability, final EnumFacing facing) {
-        if (this.getMain() != null) {
-            return ((TileMultiBlockBase) this.getMain()).getCapability(capability, facing);
-        }
-        return super.getCapability(capability, facing);
-    }
+
+
 
     public IMultiTileBlock getTeBlock() {
         return BlockCokeOven.coke_oven_input;
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.cokeoven;
+        return IUItem.cokeoven.getBlock(getTeBlock());
     }
 
 }

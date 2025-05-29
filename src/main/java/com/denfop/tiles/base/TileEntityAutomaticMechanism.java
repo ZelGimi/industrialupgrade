@@ -1,36 +1,35 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerAutomaticMechanism;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.SlotInfo;
 import com.denfop.gui.GuiAutomaticMechanism;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.HandlerInventory;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denfop.utils.ModUtils.getItemHandler;
 
@@ -38,41 +37,43 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
 
     public final SlotInfo slot;
     public final InvSlot slotOI;
-    public final Map<EnumFacing, HandlerInventory> iItemHandlerMap = new HashMap<>();
+    public final Map<Direction, HandlerInventory> iItemHandlerMap = new HashMap<>();
     public final Map<IItemHandler, Integer> slotHandler = new HashMap<>();
     private final IItemHandler main_handler;
-    public Map<EnumFacing, Upgrade> typeUpgradeMap = new HashMap<>();
-    public Map<EnumFacing, List<ItemStack>> extract = new HashMap<>();
-    public Map<EnumFacing, List<ItemStack>> pulling = new HashMap<>();
+    public Map<Direction, Upgrade> typeUpgradeMap = new HashMap<>();
+    public Map<Direction, List<ItemStack>> extract = new HashMap<>();
+    public Map<Direction, List<ItemStack>> pulling = new HashMap<>();
     private int type = 0;
     private boolean put = false;
 
-    public TileEntityAutomaticMechanism() {
-
+    public TileEntityAutomaticMechanism(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.automatic_mechanism,pos,state);
         this.slot = new SlotInfo(this, 36, false) {
             @Override
-            public void put(final int index, final ItemStack stack) {
-                super.put(index, stack);
+            public ItemStack set(final int index, final ItemStack stack) {
+                super.set(index, stack);
                 ((TileEntityAutomaticMechanism) this.base).updateList();
+                return stack;
             }
         };
         this.slotOI = new InvSlot(this, InvSlot.TypeItemSlot.INPUT_OUTPUT, 24) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 put = true;
+                return content;
             }
         };
-        for (EnumFacing facing1 : EnumFacing.VALUES) {
+        for (Direction facing1 : Direction.values()) {
             typeUpgradeMap.put(facing1, Upgrade.NONE);
         }
-        main_handler = this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.getFacing());
+        main_handler = this.getCapability(ForgeCapabilities.ITEM_HANDLER, this.getFacing()).orElse(null);
     }
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
-        for (EnumFacing facing1 : EnumFacing.VALUES) {
+        for (Direction facing1 : Direction.values()) {
             customPacketBuffer.writeInt(this.typeUpgradeMap.get(facing1).ordinal());
         }
         return customPacketBuffer;
@@ -82,26 +83,26 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
 
-        for (EnumFacing facing1 : EnumFacing.VALUES) {
+        for (Direction facing1 : Direction.values()) {
             this.typeUpgradeMap.replace(facing1, Upgrade.values()[customPacketBuffer.readInt()]);
         }
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         this.typeUpgradeMap.clear();
-        for (EnumFacing facing1 : EnumFacing.VALUES) {
-            this.typeUpgradeMap.put(facing1, Upgrade.values()[nbtTagCompound.getInteger(facing1.name().toLowerCase())]);
+        for (Direction facing1 : Direction.values()) {
+            this.typeUpgradeMap.put(facing1, Upgrade.values()[nbtTagCompound.getInt(facing1.name().toLowerCase())]);
 
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         nbt = super.writeToNBT(nbt);
-        for (EnumFacing facing1 : this.typeUpgradeMap.keySet()) {
-            nbt.setInteger(facing1.name().toLowerCase(), this.typeUpgradeMap.get(facing1).ordinal());
+        for (Direction facing1 : this.typeUpgradeMap.keySet()) {
+            nbt.putInt(facing1.name().toLowerCase(), this.typeUpgradeMap.get(facing1).ordinal());
         }
         return nbt;
     }
@@ -109,7 +110,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.world.isRemote) {
+        if (!this.level.isClientSide) {
             this.updateList();
         }
     }
@@ -117,21 +118,21 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.world.provider.getWorldTime() % 20 == 0) {
+        if (this.level.getGameTime() % 20 == 0) {
             this.iItemHandlerMap.clear();
             slotHandler.clear();
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                BlockPos pos = this.getPos().offset(facing);
-                final TileEntity tile1 = this.getWorld().getTileEntity(pos);
+            for (Direction facing : Direction.values()) {
+                BlockPos pos = this.getPos().offset(facing.getNormal());
+                final BlockEntity tile1 = this.getWorld().getBlockEntity(pos);
                 final IItemHandler handler = getItemHandler(tile1, facing.getOpposite());
-                if (!(tile1 instanceof IInventory)) {
+                if (!(tile1 instanceof Container)) {
                     if (handler == null) {
                         this.iItemHandlerMap.put(facing, null);
                     } else {
                         this.iItemHandlerMap.put(facing, new HandlerInventory(handler, null));
                     }
                 } else {
-                    this.iItemHandlerMap.put(facing, new HandlerInventory(handler, (IInventory) tile1));
+                    this.iItemHandlerMap.put(facing, new HandlerInventory(handler, (Container) tile1));
                 }
 
                 if (handler != null) {
@@ -140,9 +141,9 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
             }
 
         }
-        if (this.world.provider.getWorldTime() % 3 == 0) {
+        if (this.level.getGameTime() % 3 == 0) {
 
-            for (Map.Entry<EnumFacing, Upgrade> enumFacingTypeUpgradeEntry : this.typeUpgradeMap.entrySet()) {
+            for (Map.Entry<Direction, Upgrade> enumFacingTypeUpgradeEntry : this.typeUpgradeMap.entrySet()) {
                 switch (enumFacingTypeUpgradeEntry.getValue()) {
                     case EXTRACT:
                         this.tick(enumFacingTypeUpgradeEntry.getKey());
@@ -159,7 +160,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
         }
     }
 
-    private void tickPullIn(EnumFacing facing) {
+    private void tickPullIn(Direction facing) {
         List<ItemStack> itemStackList = this.pulling.getOrDefault(facing, Collections.emptyList());
         if (facing != null) {
 
@@ -203,7 +204,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
 
                                         if (input.isEmpty()) {
                                             if (invSlot.add(output)) {
-                                                slot.put(j, ItemStack.EMPTY);
+                                                slot.set(j, ItemStack.EMPTY);
                                                 output = ItemStack.EMPTY;
                                             }
                                         } else {
@@ -234,7 +235,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                     boolean find = false;
                                     if (!itemStackList.isEmpty()) {
                                         for (ItemStack stack : itemStackList) {
-                                            if (stack.isItemEqual(output)) {
+                                            if (stack.is(output.getItem())) {
                                                 find = true;
                                                 break;
                                             }
@@ -248,12 +249,12 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                     if (input.isEmpty()) {
                                         if (invSlot.accepts(output, j)) {
                                             if (invSlot.add(output)) {
-                                                slot.put(jj, ItemStack.EMPTY);
+                                                slot.set(jj, ItemStack.EMPTY);
                                                 output = ItemStack.EMPTY;
                                             }
                                         }
                                     } else {
-                                        if (!output.isItemEqual(input)) {
+                                        if (!output.is(input.getItem())) {
                                             continue;
                                         }
                                         int maxCount = Math.min(
@@ -283,7 +284,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                         boolean find = false;
                         if (!itemStackList.isEmpty()) {
                             for (ItemStack stack : itemStackList) {
-                                if (stack.isItemEqual(took)) {
+                                if (stack.is(took.getItem())) {
                                     find = true;
                                     break;
                                 }
@@ -309,7 +310,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
         }
     }
 
-    private void tick(EnumFacing facing) {
+    private void tick(Direction facing) {
         List<ItemStack> itemStackList = this.extract.getOrDefault(facing, Collections.emptyList());
         if (facing != null) {
 
@@ -333,7 +334,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                             boolean find = false;
                             if (!itemStackList.isEmpty()) {
                                 for (ItemStack stack : itemStackList) {
-                                    if (stack.isItemEqual(output)) {
+                                    if (stack.is(output.getItem())) {
                                         find = true;
                                         break;
                                     }
@@ -351,7 +352,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
 
                                     if (input.isEmpty()) {
                                         if (invSlot.add(output)) {
-                                            slot.put(j, ItemStack.EMPTY);
+                                            slot.set(j, ItemStack.EMPTY);
                                             output = ItemStack.EMPTY;
                                         }
                                     } else {
@@ -383,7 +384,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                 boolean find = false;
                                 if (!itemStackList.isEmpty()) {
                                     for (ItemStack stack : itemStackList) {
-                                        if (stack.isItemEqual(output)) {
+                                        if (stack.is(output.getItem())) {
                                             find = true;
                                             break;
                                         }
@@ -395,12 +396,12 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                                 if (input.isEmpty()) {
                                     if (invSlot.accepts(output, j)) {
                                         if (invSlot.add(output)) {
-                                            slot.put(jj, ItemStack.EMPTY);
+                                            slot.set(jj, ItemStack.EMPTY);
                                             output = ItemStack.EMPTY;
                                         }
                                     }
                                 } else {
-                                    if (!output.isItemEqual(input)) {
+                                    if (!output.is(input.getItem())) {
                                         continue;
                                     }
                                     int maxCount = Math.min(
@@ -433,7 +434,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                         boolean find = false;
                         if (!itemStackList.isEmpty()) {
                             for (ItemStack stack : itemStackList) {
-                                if (stack.isItemEqual(took)) {
+                                if (stack.is(took.getItem())) {
                                     find = true;
                                     break;
                                 }
@@ -444,7 +445,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                         }
                         final ItemStack stack = insertItem1(handler, took, true, slots);
                         if (stack.isEmpty()) {
-                            slot.put(j, ItemStack.EMPTY);
+                            slot.set(j, ItemStack.EMPTY);
                             insertItem1(handler, took, false, slots);
                         } else if (stack != took) {
                             int col = slot.get(j).getCount() - stack.getCount();
@@ -466,7 +467,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                         boolean find = false;
                         if (!itemStackList.isEmpty()) {
                             for (ItemStack stack : itemStackList) {
-                                if (stack.isItemEqual(took)) {
+                                if (stack.is(took.getItem())) {
                                     find = true;
                                     break;
                                 }
@@ -478,7 +479,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                         took = took.copy();
                         final ItemStack stack = ModUtils.insertItem(handler.getHandler(), took, true, slots);
                         if (stack.isEmpty()) {
-                            slot.put(j, ItemStack.EMPTY);
+                            slot.set(j, ItemStack.EMPTY);
                             ModUtils.insertItem(handler.getHandler(), took, false, slots);
                         } else if (stack != took) {
                             int col = slot.get(j).getCount() - stack.getCount();
@@ -517,11 +518,11 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
     }
 
     public boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
-        if (a.isEmpty() || !a.isItemEqual(b) || a.hasTagCompound() != b.hasTagCompound()) {
+        if (a.isEmpty() || !a.is(b.getItem()) || a.hasTag() != b.hasTag()) {
             return false;
         }
 
-        return (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
+        return (!a.hasTag() || a.getTag().equals(b.getTag()));
     }
 
     @Nonnull
@@ -531,10 +532,10 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
         }
 
         final IItemHandler dest = dest1.getHandler();
-        final IInventory inventory = dest1.getInventory();
+        final Container inventory = dest1.getInventory();
         ItemStack stackInSlot;
         try {
-            stackInSlot = inventory.getStackInSlot(slot);
+            stackInSlot = inventory.getItem(slot);
         } catch (ArrayIndexOutOfBoundsException e) {
             stackInSlot = dest.getStackInSlot(slot);
         }
@@ -549,7 +550,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
             if (simulate) {
 
 
-                if (!inventory.isItemValidForSlot(slot, stack)) {
+                if (!inventory.canPlaceItem(slot, stack)) {
                     return stack;
                 }
             }
@@ -565,16 +566,16 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
                 if (!simulate) {
                     ItemStack copy = stack.copy();
                     copy.grow(stackInSlot.getCount());
-                    inventory.setInventorySlotContents(slot, copy);
+                    inventory.setItem(slot, copy);
                     return ItemStack.EMPTY;
                 }
                 return ItemStack.EMPTY;
             } else {
                 stack = stack.copy();
                 if (!simulate) {
-                    ItemStack copy = stack.splitStack(m);
+                    ItemStack copy = stack.split(m);
                     copy.grow(stackInSlot.getCount());
-                    inventory.setInventorySlotContents(slot, copy);
+                    inventory.setItem(slot, copy);
                     return stack;
                 } else {
                     stack.shrink(m);
@@ -584,21 +585,21 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
         } else {
 
 
-            if (!inventory.isItemValidForSlot(slot, stack)) {
+            if (!inventory.canPlaceItem(slot, stack)) {
                 return stack;
             }
             m = Math.min(stack.getMaxStackSize(), dest.getSlotLimit(slot));
             if (m < stack.getCount()) {
                 stack = stack.copy();
                 if (!simulate) {
-                    inventory.setInventorySlotContents(slot, stack.splitStack(m));
+                    inventory.setItem(slot, stack.split(m));
 
                 }
                 return stack;
             } else {
                 if (!simulate) {
                     try {
-                        inventory.setInventorySlotContents(slot, stack);
+                        inventory.setItem(slot, stack);
                     } catch (ArrayIndexOutOfBoundsException e) {
                         dest.insertItem(slot, stack, false);
                     }
@@ -613,19 +614,19 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
 
 
     @Override
-    public ContainerAutomaticMechanism getGuiContainer(final EntityPlayer var1) {
+    public ContainerAutomaticMechanism getGuiContainer(final Player var1) {
         return new ContainerAutomaticMechanism(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiAutomaticMechanism(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiAutomaticMechanism((ContainerAutomaticMechanism) menu);
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -636,7 +637,7 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
     private void updateList() {
         extract.clear();
         pulling.clear();
-        for (EnumFacing facing1 : EnumFacing.VALUES) {
+        for (Direction facing1 : Direction.values()) {
             Upgrade upgrade = this.typeUpgradeMap.get(facing1);
             if (upgrade == Upgrade.NONE) {
                 continue;
@@ -670,10 +671,10 @@ public class TileEntityAutomaticMechanism extends TileEntityInventory implements
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
-        Upgrade typeUpgrade = this.typeUpgradeMap.get(EnumFacing.VALUES[(int) var2]);
+    public void updateTileServer(final Player var1, final double var2) {
+        Upgrade typeUpgrade = this.typeUpgradeMap.get(Direction.values()[(int) var2]);
         Upgrade newTypeUpgrade = Upgrade.values()[(typeUpgrade.ordinal() + 1) % 4];
-        this.typeUpgradeMap.replace(EnumFacing.VALUES[(int) var2], newTypeUpgrade);
+        this.typeUpgradeMap.replace(Direction.values()[(int) var2], newTypeUpgrade);
         this.updateList();
     }
 

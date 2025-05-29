@@ -1,39 +1,30 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
-import com.denfop.api.reactors.CreativeReactor;
-import com.denfop.api.reactors.EnumReactors;
-import com.denfop.api.reactors.EnumTypeComponent;
-import com.denfop.api.reactors.EnumTypeSecurity;
-import com.denfop.api.reactors.IReactorItem;
-import com.denfop.api.reactors.ITypeRector;
-import com.denfop.api.reactors.LogicCreativeFluidReactor;
-import com.denfop.api.reactors.LogicCreativeGasReactor;
-import com.denfop.api.reactors.LogicCreativeGraphiteReactor;
-import com.denfop.api.reactors.LogicCreativeHeatReactor;
-import com.denfop.api.reactors.LogicCreativeReactor;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.reactors.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSimulationReactors;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSimulationReactors;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotSimulatorReactor;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.items.reactors.ItemComponentVent;
-import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -44,10 +35,10 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     public final InvSlotSimulatorReactor invSlot;
     public final InvSlot scheduleSlot;
     public int type = -1;
-    public int level = -1;
+    public int levelReactor = -1;
     public EnumReactors reactors;
     public CreativeReactor reactor;
-    public boolean work;
+    public boolean work = true;
     public boolean explode;
     public LogicCreativeReactor logicReactor;
     public double output;
@@ -56,8 +47,8 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     public EnumTypeSecurity security;
     private boolean needUpdate = false;
 
-    public TileEntitySimulatorReactor() {
-
+    public TileEntitySimulatorReactor(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.simulation_reactors,pos,state);
         this.invSlot = new InvSlotSimulatorReactor(this, InvSlot.TypeItemSlot.INPUT, 80) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -69,21 +60,21 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
                     case HIGH_SOLID:
                         if (stack.getItem() instanceof IReactorItem) {
                             IReactorItem iReactorItem = (IReactorItem) stack.getItem();
-                            return level >= iReactorItem.getLevel();
+                            return levelReactor >= iReactorItem.getLevel();
                         } else {
                             return false;
                         }
                     case GAS_COOLING_FAST:
                         if (stack.getItem() instanceof IReactorItem) {
                             IReactorItem iReactorItem = (IReactorItem) stack.getItem();
-                            return level >= iReactorItem.getLevel() && (iReactorItem.getType() != EnumTypeComponent.HEAT_SINK || (stack.getItem() instanceof ItemComponentVent));
+                            return levelReactor >= iReactorItem.getLevel() && (iReactorItem.getType() != EnumTypeComponent.HEAT_SINK || (stack.getItem() instanceof ItemComponentVent));
                         } else {
                             return false;
                         }
                     case GRAPHITE_FLUID:
                         if (stack.getItem() instanceof IReactorItem) {
                             IReactorItem iReactorItem = (IReactorItem) stack.getItem();
-                            return level >= iReactorItem.getLevel() && (iReactorItem.getType() != EnumTypeComponent.HEAT_EXCHANGER);
+                            return levelReactor >= iReactorItem.getLevel() && (iReactorItem.getType() != EnumTypeComponent.HEAT_EXCHANGER);
                         } else {
                             return false;
                         }
@@ -92,8 +83,8 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 needUpdate = true;
                 switch (reactors.getType()) {
                     case FLUID:
@@ -109,13 +100,14 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
                         logicReactor = new LogicCreativeHeatReactor(reactor);
                         break;
                 }
+                return content;
             }
         };
         this.reactor = new CreativeReactor(this.reactors, invSlot);
         this.scheduleSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() == 143;
+                return stack.getItem() instanceof ItemCraftingElements && ((ItemCraftingElements<?>) stack.getItem()).getElement().getId() == 143;
             }
 
             @Override
@@ -125,11 +117,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
         };
     }
 
-    @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
 
-        return super.hasCapability(capability, facing);
-    }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -141,7 +129,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
         this.heat = customPacketBuffer.readDouble();
         this.security = EnumTypeSecurity.values()[customPacketBuffer.readInt()];
         this.type = customPacketBuffer.readInt();
-        this.level = customPacketBuffer.readInt();
+        this.levelReactor = customPacketBuffer.readInt();
         try {
             this.reactor.timer.readBuffer(customPacketBuffer);
         } catch (IOException e) {
@@ -153,10 +141,10 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         type = customPacketBuffer.readInt();
-        level = customPacketBuffer.readInt();
-        if (level != -1 && type != -1) {
-            this.reactors = EnumReactors.values()[(type - 1) * 4 + (level - 1)];
-            this.reactor.level = this.level;
+        levelReactor = customPacketBuffer.readInt();
+        if (levelReactor != -1 && type != -1) {
+            this.reactors = EnumReactors.values()[(type - 1) * 4 + (levelReactor - 1)];
+            this.reactor.level = this.levelReactor;
             this.invSlot.clear();
             this.reactor.reset(reactors);
             this.size_inventory = 0;
@@ -171,13 +159,13 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer customPacketBuffer = super.writePacket();
         customPacketBuffer.writeInt(this.type);
-        customPacketBuffer.writeInt(this.level);
+        customPacketBuffer.writeInt(this.levelReactor);
         return customPacketBuffer;
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -186,37 +174,37 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     }
 
     @Override
-    public ContainerSimulationReactors getGuiContainer(final EntityPlayer var1) {
+    public ContainerSimulationReactors getGuiContainer(final Player var1) {
         return new ContainerSimulationReactors(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSimulationReactors(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSimulationReactors((ContainerSimulationReactors) menu);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("type", type);
-        nbtTagCompound.setInteger("level", level);
-        nbtTagCompound.setBoolean("work", work);
-        nbtTagCompound.setBoolean("explode", explode);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("type", type);
+        nbtTagCompound.putInt("level", levelReactor);
+        nbtTagCompound.putBoolean("work", work);
+        nbtTagCompound.putBoolean("explode", explode);
         if (reactors != null) {
-            nbtTagCompound.setInteger("reactors", reactors.ordinal());
+            nbtTagCompound.putInt("reactors", reactors.ordinal());
         }
 
         return nbtTagCompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        type = nbtTagCompound.getInteger("type");
-        level = nbtTagCompound.getInteger("level");
+        type = nbtTagCompound.getInt("type");
+        levelReactor = nbtTagCompound.getInt("level");
 
-        reactors = EnumReactors.values()[nbtTagCompound.getInteger("reactors")];
+        reactors = EnumReactors.values()[nbtTagCompound.getInt("reactors")];
         work = nbtTagCompound.getBoolean("work");
         explode = nbtTagCompound.getBoolean("explode");
     }
@@ -231,7 +219,7 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
         customPacketBuffer.writeDouble(this.heat);
         customPacketBuffer.writeInt(this.security.ordinal());
         customPacketBuffer.writeInt(this.type);
-        customPacketBuffer.writeInt(this.level);
+        customPacketBuffer.writeInt(this.levelReactor);
         this.reactor.timer.writeBuffer(customPacketBuffer);
         return customPacketBuffer;
     }
@@ -250,51 +238,51 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.needUpdate && this.world.provider.getWorldTime() % 20 == 0 && this.reactors != null) {
+        if (this.needUpdate && this.level.getGameTime() % 20 == 0 && this.reactors != null) {
             if (!this.scheduleSlot.isEmpty()) {
                 needUpdate = false;
-                ItemStack stack = this.scheduleSlot.get();
-                final NBTTagCompound nbt = ModUtils.nbt(stack);
+                ItemStack stack = this.scheduleSlot.get(0);
+                final CompoundTag nbt = ModUtils.nbt(stack);
 
                 final List<ItemStack> infoStack = this.logicReactor.getInfoStack();
-                final NBTTagList stacks = new NBTTagList();
+                final ListTag stacks = new ListTag();
                 for (ItemStack stack1 : infoStack) {
-                    NBTTagCompound contentTag = new NBTTagCompound();
-                    stack1.writeToNBT(contentTag);
-                    stacks.appendTag(contentTag);
+                    CompoundTag contentTag = new  CompoundTag();
+                    stack1.save(contentTag);
+                    stacks.add(contentTag);
                 }
-                nbt.setInteger("type", type);
-                nbt.setInteger("level", level);
-                nbt.setString("name", this.reactors.getNameReactor().toLowerCase());
-                nbt.setInteger(
+                nbt.putInt("type", type);
+                nbt.putInt("level", levelReactor);
+                nbt.putString("name", this.reactors.getNameReactor().toLowerCase());
+                nbt.putInt(
                         "generation",
                         (int) (this.logicReactor.getGeneration() * (this.reactors.getType() == ITypeRector.GAS_COOLING_FAST
                                 ? 1.175
                                 :
-                                        1))
+                                1))
                 );
-                nbt.setInteger(
+                nbt.putInt(
                         "rad",
                         this.logicReactor.getRadGeneration()
                 );
-                nbt.setTag("Items", stacks);
+                nbt.put("Items", stacks);
                 for (int y = 0; y < this.reactors.getHeight(); y++) {
                     for (int x = 0; x < this.reactors.getWidth(); x++) {
-                        NBTTagCompound tag = new NBTTagCompound();
+                        CompoundTag tag = new CompoundTag();
                         ItemStack stack1 = this.reactor.getItemAt(x, y);
                         if (stack1.isEmpty()) {
-                            tag.setBoolean("empty", true);
-                            nbt.setTag(String.valueOf(y * this.reactors.getWidth() + x), tag);
+                            tag.putBoolean("empty", true);
+                            nbt.put(String.valueOf(y * this.reactors.getWidth() + x), tag);
                         } else {
-                            tag.setBoolean("empty", false);
+                            tag.putBoolean("empty", false);
                             for (int i = 0; i < infoStack.size(); i++) {
-                                if (infoStack.get(i).isItemEqual(stack1)) {
-                                    tag.setInteger("index", i);
+                                if (infoStack.get(i).is(stack1.getItem())) {
+                                    tag.putInt("index", i);
 
                                     break;
                                 }
                             }
-                            nbt.setTag(String.valueOf(y * this.reactors.getWidth() + x), tag);
+                            nbt.put(String.valueOf(y * this.reactors.getWidth() + x), tag);
                         }
                     }
                 }
@@ -324,11 +312,11 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     public void onLoaded() {
         super.onLoaded();
 
-        if (!this.world.isRemote && type != -1 && level != -1) {
-            this.reactors = EnumReactors.values()[(type - 1) * 4 + (level - 1)];
+        if (!this.level.isClientSide && type != -1 && levelReactor != -1) {
+            this.reactors = EnumReactors.values()[(type - 1) * 4 + (levelReactor - 1)];
             this.invSlot.clear();
             this.reactor.reset(reactors);
-            this.reactor.level = level;
+            this.reactor.level = levelReactor;
             this.work = false;
             explode = false;
             this.reactor.setTime(EnumTypeSecurity.STABLE);
@@ -350,10 +338,10 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, double var2) {
+    public void updateTileServer(final Player var1, double var2) {
         if (var2 < 0) {
             var2 *= -1;
-            level = (int) var2;
+            levelReactor = (int) var2;
         } else if (var2 >= 1) {
             type = (int) var2;
         } else if (var2 < 1) {
@@ -363,8 +351,8 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
             this.reactor.setTime(EnumTypeSecurity.STABLE);
             return;
         }
-        if (level != -1 && type != -1) {
-            this.reactors = EnumReactors.values()[(type - 1) * 4 + (level - 1)];
+        if (levelReactor != -1 && type != -1) {
+            this.reactors = EnumReactors.values()[(type - 1) * 4 + (levelReactor - 1)];
             this.invSlot.clear();
             this.reactor.reset(reactors);
             this.size_inventory = 0;
@@ -375,9 +363,9 @@ public class TileEntitySimulatorReactor extends TileEntityInventory implements I
             }
             this.work = false;
             explode = false;
-            var1.closeScreen();
+            var1.closeContainer();
             this.reactor.setTime(EnumTypeSecurity.STABLE);
-            this.reactor.level = level;
+            this.reactor.level = levelReactor;
             switch (this.reactors.getType()) {
                 case FLUID:
                     this.logicReactor = new LogicCreativeFluidReactor(reactor);

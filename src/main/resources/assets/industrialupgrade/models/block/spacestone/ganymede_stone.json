@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/ganymede_stone"
+    "all" : "industrialupgrade:block/ganymede_stone"
   }
 }

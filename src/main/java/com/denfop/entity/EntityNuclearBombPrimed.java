@@ -1,155 +1,99 @@
 package com.denfop.entity;
 
+
+import com.denfop.IUItem;
 import com.denfop.IUPotion;
 import com.denfop.api.item.IHazmatLike;
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 
 public class EntityNuclearBombPrimed extends Entity {
+    private static final EntityDataAccessor<Integer> FUSE = SynchedEntityData.defineId(EntityNuclearBombPrimed.class, EntityDataSerializers.INT);
 
-    private static final DataParameter<Integer> FUSE = EntityDataManager.createKey(
-            EntityNuclearBombPrimed.class,
-            DataSerializers.VARINT
-    );
-    private static final Random RANDOM = new Random();
-    @Nullable
-    private EntityLivingBase tntPlacedBy;
-    private int fuse;
+    private LivingEntity owner;
 
-    public EntityNuclearBombPrimed(World worldIn) {
-        super(worldIn);
-        this.fuse = 80;
-        this.preventEntitySpawning = true;
-        this.isImmuneToFire = true;
-        this.setSize(0.98F, 0.98F);
+    public EntityNuclearBombPrimed(EntityType<?> type, Level level) {
+        super(type, level);
+        this.blocksBuilding = true;
     }
 
-    public EntityNuclearBombPrimed(World worldIn, double x, double y, double z, EntityLivingBase igniter) {
-        this(worldIn);
-        this.setPosition(x, y, z);
-        float f = (float) (Math.random() * (Math.PI * 2D));
-        this.motionX = -Math.sin(f) * 0.02F;
-        this.motionY = 0.20000000298023224D;
-        this.motionZ = -Math.cos(f) * 0.02F;
+    public EntityNuclearBombPrimed(Level level, double x, double y, double z, LivingEntity igniter) {
+        this(IUItem.entity_nuclear_bomb.get(), level);
+        this.setPos(x, y, z);
+        this.xo = x;
+        this.yo = y;
+        this.zo = z;
+        this.owner = igniter;
         this.setFuse(80);
-        this.tntPlacedBy = igniter;
     }
 
-    protected void entityInit() {
-        this.dataManager.register(FUSE, 80);
+    @Override
+    protected void defineSynchedData() {
+        this.entityData.define(FUSE, 80);
     }
 
-    protected boolean canTriggerWalking() {
-        return false;
+    public int getFuse() {
+        return this.entityData.get(FUSE);
     }
 
-    public boolean canBeCollidedWith() {
-        return !this.isDead;
+    public void setFuse(int ticks) {
+        this.entityData.set(FUSE, ticks);
     }
 
-    public void onUpdate() {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+    @Override
+    public void tick() {
+        super.tick();
 
-        if (!this.hasNoGravity()) {
-            this.motionY -= 0.03999999910593033D;
+        Vec3 motion = this.getDeltaMovement();
+        this.setDeltaMovement(motion.x, motion.y - 0.04, motion.z);
+        this.move(MoverType.SELF, this.getDeltaMovement());
+
+        if (this.onGround()) {
+            Vec3 damp = this.getDeltaMovement().multiply(0.7, -0.5, 0.7);
+            this.setDeltaMovement(damp);
         }
 
-        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-        this.motionX *= 0.9800000190734863D;
-        this.motionY *= 0.9800000190734863D;
-        this.motionZ *= 0.9800000190734863D;
+        int fuse = this.getFuse() - 1;
+        this.setFuse(fuse);
 
-        if (this.onGround) {
-            this.motionX *= 0.699999988079071D;
-            this.motionZ *= 0.699999988079071D;
-            this.motionY *= -0.5D;
-        }
-
-        --this.fuse;
-
-        if (this.fuse <= 0) {
-            this.setDead();
-            if (!this.world.isRemote) {
-                this.explode();
-            } else {
-                BlockPos explosionPos = new BlockPos(posX, posY, posZ);
-                final int explosionRadius = 10;
-                createRadiationParticles(explosionPos, (int) explosionRadius);
-                createExplosionFlash(explosionPos, (int) explosionRadius);
-            }
+        if (fuse <= 0) {
+            this.discard();
+            explode();
         } else {
-            this.handleWaterMovement();
-            this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.level().addParticle(net.minecraft.core.particles.ParticleTypes.SMOKE,
+                    this.getX(), this.getY() + 0.5, this.getZ(), 0, 0, 0);
         }
     }
 
     private void explode() {
-        float explosionRadius = 20.0F;
-        boolean causeFire = true;
-        this.world.createExplosion(this, this.posX, this.posY + (this.height / 16.0F), this.posZ, explosionRadius, causeFire);
+        level().explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 20.0F, Level.ExplosionInteraction.TNT);
+        BlockPos explosionPos = new BlockPos((int) this.getX(), (int) this.getY(), (int) this.getZ());
 
-        this.world.playSound(
-                null,
-                this.posX,
-                this.posY,
-                this.posZ,
-                SoundEvents.ENTITY_GENERIC_EXPLODE,
-                net.minecraft.util.SoundCategory.BLOCKS,
-                4.0F,
-                1.0F
-        );
-
-        BlockPos explosionPos = new BlockPos(posX, posY, posZ);
-
-
-        if (!this.world.isRemote) {
-            if (this.world.provider.getDimension() == 0) {
+        if (!this.level().isClientSide) {
+            if (this.level().dimension() == Level.OVERWORLD) {
                 int radiationValue = 5000;
-                new PacketUpdateRadiationValue(this.world.getChunkFromBlockCoords(explosionPos).getPos(), radiationValue);
+                new PacketUpdateRadiationValue(this.level().getChunk(explosionPos).getPos(), radiationValue);
                 spreadRadiation(explosionPos, radiationValue);
                 affectNearbyPlayers(explosionPos, 30.0D);
             }
-        }
-    }
-
-
-    private void createExplosionFlash(BlockPos center, int radius) {
-        for (int i = 0; i < radius * 20; i++) {
-            double x = center.getX() + RANDOM.nextDouble() * radius * 2 - radius;
-            double y = center.getY() + RANDOM.nextDouble() * radius / 2;
-            double z = center.getZ() + RANDOM.nextDouble() * radius * 2 - radius;
-
-            this.world.spawnParticle(EnumParticleTypes.SPELL_MOB_AMBIENT, x, y, z, 1.0D, 0.0D, 0.0D);
-            this.world.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, x, y, z, 1.0D, 0.0D, 0.0D);
-        }
-    }
-
-    private void createRadiationParticles(BlockPos center, int radius) {
-        for (int i = 0; i < radius * 50; i++) {
-            double x = center.getX() + RANDOM.nextDouble() * radius * 2 - radius;
-            double y = center.getY() + RANDOM.nextDouble() * radius;
-            double z = center.getZ() + RANDOM.nextDouble() * radius * 2 - radius;
-
-            this.world.spawnParticle(EnumParticleTypes.REDSTONE, x, y, z, 1.0D, 0.0D, 0.0D);
         }
     }
 
@@ -157,64 +101,46 @@ public class EntityNuclearBombPrimed extends Entity {
         int radius = 3;
         for (int x = -radius; x <= radius; x++) {
             for (int z = -radius; z <= radius; z++) {
-                BlockPos chunkCenter = explosionPos.add(x * 16, 0, z * 16);
+                BlockPos chunkCenter = explosionPos.offset(x * 16, 0, z * 16);
                 int radiationLevel = (int) (initialRadiation / (1 + Math.sqrt(x * x + z * z)));
-                new PacketUpdateRadiationValue(this.world.getChunkFromBlockCoords(chunkCenter).getPos(), radiationLevel);
+                new PacketUpdateRadiationValue(this.level().getChunk(chunkCenter).getPos(), radiationLevel);
             }
         }
     }
 
     private void affectNearbyPlayers(BlockPos explosionPos, double radius) {
-        List<EntityPlayer> players = this.world.getEntitiesWithinAABB(
-                EntityPlayer.class,
-                this.getEntityBoundingBox().grow(radius)
+        List<Player> players = this.level().getEntitiesOfClass(
+                Player.class,
+                this.getBoundingBox().inflate(radius)
         );
-        for (EntityPlayer player : players) {
+        for (Player player : players) {
             if (!hasRadiationSuit(player)) {
-                player.addPotionEffect(new PotionEffect(IUPotion.radiation, 200, 0));
+                player.addEffect(new MobEffectInstance(IUPotion.radiation, 200, 0));
             }
         }
     }
 
-    private boolean hasRadiationSuit(EntityPlayer player) {
+    private boolean hasRadiationSuit(Player player) {
 
         return IHazmatLike.hasCompleteHazmat(player, EnumLevelRadiation.LOW);
     }
 
-    protected void writeEntityToNBT(NBTTagCompound compound) {
-        compound.setShort("Fuse", (short) this.getFuse());
+    @Override
+    protected void readAdditionalSaveData(CompoundTag tag) {
+        this.setFuse(tag.getShort("Fuse"));
     }
 
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-        this.setFuse(compound.getShort("Fuse"));
+    @Override
+    protected void addAdditionalSaveData(CompoundTag tag) {
+        tag.putShort("Fuse", (short) this.getFuse());
     }
 
-    @Nullable
-    public EntityLivingBase getTntPlacedBy() {
-        return this.tntPlacedBy;
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public float getEyeHeight() {
-        return 0.0F;
+    public LivingEntity getOwner() {
+        return this.owner;
     }
-
-    public void notifyDataManagerChange(DataParameter<?> key) {
-        if (FUSE.equals(key)) {
-            this.fuse = this.getFuseDataManager();
-        }
-    }
-
-    public int getFuseDataManager() {
-        return this.dataManager.get(FUSE);
-    }
-
-    public int getFuse() {
-        return this.fuse;
-    }
-
-    public void setFuse(int fuseIn) {
-        this.dataManager.set(FUSE, fuseIn);
-        this.fuse = fuseIn;
-    }
-
 }

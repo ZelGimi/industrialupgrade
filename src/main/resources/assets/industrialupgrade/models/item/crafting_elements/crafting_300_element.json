@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/hex_heat_storage"
+		"layer0": "industrialupgrade:item/hex_heat_storage"
 	}
 }

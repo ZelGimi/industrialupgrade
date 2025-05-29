@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/bio_machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_295_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:basemachine3/steam_peat_generator"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_64_element"
+      }
+    ]
+  },
+  "pattern": [
+    " D ",
+    "BCB",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/steam_bio_generator"
+  },
+  "show_notification": true
+}

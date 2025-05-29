@@ -1,42 +1,32 @@
 package com.denfop.api.recipe;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 
-public class RecipeOutput {
+public final class RecipeOutput {
 
     public final List<ItemStack> items;
-    public final NBTTagCompound metadata;
+    public final CompoundTag metadata;
 
-    public RecipeOutput(NBTTagCompound metadata1, List<ItemStack> items1) {
+    public RecipeOutput(CompoundTag metadata1, List<ItemStack> items1) {
         assert !items1.contains(ItemStack.EMPTY);
 
         this.metadata = metadata1;
         this.items = items1;
     }
 
-    public RecipeOutput(NBTTagCompound metadata1, List<ItemStack> items1, int count) {
-        assert !items1.contains(ItemStack.EMPTY);
-
-        this.metadata = metadata1;
-        items1.forEach(item -> {
-            item.setCount(count);
-        });
-        this.items = items1;
-    }
-
-    public RecipeOutput(NBTTagCompound metadata1, ItemStack... items1) {
+    public RecipeOutput(CompoundTag metadata1, ItemStack... items1) {
         this(metadata1, Arrays.asList(items1));
     }
 
     public boolean equals(Object obj) {
-        if (obj instanceof RecipeOutput) {
-            RecipeOutput ro = (RecipeOutput) obj;
+        if (obj instanceof RecipeOutput ro) {
             if (this.items.size() == ro.items.size() && (this.metadata == null && ro.metadata == null || this.metadata != null && ro.metadata != null && this.metadata.equals(
                     ro.metadata))) {
                 Iterator<ItemStack> itA = this.items.iterator();
@@ -45,7 +35,7 @@ public class RecipeOutput {
                 while (itA.hasNext() && itB.hasNext()) {
                     ItemStack stackA = itA.next();
                     ItemStack stackB = itB.next();
-                    if (ItemStack.areItemStacksEqual(stackA, stackB)) {
+                    if (ItemStack.isSameItem(stackA, stackB)) {
                         return false;
                     }
                 }

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/germanium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/vitalium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:gears/alcled"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_14_element"
+  },
+  "show_notification": true
+}

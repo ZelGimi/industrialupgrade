@@ -2,19 +2,15 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.api.vein.Type;
 import com.denfop.container.ContainerOilPump;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiOilPump extends GuiIU<ContainerOilPump> {
+@OnlyIn(Dist.CLIENT)
+public class GuiOilPump<T extends ContainerOilPump> extends GuiIU<ContainerOilPump> {
 
     public final ContainerOilPump container;
 
@@ -45,20 +41,6 @@ public class GuiOilPump extends GuiIU<ContainerOilPump> {
                     }
                 }
         ));
-    }
-
-    protected void drawForegroundLayer(int par1, int par2) {
-
-
-        super.drawForegroundLayer(par1, par2);
-
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-
-
     }
 
 

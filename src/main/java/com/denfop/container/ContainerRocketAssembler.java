@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityRocketAssembler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerRocketAssembler extends ContainerFullInv<TileEntityRocketAssembler> {
 
-    public ContainerRocketAssembler(TileEntityRocketAssembler tileEntityBatteryFactory, EntityPlayer var1) {
+    public ContainerRocketAssembler(TileEntityRocketAssembler tileEntityBatteryFactory, Player var1) {
         super(var1, tileEntityBatteryFactory, 178, 216 + 18 + 22);
         this.addSlotToContainer(new SlotInvSlot(
                 tileEntityBatteryFactory.inputSlotA,

@@ -2,19 +2,15 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerGasTurbineRecuperator;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiGasTurbineRecuperator extends GuiIU<ContainerGasTurbineRecuperator> {
+public class GuiGasTurbineRecuperator<T extends ContainerGasTurbineRecuperator> extends GuiIU<ContainerGasTurbineRecuperator> {
 
     public GuiGasTurbineRecuperator(ContainerGasTurbineRecuperator guiContainer) {
         super(guiContainer);
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 
-    }
 
     @Override
     protected ResourceLocation getTexture() {

@@ -1,120 +1,67 @@
 package com.denfop.network;
 
-import com.denfop.items.ItemStackInventory;
-import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.network.packet.EnumTypePacket;
-import com.denfop.network.packet.IPacket;
-import com.denfop.network.packet.PacketAbstractComponent;
-import com.denfop.network.packet.PacketAddBuildingToColony;
-import com.denfop.network.packet.PacketAddRelocatorPoint;
-import com.denfop.network.packet.PacketCableSound;
-import com.denfop.network.packet.PacketChangeSolarPanel;
-import com.denfop.network.packet.PacketChangeSpaceOperation;
-import com.denfop.network.packet.PacketColorPicker;
-import com.denfop.network.packet.PacketColorPickerAllLoggIn;
-import com.denfop.network.packet.PacketCreateAutoSends;
-import com.denfop.network.packet.PacketCreateColony;
-import com.denfop.network.packet.PacketDeleteColony;
-import com.denfop.network.packet.PacketExplosion;
-import com.denfop.network.packet.PacketFixedClient;
-import com.denfop.network.packet.PacketItemStackEvent;
-import com.denfop.network.packet.PacketItemStackUpdate;
-import com.denfop.network.packet.PacketKeys;
-import com.denfop.network.packet.PacketLandEffect;
-import com.denfop.network.packet.PacketRadiation;
-import com.denfop.network.packet.PacketRadiationChunk;
-import com.denfop.network.packet.PacketRadiationUpdateValue;
-import com.denfop.network.packet.PacketRelocatorTeleportPlayer;
-import com.denfop.network.packet.PacketRemoveRelocatorPoint;
-import com.denfop.network.packet.PacketRemoveUpdateTile;
-import com.denfop.network.packet.PacketResearchSystem;
-import com.denfop.network.packet.PacketResearchSystemAdd;
-import com.denfop.network.packet.PacketResearchSystemDelete;
-import com.denfop.network.packet.PacketReturnRoversToPlanet;
-import com.denfop.network.packet.PacketRunParticles;
-import com.denfop.network.packet.PacketSendResourceToEarth;
-import com.denfop.network.packet.PacketSendRoversToPlanet;
-import com.denfop.network.packet.PacketSoundPlayer;
-import com.denfop.network.packet.PacketStopSound;
-import com.denfop.network.packet.PacketStopSoundPlayer;
-import com.denfop.network.packet.PacketSuccessUpdateColony;
-import com.denfop.network.packet.PacketUpdateBody;
-import com.denfop.network.packet.PacketUpdateFakeBody;
-import com.denfop.network.packet.PacketUpdateFieldContainerItemStack;
-import com.denfop.network.packet.PacketUpdateFieldContainerTile;
-import com.denfop.network.packet.PacketUpdateFieldTile;
-import com.denfop.network.packet.PacketUpdateOvertimeTile;
-import com.denfop.network.packet.PacketUpdateRadiation;
-import com.denfop.network.packet.PacketUpdateRadiationValue;
-import com.denfop.network.packet.PacketUpdateServerTile;
-import com.denfop.network.packet.PacketUpdateTe;
-import com.denfop.network.packet.PacketUpdateTile;
+import com.denfop.IUCore;
+import com.denfop.network.packet.*;
 import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.server.management.PlayerChunkMap;
-import net.minecraft.server.management.PlayerChunkMapEntry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLEventChannel;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
+import io.netty.buffer.Unpooled;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.server.ServerLifecycleHooks;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class NetworkManager {
 
-    private static FMLEventChannel channel;
-    public Map<Byte, IPacket> packetMap = new HashMap<>();
+    private static SimpleChannel channel;
+    private static ResourceLocation handler;
+    public static Map<Byte, IPacket> packetMap = new HashMap<>();
 
     public NetworkManager() {
-        if (channel == null) {
-            channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("IU");
-        }
+        handler = new ResourceLocation("industrialupgrade", "network");
 
-        channel.register(this);
+        if (channel == null) {
+            channel = NetworkRegistry.newSimpleChannel(handler, () -> "1.0.0", (e) -> true, (e) -> true);
+        }
         this.registerPacket(new PacketKeys());
         this.registerPacket(new PacketAbstractComponent());
         this.registerPacket(new PacketColorPickerAllLoggIn(null));
         this.registerPacket(new PacketRadiation());
         this.registerPacket(new PacketUpdateServerTile());
         this.registerPacket(new PacketUpdateTile());
-        this.registerPacket(new PacketUpdateTe());
         this.registerPacket(new PacketRadiationChunk());
         this.registerPacket(new PacketRadiationUpdateValue());
         this.registerPacket(new PacketUpdateFieldContainerTile());
         this.registerPacket(new PacketColorPicker());
         this.registerPacket(new PacketUpdateFieldTile());
-        this.registerPacket(new PacketLandEffect());
-        this.registerPacket(new PacketRunParticles());
         this.registerPacket(new PacketExplosion());
         this.registerPacket(new PacketChangeSolarPanel());
         this.registerPacket(new PacketSoundPlayer());
-        this.registerPacket(new PacketResearchSystem());
-        this.registerPacket(new PacketResearchSystemAdd());
-        this.registerPacket(new PacketResearchSystemDelete());
         this.registerPacket(new PacketUpdateOvertimeTile());
         this.registerPacket(new PacketItemStackUpdate());
         this.registerPacket(new PacketItemStackEvent());
-        this.registerPacket(new PacketCableSound());
         this.registerPacket(new PacketStopSound());
-        this.registerPacket(new PacketFixedClient());
-        this.registerPacket(new PacketRemoveUpdateTile());
+        this.registerPacket(new PacketUpdateInventory());
         this.registerPacket(new PacketUpdateRadiationValue());
         this.registerPacket(new PacketUpdateRadiation());
         this.registerPacket(new PacketStopSoundPlayer());
         this.registerPacket(new PacketAddRelocatorPoint());
         this.registerPacket(new PacketRemoveRelocatorPoint());
-        this.registerPacket(new PacketUpdateFieldContainerItemStack());
         this.registerPacket(new PacketRelocatorTeleportPlayer());
         this.registerPacket(new PacketUpdateBody());
         this.registerPacket(new PacketUpdateFakeBody());
@@ -128,69 +75,109 @@ public class NetworkManager {
         this.registerPacket(new PacketCreateAutoSends());
         this.registerPacket(new PacketDeleteColony());
 
+
+        channel.registerMessage(0, CustomPacketBuffer.class,
+                (customPacketBuffer, buf) -> {
+                    buf.writeBytes(customPacketBuffer);
+                }, CustomPacketBuffer::new
+                , this::onPacketData);
     }
 
-    private static FMLProxyPacket makePacket(CustomPacketBuffer buffer) {
-        return new FMLProxyPacket(buffer, "IU");
+    public static SimpleChannel getChannel() {
+        return channel;
     }
 
-    public static <T extends Collection<EntityPlayerMP>> T getPlayersInRange(World world, BlockPos pos, T result) {
-        if (world instanceof WorldServer) {
-            PlayerChunkMap playerManager = ((WorldServer) world).getPlayerChunkMap();
-            PlayerChunkMapEntry instance = playerManager.getEntry(pos.getX() >> 4, pos.getZ() >> 4);
-            if (instance != null) {
-                result.addAll(instance.players);
-            }
-
-        }
-        return result;
-    }
-
-
-    public void addTileContainerToUpdate(TileEntityBlock te, EntityPlayer player, CustomPacketBuffer packetBuffer) {
-        if (te == null) {
-            return;
-        }
-        WorldData worldData = WorldData.get(te.getWorld());
-        if (te.isInvalid()) {
-            return;
-        }
-        Map<EntityPlayer, CustomPacketBuffer> map;
-        if (worldData.mapUpdateContainer.containsKey(te)) {
-            map = worldData.mapUpdateContainer.computeIfAbsent(te, k -> new HashMap<>());
+    public static <T extends Collection<ServerPlayer>> T getPlayersInRange(Level world, BlockPos pos, T result) {
+        if (!(world instanceof ServerLevel)) {
+            return result;
         } else {
-            map = new HashMap<>();
-            worldData.mapUpdateContainer.put(te, map);
-        }
-        map.put(player, packetBuffer);
-    }
-
-    public void addTileContainerToUpdate(ItemStackInventory te, EntityPlayer player, CustomPacketBuffer packetBuffer) {
-        if (te == null) {
-            return;
-        }
-        WorldData worldData = WorldData.get(player.getEntityWorld());
-        Map<EntityPlayer, CustomPacketBuffer> map;
-        if (worldData.mapUpdateItemStackContainer.containsKey(te)) {
-            map = worldData.mapUpdateItemStackContainer.computeIfAbsent(te, k -> new HashMap<>());
-        } else {
-            map = new HashMap<>();
-            worldData.mapUpdateItemStackContainer.put(te, map);
-        }
-        map.put(player, packetBuffer);
-    }
-
-    public void addTileToUpdate(TileEntityBlock te) {
-        if (te.hasWorld()) {
-            WorldData worldData = WorldData.get(te.getWorld());
-            worldData.listUpdateTile.add(te);
+            List<ServerPlayer> list = ((ServerLevel) world).getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false);
+            result.addAll(list);
+            return result;
         }
     }
 
+    public Packet<?> makePacket(NetworkDirection direction, CustomPacketBuffer buffer) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeByte(0);
+        buf.writeBoolean(this.isClient());
+        buf.writeBytes(buffer);
+        return direction.buildPacket(Pair.of(buf, 0), handler).getThis();
+    }
+
+    public void sendPacket(PacketDistributor.PacketTarget packetDistributor, CustomPacketBuffer buffer) {
+        if (!this.isClient()) {
+            packetDistributor.send(makePacket(packetDistributor.getDirection(), buffer));
+        } else{
+            IUCore.network.getClient().sendPacket(packetDistributor,buffer);
+        }
+
+    }
 
     public void registerPacket(IPacket packet) {
+
         if (!packetMap.containsKey(packet.getId())) {
             packetMap.put(packet.getId(), packet);
+        }
+
+    }
+
+
+    protected boolean isClient() {
+        return false;
+    }
+
+    public void onPacketData(CustomPacketBuffer is, Supplier<NetworkEvent.Context> ctx) {
+        boolean isClient = is.readBoolean();
+        if (!isClient) {
+            is.retain();
+            byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
+            is.readBytes(bytes);
+            ctx.get().enqueueWork(() -> {
+                CustomPacketBuffer is1 = new CustomPacketBuffer(bytes);
+                if (is1.writerIndex() > is1.readerIndex()) {
+                    byte type = is1.readByte();
+                    IUCore.network.getClient().onPacketData(is1,type);
+
+                }
+            });
+        } else {
+            is.retain();
+            byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
+            is.readBytes(bytes);
+            ctx.get().enqueueWork(() -> {
+                CustomPacketBuffer is1 = new CustomPacketBuffer(bytes);
+                if (is1.writerIndex() > is1.readerIndex()) {
+                    try {
+                        byte type = is1.readByte();
+                        IPacket packet = packetMap.get(type);
+                        if (packet != null && packet.getPacketType() == EnumTypePacket.CLIENT) {
+                            packet.readPacket(is1, ctx.get().getSender());
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Ошибка обработки пакета: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        ctx.get().setPacketHandled(true);
+    }
+
+    public void onPacketData(CustomPacketBuffer is, byte type) {
+    }
+
+    public final void sendPacket(CustomPacketBuffer buffer, ServerPlayer player) {
+        this.sendPacket(PacketDistributor.PLAYER.with(() -> player), buffer);
+    }
+
+    public void sendPacket(CustomPacketBuffer buffer) {
+        if (!this.isClient()) {
+            PlayerList players = ServerLifecycleHooks.getCurrentServer().getPlayerList();
+            for (ServerPlayer player : players.getPlayers())
+                this.sendPacket(PacketDistributor.PLAYER.with(() -> player), buffer);
+        } else {
+            IUCore.network.getClient().sendPacket(buffer);
         }
 
     }
@@ -203,59 +190,45 @@ public class NetworkManager {
         }
     }
 
-    protected boolean isClient() {
-        return false;
-    }
-
-    @SubscribeEvent
-    public void onPacket(ServerCustomPacketEvent event) {
-        if (this.getClass() == NetworkManager.class) {
-            try {
-                this.onPacketData(
-                        new CustomPacketBuffer(event.getPacket().payload()),
-                        ((NetHandlerPlayServer) event.getHandler()).player
-                );
-            } catch (Throwable var3) {
-                throw new RuntimeException(var3);
-            }
-
-            event.getPacket().payload().release();
+    public void addTileContainerToUpdate(TileEntityBlock te, ServerPlayer player, CustomPacketBuffer packetBuffer) {
+        if (te == null) {
+            return;
         }
-
-    }
-
-    private void onPacketData(CustomPacketBuffer is, final EntityPlayer player) {
-        if (is.writerIndex() > is.readerIndex()) {
-
-            byte type = is.readByte();
-            IPacket packet = this.packetMap.get(type);
-            if (packet != null && packet.getPacketType() == EnumTypePacket.CLIENT) {
-                packet.readPacket(is, player);
-            }
-
+        WorldData worldData = WorldData.get(te.getLevel());
+        if (te.isRemoved()) {
+            return;
         }
-
-    }
-
-
-    public final void sendPacket(CustomPacketBuffer buffer, EntityPlayerMP player) {
-        assert !this.isClient();
-
-        channel.sendTo(makePacket(buffer), player);
-    }
-
-    public final void sendPacket(CustomPacketBuffer buffer) {
-        if (!this.isClient()) {
-            channel.sendToAll(makePacket(buffer));
+        Map<Player, CustomPacketBuffer> map;
+        if (worldData.mapUpdateContainer.containsKey(te)) {
+            map = worldData.mapUpdateContainer.computeIfAbsent(te, k -> new HashMap<>());
         } else {
-            channel.sendToServer(makePacket(buffer));
+            map = new HashMap<>();
+            worldData.mapUpdateContainer.put(te, map);
         }
-
+        map.put(player, packetBuffer);
     }
 
+    public void addTileToUpdate(TileEntityBlock te) {
+        if (te.hasLevel()) {
+            WorldData worldData = WorldData.get(te.getLevel());
+            worldData.listUpdateTile.add(te);
+        }
+    }
+
+    public void addTileToOvertimeUpdate(TileEntityBlock te) {
+        WorldData worldData = WorldData.get(te.getLevel());
+        if (!worldData.mapUpdateOvertimeField.containsKey(te.getBlockPos())) {
+            worldData.mapUpdateOvertimeField.put(te.getBlockPos(), te);
+        }
+    }
+
+    public void removeTileToOvertimeUpdate(TileEntityBlock te) {
+        WorldData worldData = WorldData.get(te.getLevel());
+        worldData.mapUpdateOvertimeField.remove(te.getBlockPos());
+    }
 
     public void addTileFieldToUpdate(TileEntityBlock te, CustomPacketBuffer packet) {
-        WorldData worldData = WorldData.get(te.getWorld());
+        WorldData worldData = WorldData.get(te.getLevel());
         if (worldData.mapUpdateField.containsKey(te)) {
             worldData.mapUpdateField.get(te).add(packet);
         } else {
@@ -263,16 +236,5 @@ public class NetworkManager {
         }
     }
 
-    public void addTileToOvertimeUpdate(TileEntityBlock te) {
-        WorldData worldData = WorldData.get(te.getWorld());
-        if (!worldData.mapUpdateOvertimeField.containsKey(te.getPos())) {
-            worldData.mapUpdateOvertimeField.put(te.getPos(), te);
-        }
-    }
-
-    public void removeTileToOvertimeUpdate(TileEntityBlock te) {
-        WorldData worldData = WorldData.get(te.getWorld());
-        worldData.mapUpdateOvertimeField.remove(te.getPos());
-    }
 
 }

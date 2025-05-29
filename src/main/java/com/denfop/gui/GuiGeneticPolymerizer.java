@@ -14,17 +14,16 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerGeneticPolymerizer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@SideOnly(Side.CLIENT)
-public class GuiGeneticPolymerizer extends GuiIU<ContainerGeneticPolymerizer> {
+
+public class GuiGeneticPolymerizer<T extends ContainerGeneticPolymerizer> extends GuiIU<ContainerGeneticPolymerizer> {
 
     public final ContainerGeneticPolymerizer container;
 
@@ -68,8 +67,8 @@ public class GuiGeneticPolymerizer extends GuiIU<ContainerGeneticPolymerizer> {
         return ret;
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
 
         this.handleUpgradeTooltip(par1, par2);
     }
@@ -80,19 +79,19 @@ public class GuiGeneticPolymerizer extends GuiIU<ContainerGeneticPolymerizer> {
             text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
-                text.add(stack.getDisplayName());
+                text.add(stack.getDisplayName().getString());
             }
 
             this.drawTooltip(mouseX, mouseY, text);
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+        bindTexture(getTexture());
 
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

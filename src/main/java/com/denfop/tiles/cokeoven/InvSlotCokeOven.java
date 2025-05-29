@@ -1,8 +1,8 @@
 package com.denfop.tiles.cokeoven;
 
 import com.denfop.invslot.InvSlot;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 
 public class InvSlotCokeOven extends InvSlot {

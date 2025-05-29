@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/reactor_heat_vent"
+    "layer0" : "industrialupgrade:item/reactor_heat_vent"
   }
 }

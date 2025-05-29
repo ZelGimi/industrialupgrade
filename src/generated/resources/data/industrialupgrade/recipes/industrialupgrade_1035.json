@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_625_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_621_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:circuit/photoncircuit"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_24_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_654_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BDB",
+    "ECE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_620_element"
+  },
+  "show_notification": true
+}

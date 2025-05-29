@@ -4,50 +4,53 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
+import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class WaterRotorsCategory extends Gui implements IRecipeCategory<WaterRotorsWrapper> {
+public class WaterRotorsCategory extends GuiIU implements IRecipeCategory<WaterRotorsHandler> {
 
     private final IDrawableStatic bg;
-
+    JeiInform jeiInform;
     public WaterRotorsCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsr_jei" +
                         ".png"), 5, 5, 140,
                 80
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
+    }
+
+    @Override
+    public RecipeType<WaterRotorsHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine3.water_rotor_assembler.getName();
+    public String getTitles() {
+        return Localization.translate( ItemStackHelper.fromData(IUItem.basemachine2, 1, 44).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine2, 1, 44).getUnlocalizedName());
-    }
-
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -57,31 +60,20 @@ public class WaterRotorsCategory extends Gui implements IRecipeCategory<WaterRot
 
 
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(WaterRotorsHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
 
-    }
+     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final WaterRotorsWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-
-        isg.init(0, true, 51, 14);
-        isg.set(0, recipes.getInput()[0]);
-        isg.init(1, true, 29, 36);
-        isg.set(1, recipes.getInput()[0]);
-        isg.init(2, true, 51, 36);
-        isg.set(2, recipes.getInput()[4]);
-        isg.init(3, true, 73, 36);
-        isg.set(3, recipes.getInput()[0]);
-        isg.init(4, true, 51, 58);
-        isg.set(4, recipes.getInput()[0]);
-        isg.init(recipes.getInput().length, false, 112, 36);
-        isg.set(recipes.getInput().length, recipes.getOutput());
+    public void setRecipe(IRecipeLayoutBuilder builder, WaterRotorsHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,52,15).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT,30,37).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT,52,37).addItemStack(recipe.getInputs()[4]);
+        builder.addSlot(RecipeIngredientRole.INPUT,74,37).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT,52,59).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.OUTPUT,113,37).addItemStack(recipe.getOutput());
     }
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirotorsr_jei.png");

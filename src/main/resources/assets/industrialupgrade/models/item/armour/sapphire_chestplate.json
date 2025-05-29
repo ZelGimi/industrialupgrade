@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/sapphire_chestplate"
+    "layer0" : "industrialupgrade:item/sapphire_chestplate"
   }
 }

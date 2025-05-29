@@ -1,23 +1,28 @@
 package com.denfop.tiles.base;
 
-import com.denfop.Config;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSolidMatter;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSolidMatter;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -34,13 +39,14 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
     private final String name;
     private double progress;
 
-    public TileEntityMatterGenerator(ItemStack itemstack, String name) {
+    public TileEntityMatterGenerator(ItemStack itemstack, String name, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block, pos, state);
         this.itemstack = itemstack;
         this.outputSlot = new InvSlotOutput(this, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.progress = 0;
         this.name = name;
-        this.energy = this.addComponent(Energy.asBasicSink(this, Config.SolidMatterStorage, 10));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 5E7D, 10));
 
     }
 
@@ -77,7 +83,7 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.matter_solid_work_info") + (int) Config.SolidMatterStorage);
+            tooltip.add(Localization.translate("iu.matter_solid_work_info") + (int) 5E7D);
         }
         Energy energy = this.energy;
         if (!energy.getSourceDirs().isEmpty()) {
@@ -89,14 +95,14 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getDouble("progress");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setDouble("progress", this.progress);
+        nbttagcompound.putDouble("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -125,12 +131,12 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiSolidMatter getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSolidMatter(new ContainerSolidMatter(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiSolidMatter((ContainerSolidMatter) isAdmin);
     }
 
-    public ContainerSolidMatter getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSolidMatter getGuiContainer(Player entityPlayer) {
         return new ContainerSolidMatter(entityPlayer, this);
     }
 
@@ -154,9 +160,6 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
                 UpgradableProperty.ItemInput,
                 UpgradableProperty.ItemExtract
         );
-    }
-
-    public void onGuiClosed(EntityPlayer player) {
     }
 
 

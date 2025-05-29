@@ -1,15 +1,16 @@
 package com.denfop.api.energy.event;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
 
-public class TileLoadEvent extends WorldEvent {
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.event.level.LevelEvent;
+
+public class TileLoadEvent extends LevelEvent {
 
 
-    public final TileEntity tileentity;
+    public final BlockEntity tileentity;
 
-    public TileLoadEvent(World world, TileEntity tile) {
+    public TileLoadEvent(Level world, BlockEntity tile) {
         super(world);
         this.tileentity = tile;
     }

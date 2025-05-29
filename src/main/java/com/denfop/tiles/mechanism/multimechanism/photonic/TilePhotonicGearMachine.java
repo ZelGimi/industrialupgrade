@@ -6,12 +6,14 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksPhotonicMachine;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TilePhotonicGearMachine extends TileMultiMachine {
 
-    public TilePhotonicGearMachine() {
+    public TilePhotonicGearMachine(BlockPos pos, BlockState state) {
         super(
-                EnumMultiMachine.Pho_Gearing
+                EnumMultiMachine.Pho_Gearing, BlocksPhotonicMachine.photonic_gearing, pos, state
         );
 
     }
@@ -27,7 +29,7 @@ public class TilePhotonicGearMachine extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.pho_machine;
+        return IUItem.pho_machine.getBlock(getTeBlock().getId());
     }
 
     @Override

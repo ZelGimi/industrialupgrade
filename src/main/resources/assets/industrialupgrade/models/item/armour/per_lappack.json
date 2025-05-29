@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/per_lappack"
+    "layer0" : "industrialupgrade:item/per_lappack"
   }
 }

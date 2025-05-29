@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=gen_obsidian": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian"
+    },
+    "facing=south,type=gen_obsidian": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian",
+      "y": 180
+    },
+    "facing=west,type=gen_obsidian": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian",
+      "y": 270
+    },
+    "facing=east,type=gen_obsidian": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian",
+      "y": 90
+    },
+    "facing=down,type=gen_obsidian": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian",
+      "x": 90
+    },
+    "facing=up,type=gen_obsidian": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian",
+      "x": 270
+    },
+    "facing=north,type=gen_obsidian_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active"
+    },
+    "facing=south,type=gen_obsidian_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "y": 180
+    },
+    "facing=west,type=gen_obsidian_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "y": 270
+    },
+    "facing=east,type=gen_obsidian_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "y": 90
+    },
+    "facing=down,type=gen_obsidian_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "x": 90
+    },
+    "facing=up,type=gen_obsidian_invalid": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "x": 270
+    },
+    "facing=north,type=gen_obsidian_active": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active"
+    },
+    "facing=south,type=gen_obsidian_active": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "y": 180
+    },
+    "facing=west,type=gen_obsidian_active": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "y": 270
+    },
+    "facing=east,type=gen_obsidian_active": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "y": 90
+    },
+    "facing=down,type=gen_obsidian_active": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "x": 90
+    },
+    "facing=up,type=gen_obsidian_active": {
+      "model": "industrialupgrade:block/basemachine/gen_obsidian_active",
+      "x": 270
+    }
+  }
+}

@@ -2,8 +2,12 @@ package com.denfop.tiles.mechanism.generator.energy.coal;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -11,14 +15,15 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.generator.energy.TileEntityBaseGenerator;
 import com.denfop.utils.DamageHandler;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,20 +42,20 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
 
     public int itemFuelTime = 0;
 
-    public TileEntityAdvGenerator(double coef, int maxstorage, int tier) {
+    public TileEntityAdvGenerator(double coef, int maxstorage, int tier, IMultiTileBlock multiTileBlock, BlockPos pos, BlockState state) {
         super(
                 coef * (double) Math.round(10.0F * 1),
                 tier,
-                maxstorage
+                maxstorage, multiTileBlock, pos, state
         );
         this.coef = coef;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
-            ModUtils.showFlames(this.getWorld(), this.pos, this.getFacing());
+            ModUtils.showFlames(this.getWorld(), this.getBlockPos(), this.getFacing());
         }
 
     }
@@ -124,23 +129,23 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
 
 
         ItemStack stack = this.fuelSlot.get(0);
-        if (!stack.isEmpty() && (ModUtils.getSize(stack) == 1 || !stack.getItem().hasContainerItem(stack))) {
+        if (!stack.isEmpty() && (ModUtils.getSize(stack) == 1 || !stack.getItem().hasCraftingRemainingItem(stack))) {
             int currentAmount = Math.min(amount, ModUtils.getSize(stack));
             amount -= currentAmount;
             if (ModUtils.getSize(stack) == currentAmount) {
-                if (stack.getItem().hasContainerItem(stack)) {
-                    ItemStack container = stack.getItem().getContainerItem(stack);
-                    if (container.isEmpty() && container.isItemStackDamageable() && DamageHandler.getDamage(container) > DamageHandler.getMaxDamage(
+                if (stack.getItem().hasCraftingRemainingItem(stack)) {
+                    ItemStack container = stack.getItem().getCraftingRemainingItem(stack);
+                    if (container.isEmpty() && container.isDamageableItem() && DamageHandler.getDamage(container) > DamageHandler.getMaxDamage(
                             container)) {
                         container = ItemStack.EMPTY;
                     }
 
-                    this.fuelSlot.put(0, container);
+                    this.fuelSlot.set(0, container);
                 } else {
-                    this.fuelSlot.put(0, ItemStack.EMPTY);
+                    this.fuelSlot.set(0, ItemStack.EMPTY);
                 }
             } else {
-                this.fuelSlot.put(0, ModUtils.decSize(stack, currentAmount));
+                this.fuelSlot.set(0, ModUtils.decSize(stack, currentAmount));
             }
 
             ret = ModUtils.setSize(stack, currentAmount);
@@ -159,13 +164,13 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
     }
 
 
-    public ContainerGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiGenerator(new ContainerGenerator(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiGenerator((ContainerGenerator) menu);
     }
 
     public boolean isConverting() {
@@ -177,14 +182,14 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
     }
 
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
-        this.itemFuelTime = nbt.getInteger("itemFuelTime");
+        this.itemFuelTime = nbt.getInt("itemFuelTime");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setInteger("itemFuelTime", this.itemFuelTime);
+        nbt.putInt("itemFuelTime", this.itemFuelTime);
         return nbt;
     }
 

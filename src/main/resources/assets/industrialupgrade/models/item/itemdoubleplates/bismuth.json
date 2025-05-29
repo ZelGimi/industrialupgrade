@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/bismuth_doubleplate"	}
+		"layer0": "industrialupgrade:item/bismuth_doubleplate"	}
 }

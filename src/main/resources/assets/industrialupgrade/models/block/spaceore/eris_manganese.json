@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/eris_manganese"
+    "all" : "industrialupgrade:block/eris_manganese"
   }
 }

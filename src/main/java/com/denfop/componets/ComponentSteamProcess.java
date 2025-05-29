@@ -9,11 +9,12 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.blocks.FluidName;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.Timer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.List;
@@ -70,21 +71,6 @@ public class ComponentSteamProcess extends AbstractComponent {
     }
 
     @Override
-    public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem().equals(IUItem.canister)) {
-            FluidStack fluid = FluidUtil.getFluidContained(stack);
-            if (fluid != null && fluid.getFluid() == FluidName.fluidsteam_oil.getInstance() && fluid.amount >= 250 && (!timer1.canWork() || timer1.getBar() == 0) && (timer == null || !timer.canWork())) {
-                this.timer = new Timer(0, 0, 40);
-                final IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
-                handler.drain(250, true);
-                return true;
-            }
-        }
-        return super.onBlockActivated(player, hand);
-    }
-
-    @Override
     public void onLoaded() {
         super.onLoaded();
         this.componentProgress = this.getParent().getComp("com.denfop.componets.ComponentProgress");
@@ -93,6 +79,21 @@ public class ComponentSteamProcess extends AbstractComponent {
         this.audoFix = this.getParent() instanceof IAudioFixer;
         this.heatComponent = this.getParent().getComp(HeatComponent.class);
 
+    }
+
+    @Override
+    public boolean onBlockActivated(final Player player, final InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem().equals(IUItem.canister.getItem())) {
+            IFluidHandlerItem handler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse((IFluidHandlerItem) stack.getItem().initCapabilities(stack, stack.getTag()));
+            FluidStack fluid = handler.getFluidInTank(0);
+            if (fluid != FluidStack.EMPTY && fluid.getFluid() == FluidName.fluidsteam_oil.getInstance().get() && fluid.getAmount() >= 250 && (!timer1.canWork() || timer1.getBar() == 0) && (timer == null || !timer.canWork())) {
+                this.timer = new Timer(0, 0, 40);
+                handler.drain(250, IFluidHandler.FluidAction.EXECUTE);
+                return true;
+            }
+        }
+        return super.onBlockActivated(player, hand);
     }
 
     public void setSlotOutput(final InvSlotOutput slotOutput) {
@@ -143,7 +144,7 @@ public class ComponentSteamProcess extends AbstractComponent {
     public boolean checkFluidRecipe() {
         return (!hasTank || this.updateTick.getRecipeOutput().getRecipe().input.getFluid() == null || (this.invSlotRecipes
                 .getTank()
-                .getFluid() != null && this.updateTick.getRecipeOutput()
+                .getFluid() != FluidStack.EMPTY && this.updateTick.getRecipeOutput()
                 .getRecipe().input
                 .getFluid() != null && this.invSlotRecipes.getTank()
                 .getFluid()
@@ -153,7 +154,7 @@ public class ComponentSteamProcess extends AbstractComponent {
                         .getFluid()
                         .getFluid()) && this.invSlotRecipes.getTank().getFluidAmount() >= this.updateTick.getRecipeOutput()
                 .getRecipe().input
-                .getFluid().amount));
+                .getFluid().getAmount()));
     }
 
 
@@ -193,15 +194,15 @@ public class ComponentSteamProcess extends AbstractComponent {
                 }
             }
             this.componentProgress.addProgress();
-            if (timer != null && timer.canWork()) {
-                this.componentProgress.addProgress();
-
-            }
             if (action != null && action.needAction(TypeLoad.PROGRESS)) {
                 action.doAction();
             }
             if (this.componentProgress.getMaxValue() != this.operationLength) {
                 this.componentProgress.setMaxValue((short) this.operationLength);
+            }
+            if (timer != null && timer.canWork()) {
+                this.componentProgress.addProgress();
+
             }
             this.consumeEnergy();
             this.advEnergy.useEnergy(energyConsume);
@@ -247,7 +248,7 @@ public class ComponentSteamProcess extends AbstractComponent {
             action.doAction();
         }
         if (this.parent.getActive()) {
-            if (this.parent.getWorld().getWorldTime() % 20 == 0) {
+            if (this.parent.getWorld().getGameTime() % 20 == 0) {
                 if (this.timer != null && this.timer.canWork()) {
                     this.timer.work();
                     if (!this.timer.canWork()) {
@@ -289,16 +290,16 @@ public class ComponentSteamProcess extends AbstractComponent {
             }
         }
         int maxSize = size;
-        int count = this.outputSlot.get().isEmpty() ? output.getRecipe().output.items.get(0).getMaxStackSize() :
-                this.outputSlot.get().getMaxStackSize() - this.outputSlot.get().getCount();
+        int count = this.outputSlot.get(0).isEmpty() ? output.getRecipe().output.items.get(0).getMaxStackSize() :
+                this.outputSlot.get(0).getMaxStackSize() - this.outputSlot.get(0).getCount();
         ItemStack outputStack = this.updateTick.getRecipeOutput().getRecipe().output.items.get(0);
         count = count / Math.max(outputStack.getCount(), 1);
         size = Math.min(size, count);
-        size = Math.min(size, this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getItem().getItemStackLimit());
+        size = Math.min(size, this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getMaxStackSize());
         if (this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null) {
             final int size1 = this.invSlotRecipes.getTank().getFluidAmount() / this.updateTick
                     .getRecipeOutput()
-                    .getRecipe().input.getFluid().amount;
+                    .getRecipe().input.getFluid().getAmount();
             size = Math.min(size, size1);
         }
         size = Math.min(size, this.operationsPerTick);

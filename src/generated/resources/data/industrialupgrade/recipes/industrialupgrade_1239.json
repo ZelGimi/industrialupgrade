@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/cadmium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/zirconium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/niobium"
+      }
+    ]
+  },
+  "pattern": [
+    "DCC",
+    "CBB",
+    "AA "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_489_element"
+  },
+  "show_notification": true
+}

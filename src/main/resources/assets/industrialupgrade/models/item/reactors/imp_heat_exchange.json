@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/imp_heat_exchange"
+    "layer0" : "industrialupgrade:item/imp_heat_exchange"
   }
 }

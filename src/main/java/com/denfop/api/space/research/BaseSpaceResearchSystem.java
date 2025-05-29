@@ -1,27 +1,17 @@
 package com.denfop.api.space.research;
 
 import com.denfop.ElectricItem;
-import com.denfop.api.space.IAsteroid;
-import com.denfop.api.space.IBody;
-import com.denfop.api.space.IPlanet;
-import com.denfop.api.space.ISatellite;
-import com.denfop.api.space.SpaceNet;
-import com.denfop.api.space.fakebody.Data;
-import com.denfop.api.space.fakebody.EnumOperation;
-import com.denfop.api.space.fakebody.FakeAsteroid;
-import com.denfop.api.space.fakebody.FakePlanet;
-import com.denfop.api.space.fakebody.FakeSatellite;
-import com.denfop.api.space.fakebody.IFakeAsteroid;
-import com.denfop.api.space.fakebody.IFakeBody;
-import com.denfop.api.space.fakebody.IFakePlanet;
-import com.denfop.api.space.fakebody.IFakeSatellite;
-import com.denfop.api.space.fakebody.SpaceOperation;
+import com.denfop.api.space.*;
+import com.denfop.api.space.fakebody.*;
 import com.denfop.api.space.research.api.IResearchSystem;
 import com.denfop.api.space.research.api.IResearchTable;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.rovers.api.IRovers;
+import com.denfop.utils.FluidHandlerFix;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -57,8 +47,8 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                                 EnumOperation.WAIT, true
                         )
                 );
-                FluidStack fluidStack = FluidUtil.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, false);
-                if (fluidStack != null && fluidStack.amount >= (fakeplanet.getTimerFrom().getTime() + fakeplanet
+                FluidStack fluidStack = FluidHandlerFix.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+                if (!fluidStack.isEmpty() && fluidStack.getAmount() >= (fakeplanet.getTimerFrom().getTime() + fakeplanet
                         .getTimerTo()
                         .getTime())) {
                     SpaceNet.instance.getFakeSpaceSystem().addFakePlanet(fakeplanet);
@@ -89,8 +79,8 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                                 EnumOperation.WAIT, true
                         )
                 );
-                FluidStack fluidStack = FluidUtil.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, false);
-                if (fluidStack != null && fluidStack.amount >= (fakeSatellite.getTimerFrom().getTime() + fakeSatellite
+                FluidStack fluidStack = FluidHandlerFix.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+                if (!fluidStack.isEmpty() && fluidStack.getAmount() >= (fakeSatellite.getTimerFrom().getTime() + fakeSatellite
                         .getTimerTo()
                         .getTime())) {
                     SpaceNet.instance.getFakeSpaceSystem().addFakeSatellite(fakeSatellite);
@@ -119,8 +109,8 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                                 EnumOperation.WAIT, true
                         )
                 );
-                FluidStack fluidStack = FluidUtil.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, false);
-                if (fluidStack != null && fluidStack.amount >= (fakeSatellite.getTimerFrom().getTime() + fakeSatellite
+                FluidStack fluidStack = FluidHandlerFix.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+                if (!fluidStack.isEmpty() && fluidStack.getAmount() >= (fakeSatellite.getTimerFrom().getTime() + fakeSatellite
                         .getTimerTo()
                         .getTime())) {
                     SpaceNet.instance.getFakeSpaceSystem().addFakeAsteroid(fakeSatellite);
@@ -232,7 +222,7 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
         if (rovers == null) {
             return false;
         }
-        if (rovers.getItem().getFluidHandler(rovers.getItemStack()).drain(10, false) == null) {
+        if (FluidUtil.getFluidHandler(rovers.getItemStack()).orElse((IFluidHandlerItem) rovers.getItemStack().getItem().initCapabilities(rovers.getItemStack(), rovers.getItemStack().getTag())).drain(10, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
             return false;
         }
         Data data = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(table.getPlayer()).computeIfAbsent(
@@ -268,21 +258,21 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
             return false;
         }
         if (body instanceof IPlanet) {
-            return table.getLevel().ordinal() >= ((IPlanet) body).getLevels().ordinal() && rovers
+            return table.getLevelTable().ordinal() >= ((IPlanet) body).getLevels().ordinal() && rovers
                     .getItem()
                     .getLevel()
                     .getLevelsList()
                     .contains(((IPlanet) body).getLevels());
         }
         if (body instanceof ISatellite) {
-            return table.getLevel().ordinal() >= ((ISatellite) body).getLevels().ordinal() && rovers
+            return table.getLevelTable().ordinal() >= ((ISatellite) body).getLevels().ordinal() && rovers
                     .getItem()
                     .getLevel()
                     .getLevelsList()
                     .contains(((ISatellite) body).getLevels());
         }
         if (body instanceof IAsteroid) {
-            return table.getLevel().ordinal() >= ((IAsteroid) body).getLevels().ordinal() && rovers
+            return table.getLevelTable().ordinal() >= ((IAsteroid) body).getLevels().ordinal() && rovers
                     .getItem()
                     .getLevel()
                     .getLevelsList()

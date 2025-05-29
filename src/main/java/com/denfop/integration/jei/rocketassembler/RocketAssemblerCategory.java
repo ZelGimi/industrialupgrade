@@ -13,25 +13,29 @@ import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerRocketAssembler;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
+import com.denfop.integration.jei.JeiInform;
 import com.denfop.tiles.mechanism.TileEntityRocketAssembler;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<RocketAssemblerRecipeWrapper> {
+public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<RocketAssemblerHandler> {
 
     private final IDrawableStatic bg;
     private final ContainerRocketAssembler container1;
@@ -39,11 +43,13 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
     private final GuiComponent slots1;
     private int progress = 0;
     private int energy = 0;
-
+    JeiInform jeiInform;
     public RocketAssemblerCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileEntityRocketAssembler) BlockBaseMachine3.rocket_assembler.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+        super(((TileEntityRocketAssembler) BlockBaseMachine3.rocket_assembler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 240,
                 180
@@ -64,24 +70,14 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         this.componentList.add(progress_bar);
     }
 
-    @Nonnull
-    @Override
-    public String getUid() {
-        return BlockBaseMachine3.rocket_assembler.getName();
-    }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.rocket_assembler).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.rocket_assembler).getDescriptionId());
     }
 
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -89,9 +85,8 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(RocketAssemblerHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         if (this.energy < 100) {
             energy++;
@@ -101,42 +96,38 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         if (xScale >= 1) {
             progress = 0;
         }
-        this.slots.drawBackground(0, 0);
-        this.slots1.drawBackground(0, 0);
+        this.slots.drawBackground( stack,0, 0);
+        this.slots1.drawBackground( stack,0, 0);
 
-        progress_bar.renderBar(40, 55, xScale);
-        mc.getTextureManager().bindTexture(getTexture());
-
-
+        progress_bar.renderBar( stack,40, 55, xScale);
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final RocketAssemblerRecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-
+    public void setRecipe(IRecipeLayoutBuilder builder, RocketAssemblerHandler recipe, IFocusGroup focuses) {
         List<SlotInvSlot> list = new ArrayList<>();
-        for (Slot slot : container1.inventorySlots) {
+        for (Slot slot : container1.slots) {
             if (slot instanceof SlotInvSlot) {
                 if (((SlotInvSlot) slot).invSlot instanceof InvSlotRecipes) {
                     list.add((SlotInvSlot) slot);
                 }
             }
         }
-        final List<ItemStack> inputs = recipes.getInputs1();
+        final List<ItemStack> inputs = recipe.getInput();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            isg.init(i, true, list.get(i).getJeiX(), list.get(i).getJeiY());
-            isg.set(i, inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT,list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
+
 
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
-        isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
-        isg.set(i, recipes.getOutput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipe.output);
+
+    }
+
+    @Override
+    public RecipeType<RocketAssemblerHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     protected ResourceLocation getTexture() {

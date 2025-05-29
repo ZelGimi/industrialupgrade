@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/chromium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/aluminumbronze"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:wiring/copper"
+      }
+    ]
+  },
+  "pattern": [
+    "ABC",
+    "BBC",
+    "ABC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_560_element"
+  },
+  "show_notification": true
+}

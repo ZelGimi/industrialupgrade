@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/molybdenum_steel_casing"	}
+		"layer0": "industrialupgrade:item/molybdenum_steel_casing"	}
 }

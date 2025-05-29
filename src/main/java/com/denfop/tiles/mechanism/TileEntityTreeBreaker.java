@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -12,20 +13,23 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTreeBreaker;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiTreeBreaker;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLeaves;
-import net.minecraft.block.BlockLog;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -42,7 +46,8 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
 
-    public TileEntityTreeBreaker() {
+    public TileEntityTreeBreaker(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.tree_breaker,pos,state);
         this.slot = new InvSlotOutput(this, 18);
         this.energy = this.addComponent(Energy.asBasicSink(this, 4000, 5));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
@@ -59,7 +64,7 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -68,23 +73,26 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
     }
 
     @Override
-    public ContainerTreeBreaker getGuiContainer(final EntityPlayer var1) {
+    public ContainerTreeBreaker getGuiContainer(final Player var1) {
         return new ContainerTreeBreaker(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiTreeBreaker(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiTreeBreaker((ContainerTreeBreaker) menu);
     }
 
 
     private void breakTreesInRadius() {
         for (int x = -RADIUS; x <= RADIUS; x++) {
             for (int z = -RADIUS; z <= RADIUS; z++) {
-                BlockPos targetPos = pos.add(x, 0, z);
-                Block block = world.getBlockState(targetPos).getBlock();
-                if (block instanceof BlockLog && this.energy.getEnergy() >= 100) {
+                BlockPos targetPos = pos.offset(x, 0, z);
+                BlockState state = level.getBlockState(targetPos);
+                Block block = state.getBlock();
+
+                if ((block instanceof RotatedPillarBlock) && this.energy.getEnergy() >= 100) {
                     breakTree(targetPos);
                     this.energy.useEnergy(100);
                     return;
@@ -98,15 +106,32 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
         findConnectedTreeBlocks(startPos, blocksToBreak);
 
         for (BlockPos blockPos : blocksToBreak) {
-            IBlockState state = world.getBlockState(blockPos);
+            BlockState state = level.getBlockState(blockPos);
             Block block = state.getBlock();
-            List<ItemStack> drops = block.getDrops(world, blockPos, state, 0);
+
+            List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, blockPos, null);
             for (ItemStack drop : drops) {
                 this.slot.add(drop);
             }
-            world.setBlockToAir(blockPos);
+
+            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
         }
     }
+
+    private void findConnectedTreeBlocks(BlockPos startPos, List<BlockPos> blocksToBreak) {
+        if (blocksToBreak.contains(startPos)) return;
+
+        BlockState state = level.getBlockState(startPos);
+        Block block = state.getBlock();
+
+        if (block instanceof RotatedPillarBlock || block instanceof LeavesBlock) {
+            blocksToBreak.add(startPos);
+            for (BlockPos offset : BlockPos.betweenClosed(startPos.offset(-1, -1, -1), startPos.offset(1, 1, 1))) {
+                findConnectedTreeBlocks(offset.immutable(), blocksToBreak);
+            }
+        }
+    }
+
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
@@ -122,24 +147,12 @@ public class TileEntityTreeBreaker extends TileEntityInventory implements IUpgra
         }
     }
 
-    private void findConnectedTreeBlocks(BlockPos startPos, List<BlockPos> blocksToBreak) {
-        if (blocksToBreak.contains(startPos)) {
-            return;
-        }
 
-        Block block = world.getBlockState(startPos).getBlock();
-        if (block instanceof BlockLog || block instanceof BlockLeaves) {
-            blocksToBreak.add(startPos);
-            for (BlockPos offset : BlockPos.getAllInBox(startPos.add(-1, -1, -1), startPos.add(1, 1, 1))) {
-                findConnectedTreeBlocks(offset, blocksToBreak);
-            }
-        }
-    }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
+        if (this.getWorld().getGameTime() % 40 == 0) {
             this.breakTreesInRadius();
         }
     }

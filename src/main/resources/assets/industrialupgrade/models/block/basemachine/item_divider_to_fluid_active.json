@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/item_divider_to_fluid_active_front",
-    "down" : "industrialupgrade:blocks/item_divider_to_fluid_sides",
-    "up" : "industrialupgrade:blocks/item_divider_to_fluid_sides",
-    "north" : "industrialupgrade:blocks/item_divider_to_fluid_active_front",
-    "east" : "industrialupgrade:blocks/item_divider_to_fluid_sides",
-    "south" : "industrialupgrade:blocks/item_divider_to_fluid_sides",
-    "west" : "industrialupgrade:blocks/item_divider_to_fluid_sides"
+    "particle" : "industrialupgrade:block/item_divider_to_fluid_active_front",
+    "down" : "industrialupgrade:block/item_divider_to_fluid_sides",
+    "up" : "industrialupgrade:block/item_divider_to_fluid_sides",
+    "north" : "industrialupgrade:block/item_divider_to_fluid_active_front",
+    "east" : "industrialupgrade:block/item_divider_to_fluid_sides",
+    "south" : "industrialupgrade:block/item_divider_to_fluid_sides",
+    "west" : "industrialupgrade:block/item_divider_to_fluid_sides"
   }
 }

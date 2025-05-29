@@ -1,23 +1,28 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerNightTransformer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiNightTransformer;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -26,83 +31,78 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
     public final ComponentBaseEnergy ne;
     public final ComponentBaseEnergy se;
     public final ComponentBaseEnergy qe;
-    public int level;
+    public int levelBlock;
 
-    public TileEntityNightTransformer() {
+    public TileEntityNightTransformer(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.night_transformer,pos,state);
         this.ne = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.NIGHT, this, 10000));
         this.se = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.SOLARIUM, this, 20000));
         this.qe = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
     }
 
     @Override
-    public int getLevel() {
-        return this.level;
+    public int getLevelMechanism() {
+        return this.levelBlock;
     }
 
-    @Override
-    public void setLevel(final int level) {
-        this.level = level;
+    public void setLevelMech(final int levelBlock) {
+        this.levelBlock = levelBlock;
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.levelBlock -= level;
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (level < 10) {
-            ItemStack stack = player.getHeldItem(hand);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (levelBlock < 10) {
+            ItemStack stack = player.getItemInHand(hand);
             if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
-                this.level++;
+                this.levelBlock++;
                 return true;
             }
         } else {
-
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+
+
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.level != 0) {
-            ret.add(new ItemStack(IUItem.upgrade_speed_creation, this.level));
-            this.level = 0;
+        if (this.levelBlock != 0) {
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.levelBlock));
+            this.levelBlock = 0;
         }
         return ret;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.level = nbttagcompound.getInteger("level");
+        this.levelBlock = nbttagcompound.getInt("level");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("level", this.level);
+        nbttagcompound.putInt("level", this.levelBlock);
         return nbttagcompound;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiNightTransformer(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiNightTransformer((ContainerNightTransformer) menu);
     }
 
     @Override
-    public ContainerNightTransformer getGuiContainer(final EntityPlayer var1) {
+    public ContainerNightTransformer getGuiContainer(final Player var1) {
         return new ContainerNightTransformer(this, var1);
     }
 
@@ -110,9 +110,9 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.qe.getEnergy() >= 5 && this.se.getEnergy() >= 2 && this.ne.getEnergy() + 1 <= this.ne.getCapacity()) {
-            int max = (int) Math.min((level + 1)*5, qe.getEnergy() / ((level + 1) * 5));
-            max = (int) Math.min(max, se.getEnergy() / ((level + 1) * 2));
-            max = (int) Math.min(max, (this.ne.getCapacity() - ne.getEnergy()) / ((level + 1)));
+            int max = (int) Math.min((levelBlock + 1)*5, qe.getEnergy() / ((levelBlock + 1) * 5));
+            max = (int) Math.min(max, se.getEnergy() / ((levelBlock + 1) * 2));
+            max = (int) Math.min(max, (this.ne.getCapacity() - ne.getEnergy()) / ((levelBlock + 1)));
             this.qe.useEnergy(max * 5);
             this.se.useEnergy(max * 2);
             this.ne.addEnergy(max);
@@ -126,7 +126,7 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

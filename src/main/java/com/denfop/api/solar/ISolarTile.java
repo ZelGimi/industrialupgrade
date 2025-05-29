@@ -1,7 +1,8 @@
 package com.denfop.api.solar;
 
+
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -26,14 +27,13 @@ public interface ISolarTile {
 
     void setLoad(double load);
 
-    List<List<TileEntityMiniPanels.EnumState>> getStables();
+     List<List<TileEntityMiniPanels.EnumState>> getStables();
 
-    void setStables(int index, List<TileEntityMiniPanels.EnumState> enumStateList);
+      void setStables(int index, List<TileEntityMiniPanels.EnumState> enumStateList);
 
     List<ItemStack> getCoresItems();
 
     int getCoreLevel();
 
     void setCoreLevel(int level);
-
 }

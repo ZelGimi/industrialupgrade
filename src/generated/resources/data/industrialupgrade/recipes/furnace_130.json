@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:blockspace3/mimas_bloodstone"
+  },
+  "result": "industrialupgrade:itemingots/bloodstone"
+}

@@ -1,34 +1,36 @@
 package com.denfop.tiles.mechanism.solardestiller;
 
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSolarDestiller;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSolarDestiller;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotTank;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -49,20 +51,21 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     private boolean skyLight;
     private boolean hasSky;
 
-    public TileEntityBaseSolarDestiller(EnumTypeStyle style) {
+    public TileEntityBaseSolarDestiller(EnumTypeStyle style, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block, pos, state);
         this.style = style;
-        this.inputTank = this.fluids.addTankInsert("inputTank", 10000, Fluids.fluidPredicate(FluidRegistry.WATER));
+        this.inputTank = this.fluids.addTankInsert("inputTank", 10000, Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER));
         this.outputTank = this.fluids.addTankExtract(
                 "outputTank",
                 10000,
-                Fluids.fluidPredicate(FluidName.fluiddistilled_water.getInstance())
+                Fluids.fluidPredicate(FluidName.fluiddistilled_water.getInstance().get())
         );
         this.waterinputSlot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
                 1,
                 InvSlotFluid.TypeFluidSlot.INPUT,
-                FluidRegistry.WATER
+                net.minecraft.world.level.material.Fluids.WATER
         );
         this.destiwaterinputSlot = new InvSlotTank(
                 this,
@@ -79,14 +82,14 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     public void onLoaded() {
         super.onLoaded();
         this.tickrate = this.getTickRate();
-        this.hasSky = !this.world.provider.isNether();
+        this.hasSky = !(this.getLevel().dimension() == Level.NETHER);
         updateVisibility();
     }
 
     public void updateVisibility() {
-        this.skyLight = this.world.canBlockSeeSky(this.pos.up()) &&
-                (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                        MapColor.AIR) && this.hasSky && this.world.isDaytime();
+        this.skyLight = this.level.canSeeSky(this.pos.above()) &&
+                (this.level.getBlockState(this.pos.above()).getMapColor(this.level, this.pos.above()) ==
+                        MapColor.NONE) && this.hasSky && this.level.isDay();
     }
 
     @Override
@@ -114,7 +117,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     public void updateEntityServer() {
         super.updateEntityServer();
         this.waterinputSlot.processIntoTank(this.inputTank, this.wateroutputSlot);
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
+        if (this.getWorld().getGameTime() % 40 == 0) {
             updateVisibility();
 
         }
@@ -122,11 +125,11 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         if (!this.skyLight) {
             return;
         }
-        if (this.getWorld().provider.getWorldTime() % this.tickrate == 0) {
+        if (this.getWorld().getGameTime() % this.tickrate == 0) {
 
             if (this.canWork()) {
-                this.inputTank.drainInternal(getAmountWater(), true);
-                this.outputTank.fillInternal(new FluidStack(FluidName.fluiddistilled_water.getInstance(), 1), true);
+                this.inputTank.drain(getAmountWater(), IFluidHandler.FluidAction.EXECUTE);
+                this.outputTank.fill(new FluidStack(FluidName.fluiddistilled_water.getInstance().get(), 1), IFluidHandler.FluidAction.EXECUTE);
             }
 
 
@@ -137,13 +140,13 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     }
 
 
-    public ContainerSolarDestiller getGuiContainer(EntityPlayer player) {
+    public ContainerSolarDestiller getGuiContainer(Player player) {
         return new ContainerSolarDestiller(player, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiSolarDestiller(new ContainerSolarDestiller(player, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiSolarDestiller((ContainerSolarDestiller) isAdmin);
     }
 
     public int getAmountWater() {
@@ -163,8 +166,9 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     }
 
     public int getTickRate() {
-        Biome biome = world.getBiome(pos);
-        if (BiomeDictionary.hasType(biome, Type.HOT)) {
+        Holder<Biome> biome = level.getBiome(pos);
+
+        if (biome.is(Tags.Biomes.IS_HOT)) {
             switch (style) {
                 case DEFAULT:
                     return 36;
@@ -178,19 +182,19 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
                     return 4;
             }
         } else {
+            boolean isCold = biome.is(Tags.Biomes.IS_COLD);
             switch (style) {
                 case DEFAULT:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 144 : 72;
+                    return isCold ? 144 : 72;
                 case ADVANCED:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 80 : 40;
+                    return isCold ? 80 : 40;
                 case IMPROVED:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 44 : 22;
+                    return isCold ? 44 : 22;
                 case PERFECT:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 24 : 12;
+                    return isCold ? 24 : 12;
                 case PHOTONIC:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 16 : 8;
+                    return isCold ? 16 : 8;
             }
-
         }
         return 0;
     }

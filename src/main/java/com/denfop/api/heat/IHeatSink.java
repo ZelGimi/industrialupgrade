@@ -11,5 +11,4 @@ public interface IHeatSink extends IHeatAcceptor {
     boolean needTemperature();
 
     List<IHeatSource> getEnergyTickList();
-
 }

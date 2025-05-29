@@ -1,21 +1,25 @@
 package com.denfop.tiles.reactors.water.security;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.reactors.EnumTypeSecurity;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockWaterReactors;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWaterSecurity;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWaterSecurity;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.water.ISecurity;
 import com.denfop.tiles.reactors.water.controller.TileEntityMainController;
 import com.denfop.utils.Timer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 
@@ -25,6 +29,10 @@ public class TileEntityImpSecurity extends TileEntityMultiBlockElement implement
     private Timer red_timer = new Timer(0, 2, 30);
     private Timer yellow_timer = new Timer(0, 5, 0);
 
+    public TileEntityImpSecurity(BlockPos pos, BlockState state) {
+        super( BlockWaterReactors.water_imp_security, pos, state);
+    }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockWaterReactors.water_imp_security;
@@ -32,7 +40,7 @@ public class TileEntityImpSecurity extends TileEntityMultiBlockElement implement
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.water_reactors_component;
+        return IUItem.water_reactors_component.getBlock(getTeBlock());
     }
 
     @Override
@@ -84,13 +92,14 @@ public class TileEntityImpSecurity extends TileEntityMultiBlockElement implement
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiWaterSecurity(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiWaterSecurity((ContainerWaterSecurity) menu);
     }
 
+
     @Override
-    public ContainerWaterSecurity getGuiContainer(final EntityPlayer var1) {
+    public ContainerWaterSecurity getGuiContainer(final Player var1) {
         return new ContainerWaterSecurity(this, var1);
     }
 

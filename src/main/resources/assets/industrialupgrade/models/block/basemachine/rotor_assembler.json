@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "industrialupgrade:models/rotor_assembler",
-		"particle": "industrialupgrade:models/rotor_assembler"
+		"0": "industrialupgrade:block/rotor_assembler",
+		"particle": "industrialupgrade:block/rotor_assembler"
 	},
 	"elements": [
 		{

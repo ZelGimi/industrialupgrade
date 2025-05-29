@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/cobalt"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_142_element"
+  },
+  "show_notification": true
+}

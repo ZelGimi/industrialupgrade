@@ -1,10 +1,8 @@
 package com.denfop.items.bags;
 
-import com.denfop.Constants;
 import com.denfop.ElectricItem;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
@@ -14,73 +12,86 @@ import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.container.ContainerBags;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
+import com.denfop.items.IProperties;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
-import com.denfop.register.Register;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemEnergyBags extends Item implements IItemStackInventory, IUpdatableItemStackEvent, IUpgradeItem, IEnergyItem,
-        IModelRegister {
+import static com.denfop.IUCore.runnableListAfterRegisterItem;
 
+public class ItemEnergyBags extends Item implements IItemStackInventory, IProperties, IUpdatableItemStackEvent, IItemTab, IUpgradeItem, IEnergyItem {
     private final int slots;
     private final int maxStorage;
     private final int getTransferLimit;
+    private String nameItem;
 
-    private final String internalName;
-
-    public ItemEnergyBags(String internalName, int slots, int maxStorage, int getTransferLimit) {
-
-        this.setCreativeTab(IUCore.EnergyTab);
-        this.setMaxStackSize(1);
-        this.internalName = internalName;
+    public ItemEnergyBags(int slots, int maxStorage, int getTransferLimit) {
+        super(new Properties().stacksTo(1));
         this.slots = slots;
 
         this.getTransferLimit = getTransferLimit;
         this.maxStorage = maxStorage;
-        IUCore.proxy.addIModelRegister(this);
-        Register.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
-        UpgradeSystem.system.addRecipe(this, EnumUpgrades.BAGS.list);
-
+        runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.BAGS.list));
+        IUCore.proxy.addProperties(this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "bags" + "/" + name;
+    @Override
+    public void appendHoverText(
+            ItemStack stack,
+            @Nullable Level world,
+            List<Component> tooltip,
+            TooltipFlag flag
+    ) {
+        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            tooltip.add(Component.translatable("press.lshift"));
+        } else {
+            CompoundTag nbt = stack.getTag();
+            if (nbt == null || !nbt.contains("bag")) {
+                return;
+            }
 
-        return new ModelResourceLocation(loc, null);
+            List<BagsDescription> list = new ArrayList<>();
+            CompoundTag nbt1 = nbt.getCompound("bag");
+            int size = nbt1.getInt("size");
+
+            for (int i = 0; i < size; i++) {
+                list.add(new BagsDescription(nbt1.getCompound(String.valueOf(i))));
+            }
+
+            for (BagsDescription description : list) {
+                tooltip.add(Component.literal(description.getCount() + "x ")
+                        .append(description.getStack().getHoverName())
+                        .withStyle(ChatFormatting.GREEN));
+            }
+        }
     }
 
     @Override
@@ -88,239 +99,213 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IUpdata
         return EnumUpgrades.BAGS.list;
     }
 
-    public boolean showDurabilityBar(final ItemStack stack) {
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "item."+pathBuilder.toString().split("\\.")[2];
+        }
+
+        return this.nameItem;
+    }
+
+    public boolean isBarVisible(final ItemStack stack) {
         return true;
     }
 
-    public int getRGBDurabilityForDisplay(ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         return ModUtils.convertRGBcolorToInt(33, 91, 199);
     }
 
-    public double getDurabilityForDisplay(ItemStack stack) {
-        return Math.min(
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
                 Math.max(
                         1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
                         0.0
                 ),
                 1.0
-        );
+        ));
     }
 
-    public int getItemEnchantability() {
-        return 0;
+    public boolean canProvideEnergy(ItemStack stack) {
+        return false;
     }
 
-    public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {
+    public double getMaxEnergy(ItemStack stack) {
+        return maxStorage;
+    }
+
+    public short getTierItem(ItemStack stack) {
+        return (short) 2;
+    }
+
+    public double getTransferEnergy(ItemStack stack) {
+        return getTransferLimit;
+    }
+
+    public IAdvInventory getInventory(Player player, ItemStack stack) {
+        return new ItemStackBags(player, stack, this.slots);
+    }
+
+
+
+    @Override
+    public boolean isEnchantable(ItemStack p_41456_) {
         return false;
     }
 
     @Override
-    public void onUpdate(
-            final ItemStack stack,
-            final World worldIn,
-            final Entity entityIn,
-            final int itemSlot,
-            final boolean isSelected
-    ) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        if (entityIn instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entityIn;
-            if (nbt.getBoolean("open")) {
-                int slot_id = nbt.getInteger("slot_inventory");
-                if (slot_id != itemSlot && !player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
-                    ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
-                    if (toolbox.isThisContainer(stack)) {
-                        toolbox.saveAsThrown(stack);
-                        player.closeScreen();
-                        nbt.setBoolean("open", false);
-                    }
-                } else if (!(player.openContainer instanceof ContainerBags)) {
-                    nbt.setBoolean("open", false);
-                }
-            }
-        }
-        if (!UpgradeSystem.system.hasInMap(stack)) {
-            nbt.setBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(worldIn, this, stack));
-        }
+    public int getEnchantmentValue() {
+        return 0;
+    }
+
+    public void save(ItemStack stack, Player player) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("open", true);
+        nbt.putInt("slot_inventory", player.getInventory().selected);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(
-            final ItemStack stack,
-            @Nullable final World worldIn,
-            final List<String> tooltip,
-            final ITooltipFlag flagIn
-    ) {
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("press.lshift"));
-        } else {
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
-            if (!nbt.hasKey("bag")) {
-                return;
-            }
-            List<BagsDescription> list = new ArrayList<>();
-            final NBTTagCompound nbt1 = nbt.getCompoundTag("bag");
-            int size = nbt1.getInteger("size");
-            for (int i = 0; i < size; i++) {
-                list.add(new BagsDescription(nbt1.getCompoundTag(String.valueOf(i))));
-            }
-            for (BagsDescription description : list) {
-                tooltip.add(TextFormatting.GREEN + "" + description.getCount() + "x " + description.getStack().getDisplayName());
-            }
-        }
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Nonnull
-    public String getUnlocalizedName() {
-        return "item." + this.internalName + ".name";
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> {
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
-            return getModelLocation1(name + (nbt.getBoolean("open") ? "_open" : ""));
-
-        });
-        String[] mode = {"", "_open"};
-        for (final String s : mode) {
-            ModelBakery.registerItemVariants(this, getModelLocation1(name + s));
-        }
-    }
-
-    @Override
-    public void registerModels() {
-        registerModels(this.internalName);
-    }
-
-    @Override
-    public void getSubItems(@Nonnull final CreativeTabs p_150895_1_, @Nonnull final NonNullList<ItemStack> var3) {
-        if (this.isInCreativeTab(p_150895_1_)) {
-            final ItemStack var4 = new ItemStack(this, 1);
-            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
-            var3.add(var4);
-            var3.add(new ItemStack(this, 1, 27));
-        }
-    }
-
-    @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand) {
-        double coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, player.getHeldItem(hand)) ?
-                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, player.getHeldItem(hand)).number * 0.25D : 0);
-
-        if (ElectricItem.manager.canUse(player.getHeldItem(hand), 350 * coef)) {
-            ElectricItem.manager.use(player.getHeldItem(hand), 350 * coef, player);
-            ItemStack stack = ModUtils.get(player, hand);
-            if (IUCore.proxy.isSimulating()) {
-                save(stack, player);
-                player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-                return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-
-            }
-        }
-        return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
-    }
-
-    @Override
-    public @NotNull EnumActionResult onItemUseFirst(
-            final @NotNull EntityPlayer player,
-            final @NotNull World world,
-            final @NotNull BlockPos pos,
-            final @NotNull EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ,
-            final @NotNull EnumHand hand
-    ) {
-        final TileEntity tile = world.getTileEntity(pos);
-        if (player.isSneaking()) {
-            if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
-                IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
-                ItemStackBags box = (ItemStackBags) getInventory(player, player.getHeldItem(hand));
-                ItemStack[] itemStackList = box.getAll();
-                for (ItemStack stack : itemStackList) {
-                    if (stack == null || stack.isEmpty()) {
-                        continue;
-                    }
-                    ModUtils.tick(itemStackList, handler, box);
-                }
-                return EnumActionResult.SUCCESS;
-            }
-        }
-        return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
-    }
-
-    public void save(ItemStack stack, EntityPlayer player) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("open", true);
-        nbt.setInteger("slot_inventory", player.inventory.currentItem);
-    }
-
-    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
-            ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
-            if (toolbox.isThisContainer(stack)) {
-                toolbox.saveAsThrown(stack);
-                player.closeScreen();
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
 
     }
 
     @Override
     public void updateEvent(final int event, final ItemStack stack) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        nbt.setBoolean("white", !nbt.getBoolean("white"));
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        nbt.putBoolean("white", !nbt.getBoolean("white"));
     }
 
-    public boolean canInsert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
+    public boolean canInsert(Player player, ItemStack stack, ItemStack stack1) {
         ItemStackBags box = (ItemStackBags) getInventory(player, stack);
         return box.canAdd(stack1);
     }
 
-    public void insert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
+    public void insert(Player player, ItemStack stack, ItemStack stack1) {
         ItemStackBags box = (ItemStackBags) getInventory(player, stack);
         box.add(stack1);
-        box.markDirty();
+        box.setChanged();
     }
 
-    public void insertWithoutSave(EntityPlayer player, ItemStack stack, ItemStack stack1) {
+    public void insertWithoutSave(Player player, ItemStack stack, ItemStack stack1) {
         ItemStackBags box = (ItemStackBags) getInventory(player, stack);
         box.addWithoutSave(stack1);
     }
 
-    public IAdvInventory getInventory(EntityPlayer player, ItemStack stack) {
-        return new ItemStackBags(player, stack, slots);
+    @Override
+    public void inventoryTick(
+            ItemStack stack,
+            Level world,
+            Entity entity,
+            int itemSlot,
+            boolean isSelected
+    ) {
+        super.inventoryTick(stack, world, entity, itemSlot, isSelected);
+
+        if (!(entity instanceof Player)) {
+            return;
+        }
+        CompoundTag nbt = ModUtils.nbt(stack);
+
+        if (!UpgradeSystem.system.hasInMap(stack)) {
+            nbt.putBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, stack));
+        }
+
+        Player player = (Player) entity;
+
+        if (nbt.getBoolean("open")) {
+            int slotId = nbt.getInt("slot_inventory");
+            if (slotId != itemSlot && !world.isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerBags) {
+                ItemStackBags toolbox = ((ContainerBags) player.containerMenu).base;
+                if (toolbox.isThisContainer(stack)) {
+                    toolbox.saveAsThrown(stack);
+                    player.closeContainer();
+                    nbt.putBoolean("open", false);
+                }
+            } else if (!(player.containerMenu instanceof ContainerBags)) {
+                nbt.putBoolean("open", false);
+            }
+        }
+
+
     }
 
+
     @Override
-    public boolean canProvideEnergy(final ItemStack itemStack) {
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, @Nonnull Player player) {
+        if (!player.level().isClientSide && !stack.isEmpty() && player.containerMenu instanceof ContainerBags) {
+            ItemStackBags toolbox = ((ContainerBags) player.containerMenu).base;
+            if (toolbox.isThisContainer(stack)) {
+                toolbox.saveAndThrow(stack);
+                player.closeContainer();
+            }
+        }
         return true;
     }
 
     @Override
-    public double getMaxEnergy(final ItemStack itemStack) {
-        return this.maxStorage;
+    @Nonnull
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
+        ItemStack stack = ModUtils.get(player, hand);
+        double coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, player.getItemInHand(hand)) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, player.getItemInHand(hand)).number * 0.25D : 0);
+
+        if (ElectricItem.manager.canUse(player.getItemInHand(hand), 350 * coef)) {
+            ElectricItem.manager.use(player.getItemInHand(hand), 350 * coef, player);
+            if (!world.isClientSide && !player.isShiftKeyDown()) {
+                save(stack, player);
+
+                CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+                growingBuffer.writeByte(1);
+
+                growingBuffer.flip();
+                NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+
+
+                return InteractionResultHolder.success(player.getItemInHand(hand));
+
+            }
+        }
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
+    }
+
+
+    @Override
+    public String[] properties() {
+        return new String[]{"open"};
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public float getItemProperty(ItemStack itemStack, ClientLevel level, LivingEntity entity, int p174679, String property) {
+        return ModUtils.nbt(itemStack).getBoolean("open") ? 1 : 0;
     }
 
     @Override
-    public short getTierItem(final ItemStack itemStack) {
-        return 2;
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            final ItemStack var4 = new ItemStack(this, 1);
+            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
+            p_41392_.add(var4);
+            p_41392_.add(new ItemStack(this, 1));
+        }
     }
 
     @Override
-    public double getTransferEnergy(final ItemStack itemStack) {
-        return getTransferLimit;
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
-
 }

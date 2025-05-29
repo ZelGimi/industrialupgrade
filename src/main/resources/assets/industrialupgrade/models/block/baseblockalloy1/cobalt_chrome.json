@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "industrialupgrade:block/cobalt_chrome_block"
+	}
+}

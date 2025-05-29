@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -11,23 +12,24 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSaplingGardener;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSaplingGardener;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.block.Block;
-import net.minecraft.block.IGrowable;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.EnumPlantType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.PlantType;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -43,13 +45,14 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
 
-    public TileEntitySaplingGardener() {
+    public TileEntitySaplingGardener(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.sapling_gardener,pos,state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() instanceof IPlantable && ((IPlantable) ((ItemBlock) stack.getItem()).getBlock()).getPlantType(
-                        world,
-                        getBlockPos()) == EnumPlantType.Plains;
+                return stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof IPlantable && ((IPlantable) ((BlockItem) stack.getItem()).getBlock()).getPlantType(
+                        level,
+                        getBlockPos()) == PlantType.PLAINS;
             }
         };
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
@@ -67,7 +70,7 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -76,20 +79,21 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     }
 
     @Override
-    public ContainerSaplingGardener getGuiContainer(final EntityPlayer var1) {
+    public ContainerSaplingGardener getGuiContainer(final Player var1) {
         return new ContainerSaplingGardener(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSaplingGardener(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiSaplingGardener((ContainerSaplingGardener) menu);
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
+        if (this.getWorld().getGameTime() % 40 == 0) {
             plantSaplingsInRadius();
         }
     }
@@ -111,10 +115,10 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     private void plantSaplingsInRadius() {
         for (int x = -RADIUS; x <= RADIUS; x += 2) {
             for (int z = -RADIUS; z <= RADIUS; z += 2) {
-                BlockPos targetPos = pos.add(x, 0, z);
+                BlockPos targetPos = pos.offset(x, 0, z);
 
                 if (canPlantSaplingAt(targetPos) && this.energy.canUseEnergy(25)) {
-                    ItemStack saplingStack = this.slot.get();
+                    ItemStack saplingStack = this.slot.get(0);
                     if (!saplingStack.isEmpty()) {
                         this.energy.useEnergy(25);
                         plantSapling(targetPos, saplingStack);
@@ -128,23 +132,27 @@ public class TileEntitySaplingGardener extends TileEntityInventory implements IU
     }
 
     private boolean canPlantSaplingAt(BlockPos pos) {
-
-        Block blockAt = world.getBlockState(pos).getBlock();
-        if (blockAt != Blocks.AIR) {
+        BlockState stateAt = level.getBlockState(pos);
+        if (!stateAt.isAir()) {
             return false;
         }
-        Block blockBelow = world.getBlockState(pos.down()).getBlock();
 
+        BlockState below = level.getBlockState(pos.below());
+        Block blockBelow = below.getBlock();
 
-        return blockBelow == Blocks.DIRT || blockBelow == Blocks.GRASS;
+        return blockBelow == Blocks.DIRT || blockBelow == Blocks.GRASS_BLOCK;
     }
 
     private void plantSapling(BlockPos targetPos, ItemStack saplingStack) {
-        Block block = ((ItemBlock) saplingStack.getItem()).getBlock();
-        if (block instanceof IGrowable) {
-            world.setBlockState(targetPos, block.getStateFromMeta(saplingStack.getItemDamage()));
-            saplingStack.shrink(1);
+        if (saplingStack.getItem() instanceof BlockItem blockItem) {
+            Block block = blockItem.getBlock();
+            if (block instanceof net.minecraft.world.level.block.SaplingBlock) {
+                BlockState stateToPlace = block.defaultBlockState();
+                level.setBlock(targetPos, stateToPlace, 3);
+                saplingStack.shrink(1);
+            }
         }
     }
+
 
 }

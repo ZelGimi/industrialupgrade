@@ -3,21 +3,26 @@ package com.denfop.tiles.gaswell;
 import com.denfop.IUItem;
 import com.denfop.api.gasvein.GasVein;
 import com.denfop.api.gasvein.GasVeinSystem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasWell;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGasWellAnalyzer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGasWellAnalyzer;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityGasWellAnalyzer extends TileEntityMultiBlockElement implements IAnalyzer, IUpdatableTileEvent {
 
@@ -26,13 +31,14 @@ public class TileEntityGasWellAnalyzer extends TileEntityMultiBlockElement imple
     public int col;
     public boolean work;
 
-    public TileEntityGasWellAnalyzer() {
-
+    public TileEntityGasWellAnalyzer(BlockPos pos, BlockState state) {
+        super(BlockGasWell.gas_well_analyzer, pos, state);
     }
+
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_well;
+        return IUItem.gas_well.getBlock(getTeBlock());
     }
 
     @Override
@@ -41,14 +47,14 @@ public class TileEntityGasWellAnalyzer extends TileEntityMultiBlockElement imple
     }
 
     @Override
-    public ContainerGasWellAnalyzer getGuiContainer(final EntityPlayer var1) {
+    public ContainerGasWellAnalyzer getGuiContainer(final Player var1) {
         return new ContainerGasWellAnalyzer(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiGasWellAnalyzer(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiGasWellAnalyzer((ContainerGasWellAnalyzer) menu);
     }
 
     @Override
@@ -78,29 +84,29 @@ public class TileEntityGasWellAnalyzer extends TileEntityMultiBlockElement imple
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        nbt.setBoolean("work", this.work);
-        nbt.setInteger("progress", this.progress);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        nbt.putBoolean("work", this.work);
+        nbt.putInt("progress", this.progress);
         return super.writeToNBT(nbt);
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         this.work = nbtTagCompound.getBoolean("analyzer");
-        this.progress = nbtTagCompound.getInteger("progress");
+        this.progress = nbtTagCompound.getInt("progress");
     }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             return;
         }
-        if (getWorld().provider.getDimension() != 0) {
+        if (getWorld().dimension() != Level.OVERWORLD) {
             this.vein = GasVeinSystem.system.getEMPTY();
         } else {
-            final Chunk chunk = this.getWorld().getChunkFromBlockCoords(this.pos);
+            LevelChunk chunk = this.getWorld().getChunkAt(this.pos);
             final ChunkPos chunkpos = chunk.getPos();
             if (!GasVeinSystem.system.getChunkPos().contains(chunkpos)) {
                 GasVeinSystem.system.addVein(chunk);
@@ -144,7 +150,7 @@ public class TileEntityGasWellAnalyzer extends TileEntityMultiBlockElement imple
 
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (var2 == 0 && this.getMain() != null && !vein.isFind() && progress < 1200) {
             work = !work;
         }

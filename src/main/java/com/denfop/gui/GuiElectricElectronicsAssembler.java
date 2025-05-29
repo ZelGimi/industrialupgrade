@@ -7,12 +7,10 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerElectricElectronicsAssembler;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-@SideOnly(Side.CLIENT)
-public class GuiElectricElectronicsAssembler extends GuiIU<ContainerElectricElectronicsAssembler> {
+public class GuiElectricElectronicsAssembler<T extends ContainerElectricElectronicsAssembler> extends GuiIU<ContainerElectricElectronicsAssembler> {
 
     public final ContainerElectricElectronicsAssembler container;
 
@@ -36,27 +34,16 @@ public class GuiElectricElectronicsAssembler extends GuiIU<ContainerElectricElec
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-
-    }
 
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        this.drawTexturedModalRect(this.guiLeft - 22, this.guiTop + 82, 8, 7, 20, 20);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
+        this.drawTexturedModalRect(poseStack, this.guiLeft - 22, this.guiTop + 82, 8, 7, 20, 20);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
 
-
-    }
 
     public String getName() {
         return "";

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:gears/polonium"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:adv_bee_frame_template"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/vanady"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:casings/copper"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:frame/slow_aging_2"
+  },
+  "show_notification": true
+}

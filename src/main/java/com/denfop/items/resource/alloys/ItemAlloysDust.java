@@ -1,47 +1,53 @@
 package com.denfop.items.resource.alloys;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemAlloysDust extends ItemSubTypes<ItemAlloysDust.Types> implements IModelRegister {
-
-    protected static final String NAME = "alloydust";
-
-    public ItemAlloysDust() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemAlloysDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemAlloysDust(T element) {
+        super(new Item.Properties(), element);
     }
 
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("iu.alloy", "iu.alloys"));
+    @Override
+    public Item getItem() {
+        return this;
+    }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        return new String[]{"forge:dusts/" + getElement().getName().replace("_alloy", "").replace("_", ""), "forge:dusts"};
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
+        }
+
+        return this.nameItem;
     }
 
-    public enum Types implements ISubEnum {
+    public enum Type implements ISubEnum {
         aluminum_bronze(0),
         alumel(1),
         red_brass(2),
@@ -79,12 +85,12 @@ public class ItemAlloysDust extends ItemSubTypes<ItemAlloysDust.Types> implement
         private final String name;
         private final int ID;
 
-        Types(final int ID) {
+        Type(final int ID) {
             this.name = this.name().toLowerCase(Locale.US);
             this.ID = ID;
         }
 
-        public static Types getFromID(final int ID) {
+        public static Type getFromID(final int ID) {
             return values()[ID % values().length];
         }
 
@@ -92,9 +98,18 @@ public class ItemAlloysDust extends ItemSubTypes<ItemAlloysDust.Types> implement
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "alloydust";
+        }
+
+        @Override
+        public String getOtherPart() {
+            return "";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

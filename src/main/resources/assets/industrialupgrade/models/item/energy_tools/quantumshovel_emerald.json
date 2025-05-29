@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/quantumshovel_emerald"	}
+		"layer0": "industrialupgrade:item/quantumshovel_emerald"	}
 }

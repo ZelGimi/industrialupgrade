@@ -3,9 +3,10 @@ package com.denfop.integration.jei.siliconhandler;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SiliconHandler {
@@ -79,7 +80,9 @@ public class SiliconHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
-
+    public List<ItemStack> getInputs1() {
+        return Arrays.asList(input, input1);
+    }
 }

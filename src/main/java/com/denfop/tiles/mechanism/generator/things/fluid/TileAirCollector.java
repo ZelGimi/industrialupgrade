@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism.generator.things.fluid;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.pollution.ChunkLevel;
 import com.denfop.api.pollution.PollutionManager;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -14,7 +15,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAirCollector;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiAirCollector;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDrainTank;
 import com.denfop.invslot.InvSlotFluid;
@@ -25,22 +28,24 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraftforge.fluids.Fluid;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -53,16 +58,16 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotDrainTank[] containerslot;
     public FluidTank[] fluidTank;
-    private int level;
+    private int levelBlock;
     private boolean work;
     private ChunkPos chunkpos;
 
-    public TileAirCollector() {
-        super(5000, 1, 3);
+    public TileAirCollector(BlockPos pos, BlockState state) {
+        super(5000, 1, 3,BlockBaseMachine3.aircollector,pos,state);
         this.fluidTank = new FluidTank[3];
         this.fluids = this.addComponent(new Fluids(this));
-        Fluid[] name1 = new Fluid[]{FluidName.fluidazot.getInstance(), FluidName.fluidoxy.getInstance(),
-                FluidName.fluidco2.getInstance()};
+        Fluid[] name1 = new Fluid[]{FluidName.fluidazot.getInstance().get(), FluidName.fluidoxy.getInstance().get(),
+                FluidName.fluidco2.getInstance().get()};
         for (int i = 0; i < fluidTank.length; i++) {
 
             this.fluidTank[i] = this.fluids.addTank("fluidTank" + i, 10000, InvSlot.TypeItemSlot.OUTPUT,
@@ -77,7 +82,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
             );
         }
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
-        this.level = 0;
+        this.levelBlock = 0;
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
 
     }
@@ -87,7 +92,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
         for (int i = this.pos.getX() - 5; i <= this.pos.getX() + 5; i++) {
             for (int j = this.pos.getY() - 5; j <= this.pos.getY() + 5; j++) {
                 for (int k = this.pos.getZ() - 5; k <= this.pos.getZ() + 5; k++) {
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+                    final BlockEntity tile = this.getWorld().getBlockEntity(new BlockPos(i, j, k));
                     if (tile instanceof TileAirCollector) {
                         ((TileAirCollector) tile).update_collector(this.pos);
                     }
@@ -106,7 +111,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
                     if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
                         continue;
                     }
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+                    final BlockEntity tile = this.getWorld().getBlockEntity(new BlockPos(i, j, k));
                     if (tile instanceof TileAirCollector) {
                         this.work = false;
                         ((TileAirCollector) tile).work = false;
@@ -128,7 +133,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
                     if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
                         continue;
                     }
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+                    final BlockEntity tile = this.getWorld().getBlockEntity(new BlockPos(i, j, k));
                     if (tile instanceof TileAirCollector) {
                         this.work = false;
                         ((TileAirCollector) tile).work = false;
@@ -178,10 +183,10 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @SideOnly(Side.CLIENT)
+
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -190,27 +195,27 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
             tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.aircollector.info", 20) + new FluidStack(
-                    FluidName.fluidazot.getInstance(),
+                    FluidName.fluidazot.getInstance().get(),
                     1
-            ).getLocalizedName());
+            ).getDisplayName().getString());
             tooltip.add(Localization.translate("iu.aircollector.info", 60) + new FluidStack(
-                    FluidName.fluidoxy.getInstance(),
+                    FluidName.fluidoxy.getInstance().get(),
                     1
-            ).getLocalizedName());
+            ).getDisplayName().getString());
             tooltip.add(Localization.translate("iu.aircollector.info", 120) + new FluidStack(
-                    FluidName.fluidco2.getInstance(),
+                    FluidName.fluidco2.getInstance().get(),
                     1
-            ).getLocalizedName());
+            ).getDisplayName().getString());
 
         }
         super.addInformation(stack, tooltip);
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.level != 0) {
-            ret.add(new ItemStack(IUItem.upgrade_speed_creation, this.level));
-            this.level = 0;
+        if (this.levelBlock != 0) {
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.levelBlock));
+            this.levelBlock = 0;
         }
         return ret;
     }
@@ -220,52 +225,47 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     }
 
     @Override
-    public ContainerAirCollector getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerAirCollector getGuiContainer(final Player entityPlayer) {
         return new ContainerAirCollector(entityPlayer, this);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("level", this.level);
+        nbttagcompound.putInt("level", this.levelBlock);
 
         return nbttagcompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.level = nbttagcompound.getInteger("level");
+        this.levelBlock = nbttagcompound.getInt("level");
 
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (level < 10) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (levelBlock < 10) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
-                this.level++;
+                this.levelBlock++;
                 return true;
             }
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 
+
+
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiAirCollector(new ContainerAirCollector(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiAirCollector((ContainerAirCollector) menu);
     }
 
     public int gaugeLiquidScaled(int i) {
@@ -284,7 +284,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.setUpgradestat();
             update_collector();
             this.chunkpos = new ChunkPos(this.pos);
@@ -295,15 +295,15 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.world.provider.getWorldTime() % 60 == 0 && this.energy.getEnergy() > 5) {
+        if (this.level.getGameTime() % 60 == 0 && this.energy.getEnergy() > 5) {
             ChunkLevel chunkLevel = PollutionManager.pollutionManager.getChunkLevelAir(chunkpos);
             if (chunkLevel != null) {
                 if (chunkLevel.removePollution(5)) {
                     if (fluidTank[2].getFluidAmount() + 10 <= fluidTank[2].getCapacity()) {
-                        fluidTank[2].fill(new FluidStack(FluidName.fluidco2.getInstance(), Math.min(
+                        fluidTank[2].fill(new FluidStack(FluidName.fluidco2.getInstance().get(), Math.min(
                                 10,
                                 fluidTank[2].getCapacity() - fluidTank[2].getFluidAmount()
-                        )), true);
+                        )), IFluidHandler.FluidAction.EXECUTE);
                         work = true;
                         this.energy.useEnergy(5);
                     }
@@ -321,41 +321,41 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
 
         }
         boolean work = false;
-        if (this.energy.getEnergy() > 5 + 5 * this.level) {
-            if (this.world.provider.getWorldTime() % 400 == 0) {
+        if (this.energy.getEnergy() > 5 + 5 * this.levelBlock) {
+            if (this.level.getGameTime() % 400 == 0) {
                 this.initiate(2);
             }
             work = true;
-            if (this.world.provider.getWorldTime() % 20 == 0) {
+            if (this.level.getGameTime() % 20 == 0) {
                 if (fluidTank[0].getFluidAmount() + 1 <= fluidTank[0].getCapacity()) {
                     fluidTank[0].fill(
-                            new FluidStack(FluidName.fluidazot.getInstance(), Math.min(
-                                    1 + this.level,
+                            new FluidStack(FluidName.fluidazot.getInstance().get(), Math.min(
+                                    1 + this.levelBlock,
                                     fluidTank[0].getCapacity() - fluidTank[0].getFluidAmount()
                             )),
-                            true
+                            IFluidHandler.FluidAction.EXECUTE
                     );
 
                 }
-                if (this.world.provider.getWorldTime() % 60 == 0) {
+                if (this.level.getGameTime() % 60 == 0) {
                     if (fluidTank[1].getFluidAmount() + 1 <= fluidTank[1].getCapacity()) {
-                        fluidTank[1].fill(new FluidStack(FluidName.fluidoxy.getInstance(), Math.min(
-                                1 + this.level,
+                        fluidTank[1].fill(new FluidStack(FluidName.fluidoxy.getInstance().get(), Math.min(
+                                1 + this.levelBlock,
                                 fluidTank[1].getCapacity() - fluidTank[1].getFluidAmount()
-                        )), true);
+                        )), IFluidHandler.FluidAction.EXECUTE);
                         work = true;
                     }
                 }
-                if (this.world.provider.getWorldTime() % 120 == 0) {
+                if (this.level.getGameTime() % 120 == 0) {
                     if (fluidTank[2].getFluidAmount() + 1 <= fluidTank[2].getCapacity()) {
-                        fluidTank[2].fill(new FluidStack(FluidName.fluidco2.getInstance(), Math.min(
-                                1 + this.level,
+                        fluidTank[2].fill(new FluidStack(FluidName.fluidco2.getInstance().get(), Math.min(
+                                1 + this.levelBlock,
                                 fluidTank[2].getCapacity() - fluidTank[2].getFluidAmount()
-                        )), true);
+                        )), IFluidHandler.FluidAction.EXECUTE);
                         work = true;
                     }
                 }
-                this.energy.useEnergy(5 + 5 * this.level);
+                this.energy.useEnergy(5 + 5 * this.levelBlock);
             }
         }
         if (!work) {
@@ -383,18 +383,17 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     }
 
     @Override
-    public int getLevel() {
-        return this.level;
+    public int getLevelMechanism() {
+        return this.levelBlock;
     }
 
-    @Override
-    public void setLevel(final int level) {
-        this.level = level;
+    public void setLevelMech(final int levelBlock) {
+        this.levelBlock = levelBlock;
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.levelBlock -= level;
     }
 
     @Override

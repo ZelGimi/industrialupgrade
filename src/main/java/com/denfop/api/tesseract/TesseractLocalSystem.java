@@ -4,9 +4,10 @@ import com.denfop.api.energy.IDual;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,8 +26,8 @@ public class TesseractLocalSystem {
     }
 
     public void add(ITesseract tesseract) {
-        if (!tesseractMap.containsKey(tesseract.getBlockPos())) {
-            tesseractMap.put(tesseract.getBlockPos(), tesseract);
+        if (!tesseractMap.containsKey(tesseract.getPos())) {
+            tesseractMap.put(tesseract.getPos(), tesseract);
             for (Channel channel : tesseract.getChannels()) {
                 addChannel(channel);
             }
@@ -94,7 +95,7 @@ public class TesseractLocalSystem {
     }
 
     public void remove(ITesseract tesseract) {
-        ITesseract tesseract1 = tesseractMap.remove(tesseract.getBlockPos());
+        ITesseract tesseract1 = tesseractMap.remove(tesseract.getPos());
         if (tesseract1 != null) {
             for (Channel channel : tesseract1.getChannels()) {
                 removeChannel(channel);
@@ -168,15 +169,15 @@ public class TesseractLocalSystem {
                                 }
                                 FluidStack stack = one.getFluid();
                                 if (two.getFluidAmount() == 0) {
-                                    two.fill(stack, true);
-                                    one.drain(stack.amount, true);
+                                    two.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+                                    one.drain(stack.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                                 } else {
                                     if (two.getFluid().isFluidEqual(stack)) {
                                         final int canFill = two.getCapacity() - two.getFluidAmount();
-                                        final int canDrain = stack.amount;
+                                        final int canDrain = stack.getAmount();
                                         final int sent = Math.min(canFill, canDrain);
-                                        two.fill(new FluidStack(two.getFluid().getFluid(), sent), true);
-                                        one.drain(sent, true);
+                                        two.fill(new FluidStack(two.getFluid().getFluid(), sent), IFluidHandler.FluidAction.EXECUTE);
+                                        one.drain(sent, IFluidHandler.FluidAction.EXECUTE);
                                     }
                                 }
                             }
@@ -191,16 +192,16 @@ public class TesseractLocalSystem {
                             }
                             FluidStack stack = one.getFluid();
                             if (two.getFluidAmount() == 0) {
-                                two.fill(stack, true);
-                                one.drain(stack.amount, true);
+                                two.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+                                one.drain(stack.getAmount(), IFluidHandler.FluidAction.EXECUTE);
                             } else {
 
                                 if (two.getFluid().isFluidEqual(stack)) {
                                     final int canFill = two.getCapacity() - two.getFluidAmount();
-                                    final int canDrain = stack.amount;
+                                    final int canDrain = stack.getAmount();
                                     final int sent = Math.min(canFill, canDrain);
-                                    two.fill(new FluidStack(two.getFluid().getFluid(), sent), true);
-                                    one.drain(sent, true);
+                                    two.fill(new FluidStack(two.getFluid().getFluid(), sent), IFluidHandler.FluidAction.EXECUTE);
+                                    one.drain(sent, IFluidHandler.FluidAction.EXECUTE);
                                 }
                             }
                         }
@@ -224,14 +225,14 @@ public class TesseractLocalSystem {
                                 if (one.isEmpty()) {
                                     continue cycle;
                                 }
-                                for (int i = 0; i < one.getContents().size(); i++) {
-                                    ItemStack stack = one.getContents().get(i);
+                                for (int i = 0; i < one.size(); i++) {
+                                    ItemStack stack = one.get(i);
                                     if (stack.isEmpty()) {
                                         continue;
                                     }
                                     final int countFill = two.addExperimental(stack);
                                     if (countFill == 0) {
-                                        one.put(i, ItemStack.EMPTY);
+                                        one.set(i, ItemStack.EMPTY);
                                     } else {
                                         stack.setCount(countFill);
                                     }
@@ -247,14 +248,14 @@ public class TesseractLocalSystem {
                             if (one.isEmpty()) {
                                 continue cycle;
                             }
-                            for (int i = 0; i < one.getContents().size(); i++) {
-                                ItemStack stack = one.getContents().get(i);
+                            for (int i = 0; i < one.size(); i++) {
+                                ItemStack stack = one.get(i);
                                 if (stack.isEmpty()) {
                                     continue;
                                 }
                                 final int countFill = two.addExperimental(stack);
                                 if (countFill == 0) {
-                                    one.put(i, ItemStack.EMPTY);
+                                    one.set(i, ItemStack.EMPTY);
                                 } else {
                                     stack.setCount(countFill);
                                 }

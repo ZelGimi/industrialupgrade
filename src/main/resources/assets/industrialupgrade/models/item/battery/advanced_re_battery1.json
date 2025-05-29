@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/battery/advanced_re_battery_1"
+    "layer0" : "industrialupgrade:item/battery/advanced_re_battery_1"
   }
 }

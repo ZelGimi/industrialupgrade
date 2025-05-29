@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntitySolidStateElectrolyzer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSolidStateElectrolyzer extends ContainerFullInv<TileEntitySolidStateElectrolyzer> {
 
-    public ContainerSolidStateElectrolyzer(EntityPlayer var1, TileEntitySolidStateElectrolyzer tileEntity1) {
+    public ContainerSolidStateElectrolyzer(Player var1, TileEntitySolidStateElectrolyzer tileEntity1) {
         super(var1, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 120, 99));

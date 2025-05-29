@@ -4,11 +4,7 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
@@ -19,14 +15,14 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,8 +38,8 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     public int tick = 0;
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.ROLLING);
 
-    public TileEntityRollingMachine() {
-
+    public TileEntityRollingMachine(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.rolling_machine,pos,state);
         this.inputSlotA = new InvSlotRecipes(this, "cutting", this) {
         };
         this.progress = 0;
@@ -53,12 +49,12 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("primitive_rcm.info"));
-        tooltip.add(Localization.translate("primitive_use.info") + IUItem.cutter.getItemStackDisplayName());
+        tooltip.add(Localization.translate("primitive_use.info") + IUItem.cutter.getItem().getDescription().getString());
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -66,25 +62,14 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
         return BlockBaseMachine3.rolling_machine;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
         data = PrimitiveHandler.getPlayersData(EnumPrimitive.ROLLING);
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
         }
@@ -96,23 +81,23 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot3")) {
-            inputSlotA.put(0, ItemStack.EMPTY);
+            inputSlotA.set(0, ItemStack.EMPTY);
         }
         if (name.equals("slot2")) {
-            outputSlot.put(0, ItemStack.EMPTY);
+            outputSlot.set(0, ItemStack.EMPTY);
         }
     }
 
@@ -120,8 +105,8 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -157,38 +142,30 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        ItemStack stack = player.getHeldItem(hand);
-
-        if (stack.getItem() == IUItem.cutter && this.output != null && this.inputSlotA
-                .get()
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem() == IUItem.cutter.getItem() && this.output != null && this.inputSlotA
+                .get(0)
                 .getCount() >= this.output.getRecipe().input
                 .getInputs()
                 .get(0)
                 .getAmount() && this.outputSlot.canAdd(this.output.getRecipe().output.items.get(
                 0))) {
-            progress += (short) (10 + (short) (data.getOrDefault(player.getUniqueID(), 0.0) / 5d));
+            progress += (short) (10 + (short) (data.getOrDefault(player.getUUID(), 0.0) / 5d));
             this.getCooldownTracker().setTick(10);
             if (progress >= 100) {
                 this.progress = 0;
-                player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-                if (!this.getWorld().isRemote) {
-                    PrimitiveHandler.addExperience(EnumPrimitive.ROLLING, 0.5, player.getUniqueID());
+                player.setItemInHand(hand, stack.getItem().getCraftingRemainingItem(stack));
+                if (!this.getWorld().isClientSide) {
+                    PrimitiveHandler.addExperience(EnumPrimitive.ROLLING, 0.5, player.getUUID());
                 }
                 this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                 this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
-                if (this.inputSlotA.isEmpty() || this.outputSlot.get().getCount() >= 64) {
+                if (this.inputSlotA.isEmpty() || this.outputSlot.get(0).getCount() >= 64) {
                     this.output = null;
 
                 }
-                if (!world.isRemote) {
+                if (!level.isClientSide) {
                     new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
                 }
@@ -198,40 +175,40 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
         } else {
             if (!stack.isEmpty()) {
                 if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 0)) {
-                    this.inputSlotA.put(0, stack.copy());
+                    this.inputSlotA.set(0, stack.copy());
                     stack.setCount(0);
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     }
                     return true;
-                } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).isItemEqual(stack)) {
+                } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).is(stack.getItem())) {
                     int minCount = 64 - this.inputSlotA.get(0).getCount();
                     minCount = Math.min(stack.getCount(), minCount);
                     this.inputSlotA.get(0).grow(minCount);
                     stack.grow(-minCount);
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     }
                     return true;
                 }
             } else {
                 if (!outputSlot.isEmpty()) {
-                    if (!world.isRemote) {
-                        ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
+                    if (!level.isClientSide) {
+                        ModUtils.dropAsEntity(level, pos, outputSlot.get(0));
                     }
-                    outputSlot.put(0, ItemStack.EMPTY);
-                    if (!world.isRemote) {
+                    outputSlot.set(0, ItemStack.EMPTY);
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot2", false);
                     }
                     return true;
                 } else {
                     if (!inputSlotA.isEmpty()) {
-                        if (!world.isRemote) {
-                            ModUtils.dropAsEntity(world, pos, inputSlotA.get(), player);
+                        if (!level.isClientSide) {
+                            ModUtils.dropAsEntity(level, pos, inputSlotA.get(0));
                         }
-                        inputSlotA.put(0, ItemStack.EMPTY);
+                        inputSlotA.set(0, ItemStack.EMPTY);
                         this.output = null;
-                        if (!world.isRemote) {
+                        if (!level.isClientSide) {
                             new PacketUpdateFieldTile(this, "slot3", false);
                         }
                         return true;
@@ -244,21 +221,13 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
         return false;
     }
 
+
     @Override
     public void onUpdate() {
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
 
-
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
-    }
 
     @Override
     public MachineRecipe getRecipeOutput() {

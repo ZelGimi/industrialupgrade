@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/reactordepleteduran233dual"
+    "layer0" : "industrialupgrade:item/reactordepleteduran233dual"
   }
 }

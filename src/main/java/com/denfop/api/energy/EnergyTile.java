@@ -1,9 +1,9 @@
 package com.denfop.api.energy;
 
 import com.denfop.api.sytem.InfoTile;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -16,12 +16,12 @@ public class EnergyTile implements IEnergyTile {
     }
 
     @Override
-    public TileEntity getTileEntity() {
+    public BlockEntity getTileEntity() {
         return null;
     }
 
     @Override
-    public BlockPos getBlockPos() {
+    public BlockPos getPos() {
         return null;
     }
 
@@ -36,17 +36,17 @@ public class EnergyTile implements IEnergyTile {
     }
 
     @Override
-    public void AddTile(final IEnergyTile tile, final EnumFacing dir) {
+    public void AddTile(final IEnergyTile tile, final Direction dir) {
 
     }
 
     @Override
-    public void RemoveTile(final IEnergyTile tile, final EnumFacing dir) {
+    public void RemoveTile(final IEnergyTile tile, final Direction dir) {
 
     }
 
     @Override
-    public Map<EnumFacing, IEnergyTile> getTiles() {
+    public Map<Direction, IEnergyTile> getTiles() {
         return null;
     }
 

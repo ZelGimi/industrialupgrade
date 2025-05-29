@@ -1,20 +1,15 @@
 package com.denfop.api.item;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.EntityEquipmentSlot.Type;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 public interface IVolcanoArmor {
 
-
-    static boolean hasCompleteHazmat(EntityLivingBase living) {
-        EntityEquipmentSlot[] var1 = EntityEquipmentSlot.values();
-        int var2 = var1.length;
-
-        for (EntityEquipmentSlot slot : var1) {
-            if (slot.getSlotType() == Type.ARMOR) {
-                ItemStack stack = living.getItemStackFromSlot(slot);
+    static boolean hasCompleteHazmat(LivingEntity living) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+                ItemStack stack = living.getItemBySlot(slot);
                 if (stack.isEmpty() || !(stack.getItem() instanceof IVolcanoArmor)) {
                     return false;
                 }
@@ -28,16 +23,16 @@ public interface IVolcanoArmor {
                     return true;
                 }
             }
-
         }
-
         return true;
     }
 
-    boolean addsProtection(EntityLivingBase var1, EntityEquipmentSlot var2, ItemStack var3);
 
-    default boolean fullyProtects(EntityLivingBase entity, EntityEquipmentSlot slot, ItemStack stack) {
+    boolean addsProtection(LivingEntity entity, EquipmentSlot slot, ItemStack stack);
+
+
+    default boolean fullyProtects(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
         return false;
     }
-
 }
+

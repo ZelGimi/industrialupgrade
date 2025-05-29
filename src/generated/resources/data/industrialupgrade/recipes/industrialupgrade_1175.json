@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:adv_refiner/adv_refiner"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_86_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_96_element"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    " A ",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/imp_refiner"
+  },
+  "show_notification": true
+}

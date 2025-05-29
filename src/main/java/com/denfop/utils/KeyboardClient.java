@@ -2,87 +2,97 @@ package com.denfop.utils;
 
 import com.denfop.IUCore;
 import com.denfop.network.packet.PacketKeys;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class KeyboardClient extends KeyboardIU {
 
-    public static final KeyBinding changemode = new KeyBinding("Change mode key", Keyboard.KEY_G, "IndustrialUpgrade");
-    public static final KeyBinding flymode = new KeyBinding("Fly Key", Keyboard.KEY_F, "IndustrialUpgrade");
-    public static final KeyBinding blacklistviewmode = new KeyBinding("BlackList View Key", Keyboard.KEY_X, "IndustrialUpgrade");
-    public static final KeyBinding verticalmode = new KeyBinding("Vertical Key", Keyboard.KEY_K, "IndustrialUpgrade");
-    public static final KeyBinding savemode = new KeyBinding("Save move Key", Keyboard.KEY_L, "IndustrialUpgrade");
-    public static final KeyBinding blackmode = new KeyBinding("BlackList Key", Keyboard.KEY_J, "IndustrialUpgrade");
-    public static final KeyBinding streakmode = new KeyBinding("Streak Key", Keyboard.KEY_V, "IndustrialUpgrade");
+    public static final KeyMapping changemode = new KeyMapping("Change mode key", InputConstants.KEY_G, "IndustrialUpgrade");
+    public static final KeyMapping flymode = new KeyMapping("Fly Key", InputConstants.KEY_F, "IndustrialUpgrade");
+    public static final KeyMapping blacklistviewmode = new KeyMapping("BlackList View Key", InputConstants.KEY_X, "IndustrialUpgrade");
+    public static final KeyMapping verticalmode = new KeyMapping("Vertical Key", InputConstants.KEY_K, "IndustrialUpgrade");
+    public static final KeyMapping savemode = new KeyMapping("Save move Key", InputConstants.KEY_L, "IndustrialUpgrade");
+    public static final KeyMapping blackmode = new KeyMapping("BlackList Key", InputConstants.KEY_J, "IndustrialUpgrade");
+    public static final KeyMapping streakmode = new KeyMapping("Streak Key", InputConstants.KEY_V, "IndustrialUpgrade");
 
-    public static final KeyBinding armormode = new KeyBinding("Armor Key", Keyboard.KEY_M, "IndustrialUpgrade");
-    public static final KeyBinding bootsmode = new KeyBinding("Boots Key", Keyboard.KEY_B, "IndustrialUpgrade");
-    public static final KeyBinding leggingsmode = new KeyBinding("Leggings Key", Keyboard.KEY_N, "IndustrialUpgrade");
+    public static final KeyMapping armormode = new KeyMapping("Armor Key", InputConstants.KEY_M, "IndustrialUpgrade");
+    public static final KeyMapping bootsmode = new KeyMapping("Boots Key", InputConstants.KEY_B, "IndustrialUpgrade");
+    public static final KeyMapping leggingsmode = new KeyMapping("Leggings Key", InputConstants.KEY_N, "IndustrialUpgrade");
+    public static final KeyMapping altmode = new KeyMapping("ALT Key", InputConstants.KEY_LALT, "IndustrialUpgrade");
 
-    private final Minecraft mc = Minecraft.getMinecraft();
+    private final Minecraft mc = Minecraft.getInstance();
     private int lastKeyState = 0;
 
     public KeyboardClient() {
-        ClientRegistry.registerKeyBinding(changemode);
-        ClientRegistry.registerKeyBinding(flymode);
-        ClientRegistry.registerKeyBinding(blacklistviewmode);
-        ClientRegistry.registerKeyBinding(verticalmode);
-        ClientRegistry.registerKeyBinding(savemode);
-        ClientRegistry.registerKeyBinding(blackmode);
-        ClientRegistry.registerKeyBinding(streakmode);
-        ClientRegistry.registerKeyBinding(armormode);
-        ClientRegistry.registerKeyBinding(bootsmode);
-        ClientRegistry.registerKeyBinding(leggingsmode);
+        MinecraftForge.EVENT_BUS.register(this);
     }
+
+    public void register(RegisterKeyMappingsEvent ClientRegistry) {
+        ClientRegistry.register(changemode);
+        ClientRegistry.register(flymode);
+        ClientRegistry.register(blacklistviewmode);
+        ClientRegistry.register(verticalmode);
+        ClientRegistry.register(savemode);
+        ClientRegistry.register(blackmode);
+        ClientRegistry.register(streakmode);
+        ClientRegistry.register(armormode);
+        ClientRegistry.register(bootsmode);
+        ClientRegistry.register(leggingsmode);
+        ClientRegistry.register(altmode);
+    }
+
 
     public void sendKeyUpdate() {
         Set<Key> keys = EnumSet.noneOf(Key.class);
-        GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+        Screen currentScreen = Minecraft.getInstance().screen;
         if (currentScreen == null) {
-            if (GameSettings.isKeyDown(changemode)) {
+            if (keyDown(changemode)) {
                 keys.add(Key.CHANGE);
             }
-            if (GameSettings.isKeyDown(flymode)) {
+            if (keyDown(flymode)) {
                 keys.add(Key.FLYMODE);
             }
-            if (GameSettings.isKeyDown(armormode)) {
+            if (keyDown(altmode)) {
+                keys.add(Key.ALT);
+            }
+            if (keyDown(armormode)) {
                 keys.add(Key.ARMOR);
             }
-            if (GameSettings.isKeyDown(this.mc.gameSettings.keyBindForward)) {
+            if (keyDown(this.mc.options.keySprint)) {
                 keys.add(Key.FORWARD);
             }
-            if (GameSettings.isKeyDown(this.mc.gameSettings.keyBindJump)) {
+            if (keyDown(this.mc.options.keyJump)) {
                 keys.add(Key.JUMP);
             }
-            if (GameSettings.isKeyDown(verticalmode)) {
+            if (keyDown(verticalmode)) {
                 keys.add(Key.VERTICALMODE);
             }
-            if (GameSettings.isKeyDown(blacklistviewmode)) {
+            if (keyDown(blacklistviewmode)) {
                 keys.add(Key.BLACKLISTVIEWMODE);
             }
-            if (GameSettings.isKeyDown(savemode)) {
+            if (keyDown(savemode)) {
                 keys.add(Key.SAVEMODE);
             }
-            if (GameSettings.isKeyDown(blackmode)) {
+            if (keyDown(blackmode)) {
                 keys.add(Key.BLACKMODE);
             }
-            if (GameSettings.isKeyDown(streakmode)) {
+            if (keyDown(streakmode)) {
                 keys.add(Key.STREAK);
             }
-            if (GameSettings.isKeyDown(bootsmode)) {
+            if (keyDown(bootsmode)) {
                 keys.add(Key.BOOTS);
             }
-            if (GameSettings.isKeyDown(leggingsmode)) {
+            if (keyDown(leggingsmode)) {
                 keys.add(Key.LEGGINGS);
             }
         }

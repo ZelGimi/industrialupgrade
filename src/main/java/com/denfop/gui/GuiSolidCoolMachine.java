@@ -11,15 +11,15 @@ import com.denfop.container.ContainerSolidCoolMachine;
 import com.denfop.tiles.mechanism.TileSolidCooling;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiSolidCoolMachine extends GuiIU<ContainerSolidCoolMachine> {
+public class GuiSolidCoolMachine<T extends ContainerSolidCoolMachine> extends GuiIU<ContainerSolidCoolMachine> {
 
     public ContainerSolidCoolMachine container;
     public String name;
@@ -68,38 +68,30 @@ public class GuiSolidCoolMachine extends GuiIU<ContainerSolidCoolMachine> {
         }
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
 
-    }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
         if (this.container.base.time != 0) {
             final List<Double> time = ModUtils.Time(this.container.base.time);
             final String timer =
                     Localization.translate("iu.timetoend") + time.get(1) + Localization.translate("iu.minutes") + time.get(2) + Localization.translate(
                             "iu.seconds");
-            this.fontRenderer.drawString(timer, 20, 70, 4210752);
+           draw(poseStack, timer, 20, 70, 4210752);
 
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xOffset + 3, yOffset + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(getTexture());
+        int xOffset = guiLeft;
+        int yOffset = guiTop;
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, xOffset + 3, yOffset + 3, 0, 0, 10, 10);
+      bindTexture(getTexture());
 
     }
 

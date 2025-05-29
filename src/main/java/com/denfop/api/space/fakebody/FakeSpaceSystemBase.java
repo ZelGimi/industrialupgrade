@@ -9,17 +9,11 @@ import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.rovers.api.IRovers;
 import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
 
@@ -176,10 +170,9 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
             return;
         }
 
-
         ItemStack itemStack = fakeBody.getRover().getItemStack();
         if (ElectricItem.manager.getCharge(itemStack) < 100 ||
-                fakeBody.getRover().getItem().getFluidHandler(itemStack).drain(2, false) == null) {
+                fakeBody.getRover().getItem().getFluidHandler(itemStack).drain(2, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
             failOperation(fakeBody, playerId, uuidListMap);
             return;
         }
@@ -364,7 +357,7 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
     private void manageEnergy(IFakeBody fakeBody) {
         ItemStack itemStack = fakeBody.getRover().getItemStack();
         ElectricItem.manager.discharge(itemStack, 100, 14, true, false, false);
-        fakeBody.getRover().getItem().getFluidHandler(itemStack).drain(2, true);
+        fakeBody.getRover().getItem().getFluidHandler(itemStack).drain(2, IFluidHandler.FluidAction.EXECUTE);
 
         int solar = SpaceUpgradeSystem.system.hasModules(EnumTypeUpgrade.SOLAR, itemStack)
                 ? SpaceUpgradeSystem.system.getModules(EnumTypeUpgrade.SOLAR, itemStack).number

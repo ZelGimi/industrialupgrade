@@ -3,7 +3,7 @@ package com.denfop.integration.jei.synthesis;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +13,18 @@ public class SynthesisHandler {
     private static final List<SynthesisHandler> recipes = new ArrayList<>();
     private final int percent;
     private final ItemStack input, input1, output;
+    private final BaseMachineRecipe container;
 
-    public SynthesisHandler(ItemStack input, ItemStack input1, ItemStack output, int percent) {
+    public SynthesisHandler(ItemStack input, ItemStack input1, ItemStack output, int percent, BaseMachineRecipe container) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
         this.percent = percent;
+        this.container  = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<SynthesisHandler> getRecipes() {
@@ -28,8 +34,8 @@ public class SynthesisHandler {
         return recipes;
     }
 
-    public static SynthesisHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, int percent) {
-        SynthesisHandler recipe = new SynthesisHandler(input, input1, output, percent);
+    public static SynthesisHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, int percent, BaseMachineRecipe container) {
+        SynthesisHandler recipe = new SynthesisHandler(input, input1, output, percent,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -55,7 +61,7 @@ public class SynthesisHandler {
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.getOutput().items.get(0),
-                    container.getOutput().metadata.getInteger("percent")
+                    container.getOutput().metadata.getInt("percent"),container
             );
 
 
@@ -81,7 +87,7 @@ public class SynthesisHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

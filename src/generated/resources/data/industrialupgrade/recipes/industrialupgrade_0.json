@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ],
+    [
+      {
+        "tag": "forge:ingots/bronze"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:blockresource/bronze_block"
+  }
+}

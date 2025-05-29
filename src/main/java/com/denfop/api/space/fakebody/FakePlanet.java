@@ -1,11 +1,6 @@
 package com.denfop.api.space.fakebody;
 
-import com.denfop.api.space.BaseResource;
-import com.denfop.api.space.IBaseResource;
-import com.denfop.api.space.IBody;
-import com.denfop.api.space.IPlanet;
-import com.denfop.api.space.SpaceInit;
-import com.denfop.api.space.SpaceNet;
+import com.denfop.api.space.*;
 import com.denfop.api.space.rovers.Rovers;
 import com.denfop.api.space.rovers.api.IRovers;
 import com.denfop.api.space.rovers.api.IRoversItem;
@@ -13,10 +8,11 @@ import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
 import com.denfop.blocks.FluidName;
 import com.denfop.utils.Timer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,15 +48,15 @@ public class FakePlanet implements IFakePlanet {
             ).number;
             seconds = (int) (seconds * (1 - (engine * 0.125D)));
         }
-        FluidStack fluidStack = rovers.getItem().getFluidHandler(rovers.getItemStack()).drain(1, false);
+        FluidStack fluidStack = rovers.getItem().getFluidHandler(rovers.getItemStack()).drain(1, IFluidHandler.FluidAction.SIMULATE);
         double coef = 1;
-        if (fluidStack.getFluid().equals(FluidName.fluiddimethylhydrazine.getInstance())) {
+        if (fluidStack.getFluid().equals(FluidName.fluiddimethylhydrazine.getInstance().get())) {
             coef = 3;
         }
-        if (fluidStack.getFluid().equals(FluidName.fluiddecane.getInstance())) {
+        if (fluidStack.getFluid().equals(FluidName.fluiddecane.getInstance().get())) {
             coef = 4.4;
         }
-        if (fluidStack.getFluid().equals(FluidName.fluidxenon.getInstance())) {
+        if (fluidStack.getFluid().equals(FluidName.fluidxenon.getInstance().get())) {
             coef = 7.5;
         }
         seconds = (int) (seconds / coef);
@@ -69,18 +65,18 @@ public class FakePlanet implements IFakePlanet {
         timerFromPlanet.setCanWork(false);
     }
 
-    public FakePlanet(final NBTTagCompound nbtTagCompound) {
-        player = nbtTagCompound.getUniqueId("uuid");
+    public FakePlanet(final CompoundTag nbtTagCompound) {
+        player = nbtTagCompound.getUUID("uuid");
         this.planet = (IPlanet) SpaceNet.instance.getBodyFromName(nbtTagCompound.getString("body"));
         this.data = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(player).get(planet);
-        ItemStack stack = new ItemStack(nbtTagCompound.getCompoundTag("rover"));
+        ItemStack stack = ItemStack.of(nbtTagCompound.getCompound("rover"));
         this.rovers = new Rovers((IRoversItem) stack.getItem(), stack);
-        this.timerToPlanet = new Timer(nbtTagCompound.getCompoundTag("timerTo"));
-        this.timerFromPlanet = new Timer(nbtTagCompound.getCompoundTag("timerFrom"));
-        this.spaceOperation = new SpaceOperation(this.planet, nbtTagCompound.getCompoundTag("operation"));
-        final NBTTagList tagList = nbtTagCompound.getTagList("baseResource", 10);
-        for (int i = 0; i < tagList.tagCount(); i++) {
-            NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
+        this.timerToPlanet = new Timer(nbtTagCompound.getCompound("timerTo"));
+        this.timerFromPlanet = new Timer(nbtTagCompound.getCompound("timerFrom"));
+        this.spaceOperation = new SpaceOperation(this.planet, nbtTagCompound.getCompound("operation"));
+        final ListTag tagList = nbtTagCompound.getList("baseResource", 10);
+        for (int i = 0; i < tagList.size(); i++) {
+            CompoundTag tagCompound = tagList.getCompound(i);
             IBaseResource baseResource = new BaseResource(tagCompound);
             iBaseResourceList.add(baseResource);
         }
@@ -122,20 +118,20 @@ public class FakePlanet implements IFakePlanet {
     }
 
     @Override
-    public NBTTagCompound writeNBTTagCompound(final NBTTagCompound nbtTagCompound) {
-        nbtTagCompound.setUniqueId("uuid", player);
-        nbtTagCompound.setString("body", planet.getName());
-        nbtTagCompound.setTag("rover", this.rovers.getItemStack().writeToNBT(new NBTTagCompound()));
-        nbtTagCompound.setTag("timerTo", timerToPlanet.writeNBT(new NBTTagCompound()));
-        nbtTagCompound.setTag("timerFrom", timerFromPlanet.writeNBT(new NBTTagCompound()));
-        nbtTagCompound.setTag("operation", spaceOperation.writeTag(new NBTTagCompound()));
-        NBTTagList tagList = new NBTTagList();
+    public CompoundTag writeNBTTagCompound(final CompoundTag nbtTagCompound) {
+        nbtTagCompound.putUUID("uuid", player);
+        nbtTagCompound.putString("body", planet.getName());
+        nbtTagCompound.put("rover", this.rovers.getItemStack().save(new CompoundTag()));
+        nbtTagCompound.put("timerTo", timerToPlanet.writeNBT(new CompoundTag()));
+        nbtTagCompound.put("timerFrom", timerFromPlanet.writeNBT(new CompoundTag()));
+        nbtTagCompound.put("operation", spaceOperation.writeTag(new CompoundTag()));
+        ListTag tagList = new ListTag();
         for (IBaseResource baseResource : iBaseResourceList) {
-            NBTTagCompound nbt = new NBTTagCompound();
+            CompoundTag nbt = new CompoundTag();
             baseResource.writeNBTTag(nbt);
-            tagList.appendTag(nbt);
+            tagList.add(nbt);
         }
-        nbtTagCompound.setTag("baseResource", tagList);
+        nbtTagCompound.put("baseResource", tagList);
         return nbtTagCompound;
     }
 

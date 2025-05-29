@@ -3,7 +3,7 @@ package com.denfop.integration.jei.alloysmelter;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +13,18 @@ public class AlloySmelterHandler {
     private static final List<AlloySmelterHandler> recipes = new ArrayList<>();
     public final ItemStack input, input1, output;
     public final short temperature;
+    private final BaseMachineRecipe container;
 
-    public AlloySmelterHandler(ItemStack input, ItemStack input1, ItemStack output, final short temperature) {
+    public AlloySmelterHandler(ItemStack input, ItemStack input1, ItemStack output, final short temperature, BaseMachineRecipe container) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
         this.temperature = temperature;
+        this.container=container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<AlloySmelterHandler> getRecipes() {
@@ -28,8 +34,8 @@ public class AlloySmelterHandler {
         return recipes;
     }
 
-    public static AlloySmelterHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, final short temperature) {
-        AlloySmelterHandler recipe = new AlloySmelterHandler(input, input1, output, temperature);
+    public static AlloySmelterHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, final short temperature, BaseMachineRecipe container) {
+        AlloySmelterHandler recipe = new AlloySmelterHandler(input, input1, output, temperature,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -42,9 +48,9 @@ public class AlloySmelterHandler {
             return null;
         }
         for (AlloySmelterHandler recipe : recipes) {
-            if (recipe.matchesInput(is)) {
+
                 return recipe;
-            }
+
         }
         return null;
     }
@@ -55,7 +61,7 @@ public class AlloySmelterHandler {
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.getOutput().items.get(0),
-                    container.getOutput().metadata.getShort("temperature")
+                    container.getOutput().metadata.getShort("temperature"),container
             );
 
 
@@ -75,8 +81,5 @@ public class AlloySmelterHandler {
         return output.copy();
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
-    }
 
 }

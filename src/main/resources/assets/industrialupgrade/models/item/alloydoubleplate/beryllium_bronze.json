@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/beryllium_bronze_doubleplate"	}
+		"layer0": "industrialupgrade:item/beryllium_bronze_doubleplate"	}
 }

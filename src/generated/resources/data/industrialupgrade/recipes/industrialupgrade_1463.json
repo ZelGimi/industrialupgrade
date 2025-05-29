@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/quad_handlerho"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_623_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_633_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_622_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    " A ",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:photonic_machine/photonic_handlerho"
+  },
+  "show_notification": true
+}

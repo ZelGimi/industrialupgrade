@@ -4,11 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityImpCooling extends TileEntityCoolant {
 
-    public TileEntityImpCooling() {
-        super(2);
+    public TileEntityImpCooling(BlockPos pos, BlockState state) {
+        super(2,BlocksGraphiteReactors.graphite_imp_cooling,pos,state);
     }
 
     @Override
@@ -18,7 +20,7 @@ public class TileEntityImpCooling extends TileEntityCoolant {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.graphite_reactor;
+        return IUItem.graphite_reactor.getBlock(getTeBlock());
     }
 
 }

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine1/handler_ho"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_204_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    " A ",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/double_handlerho"
+  },
+  "show_notification": true
+}

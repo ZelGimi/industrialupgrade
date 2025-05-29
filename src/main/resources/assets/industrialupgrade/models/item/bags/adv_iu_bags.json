@@ -1,6 +1,14 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/advanced_bag"
-  }
+    "layer0" : "industrialupgrade:item/advanced_bag"
+  },
+	"overrides" : [
+    {
+      "predicate" : {
+        "open" : 1
+      },
+      "model" : "industrialupgrade:item/bags/adv_iu_bags_open"
+    }
+	]
 }

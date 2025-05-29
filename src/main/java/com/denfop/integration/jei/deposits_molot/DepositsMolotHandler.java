@@ -7,7 +7,7 @@ import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.VeinType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +52,7 @@ public class DepositsMolotHandler {
                         recipe,
                         recipe_list,
                         false,
-                        Collections.singletonList(new ItemStack(vein.getHeavyOre().getBlock(), 1, vein.getMeta()))
+                        Collections.singletonList(new ItemStack(vein.getHeavyOre().getBlock(), 1))
                 );
                 if (output != null) {
                     addRecipe(output, vein);
@@ -61,7 +61,10 @@ public class DepositsMolotHandler {
             }
         }
     }
+    public List<ItemStack> getInputs() {
 
+        return new ArrayList<>(machineRecipe.getRecipe().output.items);
+    }
     public MachineRecipe getMachineRecipe() {
         return machineRecipe;
     }

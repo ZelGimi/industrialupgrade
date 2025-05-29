@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:doubleplate/vitalium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/platinum"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    },
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems6"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "D D",
+    "EEE"
+  ],
+  "result": {
+    "item": "industrialupgrade:upgradekitmachine/upgradepanelkitmachine1"
+  },
+  "show_notification": true
+}

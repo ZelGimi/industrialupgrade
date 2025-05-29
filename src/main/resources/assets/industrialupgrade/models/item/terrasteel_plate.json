@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/terrasteel_plate"
+    "layer0" : "industrialupgrade:item/terrasteel_plate"
   }
 }

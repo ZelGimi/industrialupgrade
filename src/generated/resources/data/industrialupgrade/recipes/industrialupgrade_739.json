@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:ingots/tungsten"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:circuit/circuit_part3"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:redstone"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "CBC",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_42_element"
+  },
+  "show_notification": true
+}

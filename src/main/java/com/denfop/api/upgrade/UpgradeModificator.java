@@ -1,19 +1,22 @@
 package com.denfop.api.upgrade;
 
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.RegistryObject;
 
 public class UpgradeModificator {
 
-    public final ItemStack itemstack;
+    public final RegistryObject<? extends Item> itemstack;
     public final String type;
 
-    public UpgradeModificator(ItemStack stack, String type) {
+    public UpgradeModificator(RegistryObject<? extends Item> stack, String type) {
         this.itemstack = stack;
         this.type = type;
     }
 
     public boolean matches(ItemStack stack) {
-        return this.itemstack.isItemEqual(stack);
+        return this.itemstack.get() == stack.getItem();
     }
 
     public boolean matches(String type) {
@@ -29,7 +32,7 @@ public class UpgradeModificator {
             return false;
         }
         UpgradeModificator that = (UpgradeModificator) o;
-        return itemstack.isItemEqual(that.itemstack);
+        return this.itemstack.get() == that.itemstack.get();
     }
 
 

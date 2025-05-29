@@ -5,7 +5,7 @@ import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import java.io.IOException;
 
@@ -36,7 +36,7 @@ public class PacketUpdateRadiation implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
+    public void readPacket(final CustomPacketBuffer customPacketBuffer, final Player entityPlayer) {
         try {
             Radiation radiation = (Radiation) DecoderHandler.decode(customPacketBuffer);
             Radiation radiation1 = RadiationSystem.rad_system.getMap().get(radiation.getPos());

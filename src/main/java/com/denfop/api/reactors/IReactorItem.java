@@ -1,6 +1,7 @@
 package com.denfop.api.reactors;
 
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.world.item.ItemStack;
 
 public interface IReactorItem {
 
@@ -31,6 +32,4 @@ public interface IReactorItem {
     double getEnergyProduction(final IAdvReactor reactor);
 
     boolean needClear(ItemStack stack);
-
-
 }

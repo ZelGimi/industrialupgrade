@@ -1,31 +1,28 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentTimer;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerMatterFactory;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiMatterFactory;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Timer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityMatterFactory extends TileElectricMachine implements IUpdateTick, IHasRecipe {
 
@@ -35,8 +32,8 @@ public class TileEntityMatterFactory extends TileElectricMachine implements IUpd
     private final AirPollutionComponent pollutionAir;
     public MachineRecipe output;
 
-    public TileEntityMatterFactory() {
-        super(2000, 14, 1);
+    public TileEntityMatterFactory(BlockPos pos, BlockState state) {
+        super(2000, 14, 1,BlockBaseMachine3.matter_factory,pos,state);
         this.inputSlotA = new InvSlotRecipes(this, "active_matter_factory", this);
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 30, 0)));
         Recipes.recipes.addInitRecipes(this);
@@ -50,25 +47,25 @@ public class TileEntityMatterFactory extends TileElectricMachine implements IUpd
                 "active_matter_factory",
                 new BaseMachineRecipe(
                         new Input(input.getInput(container)),
-                        new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, output))
+                        new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(output), 1))
                 )
         );
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
-    public ContainerMatterFactory getGuiContainer(final EntityPlayer var1) {
+    public ContainerMatterFactory getGuiContainer(final Player var1) {
         return new ContainerMatterFactory(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiMatterFactory(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiMatterFactory((ContainerMatterFactory) menu);
     }
 
     @Override
@@ -83,7 +80,7 @@ public class TileEntityMatterFactory extends TileElectricMachine implements IUpd
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -94,8 +91,8 @@ public class TileEntityMatterFactory extends TileElectricMachine implements IUpd
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.energy.getEnergy() < 1 && this.inputSlotA.get().isEmpty() || this.output == null || this.outputSlot
-                .get()
+        if (this.energy.getEnergy() < 1 && this.inputSlotA.get(0).isEmpty() || this.output == null || this.outputSlot
+                .get(0)
                 .getCount() >= 64) {
             this.timer.setCanWork(false);
             this.setActive(false);
@@ -133,20 +130,20 @@ public class TileEntityMatterFactory extends TileElectricMachine implements IUpd
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.sunnarium, 2, 2), 423);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 0), 395);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 1), 313);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 2), 348);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 3), 409);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 4), 384);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 5), 388);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 6), 332);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 7), 432);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 8), 361);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 9), 309);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 10), 304);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 11), 318);
-        addRecipe(new ItemStack(IUItem.sunnariumpanel, 2, 12), 353);
+        addRecipe(new ItemStack(IUItem.sunnarium.getStack(2), 2), 423);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(0), 2), 395);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(1), 2), 313);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(2), 2), 348);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(3), 2), 409);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(4), 2), 384);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(5), 2), 388);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(6), 2), 332);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(7), 2), 432);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(8), 2), 361);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(9), 2), 309);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(10), 2), 304);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(11), 2), 318);
+        addRecipe(new ItemStack(IUItem.sunnariumpanel.getStack(12), 2), 353);
     }
 
 }

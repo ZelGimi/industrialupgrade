@@ -1,8 +1,8 @@
 {
 	"credit": "texnounits",
 	"textures": {
-		"2": "industrialupgrade:models/refiner",
-		"particle": "industrialupgrade:models/refiner"
+		"2": "industrialupgrade:block/refiner",
+		"particle": "industrialupgrade:block/refiner"
 	},
 	"elements": [
 		{

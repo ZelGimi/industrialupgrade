@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [128, 128],
 	"textures": {
-		"4": "industrialupgrade:blocks/compressor",
-		"particle": "industrialupgrade:blocks/compressor"
+		"4": "industrialupgrade:block/compressor",
+		"particle": "industrialupgrade:block/compressor"
 	},
 	"elements": [
 		{

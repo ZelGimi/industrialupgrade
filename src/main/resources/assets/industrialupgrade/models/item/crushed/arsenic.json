@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/arsenic_crushed"	}
+		"layer0": "industrialupgrade:item/arsenic_crushed"	}
 }

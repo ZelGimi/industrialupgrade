@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=primal_wire_insulator_iron_final": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final"
+    },
+    "facing=south,type=primal_wire_insulator_iron_final": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "y": 180
+    },
+    "facing=west,type=primal_wire_insulator_iron_final": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "y": 270
+    },
+    "facing=east,type=primal_wire_insulator_iron_final": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "y": 90
+    },
+    "facing=down,type=primal_wire_insulator_iron_final": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "x": 90
+    },
+    "facing=up,type=primal_wire_insulator_iron_final": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "x": 270
+    },
+    "facing=north,type=primal_wire_insulator_iron_final_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final"
+    },
+    "facing=south,type=primal_wire_insulator_iron_final_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "y": 180
+    },
+    "facing=west,type=primal_wire_insulator_iron_final_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "y": 270
+    },
+    "facing=east,type=primal_wire_insulator_iron_final_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "y": 90
+    },
+    "facing=down,type=primal_wire_insulator_iron_final_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "x": 90
+    },
+    "facing=up,type=primal_wire_insulator_iron_final_invalid": {
+      "model": "industrialupgrade:block/basemachine/primal_wire_insulator_iron_final",
+      "x": 270
+    }
+  }
+}

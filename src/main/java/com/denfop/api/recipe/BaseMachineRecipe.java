@@ -1,6 +1,7 @@
 package com.denfop.api.recipe;
 
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 

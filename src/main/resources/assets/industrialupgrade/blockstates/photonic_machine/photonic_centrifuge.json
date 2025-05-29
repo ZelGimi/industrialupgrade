@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=photonic_centrifuge": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge"
+    },
+    "facing=south,type=photonic_centrifuge": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge",
+      "y": 180
+    },
+    "facing=west,type=photonic_centrifuge": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge",
+      "y": 270
+    },
+    "facing=east,type=photonic_centrifuge": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge",
+      "y": 90
+    },
+    "facing=down,type=photonic_centrifuge": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge",
+      "x": 90
+    },
+    "facing=up,type=photonic_centrifuge": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge",
+      "x": 270
+    },
+    "facing=north,type=photonic_centrifuge_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active"
+    },
+    "facing=south,type=photonic_centrifuge_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_centrifuge_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_centrifuge_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_centrifuge_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_centrifuge_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "x": 270
+    },
+    "facing=north,type=photonic_centrifuge_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active"
+    },
+    "facing=south,type=photonic_centrifuge_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_centrifuge_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_centrifuge_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_centrifuge_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_centrifuge_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_centrifuge_active",
+      "x": 270
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=radiation_purifier": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier"
+    },
+    "facing=south,type=radiation_purifier": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier",
+      "y": 180
+    },
+    "facing=west,type=radiation_purifier": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier",
+      "y": 270
+    },
+    "facing=east,type=radiation_purifier": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier",
+      "y": 90
+    },
+    "facing=down,type=radiation_purifier": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier",
+      "x": 90
+    },
+    "facing=up,type=radiation_purifier": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier",
+      "x": 270
+    },
+    "facing=north,type=radiation_purifier_invalid": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active"
+    },
+    "facing=south,type=radiation_purifier_invalid": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "y": 180
+    },
+    "facing=west,type=radiation_purifier_invalid": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "y": 270
+    },
+    "facing=east,type=radiation_purifier_invalid": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "y": 90
+    },
+    "facing=down,type=radiation_purifier_invalid": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "x": 90
+    },
+    "facing=up,type=radiation_purifier_invalid": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "x": 270
+    },
+    "facing=north,type=radiation_purifier_active": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active"
+    },
+    "facing=south,type=radiation_purifier_active": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "y": 180
+    },
+    "facing=west,type=radiation_purifier_active": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "y": 270
+    },
+    "facing=east,type=radiation_purifier_active": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "y": 90
+    },
+    "facing=down,type=radiation_purifier_active": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "x": 90
+    },
+    "facing=up,type=radiation_purifier_active": {
+      "model": "industrialupgrade:block/basemachine/radiation_purifier_active",
+      "x": 270
+    }
+  }
+}

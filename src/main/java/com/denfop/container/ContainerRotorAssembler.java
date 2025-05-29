@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityRotorAssembler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerRotorAssembler extends ContainerFullInv<TileEntityRotorAssembler> {
 
     public ContainerRotorAssembler(
             final TileEntityRotorAssembler tileEntity1,
-            EntityPlayer entityPlayer
+            Player entityPlayer
     ) {
         super(entityPlayer, tileEntity1, 255);
 

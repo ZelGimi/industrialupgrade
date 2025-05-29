@@ -1,33 +1,32 @@
 package com.denfop.api.transport;
 
 import com.denfop.api.sytem.InfoTile;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ITransportTile<T, E> {
 
-    E getHandler(EnumFacing facing);
+    E getHandler(Direction facing);
 
-    BlockPos getBlockPos();
+    BlockPos getPos();
 
     List<InfoTile<ITransportTile>> getValidReceivers();
 
-    TileEntity getTileEntity();
+    BlockEntity getTileEntity();
 
     long getIdNetwork();
 
     void setId(long id);
 
-    void AddTile(ITransportTile tile, final EnumFacing dir);
+    void AddTile(ITransportTile tile, final Direction dir);
 
-    void RemoveTile(ITransportTile tile, final EnumFacing dir);
+    void RemoveTile(ITransportTile tile, final Direction dir);
 
-    Map<EnumFacing, ITransportTile> getTiles();
-
+    Map<Direction, ITransportTile> getTiles();
 
 
     int getHashCodeSource();

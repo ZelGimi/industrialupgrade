@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=socket_factory": {
+      "model": "industrialupgrade:block/basemachine/socket_factory"
+    },
+    "facing=south,type=socket_factory": {
+      "model": "industrialupgrade:block/basemachine/socket_factory",
+      "y": 180
+    },
+    "facing=west,type=socket_factory": {
+      "model": "industrialupgrade:block/basemachine/socket_factory",
+      "y": 270
+    },
+    "facing=east,type=socket_factory": {
+      "model": "industrialupgrade:block/basemachine/socket_factory",
+      "y": 90
+    },
+    "facing=down,type=socket_factory": {
+      "model": "industrialupgrade:block/basemachine/socket_factory",
+      "x": 90
+    },
+    "facing=up,type=socket_factory": {
+      "model": "industrialupgrade:block/basemachine/socket_factory",
+      "x": 270
+    },
+    "facing=north,type=socket_factory_invalid": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active"
+    },
+    "facing=south,type=socket_factory_invalid": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "y": 180
+    },
+    "facing=west,type=socket_factory_invalid": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "y": 270
+    },
+    "facing=east,type=socket_factory_invalid": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "y": 90
+    },
+    "facing=down,type=socket_factory_invalid": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "x": 90
+    },
+    "facing=up,type=socket_factory_invalid": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "x": 270
+    },
+    "facing=north,type=socket_factory_active": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active"
+    },
+    "facing=south,type=socket_factory_active": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "y": 180
+    },
+    "facing=west,type=socket_factory_active": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "y": 270
+    },
+    "facing=east,type=socket_factory_active": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "y": 90
+    },
+    "facing=down,type=socket_factory_active": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "x": 90
+    },
+    "facing=up,type=socket_factory_active": {
+      "model": "industrialupgrade:block/basemachine/socket_factory_active",
+      "x": 270
+    }
+  }
+}

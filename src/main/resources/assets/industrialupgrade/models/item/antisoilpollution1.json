@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/antisoilpollution1"
+    "layer0" : "industrialupgrade:item/antisoilpollution1"
   }
 }

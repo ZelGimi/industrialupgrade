@@ -1,12 +1,12 @@
 package com.denfop.tiles.base;
 
 
-import cofh.redstoneflux.api.IEnergyHandler;
-import cofh.redstoneflux.api.IEnergyReceiver;
-import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.Recipes;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -17,38 +17,46 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAutoSpawner;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiAutoSpawner;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlotModules;
 import com.denfop.invslot.InvSlotUpgradeModule;
+import com.denfop.mixin.access.LootTableAccessor;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.LootTable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
 public class TileAutoSpawner extends TileElectricMachine
-        implements IEnergyReceiver, IEnergyHandler, IUpgradableBlock {
+        implements IUpgradableBlock {
 
     public final InvSlotModules module_slot;
     public final double[] maxprogress;
@@ -68,20 +76,20 @@ public class TileAutoSpawner extends TileElectricMachine
     public int chance;
     public int spawn;
     public int experience;
-    public EntityLiving[] mobUtils = new EntityLiving[4];
+    public LivingEntity[] mobUtils = new LivingEntity[4];
     public String[] description_mobs = new String[4];
     public LootTable[] loot_Tables = new LootTable[4];
-    public LootContext.Builder[] lootContext = new LootContext.Builder[4];
+    public LootParams.Builder[] lootContext = new LootParams.Builder[4];
 
     public List<LootPool>[] lootPoolList = new List[4];
     public int fireAspect;
 
-    public TileAutoSpawner() {
-        super(150000, 14, 27);
+    public TileAutoSpawner(BlockPos pos, BlockState state) {
+        super(150000, 14, 27,BlockBaseMachine3.spawner,pos,state);
         this.module_slot = new InvSlotModules(this);
         this.module_upgrade = new InvSlotUpgradeModule(this);
         this.progress = new int[module_slot.size()];
-        this.maxEnergy2 = 50000 * Config.coefficientrf;
+        this.maxEnergy2 = 50000 * 4;
         this.maxprogress = new double[4];
         this.tempprogress = new int[]{100, 100, 100, 100};
         this.tempcostenergy = 1500;
@@ -101,18 +109,13 @@ public class TileAutoSpawner extends TileElectricMachine
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
+
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 1;
-    }
-
-    public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-
-        return receiveEnergy(maxReceive, simulate);
-
     }
 
     @Override
@@ -170,7 +173,7 @@ public class TileAutoSpawner extends TileElectricMachine
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.world.isRemote) {
+        if (!this.level.isClientSide) {
             this.player = new FakePlayerSpawner(getWorld());
         }
         this.module_slot.update();
@@ -178,25 +181,16 @@ public class TileAutoSpawner extends TileElectricMachine
 
     }
 
-    public boolean canConnectEnergy(EnumFacing arg0) {
-        return true;
+
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiAutoSpawner((ContainerAutoSpawner) menu);
     }
 
-    public int getEnergyStored(EnumFacing from) {
-        return (int) this.energy2;
-    }
-
-    public int getMaxEnergyStored(EnumFacing from) {
-        return (int) this.maxEnergy2;
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    public GuiAutoSpawner getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiAutoSpawner(new ContainerAutoSpawner(entityPlayer, this));
-    }
-
-    public ContainerAutoSpawner getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerAutoSpawner getGuiContainer(Player entityPlayer) {
         return new ContainerAutoSpawner(entityPlayer, this);
     }
 
@@ -206,23 +200,23 @@ public class TileAutoSpawner extends TileElectricMachine
         super.updateEntityServer();
 
 
-        if (this.world.provider.getWorldTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
+        if (this.level.getGameTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
             ModUtils.tick(this.outputSlot, this);
         }
 
         boolean active = false;
         for (int i = 0; i < module_slot.size(); i++) {
             if (!this.module_slot.get(i).isEmpty()) {
-                if (this.energy.getEnergy() >= this.costenergy || this.energy2 >= this.costenergy * Config.coefficientrf) {
+                if (this.energy.getEnergy() >= this.costenergy || this.energy2 >= this.costenergy * 4) {
                     this.progress[i]++;
                     active = true;
                     if (this.energy.getEnergy() >= this.costenergy) {
                         this.energy.useEnergy(this.costenergy);
                     } else {
-                        this.energy2 -= this.costenergy * Config.coefficientrf;
+                        this.energy2 -= this.costenergy * 4;
                     }
                 }
-                this.tempprogress[i] = (int) (this.maxprogress[i] - this.speed);
+                this.tempprogress[i] = (int) (this.maxprogress[i] -  (this.maxprogress[i] * this.speed  / 100D));
                 this.tempprogress[i] = Math.max(1, this.tempprogress[i]);
                 if (this.progress[i] >= this.tempprogress[i]) {
                     this.progress[i] = 0;
@@ -230,11 +224,9 @@ public class TileAutoSpawner extends TileElectricMachine
                         continue;
                     }
 
-                    final EntityLiving entity = this.mobUtils[i];
-                    entity.setWorld(this.getWorld());
-
-                    dropItemFromEntity(entity, DamageSource.causePlayerDamage(player), this.loot_Tables[i], i);
-                    int exp = Math.max(entity.getExperiencePoints(this.player), 1);
+                    final LivingEntity entity = this.mobUtils[i];
+                    dropItemFromEntity(entity, player.damageSources().playerAttack(player), this.loot_Tables[i], i);
+                    int exp = Math.max(entity.getExperienceReward(), 1);
                     this.exp.addEnergy((exp + this.experience * exp / 100D));
 
 
@@ -248,50 +240,37 @@ public class TileAutoSpawner extends TileElectricMachine
         }
     }
 
-    private void dropItemFromEntity(EntityLiving entity, DamageSource source, LootTable table, int index) {
-        if (entity.isNonBoss()) {
-            if (!this.world.isRemote) {
+    private void dropItemFromEntity(LivingEntity entity, DamageSource source, LootTable table, int index) {
+        if (!(entity instanceof WitherBoss) && !(entity instanceof EnderDragon)) {
+            if (!this.level.isClientSide) {
                 int i = this.chance;
-                LootContext.Builder lootcontext$builder = this.lootContext[index];
+                LootParams.Builder lootcontext$builder = this.lootContext[index];
                 if (table == null) {
                     return;
                 }
                 if (lootcontext$builder == null) {
-                    lootcontext$builder = this.lootContext[index] = (new LootContext.Builder((WorldServer) this.world))
-                            .withLootedEntity(entity).withPlayer(this.player)
-                            .withDamageSource(source).withLuck(i);
-                    List<LootPool> lootPools = new ArrayList<>();
-                    final LootPool mainPool = table.getPool("main");
-                    if (mainPool != null) {
-                        lootPools.add(mainPool);
-                        int in = 1;
-                        LootPool pool = table.getPool("pool" + in);
-                        while (pool != null) {
-                            lootPools.add(pool);
-                            in++;
-                            pool = table.getPool("pool" + in);
-                        }
-                    }
+                    lootcontext$builder = this.lootContext[index] = (new LootParams.Builder((ServerLevel) this.level))
+                            .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.KILLER_ENTITY, this.player).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player)
+                            .withParameter(LootContextParams.DAMAGE_SOURCE, source).withParameter(LootContextParams.DIRECT_KILLER_ENTITY, entity).withLuck(i).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(),pos.getY(),pos.getZ()));
+                    List<LootPool> lootPools = ((LootTableAccessor)table).getPools();
                     this.lootPoolList[index] = lootPools;
                 }
-                final LootContext context = lootcontext$builder.build();
+                final LootParams context = lootcontext$builder.create(LootContextParamSets.ENTITY);
 
                 List<ItemStack> list = Lists.newArrayList();
                 for (int j = 0; j < this.spawn; j++) {
-                    for (LootPool lootpool : this.lootPoolList[index]) {
-                        lootpool.generateLoot(list, this.getWorld().rand, context);
-                    }
+                    table.getRandomItems(context,list::add);
                 }
                 for (ItemStack item : list) {
 
 
                     ItemStack smelt = ItemStack.EMPTY;
                     if (this.fireAspect > 0) {
-
-                        smelt = FurnaceRecipes.instance().getSmeltingResult(item);
-                        if (!smelt.isEmpty()) {
-                            smelt.setCount(item.getCount());
-                        }
+                        MachineRecipe recipe = Recipes.recipes.getRecipeMachineMultiOutput(Recipes.recipes.getRecipe("furnace"), Recipes.recipes.getRecipeList("furnace"), false, Collections.singletonList(item));
+                       if (recipe != null) {
+                           smelt = recipe.getRecipe().output.items.get(0).copy();
+                           smelt.setCount(item.getCount());
+                       }
                     }
                     if (smelt.isEmpty()) {
                         this.outputSlot.add(item);
@@ -309,19 +288,19 @@ public class TileAutoSpawner extends TileElectricMachine
     }
 
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setDouble("energy2", energy2);
+        nbttagcompound.putDouble("energy2", energy2);
         for (int i = 0; i < 4; i++) {
-            nbttagcompound.setInteger("progress" + i, progress[i]);
+            nbttagcompound.putInt("progress" + i, progress[i]);
         }
         return nbttagcompound;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         for (int i = 0; i < 4; i++) {
-            progress[i] = nbttagcompound.getInteger("progress" + i);
+            progress[i] = nbttagcompound.getInt("progress" + i);
         }
 
     }

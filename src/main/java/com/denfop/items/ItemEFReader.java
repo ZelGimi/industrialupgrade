@@ -1,96 +1,65 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.inv.IAdvInventory;
-import com.denfop.blocks.ISubEnum;
 import com.denfop.gui.GUIEFReader;
-import com.denfop.items.resource.ItemSubTypes;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
-import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nonnull;
-import java.util.Locale;
-
-public class ItemEFReader extends ItemSubTypes<ItemEFReader.Types> implements IModelRegister, IItemStackInventory,
-        IUpdatableItemStackEvent {
-
-    protected static final String NAME = "ef";
+public class ItemEFReader extends Item implements IItemStackInventory, IUpdatableItemStackEvent, IItemTab {
+    private String nameItem;
 
     public ItemEFReader() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.EnergyTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+        super(new Properties().stacksTo(1).setNoRepair());
     }
-
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
-    }
-
     @Override
-    public IAdvInventory getInventory(final EntityPlayer var1, final ItemStack var2) {
-        return new EFReaderInventory(var1, var2);
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
-
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand) {
-        if (IUCore.proxy.isSimulating()) {
-            RayTraceResult position = this.rayTrace(world, player, true);
-            if (position != null && position.typeOfHit == RayTraceResult.Type.BLOCK && EnergyNetGlobal.instance.getTile(
-                    world,
-                    position.getBlockPos()
-            ) != EnergyNetGlobal.EMPTY) {
-                final NBTTagCompound nbt = ModUtils.nbt(player.getHeldItem(hand));
-                nbt.setInteger("x", position.getBlockPos().getX());
-                nbt.setInteger("y", position.getBlockPos().getY());
-                nbt.setInteger("z", position.getBlockPos().getZ());
-                player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-                return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-            } else {
-                IUCore.proxy.messagePlayer(player, "This block isn`t energyTile");
-                return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
             }
+            this.nameItem = pathBuilder.toString();
         }
-        return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
+
+        return this.nameItem;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
-        if (IUCore.proxy.getGui() != null) {
-            GuiScreen gui = (GuiScreen) IUCore.proxy.getGui();
-            if (gui instanceof GUIEFReader) {
-                GUIEFReader guiefReader = (GUIEFReader) gui;
-                guiefReader.readField(name, buffer);
-            }
+        if (Minecraft.getInstance().screen instanceof GUIEFReader) {
+            GUIEFReader guiefReader = (GUIEFReader) Minecraft.getInstance().screen;
+            guiefReader.readField(name, buffer);
         }
     }
 
@@ -99,29 +68,42 @@ public class ItemEFReader extends ItemSubTypes<ItemEFReader.Types> implements IM
 
     }
 
-    public enum Types implements ISubEnum {
-        reader(0),
-        ;
-
-        private final String name;
-        private final int ID;
-
-        Types(final int ID) {
-            this.name = this.name().toLowerCase(Locale.US);
-            this.ID = ID;
-        }
-
-        public static Types getFromID(final int ID) {
-            return values()[ID % values().length];
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public int getId() {
-            return this.ID;
-        }
+    @Override
+    public IAdvInventory getInventory(final Player var1, final ItemStack var2) {
+        return new EFReaderInventory(var1, var2);
     }
 
+    @Override
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        Player player = context.getPlayer();
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        InteractionHand hand = context.getHand();
+        if (!world.isClientSide) {
+
+            if (EnergyNetGlobal.instance.getTile(
+                    world,
+                    pos
+            ) != EnergyNetGlobal.EMPTY) {
+                final CompoundTag nbt = ModUtils.nbt(player.getItemInHand(context.getHand()));
+                nbt.putInt("x", pos.getX());
+                nbt.putInt("y", pos.getY());
+                nbt.putInt("z", pos.getZ());
+
+                CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+                growingBuffer.writeByte(1);
+
+                growingBuffer.flip();
+                NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, player.getItemInHand(hand)), buf -> buf.writeBytes(growingBuffer));
+
+
+                return InteractionResult.SUCCESS;
+            } else {
+                IUCore.proxy.messagePlayer(player, "This block isn`t energyTile");
+                return InteractionResult.PASS;
+            }
+        }
+        return InteractionResult.PASS;
+    }
 }

@@ -4,27 +4,27 @@ import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.CustomButton;
 import com.denfop.container.ContainerModuleMachine;
-import com.denfop.network.packet.PacketUpdateServerTile;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
-@SideOnly(Side.CLIENT)
-public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
+@OnlyIn(Dist.CLIENT)
+public class GuiModuleMachine<T extends ContainerModuleMachine> extends GuiIU<ContainerModuleMachine> {
 
     public final ContainerModuleMachine container;
 
     public GuiModuleMachine(ContainerModuleMachine container1) {
         super(container1);
         this.container = container1;
-        this.ySize = 178;
+        this.imageHeight = 178;
         this.inventory.setX(7);
         this.inventory.setY(96);
         this.addElement(new CustomButton(this, 103, 15, 68, 14, container1.base, 0, Localization.translate("button.write")));
@@ -40,34 +40,30 @@ public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
         return ret;
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 4, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageHeight / 2, 4, Component.literal(name), 4210752, false);
     }
 
-    public void initGui() {
-        super.initGui();
 
-    }
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        int xoffset = (this.width - this.imageWidth) / 2;
+        int yoffset = (this.height - this.imageHeight) / 2;
 
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-
-        this.mc.getTextureManager().bindTexture(getTexture());
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        this.drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(this.getTexture());
+        bindTexture();
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        this.drawTexturedModalRect(poseStack, xoffset + 3, yoffset + 3, 0, 0, 10, 10);
+        bindTexture();
 
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
         handleUpgradeTooltip(par1, par2);
     }
@@ -88,14 +84,6 @@ public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
         }
     }
 
-
-    protected void actionPerformed(GuiButton guibutton) {
-
-        if (guibutton.id == 0) {
-            new PacketUpdateServerTile(this.container.base, 0);
-
-        }
-    }
 
     public ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");

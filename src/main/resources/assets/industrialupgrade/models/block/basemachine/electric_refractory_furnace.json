@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/electric_refractory_furnace_bottom",
-    "down" : "industrialupgrade:blocks/electric_refractory_furnace_bottom",
-    "up" : "industrialupgrade:blocks/electric_refractory_furnace_top",
-    "north" : "industrialupgrade:blocks/electric_refractory_furnace_main",
-    "east" : "industrialupgrade:blocks/electric_refractory_furnace_leftrightback",
-    "south" : "industrialupgrade:blocks/electric_refractory_furnace_bottom",
-    "west" : "industrialupgrade:blocks/electric_refractory_furnace_leftrightback"
+    "particle" : "industrialupgrade:block/electric_refractory_furnace_bottom",
+    "down" : "industrialupgrade:block/electric_refractory_furnace_bottom",
+    "up" : "industrialupgrade:block/electric_refractory_furnace_top",
+    "north" : "industrialupgrade:block/electric_refractory_furnace_main",
+    "east" : "industrialupgrade:block/electric_refractory_furnace_leftrightback",
+    "south" : "industrialupgrade:block/electric_refractory_furnace_bottom",
+    "west" : "industrialupgrade:block/electric_refractory_furnace_leftrightback"
   }
 }

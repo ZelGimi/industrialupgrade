@@ -2,7 +2,7 @@ package com.denfop.integration.jei.quantumminer;
 
 
 import com.denfop.IUItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class QuantumMinerHandler {
 
     public static void initRecipes() {
         for (int meta : metas) {
-            addRecipe(62500, new ItemStack(IUItem.crafting_elements, 1, meta));
+            addRecipe(62500, new ItemStack(IUItem.crafting_elements.getStack(meta), 1));
         }
 
 

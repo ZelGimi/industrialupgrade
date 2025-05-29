@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/woods"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/bloodstone"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "CAC",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:double_molecular"
+  },
+  "show_notification": true
+}

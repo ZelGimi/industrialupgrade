@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/neodymium"
+      }
+    ]
+  },
+  "pattern": [
+    " AA",
+    "AAA",
+    "AA "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_740_element"
+  },
+  "show_notification": true
+}

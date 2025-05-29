@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/quarry_vein"
+    "layer0" : "industrialupgrade:item/quarry_vein"
   }
 }

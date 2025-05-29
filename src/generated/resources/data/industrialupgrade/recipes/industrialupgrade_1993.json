@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/molybdenum"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_0_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BBA",
+    "AAA"
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_714_element"
+  },
+  "show_notification": true
+}

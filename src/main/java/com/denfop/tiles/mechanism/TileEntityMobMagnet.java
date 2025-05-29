@@ -8,10 +8,12 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.utils.Vector3;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -19,7 +21,8 @@ public class TileEntityMobMagnet extends TileEntityInventory {
 
     private final Energy energy;
 
-    public TileEntityMobMagnet() {
+    public TileEntityMobMagnet(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.mob_magnet,pos,state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
 
         this.addComponent(new SoilPollutionComponent(this, 0.1));
@@ -30,46 +33,41 @@ public class TileEntityMobMagnet extends TileEntityInventory {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.world.provider.getWorldTime() % 4 == 0) {
+        if (this.level.getGameTime() % 4 == 0) {
             if (this.energy.getEnergy() > 20) {
-                List<EntityLivingBase> entities = this.world.getEntitiesWithinAABB(
-                        EntityLivingBase.class,
-                        new AxisAlignedBB(this.pos.getX() - 7, this.pos.getY() - 4, this.pos.getZ() - 7, (this.pos.getX() + 7),
-                                (this.pos.getY() + 4),
-                                (this.pos.getZ() + 7)
-                        )
+                AABB aabb = new AABB(
+                        this.worldPosition.getX() - 7, this.worldPosition.getY() - 4, this.worldPosition.getZ() - 7,
+                        this.worldPosition.getX() + 7, this.worldPosition.getY() + 4, this.worldPosition.getZ() + 7
                 );
-                for (EntityLivingBase entity : entities) {
-                    if (entity instanceof EntityPlayer) {
-                        continue;
-                    }
-                    if (this.energy.getEnergy() < 20) {
-                        break;
-                    }
+
+                List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, aabb);
+
+                for (LivingEntity entity : entities) {
+                    if (entity instanceof Player) continue;
+                    if (this.energy.getEnergy() < 20) break;
+
                     this.energy.useEnergy(20);
-                    double x2 = entity.posX;
-                    double y2 = entity.posY;
-                    double z2 = entity.posZ;
-                    double x1 = this.pos.getX() + 0.5D;
-                    double y1 = this.pos.getY() + 0.5D;
-                    double z1 = this.pos.getZ() + 0.5D;
-                    final boolean blue = true;
-                    float distanceSqrd = blue
-                            ? (float) ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2))
-                            : 1.1F;
+
+                    double x2 = entity.getX();
+                    double y2 = entity.getY();
+                    double z2 = entity.getZ();
+
+                    double x1 = this.worldPosition.getX() + 0.5D;
+                    double y1 = this.worldPosition.getY() + 0.5D;
+                    double z1 = this.worldPosition.getZ() + 0.5D;
+
+                    float distanceSqrd = (float)((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2) + (z1 - z2)*(z1 - z2));
                     if (distanceSqrd > 1.0F) {
-                        final Vector3 originalPosVector = new Vector3(x1, y1, z1);
-                        Vector3 entityVector = Vector3.fromEntityCenter(entity);
-                        Vector3 finalVector = originalPosVector.copy().subtract(entityVector);
-                        if (finalVector.mag() > 1.0D) {
-                            finalVector.normalize();
-                        }
-                        entity.motionX = finalVector.x * 1 * 0.25F;
-                        entity.motionY = finalVector.y * 1 * 0.25F;
-                        entity.motionZ = finalVector.z * 1 * 0.25F;
+                        Vec3 originalPos = new Vec3(x1, y1, z1);
+                        Vec3 entityPos = entity.position().add(0.0D, entity.getBbHeight() / 2.0D, 0.0D);
+                        Vec3 motion = originalPos.subtract(entityPos).normalize().scale(0.25F);
+
+                        entity.setDeltaMovement(motion);
+                        entity.hurtMarked = true;
                     }
                 }
             }
+
         }
 
 
@@ -81,7 +79,7 @@ public class TileEntityMobMagnet extends TileEntityInventory {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

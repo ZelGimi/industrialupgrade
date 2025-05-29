@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/neutronseparator",
-    "down" : "industrialupgrade:blocks/neutronseparator_side",
-    "up" : "industrialupgrade:blocks/neutronseparator_side",
-    "north" : "industrialupgrade:blocks/neutronseparator",
-    "east" : "industrialupgrade:blocks/neutronseparator_side",
-    "south" : "industrialupgrade:blocks/neutronseparator_side",
-    "west" : "industrialupgrade:blocks/neutronseparator_side"
+    "particle" : "industrialupgrade:block/neutronseparator",
+    "down" : "industrialupgrade:block/neutronseparator_side",
+    "up" : "industrialupgrade:block/neutronseparator_side",
+    "north" : "industrialupgrade:block/neutronseparator",
+    "east" : "industrialupgrade:block/neutronseparator_side",
+    "south" : "industrialupgrade:block/neutronseparator_side",
+    "west" : "industrialupgrade:block/neutronseparator_side"
   }
 }

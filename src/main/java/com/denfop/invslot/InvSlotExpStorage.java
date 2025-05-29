@@ -4,7 +4,7 @@ import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.mechanism.exp.TileStorageExp;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotExpStorage extends InvSlot implements ITypeSlot {
 
@@ -24,19 +24,20 @@ public class InvSlotExpStorage extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (this.isEmpty()) {
             this.base1.energy.setCapacity(2000000000);
             if (this.base1.energy.getEnergy() > 2000000000) {
                 this.base1.energy.storage = 2000000000;
             }
         }
+        return content;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
 
-        return itemStack.getItem().equals(IUItem.expmodule);
+        return itemStack.getItem().equals(IUItem.expmodule.getItem());
     }
 
     public int getStackSizeLimit() {

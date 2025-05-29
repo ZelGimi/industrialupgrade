@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=bio_rolling": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling"
+    },
+    "facing=south,type=bio_rolling": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling",
+      "y": 180
+    },
+    "facing=west,type=bio_rolling": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling",
+      "y": 270
+    },
+    "facing=east,type=bio_rolling": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling",
+      "y": 90
+    },
+    "facing=down,type=bio_rolling": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling",
+      "x": 90
+    },
+    "facing=up,type=bio_rolling": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling",
+      "x": 270
+    },
+    "facing=north,type=bio_rolling_invalid": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active"
+    },
+    "facing=south,type=bio_rolling_invalid": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "y": 180
+    },
+    "facing=west,type=bio_rolling_invalid": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "y": 270
+    },
+    "facing=east,type=bio_rolling_invalid": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "y": 90
+    },
+    "facing=down,type=bio_rolling_invalid": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "x": 90
+    },
+    "facing=up,type=bio_rolling_invalid": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "x": 270
+    },
+    "facing=north,type=bio_rolling_active": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active"
+    },
+    "facing=south,type=bio_rolling_active": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "y": 180
+    },
+    "facing=west,type=bio_rolling_active": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "y": 270
+    },
+    "facing=east,type=bio_rolling_active": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "y": 90
+    },
+    "facing=down,type=bio_rolling_active": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "x": 90
+    },
+    "facing=up,type=bio_rolling_active": {
+      "model": "industrialupgrade:block/basemachine/bio_rolling_active",
+      "x": 270
+    }
+  }
+}

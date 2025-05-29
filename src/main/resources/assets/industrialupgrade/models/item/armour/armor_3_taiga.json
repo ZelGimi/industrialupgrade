@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/supersolarpanels.itemarmorquantumlegs_taiga"
+    "layer0" : "industrialupgrade:item/supersolarpanels.itemarmorquantumlegs_taiga"
   }
 }

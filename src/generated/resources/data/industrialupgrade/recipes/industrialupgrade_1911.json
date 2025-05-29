@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade13"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:quantumitems2"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade14"
+  },
+  "show_notification": true
+}

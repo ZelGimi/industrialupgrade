@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/electronic_stabilizers"
+    "layer0" : "industrialupgrade:item/electronic_stabilizers"
   }
 }

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockextruding_side",
-    "down" : "industrialupgrade:blocks/blockextruding_side",
-    "up" : "industrialupgrade:blocks/blockextruding_side",
-    "north" : "industrialupgrade:blocks/blockextruding_main_active",
-    "east" : "industrialupgrade:blocks/blockextruding_side",
-    "south" : "industrialupgrade:blocks/blockextruding_side",
-    "west" : "industrialupgrade:blocks/blockextruding_side"
+    "particle" : "industrialupgrade:block/blockextruding_side",
+    "down" : "industrialupgrade:block/blockextruding_side",
+    "up" : "industrialupgrade:block/blockextruding_side",
+    "north" : "industrialupgrade:block/blockextruding_main_active",
+    "east" : "industrialupgrade:block/blockextruding_side",
+    "south" : "industrialupgrade:block/blockextruding_side",
+    "west" : "industrialupgrade:block/blockextruding_side"
   }
 }

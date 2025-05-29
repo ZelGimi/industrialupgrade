@@ -3,7 +3,7 @@ package com.denfop.integration.jei.combmac;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +12,17 @@ public class CombMacHandler {
 
     private static final List<CombMacHandler> recipes = new ArrayList<>();
     private final ItemStack input, output;
+    private final BaseMachineRecipe container;
 
-    public CombMacHandler(ItemStack input, ItemStack output) {
+    public CombMacHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
         this.output.setCount(3);
+        this.container = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<CombMacHandler> getRecipes() {
@@ -26,8 +32,8 @@ public class CombMacHandler {
         return recipes;
     }
 
-    public static CombMacHandler addRecipe(ItemStack input, ItemStack output) {
-        CombMacHandler recipe = new CombMacHandler(input, output);
+    public static CombMacHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
+        CombMacHandler recipe = new CombMacHandler(input, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -51,7 +57,7 @@ public class CombMacHandler {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("comb_macerator")) {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0)
+                    container.getOutput().items.get(0),container
             );
 
 

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/manganese"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/yttrium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/barium"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " AC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_752_element"
+  },
+  "show_notification": true
+}

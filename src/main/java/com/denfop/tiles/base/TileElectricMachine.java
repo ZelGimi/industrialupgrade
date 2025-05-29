@@ -5,9 +5,11 @@ import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.Energy;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -16,13 +18,17 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,14 +49,12 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
     public EnumTypeAudio[] valuesAudio;
     public boolean sound = true;
 
-    public TileElectricMachine(double MaxEnergy, int tier, int count) {
-
+    public TileElectricMachine(double MaxEnergy, int tier, int count, IMultiTileBlock multiTileBlock, BlockPos pos, BlockState state) {
+        super(multiTileBlock, pos, state);
         this.tier = tier;
-
+        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, tier, false);
         if (MaxEnergy != 0) {
-            energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier));
-            dischargeSlot = new InvSlotDischarge(this, 14);
-            energy.addManagedSlot(dischargeSlot);
+            energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
         }
 
         if (count != 0) {
@@ -71,15 +75,15 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
                     final Energy component = this.getComp(Energy.class);
                     if (component != null) {
                         if (component.getEnergy() != 0) {
-                            final NBTTagCompound nbt = ModUtils.nbt(drop);
-                            nbt.setDouble("energy", component.getEnergy());
+                            final CompoundTag nbt = ModUtils.nbt(drop);
+                            nbt.putDouble("energy", component.getEnergy());
                         }
                     }
                     return drop;
                 case None:
                     return null;
                 case Generator:
-                    return new ItemStack(IUItem.basemachine2, 1, 78);
+                   return new ItemStack(IUItem.basemachine2.getItem(78), 1);
                 case Machine:
                     return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                 case AdvMachine:
@@ -89,8 +93,8 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         final Energy component = this.getComp(Energy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
-                final NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy", component.getEnergy());
+                final CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.putDouble("energy", component.getEnergy());
             }
         }
         return drop;
@@ -126,7 +130,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         return packet;
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
 
 
         sound = !sound;
@@ -135,7 +139,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         if (!sound) {
             if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                new PacketStopSound(getWorld(), this.pos);
+                new PacketStopSound(getLevel(), this.getBlockPos());
 
             }
         }
@@ -155,15 +159,16 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (this.getComp(Energy.class) != null) {
             Energy energy = this.getComp(Energy.class);
@@ -172,7 +177,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
             } else if (!energy.getSinkDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
+            final CompoundTag nbt = ModUtils.nbt(stack);
             final double energy1 = nbt.getDouble("energy");
             if (energy1 != 0) {
                 tooltip.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
@@ -181,7 +186,6 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
             }
 
         }
-        super.addInformation(stack, tooltip);
     }
 
     public EnumTypeAudio getTypeAudio() {
@@ -215,25 +219,25 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getLevel().playSound(null, this.getBlockPos(), getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
-            new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            new PacketStopSound(getLevel(), this.getBlockPos());
+            this.getLevel().playSound(null, this.getBlockPos(), EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
-            new PacketStopSound(getWorld(), this.pos);
+            new PacketStopSound(getLevel(), this.getBlockPos());
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
 
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
         return nbttagcompound;
     }
 
@@ -244,11 +248,6 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
 
     }
 
-    public void markDirty() {
-        super.markDirty();
-
-
-    }
 
     public void updateEntityServer() {
         super.updateEntityServer();

@@ -43,8 +43,8 @@ public class ChemicalPlantHandler {
 
     public static void initRecipes() {
         addRecipe(
-                new FluidStack(FluidName.fluidHelium.getInstance(), 2),
-                new FluidStack(FluidName.fluidcryogen.getInstance(), 10)
+                new FluidStack(FluidName.fluidHelium.getInstance().get(), 2),
+                new FluidStack(FluidName.fluidcryogen.getInstance().get(), 10)
         );
     }
 

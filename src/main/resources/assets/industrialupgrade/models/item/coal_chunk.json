@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/coal_chunk"
+    "layer0" : "industrialupgrade:item/coal_chunk"
   }
 }

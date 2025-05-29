@@ -1,0 +1,38 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:item/battery/charging_lapotron_crystal_0"
+  },
+  "overrides" : [
+    {
+      "predicate" : {
+        "level" : 0
+      },
+      "model" : "industrialupgrade:item/battery/charging_lapotron_crystal0"
+    },
+    {
+      "predicate" : {
+        "level" : 0.25
+      },
+      "model" : "industrialupgrade:item/battery/charging_lapotron_crystal1"
+    },
+    {
+      "predicate" : {
+        "level" : 0.5
+      },
+      "model" : "industrialupgrade:item/battery/charging_lapotron_crystal2"
+    },
+    {
+      "predicate" : {
+        "level" : 0.75
+      },
+      "model" : "industrialupgrade:item/battery/charging_lapotron_crystal3"
+    },
+    {
+      "predicate" : {
+        "level" : 1
+      },
+      "model" : "industrialupgrade:item/battery/charging_lapotron_crystal4"
+    }
+	]
+}

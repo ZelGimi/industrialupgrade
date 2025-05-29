@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=imp_replicator": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator"
+    },
+    "facing=south,type=imp_replicator": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator",
+      "y": 180
+    },
+    "facing=west,type=imp_replicator": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator",
+      "y": 270
+    },
+    "facing=east,type=imp_replicator": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator",
+      "y": 90
+    },
+    "facing=down,type=imp_replicator": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator",
+      "x": 90
+    },
+    "facing=up,type=imp_replicator": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator",
+      "x": 270
+    },
+    "facing=north,type=imp_replicator_invalid": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active"
+    },
+    "facing=south,type=imp_replicator_invalid": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "y": 180
+    },
+    "facing=west,type=imp_replicator_invalid": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "y": 270
+    },
+    "facing=east,type=imp_replicator_invalid": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "y": 90
+    },
+    "facing=down,type=imp_replicator_invalid": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "x": 90
+    },
+    "facing=up,type=imp_replicator_invalid": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "x": 270
+    },
+    "facing=north,type=imp_replicator_active": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active"
+    },
+    "facing=south,type=imp_replicator_active": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "y": 180
+    },
+    "facing=west,type=imp_replicator_active": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "y": 270
+    },
+    "facing=east,type=imp_replicator_active": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "y": 90
+    },
+    "facing=down,type=imp_replicator_active": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "x": 90
+    },
+    "facing=up,type=imp_replicator_active": {
+      "model": "industrialupgrade:block/basemachine/imp_replicator_active",
+      "x": 270
+    }
+  }
+}

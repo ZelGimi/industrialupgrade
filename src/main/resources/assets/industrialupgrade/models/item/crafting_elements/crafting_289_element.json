@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/cf_powder"
+		"layer0": "industrialupgrade:item/cf_powder"
 	}
 }

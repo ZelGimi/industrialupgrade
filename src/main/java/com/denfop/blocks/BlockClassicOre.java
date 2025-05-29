@@ -1,204 +1,122 @@
 package com.denfop.blocks;
 
-
-import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.DataBlock;
 import com.denfop.IUItem;
 import com.denfop.IUPotion;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IHazmatLike;
-import com.denfop.blocks.state.BoolProperty;
+import com.denfop.datagen.blocktags.BlockTagsProvider;
+import com.denfop.datagen.blocktags.IBlockTag;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.phys.AABB;
+import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.Random;
-import java.util.stream.Collectors;
 
-public class BlockClassicOre extends BlockCore implements IModelRegister {
+import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL;
 
-    public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("type", Type.class);
-    public static final BoolProperty BOOL_PROPERTY = new BoolProperty("hasdamage");
+public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
 
 
-    public BlockClassicOre() {
-        super(Material.ROCK, Constants.MOD_ID);
-        setUnlocalizedName("classicore");
-        setCreativeTab(IUCore.OreTab);
-        setHardness(1.0F);
-        setSoundType(SoundType.STONE);
-        this.setTickRandomly(true);
-        setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.copper));
-        setHarvestLevel("pickaxe", 1);
+    public static final BooleanProperty BOOL_PROPERTY = BooleanProperty.create("hasdamage");
+
+    public BlockClassicOre(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
+        super(Properties.of().mapColor(MapColor.STONE).destroyTime(1f).randomTicks().explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
+        BlockTagsProvider.list.add(this);
+
     }
 
-    public ItemStack getItemStack(Type type) {
-        return this.getItemStack(this.getState(type));
-    }
+    @Override
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
 
-    public IBlockState getState(Type type) {
-        if (type == null) {
-            throw new IllegalArgumentException("invalid type: " + type);
-        } else {
-            return this.getDefaultState().withProperty(VARIANT, type);
-        }
-    }
-
-    public void randomTick(World world, BlockPos pos, IBlockState state, Random random) {
-        if (world.isRemote) {
+        if (world.isClientSide || this.getElement() != Type.uranium) {
             return;
         }
-        Type type = state.getValue(VARIANT);
-        if (type != Type.uranium) {
-            return;
-        }
+
         boolean damage = state.getValue(BOOL_PROPERTY);
         if (!damage) {
             return;
         }
+
+
         ChunkPos chunkPos = new ChunkPos(pos);
-        new PacketUpdateRadiationValue(chunkPos, 1);
-        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2,
-                pos.getY() + 2, pos.getZ() + 2
+        PacketUpdateRadiationValue packet = new PacketUpdateRadiationValue(chunkPos, 1);
+        AABB axisAlignedBB = new AABB(
+                pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2,
+                pos.getX() + 3, pos.getY() + 3, pos.getZ() + 3
         );
-        final List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, axisAlignedBB);
-        for (EntityPlayer player : list) {
-            boolean can = !IHazmatLike.hasCompleteHazmat(player);
-            if (can) {
-                player.addPotionEffect(new PotionEffect(IUPotion.radiation, 400, 0));
-                player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 0));
-
-            }
 
 
-        }
-
-    }
-
-    @Override
-    public void onBlockPlacedBy(
-            final World p_180633_1_,
-            final BlockPos p_180633_2_,
-            IBlockState p_180633_3_,
-            final EntityLivingBase p_180633_4_,
-            final ItemStack p_180633_5_
-    ) {
-        super.onBlockPlacedBy(p_180633_1_, p_180633_2_, p_180633_3_, p_180633_4_, p_180633_5_);
-        p_180633_3_ = p_180633_3_.withProperty(BOOL_PROPERTY, false);
-        p_180633_1_.setBlockState(p_180633_2_, p_180633_3_);
-    }
-
-    public ItemStack getItemStack(IBlockState state) {
-        if (state.getBlock() != this) {
-            return null;
-        } else {
-            Item item = Item.getItemFromBlock(this);
-            if (item != Items.AIR) {
-                int meta = this.getMetaFromState(state);
-                return new ItemStack(item, 1, meta);
-            } else {
-                throw new RuntimeException("no matching item for " + this);
+        List<Player> players = world.getEntitiesOfClass(Player.class, axisAlignedBB);
+        for (Player player : players) {
+            boolean canAffect = !IHazmatLike.hasCompleteHazmat(player);
+            if (canAffect) {
+                player.addEffect(new MobEffectInstance(IUPotion.radiation, 400, 0));
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 0));
             }
         }
     }
 
-    @Nonnull
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT, BOOL_PROPERTY);
-    }
-
-    public void getSubBlocks(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
-        for (int i = 0; i < (Type.values()).length; i++) {
-            items.add(new ItemStack(this, 1, i));
-        }
-    }
-
-    public String getUnlocalizedName(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        if (meta >= (Type.values()).length) {
-            meta = 0;
-        }
-        return "iu." + Type.values()[meta].getName() + "_ore" + ".name";
-    }
-
-    public EnumRarity getRarity(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        if (meta >= (Type.values()).length) {
-            return EnumRarity.COMMON;
-        }
-        return Type.values()[meta].getRarity();
+    @Override
+    int getMetaFromState(BlockState state) {
+        return getElement().getId();
     }
 
 
     @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        boolean property = meta == 3;
-        return getDefaultState().withProperty(BOOL_PROPERTY, property).withProperty(VARIANT, Type.values()[meta]);
-    }
-
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT).getMetadata();
-    }
-
-    public int damageDropped(IBlockState state) {
-        return state.getValue(VARIANT).getMetadata();
-    }
-
-    public int getLightValue(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
-        return state.getValue(VARIANT).getLight();
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_49915_) {
+        super.createBlockStateDefinition(p_49915_);
+        p_49915_.add(BOOL_PROPERTY);
     }
 
     @Override
-    public void getDrops(
-            @Nonnull final NonNullList<ItemStack> drops,
-            @Nonnull final IBlockAccess world,
-            @Nonnull final BlockPos pos,
-            @Nonnull final IBlockState state,
-            final int fortune
-    ) {
+    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+        return this.stateDefinition.any().setValue(BOOL_PROPERTY, false);
+    }
 
-        final int meta = this.getMetaFromState(state);
+    @Override
+    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+        p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
+        final int meta = getElement().getId();
+        int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, p_60538_.getParameter(TOOL));
         if (meta == 0) {
-            drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), 16));
+            return Collections.singletonList((new ItemStack(IUItem.rawMetals.getStack(16), 1 + getDrop(fortune))));
         } else if (meta == 1) {
-            drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), 20));
+            return Collections.singletonList(new ItemStack(IUItem.rawMetals.getStack(20), 1 + getDrop(fortune)));
         } else if (meta == 2) {
-            drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), 19));
+            return Collections.singletonList(new ItemStack(IUItem.rawMetals.getStack(19), 1 + getDrop(fortune)));
         } else if (meta == 3) {
-            super.getDrops(drops, world, pos, state, fortune);
+            return super.getDrops(p_60537_, p_60538_);
         }
-        return;
+        return super.getDrops(p_60537_, p_60538_);
     }
-
 
     private int getDrop(int fortune) {
         switch (fortune) {
@@ -213,47 +131,21 @@ public class BlockClassicOre extends BlockCore implements IModelRegister {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        for (int i = 0; i < (Type.values()).length; i++) {
-            ModelLoader.setCustomModelResourceLocation(
-                    Item.getItemFromBlock(this),
-                    i,
-                    new ModelResourceLocation(this.modName + ":" + this.name, "type=" + Type.values()[i].getName())
-            );
-        }
-        ModelLoader.setCustomStateMapper(this, block -> block.getBlockState().getValidStates().stream()
-                .collect(Collectors.toMap(
-                        state -> state,
-                        state -> {
-                            StateMapperIU stateMapper = new StateMapperIU(getRegistryName());
-                            return stateMapper.getModelResourceLocation(state);
-                        }
-                )));
+    @Override
+    public Block getBlock() {
+        return this;
     }
 
-    public boolean preInit() {
-        setRegistryName("classicore");
-        ForgeRegistries.BLOCKS.register(this);
-        ItemBlockCore itemBlock = new ItemBlockCore(this);
-        itemBlock.setRegistryName(Objects.requireNonNull(getRegistryName()));
-        ForgeRegistries.ITEMS.register(itemBlock);
-        IUCore.proxy.addIModelRegister(this);
-
-        return true;
+    @Override
+    public Pair<String, Integer> getHarvestLevel() {
+        return new Pair<>("pickaxe", 1);
     }
 
-    public boolean initialize() {
-
-        return true;
-    }
-
-    public enum Type implements IStringSerializable {
+    public enum Type implements ISubEnum {
         copper(0),
         tin(1),
         lead(2),
         uranium(3);
-
 
         private final int metadata;
         private final String name;
@@ -271,20 +163,33 @@ public class BlockClassicOre extends BlockCore implements IModelRegister {
             return this.metadata;
         }
 
+        @Override
+        public int getId() {
+            return this.metadata;
+        }
+
+        @Override
+        public String getOtherPart() {
+            return "type=";
+        }
+
         @Nonnull
         public String getName() {
             return this.name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "classicore";
         }
 
         public int getLight() {
             return 0;
         }
 
-        public EnumRarity getRarity() {
-            return EnumRarity.COMMON;
+        @Override
+        public boolean register() {
+            return this != copper;
         }
-
-
     }
-
 }

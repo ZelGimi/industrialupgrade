@@ -9,11 +9,12 @@ import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputFluid;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
@@ -22,10 +23,11 @@ public class TileEntityFluidInput extends TileEntityMultiBlockElement implements
     private final Fluids fluids;
     FluidTank tank;
 
-    public TileEntityFluidInput() {
+    public TileEntityFluidInput(BlockPos pos, BlockState state) {
+        super(BlockBlastFurnace.blast_furnace_input_fluid, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = fluids.addTank("tank", 10000, InvSlot.TypeItemSlot.INPUT,
-                Fluids.fluidPredicate(FluidRegistry.WATER)
+                Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER)
         );
 
     }
@@ -35,21 +37,19 @@ public class TileEntityFluidInput extends TileEntityMultiBlockElement implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.blastfurnace;
+        return IUItem.blastfurnace.getBlock(getTeBlock().getId());
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.blastfurnace.info1"));
         tooltip.add(Localization.translate("iu.blastfurnace.info3") + Localization.translate(new ItemStack(
-                IUItem.blastfurnace,
-                1,
-                0
-        ).getUnlocalizedName()));
+                IUItem.blastfurnace.getItem(0)
+        ).getDescriptionId()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 

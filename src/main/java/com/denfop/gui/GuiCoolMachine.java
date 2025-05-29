@@ -10,15 +10,15 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerCoolMachine;
 import com.denfop.tiles.mechanism.cooling.TileCooling;
 import com.denfop.utils.ListInformationUtils;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiCoolMachine extends GuiIU<ContainerCoolMachine> {
+public class GuiCoolMachine<T extends ContainerCoolMachine> extends GuiIU<ContainerCoolMachine> {
 
     public ContainerCoolMachine container;
     public String name;
@@ -87,33 +87,25 @@ public class GuiCoolMachine extends GuiIU<ContainerCoolMachine> {
         }
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
 
-    }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
-        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6, 4210752);
+       draw(poseStack,this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 6, 4210752);
 
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xOffset + 3, yOffset + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+       bindTexture(getTexture());
+        int xOffset = (this.width - this.imageWidth) / 2;
+        int yOffset = (this.height - this.imageHeight) / 2;
+       bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, xOffset + 3, yOffset + 3, 0, 0, 10, 10);
+       bindTexture(getTexture());
 
 
     }

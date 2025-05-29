@@ -14,6 +14,5 @@ public interface IHeatConductor extends IHeatAcceptor, IHeatEmitter {
     InfoCable getHeatCable();
 
     void setHeatCable(InfoCable cable);
-
 }
 

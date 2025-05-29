@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/imp_vending_main",
-    "down" : "industrialupgrade:blocks/imp_vending_up-down",
-    "up" : "industrialupgrade:blocks/imp_vending_up-down",
-    "north" : "industrialupgrade:blocks/imp_vending_main",
-    "east" : "industrialupgrade:blocks/imp_vending_left-right-back",
-    "south" : "industrialupgrade:blocks/imp_vending_left-right-back",
-    "west" : "industrialupgrade:blocks/imp_vending_left-right-back"
+    "particle" : "industrialupgrade:block/imp_vending_main",
+    "down" : "industrialupgrade:block/imp_vending_up-down",
+    "up" : "industrialupgrade:block/imp_vending_up-down",
+    "north" : "industrialupgrade:block/imp_vending_main",
+    "east" : "industrialupgrade:block/imp_vending_left-right-back",
+    "south" : "industrialupgrade:block/imp_vending_left-right-back",
+    "west" : "industrialupgrade:block/imp_vending_left-right-back"
   }
 }

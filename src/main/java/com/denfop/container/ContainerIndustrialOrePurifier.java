@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityIndustrialOrePurifier;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerIndustrialOrePurifier extends ContainerFullInv<TileEntityIndustrialOrePurifier> {
 
-    public ContainerIndustrialOrePurifier(EntityPlayer var1, TileEntityIndustrialOrePurifier tileEntity1) {
+    public ContainerIndustrialOrePurifier(Player var1, TileEntityIndustrialOrePurifier tileEntity1) {
         super(var1, tileEntity1);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 108, 44));

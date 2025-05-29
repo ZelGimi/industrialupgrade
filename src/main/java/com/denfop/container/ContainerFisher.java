@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileFisher;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerFisher extends ContainerFullInv<TileFisher> {
 
-    public ContainerFisher(EntityPlayer entityPlayer, TileFisher tileEntity1) {
+    public ContainerFisher(Player entityPlayer, TileFisher tileEntity1) {
         this(entityPlayer, tileEntity1, 166);
 
         addSlotToContainer(new SlotInvSlot(tileEntity1.inputslot, 0, 17,
@@ -19,7 +19,7 @@ public class ContainerFisher extends ContainerFullInv<TileFisher> {
         }
     }
 
-    public ContainerFisher(EntityPlayer entityPlayer, TileFisher tileEntity1, int height) {
+    public ContainerFisher(Player entityPlayer, TileFisher tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
     }
 

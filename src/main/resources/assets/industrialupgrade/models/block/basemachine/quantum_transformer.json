@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "industrialupgrade:models/quantum_transformer",
-		"1": "industrialupgrade:models/quantum_transformer_32x",
-		"particle": "industrialupgrade:models/quantum_transformer_particle"
+		"0": "industrialupgrade:block/quantum_transformer",
+		"1": "industrialupgrade:block/quantum_transformer_32x",
+		"particle": "industrialupgrade:block/quantum_transformer_particle"
 	},
 	"elements": [
 		{

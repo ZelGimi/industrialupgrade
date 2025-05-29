@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nuclear/americium_smalldust"
+		"layer0": "industrialupgrade:item/nuclear/americium_smalldust"
 	}
 }

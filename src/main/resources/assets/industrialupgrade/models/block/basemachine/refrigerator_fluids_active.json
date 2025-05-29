@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/refrigerator_fluids_active_front-right-left-back",
-    "down" : "industrialupgrade:blocks/refrigerator_fluids_bottom",
-    "up" : "industrialupgrade:blocks/refrigerator_fluids_active_top",
-    "north" : "industrialupgrade:blocks/refrigerator_fluids_active_front-right-left-back",
-    "east" : "industrialupgrade:blocks/refrigerator_fluids_active_front-right-left-back",
-    "south" : "industrialupgrade:blocks/refrigerator_fluids_active_front-right-left-back",
-    "west" : "industrialupgrade:blocks/refrigerator_fluids_active_front-right-left-back"
+    "particle" : "industrialupgrade:block/refrigerator_fluids_active_front-right-left-back",
+    "down" : "industrialupgrade:block/refrigerator_fluids_bottom",
+    "up" : "industrialupgrade:block/refrigerator_fluids_active_top",
+    "north" : "industrialupgrade:block/refrigerator_fluids_active_front-right-left-back",
+    "east" : "industrialupgrade:block/refrigerator_fluids_active_front-right-left-back",
+    "south" : "industrialupgrade:block/refrigerator_fluids_active_front-right-left-back",
+    "west" : "industrialupgrade:block/refrigerator_fluids_active_front-right-left-back"
   }
 }

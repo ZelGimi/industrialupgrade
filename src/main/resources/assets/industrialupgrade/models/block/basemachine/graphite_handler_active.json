@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/graphite_handler_active_main",
-    "down" : "industrialupgrade:blocks/graphite_handler_active_all",
-    "up" : "industrialupgrade:blocks/graphite_handler_active_up",
-    "north" : "industrialupgrade:blocks/graphite_handler_active_main",
-    "east" : "industrialupgrade:blocks/graphite_handler_active_all",
-    "south" : "industrialupgrade:blocks/graphite_handler_active_all",
-    "west" : "industrialupgrade:blocks/graphite_handler_active_all"
+    "particle" : "industrialupgrade:block/graphite_handler_active_main",
+    "down" : "industrialupgrade:block/graphite_handler_active_all",
+    "up" : "industrialupgrade:block/graphite_handler_active_up",
+    "north" : "industrialupgrade:block/graphite_handler_active_main",
+    "east" : "industrialupgrade:block/graphite_handler_active_all",
+    "south" : "industrialupgrade:block/graphite_handler_active_all",
+    "west" : "industrialupgrade:block/graphite_handler_active_all"
   }
 }

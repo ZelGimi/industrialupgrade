@@ -1,12 +1,12 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntitySimulatorReactor;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class ContainerSimulationReactors extends ContainerFullInv<TileEntitySimulatorReactor> {
 
-    public ContainerSimulationReactors(TileEntitySimulatorReactor tileEntitySimulatorReactor, EntityPlayer var1) {
+    public ContainerSimulationReactors(TileEntitySimulatorReactor tileEntitySimulatorReactor, Player var1) {
         super(var1, tileEntitySimulatorReactor, 254);
         addSlotToContainer(new SlotInvSlot(
                 tileEntitySimulatorReactor.scheduleSlot,
@@ -14,7 +14,7 @@ public class ContainerSimulationReactors extends ContainerFullInv<TileEntitySimu
                 231,
                 170
         ));
-        if (tileEntitySimulatorReactor.type != -1 && tileEntitySimulatorReactor.level != -1 && tileEntitySimulatorReactor.reactors != null) {
+        if (tileEntitySimulatorReactor.type != -1 && tileEntitySimulatorReactor.levelReactor != -1 && tileEntitySimulatorReactor.reactors != null) {
             int minX = (int) (240 / 2 - (tileEntitySimulatorReactor.reactors.getWidth() / 2D) * 18);
             int minY = (int) (190 / 2 - (tileEntitySimulatorReactor.reactors.getHeight() / 2D) * 18);
 
@@ -29,10 +29,12 @@ public class ContainerSimulationReactors extends ContainerFullInv<TileEntitySimu
                             minY + finalY * 18,
                             tileEntitySimulatorReactor.invSlot
                     ) {
+
+
                         @Override
-                        public void putStack(final ItemStack stack) {
-                            super.putStack(stack);
-                            tileEntitySimulatorReactor.invSlot.put(this.getSlotIndex(), stack);
+                        public void set(final ItemStack stack) {
+                            super.set(stack);
+                            tileEntitySimulatorReactor.invSlot.set(this.getSlotIndex(), stack);
                         }
 
                         @Override

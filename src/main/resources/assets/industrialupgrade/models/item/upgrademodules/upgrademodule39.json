@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/upgrademodule39"
+    "layer0" : "industrialupgrade:item/upgrademodule39"
   }
 }

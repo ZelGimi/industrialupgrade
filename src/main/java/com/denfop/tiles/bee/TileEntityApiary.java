@@ -22,8 +22,10 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockApiary;
 import com.denfop.container.ContainerApiary;
+import com.denfop.container.ContainerBase;
 import com.denfop.damagesource.IUDamageSource;
 import com.denfop.gui.GuiApiary;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemFluidCell;
 import com.denfop.items.bee.ItemJarBees;
@@ -36,32 +38,25 @@ import com.denfop.tiles.mechanism.TileEntityApothecaryBee;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
 import com.google.common.collect.Lists;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.denfop.api.bee.genetics.GeneticsManager.enumGeneticListMap;
@@ -89,7 +84,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     public ChunkPos chunkPos;
     public ChunkLevel chunkLevel;
     public Biome biome;
-    public Chunk chunk;
+    public LevelChunk chunk;
     public Radiation radLevel;
     public boolean rain;
     public boolean thundering;
@@ -118,9 +113,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     List<Bee> workersBeeList = new LinkedList<>();
     List<Bee> buildersBeeList = new LinkedList<>();
     List<Bee> illBeeList = new LinkedList<>();
-    Map<EntityPlayer, Double> enemy;
+    Map<Player, Double> enemy;
     Map<Long, EnumStatus> statusMap = new HashMap<>();
-    Map<EntityPlayer, Double> entityWeightMap = new HashMap<>();
+    Map<Player, Double> entityWeightMap = new HashMap<>();
     Set<ChunkPos> chunkPositions = new HashSet<>();
     Map<ChunkPos, List<TileEntityCrop>> chunkPosListMap = new HashMap<>();
     Map<ChunkPos, List<TileEntityApiary>> chunkPosListMap1 = new HashMap<>();
@@ -136,9 +131,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     double chanceHealing = 1;
     int generation = 0;
     Genome genome;
-    List<Chunk> chunks = new ArrayList<>();
-    private AxisAlignedBB axisAlignedBB;
-    private Vec3d center;
+    List<LevelChunk> chunks = new ArrayList<>();
+    private AABB axisAlignedBB;
+    private Vec3 center;
     private double maxDistance;
     private byte tickDrainFood = 0;
     private byte tickDrainJelly = 0;
@@ -164,7 +159,8 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     private LevelPollution soilPollution = LevelPollution.LOW;
     private EnumLevelRadiation radiationPollution = EnumLevelRadiation.LOW;
 
-    public TileEntityApiary() {
+    public TileEntityApiary(BlockPos pos, BlockState state) {
+        super(BlockApiary.apiary,pos,state);
         this.invSlotProduct = new InvSlotOutput(this, 7);
         this.invSlotFood = new InvSlotOutput(this, 1);
         this.invSlotJelly = new InvSlotOutput(this, 1);
@@ -187,9 +183,10 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 update();
+                return content;
             }
 
 
@@ -198,7 +195,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 for (ItemStack stack : contents) {
                     if (!stack.isEmpty()) {
                         IFrameItem frameItem = (IFrameItem) stack.getItem();
-                        FrameAttributeLevel attributeLevel = frameItem.getAttribute(stack.getItemDamage());
+                        FrameAttributeLevel attributeLevel = frameItem.getAttribute(stack.getDamageValue());
                         switch (attributeLevel.getAttribute()) {
                             case STORAGE_FOOD:
                                 maxFood = (short) (maxDefaultFood * attributeLevel.getValue());
@@ -268,7 +265,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.apiary;
+        return IUItem.apiary.getBlock();
     }
 
     @Override
@@ -276,17 +273,17 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         return BlockApiary.apiary;
     }
 
-    public Map<EntityPlayer, Double> getNearbyEntitiesWithWeight() {
-        AxisAlignedBB axisAlignedBB = this.axisAlignedBB;
+    public Map<Player, Double> getNearbyEntitiesWithWeight() {
+        AABB axisAlignedBB = this.axisAlignedBB;
 
-        List<EntityPlayer> players = getEntitiesWithinAABB(axisAlignedBB);
+        List<Player> players = getEntitiesWithinAABB(axisAlignedBB);
         entityWeightMap.clear();
 
-        for (EntityPlayer player : players) {
-            if (getComponentPrivate().getPlayers().contains(player.getName()) || player.isCreative()) {
+        for (Player player : players) {
+            if (getComponentPrivate().getPlayers().contains(player.getName().getString()) || player.isCreative()) {
                 continue;
             }
-            double distance = center.distanceTo(player.getPositionVector());
+            double distance = center.distanceTo(player.position());
             double weight = calculateWeight(distance, maxDistance);
             entityWeightMap.put(player, weight);
         }
@@ -295,19 +292,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         return entityWeightMap;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     public void set() {
         if (genome == null) {
@@ -453,19 +438,16 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             BeeNetwork.instance.removeApiaryFromWorld(this);
         }
-     /*   if (this.getWorld().isRemote) {
-            GlobalRenderManager.removeRender(pos);
-        }*/
     }
 
-    public List<EntityPlayer> getEntitiesWithinAABB(AxisAlignedBB aabb) {
-        List<EntityPlayer> list = Lists.newArrayList();
-        WorldServer server = (WorldServer) world;
-        for (EntityPlayer player : server.playerEntities) {
-            if (aabb.contains(player.getPositionVector())) {
+    public List<Player> getEntitiesWithinAABB(AABB aabb) {
+        List<Player> list = Lists.newArrayList();
+        ServerLevel server = (ServerLevel) level;
+        for (Player player : server.players()) {
+            if (aabb.contains(player.position())) {
                 list.add(player);
             }
         }
@@ -475,21 +457,18 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     @Override
     public void onLoaded() {
         super.onLoaded();
-   /*     if (this.getWorld().isRemote) {
-            this.render = createFunction(this);
-             GlobalRenderManager.addRender(pos, render);
-        }*/
-        if (!this.getWorld().isRemote) {
+
+        if (!this.getWorld().isClientSide) {
             BeeNetwork.instance.addNewApiaryToWorld(this);
             this.frameSlot.update();
             if (this.queen != null) {
                 this.genome = new Genome(this.stack);
-                this.chunk = this.getWorld().getChunkFromBlockCoords(pos);
-                this.biome = this.getWorld().getBiome(pos);
+                this.chunk = this.getWorld().getChunkAt(pos);
+                this.biome = this.getWorld().getBiome(pos).get();
                 reset();
                 set();
-                this.coef = this.queen.canWorkInBiome(biome) || genome.hasGenome(EnumGenetic.COEF_BIOME) ? 1 : 0.5;
-                this.axisAlignedBB = new AxisAlignedBB(
+                this.coef = this.queen.canWorkInBiome(biome,level) || genome.hasGenome(EnumGenetic.COEF_BIOME) ? 1 : 0.5;
+                this.axisAlignedBB = new AABB(
                         pos.getX() + this.queen.getSizeTerritory().minX * radiusGenome,
                         pos.getY() + this.queen.getSizeTerritory().minY * radiusGenome,
                         pos.getZ() + this.queen.getSizeTerritory().minZ * radiusGenome,
@@ -497,26 +476,26 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                         pos.getY() + this.queen.getSizeTerritory().maxY * radiusGenome,
                         pos.getZ() + this.queen.getSizeTerritory().maxZ * radiusGenome
                 );
-                this.center = new Vec3d(
+                this.center = new Vec3(
                         (axisAlignedBB.minX + axisAlignedBB.maxX) / 2,
                         (axisAlignedBB.minY + axisAlignedBB.maxY) / 2,
                         (axisAlignedBB.minZ + axisAlignedBB.maxZ) / 2
                 );
-                final AxisAlignedBB aabb = axisAlignedBB;
-                int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
-                int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
-                int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
-                int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
+                final AABB aabb = axisAlignedBB;
+                int j2 = Mth.floor((aabb.minX - 2) / 16.0D);
+                int k2 = Mth.ceil((aabb.maxX + 2) / 16.0D);
+                int l2 = Mth.floor((aabb.minZ - 2) / 16.0D);
+                int i3 = Mth.ceil((aabb.maxZ + 2) / 16.0D);
                 for (int j3 = j2; j3 < k2; ++j3) {
                     for (int k3 = l2; k3 < i3; ++k3) {
-                        final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
+                        final LevelChunk chunk = level.getChunk(j3, k3);
                         if (!chunks.contains(chunk)) {
                             chunks.add(chunk);
                         }
                     }
                 }
                 chunkPositions.clear();
-                this.maxDistance = center.distanceTo(new Vec3d(axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ));
+                this.maxDistance = center.distanceTo(new Vec3(axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ));
 
                 int minX = (int) Math.floor(axisAlignedBB.minX) >> 4;
                 int maxX = (int) Math.floor(axisAlignedBB.maxX) >> 4;
@@ -543,10 +522,10 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 PollutionManager.pollutionManager.addChunkLevelSoil(chunkLevel);
             }
             for (ChunkPos chunkPos : chunkPositions) {
-                chunkPosListMap.put(chunkPos, CropNetwork.instance.getCropsFromChunk(world, chunkPos));
+                chunkPosListMap.put(chunkPos, CropNetwork.instance.getCropsFromChunk(level, chunkPos));
             }
             for (ChunkPos chunkPos : chunkPositions) {
-                chunkPosListMap1.put(chunkPos, BeeNetwork.instance.getApiaryFromChunk(world, chunkPos));
+                chunkPosListMap1.put(chunkPos, BeeNetwork.instance.getApiaryFromChunk(level, chunkPos));
             }
             this.chunkLevel = chunkLevel;
 
@@ -567,32 +546,30 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
 
     @Override
     public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+            final Player player,
+            final InteractionHand hand,
+            final Direction side,
+            final Vec3 hitX
     ) {
         if (player
-                .getHeldItem(EnumHand.MAIN_HAND)
-                .getItem() instanceof ItemJarBees && queen == null && !this.getWorld().isRemote) {
-            ItemStack stack = player.getHeldItem(hand);
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
-            if (nbt.hasKey("swarm")) {
+                .getItemInHand(InteractionHand.MAIN_HAND)
+                .getItem() instanceof ItemJarBees && queen == null && !this.getWorld().isClientSide) {
+            ItemStack stack = player.getItemInHand(hand);
+            final CompoundTag nbt = ModUtils.nbt(stack);
+            if (nbt.contains("swarm")) {
                 this.stack = stack.copy();
                 this.stack.setCount(1);
-                int id = nbt.getInteger("bee_id");
+                int id = nbt.getInt("bee_id");
                 this.id = WorldBaseGen.random.nextLong();
                 this.queen = BeeNetwork.instance.getBee(id).copy();
                 this.genome = new Genome(this.stack);
-                this.biome = this.getWorld().getBiome(pos);
-                this.coef = this.queen.canWorkInBiome(biome) ? 1 : 0.5;
+                this.biome = this.getWorld().getBiome(pos).get();
+                this.coef = this.queen.canWorkInBiome(biome,level) ? 1 : 0.5;
                 reset();
                 set();
                 this.coef = genome.hasGenome(EnumGenetic.COEF_BIOME) ? 1 : coef;
-                int totalBeeCount = nbt.getInteger("swarm");
-                if (!nbt.hasKey("info")) {
+                int totalBeeCount = nbt.getInt("swarm");
+                if (!nbt.contains("info")) {
                     int attackBeeCount = (int) (totalBeeCount * (percentAttackBee / 100.0));
                     int doctorBeeCount = (int) (totalBeeCount * (percentDoctorBee / 100.0));
                     int workersBeeCount = (int) (totalBeeCount * (percentWorkersBee / 100.0));
@@ -626,9 +603,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                         apairyBeeList.add(bee);
                     }
                 } else {
-                    final NBTTagList tagList = nbt.getTagList("info", 10);
-                    for (int i = 0; i < tagList.tagCount(); i++) {
-                        NBTTagCompound beeInfo = tagList.getCompoundTagAt(i);
+                    final ListTag tagList = nbt.getList("info", 10);
+                    for (int i = 0; i < tagList.size(); i++) {
+                        CompoundTag beeInfo = tagList.getCompound(i);
                         Bee bee = new Bee(beeInfo);
                         if (bee.isIll()) {
                             this.illBeeList.add(bee);
@@ -653,7 +630,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                         this.apairyBeeList.add(bee);
                     }
                 }
-                this.axisAlignedBB = new AxisAlignedBB(
+                this.axisAlignedBB = new AABB(
                         pos.getX() + this.queen.getSizeTerritory().minX * radiusGenome,
                         pos.getY() + this.queen.getSizeTerritory().minY * radiusGenome,
                         pos.getZ() + this.queen.getSizeTerritory().minZ * radiusGenome,
@@ -661,12 +638,12 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                         pos.getY() + this.queen.getSizeTerritory().maxY * radiusGenome,
                         pos.getZ() + this.queen.getSizeTerritory().maxZ * radiusGenome
                 );
-                this.center = new Vec3d(
+                this.center = new Vec3(
                         (axisAlignedBB.minX + axisAlignedBB.maxX) / 2,
                         (axisAlignedBB.minY + axisAlignedBB.maxY) / 2,
                         (axisAlignedBB.minZ + axisAlignedBB.maxZ) / 2
                 );
-                this.maxDistance = center.distanceTo(new Vec3d(axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ));
+                this.maxDistance = center.distanceTo(new Vec3(axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ));
 
                 int minX = (int) Math.floor(axisAlignedBB.minX) >> 4;
                 int maxX = (int) Math.floor(axisAlignedBB.maxX) >> 4;
@@ -682,30 +659,30 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 chunkPosListMap.clear();
                 chunkPosListMap1.clear();
                 for (ChunkPos chunkPos : chunkPositions) {
-                    chunkPosListMap.put(chunkPos, CropNetwork.instance.getCropsFromChunk(world, chunkPos));
+                    chunkPosListMap.put(chunkPos, CropNetwork.instance.getCropsFromChunk(level, chunkPos));
                 }
                 for (ChunkPos chunkPos : chunkPositions) {
-                    chunkPosListMap1.put(chunkPos, BeeNetwork.instance.getApiaryFromChunk(world, chunkPos));
+                    chunkPosListMap1.put(chunkPos, BeeNetwork.instance.getApiaryFromChunk(level, chunkPos));
                 }
 
 
                 stack.shrink(1);
             }
         } else if (queen != null && player
-                .getHeldItem(EnumHand.MAIN_HAND)
-                .getItem() instanceof ItemNet && !this.getWorld().isRemote) {
-            ItemStack stack = new ItemStack(IUItem.jarBees, 1);
+                .getItemInHand(InteractionHand.MAIN_HAND)
+                .getItem() instanceof ItemNet && !this.getWorld().isClientSide) {
+            ItemStack stack = new ItemStack(IUItem.jarBees.getStack(0), 1);
 
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
+            final CompoundTag nbt = ModUtils.nbt(stack);
             this.genome.writeNBT(nbt);
-            nbt.setInteger("bee_id", queen.getId());
-            nbt.setInteger("swarm", this.apairyBeeList.size());
-            NBTTagList tagList = new NBTTagList();
+            nbt.putInt("bee_id", queen.getId());
+            nbt.putInt("swarm", this.apairyBeeList.size());
+            ListTag tagList = new ListTag();
             for (Bee bee : this.apairyBeeList) {
-                tagList.appendTag(bee.writeToNBT());
+                tagList.add(bee.writeToNBT());
             }
-            nbt.setTag("info", tagList);
-            player.addItemStackToInventory(stack);
+            nbt.put("info", tagList);
+            player.addItem(stack);
             this.apairyBeeList.clear();
             this.queen = null;
             this.attackBeeList.clear();
@@ -718,20 +695,20 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             this.birthBeeList.clear();
         }
         if (this.queen != null) {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, hitX);
         }
         return false;
     }
 
     @Override
-    public ContainerApiary getGuiContainer(final EntityPlayer var1) {
+    public ContainerApiary getGuiContainer(final Player var1) {
         return new ContainerApiary(var1, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiApiary(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<?>> getGui(final Player var1, final ContainerBase<?> var2) {
+        return new GuiApiary((ContainerApiary) var2);
     }
 
     public void feedBees(List<Bee> beeList) {
@@ -808,74 +785,51 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         illBeeList.removeAll(recoveryList);
     }
 
-    public void healBeesFromApothecary(TileEntityApothecaryBee apothecaryBee) {
-        if (illBeeList.isEmpty()) {
-            return;
-        }
-        illBeeList.sort(Comparator.comparingInt(bee -> bee.getTypeBee().ordinal()));
-        List<Bee> recoveryList = new ArrayList<>();
 
-        for (Bee illBee : illBeeList) {
-            if (!illBee.isIll()) {
-                continue;
-            }
-            if (apothecaryBee.energy.getEnergy() < 50) {
-                break;
-            }
-            apothecaryBee.energy.useEnergy(50);
-            illBee.setIll(false);
-            recoveryList.add(illBee);
-
-
-        }
-
-        illBeeList.removeAll(recoveryList);
-
-    }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         nbt = super.writeToNBT(nbt);
         if (queen != null) {
-            NBTTagList tagList = new NBTTagList();
+            ListTag tagList = new ListTag();
             for (Bee bee : apairyBeeList) {
-                tagList.appendTag(bee.writeToNBT());
+                tagList.add(bee.writeToNBT());
             }
-            nbt.setByte("bee_id", (byte) queen.getId());
-            nbt.setTag("bees", tagList);
-            nbt.setLong("id_queen", id);
-            nbt.setTag("stack", stack.serializeNBT());
+            nbt.putByte("bee_id", (byte) queen.getId());
+            nbt.put("bees", tagList);
+            nbt.putLong("id_queen", id);
+            nbt.put("stack", stack.serializeNBT());
         }
 
-        nbt.setShort("royalJelly", (short) (royalJelly * 10));
-        nbt.setShort("food", (short) (food * 10));
-        nbt.setByte("harvest", (byte) harvest);
-        nbt.setInteger("birth", birth);
-        nbt.setInteger("generation", generation);
-        nbt.setInteger("death", death);
-        NBTTagList tagList = new NBTTagList();
+        nbt.putShort("royalJelly", (short) (royalJelly * 10));
+        nbt.putShort("food", (short) (food * 10));
+        nbt.putByte("harvest", (byte) harvest);
+        nbt.putInt("birth", birth);
+        nbt.putInt("generation", generation);
+        nbt.putInt("death", death);
+        ListTag tagList = new ListTag();
         statusMap.forEach((id, status) -> {
-            final NBTTagCompound nbt1 = new NBTTagCompound();
-            nbt1.setLong("id", id);
-            nbt1.setByte("status", (byte) status.ordinal());
+            final CompoundTag nbt1 = new CompoundTag();
+            nbt1.putLong("id", id);
+            nbt1.putByte("status", (byte) status.ordinal());
         });
-        nbt.setTag("status", tagList);
+        nbt.put("status", tagList);
 
         return nbt;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbt) {
+    public void readFromNBT(final CompoundTag nbt) {
         super.readFromNBT(nbt);
-        if (nbt.hasKey("bees")) {
+        if (nbt.contains("bees")) {
             int beeId = nbt.getByte("bee_id");
             id = nbt.getLong("id_queen");
             queen = BeeNetwork.instance.getBee(beeId);
-            this.stack = new ItemStack(nbt.getCompoundTag("stack"));
-            NBTTagList tagList = nbt.getTagList("bees", 10);
+            this.stack = ItemStack.of(nbt.getCompound("stack"));
+            ListTag tagList = nbt.getList("bees", 10);
             apairyBeeList.clear();
-            for (int i = 0; i < tagList.tagCount(); i++) {
-                NBTTagCompound beeTag = tagList.getCompoundTagAt(i);
+            for (int i = 0; i < tagList.size(); i++) {
+                CompoundTag beeTag = tagList.getCompound(i);
                 Bee bee = new Bee(beeTag);
                 apairyBeeList.add(bee);
                 if (bee.isIll()) {
@@ -901,9 +855,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             }
         }
         statusMap.clear();
-        NBTTagList tagList = nbt.getTagList("status", 10);
-        for (int i = 0; i < tagList.tagCount(); i++) {
-            NBTTagCompound nbt1 = tagList.getCompoundTagAt(i);
+        ListTag tagList = nbt.getList("status", 10);
+        for (int i = 0; i < tagList.size(); i++) {
+            CompoundTag nbt1 = tagList.getCompound(i);
 
             long id = nbt1.getLong("id");
             byte statusOrdinal = nbt1.getByte("status");
@@ -913,9 +867,9 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         royalJelly = nbt.getShort("royalJelly") / 10D;
         food = nbt.getShort("food") / 10D;
         harvest = nbt.getByte("harvest");
-        birth = nbt.getInteger("birth");
-        death = nbt.getInteger("death");
-        generation = nbt.getInteger("generation");
+        birth = nbt.getInt("birth");
+        death = nbt.getInt("death");
+        generation = nbt.getInt("generation");
     }
 
     public void death(Bee bee) {
@@ -962,24 +916,24 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        final boolean day = getWorld().provider.isDaytime();
+        final boolean day = getWorld().isDay();
         if (!this.apairyBeeList.isEmpty() && this
                 .getWorld()
-                .getWorldTime() % 20 == 0 && queen != null && (day && (queen.isSun() || sunGenome) || (!day && (queen.isNight() || nightGenome)))) {
+                .getGameTime() % 20 == 0 && queen != null && (day && (queen.isSun() || sunGenome) || (!day && (queen.isNight() || nightGenome)))) {
             for (int i = 0; i < this.frameSlot.size(); i++) {
                 ItemStack stack = this.frameSlot.get(i);
                 if (!stack.isEmpty()) {
                     if (((IDamageItem) stack.getItem()).applyCustomDamage(stack, -20, null)) {
-                        this.frameSlot.put(i, ItemStack.EMPTY);
+                        this.frameSlot.set(i, ItemStack.EMPTY);
                     }
                 }
             }
-            if (this.getWorld().getWorldTime() % 3600 == 0) {
+            if (this.getWorld().getGameTime() % 3600 == 0) {
                 generation++;
                 canAdaptationBee();
             }
-            this.rain = world.isRaining();
-            this.thundering = world.isThundering();
+            this.rain = level.isRaining();
+            this.thundering = level.isThundering();
             feedBees(apairyBeeList);
             if (food > maxFood) {
                 food = maxFood;
@@ -1188,7 +1142,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             if (this.food > 750) {
                 tickDrainFood = 0;
                 foodCellSlot.get(0).shrink(1);
-                this.invSlotFood.add(ModUtils.getCellFromFluid(FluidName.fluidhoney.getInstance()));
+                this.invSlotFood.add(ModUtils.getCellFromFluid(FluidName.fluidhoney.getInstance().get()));
                 this.food -= 750D;
             }
         }
@@ -1196,7 +1150,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             if (this.royalJelly > 50) {
                 tickDrainJelly = 0;
                 jellyCellSlot.get(0).shrink(1);
-                this.invSlotJelly.add(ModUtils.getCellFromFluid(FluidName.fluidroyaljelly.getInstance()));
+                this.invSlotJelly.add(ModUtils.getCellFromFluid(FluidName.fluidroyaljelly.getInstance().get()));
                 this.royalJelly -= 50D;
             }
         }
@@ -1238,7 +1192,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                                     }
                                     break cycle;
                                 case COEF_BIOME:
-                                    boolean canWork = queen.canWorkInBiome(biome);
+                                    boolean canWork = queen.canWorkInBiome(biome,level);
                                     if (!hasGenome) {
                                         if (!canWork && (WorldBaseGen.random.nextInt(4) == 0)) {
                                             genome.addGenome(genetic.get(0), stack);
@@ -1613,11 +1567,11 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         return map;
     }
 
-    public double distanceTo(Vec3d vec, BlockPos pos) {
+    public double distanceTo(Vec3 vec, BlockPos pos) {
         double d0 = pos.getX() - vec.x;
         double d1 = pos.getY() - vec.y;
         double d2 = pos.getZ() - vec.z;
-        return (double) MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+        return (double) Mth.sqrt((float) (d0 * d0 + d1 * d1 + d2 * d2));
     }
 
     private void findWork(Bee bee) {
@@ -1710,6 +1664,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                                 crop.getCrop().addTick((int) ((int) ((crop
                                         .getCrop()
                                         .getGrowthSpeed() * 10 + 10 * speedCrop)) * pestGenome));
+                                crop.setActive(crop.getCrop().getName().toLowerCase()+"_"+crop.getCrop().getStage());
                             }
                             boolean needUpdate = stage != crop.getCrop().getStage();
                             if (needUpdate) {
@@ -1774,7 +1729,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         }
     }
 
-    private void attackPlayers(Map<EntityPlayer, Double> enemy) {
+    private void attackPlayers(Map<Player, Double> enemy) {
 
         enemy.forEach((key, value) -> {
 
@@ -1782,7 +1737,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                 for (Bee bee : attackBeeList) {
                     if (!bee.isIll()) {
                         if (WorldBaseGen.random.nextInt(100) < 20) {
-                            key.attackEntityFrom(IUDamageSource.bee, 1);
+                            key.hurt(IUDamageSource.bee, 1);
                         }
                     }
                 }
@@ -1795,4 +1750,28 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         return genome;
     }
 
+    public void healBeesFromApothecary(TileEntityApothecaryBee apothecaryBee) {
+        if (illBeeList.isEmpty()) {
+            return;
+        }
+        illBeeList.sort(Comparator.comparingInt(bee -> bee.getTypeBee().ordinal()));
+        List<Bee> recoveryList = new ArrayList<>();
+
+        for (Bee illBee : illBeeList) {
+            if (!illBee.isIll()) {
+                continue;
+            }
+            if (apothecaryBee.energy.getEnergy() < 50) {
+                break;
+            }
+            apothecaryBee.energy.useEnergy(50);
+            illBee.setIll(false);
+            recoveryList.add(illBee);
+
+
+        }
+
+        illBeeList.removeAll(recoveryList);
+
+    }
 }

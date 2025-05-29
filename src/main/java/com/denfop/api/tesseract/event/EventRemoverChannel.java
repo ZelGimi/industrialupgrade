@@ -1,14 +1,14 @@
 package com.denfop.api.tesseract.event;
 
 import com.denfop.api.tesseract.Channel;
-import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.level.LevelEvent;
 
-public class EventRemoverChannel extends WorldEvent {
+public class EventRemoverChannel extends LevelEvent {
 
     private final Channel channel;
 
-    public EventRemoverChannel(Channel channel, final World world) {
+    public EventRemoverChannel(Channel channel, final Level world) {
         super(world);
         this.channel = channel;
     }

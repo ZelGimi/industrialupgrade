@@ -3,10 +3,11 @@ package com.denfop.integration.jei.genetic_transposer;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GeneticTransposerHandler {
@@ -74,6 +75,9 @@ public class GeneticTransposerHandler {
         }
     }
 
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1, input3, input4);
+    }
 
     public ItemStack getInput() {
         return input;
@@ -100,7 +104,7 @@ public class GeneticTransposerHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

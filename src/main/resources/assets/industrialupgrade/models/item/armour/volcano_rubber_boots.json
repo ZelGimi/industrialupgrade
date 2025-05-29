@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/volcano_rubber_boots"
+		"layer0": "industrialupgrade:item/volcano_rubber_boots"
 	}
 }

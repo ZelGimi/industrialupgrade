@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=photonic_assembler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler"
+    },
+    "facing=south,type=photonic_assembler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler",
+      "y": 180
+    },
+    "facing=west,type=photonic_assembler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler",
+      "y": 270
+    },
+    "facing=east,type=photonic_assembler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler",
+      "y": 90
+    },
+    "facing=down,type=photonic_assembler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler",
+      "x": 90
+    },
+    "facing=up,type=photonic_assembler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler",
+      "x": 270
+    },
+    "facing=north,type=photonic_assembler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active"
+    },
+    "facing=south,type=photonic_assembler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_assembler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_assembler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_assembler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_assembler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "x": 270
+    },
+    "facing=north,type=photonic_assembler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active"
+    },
+    "facing=south,type=photonic_assembler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_assembler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_assembler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_assembler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_assembler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_assembler_active",
+      "x": 270
+    }
+  }
+}

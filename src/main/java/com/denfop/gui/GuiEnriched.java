@@ -7,12 +7,13 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.tiles.mechanism.dual.TileEnrichment;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiEnriched extends GuiIU<ContainerDoubleElectricMachine> {
+@OnlyIn(Dist.CLIENT)
+public class GuiEnriched<T extends ContainerDoubleElectricMachine> extends GuiIU<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
@@ -31,27 +32,27 @@ public class GuiEnriched extends GuiIU<ContainerDoubleElectricMachine> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics stack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(stack, mouseX, mouseY);
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics stack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(stack, f, x, y);
+        int xoffset = guiLeft();
+        int yoffset = guiTop();
+        bindTexture(getTexture());
 
         int progress = (int) (15 * this.container.base.getProgress());
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 67 + 2, yoffset + 36, 177, 32, progress + 1, 15);
+            drawTexturedModalRect(stack, xoffset + 67 + 2, yoffset + 36, 177, 32, progress + 1, 15);
         }
 
     }
 
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUEnrichment.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUEnrichment.png".toLowerCase());
     }
 
 }

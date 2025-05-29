@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/aluminium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:casings/spinel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:doubleplate/manganese"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:basemachine/per_matter"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:itemcore/procore"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:solid/solidmatter"
+  },
+  "show_notification": true
+}

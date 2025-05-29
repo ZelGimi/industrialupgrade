@@ -1,35 +1,32 @@
 package com.denfop.api.sytem;
 
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ITile {
 
-    BlockPos getBlockPos();
+    BlockPos getPos();
 
-    TileEntity getTile();
+    BlockEntity getTile();
 
     long getIdNetwork();
 
     void setId(long id);
 
-    void AddTile(EnergyType energyType, ITile tile, final EnumFacing dir);
+    void AddTile(EnergyType energyType, ITile tile, final Direction dir);
 
-    void RemoveTile(EnergyType energyType, ITile tile, final EnumFacing dir);
+    void RemoveTile(EnergyType energyType, ITile tile, final Direction dir);
 
-    Map<EnumFacing, ITile> getTiles(EnergyType energyType);
+    Map<Direction, ITile> getTiles(EnergyType energyType);
 
     List<InfoTile<ITile>> getValidReceivers(EnergyType energyType);
-
-
 
     int getHashCodeSource();
 
     void setHashCodeSource(int hashCode);
-
 }

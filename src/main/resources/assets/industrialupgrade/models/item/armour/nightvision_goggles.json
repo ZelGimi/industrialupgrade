@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nightvision_goggles"
+		"layer0": "industrialupgrade:item/nightvision_goggles"
 	}
 }

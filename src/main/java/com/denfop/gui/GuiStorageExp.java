@@ -4,15 +4,12 @@ import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.CustomButton;
 import com.denfop.container.ContainerStorageExp;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 
-public class GuiStorageExp extends GuiIU<ContainerStorageExp> {
+public class GuiStorageExp<T extends ContainerStorageExp> extends GuiIU<ContainerStorageExp> {
 
     public final ContainerStorageExp container;
 
@@ -24,37 +21,27 @@ public class GuiStorageExp extends GuiIU<ContainerStorageExp> {
 
     }
 
-    public void initGui() {
-        super.initGui();
+
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+    draw(poseStack, "Lvl:" + this.container.base.expirencelevel, 100, 51 - 5, 4210752);
+       draw(poseStack, "Lvl:" + this.container.base.expirencelevel1, 31, 51 - 5, 4210752);
 
 
     }
 
-    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-    }
+        int xoffset = (this.width - this.imageWidth) / 2;
+        int yoffset = (this.height - this.imageHeight) / 2;
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString("Lvl:" + this.container.base.expirencelevel, 100, 51 - 5, 4210752);
-        this.fontRenderer.drawString("Lvl:" + this.container.base.expirencelevel1, 31, 51 - 5, 4210752);
-
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png"));
-        drawTexturedModalRect(xoffset + 149, yoffset + 22, 18,
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png"));
+        drawTexturedModalRect(poseStack, xoffset + 149, yoffset + 22, 18,
                 34, 24, 55
         );
-        drawTexturedModalRect(xoffset + 7, yoffset + 22, 18,
+        drawTexturedModalRect(poseStack, xoffset + 7, yoffset + 22, 18,
                 34, 24, 55
         );
         int chargeLevel = (int) (47.0F * Math.min(this.container.base.expirencelevel
@@ -66,16 +53,16 @@ public class GuiStorageExp extends GuiIU<ContainerStorageExp> {
         }
         chargeLevel = Math.min(chargeLevel, 47);
         chargeLevel1 = Math.min(chargeLevel1, 47);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png"));
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/common.png"));
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (chargeLevel > 0) {
-            drawTexturedModalRect(xoffset + 153, yoffset + 26 + 47 - chargeLevel, 50,
+            drawTexturedModalRect(poseStack, xoffset + 153, yoffset + 26 + 47 - chargeLevel, 50,
                     85 - chargeLevel, 12, chargeLevel
             );
         }
 
         if (chargeLevel1 > 0) {
-            drawTexturedModalRect(xoffset + 11, yoffset + 26 + 47 - chargeLevel1, 50,
+            drawTexturedModalRect(poseStack, xoffset + 11, yoffset + 26 + 47 - chargeLevel1, 50,
                     85 - chargeLevel1, 12, chargeLevel1
             );
         }

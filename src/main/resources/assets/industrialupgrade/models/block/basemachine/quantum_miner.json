@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "industrialupgrade:models/quantum_mine",
-		"1": "industrialupgrade:models/quantum_mine_32x",
-		"particle": "industrialupgrade:models/quantum_mine_particle"
+		"0": "industrialupgrade:block/quantum_mine",
+		"1": "industrialupgrade:block/quantum_mine_32x",
+		"particle": "industrialupgrade:block/quantum_mine_particle"
 	},
 	"elements": [
 		{

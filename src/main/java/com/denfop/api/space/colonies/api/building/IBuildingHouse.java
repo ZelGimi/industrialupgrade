@@ -25,5 +25,4 @@ public interface IBuildingHouse extends IColonyBuilding {
 
 
     void removeFreeWorkers(int workers);
-
 }

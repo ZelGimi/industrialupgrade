@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/cobalt_stick"
+    "layer0" : "industrialupgrade:item/cobalt_stick"
   }
 }

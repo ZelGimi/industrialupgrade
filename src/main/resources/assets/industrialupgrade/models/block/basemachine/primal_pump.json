@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/pompa",
-		"particle": "industrialupgrade:models/pompa"
+		"0": "industrialupgrade:block/pompa",
+		"particle": "industrialupgrade:block/pompa"
 	},
 	"elements": [
 		{

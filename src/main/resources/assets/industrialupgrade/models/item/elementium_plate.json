@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/elementium_plate"
+    "layer0" : "industrialupgrade:item/elementium_plate"
   }
 }

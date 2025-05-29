@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/fluid_heater_main",
-    "down" : "industrialupgrade:blocks/fluid_heater_bottom-back",
-    "up" : "industrialupgrade:blocks/fluid_heater_bottom-back",
-    "north" : "industrialupgrade:blocks/fluid_heater_main",
-    "east" : "industrialupgrade:blocks/fluid_heater_left-right-top",
-    "south" : "industrialupgrade:blocks/fluid_heater_bottom-back",
-    "west" : "industrialupgrade:blocks/fluid_heater_left-right-top"
+    "particle" : "industrialupgrade:block/fluid_heater_main",
+    "down" : "industrialupgrade:block/fluid_heater_bottom-back",
+    "up" : "industrialupgrade:block/fluid_heater_bottom-back",
+    "north" : "industrialupgrade:block/fluid_heater_main",
+    "east" : "industrialupgrade:block/fluid_heater_left-right-top",
+    "south" : "industrialupgrade:block/fluid_heater_bottom-back",
+    "west" : "industrialupgrade:block/fluid_heater_left-right-top"
   }
 }

@@ -1,45 +1,54 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemPlate extends ItemSubTypes<ItemPlate.ItemPlateTypes> implements IModelRegister {
-
-    protected static final String NAME = "itemplates";
-
-    public ItemPlate() {
-        super(ItemPlateTypes.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemPlate<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemPlate(T element) {
+        super(new Item.Properties(), element);
     }
 
     @Override
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+    public Item getItem() {
+        return this;
+    }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        String name = getElement().getName();
+        switch (this.getElement().getId()) {
+            case 3:
+                name = "tungsten";
+                break;
+            case 9:
+                name = "platinum";
+                break;
+            case 13:
+                name = "electrum";
+                break;
+            case 46:
+                name = "adamantium";
+                break;
+            case 49:
+                name = "meteoric";
+                break;
+            case 50:
+                name = "mithril";
+                break;
+        }
+        return new String[]{"forge:plates/" + name.split("_")[0], "forge:plates"};
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item stack, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":itemplates/" + ItemPlateTypes.getFromID(meta).getName(), null)
-        );
-    }
-
-    public enum ItemPlateTypes implements ISubEnum {
+    public enum Types implements ISubEnum {
         mikhail_plate(0),
         aluminium_plate(1),
         vanady_plate(2),
@@ -98,17 +107,23 @@ public class ItemPlate extends ItemSubTypes<ItemPlate.ItemPlateTypes> implements
         private final String name;
         private final int ID;
 
-        ItemPlateTypes(final int ID) {
+        Types(final int ID) {
             this.name = this.name().toLowerCase(Locale.US);
             this.ID = ID;
         }
 
-        public static ItemPlateTypes getFromID(final int ID) {
+        public static Types getFromID(final int ID) {
             return values()[ID % values().length];
         }
 
+        @Override
         public String getName() {
-            return this.name;
+            return name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "itemplates";
         }
 
         public int getId() {

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/pluto_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/pluto_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/pluto_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/pluto_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/pluto_boulder"
+  }
+}

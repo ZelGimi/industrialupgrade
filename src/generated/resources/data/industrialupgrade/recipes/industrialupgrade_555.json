@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:paints/emptybox"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:green_dye"
+      }
+    ]
+  },
+  "pattern": [
+    "AB ",
+    "   ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:paints/greenpaint"
+  },
+  "show_notification": true
+}

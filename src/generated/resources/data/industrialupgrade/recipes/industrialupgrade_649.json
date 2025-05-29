@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:experience_bottle"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "ABA",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:expmodule"
+  },
+  "show_notification": true
+}

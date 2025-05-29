@@ -1,10 +1,10 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.Fluids;
@@ -15,23 +15,21 @@ import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.List;
 
 public abstract class TileBaseObsidianGenerator extends TileElectricMachine
-        implements IUpgradableBlock, IFluidHandler {
+        implements IUpgradableBlock {
 
     public final InvSlotOutput outputSlot1;
     public final InvSlotFluidByList fluidSlot1;
@@ -50,34 +48,31 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
     protected short progress;
     protected double guiProgress;
 
-    public TileBaseObsidianGenerator(int energyPerTick, int length, int outputSlots) {
-        this(energyPerTick, length, outputSlots, 1);
-    }
 
-    public TileBaseObsidianGenerator(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
-        super(energyPerTick * length, 1, outputSlots);
+    public TileBaseObsidianGenerator(int energyPerTick, int length, int outputSlots, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(energyPerTick * length, 1, outputSlots, block, pos, state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = energyPerTick;
         this.defaultOperationLength = this.operationLength = length;
-        this.defaultTier = aDefaultTier;
+        this.defaultTier = 1;
         this.defaultEnergyStorage = energyPerTick * length;
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.outputSlot1 = new InvSlotOutput(this, 1);
 
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
-        this.fluidSlot2 = new InvSlotFluidByList(this, 1, FluidRegistry.LAVA);
+        this.fluidSlot1 = new InvSlotFluidByList(this, 1, net.minecraft.world.level.material.Fluids.WATER);
+        this.fluidSlot2 = new InvSlotFluidByList(this, 1, net.minecraft.world.level.material.Fluids.LAVA);
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank(
                 "fluidTank1",
                 12 * 1000,
-                Fluids.fluidPredicate(FluidRegistry.WATER),
+                Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER),
                 InvSlot.TypeItemSlot.INPUT
 
         );
         this.fluidTank2 = fluids.addTank(
                 "fluidTank2",
                 12 * 1000,
-                Fluids.fluidPredicate(FluidRegistry.LAVA),
+                Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.LAVA),
                 InvSlot.TypeItemSlot.INPUT
 
         );
@@ -90,7 +85,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
     }
 
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
@@ -109,9 +104,9 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -143,7 +138,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.getWorld().isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -260,7 +255,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     public abstract String getInventoryName();
 
-    public ContainerObsidianGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerObsidianGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerObsidianGenerator(entityPlayer, this);
     }
 
@@ -269,54 +264,5 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
         return EnumSound.gen_obsidiant.getSoundEvent();
     }
 
-    public void onGuiClosed(EntityPlayer entityPlayer) {
-    }
-
-
-    public boolean canFill(Fluid fluid) {
-        return fluid == FluidRegistry.LAVA || fluid == FluidRegistry.WATER;
-    }
-
-    public boolean canDrain() {
-        return true;
-    }
-
-    public int fill(FluidStack resource, boolean doFill) {
-        if (this.getFluidTank1().getFluidAmount() < this.getFluidTank1().getCapacity() && resource
-                .getFluid()
-                .equals(FluidRegistry.WATER)) {
-            return this.canFill(resource.getFluid()) ? this.getFluidTank1().fill(resource, doFill) : 0;
-        }
-        if (this.getFluidTank2().getFluidAmount() < this.getFluidTank2().getCapacity() && resource
-                .getFluid()
-                .equals(FluidRegistry.LAVA)) {
-            return this.canFill(resource.getFluid()) ? this.getFluidTank2().fill(resource, doFill) : 0;
-
-        }
-        return 0;
-    }
-
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        if (resource != null && resource.isFluidEqual(this.getFluidTank1().getFluid())) {
-            return !this.canDrain() ? null : this.getFluidTank1().drain(resource.amount, doDrain);
-        } else if (resource != null && resource.isFluidEqual(this.getFluidTank2().getFluid())) {
-            return !this.canDrain() ? null : this.getFluidTank2().drain(resource.amount, doDrain);
-        } else {
-            return null;
-        }
-    }
-
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        return !this.canDrain() ? null : this.getFluidTank2().drain(maxDrain, doDrain);
-    }
-
-
-    public FluidTank getFluidTank1() {
-        return this.fluidTank1;
-    }
-
-    public FluidTank getFluidTank2() {
-        return this.fluidTank2;
-    }
 
 }

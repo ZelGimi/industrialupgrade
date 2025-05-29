@@ -6,7 +6,7 @@ import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileEntityAutoDigger;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotDigger extends InvSlot implements ITypeSlot {
 
@@ -31,7 +31,7 @@ public class InvSlotDigger extends InvSlot implements ITypeSlot {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 ItemStack type1 = this.get(i);
-                EnumQuarryModules module = EnumQuarryModules.getFromID(type1.getItemDamage());
+                EnumQuarryModules module = EnumQuarryModules.getFromID(((ItemQuarryModule<?>) type1.getItem()).getElement().getId());
                 EnumQuarryType type = module.type;
 
                 switch (type) {
@@ -64,8 +64,8 @@ public class InvSlotDigger extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.tile.consume = this.tile.energyconsume;
         this.tile.col = 1;
         this.tile.chance = 0;
@@ -75,7 +75,7 @@ public class InvSlotDigger extends InvSlot implements ITypeSlot {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 ItemStack type1 = this.get(i);
-                EnumQuarryModules module = EnumQuarryModules.getFromID(type1.getItemDamage());
+                EnumQuarryModules module = EnumQuarryModules.getFromID(((ItemQuarryModule<?>) type1.getItem()).getElement().getId());
                 EnumQuarryType type = module.type;
 
                 switch (type) {
@@ -105,13 +105,14 @@ public class InvSlotDigger extends InvSlot implements ITypeSlot {
 
 
         this.tile.inputslot.update();
+        return content;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
 
 
-        return itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(itemStack.getItemDamage()).type != EnumQuarryType.WHITELIST && EnumQuarryModules.getFromID(
-                itemStack.getItemDamage()).type != EnumQuarryType.BLACKLIST);
+        return itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(((ItemQuarryModule<?>) itemStack.getItem()).getElement().getId()).type != EnumQuarryType.WHITELIST && EnumQuarryModules.getFromID(
+                ((ItemQuarryModule<?>) itemStack.getItem()).getElement().getId()).type != EnumQuarryType.BLACKLIST);
 
     }
 

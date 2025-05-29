@@ -1,60 +1,41 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
-import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class ItemRawMetals extends ItemSubTypes<ItemRawMetals.Types> implements IModelRegister {
-
-    protected static final String NAME = "raw_metals";
-
-    public ItemRawMetals() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemRawMetals<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemRawMetals(T element) {
+        super(new Item.Properties(), element);
     }
 
-    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
+    @Override
+    public Item getItem() {
+        return this;
+    }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        String name = getElement().getName();
+        switch (this.getElement().getId()) {
+            case 3:
+                name = "tungsten";
+                break;
+            case 2:
+                name = "vanady";
+                break;
 
-            for (final Types type : this.typeProperty.getAllowedValues()) {
-                if (type != Types.uranium) {
-                    subItems.add(this.getItemStackUnchecked(type));
-                }
-            }
 
         }
-    }
-
-    protected ItemStack getItemStackUnchecked(Types type) {
-        return new ItemStack(this, 1, ((ISubEnum) type).getId());
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item stack, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(
-                        Constants.MOD_ID + ":" + NAME + "/" + "raw_" + Types.getFromID(meta).getName(),
-                        null
-                )
-        );
+        return new String[]{"forge:raw_materials/" + name, "forge:raw_materials"};
     }
 
     public enum Types implements ISubEnum {
@@ -74,12 +55,8 @@ public class ItemRawMetals extends ItemSubTypes<ItemRawMetals.Types> implements 
         manganese(13),
         iridium(14),
         germanium(15),
-        copper(16),
-        gold(17),
-        iron(18),
         lead(19),
         tin(20),
-        uranium(21),
         osmium(22),
         tantalum(23),
         cadmium(24),
@@ -112,8 +89,19 @@ public class ItemRawMetals extends ItemSubTypes<ItemRawMetals.Types> implements 
             return values()[ID % values().length];
         }
 
+        @Override
+        public String getSerializedName() {
+            return "raw_" + name;
+        }
+
+        @Override
         public String getName() {
-            return this.name;
+            return name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "raw_metals";
         }
 
         public int getId() {

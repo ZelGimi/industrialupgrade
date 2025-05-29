@@ -1,11 +1,12 @@
 package com.denfop.invslot;
 
-import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
+import com.denfop.blocks.blockitem.ItemBlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.blocks.mechanism.BlockSimpleMachine;
 import com.denfop.tiles.base.TileCombinerMatter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotMatter extends InvSlot implements ITypeSlot {
 
@@ -30,18 +31,31 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.tile.energy.setCapacity(this.getMaxEnergy(this));
         this.tile.fluidTank.setCapacity(this.getFluidTank(this));
         this.tile.energycost = this.getcostEnergy(this);
+        return content;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
+
         return (itemStack
                 .getItem()
-                .equals(Item.getItemFromBlock(IUItem.machines)) && itemStack.getItemDamage() <= 3) || (itemStack.isItemEqual(
-                new ItemStack(IUItem.simplemachine, 1, 6)));
+                instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlockBaseMachine.adv_matter.getIDBlock() && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getId() <= 3)
+                || (itemStack
+                .getItem()
+                instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlockSimpleMachine.generator_matter.getIDBlock() && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getId() == 6)
+                || (itemStack
+                .getItem()
+                instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlockBaseMachine.imp_matter.getIDBlock())
+                || (itemStack
+                .getItem()
+                instanceof ItemBlockTileEntity<?> && ((ItemBlockTileEntity<?>) itemStack.getItem()).getTeBlock(itemStack).getIDBlock() == BlockBaseMachine.per_matter.getIDBlock())
+
+                ;
+
     }
 
     public int getStackSizeLimit() {
@@ -53,31 +67,27 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
     }
 
     public double getMattercostenergy(ItemStack stack) {
-        int count = stack.getItemDamage();
-        if (stack.getItem().equals(Item.getItemFromBlock(IUItem.machines))) {
-            switch (count) {
-                case 1:
-                    return 900000;
-                case 2:
-                    return 800000;
-                case 3:
-                    return 700000;
-            }
+        int count = ((ItemBlockTileEntity<?>) stack.getItem()).getTeBlock(stack).getId();
+        switch (count) {
+            case 1:
+                return 900000;
+            case 2:
+                return 800000;
+            case 3:
+                return 700000;
         }
         return 1000000;
     }
 
     public double getMatterenergy(ItemStack stack) {
-        int count = stack.getItemDamage();
-        if (stack.getItem().equals(Item.getItemFromBlock(IUItem.machines))) {
-            switch (count) {
-                case 1:
-                    return 8000000;
-                case 2:
-                    return 64000000;
-                case 3:
-                    return 256000000;
-            }
+        int count = ((ItemBlockTileEntity<?>) stack.getItem()).getTeBlock(stack).getId();
+        switch (count) {
+            case 1:
+                return 8000000;
+            case 2:
+                return 64000000;
+            case 3:
+                return 256000000;
         }
         return 5000000;
     }
@@ -117,17 +127,15 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
         return 1000 * count;
     }
 
-    private int getMattertank(ItemStack itemStack) {
-        int count = itemStack.getItemDamage();
-        if (itemStack.getItem().equals(Item.getItemFromBlock(IUItem.machines))) {
-            switch (count) {
-                case 1:
-                    return 12;
-                case 2:
-                    return 14;
-                case 3:
-                    return 16;
-            }
+    private int getMattertank(ItemStack stack) {
+        int count = ((ItemBlockTileEntity<?>) stack.getItem()).getTeBlock(stack).getId();
+        switch (count) {
+            case 1:
+                return 12;
+            case 2:
+                return 14;
+            case 3:
+                return 16;
         }
         return 10;
     }

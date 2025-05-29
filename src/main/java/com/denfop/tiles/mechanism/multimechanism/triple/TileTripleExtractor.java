@@ -10,16 +10,18 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileTripleExtractor extends TileMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileTripleExtractor() {
+    public TileTripleExtractor(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.TRIPLE_EXTRACTOR.usagePerTick,
-                EnumMultiMachine.TRIPLE_EXTRACTOR.lenghtOperation
+                EnumMultiMachine.TRIPLE_EXTRACTOR.lenghtOperation, BlockMoreMachine.triple_extractor, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.075));
@@ -30,7 +32,7 @@ public class TileTripleExtractor extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base;
+        return IUItem.machines_base.getBlock(getTeBlock().getId());
     }
 
     @Override

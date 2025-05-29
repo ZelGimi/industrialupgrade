@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/stellite_nugget"	}
+		"layer0": "industrialupgrade:item/stellite_nugget"	}
 }

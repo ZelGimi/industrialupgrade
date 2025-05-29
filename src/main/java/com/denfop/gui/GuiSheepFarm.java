@@ -5,9 +5,9 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerSheepFarm;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiSheepFarm extends GuiIU<ContainerSheepFarm> {
+public class GuiSheepFarm<T extends ContainerSheepFarm> extends GuiIU<ContainerSheepFarm> {
 
     public GuiSheepFarm(ContainerSheepFarm guiContainer) {
         super(guiContainer);
@@ -16,20 +16,6 @@ public class GuiSheepFarm extends GuiIU<ContainerSheepFarm> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
 
     @Override
     protected ResourceLocation getTexture() {

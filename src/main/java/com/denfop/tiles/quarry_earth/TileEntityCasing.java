@@ -5,16 +5,19 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockEarthQuarry;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityCasing extends TileEntityMultiBlockElement implements ICasing {
 
-    public TileEntityCasing() {
 
+    public TileEntityCasing( BlockPos pos, BlockState state) {
+        super(BlockEarthQuarry.earth_casing, pos, state);
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.earthQuarry;
+        return IUItem.earthQuarry.getBlock(getTeBlock());
     }
 
     @Override

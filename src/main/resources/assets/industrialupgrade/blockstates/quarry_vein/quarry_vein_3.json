@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=quarry_vein_active_3": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3"
+    },
+    "facing=south,type=quarry_vein_active_3": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "y": 180
+    },
+    "facing=west,type=quarry_vein_active_3": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "y": 270
+    },
+    "facing=east,type=quarry_vein_active_3": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "y": 90
+    },
+    "facing=down,type=quarry_vein_active_3": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "x": 90
+    },
+    "facing=up,type=quarry_vein_active_3": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "x": 270
+    },
+    "facing=north,type=quarry_vein_3_invalid": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3"
+    },
+    "facing=south,type=quarry_vein_3_invalid": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "y": 180
+    },
+    "facing=west,type=quarry_vein_3_invalid": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "y": 270
+    },
+    "facing=east,type=quarry_vein_3_invalid": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "y": 90
+    },
+    "facing=down,type=quarry_vein_3_invalid": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "x": 90
+    },
+    "facing=up,type=quarry_vein_3_invalid": {
+      "model": "industrialupgrade:block/basemachine/quarry_vein_active_3",
+      "x": 270
+    }
+  }
+}

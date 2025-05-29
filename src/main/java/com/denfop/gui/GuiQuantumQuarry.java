@@ -10,24 +10,25 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerQuantumQuarry;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
-public class GuiQuantumQuarry extends GuiIU<ContainerQuantumQuarry> {
+public class GuiQuantumQuarry<T extends ContainerQuantumQuarry> extends GuiIU<ContainerQuantumQuarry> {
 
     public final ContainerQuantumQuarry container;
 
     public GuiQuantumQuarry(ContainerQuantumQuarry container1) {
         super(container1, container1.base.getStyle());
         this.container = container1;
-        this.ySize += 60;
-        this.xSize += 24;
+        this.imageHeight += 60;
+        this.imageWidth += 24;
         this.inventory.setY(this.inventory.getY() + 60);
-        this.addElement(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.addElement(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         this.addComponent(new GuiComponent(this, 156 + 24, 5, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
@@ -53,30 +54,29 @@ public class GuiQuantumQuarry extends GuiIU<ContainerQuantumQuarry> {
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         handleUpgradeTooltip(par1, par2);
 
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, guiLeft(), this.guiTop(), 0, 0, this.imageWidth, this.imageHeight);
 
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, guiLeft() + 3, guiTop() + 3, 0, 0, 10, 10);
+        bindTexture(getTexture());
 
         String getblock = ModUtils.getString(this.container.base.getblock);
-        fontRenderer.drawString(getblock
+        draw(poseStack, getblock
                 ,
-                guiLeft + 150 - getblock.length() + 15, guiTop + 24, 4210752
+                guiLeft() + 150 - getblock.length() + 15, guiTop() + 24, 4210752
         );
 
     }

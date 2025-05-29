@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/spawner_module5"
+    "layer0" : "industrialupgrade:item/spawner_module5"
   }
 }

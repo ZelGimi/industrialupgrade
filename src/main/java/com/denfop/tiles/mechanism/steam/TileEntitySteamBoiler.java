@@ -2,13 +2,16 @@ package com.denfop.tiles.mechanism.steam;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamBoiler;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamBoiler;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -16,24 +19,23 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,16 +49,16 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
     public Fluids fluids;
     public boolean work = true;
 
-    public TileEntitySteamBoiler() {
-        super(0, 0, 1);
+    public TileEntitySteamBoiler(BlockPos pos,BlockState state) {
+        super(0, 0, 1,BlockBaseMachine3.steamboiler,pos,state);
 
 
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 4000, InvSlot.TypeItemSlot.INPUT, Fluids.fluidPredicate(
-                FluidRegistry.WATER
+                net.minecraft.world.level.material.Fluids.WATER
         ));
         this.fluidTank1 = this.fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
-                FluidName.fluidsteam.getInstance()
+                FluidName.fluidsteam.getInstance().get()
         ));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSource(this, 4000));
         this.steam.setFluidTank(fluidTank1);
@@ -64,56 +66,40 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.steam_info"));
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 
+
     @Override
-    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+    public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
         if (work) {
-            if (this.pos.down().distanceSq(neighborPos) == 0) {
-                IBlockState blockState = world.getBlockState(this.pos.down());
-                if (blockState.getMaterial() != Material.AIR) {
-                    this.work =
-                            blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                                    .getInstance()
-                                    .getBlock();
+            if (this.pos.below().distSqr(neighborPos) == 0) {
+                FluidState blockState = level.getFluidState(this.pos.below());
+                if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
+                    this.work = blockState.getType().isSame(Fluids.LAVA);
                 } else {
                     work = false;
                 }
             }
         } else {
-            if (this.pos.down().distanceSq(neighborPos) == 0) {
-                IBlockState blockState = world.getBlockState(this.pos.down());
-                if (blockState.getMaterial() != Material.AIR) {
-                    this.work =
-                            blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                                    .getInstance()
-                                    .getBlock();
+            if (this.pos.below().distSqr(neighborPos) == 0) {
+                FluidState blockState = level.getFluidState(this.pos.below());
+                if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
+                    this.work = blockState.getType().isSame(Fluids.LAVA);
                 } else {
                     work = false;
                 }
@@ -128,11 +114,11 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
             }
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.fluidTank1.readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                this.fluidTank1.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -148,7 +134,7 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -168,30 +154,29 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            IBlockState blockState = world.getBlockState(this.pos.down());
-            if (blockState.getMaterial() != Material.AIR) {
-                this.work =
-                        blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA || blockState.getBlock() == FluidName.fluidpahoehoe_lava
-                                .getInstance()
-                                .getBlock();
+        if (!this.getWorld().isClientSide) {
+
+            FluidState blockState = level.getFluidState(this.pos.below());
+            if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
+                this.work = blockState.getType().isSame(Fluids.LAVA);
             } else {
                 work = false;
             }
+
         }
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
 
     }
 
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         return nbttagcompound;
 
@@ -201,10 +186,10 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.work) {
-            if (this.getWorld().getWorldTime() % 3 == 0) {
-                if (this.fluidTank.getFluid() != null && this.fluidTank.getFluid().amount >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
+            if (this.getWorld().getGameTime() % 3 == 0) {
+                if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
                     this.steam.addEnergy(2);
-                    this.fluidTank.drain(2, true);
+                    this.fluidTank.drain(2, IFluidHandler.FluidAction.EXECUTE);
                     this.setActive(true);
                 } else {
                     setActive(false);
@@ -222,14 +207,14 @@ public class TileEntitySteamBoiler extends TileElectricMachine implements IUpdat
 
 
     @Override
-    public ContainerSteamBoiler getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerSteamBoiler getGuiContainer(final Player entityPlayer) {
         return new ContainerSteamBoiler(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiSteamBoiler(getGuiContainer(entityPlayer), b);
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSteamBoiler((ContainerSteamBoiler) menu);
     }
 
 

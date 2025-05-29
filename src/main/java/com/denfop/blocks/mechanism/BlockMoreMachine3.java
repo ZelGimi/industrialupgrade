@@ -1,37 +1,22 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.DefaultDrop;
+import com.denfop.blocks.state.HarvestTool;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleAssamplerScrap;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleCentrifuge;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleFermer;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleGearMachine;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleOreWashing;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadAssamplerScrap;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadCentrifuge;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadFermer;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadGearMachine;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadOreWashing;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileAssamplerScrap;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileCentrifuge;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileFermer;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileGearMachine;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileOreWashing;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleAssamplerScrap;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleCentrifuge;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleFermer;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleGearMachine;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleOreWashing;
+import com.denfop.tiles.mechanism.multimechanism.dual.*;
+import com.denfop.tiles.mechanism.multimechanism.quad.*;
+import com.denfop.tiles.mechanism.multimechanism.simple.*;
+import com.denfop.tiles.mechanism.multimechanism.triple.*;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -60,43 +45,52 @@ public enum BlockMoreMachine3 implements IMultiTileBlock {
     ;
 
 
-    public static final ResourceLocation IDENTITY = IUCore.getIdentifier("moremachine3");
-
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
-    private final EnumRarity rarity;
     int idBlock;
     private TileEntityBlock dummyTe;
+    private BlockState defaultState;
+    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
 
     BlockMoreMachine3(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
-
-    }
-
-    BlockMoreMachine3(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
-        this.rarity = rarity;
-
-        GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
     }
 
     public void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
+        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
-        for (final BlockMoreMachine3 block : BlockMoreMachine3.values()) {
-            if (block.teClass != null) {
-                try {
-                    block.dummyTe = block.teClass.newInstance();
-                } catch (Exception e) {
+        if (this.getTeClass() != null) {
+            try {
+                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+            } catch (Exception e) {
 
-                }
             }
         }
+    }
+
+    @Override
+    public void setDefaultState(BlockState blockState) {
+        this.defaultState = blockState;
+    }
+
+    @Override
+    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+        this.blockType = blockEntityType;
+    }
+
+    @Override
+    public BlockEntityType<? extends TileEntityBlock> getBlockType() {
+        return this.blockType.get();
+    }
+
+    @Override
+    public String getMainPath() {
+        return "moremachine3";
     }
 
     @Override
@@ -107,12 +101,6 @@ public enum BlockMoreMachine3 implements IMultiTileBlock {
     @Override
     public int getId() {
         return this.itemMeta;
-    }
-
-    @Override
-    @Nonnull
-    public ResourceLocation getIdentifier() {
-        return BlockMoreMachine3.IDENTITY;
     }
 
     @Override
@@ -145,7 +133,7 @@ public enum BlockMoreMachine3 implements IMultiTileBlock {
 
     @Override
     @Nonnull
-    public Set<EnumFacing> getSupportedFacings() {
+    public Set<Direction> getSupportedFacings() {
         return ModUtils.horizontalFacings;
     }
 
@@ -156,14 +144,14 @@ public enum BlockMoreMachine3 implements IMultiTileBlock {
 
     @Override
     @Nonnull
-    public MultiTileBlock.HarvestTool getHarvestTool() {
-        return MultiTileBlock.HarvestTool.Wrench;
+    public HarvestTool getHarvestTool() {
+        return HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public MultiTileBlock.DefaultDrop getDefaultDrop() {
-        return MultiTileBlock.DefaultDrop.Machine;
+    public DefaultDrop getDefaultDrop() {
+        return DefaultDrop.Machine;
     }
 
     @Override

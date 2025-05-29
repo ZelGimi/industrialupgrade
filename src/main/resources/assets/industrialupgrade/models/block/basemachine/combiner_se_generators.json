@@ -5,8 +5,8 @@
     128
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/solar_combiner",
-    "particle" : "industrialupgrade:models/solar_combiner"
+    "0" : "industrialupgrade:block/solar_combiner",
+    "particle" : "industrialupgrade:block/solar_combiner"
   },
   "elements" : [
     {

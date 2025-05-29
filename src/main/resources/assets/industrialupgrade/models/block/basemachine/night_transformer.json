@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/night_converter_front",
-    "down" : "industrialupgrade:blocks/night_converter_side",
-    "up" : "industrialupgrade:blocks/night_converter_up",
-    "north" : "industrialupgrade:blocks/night_converter_front",
-    "east" : "industrialupgrade:blocks/night_converter_side",
-    "south" : "industrialupgrade:blocks/night_converter_side",
-    "west" : "industrialupgrade:blocks/night_converter_side"
+    "particle" : "industrialupgrade:block/night_converter_front",
+    "down" : "industrialupgrade:block/night_converter_side",
+    "up" : "industrialupgrade:block/night_converter_up",
+    "north" : "industrialupgrade:block/night_converter_front",
+    "east" : "industrialupgrade:block/night_converter_side",
+    "south" : "industrialupgrade:block/night_converter_side",
+    "west" : "industrialupgrade:block/night_converter_side"
   }
 }

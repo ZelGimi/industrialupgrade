@@ -3,7 +3,7 @@ package com.denfop.integration.jei.rolling;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,16 @@ public class RollingHandler {
 
     private static final List<RollingHandler> recipes = new ArrayList<>();
     private final ItemStack input, output;
+    private final BaseMachineRecipe container;
 
-    public RollingHandler(ItemStack input, ItemStack output) {
+    public RollingHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
+        this.container  = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<RollingHandler> getRecipes() {
@@ -25,8 +31,8 @@ public class RollingHandler {
         return recipes;
     }
 
-    public static RollingHandler addRecipe(ItemStack input, ItemStack output) {
-        RollingHandler recipe = new RollingHandler(input, output);
+    public static RollingHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
+        RollingHandler recipe = new RollingHandler(input, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -52,7 +58,7 @@ public class RollingHandler {
 
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0)
+                    container.getOutput().items.get(0),container
             );
 
 

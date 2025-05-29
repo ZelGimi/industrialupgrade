@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [128, 128],
 	"textures": {
-		"1": "industrialupgrade:blocks/macerator",
-		"particle": "industrialupgrade:blocks/macerator"
+		"1": "industrialupgrade:block/macerator",
+		"particle": "industrialupgrade:block/macerator"
 	},
 	"elements": [
 		{

@@ -1,9 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
@@ -16,7 +16,9 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAutoCrafter;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiAutoCrafter;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotAutoCrafter;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -26,22 +28,21 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgradableBlock {
@@ -51,7 +52,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
     public final int defaultOperationLength;
     public final int defaultTier;
     public final double defaultEnergyStorage;
-    private final InventoryCrafting crafingTable;
+    private final CraftingContainer crafingTable;
     private final InvSlot slot;
     private final InvSlotAutoCrafter autoCrafter;
     public int operationsPerTick;
@@ -60,13 +61,14 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
     BaseMachineRecipe recipe;
     private boolean canRecipe = false;
 
-    public TileEntityAutoCrafter() {
-        super(1000, 4, 1);
+    public TileEntityAutoCrafter(BlockPos pos, BlockState state) {
+        super(1000, 4, 1,BlockBaseMachine3.autocrafter,pos,state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 18) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 ((TileEntityAutoCrafter) this.base).checkRecipe();
+                return content;
             }
         };
         this.addComponent(new SoilPollutionComponent(this, 0.1));
@@ -97,14 +99,14 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
     }
 
     @Override
-    public ContainerAutoCrafter getGuiContainer(final EntityPlayer var1) {
+    public ContainerAutoCrafter getGuiContainer(final Player var1) {
         return new ContainerAutoCrafter(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiAutoCrafter(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiAutoCrafter((ContainerAutoCrafter) menu);
     }
 
     public BaseMachineRecipe getRecipe() {
@@ -146,8 +148,9 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
         } else {
             canRecipe = false;
 
-            final List<ItemStack> list = this.slot.stream()
-                    .filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
+             final List<ItemStack> list = this.slot.stream()
+                    .filter(itemStack -> !itemStack.isEmpty())
+                    .toList();
 
 
             final List<IInputItemStack> input = recipe.input.getInputs();
@@ -182,7 +185,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             this.setOverclockRates();
             updateCraft();
             this.checkRecipe();
@@ -216,7 +219,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
         if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
+        if (this.getWorld().getGameTime() % 40 == 0) {
             this.checkRecipe();
         }
     }
@@ -246,7 +249,7 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
 
     private void operateOnce(List<ItemStack> processResult) {
         final List<IInputItemStack> input = recipe.input.getInputs();
-        final List<ItemStack> list = this.slot.stream()
+         final List<ItemStack> list = this.slot.stream()
                 .filter(itemStack -> !itemStack.isEmpty())
                 .collect(Collectors.toList());
 
@@ -278,6 +281,8 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
 
         this.outputSlot.add(processResult);
     }
+
+
     public InvSlotAutoCrafter getAutoCrafter() {
         return autoCrafter;
     }
@@ -292,20 +297,24 @@ public class TileEntityAutoCrafter extends TileElectricMachine implements IUpgra
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     public void updateCraft() {
-        final Collection<IRecipe> recipes = ForgeRegistries.RECIPES.getValuesCollection();
+        if (!(level instanceof ServerLevel))
+            return;;
+        RecipeManager recipeManager = ((ServerLevel) level).getRecipeManager();
+        Collection<CraftingRecipe> recipes = recipeManager.getAllRecipesFor(RecipeType.CRAFTING);
+
         if (this.autoCrafter.isEmpty()) {
             recipe = null;
             return;
         }
         recipe = null;
-        for (IRecipe recipe1 : recipes) {
+        for (CraftingRecipe recipe1 : recipes) {
 
-            if (recipe1.matches(this.crafingTable, world)) {
-                final ItemStack output = recipe1.getCraftingResult(this.crafingTable);
+            if (recipe1.matches(this.crafingTable, level)) {
+                final ItemStack output = recipe1.assemble(this.crafingTable,this.getLevel().registryAccess());
                 List<IInputItemStack> list = new ArrayList<>();
                 for (ItemStack stack : this.autoCrafter) {
                     if (!stack.isEmpty()) {

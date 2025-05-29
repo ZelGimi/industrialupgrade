@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/yttrium_stick"	}
+		"layer0": "industrialupgrade:item/yttrium_stick"	}
 }

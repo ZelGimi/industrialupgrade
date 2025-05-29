@@ -7,14 +7,15 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerSunnariumMaker;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
-@SideOnly(Side.CLIENT)
-public class GuiSunnariumMaker extends GuiIU<ContainerSunnariumMaker> {
+@OnlyIn(Dist.CLIENT)
+public class GuiSunnariumMaker<T extends ContainerSunnariumMaker> extends GuiIU<ContainerSunnariumMaker> {
 
     public final ContainerSunnariumMaker container;
 
@@ -36,31 +37,26 @@ public class GuiSunnariumMaker extends GuiIU<ContainerSunnariumMaker> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
 
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        bindTexture(getTexture());
         int progress = (int) (17 * this.container.base.componentProgress.getBar());
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
 
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 49, yoffset + 24, 177, 20, progress + 1, 32);
+            drawTexturedModalRect(poseStack, xoffset + 49, yoffset + 24, 177, 20, progress + 1, 32);
         }
         progress = (int) (12 * this.container.base.componentProgress.getBar());
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 85, yoffset + 24, 177, 56, progress + 1, 33);
+            drawTexturedModalRect(poseStack, xoffset + 85, yoffset + 24, 177, 56, progress + 1, 33);
         }
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiSunnariumMaker.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiSunnariumMaker.png".toLowerCase());
     }
 
 }

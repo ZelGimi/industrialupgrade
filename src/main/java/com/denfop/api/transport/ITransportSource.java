@@ -1,12 +1,12 @@
 package com.denfop.api.transport;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public interface ITransportSource<T, E> extends ITransportEmitter<T, E> {
 
-    TransportItem<T> getOffered(int type, EnumFacing facing);
+    TransportItem<T> getOffered(int type, Direction facing);
 
-    void draw(T var, int col, EnumFacing facing);
+    void draw(T var, int col, Direction facing);
 
     boolean isItem();
 

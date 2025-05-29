@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/reactordepletedterastrellsimple"
+    "layer0" : "industrialupgrade:item/reactordepletedterastrellsimple"
   }
 }

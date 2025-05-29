@@ -3,49 +3,53 @@ package com.denfop.integration.jei.gaswell;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.mechanism.BlockRefiner;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.tiles.mechanism.TileOilRefiner;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GasPumpCategory extends Gui implements IRecipeCategory<GasPumpWrapper> {
+public class GasPumpCategory extends GuiIU implements IRecipeCategory<GasPumpHandler> {
 
     private final IDrawableStatic bg;
+    private final JeiInform jeiInform;
 
     public GasPumpCategory(
-            final IGuiHelper guiHelper
+            final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI" +
+        super(((TileOilRefiner) BlockRefiner.refiner.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform=jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI".toLowerCase() +
                         ".png"), 5, 5, 140,
                 75
         );
     }
 
-    @Nonnull
-    @Override
-    public String getUid() {
-        return BlockBaseMachine3.gas_pump.getName();
-    }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.gas_pump).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.gas_pump).getDescriptionId());
     }
 
-    @Nonnull
     @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
+    public RecipeType<GasPumpHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
@@ -54,34 +58,27 @@ public class GasPumpCategory extends Gui implements IRecipeCategory<GasPumpWrapp
         return bg;
     }
 
-
     @Override
-    public void drawExtras(final Minecraft mc) {
-
-
-        mc.getTextureManager().bindTexture(getTexture());
-
-
+    public void draw(GasPumpHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
+       drawSplitString(stack,
+                Localization.translate("iu.gaspump.info"),
+                10,
+                5,
+                140 - 10,
+                4210752
+        );
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final GasPumpWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-
-
-        IGuiFluidStackGroup fff = layout.getFluidStacks();
-
-        fff.init(0, false, 95, 21, 12, 47, 10000, true, null);
-        fff.set(0, recipes.getInput2());
-
+    public void setRecipe(IRecipeLayoutBuilder builder, GasPumpHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 95, 21).setFluidRenderer(10000,true,12, 47).addFluidStack(recipe.getOutput().getFluid(),recipe.getOutput().getAmount());
 
     }
+
+
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png".toLowerCase());
     }
 
 

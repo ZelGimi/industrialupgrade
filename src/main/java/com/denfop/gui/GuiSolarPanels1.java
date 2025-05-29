@@ -2,35 +2,28 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiSlider;
+import com.denfop.api.gui.*;
 import com.denfop.componets.Energy;
 import com.denfop.container.ContainerSolarPanels1;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiPageButtonList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiSolarPanels1 extends GuiIU<ContainerSolarPanels1> implements GuiPageButtonList.GuiResponder,
-        GuiSlider.FormatHelper {
-
+public class GuiSolarPanels1<Y extends ContainerSolarPanels1> extends GuiIU<ContainerSolarPanels1> implements GuiPageButtonList.GuiResponder, GuiSlider.FormatHelper {
     public final TileSolarPanel tileentity;
+    private GuiSlider slider;
 
     public GuiSolarPanels1(ContainerSolarPanels1 containerSolarPanels1) {
         super(containerSolarPanels1);
         this.componentList.clear();
-        this.tileentity = container.tileentity;
-        this.xSize = 198;
-        this.ySize = 232;
+        this.tileentity = containerSolarPanels1.tileentity;
+        this.imageWidth = 198;
+        this.imageHeight = 232;
         this.componentList.add(new GuiComponent(this, 50, 95, EnumTypeComponent.ENERGY_WEIGHT,
                 new Component<>(new Energy(tileentity, tileentity.debtMax) {
                     @Override
@@ -51,23 +44,17 @@ public class GuiSolarPanels1 extends GuiIU<ContainerSolarPanels1> implements Gui
         ));
     }
 
-    @Override
-    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
-        if (guibutton instanceof GuiSlider) {
-            GuiSlider slider = (GuiSlider) guibutton;
-            this.setEntryValue(guibutton.id, slider.getSliderValue());
-        }
-
-    }
 
     @Override
-    public void initGui() {
-        super.initGui();
-        this.buttonList.add(new GuiSlider(this, 0, (this.width - this.xSize) / 2 + 33, (this.height - this.ySize) / 2 + 84,
+    public void init() {
+        super.init();
+        slider = new GuiSlider(this, 0, (this.width - this.imageWidth) / 2 + 33, (this.height - this.imageHeight) / 2 + 84,
                 "",
-                (float) -50, (float) 100, (float) this.container.base.deptPercent, this, 78
-        ));
+                (float) -50, (float) 100, (float) this.tileentity.deptPercent, this, 78
+        );
+
+        this.addWidget(slider);
+        this.addRenderableWidget(slider);
     }
 
     @Override
@@ -82,7 +69,7 @@ public class GuiSolarPanels1 extends GuiIU<ContainerSolarPanels1> implements Gui
 
     @Override
     public void setEntryValue(final int i, final float v) {
-        new PacketUpdateServerTile(this.container.base, v);
+        new PacketUpdateServerTile(this.tileentity, v);
 
     }
 
@@ -91,8 +78,8 @@ public class GuiSolarPanels1 extends GuiIU<ContainerSolarPanels1> implements Gui
 
     }
 
-    protected void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int mouseX, int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
         if (mouseX + 17 >= 0 && mouseX <= 12 + 17 && mouseY >= 41 && mouseY <= 12 + 41) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.panel_upgrade.info"));
@@ -111,11 +98,10 @@ public class GuiSolarPanels1 extends GuiIU<ContainerSolarPanels1> implements Gui
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(this.guiLeft + 17, this.guiTop + 41, 0, 0, 10, 10);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, this.guiLeft + 17, this.guiTop + 41, 0, 0, 10, 10);
 
     }
 

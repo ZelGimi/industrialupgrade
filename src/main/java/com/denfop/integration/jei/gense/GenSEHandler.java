@@ -2,7 +2,7 @@ package com.denfop.integration.jei.gense;
 
 
 import com.denfop.IUItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class GenSEHandler {
     }
 
     public static void initRecipes() {
-        addRecipe(new ItemStack(IUItem.sunnarium, 1, 4));
+        addRecipe(new ItemStack(IUItem.sunnarium.getStack(4), 1));
 
 
     }

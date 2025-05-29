@@ -5,7 +5,7 @@ import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemWaterRod;
 import com.denfop.items.ItemWaterRotor;
 import com.denfop.tiles.hydroturbine.TileEntityHydroTurbineController;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotHydroTurbineRotorBlades extends InvSlot implements ITypeSlot {
 
@@ -32,7 +32,7 @@ public class InvSlotHydroTurbineRotorBlades extends InvSlot implements ITypeSlot
             return false;
         }
         if (this.windGenerator.getRotor() != null && stack.getItem() instanceof ItemWaterRod) {
-            return ((ItemWaterRod) stack.getItem()).getLevel(this.windGenerator.getRotor().getLevel(), stack.getItemDamage());
+            return ((ItemWaterRod) stack.getItem()).getLevel(this.windGenerator.getRotor().getLevel(), ((ItemWaterRod<?>) stack.getItem()).getElement().getId());
         }
         return false;
     }
@@ -42,14 +42,14 @@ public class InvSlotHydroTurbineRotorBlades extends InvSlot implements ITypeSlot
     }
 
     public void work() {
-        if (this.get().isEmpty()) {
+        if (this.get(0).isEmpty()) {
             return;
         }
-        final ItemStack stack = this.windGenerator.slot.get();
-        if (this.windGenerator.getRotor() != null && this.get().getItem() instanceof ItemWaterRod) {
-            if (((ItemWaterRod) this.get().getItem()).getLevel(
+        final ItemStack stack = this.windGenerator.slot.get(0);
+        if (this.windGenerator.getRotor() != null && this.get(0).getItem() instanceof ItemWaterRod) {
+            if (((ItemWaterRod) this.get(0).getItem()).getLevel(
                     this.windGenerator.getRotor().getLevel(),
-                    this.get().getItemDamage()
+                    ((ItemWaterRod<?>) this.get(0).getItem()).getElement().getId()
             )) {
                 if (((ItemWaterRotor) stack.getItem()).getCustomDamage(stack) <= ((ItemWaterRotor) stack.getItem()).getMaxCustomDamage(
                         stack) * 0.75) {
@@ -57,7 +57,7 @@ public class InvSlotHydroTurbineRotorBlades extends InvSlot implements ITypeSlot
                             (int) (-1 * ((ItemWaterRotor) stack.getItem()).getMaxCustomDamage(stack) * 0.25),
                             0
                     );
-                    this.get().shrink(1);
+                    this.get(0).shrink(1);
                 }
             }
         }

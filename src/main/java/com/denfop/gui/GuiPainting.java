@@ -10,18 +10,18 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.items.ItemPaints;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
+@OnlyIn(Dist.CLIENT)
+public class GuiPainting<T extends ContainerDoubleElectricMachine> extends GuiIU<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
@@ -37,23 +37,22 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
         ));
         this.addElement(new ItemStackImage(this, 62, 57, () -> ItemStack.EMPTY) {
             @Override
-            public void drawForeground(final int mouseX, final int mouseY) {
+            public void drawForeground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
 
             }
 
             @Override
-            public void drawBackground(final int mouseX, final int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, final int mouseX, final int mouseY) {
                 if (container.base.output == null) {
                     return;
                 }
-                super.drawBackground(mouseX, mouseY);
+                super.drawBackground(poseStack, mouseX, mouseY);
                 ItemStack stack = container.base.inputSlotA.get(0).getItem() instanceof ItemPaints
                         ? container.base.inputSlotA.get(1) : container.base.inputSlotA.get(0);
                 stack = ModUtils.mode(container.base.output.getRecipe().output.metadata, stack);
                 if (!ModUtils.isEmpty(stack)) {
-                    RenderHelper.enableGUIStandardItemLighting();
-                    this.gui.drawItemStack(this.x, this.y, stack);
-                    RenderHelper.disableStandardItemLighting();
+
+                    this.gui.drawItemStack(poseStack, this.x, this.y, stack);
                 }
 
             }
@@ -77,15 +76,15 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
         return ret;
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
         handleUpgradeTooltip1(par1, par2);
 
         if (!this.container.base.inputSlotA.get(1).isEmpty() && !this.container.base.inputSlotA
                 .get(0)
                 .isEmpty() && this.container.base.output != null) {
-            this.fontRenderer.drawString(ModUtils.mode(this.container.base.output.getRecipe().output.metadata), 80, 63, 4210752);
+           draw(poseStack, ModUtils.mode(this.container.base.output.getRecipe().output.metadata), 80, 63, 4210752);
         }
     }
 
@@ -105,21 +104,21 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
         }
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
 
-        this.mc.getTextureManager().bindTexture(getTexture());
+        bindTexture(getTexture());
 
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        this.drawTexturedModalRect(this.guiLeft + 165, this.guiTop, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(this.getTexture());
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        this.drawTexturedModalRect(poseStack, this.guiLeft() + 165, this.guiTop(), 0, 0, 10, 10);
+        bindTexture(this.getTexture());
 
 
-        int progress = (int) (9 * this.container.base.componentProgress.getBar());
+        int progress = (int) (10 * this.container.base.componentProgress.getBar());
 
 
         if (progress > 0) {
-            drawTexturedModalRect(this.guiLeft + 79, this.guiTop + 39, 179, 34, progress, 13);
+            drawTexturedModalRect(poseStack, this.guiLeft() + 79, this.guiTop() + 38, 179, 34, progress, 13);
         }
 
 
@@ -127,7 +126,7 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPainter.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPainter.png".toLowerCase());
     }
 
 }

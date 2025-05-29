@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -12,19 +13,22 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCactusFarm;
 import com.denfop.gui.GuiCactusFarm;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCactus;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CactusBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -40,7 +44,8 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
 
-    public TileEntityCactusFarm() {
+    public TileEntityCactusFarm(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.cactus_farm,pos,state);
         this.slot = new InvSlotOutput(this, 9);
         this.energy = this.addComponent(Energy.asBasicSink(this, 4000, 5));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
@@ -56,19 +61,20 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
     }
 
     @Override
-    public ContainerCactusFarm getGuiContainer(final EntityPlayer var1) {
+    public ContainerCactusFarm getGuiContainer(final Player var1) {
         return new ContainerCactusFarm(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCactusFarm(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiCactusFarm((ContainerCactusFarm) menu);
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -79,14 +85,38 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
     private void breakCactusInRadius() {
         for (int x = -RADIUS; x <= RADIUS; x++) {
             for (int z = -RADIUS; z <= RADIUS; z++) {
-                BlockPos targetPos = pos.add(x, 1, z);
-                Block block = world.getBlockState(targetPos).getBlock();
-                if (block instanceof BlockCactus && this.energy.getEnergy() >= 100) {
+                BlockPos targetPos = pos.offset(x, 1, z);
+                BlockState state = level.getBlockState(targetPos);
+                Block block = state.getBlock();
+
+                if (block instanceof CactusBlock && this.energy.getEnergy() >= 100) {
                     breakCactus(targetPos);
                     this.energy.useEnergy(100);
                     return;
                 }
             }
+        }
+    }
+
+    private void breakCactus(BlockPos startPos) {
+        BlockPos currentPos = startPos;
+        while (!level.getBlockState(currentPos).isAir()) {
+            BlockState state = level.getBlockState(currentPos);
+            Block block = state.getBlock();
+
+            if (block instanceof CactusBlock) {
+                List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, currentPos, null);
+
+                for (ItemStack drop : drops) {
+                    this.slot.add(drop);
+                }
+
+                level.setBlock(currentPos, Blocks.AIR.defaultBlockState(), 3);
+            } else {
+                break;
+            }
+
+            currentPos = currentPos.above();
         }
     }
 
@@ -104,28 +134,13 @@ public class TileEntityCactusFarm extends TileEntityInventory implements IUpgrad
         }
     }
 
-    private void breakCactus(BlockPos startPos) {
-        BlockPos currentPos = startPos;
-        while (!world.isAirBlock(currentPos)) {
-            IBlockState state = world.getBlockState(currentPos);
-            if (state.getBlock() instanceof BlockCactus) {
-                List<ItemStack> drops = state.getBlock().getDrops(world, currentPos, state, 0);
-                for (ItemStack drop : drops) {
-                    this.slot.add(drop);
-                }
-                world.setBlockToAir(currentPos);
-            } else {
-                break;
-            }
-            currentPos = currentPos.up();
-        }
-    }
+
 
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
+        if (this.getWorld().getGameTime() % 40 == 0) {
             this.breakCactusInRadius();
         }
     }

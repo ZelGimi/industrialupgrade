@@ -1,6 +1,7 @@
 package com.denfop.api.space;
 
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,23 +33,8 @@ public class Planet implements IPlanet {
             , boolean pressure, double distance, EnumType type, boolean oxygen, boolean colonies, int angle, double time,
             double size, double rotation
     ) {
-        this(name,
-                system,
-                textureLocation,
-                levels,
-                star,
-                temperature,
-                pressure,
-                distance,
-                type,
-                oxygen,
-                colonies,
-                angle,
-                time,
-                size,
-                rotation,
-                null
-        );
+        this(name, system, textureLocation, levels, star, temperature, pressure, distance, type, oxygen, colonies, angle, time, size,
+                rotation, null);
     }
 
     public Planet(

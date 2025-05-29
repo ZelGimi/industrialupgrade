@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/neodymium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/hafniumcarbide"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/lapis"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_679_element"
+  },
+  "show_notification": true
+}

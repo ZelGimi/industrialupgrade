@@ -6,19 +6,14 @@ import com.denfop.blocks.BlockClassicOre;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class ScrapboxRecipeManager {
 
@@ -31,10 +26,10 @@ public final class ScrapboxRecipeManager {
         this.addBuiltinDrops();
     }
 
-    public boolean addRecipe(IInputItemStack input, Collection<ItemStack> output, NBTTagCompound metadata, boolean replace) {
+    public boolean addRecipe(IInputItemStack input, Collection<ItemStack> output, CompoundTag metadata, boolean replace) {
         if (!input.matches(IUItem.scrapBox)) {
             throw new IllegalArgumentException("currently only scrap boxes are supported");
-        } else if (metadata != null && metadata.hasKey("weight")) {
+        } else if (metadata != null && metadata.contains("weight")) {
             if (output.size() != 1) {
                 throw new IllegalArgumentException("currently only a single drop stack is supported");
             } else {
@@ -51,13 +46,13 @@ public final class ScrapboxRecipeManager {
         }
     }
 
-    public boolean addRecipe(IInputItemStack input, NBTTagCompound metadata, boolean replace, ItemStack... outputs) {
+    public boolean addRecipe(IInputItemStack input, CompoundTag metadata, boolean replace, ItemStack... outputs) {
         return this.addRecipe(input, Arrays.asList(outputs), metadata, replace);
     }
 
     public ItemStack apply(ItemStack input) {
-        if (!ModUtils.isEmpty(input) && input.isItemEqual(
-                IUItem.scrapBox
+        if (!ModUtils.isEmpty(input) && input.is(
+                IUItem.scrapBox.getItem()
         )) {
             if (this.drops.isEmpty()) {
                 return ItemStack.EMPTY;
@@ -139,7 +134,7 @@ public final class ScrapboxRecipeManager {
         this.addDrop(Items.WOODEN_SHOVEL, 1.0F);
         this.addDrop(Items.WOODEN_PICKAXE, 1.0F);
         this.addDrop(Blocks.SOUL_SAND, 1.0F);
-        this.addDrop(Items.SIGN, 1.0F);
+        this.addDrop(Blocks.OAK_SIGN, 1.0F);
         this.addDrop(Items.LEATHER, 1.0F);
         this.addDrop(Items.FEATHER, 1.0F);
         this.addDrop(Items.BONE, 1.0F);
@@ -166,7 +161,7 @@ public final class ScrapboxRecipeManager {
         this.addDrop(Items.ENDER_PEARL, 0.08F);
         this.addDrop(Items.BLAZE_ROD, 0.04F);
         this.addDrop(Items.EGG, 0.8F);
-        this.addDrop(IUItem.classic_ore.getItemStack(BlockClassicOre.Type.copper), 0.7F);
+        this.addDrop(Blocks.COPPER_ORE, 0.7F);
         this.addDrop(IUItem.classic_ore.getItemStack(BlockClassicOre.Type.tin), 0.7F);
     }
 

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_112_element"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    " A ",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/aircollector"
+  },
+  "show_notification": true
+}

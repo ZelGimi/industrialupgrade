@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:casings/spinel"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:bricks"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:casings/yttrium"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "ABA",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:smeltery/smeltery_casing"
+  },
+  "show_notification": true
+}

@@ -1,13 +1,15 @@
 package com.denfop.api.pollution;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EventHandler {
 
     @SubscribeEvent
     public void tick(TickEvent.PlayerTickEvent event) {
-        if (event.player.getEntityWorld().provider.getDimension() != 0 || event.player.getEntityWorld().isRemote || event.phase == TickEvent.Phase.START) {
+        if (event.player.level().dimension() != Level.OVERWORLD || event.player.level().isClientSide || event.phase == TickEvent.Phase.START) {
             return;
         }
         PollutionManager.pollutionManager.work(event.player);
@@ -15,16 +17,16 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public void tick(TickEvent.WorldTickEvent event) {
-        if (event.world.provider.getDimension() != 0 || event.world.isRemote || event.phase == TickEvent.Phase.START) {
+    public void tick(TickEvent.LevelTickEvent event) {
+        if (event.level.dimension() != Level.OVERWORLD || event.level.isClientSide || event.phase == TickEvent.Phase.START) {
             return;
         }
-        PollutionManager.pollutionManager.tick(event.world);
+        PollutionManager.pollutionManager.tick(event.level);
     }
 
     @SubscribeEvent
     public void tick(PollutionAirLoadEvent event) {
-        if (event.getWorld().provider.getDimension() != 0 || event.getWorld().isRemote) {
+        if (((Level) event.getLevel()).dimension() != Level.OVERWORLD || ((Level) event.getLevel()).isClientSide) {
             return;
         }
         PollutionManager.pollutionManager.addAirPollutionMechanism(event.tile);
@@ -33,7 +35,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void tick(PollutionAirUnLoadEvent event) {
-        if (event.getWorld().provider.getDimension() != 0 || event.getWorld().isRemote) {
+        if (((Level) event.getLevel()).dimension() != Level.OVERWORLD || ((Level) event.getLevel()).isClientSide) {
             return;
         }
         PollutionManager.pollutionManager.removeAirPollutionMechanism(event.tile);
@@ -42,7 +44,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void tick(PollutionSoilLoadEvent event) {
-        if (event.getWorld().provider.getDimension() != 0 || event.getWorld().isRemote) {
+        if (((Level) event.getLevel()).dimension() != Level.OVERWORLD || ((Level) event.getLevel()).isClientSide) {
             return;
         }
         PollutionManager.pollutionManager.addSoilPollutionMechanism(event.tile);
@@ -51,7 +53,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void tick(PollutionSoilUnLoadEvent event) {
-        if (event.getWorld().provider.getDimension() != 0 || event.getWorld().isRemote) {
+        if (((Level) event.getLevel()).dimension() != Level.OVERWORLD || ((Level) event.getLevel()).isClientSide) {
             return;
         }
         PollutionManager.pollutionManager.removeSoilPollutionMechanism(event.tile);

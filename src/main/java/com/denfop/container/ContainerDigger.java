@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityAutoDigger;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerDigger extends ContainerFullInv<TileEntityAutoDigger> {
 
-    public ContainerDigger(TileEntityAutoDigger tileEntity1, EntityPlayer entityPlayer) {
+    public ContainerDigger(TileEntityAutoDigger tileEntity1, Player entityPlayer) {
         super(entityPlayer, tileEntity1, 178 + 36, 255);
         for (int i = 0; i < 2; i++) {
             for (int k = 0; k < 8; k++) {

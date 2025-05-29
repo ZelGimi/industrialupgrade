@@ -3,10 +3,14 @@ package com.denfop.tiles.base;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IPatternStorage;
 import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerScanner;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiScanner;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotScannable;
@@ -16,23 +20,19 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class TileScanner extends TileElectricMachine implements IType,
         IUpdatableTileEvent {
@@ -50,8 +50,8 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
     List<IPatternStorage> iPatternStorageList = new ArrayList<>();
     private ItemStack currentStack;
 
-    public TileScanner(int maxprogress) {
-        super(512000, 14, 0);
+    public TileScanner(int maxprogress, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(512000, 14, 0, block, pos, state);
         this.currentStack = ModUtils.emptyStack;
         this.pattern = ModUtils.emptyStack;
         this.progress = 0;
@@ -65,7 +65,7 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
         ) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.crystalMemory;
+                return stack.getItem() == IUItem.crystalMemory.getItem();
             }
         };
     }
@@ -76,9 +76,9 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
     }
 
     @Override
-    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+    public void onNeighborChange(BlockState neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+        final BlockEntity tile = this.getWorld().getBlockEntity(neighborPos);
 
         if (tile instanceof IPatternStorage) {
             if (!this.iPatternStorageList.contains((IPatternStorage) tile)) {
@@ -93,6 +93,7 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
             }
         }
     }
+
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -128,14 +129,14 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
             if (this.progress < maxprogress) {
                 if (!this.inputSlot.isEmpty() && (ModUtils.isEmpty(this.currentStack) || ModUtils.checkItemEquality(
                         this.currentStack,
-                        this.inputSlot.get()
+                        this.inputSlot.get(0)
                 ))) {
                     if (this.getPatternStorage() == null && this.diskSlot.isEmpty()) {
                         this.state = TileScanner.State.NO_STORAGE;
                         this.reset();
                     } else if (this.energy.getEnergy() >= 256.0D) {
                         if (ModUtils.isEmpty(this.currentStack)) {
-                            this.currentStack = ModUtils.setSize(this.inputSlot.get(), 1);
+                            this.currentStack = ModUtils.setSize(this.inputSlot.get(0), 1);
                         }
 
 
@@ -152,7 +153,7 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
                                 this.refreshInfo();
                                 this.pattern = this.currentStack.copy();
                                 this.state = TileScanner.State.COMPLETED;
-                                this.inputSlot.get().shrink(1);
+                                this.inputSlot.get(0).shrink(1);
                             }
                         }
                     } else {
@@ -178,8 +179,8 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
     }
 
     private boolean isPatternRecorded(ItemStack stack) {
-        if (!this.diskSlot.isEmpty() && this.diskSlot.get().getItem() instanceof ItemCrystalMemory) {
-            ItemStack crystalMemory = this.diskSlot.get();
+        if (!this.diskSlot.isEmpty() && this.diskSlot.get(0).getItem() instanceof ItemCrystalMemory) {
+            ItemStack crystalMemory = this.diskSlot.get(0);
             if (ModUtils.checkItemEquality(((ItemCrystalMemory) crystalMemory.getItem()).readItemStack(crystalMemory), stack)) {
                 return true;
             }
@@ -222,50 +223,48 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
         this.reset();
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.progress = nbttagcompound.getInteger("progress");
-        NBTTagCompound contentTag = nbttagcompound.getCompoundTag("currentStack");
-        this.currentStack = new ItemStack(contentTag);
-        contentTag = nbttagcompound.getCompoundTag("pattern");
-        this.pattern = new ItemStack(contentTag);
-        int stateIdx = nbttagcompound.getInteger("state");
+        this.progress = nbttagcompound.getInt("progress");
+        CompoundTag contentTag = nbttagcompound.getCompound("currentStack");
+        this.currentStack = ItemStack.of(contentTag);
+        contentTag = nbttagcompound.getCompound("pattern");
+        this.pattern = ItemStack.of(contentTag);
+        int stateIdx = nbttagcompound.getInt("state");
         this.state = stateIdx < TileScanner.State.values().length
                 ? TileScanner.State.values()[stateIdx]
                 : TileScanner.State.IDLE;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setInteger("progress", this.progress);
-        NBTTagCompound contentTag;
+        nbt.putInt("progress", this.progress);
+        CompoundTag contentTag;
         if (!ModUtils.isEmpty(this.currentStack)) {
-            contentTag = new NBTTagCompound();
-            this.currentStack.writeToNBT(contentTag);
-            nbt.setTag("currentStack", contentTag);
+            contentTag = new CompoundTag();
+            this.currentStack.save(contentTag);
+            nbt.put("currentStack", contentTag);
         }
 
         if (!ModUtils.isEmpty(this.pattern)) {
-            contentTag = new NBTTagCompound();
-            this.pattern.writeToNBT(contentTag);
-            nbt.setTag("pattern", contentTag);
+            contentTag = new CompoundTag();
+            this.pattern.save(contentTag);
+            nbt.put("pattern", contentTag);
         }
 
-        nbt.setInteger("state", this.state.ordinal());
+        nbt.putInt("state", this.state.ordinal());
         return nbt;
     }
 
-    public ContainerScanner getGuiContainer(EntityPlayer player) {
+    public ContainerScanner getGuiContainer(Player player) {
         return new ContainerScanner(player, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScanner getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiScanner(new ContainerScanner(player, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiScanner((ContainerScanner) isAdmin);
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
 
     public IPatternStorage getPatternStorage() {
         if (this.iPatternStorageList.isEmpty()) {
@@ -277,8 +276,8 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
 
     public boolean savetoDisk(ItemStack stack) {
         if (!this.diskSlot.isEmpty() && stack != null) {
-            if (this.diskSlot.get().getItem() instanceof ItemCrystalMemory) {
-                ItemStack crystalMemory = this.diskSlot.get();
+            if (this.diskSlot.get(0).getItem() instanceof ItemCrystalMemory) {
+                ItemStack crystalMemory = this.diskSlot.get(0);
                 ((ItemCrystalMemory) crystalMemory.getItem()).writecontentsTag(crystalMemory, stack);
                 return true;
             } else {
@@ -289,8 +288,8 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
         }
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
-        if (!this.iPatternStorageList.isEmpty() || !this.diskSlot.isEmpty()) {
+    public void updateTileServer(Player player, double event) {
+        if (!this.iPatternStorageList.isEmpty() || !this.diskSlot.isEmpty())
             switch ((int) event) {
                 case 0:
                     this.reset();
@@ -301,7 +300,6 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
                         this.state = TileScanner.State.IDLE;
                     }
             }
-        }
 
     }
 
@@ -315,12 +313,12 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
                 this.recipe = Recipes.recipes.getRecipeOutput("replicator", false, this.pattern);
             }
         } else {
-            this.recipe = Recipes.recipes.getRecipeOutput("replicator", false, this.inputSlot.get());
+            this.recipe = Recipes.recipes.getRecipeOutput("replicator", false, this.inputSlot.get(0));
             this.pattern = this.inputSlot.get(0);
         }
-        for (EnumFacing facing : EnumFacing.VALUES) {
-            final BlockPos neighborPos = pos.offset(facing);
-            final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+        for (Direction facing : Direction.values()) {
+            final BlockPos neighborPos = pos.offset(facing.getNormal());
+            final BlockEntity tile = this.getWorld().getBlockEntity(neighborPos);
             if (tile instanceof IPatternStorage) {
                 if (!this.iPatternStorageList.contains((IPatternStorage) tile)) {
                     this.iPatternStorageList.add((IPatternStorage) tile);

@@ -26,9 +26,8 @@ public enum EnumBeerVariety {
         for (EnumBeerVariety enumBeerVariety : values()) {
             List<Tuple<Integer, Integer>> pairs = enumBeerVariety.getRatioOfComponents();
             for (Tuple<Integer, Integer> combination : pairs) {
-                if (combination.getFirst() == wheat && combination.getSecond() == hop) {
+                if (combination.getA() == wheat && combination.getB() == hop)
                     return enumBeerVariety;
-                }
             }
         }
         return EnumBeerVariety.SOUP;

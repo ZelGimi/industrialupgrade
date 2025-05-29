@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/raw_yttrium"
+    "layer0" : "industrialupgrade:item/raw_yttrium"
   }
 }

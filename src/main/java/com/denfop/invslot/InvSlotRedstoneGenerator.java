@@ -1,10 +1,10 @@
 package com.denfop.invslot;
 
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileBaseRedstoneGenerator;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+
 
 public class InvSlotRedstoneGenerator extends InvSlot {
 
@@ -17,14 +17,9 @@ public class InvSlotRedstoneGenerator extends InvSlot {
 
     @Override
     public boolean accepts(final ItemStack stack, final int index) {
-        return stack.getItem() == Items.REDSTONE || stack.getItem() == Item.getItemFromBlock(Blocks.REDSTONE_BLOCK);
+        return stack.getItem() == Items.REDSTONE || stack.getItem() == Blocks.REDSTONE_BLOCK.asItem();
     }
 
-    @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
 
-
-    }
 
 }

@@ -1,39 +1,28 @@
 package com.denfop.tiles.transport.tiles;
 
-import com.denfop.IUCore;
-import com.denfop.IUItem;
-import com.denfop.api.heat.IHeatAcceptor;
-import com.denfop.api.heat.IHeatConductor;
-import com.denfop.api.heat.IHeatEmitter;
-import com.denfop.api.heat.IHeatTile;
-import com.denfop.api.heat.InfoCable;
+import com.denfop.Localization;
+import com.denfop.api.heat.*;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.mechanism.BlockPipes;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.network.packet.PacketCableSound;
 import com.denfop.tiles.transport.types.HeatType;
 import com.denfop.tiles.transport.types.ICableItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import com.denfop.utils.ModUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatConductor {
@@ -42,38 +31,27 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     public boolean addedToEnergyNet;
     protected HeatType cableType;
     int hashCodeSource;
-    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
+    Map<Direction, IHeatTile> energyHeatConductorMap = new HashMap<>();
     boolean updateConnect = false;
     List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
     private boolean needUpdate;
     private long id;
     private InfoCable typeColdCable;
 
-    public TileEntityHeatPipes(HeatType cableType) {
-        super(cableType);
+    public TileEntityHeatPipes(HeatType cableType, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
+        super(cableType, tileBlock, pos, state);
         this.cableType = cableType;
         this.addedToEnergyNet = false;
     }
+    @Override
+    public void addInformation(ItemStack stack, List<String> info) {
+        HeatType type =this.cableType;
+        double capacity;
+        capacity = type.capacity;
+        info.add(Localization.translate("iu.transport.heat") + ModUtils.getString(capacity) + " °C");
 
 
-    public TileEntityHeatPipes() {
-        super(HeatType.pipes);
-        this.cableType = HeatType.pipes;
-        this.addedToEnergyNet = false;
     }
-
-    public static TileEntityHeatPipes delegate(HeatType cableType) {
-        return new TileEntityHeatPipes(cableType);
-    }
-
-    public IMultiTileBlock getTeBlock() {
-        return BlockPipes.pipes_iu;
-    }
-
-    public BlockTileEntity getBlock() {
-        return IUItem.pipesblock;
-    }
-
     public ICableItem getCableItem() {
         return cableType;
     }
@@ -97,8 +75,8 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
     @Override
-    public void AddHeatTile(final IHeatTile tile, final EnumFacing dir) {
-        if (!this.getWorld().isRemote) {
+    public void AddHeatTile(final IHeatTile tile, final Direction dir) {
+        if (!this.getWorld().isClientSide) {
             if (!this.energyHeatConductorMap.containsKey(dir)) {
                 this.energyHeatConductorMap.put(dir, tile);
                 validHeatReceivers.add(new InfoTile<>(tile, dir.getOpposite()));
@@ -118,8 +96,8 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
     @Override
-    public void RemoveHeatTile(final IHeatTile tile, final EnumFacing dir) {
-        if (!this.getWorld().isRemote) {
+    public void RemoveHeatTile(final IHeatTile tile, final Direction dir) {
+        if (!this.getWorld().isClientSide) {
             this.energyHeatConductorMap.remove(dir);
             final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
             while (iter.hasNext()) {
@@ -134,7 +112,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
     @Override
-    public Map<EnumFacing, IHeatTile> getHeatTiles() {
+    public Map<Direction, IHeatTile> getHeatTiles() {
         return energyHeatConductorMap;
     }
 
@@ -149,20 +127,20 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         return this.pos;
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         this.cableType = HeatType.values[nbt.getByte("cableType") & 255];
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setByte("cableType", (byte) this.cableType.ordinal());
+        nbt.putByte("cableType", (byte) this.cableType.ordinal());
         return nbt;
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote && !addedToEnergyNet) {
+        if (!this.getWorld().isClientSide && !addedToEnergyNet) {
             this.energyHeatConductorMap.clear();
             this.validHeatReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
@@ -174,7 +152,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         super.updateTileServer(var1, var2);
         MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
         this.needUpdate = true;
@@ -197,7 +175,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
     public void onUnloaded() {
-        if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
+        if (!getLevel().isClientSide && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
             this.addedToEnergyNet = false;
         }
@@ -207,16 +185,11 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
 
-    public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
-        return new ItemStack(IUItem.pipes, 1, this.cableType.ordinal());
-    }
-
-
     public void updateConnectivity() {
         byte newConnectivity = 0;
-        EnumFacing[] var4 = EnumFacing.VALUES;
+        Direction[] var4 = Direction.values();
 
-        for (EnumFacing dir : var4) {
+        for (Direction dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             IHeatTile tile = getHeatTiles().get(dir);
             if (!getBlackList().contains(dir)) {
@@ -237,15 +210,15 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
 
-    public boolean wrenchCanRemove(EntityPlayer player) {
+    public boolean wrenchCanRemove(Player player) {
         return false;
     }
 
-    public boolean acceptsHeatFrom(IHeatEmitter emitter, EnumFacing direction) {
+    public boolean acceptsHeatFrom(IHeatEmitter emitter, Direction direction) {
         return !getBlackList().contains(direction);
     }
 
-    public boolean emitsHeatTo(IHeatAcceptor receiver, EnumFacing direction) {
+    public boolean emitsHeatTo(IHeatAcceptor receiver, Direction direction) {
         return !getBlackList().contains(direction);
     }
 
@@ -254,13 +227,6 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         return this.cableType.capacity + 1;
     }
 
-    public void removeConductor() {
-        this.getWorld().setBlockToAir(this.pos);
-        new PacketCableSound(this.getWorld(), this.pos,
-                0.5F,
-                2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F
-        );
-    }
 
     @Override
     public void update_render() {
@@ -291,7 +257,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
 
 
     @Override
-    public TileEntity getTile() {
+    public BlockEntity getTile() {
         return this;
     }
 

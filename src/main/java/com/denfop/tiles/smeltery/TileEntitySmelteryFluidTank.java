@@ -5,20 +5,18 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSmeltery;
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerCyclotronCryogen;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class TileEntitySmelteryFluidTank extends TileEntityMultiBlockElement implements ITank {
 
     private final Fluids fluids;
     private final Fluids.InternalFluidTank fluidTank;
 
-    public TileEntitySmelteryFluidTank() {
+    public TileEntitySmelteryFluidTank(BlockPos pos, BlockState state) {
+        super(BlockSmeltery.smeltery_tank,pos,state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTankExtract("fluids", 10000);
     }
@@ -26,7 +24,7 @@ public class TileEntitySmelteryFluidTank extends TileEntityMultiBlockElement imp
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        this.fluidTank.setCanFill(this.getMain() != null);
+        this.fluidTank.setCanAccept(this.getMain() != null);
     }
 
     @Override
@@ -34,16 +32,7 @@ public class TileEntitySmelteryFluidTank extends TileEntityMultiBlockElement imp
         return true;
     }
 
-    @Override
-    public ContainerCyclotronCryogen getGuiContainer(final EntityPlayer var1) {
-        return null;
-    }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return null;
-    }
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -52,7 +41,7 @@ public class TileEntitySmelteryFluidTank extends TileEntityMultiBlockElement imp
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.smeltery;
+        return IUItem.smeltery.getBlock(getTeBlock());
     }
 
     @Override

@@ -7,14 +7,16 @@ import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.SoilPollutionComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityGeneratorPer extends TileEntityAdvGenerator {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileEntityGeneratorPer() {
-        super(4.6, 32000, 4);
+    public TileEntityGeneratorPer(BlockPos pos, BlockState state) {
+        super(4.6, 32000, 4, BlockBaseMachine.per_gen, pos, state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
     }
@@ -29,7 +31,7 @@ public class TileEntityGeneratorPer extends TileEntityAdvGenerator {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines;
+        return IUItem.machines.getBlock(getTeBlock().getId());
     }
 
 }

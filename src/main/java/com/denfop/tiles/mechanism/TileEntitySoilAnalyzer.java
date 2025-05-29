@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -9,20 +10,21 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSoilAnalyzer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSoilAnalyzer;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -30,7 +32,7 @@ import java.util.List;
 
 public class TileEntitySoilAnalyzer extends TileElectricMachine {
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-0.2, 0.0D, -0.2, 1.2, 2.0D,
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(-0.2, 0.0D, -0.2, 1.2, 2.0D,
             1.2
     ));
     public final ComponentProgress progress;
@@ -39,8 +41,8 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
     public boolean analyzed;
     public Radiation radiation;
 
-    public TileEntitySoilAnalyzer() {
-        super(5000, 14, 0);
+    public TileEntitySoilAnalyzer(BlockPos pos, BlockState state) {
+        super(5000, 14, 0,BlockBaseMachine3.soil_analyzer,pos,state);
         this.progress = this.addComponent(new ComponentProgress(this, 1, (short) 400));
         this.analyzed = false;
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
@@ -48,21 +50,22 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         nbttagcompound = super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("analyzed", analyzed);
+        nbttagcompound.putBoolean("analyzed", analyzed);
         return nbttagcompound;
     }
 
     @Override
-    public ContainerSoilAnalyzer getGuiContainer(final EntityPlayer var1) {
+    public ContainerSoilAnalyzer getGuiContainer(final Player var1) {
         return new ContainerSoilAnalyzer(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSoilAnalyzer(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiSoilAnalyzer((ContainerSoilAnalyzer) menu);
     }
 
     @Override
@@ -95,7 +98,7 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.analyzed = nbttagcompound.getBoolean("analyzed");
     }
@@ -110,7 +113,7 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
                 this.analyzed = true;
                 this.radiation = RadiationSystem.rad_system.getMap().get(this
                         .getWorld()
-                        .getChunkFromBlockCoords(this.pos)
+                        .getChunkAt(this.pos)
                         .getPos());
             }
         }
@@ -119,11 +122,11 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             if (this.analyzed) {
                 this.radiation = RadiationSystem.rad_system.getMap().get(this
                         .getWorld()
-                        .getChunkFromBlockCoords(this.pos)
+                        .getChunkAt(this.pos)
                         .getPos());
             }
 
@@ -135,35 +138,12 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
 

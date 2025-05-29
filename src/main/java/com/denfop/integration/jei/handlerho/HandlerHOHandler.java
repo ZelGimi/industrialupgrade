@@ -3,8 +3,8 @@ package com.denfop.integration.jei.handlerho;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,10 @@ public class HandlerHOHandler {
 
     protected static final List<HandlerHOHandler> recipes = new ArrayList<>();
     protected final List<ItemStack> output;
-    protected final NBTTagCompound nbt;
+    protected final CompoundTag nbt;
     protected final ItemStack input;
 
-    public HandlerHOHandler(ItemStack input, List<ItemStack> output, final NBTTagCompound metaData) {
+    public HandlerHOHandler(ItemStack input, List<ItemStack> output, final CompoundTag metaData) {
         this.input = input;
         this.output = output;
         this.nbt = metaData;
@@ -32,7 +32,7 @@ public class HandlerHOHandler {
     public static HandlerHOHandler addRecipe(
             ItemStack input,
             List<ItemStack> output,
-            final NBTTagCompound metaData
+            final CompoundTag metaData
     ) {
         HandlerHOHandler recipe = new HandlerHOHandler(input, output, metaData);
         if (recipes.contains(recipe)) {
@@ -78,7 +78,7 @@ public class HandlerHOHandler {
         return is.getItem() == input.getItem();
     }
 
-    public NBTTagCompound getNBT() {
+    public CompoundTag getNBT() {
         return this.nbt;
     }
 

@@ -1,17 +1,17 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityElectronicsAssembler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerElectricElectronicsAssembler
         extends ContainerFullInv<TileEntityElectronicsAssembler> {
 
-    public ContainerElectricElectronicsAssembler(EntityPlayer entityPlayer, TileEntityElectronicsAssembler tileEntity1) {
+    public ContainerElectricElectronicsAssembler(Player entityPlayer, TileEntityElectronicsAssembler tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerElectricElectronicsAssembler(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileEntityElectronicsAssembler tileEntity1,
             int height,
             int upgradeX,

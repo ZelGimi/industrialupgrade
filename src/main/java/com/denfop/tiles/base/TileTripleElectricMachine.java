@@ -1,29 +1,26 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Energy;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
 import com.denfop.container.ContainerTripleElectricMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.packet.PacketStopSound;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundCategory;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -47,26 +44,17 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
     public MachineRecipe output;
     protected boolean sound = true;
 
-    public TileTripleElectricMachine(
-            int energyPerTick,
-            int length,
-            int outputSlots,
-            String name,
-            EnumTripleElectricMachine type
-    ) {
-        this(energyPerTick, length, outputSlots, 1, name, type);
-    }
 
     public TileTripleElectricMachine(
-            int energyPerTick, int length, int outputSlots, int aDefaultTier, String name,
-            EnumTripleElectricMachine type
+            int energyPerTick, int length, int outputSlots, String name,
+            EnumTripleElectricMachine type, IMultiTileBlock block, BlockPos pos, BlockState state
     ) {
-        super(outputSlots);
+        super(outputSlots, block, pos, state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.name = name;
         this.inputSlotA = new InvSlotRecipes(this, type.recipe_name, this);
         this.type = type;
-        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
+        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, 1, false);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) length
@@ -76,7 +64,7 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
         this.energy = this.addComponent(Energy
-                .asBasicSink(this, (double) energyPerTick * length, aDefaultTier)
+                .asBasicSink(this, (double) energyPerTick * length, 1)
                 .addManagedSlot(this.dischargeSlot));
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
 
@@ -88,7 +76,7 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
-        if (stack.getItemDamage() == 3 && type == EnumTripleElectricMachine.ADV_ALLOY_SMELTER) {
+        if (type == EnumTripleElectricMachine.ADV_ALLOY_SMELTER) {
             if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("press.lshift"));
             }
@@ -134,22 +122,22 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
         this.output = output;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
         return nbttagcompound;
     }
 
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.getWorld().isClientSide) {
             inputSlotA.load();
             this.getOutput();
 
@@ -166,7 +154,7 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
         return this.output;
     }
 
-    public ContainerTripleElectricMachine getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerTripleElectricMachine getGuiContainer(Player entityPlayer) {
         return new ContainerTripleElectricMachine(entityPlayer, this, type);
     }
 
@@ -182,8 +170,6 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
         );
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
 
     public void initiate(int soundEvent) {
         if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
@@ -198,12 +184,12 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.getBlockPos(), getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
-            new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            new PacketStopSound(getWorld(), this.getBlockPos());
+            this.getWorld().playSound(null, this.getBlockPos(), EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
-            new PacketStopSound(getWorld(), this.pos);
+            new PacketStopSound(getWorld(), this.getBlockPos());
         }
     }
 

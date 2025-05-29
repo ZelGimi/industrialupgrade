@@ -1,42 +1,45 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemSmallDust extends ItemSubTypes<ItemSmallDust.Types> implements IModelRegister {
-
-    protected static final String NAME = "smalldust";
-
-    public ItemSmallDust() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemSmallDust<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemSmallDust(T element) {
+        super(new Item.Properties(), element);
     }
 
+    @Override
+    public Item getItem() {
+        return this;
+    }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        String name = getElement().getName();
+        switch (this.getElement().getId()) {
+            case 3:
+                name = "tungsten";
+                break;
+            case 9:
+                name = "platinum";
+                break;
+            case 13:
+                name = "electrum";
+                break;
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+        }
+        return new String[]{"forge:smalldust/" + name, "forge:smalldust"};
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item stack, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
-    }
 
     public enum Types implements ISubEnum {
         mikhail(0),
@@ -104,8 +107,14 @@ public class ItemSmallDust extends ItemSubTypes<ItemSmallDust.Types> implements 
             return values()[ID % values().length];
         }
 
+        @Override
         public String getName() {
-            return this.name;
+            return name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "smalldust";
         }
 
         public int getId() {

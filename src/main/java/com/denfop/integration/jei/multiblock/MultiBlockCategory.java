@@ -3,51 +3,55 @@ package com.denfop.integration.jei.multiblock;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.multiblock.MultiBlockStructure;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.tiles.mechanism.TileEntityMoonSpotter;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public class MultiBlockCategory extends Gui implements IRecipeCategory<MultiBlockWrapper> {
+public class MultiBlockCategory extends GuiIU implements IRecipeCategory<MultiBlockHandler> {
 
     private final IDrawableStatic bg;
+    private final JeiInform jeiInform;
 
     public MultiBlockCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(((TileEntityMoonSpotter) BlockBaseMachine3.moon_spotter.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 170
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
+
 
     @Nonnull
     @Override
-    public String getUid() {
-        return "multiblock_iu";
-    }
-
-    @Nonnull
-    @Override
-    public String getTitle() {
+    public String getTitles() {
         return Localization.translate("multiblock.jei");
     }
 
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -57,34 +61,69 @@ public class MultiBlockCategory extends Gui implements IRecipeCategory<MultiBloc
 
 
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(MultiBlockHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
+        String name1 = Localization.translate("multiblock.jei1");
+        Minecraft   minecraft= Minecraft.getInstance();
+        int xCenter = 140 / 2;
+        int maxWidth = 140 - 20;
+        int color = 4210752;
+
+        renderTextCentered(stack,minecraft, name1, xCenter, 25, maxWidth, color);
+        int y = 2;
+
+        renderTextCentered(stack,minecraft, Localization.translate("multiblock.jei2"), xCenter, (57 + y * 25), maxWidth,
+                color
+        );
+
+        renderTextCentered(stack,minecraft, Localization.translate("multiblock.jei3"), xCenter, (10 + y * 25) + 90, maxWidth,
+                color
+        );
+    }
+    public void renderTextCentered(GuiGraphics stack, @Nonnull Minecraft minecraft, String text, int xCenter, int y, int maxWidth, int color) {
+        Font fontRenderer = minecraft.font;
 
 
+        List<FormattedText> lines = fontRenderer.getSplitter().splitLines(text, maxWidth, Style.EMPTY);
+
+
+        int lineHeight = 9;
+
+
+        int totalHeight = lines.size() * lineHeight;
+
+
+        int startY = y - totalHeight / 2;
+
+
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i).getString();
+            int lineWidth = fontRenderer.width(line);
+            int x = xCenter - lineWidth / 2;
+            draw(stack, line, x, startY + i * lineHeight, color);
+        }
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final MultiBlockWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
+    public RecipeType<MultiBlockHandler> getRecipeType() {
+        return jeiInform.recipeType;
+    }
 
-        final MultiBlockStructure structure = recipes.structure;
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, MultiBlockHandler recipes, IFocusGroup focuses) {
+        final MultiBlockStructure structure = recipes.getStructure();
         for (int i = 0; i < structure.itemStackList.size(); i++) {
             int x = 5 + (i % 6) * 20;
             int y = 45 + (i / 6) * 19;
-            isg.init(i, true, x, y);
-            isg.set(i, structure.itemStackList.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT,x,y).addItemStack(structure.itemStackList.get(i));
 
         }
         double y = 2;
-        isg.init(structure.itemStackList.size(), true, (int) (61),
-                (int) (45 + 27 + y * 23)
-        );
-        isg.set(structure.itemStackList.size(), structure.itemStackList.get(0));
+
+        builder.addSlot(RecipeIngredientRole.INPUT,61, (int) (5 + 27 + y * 23)).addItemStack(structure.itemStackList.get(0));
 
     }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");

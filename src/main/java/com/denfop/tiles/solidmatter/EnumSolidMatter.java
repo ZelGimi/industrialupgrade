@@ -1,17 +1,17 @@
 package com.denfop.tiles.solidmatter;
 
 import com.denfop.IUItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public enum EnumSolidMatter {
-    AER(new ItemStack(IUItem.matter, 1, 7)),
-    AQUA(new ItemStack(IUItem.matter, 1, 2)),
-    EARTH(new ItemStack(IUItem.matter, 1, 5)),
-    END(new ItemStack(IUItem.matter, 1, 6)),
-    NETHER(new ItemStack(IUItem.matter, 1, 3)),
-    NIGHT(new ItemStack(IUItem.matter, 1, 4)),
-    MATTER(new ItemStack(IUItem.matter, 1, 0)),
-    SUN(new ItemStack(IUItem.matter, 1, 1)),
+    AER(new ItemStack(IUItem.matter.getItemFromMeta(7), 1)),
+    AQUA(new ItemStack(IUItem.matter.getItemFromMeta(2), 1)),
+    EARTH(new ItemStack(IUItem.matter.getItemFromMeta(5), 1)),
+    END(new ItemStack(IUItem.matter.getItemFromMeta(6), 1)),
+    NETHER(new ItemStack(IUItem.matter.getItemFromMeta(3), 1)),
+    NIGHT(new ItemStack(IUItem.matter.getItemFromMeta(4), 1)),
+    MATTER(new ItemStack(IUItem.matter.getItemFromMeta(0), 1)),
+    SUN(new ItemStack(IUItem.matter.getItemFromMeta(1), 1)),
     ;
 
 

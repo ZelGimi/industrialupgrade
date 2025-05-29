@@ -1,6 +1,7 @@
 package com.denfop.world;
 
-import net.minecraft.nbt.NBTTagCompound;
+
+import net.minecraft.nbt.CompoundTag;
 
 public class GenData {
 
@@ -19,19 +20,19 @@ public class GenData {
         this.typeGas = typeGas;
     }
 
-    public GenData(NBTTagCompound nbtTagCompound) {
+    public GenData(CompoundTag nbtTagCompound) {
         this.y = nbtTagCompound.getShort("y");
-        this.x = nbtTagCompound.getInteger("x");
-        this.z = nbtTagCompound.getInteger("z");
+        this.x = nbtTagCompound.getInt("x");
+        this.z = nbtTagCompound.getInt("z");
         this.typeGas = TypeGas.values()[nbtTagCompound.getByte("type")];
     }
 
-    public NBTTagCompound writeNBT() {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        nbtTagCompound.setShort("y", (short) y);
-        nbtTagCompound.setInteger("x", (short) x);
-        nbtTagCompound.setInteger("z", (short) z);
-        nbtTagCompound.setByte("type", (byte) typeGas.ordinal());
+    public CompoundTag writeNBT() {
+        CompoundTag nbtTagCompound = new CompoundTag();
+        nbtTagCompound.putShort("y", (short) y);
+        nbtTagCompound.putInt("x", (short) x);
+        nbtTagCompound.putInt("z", (short) z);
+        nbtTagCompound.putByte("type", (byte) typeGas.ordinal());
         return nbtTagCompound;
     }
 

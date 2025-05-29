@@ -1,33 +1,25 @@
 package com.denfop.api.transport;
 
 import com.denfop.api.sytem.InfoTile;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TransportFluidItemSinkSource implements ITransportSource, ITransportSink {
 
     private final BlockPos pos;
-    private final TileEntity parent;
-    Map<EnumFacing, ItemFluidHandler> handlerMap = new HashMap<>();
-    Map<EnumFacing, Integer> slotsMap = new HashMap<>();
-    Map<EnumFacing, List<Integer>> limitsMap = new HashMap<>();
-    Map<EnumFacing, ITransportTile> energyConductorMap = new HashMap<>();
+    private final BlockEntity parent;
+    Map<Direction, ItemFluidHandler> handlerMap = new HashMap<>();
+    Map<Direction, Integer> slotsMap = new HashMap<>();
+    Map<Direction, List<Integer>> limitsMap = new HashMap<>();
+    Map<Direction, ITransportTile> energyConductorMap = new HashMap<>();
     boolean hasHashCode = false;
     int hashCodeSource;
     List<InfoTile<ITransportTile>> validReceivers = new LinkedList<>();
@@ -38,8 +30,9 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     private boolean isSourceFluid;
     private long id;
     private int hashCode;
+
     public TransportFluidItemSinkSource(
-            TileEntity parent,
+            BlockEntity parent,
             BlockPos pos
     ) {
         int slots1;
@@ -47,15 +40,15 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
         this.pos = pos;
         boolean isItem = false;
         boolean isFluid = false;
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        for (Direction facing : Direction.values()) {
             IItemHandler item_storage = parent.getCapability(
-                    CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+                    ForgeCapabilities.ITEM_HANDLER,
                     facing
-            );
+            ).orElse(null);
             IFluidHandler fluid_storage = parent.getCapability(
-                    CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+                    ForgeCapabilities.FLUID_HANDLER,
                     facing
-            );
+            ).orElse(null);
             if (!isFluid && fluid_storage != null) {
                 isFluid = true;
             }
@@ -91,13 +84,13 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
         this.id = id;
     }
 
-    public void RemoveTile(ITransportTile tile, final EnumFacing facing1) {
-        if (!this.parent.getWorld().isRemote) {
+    public void RemoveTile(ITransportTile tile, final Direction facing1) {
+        if (!this.parent.getLevel().isClientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<ITransportTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
                 InfoTile<ITransportTile> tileInfoTile = iter.next();
-                if (tileInfoTile.tileEntity.getBlockPos().equals(tile.getBlockPos())) {
+                if (tileInfoTile.tileEntity.getPos().equals(tile.getPos())) {
                     iter.remove();
                     break;
                 }
@@ -127,7 +120,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public Map<EnumFacing, ITransportTile> getTiles() {
+    public Map<Direction, ITransportTile> getTiles() {
         return energyConductorMap;
     }
 
@@ -136,12 +129,12 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public TileEntity getTileEntity() {
+    public BlockEntity getTileEntity() {
         return parent;
     }
 
-    public void AddTile(ITransportTile tile, final EnumFacing facing1) {
-        if (!this.parent.getWorld().isRemote) {
+    public void AddTile(ITransportTile tile, final Direction facing1) {
+        if (!this.parent.getLevel().isClientSide) {
             if (!this.energyConductorMap.containsKey(facing1)) {
                 this.energyConductorMap.put(facing1, tile);
                 validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
@@ -151,7 +144,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public boolean emitsTo(final ITransportAcceptor var1, final EnumFacing var2) {
+    public boolean emitsTo(final ITransportAcceptor var1, final Direction var2) {
         if (this.isSource && handlerMap
                 .get(var2)
                 .getItemHandler() instanceof IItemHandler && var1 instanceof ITransportConductor) {
@@ -163,7 +156,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public TransportItem<?> getOffered(final int type, EnumFacing facing) {
+    public TransportItem<?> getOffered(final int type, Direction facing) {
         TransportItem<?> transportItem;
 
         if (type == 0) {
@@ -187,11 +180,12 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
         } else {
             TransportItem<FluidStack> fluidTransportItem = new TransportItem<>();
             List<FluidStack> fluidStackList = new LinkedList<>();
-            IFluidTankProperties[] fluidTanks = this.handlerMap.get(facing).getFluidHandler().getTankProperties();
+            IFluidHandler handler = this.handlerMap.get(facing).getFluidHandler();
+            int fluidTanks = handler.getTanks();
 
-            for (IFluidTankProperties fluidTankProperties : fluidTanks) {
-                FluidStack contents = fluidTankProperties.getContents();
-                if (fluidTankProperties.canDrain() && contents != null) {
+            for (int i = 0; i < fluidTanks; i++) {
+                FluidStack contents = handler.getFluidInTank(i);
+                if (!handler.drain(contents, IFluidHandler.FluidAction.SIMULATE).isEmpty() && !contents.isEmpty()) {
                     fluidStackList.add(contents);
                 }
             }
@@ -204,14 +198,14 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public void draw(final Object var, final int col, EnumFacing facing) {
+    public void draw(final Object var, final int col, Direction facing) {
         if (this.isSource && var instanceof ItemStack) {
             this.handlerMap.get(facing).getItemHandler().extractItem(col, ((ItemStack) var).getCount(), false);
         }
         if (this.isSourceFluid && var instanceof FluidStack) {
             FluidStack fluidStack = (FluidStack) var;
-            fluidStack.amount = col;
-            this.handlerMap.get(facing).getFluidHandler().drain(fluidStack, true);
+            fluidStack.setAmount(col);
+            this.handlerMap.get(facing).getFluidHandler().drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
         }
     }
 
@@ -231,7 +225,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public Object getHandler(EnumFacing facing) {
+    public Object getHandler(Direction facing) {
         final ItemFluidHandler handler = this.handlerMap.get(facing);
         if (handler.getFluidHandler() != null && handler.getItemHandler() != null) {
             return handler;
@@ -246,12 +240,12 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public BlockPos getBlockPos() {
+    public BlockPos getPos() {
         return this.pos;
     }
 
     @Override
-    public boolean acceptsFrom(final ITransportEmitter var1, final EnumFacing var2) {
+    public boolean acceptsFrom(final ITransportEmitter var1, final Direction var2) {
         Object handler = var1.getHandler(var2);
         if (this.isSink && handler instanceof IItemHandler && var1 instanceof ITransportConductor) {
             return true;
@@ -260,7 +254,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public List<Integer> getDemanded(EnumFacing facing) {
+    public List<Integer> getDemanded(Direction facing) {
         if (!this.isSink) {
             return Collections.emptyList();
         }

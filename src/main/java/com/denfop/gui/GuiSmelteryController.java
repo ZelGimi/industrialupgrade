@@ -8,19 +8,19 @@ import com.denfop.api.gui.GuiElement;
 import com.denfop.container.ContainerSmelteryController;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.smeltery.ITank;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
+public class GuiSmelteryController<T extends ContainerSmelteryController> extends GuiIU<ContainerSmelteryController> {
 
     List<FluidTank> fluidTanks = new ArrayList<>();
     List<FluidTank> fluidTanks1 = new ArrayList<>();
@@ -49,10 +49,10 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
                 return container.base.list.size() > 1;
             }
 
-            public void drawBackground(int mouseX, int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
                 this.getGui().bindTexture();
                 if (highlighted) {
-                    this.gui.drawTexturedModalRect(this.gui.guiLeft + x, guiTop + y, 177,
+                    this.gui.drawTexturedModalRect( poseStack,this.gui.guiLeft + x, guiTop + y, 177,
                             25, 161 - 139, 55 - 33
                     );
                 }
@@ -70,10 +70,10 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
                 return container.base.list.size() == 1;
             }
 
-            public void drawBackground(int mouseX, int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
                 this.getGui().bindTexture();
                 if (highlighted) {
-                    this.gui.drawTexturedModalRect(this.gui.guiLeft + x, guiTop + y, 177,
+                    this.gui.drawTexturedModalRect( poseStack,this.gui.guiLeft + x, guiTop + y, 177,
                             1, 161 - 139, 55 - 33
                     );
                 }
@@ -90,10 +90,10 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
                 return container.base.list.size() > 1;
             }
 
-            public void drawBackground(int mouseX, int mouseY) {
+            public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
                 this.getGui().bindTexture();
                 if (highlighted) {
-                    this.gui.drawTexturedModalRect(this.gui.guiLeft + x, guiTop + y, 177,
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + x, guiTop + y, 177,
                             49, 161 - 139, 55 - 33
                     );
                 }
@@ -122,10 +122,10 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
     }
 
     @Override
-    protected void mouseClicked(int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = guiLeft;
+        int yMin = guiTop;
         int x = i - xMin;
         int y = j - yMin;
         for (i = 0; i < fluidTanks1.size(); i++) {
@@ -136,8 +136,8 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         tanksRefresh();
         handleUpgradeTooltip(par1, par2);
         for (int i = 0; i < fluidTanks1.size(); i++) {
@@ -146,14 +146,14 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
                 protected List<String> getToolTip() {
                     List<String> ret = new ArrayList<>();
                     FluidStack fs = fluidTanks1.get(finalI).getFluid();
-                    if (fs != null && fs.amount > 0) {
+                    if (!fs.isEmpty() && fs.getAmount() > 0) {
                         Fluid fluid = fs.getFluid();
                         if (fluid != null) {
-                            ret.add(fluid.getLocalizedName(fs));
-                            ret.add("Amount: " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
-                            String state = fs.getFluid().isGaseous() ? "Gas" : "Liquid";
+                            ret.add(Localization.translate(fluid.getFluidType().getDescriptionId()));
+                            ret.add("Amount: " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
+                            String state = "Liquid";
                             ret.add("Type: " + state);
-                            ret.add("Ingots: " + fs.amount / 144);
+                            ret.add("Ingots: " + fs.getAmount() / 144);
                         } else {
                             ret.add("Invalid FluidStack instance.");
                         }
@@ -165,7 +165,7 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
 
                     return ret;
                 }
-            }).drawForeground(
+            }).drawForeground(poseStack,
                     par1,
                     par2
             );
@@ -178,8 +178,8 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
                     FluidStack fluid1 = tank1.getFluid();
                     FluidStack fluid2 = tank2.getFluid();
 
-                    boolean hasFluid1 = fluid1 != null && fluid1.amount > 0;
-                    boolean hasFluid2 = fluid2 != null && fluid2.amount > 0;
+                    boolean hasFluid1 = !fluid1.isEmpty() && fluid1.getAmount() > 0;
+                    boolean hasFluid2 = !fluid2.isEmpty() && fluid2.getAmount() > 0;
                     if (hasFluid1 && !hasFluid2) {
                         return -1;
                     } else if (!hasFluid1 && hasFluid2) {
@@ -194,18 +194,18 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
         for (GuiElement element : elements) {
-            element.drawBackground(guiLeft, guiTop);
+            element.drawBackground(poseStack, guiLeft, guiTop);
         }
         this.bindTexture();
-        GlStateManager.color(1, 1, 1, 1);
+      RenderSystem.setShaderColor(1, 1, 1, 1);
 
         for (int i = 0; i < fluidTanks1.size(); i++) {
             this.bindTexture();
-            new FluidItem(this, 21 + (i % 6) * 18, 17 + (i / 6) * 18, fluidTanks1.get(i).getFluid()).drawBackground(
+            new FluidItem(this, 21 + (i % 6) * 18, 17 + (i / 6) * 18, fluidTanks1.get(i).getFluid()).drawBackground(poseStack,
                     this.guiLeft,
                     guiTop
             );
@@ -213,12 +213,12 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
         bindTexture();
         for (int i = 0; i < container.base.list.size(); i++) {
             int index = container.base.list.get(i);
-            drawTexturedModalRect(this.guiLeft + 21 + (index % 6) * 18, guiTop + 17 + (index / 6) * 18, 200,
+            drawTexturedModalRect(poseStack,this.guiLeft + 21 + (index % 6) * 18, guiTop + 17 + (index / 6) * 18, 200,
                     1, 18, 18
             );
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

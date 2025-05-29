@@ -1,20 +1,20 @@
 package com.denfop.api.energy;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public class InfoCable {
 
     private final IEnergyConductor conductor;
-    private final EnumFacing facing;
+    private final Direction facing;
     private final InfoCable cable;
 
-    public InfoCable(IEnergyConductor conductor, EnumFacing facing, InfoCable cable) {
+    public InfoCable(IEnergyConductor conductor, Direction facing, InfoCable cable) {
         this.conductor = conductor;
         this.facing = facing;
         this.cable = cable;
     }
 
-    public EnumFacing getFacing() {
+    public Direction getFacing() {
         return facing;
     }
 

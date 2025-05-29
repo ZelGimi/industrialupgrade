@@ -1,20 +1,19 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IPatternStorage;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerReplicator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiReplicator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -26,26 +25,22 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TileBaseReplicator extends TileElectricMachine implements IUpgradableBlock, IType,
         IUpdatableTileEvent {
@@ -74,17 +69,17 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
     private boolean instant = false;
     private boolean stack = false;
 
-    public TileBaseReplicator(double coef) {
-        super(2000000, 4, 0);
+    public TileBaseReplicator(double coef, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(2000000, 4, 0, block, pos, state);
         this.mode = TileBaseReplicator.Mode.STOPPED;
         this.fluidSlot = new InvSlotFluidByList(this, InvSlot.TypeItemSlot.INPUT, 1,
-                InvSlotFluid.TypeFluidSlot.INPUT, FluidName.fluiduu_matter.getInstance()
+                InvSlotFluid.TypeFluidSlot.INPUT, FluidName.fluiduu_matter.getInstance().get()
         );
         this.cellSlot = new InvSlotOutput(this, 1);
         this.outputSlot = new InvSlotOutput(this, 1);
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 16000, Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance()));
+        this.fluidTank = this.fluids.addTank("fluidTank", 16000, Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance().get()));
         this.coef = coef;
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, this.upgradeSlot) {
@@ -141,9 +136,9 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
     }
 
     @Override
-    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+    public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+        final BlockEntity tile = this.getWorld().getBlockEntity(neighborPos);
 
         if (tile instanceof IPatternStorage) {
             if (!this.iPatternStorageList.contains((IPatternStorage) tile)) {
@@ -226,7 +221,11 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
                     }
 
                     if (this.pattern != null) {
-                        for (int i = 0; i < size; i++) {
+                        if (size > 1)
+                            for (int i = 0; i < size - 1; i++) {
+                                this.outputSlot.add(this.pattern.getStack());
+                            }
+                        else{
                             this.outputSlot.add(this.pattern.getStack());
                         }
                     }
@@ -244,10 +243,10 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
         } else {
             amount -= this.extraUuStored;
             int toDrain = (int) Math.ceil(amount * 1000.0D);
-            FluidStack drained = this.fluidTank.drainInternal(toDrain, false);
-            if (drained != null && drained.getFluid() == FluidName.fluiduu_matter.getInstance() && drained.amount == toDrain) {
-                this.fluidTank.drainInternal(toDrain, true);
-                amount -= (double) drained.amount / 1000.0D;
+            FluidStack drained = this.fluidTank.drain(toDrain, IFluidHandler.FluidAction.SIMULATE);
+            if (!drained.isEmpty() && drained.getFluid() == FluidName.fluiduu_matter.getInstance().get() && drained.getAmount() == toDrain) {
+                this.fluidTank.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
+                amount -= (double) drained.getAmount() / 1000.0D;
                 if (amount < 0.0D) {
                     this.extraUuStored = -amount;
                 } else {
@@ -312,24 +311,24 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
         ));
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiReplicator getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiReplicator(new ContainerReplicator(player, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiReplicator((ContainerReplicator) isAdmin);
 
     }
 
-    public ContainerReplicator getGuiContainer(EntityPlayer player) {
+    public ContainerReplicator getGuiContainer(Player player) {
         return new ContainerReplicator(player, this);
 
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.getLevel().isClientSide) {
             this.setOverclockRates();
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                final BlockPos neighborPos = pos.offset(facing);
-                final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+            for (Direction facing : Direction.values()) {
+                final BlockPos neighborPos = pos.offset(facing.getNormal());
+                final BlockEntity tile = this.getWorld().getBlockEntity(neighborPos);
                 if (tile instanceof IPatternStorage) {
                     if (!this.iPatternStorageList.contains((IPatternStorage) tile)) {
                         this.iPatternStorageList.add((IPatternStorage) tile);
@@ -353,17 +352,17 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
         this.fluidSlot.processIntoTank(this.fluidTank, this.cellSlot);
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         this.extraUuStored = nbt.getDouble("extraUuStored");
         this.uuProcessed = nbt.getDouble("uuProcessed");
-        this.index = nbt.getInteger("index");
-        int modeIdx = nbt.getInteger("mode");
+        this.index = nbt.getInt("index");
+        int modeIdx = nbt.getInt("mode");
         this.mode = modeIdx < Mode.values().length ? Mode.values()[modeIdx] : Mode.STOPPED;
         boolean isPattern = nbt.getBoolean("isPattern");
         if (isPattern) {
-            NBTTagCompound contentTag = nbt.getCompoundTag("pattern");
-            final ItemStack stack = new ItemStack(contentTag);
+            CompoundTag contentTag = nbt.getCompound("pattern");
+            final ItemStack stack = ItemStack.of(contentTag);
             this.pattern = new RecipeInfo(stack, Recipes.recipes
                     .getRecipeOutput("replicator", false, stack)
                     .getOutput().metadata.getDouble(
@@ -371,25 +370,25 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
         }
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setDouble("extraUuStored", this.extraUuStored);
-        nbt.setDouble("uuProcessed", this.uuProcessed);
-        nbt.setInteger("index", this.index);
-        nbt.setInteger("mode", this.mode.ordinal());
+        nbt.putDouble("extraUuStored", this.extraUuStored);
+        nbt.putDouble("uuProcessed", this.uuProcessed);
+        nbt.putInt("index", this.index);
+        nbt.putInt("mode", this.mode.ordinal());
         if (this.pattern != null) {
-            nbt.setBoolean("isPattern", true);
-            NBTTagCompound contentTag = new NBTTagCompound();
-            this.pattern.getStack().writeToNBT(contentTag);
-            nbt.setTag("pattern", contentTag);
+            nbt.putBoolean("isPattern", true);
+            CompoundTag contentTag = new CompoundTag();
+            this.pattern.getStack().save(contentTag);
+            nbt.put("pattern", contentTag);
         } else {
-            nbt.setBoolean("isPattern", false);
+            nbt.putBoolean("isPattern", false);
         }
 
         return nbt;
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         switch ((int) event) {
             case 0:
             case 1:
@@ -438,8 +437,6 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
 
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
 
     public Mode getMode() {
         return this.mode;

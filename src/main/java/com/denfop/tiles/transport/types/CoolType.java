@@ -2,7 +2,7 @@ package com.denfop.tiles.transport.types;
 
 import com.denfop.Constants;
 import com.denfop.blocks.ISubEnum;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,9 @@
 {
 	"credit": "deposits",
 	"textures": {
-		"0": "industrialupgrade:models/deposits/stone",
-		"1": "industrialupgrade:models/deposits/rhodonite",
-		"particle": "industrialupgrade:models/deposits/stone"
+		"0": "industrialupgrade:block/deposits/stone",
+		"1": "industrialupgrade:block/deposits/rhodonite",
+		"particle": "industrialupgrade:block/deposits/stone"
 	},
 	"elements": [
 		{

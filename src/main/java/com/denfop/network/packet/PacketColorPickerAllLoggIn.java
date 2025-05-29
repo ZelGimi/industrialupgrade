@@ -2,7 +2,7 @@ package com.denfop.network.packet;
 
 import com.denfop.IUCore;
 import com.denfop.render.streak.PlayerStreakInfo;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class PacketColorPickerAllLoggIn implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
+    public void readPacket(final CustomPacketBuffer is, final Player entityPlayer) {
         int size = is.readInt();
         for (int i = 0; i < size; i++) {
 

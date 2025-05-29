@@ -3,11 +3,11 @@ package com.denfop.blocks;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.material.MapColor;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,11 +23,11 @@ public final class TileBlockCreator {
     }
 
 
-    public <E extends Enum<E> & IMultiTileBlock> BlockTileEntity create(Class<E> enumClass) {
+    public <E extends Enum<E> & IMultiTileBlock> BlockTileEntity<E> create(E enumClass, ResourceLocation location) {
         InfoAboutTile<E> instance = new InfoAboutTile<>(enumClass, index);
-        final BlockTileEntity block = BlockTileEntity.create(
-                "industrialupgrade_" + instance.teBlocks.get(0).getIdentifier().getResourcePath(),
-                instance.teBlocks.get(0).getIdentifier(),
+        final BlockTileEntity<E> block = BlockTileEntity.create(
+                enumClass,
+                location,
                 instance
         );
         instance.setBlock(block);
@@ -38,8 +38,6 @@ public final class TileBlockCreator {
 
 
     public void buildBlocks() {
-
-
         for (InfoAboutTile<?> tile : dataInfo) {
             for (IMultiTileBlock multiTileBlock : tile.teBlocks) {
                 multiTileBlock.buildDummies();
@@ -53,26 +51,31 @@ public final class TileBlockCreator {
         return dataInfo.get(index).getBlock();
     }
 
+    public List<IMultiTileBlock> getAllTiles() {
+        List<IMultiTileBlock> tileBlocks = new ArrayList<>();
+        for (InfoAboutTile<?> tile : dataInfo) {
+            tileBlocks.addAll(tile.teBlocks);
+        }
+        return tileBlocks;
+    }
 
     public static class InfoAboutTile<E extends Enum<E> & IMultiTileBlock> {
 
         private final boolean specialModels;
         private final int index;
-        private final CreativeTabs tab;
-        private final Material defaultMaterial;
+        private final CreativeModeTab tab;
+        private final MapColor defaultMaterial;
         private final List<? extends IMultiTileBlock> listBlock;
         private List<IMultiTileBlock> teBlocks;
         private List<IMultiTileBlock> idMap;
-        private BlockTileEntity block;
+        private BlockTileEntity<E> block;
 
-        InfoAboutTile(Class<E> universe, int index) {
+        InfoAboutTile(E universe, int index) {
             this.idMap = new LinkedList<>();
             this.index = index;
             this.teBlocks = new LinkedList<>();
-            this.specialModels = IMultiBlockItem.class.isAssignableFrom(universe);
-            for (final E e : EnumSet.allOf(universe)) {
-                this.register(e);
-            }
+            this.specialModels = IMultiBlockItem.class.isAssignableFrom(universe.getClass());
+            this.register(universe);
             this.idMap = new ArrayList<>(idMap);
             this.teBlocks = new ArrayList<>(this.teBlocks);
             this.defaultMaterial = teBlocks.get(0).getMaterial();
@@ -94,7 +97,7 @@ public final class TileBlockCreator {
             return listBlock;
         }
 
-        public CreativeTabs getTab() {
+        public CreativeModeTab getTab() {
             return tab;
         }
 
@@ -131,16 +134,16 @@ public final class TileBlockCreator {
             return teBlocks;
         }
 
-        public BlockTileEntity getBlock() {
+        public BlockTileEntity<E> getBlock() {
             return this.block;
         }
 
-        void setBlock(BlockTileEntity block) {
+        void setBlock(BlockTileEntity<E> block) {
             this.block = block;
         }
 
 
-        public Material getDefaultMaterial() {
+        public MapColor getDefaultMaterial() {
             return this.defaultMaterial;
         }
 

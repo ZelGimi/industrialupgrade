@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/umbriel_spinel_ore"
+    "all" : "industrialupgrade:block/umbriel_spinel_ore"
   }
 }

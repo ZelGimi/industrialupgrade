@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/sintezator_item"
+    "layer0" : "industrialupgrade:item/sintezator_item"
   }
 }

@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/night/adm"
+		"layer0": "industrialupgrade:item/night/adm"
 	}
 }

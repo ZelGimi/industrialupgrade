@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
-import net.minecraftforge.fluids.FluidTank;
+
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public interface IMatter {
 

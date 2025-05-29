@@ -9,26 +9,27 @@ import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.items.ItemRecipeSchedule;
 import com.denfop.tiles.base.TileConverterSolidMatter;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class InvSlotRecipes extends InvSlot implements ITypeSlot {
 
     public final IUpdateTick tile;
+    private final ConcurrentHashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new ConcurrentHashMap<>();
     private final RecipeArrayList<IRecipeInputStack> default_accepts;
-    int index = 0;
-    private HashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new HashMap<>();
-    private HashMap<Integer, RecipeArrayList<IRecipeInputStack>> default_map = new HashMap<>();
     private IBaseRecipe recipe;
     private RecipeArrayList<IRecipeInputStack> accepts;
     private List<BaseMachineRecipe> recipe_list;
     private Fluids.InternalFluidTank tank;
+
     private InvSlotFluidByList invSlotConsumableLiquidByList = null;
+    private int index;
 
 
     public InvSlotRecipes(final TileEntityInventory base, IBaseRecipe baseRecipe, IUpdateTick tile) {
@@ -50,7 +51,6 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
                     }
                 }
             }
-            this.default_map = this.map;
         }
         this.tile = tile;
         this.tank = null;
@@ -77,11 +77,9 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
     public void changeAccepts(ItemStack stack) {
         if (stack.isEmpty()) {
             this.accepts = this.default_accepts;
-            this.map = default_map;
         } else {
             ItemRecipeSchedule itemRecipeSchedule = (ItemRecipeSchedule) stack.getItem();
             this.accepts = itemRecipeSchedule.getInputs(this.recipe, stack);
-            this.map = itemRecipeSchedule.getInputsMap(this.recipe, stack);
         }
     }
 
@@ -114,7 +112,6 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
                     }
                 }
             }
-            this.default_map = this.map;
         }
         if (this.invSlotConsumableLiquidByList != null) {
             this.invSlotConsumableLiquidByList.setAcceptedFluids(new HashSet<>(Recipes.recipes.getInputFluidsFromRecipe(this.recipe.getName())));
@@ -126,11 +123,12 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         final MachineRecipe recipe1 = this.process();
         this.tile.setRecipeOutput(this.index, recipe1);
         this.tile.onUpdate();
+        return content;
     }
 
     public boolean acceptAllOrIndex() {
@@ -202,7 +200,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
             }
             MachineRecipe output;
             output = this.getOutputFor();
-            if (this.tile instanceof TileConverterSolidMatter) {
+           if (this.tile instanceof TileConverterSolidMatter) {
                 TileConverterSolidMatter mechanism = (TileConverterSolidMatter) this.tile;
                 if (output != null) {
                     mechanism.getrequiredmatter(output.getRecipe().getOutput());
@@ -229,20 +227,30 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
         }
 
         if (this.tank == null) {
-            return Recipes.recipes.getRecipeConsume(
-                    this.recipe,
-                    this.tile.getRecipeOutput(this.index),
-                    this.recipe.consume(),
-                    list
-            );
+            return Recipes.recipes.getRecipeConsume(this.recipe, this.tile.getRecipeOutput(this.index), this.recipe.consume(), list);
         } else {
-            return Recipes.recipes.getRecipeOutputFluid(this.recipe,
-                    this.tile.getRecipeOutput(this.index),
-                    this.recipe.consume(),
-                    list,
+            return Recipes.recipes.getRecipeOutputFluid(this.recipe, this.tile.getRecipeOutput(this.index), this.recipe.consume(), list,
                     this.tank
             );
 
+        }
+
+    }
+
+    public boolean continue_proccess(InvSlotOutput slot) {
+        if (tile.getRecipeOutput(index) == null) {
+            return false;
+        }
+        if (this.tank == null) {
+            return
+
+                    slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get(0).getCount() >= tile
+                            .getRecipeOutput(index).getList().get(0);
+        } else {
+            return slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get(0).getCount() >= tile
+                    .getRecipeOutput(index).getList().get(0) && this.tank.getFluidAmount() >= this.tile
+                    .getRecipeOutput(index)
+                    .getRecipe().input.getFluid().getAmount();
         }
 
     }
@@ -302,7 +310,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
                     }
                 }
                 if (output.getRecipe().input.getFluid() != null) {
-                    this.getTank().drain(output.getRecipe().input.getFluid().amount * size, true);
+                    this.getTank().drain(output.getRecipe().input.getFluid().getAmount() * size, IFluidHandler.FluidAction.EXECUTE);
                 }
             } else {
                 for (int i = 0; i < output.getList().size(); i++) {
@@ -310,28 +318,10 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
                     stack.shrink(size * output.getList().get(i));
                 }
                 if (output.getRecipe().input.getFluid() != null) {
-                    this.getTank().drain(output.getRecipe().input.getFluid().amount * size, true);
+                    this.getTank().drain(output.getRecipe().input.getFluid().getAmount() * size, IFluidHandler.FluidAction.EXECUTE);
                 }
             }
         }
-    }
-
-    public boolean continue_proccess(InvSlotOutput slot) {
-        if (tile.getRecipeOutput(index) == null) {
-            return false;
-        }
-        if (this.tank == null) {
-            return
-
-                    slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get().getCount() >= tile
-                            .getRecipeOutput(index).getList().get(0);
-        } else {
-            return slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get().getCount() >= tile
-                    .getRecipeOutput(index).getList().get(0) && this.tank.getFluidAmount() >= this.tile
-                    .getRecipeOutput(index)
-                    .getRecipe().input.getFluid().amount;
-        }
-
     }
 
 }

@@ -1,9 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
@@ -19,7 +19,9 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerFluidSeparator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiFluidSeparator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -29,15 +31,16 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -66,8 +69,8 @@ public class TileEntityFluidSeparator extends TileElectricMachine implements IUp
     protected short progress;
     protected double guiProgress;
 
-    public TileEntityFluidSeparator() {
-        super(100, 1, 3);
+    public TileEntityFluidSeparator(BlockPos pos, BlockState state) {
+        super(100, 1, 3,BlockBaseMachine3.fluid_separator,pos,state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;
@@ -109,49 +112,49 @@ public class TileEntityFluidSeparator extends TileElectricMachine implements IUp
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_separator", new BaseFluidMachineRecipe(
                 new InputFluid(
-                        new FluidStack(FluidName.fluidgas.getInstance(), 1000)),
+                        new FluidStack(FluidName.fluidgas.getInstance().get(), 1000)),
                 Arrays.asList(new FluidStack(
-                        FluidName.fluidmethane.getInstance(),
+                        FluidName.fluidmethane.getInstance().get(),
                         500
-                ), new FluidStack(FluidName.fluidpropane.getInstance(), 200))
+                ), new FluidStack(FluidName.fluidpropane.getInstance().get(), 200))
         ));
 
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_separator", new BaseFluidMachineRecipe(
                 new InputFluid(
-                        new FluidStack(FluidName.fluidmethane.getInstance(), 1000)),
+                        new FluidStack(FluidName.fluidmethane.getInstance().get(), 1000)),
                 Arrays.asList(new FluidStack(
-                        FluidName.fluidacetylene.getInstance(),
+                        FluidName.fluidacetylene.getInstance().get(),
                         500
-                ), new FluidStack(FluidName.fluidhyd.getInstance(), 1500))
+                ), new FluidStack(FluidName.fluidhyd.getInstance().get(), 1500))
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_separator", new BaseFluidMachineRecipe(
                 new InputFluid(
-                        new FluidStack(FluidName.fluidglucose.getInstance(), 1000)),
+                        new FluidStack(FluidName.fluidglucose.getInstance().get(), 1000)),
                 Arrays.asList(new FluidStack(
-                        FluidName.fluidpropionic_acid.getInstance(),
+                        FluidName.fluidpropionic_acid.getInstance().get(),
                         850
-                ), new FluidStack(FluidName.fluidco2.getInstance(), 150))
+                ), new FluidStack(FluidName.fluidco2.getInstance().get(), 150))
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("fluid_separator", new BaseFluidMachineRecipe(
                 new InputFluid(
-                        new FluidStack(FluidName.fluidacetic_acid.getInstance(), 500)),
+                        new FluidStack(FluidName.fluidacetic_acid.getInstance().get(), 500)),
                 Arrays.asList(new FluidStack(
-                        FluidName.fluidbiogas.getInstance(),
+                        FluidName.fluidbiogas.getInstance().get(),
                         350
-                ), new FluidStack(FluidRegistry.WATER, 150))
+                ), new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 150))
         ));
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -197,7 +200,7 @@ public class TileEntityFluidSeparator extends TileElectricMachine implements IUp
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -326,16 +329,17 @@ public class TileEntityFluidSeparator extends TileElectricMachine implements IUp
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerFluidSeparator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerFluidSeparator getGuiContainer(Player entityPlayer) {
         return new ContainerFluidSeparator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiFluidSeparator getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiFluidSeparator(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiFluidSeparator((ContainerFluidSeparator) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

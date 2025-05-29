@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/graphene_wire"
+    "layer0" : "industrialupgrade:item/graphene_wire"
   }
 }

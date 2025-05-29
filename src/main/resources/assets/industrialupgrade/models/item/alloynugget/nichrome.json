@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/nichrome_nugget"
+    "layer0" : "industrialupgrade:item/nichrome_nugget"
   }
 }

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=adv_redstone_generator": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator"
+    },
+    "facing=south,type=adv_redstone_generator": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator",
+      "y": 180
+    },
+    "facing=west,type=adv_redstone_generator": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator",
+      "y": 270
+    },
+    "facing=east,type=adv_redstone_generator": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator",
+      "y": 90
+    },
+    "facing=down,type=adv_redstone_generator": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator",
+      "x": 90
+    },
+    "facing=up,type=adv_redstone_generator": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator",
+      "x": 270
+    },
+    "facing=north,type=adv_redstone_generator_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active"
+    },
+    "facing=south,type=adv_redstone_generator_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "y": 180
+    },
+    "facing=west,type=adv_redstone_generator_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "y": 270
+    },
+    "facing=east,type=adv_redstone_generator_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "y": 90
+    },
+    "facing=down,type=adv_redstone_generator_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "x": 90
+    },
+    "facing=up,type=adv_redstone_generator_invalid": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "x": 270
+    },
+    "facing=north,type=adv_redstone_generator_active": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active"
+    },
+    "facing=south,type=adv_redstone_generator_active": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "y": 180
+    },
+    "facing=west,type=adv_redstone_generator_active": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "y": 270
+    },
+    "facing=east,type=adv_redstone_generator_active": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "y": 90
+    },
+    "facing=down,type=adv_redstone_generator_active": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "x": 90
+    },
+    "facing=up,type=adv_redstone_generator_active": {
+      "model": "industrialupgrade:block/basemachine/adv_redstone_generator_active",
+      "x": 270
+    }
+  }
+}

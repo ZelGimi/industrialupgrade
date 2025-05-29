@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityFluidHeater;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerHeatFluids extends ContainerFullInv<TileEntityFluidHeater> {
 
-    public ContainerHeatFluids(EntityPlayer entityPlayer, TileEntityFluidHeater tileEntity1) {
+    public ContainerHeatFluids(Player entityPlayer, TileEntityFluidHeater tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 45, 99));

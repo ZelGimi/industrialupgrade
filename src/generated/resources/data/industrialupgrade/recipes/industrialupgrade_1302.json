@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:adv_spectral_box"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/superalloyrene"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:reactors/imp_neutron_protector"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:reactors/per_neutron_protector"
+  },
+  "show_notification": true
+}

@@ -6,7 +6,7 @@ import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +28,18 @@ public class InvSlotGenCombinerSunarrium extends InvSlot implements ITypeSlot {
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
-        return itemStack.getItem() instanceof ItemBaseModules && (itemStack.getItemDamage() < 6 || itemStack.getItemDamage() > 14);
+        return itemStack.getItem() instanceof ItemBaseModules && (((ItemBaseModules<?>) itemStack.getItem()).getElement().getId() < 6 || ((ItemBaseModules<?>) itemStack.getItem()).getElement().getId() > 14);
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.tile.lst = this.coefday();
 
         this.tile.coef_day = this.tile.lst.get(0);
         this.tile.coef_night = this.tile.lst.get(1);
         this.tile.update_night = this.tile.lst.get(2);
+        return content;
     }
 
     public List<Double> coefday() {
@@ -47,10 +48,10 @@ public class InvSlotGenCombinerSunarrium extends InvSlot implements ITypeSlot {
         double coef2 = 0;
         List<Double> lst = new ArrayList<>();
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && EnumModule.getFromID(this.get(i).getItemDamage()) != null && this
+            if (!this.get(i).isEmpty() && EnumModule.getFromID(((ItemBaseModules<?>) this.get(i).getItem()).getElement().getId()) != null && this
                     .get(i)
                     .getItem() instanceof ItemBaseModules) {
-                EnumModule module = EnumModule.getFromID(this.get(i).getItemDamage());
+                EnumModule module = EnumModule.getFromID(((ItemBaseModules<?>) this.get(i).getItem()).getElement().getId());
                 EnumBaseType type = module.type;
                 double percent = module.percent;
                 switch (type) {

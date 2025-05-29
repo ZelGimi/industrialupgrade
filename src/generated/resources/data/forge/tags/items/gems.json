@@ -1,0 +1,12 @@
+{
+  "values": [
+    "industrialupgrade:preciousgem/ruby_gem",
+    "industrialupgrade:preciousgem/sapphire_gem",
+    "industrialupgrade:preciousgem/topaz_gem",
+    "industrialupgrade:crafting_elements/crafting_448_element",
+    "industrialupgrade:crafting_elements/crafting_449_element",
+    "industrialupgrade:radiationresources/americium_gem",
+    "industrialupgrade:radiationresources/neptunium_gem",
+    "industrialupgrade:radiationresources/curium_gem"
+  ]
+}

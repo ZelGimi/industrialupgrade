@@ -1,15 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -19,7 +14,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerOilPurifier;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiOilPurifier;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -29,16 +26,16 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -65,8 +62,8 @@ public class TileEntityOilPurifier extends TileElectricMachine implements IUpgra
     protected short progress;
     protected double guiProgress;
 
-    public TileEntityOilPurifier() {
-        super(100, 1, 1);
+    public TileEntityOilPurifier(BlockPos pos, BlockState state) {
+        super(100, 1, 1, BlockBaseMachine3.oil_purifier,pos,state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;
@@ -99,47 +96,34 @@ public class TileEntityOilPurifier extends TileElectricMachine implements IUpgra
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("oil_purifier", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsour_light_oil.getInstance(), 300)), new RecipeOutput(
+                new FluidStack(FluidName.fluidsour_light_oil.getInstance().get(), 300)), new RecipeOutput(
                 null,
-                new ItemStack(IUItem.smalldust, 1, 26)
-        ),
-                Collections.singletonList(new FluidStack(FluidName.fluidneft.getInstance(), 225))
+                new ItemStack(IUItem.smalldust.getStack(26))
+                ),
+                Collections.singletonList(new FluidStack(FluidName.fluidneft.getInstance().get(), 225))
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("oil_purifier", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsour_medium_oil.getInstance(), 300)), new RecipeOutput(
+                new FluidStack(FluidName.fluidsour_medium_oil.getInstance().get(), 300)), new RecipeOutput(
                 null,
-                new ItemStack(IUItem.smalldust, 2, 26)
+                new ItemStack(IUItem.smalldust.getStack(26), 2)
         ),
-                Collections.singletonList(new FluidStack(FluidName.fluidsweet_medium_oil.getInstance(), 225))
+                Collections.singletonList(new FluidStack(FluidName.fluidsweet_medium_oil.getInstance().get(), 225))
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("oil_purifier", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsour_heavy_oil.getInstance(), 300)), new RecipeOutput(
+                new FluidStack(FluidName.fluidsour_heavy_oil.getInstance().get(), 300)), new RecipeOutput(
                 null,
-                new ItemStack(IUItem.smalldust, 3, 26)
+                new ItemStack(IUItem.smalldust.getStack(26), 3)
         ),
-                Collections.singletonList(new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance(), 225))
+                Collections.singletonList(new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance().get(), 225))
         ));
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
@@ -158,9 +142,9 @@ public class TileEntityOilPurifier extends TileElectricMachine implements IUpgra
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -192,7 +176,7 @@ public class TileEntityOilPurifier extends TileElectricMachine implements IUpgra
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -314,16 +298,17 @@ public class TileEntityOilPurifier extends TileElectricMachine implements IUpgra
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerOilPurifier getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerOilPurifier getGuiContainer(Player entityPlayer) {
         return new ContainerOilPurifier(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiOilPurifier getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiOilPurifier(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiOilPurifier((ContainerOilPurifier) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

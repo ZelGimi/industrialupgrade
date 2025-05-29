@@ -2,8 +2,8 @@ package com.denfop.api.reactors;
 
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.componets.Energy;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public interface IGraphiteReactor extends IAdvReactor, IMainMultiBlock {
 

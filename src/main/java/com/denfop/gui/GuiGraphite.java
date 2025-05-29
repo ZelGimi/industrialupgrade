@@ -5,9 +5,10 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerGraphite;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiGraphite extends GuiIU<ContainerGraphite> {
+public class GuiGraphite<T extends ContainerGraphite> extends GuiIU<ContainerGraphite> {
 
     public GuiGraphite(ContainerGraphite guiContainer) {
         super(guiContainer);
@@ -20,22 +21,13 @@ public class GuiGraphite extends GuiIU<ContainerGraphite> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString("Silicon concentration: " + (int) ((this.container.base.col / 90D) * 100) + "%", 30, 20,
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+        draw(poseStack, "Silicon concentration: " + (int) ((this.container.base.col / 90D) * 100) + "%", 30, 20,
                 4210752
         );
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
 
     @Override
     protected ResourceLocation getTexture() {

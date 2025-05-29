@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/iron_cable_2"
+    "layer0" : "industrialupgrade:item/iron_cable_2"
   }
 }

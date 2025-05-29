@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=night_converter": {
+      "model": "industrialupgrade:block/basemachine/night_converter"
+    },
+    "facing=south,type=night_converter": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 180
+    },
+    "facing=west,type=night_converter": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 270
+    },
+    "facing=east,type=night_converter": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 90
+    },
+    "facing=down,type=night_converter": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "x": 90
+    },
+    "facing=up,type=night_converter": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "x": 270
+    },
+    "facing=north,type=night_converter_invalid": {
+      "model": "industrialupgrade:block/basemachine/night_converter"
+    },
+    "facing=south,type=night_converter_invalid": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 180
+    },
+    "facing=west,type=night_converter_invalid": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 270
+    },
+    "facing=east,type=night_converter_invalid": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 90
+    },
+    "facing=down,type=night_converter_invalid": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "x": 90
+    },
+    "facing=up,type=night_converter_invalid": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "x": 270
+    },
+    "facing=north,type=night_converter_active": {
+      "model": "industrialupgrade:block/basemachine/night_converter"
+    },
+    "facing=south,type=night_converter_active": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 180
+    },
+    "facing=west,type=night_converter_active": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 270
+    },
+    "facing=east,type=night_converter_active": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "y": 90
+    },
+    "facing=down,type=night_converter_active": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "x": 90
+    },
+    "facing=up,type=night_converter_active": {
+      "model": "industrialupgrade:block/basemachine/night_converter",
+      "x": 270
+    }
+  }
+}

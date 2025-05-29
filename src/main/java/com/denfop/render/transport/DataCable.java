@@ -1,25 +1,26 @@
 package com.denfop.render.transport;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemStack;
 
 public class DataCable {
 
-    private IBakedModel bakedModel;
+    private BakedModel bakedModel;
     private byte connect;
     private ItemStack itemStack;
 
-    public DataCable(byte connect, ItemStack itemStack, IBakedModel bakedModel) {
+    public DataCable(byte connect, ItemStack itemStack, BakedModel bakedModel) {
         this.connect = connect;
         this.itemStack = itemStack;
         this.bakedModel = bakedModel;
     }
 
-    public IBakedModel getBakedModel() {
+    public BakedModel getBakedModel() {
         return bakedModel;
     }
 
-    public void setBakedModel(final IBakedModel bakedModel) {
+    public void setBakedModel(final BakedModel bakedModel) {
         this.bakedModel = bakedModel;
     }
 

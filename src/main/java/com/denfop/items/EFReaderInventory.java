@@ -3,38 +3,39 @@ package com.denfop.items;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerEFReader;
 import com.denfop.gui.GUIEFReader;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+
+;
 
 public class EFReaderInventory extends ItemStackInventory {
 
     private final ItemStack itemStack1;
 
-    public EFReaderInventory(EntityPlayer player, ItemStack stack) {
+    public EFReaderInventory(Player player, ItemStack stack) {
         super(player, stack, 0);
         this.itemStack1 = stack;
     }
 
-    public ContainerBase<EFReaderInventory> getGuiContainer(EntityPlayer player) {
-        return new ContainerEFReader(this, this.itemStack1);
+    public ContainerBase<EFReaderInventory> getGuiContainer(Player player) {
+        return new ContainerEFReader(this, this.itemStack1, player);
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GUIEFReader(new ContainerEFReader(this, this.itemStack1), this.itemStack1);
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<?>> getGui(Player player, ContainerBase<?> isAdmin) {
+        return new GUIEFReader((ContainerEFReader) isAdmin, this.itemStack1);
     }
 
     @Override
-    public TileEntityInventory getParent() {
-        return null;
+    public ItemStackInventory getParent() {
+        return this;
     }
 
     @Override

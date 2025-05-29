@@ -2,12 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageInterface;
-import com.denfop.api.gui.ItemStackImage;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
@@ -15,26 +10,26 @@ import com.denfop.container.ContainerSimulationReactors;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.base.TileEntitySimulatorReactor;
 import com.denfop.utils.ModUtils;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSimulationReactors extends GuiIU<ContainerSimulationReactors> {
+public class GuiSimulationReactors<T extends ContainerSimulationReactors> extends GuiIU<ContainerSimulationReactors> {
 
     private final String nameReactor;
 
     public GuiSimulationReactors(ContainerSimulationReactors guiContainer) {
 
         super(guiContainer);
-        this.xSize = 255;
-        this.ySize = 254;
+        this.imageWidth = 255;
+        this.imageHeight = 254;
         componentList.clear();
-        this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
+        this.addElement(new ImageInterface(this, 0, 0, imageWidth, imageHeight));
         inventory = new GuiComponent(this, 7, 171, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
         );
@@ -83,7 +78,7 @@ public class GuiSimulationReactors extends GuiIU<ContainerSimulationReactors> {
                     @Override
                     public void ClickEvent() {
                         new PacketUpdateServerTile(this.getEntityBlock(), 0);
-                        ((TileEntitySimulatorReactor) this.getEntityBlock()).updateTileServer(Minecraft.getMinecraft().player, 0);
+
                     }
 
                     @Override
@@ -104,23 +99,23 @@ public class GuiSimulationReactors extends GuiIU<ContainerSimulationReactors> {
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = guiLeft;
+        int yMin = guiTop;
         int x = i - xMin;
         int y = j - yMin;
 
         for (int index = 0; index < 4; index++) {
             if (x >= 178 + index * 12 && x <= 185 + index * 12 && y >= 187 && y <= 194) {
                 new PacketUpdateServerTile(this.container.base, -(index + 1));
-                this.container.base.updateTileServer(Minecraft.getMinecraft().player, -(index + 1));
+                this.container.base.updateTileServer(Minecraft.getInstance().player, -(index + 1));
             }
         }
         for (int index = 0; index < 4; index++) {
             if (x >= 178 + index * 12 && x <= 185 + index * 12 && y >= 198 && y <= 205) {
                 new PacketUpdateServerTile(this.container.base, (index + 1));
-                this.container.base.updateTileServer(Minecraft.getMinecraft().player, (index + 1));
+                this.container.base.updateTileServer(Minecraft.getInstance().player, (index + 1));
             }
         }
     }
@@ -159,57 +154,57 @@ public class GuiSimulationReactors extends GuiIU<ContainerSimulationReactors> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip2(par1, par2);
         if (this.container.base.logicReactor != null) {
             for (int i = 0; i < this.container.base.logicReactor.getInfoStack().size(); i++) {
                 ItemStack stack = this.container.base.logicReactor.getInfoStack().get(i);
-                new ItemStackImage(this, 5 + (i / 8) * 20, 30 + i % 8 * 20, () -> stack).drawForeground(par1, par2);
+                new ItemStackImage(this, 5 + (i / 8) * 20, 30 + i % 8 * 20, () -> stack).drawForeground(poseStack,par1, par2);
             }
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         this.bindTexture();
-        if (this.container.base.level != -1) {
-            new GuiComponent(this, 178 + 12 * (this.container.base.level - 1), 184, EnumTypeComponent.CHECK_MARK,
+        if (this.container.base.levelReactor != -1) {
+            new GuiComponent(this, 178 + 12 * (this.container.base.levelReactor - 1), 184, EnumTypeComponent.CHECK_MARK,
                     new Component<>(new ComponentEmpty())
-            ).drawBackground(guiLeft, guiTop);
+            ).drawBackground(poseStack,guiLeft, guiTop);
 
         }
         if (this.container.base.type != -1) {
             new GuiComponent(this, 178 + 12 * (this.container.base.type - 1), 195, EnumTypeComponent.CHECK_MARK,
                     new Component<>(new ComponentEmpty())
-            ).drawBackground(guiLeft, guiTop);
+            ).drawBackground(poseStack,guiLeft, guiTop);
         }
         String name = Localization.translate(this.container.base.getName());
         if (!this.isBlack) {
-            this.drawXCenteredString(this.xSize / 2, 6, name, 4210752, false);
+            this.drawXCenteredString(poseStack,this.imageWidth / 2, 6, name, 4210752, false);
         } else {
-            this.drawXCenteredString(this.xSize / 2, 6, name, ModUtils.convertRGBcolorToInt(216, 216, 216), false);
+            this.drawXCenteredString(poseStack,this.imageWidth / 2, 6, name, ModUtils.convertRGBcolorToInt(216, 216, 216), false);
         }
 
         if (!this.isBlack) {
-            this.drawXCenteredString(this.xSize / 2, 17, this.nameReactor, 4210752, false);
+            this.drawXCenteredString(poseStack,this.imageWidth / 2, 17, this.nameReactor, 4210752, false);
         } else {
-            this.drawXCenteredString(this.xSize / 2, 17, this.nameReactor, ModUtils.convertRGBcolorToInt(216, 216, 216), false);
+            this.drawXCenteredString(poseStack,this.imageWidth / 2, 17, this.nameReactor, ModUtils.convertRGBcolorToInt(216, 216, 216), false);
         }
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
         if (this.container.base.logicReactor != null) {
             for (int i = 0; i < this.container.base.logicReactor.getInfoStack().size(); i++) {
                 ItemStack stack = this.container.base.logicReactor.getInfoStack().get(i);
-                new ItemStackImage(this, 5 + (i / 8) * 20, 30 + i % 8 * 20, () -> stack).drawBackground(this.guiLeft, guiTop);
+                new ItemStackImage(this, 5 + (i / 8) * 20, 30 + i % 8 * 20, () -> stack).drawBackground(poseStack,this.guiLeft, guiTop);
             }
         }
     }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
 
     }
 

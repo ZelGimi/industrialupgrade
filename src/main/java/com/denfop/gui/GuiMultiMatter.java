@@ -3,11 +3,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -16,19 +12,19 @@ import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMatter;
 import com.denfop.tiles.base.TileMultiMatter;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@SideOnly(Side.CLIENT)
-public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
+@OnlyIn(Dist.CLIENT)
+public class GuiMultiMatter<T extends ContainerMultiMatter> extends GuiIU<ContainerMultiMatter> {
 
     public final ContainerMultiMatter container;
     public final String progressLabel;
@@ -77,10 +73,10 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
         return ret;
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
+    protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.getXSize()) / 2;
+        int yMin = (this.height - this.getYSize()) / 2;
         int x = i - xMin;
         int y = j - yMin;
 
@@ -93,38 +89,38 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
             text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
-                text.add(stack.getDisplayName());
+                text.add(stack.getDisplayName().getString());
             }
 
             this.drawTooltip(mouseX, mouseY, text);
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
         this.handleUpgradeTooltip(par1, par2);
-        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawForeground(par1, par2);
-        this.fontRenderer.drawString(this.progressLabel, 8, 29, 4210752);
-        this.fontRenderer.drawString(this.container.base.getProgressAsString(), 18, 39, 4210752);
+        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawForeground(poseStack, par1, par2);
+       draw(poseStack, this.progressLabel, 8, 29, 4210752);
+        draw(poseStack, this.container.base.getProgressAsString(), 18, 39, 4210752);
         if ((this.container.base).scrap > 0) {
-            this.fontRenderer.drawString(this.amplifierLabel, 8, 49, 4210752);
-            this.fontRenderer.drawString("" + (this.container.base).scrap, 8, 59, 4210752);
+           draw(poseStack, this.amplifierLabel, 8, 49, 4210752);
+           draw(poseStack, "" + (this.container.base).scrap, 8, 59, 4210752);
         }
-        this.drawForeground(par1, par2);
+        this.drawForeground(poseStack, par1, par2);
 
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawBackground(this.guiLeft, guiTop);
+    protected void renderBg(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.renderBg(poseStack, partialTicks, mouseX, mouseY);
+        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawBackground(poseStack, this.guiLeft(), guiTop());
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, this.getXSize(), this.getYSize());
         String name = Localization.translate(this.container.base.getName());
-        int textWidth = this.fontRenderer.getStringWidth(name);
+        int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 
 
@@ -132,20 +128,20 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
             scale = 120f / textWidth;
         }
 
+        PoseStack pose = poseStack.pose();
+        pose.pushPose();
+        pose.scale(scale, scale, 1.0f);
 
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 1.0f);
 
-
-        int centerX = this.guiLeft + this.xSize / 2;
+        int centerX = this.guiLeft() + this.getXSize() / 2;
         int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
-        int textY = (int) ((this.guiTop + 6) / scale);
+        int textY = (int) ((this.guiTop() + 6) / scale);
 
 
-        this.fontRenderer.drawString(name, textX, textY, 4210752);
+        draw(poseStack, name, textX, textY, 4210752);
 
 
-        GlStateManager.popMatrix();
+        pose.popPose();
     }
 
     public ResourceLocation getTexture() {

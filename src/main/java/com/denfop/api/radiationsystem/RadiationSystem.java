@@ -5,43 +5,43 @@ import com.denfop.api.item.IHazmatLike;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.network.packet.PacketRadiation;
 import com.denfop.network.packet.PacketUpdateRadiation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class RadiationSystem {
 
     public static RadiationSystem rad_system;
-    public List<Radiation> radiationList = new LinkedList<>();
+    public List<Radiation> radiationList = new ArrayList<>();
     Map<ChunkPos, Radiation> map = new HashMap<>();
 
     Map<ChunkPos, List<IAdvReactor>> iAdvReactorMap = new HashMap<>();
 
     public RadiationSystem() {
         rad_system = this;
-        FMLCommonHandler.instance().bus().register(new EventHandler());
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
     public Map<ChunkPos, List<IAdvReactor>> getAdvReactorMap() {
         return iAdvReactorMap;
     }
 
-    public void work(EntityPlayer player) {
-        if (player.getEntityWorld().provider.getDimension() != 0 || player.getEntityWorld().isRemote) {
+    public void work(Player player) {
+        if (player.level().dimension() != Level.OVERWORLD || player.level().isClientSide) {
             return;
         }
 
-        if (player.getEntityWorld().getWorldTime() % 200 == 0) {
-            ChunkPos pos = new ChunkPos(player.getPosition());
+        if (player.level().getGameTime() % 200 == 0) {
+            ChunkPos pos = new ChunkPos(player.blockPosition());
             Radiation rad = this.map.get(pos);
             if (rad != null) {
 
@@ -49,17 +49,16 @@ public class RadiationSystem {
                     rad.process(player);
                 }
             } else {
-                final NBTTagCompound nbt = player.getEntityData();
-                double radiation = nbt.getDouble("radiation");
+                double radiation = player.getPersistentData().getDouble("radiation");
                 if (radiation >= 50) {
-                    player.addPotionEffect(new PotionEffect(IUPotion.radiation, 43200, 0));
-                    player.addPotionEffect(new PotionEffect(MobEffects.WITHER, 400, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 43200, 0));
+                    player.addEffect(new MobEffectInstance(MobEffects.WITHER, 400, 0));
                 } else if (radiation >= 10) {
-                    player.addPotionEffect(new PotionEffect(IUPotion.radiation, 1000, 0));
-                    player.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 1000, 0));
+                    player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0));
                 } else if (radiation >= 1) {
-                    player.addPotionEffect(new PotionEffect(IUPotion.radiation, 200, 0));
-                    player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 0));
+                    player.addEffect(new MobEffectInstance(IUPotion.radiation, 200, 0));
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 0));
                 }
             }
         }
@@ -73,10 +72,12 @@ public class RadiationSystem {
         return radiationList;
     }
 
-    public void addRadiation(NBTTagCompound tagCompound) {
+    public void addRadiation(CompoundTag tagCompound) {
         Radiation rad = new Radiation(tagCompound);
-        this.map.put(rad.getPos(), rad);
-        this.radiationList.add(rad);
+        if (!this.map.containsKey(rad.getPos())) {
+            this.map.put(rad.getPos(), rad);
+            this.radiationList.add(rad);
+        }
     }
 
     public void addRadiation(Radiation radiation) {
@@ -87,13 +88,8 @@ public class RadiationSystem {
 
     }
 
-    public void update(EntityPlayer player) {
+    public void update(Player player) {
         new PacketRadiation(this.radiationList, player);
-    }
-
-    public void clear() {
-        this.map.clear();
-        this.radiationList.clear();
     }
 
     public void addRadiationWihoutUpdate(Radiation radiation) {
@@ -103,13 +99,13 @@ public class RadiationSystem {
         }
     }
 
-    public void workDecay(final World world) {
+    public void workDecay(final Level world) {
         try {
             for (Radiation radiation : this.radiationList) {
                 if (radiation.getRadiation() > 0) {
                     switch (radiation.getLevel()) {
                         case LOW:
-                            if (world.provider.getWorldTime() % 36000 == 0) {
+                            if (world.getGameTime() % 36000 == 0) {
                                 if (radiation.getRadiation() > 1) {
                                     radiation.removeRadiation(radiation.getRadiation() / 2);
                                 } else {
@@ -119,7 +115,7 @@ public class RadiationSystem {
                             }
                             break;
                         case DEFAULT:
-                            if (world.provider.getWorldTime() % 18000 == 0) {
+                            if (world.getGameTime() % 18000 == 0) {
                                 if (radiation.getRadiation() > 1) {
                                     radiation.removeRadiation(radiation.getRadiation() / 2);
                                 } else {
@@ -129,7 +125,7 @@ public class RadiationSystem {
                             }
                             break;
                         case MEDIUM:
-                            if (world.provider.getWorldTime() % 12000 == 0) {
+                            if (world.getGameTime() % 12000 == 0) {
                                 if (radiation.getRadiation() > 1) {
                                     radiation.removeRadiation(radiation.getRadiation() / 2);
                                 } else {
@@ -139,7 +135,7 @@ public class RadiationSystem {
                             }
                             break;
                         case HIGH:
-                            if (world.provider.getWorldTime() % 6000 == 0) {
+                            if (world.getGameTime() % 6000 == 0) {
                                 if (radiation.getRadiation() > 1) {
                                     radiation.removeRadiation(radiation.getRadiation() / 2);
                                 } else {
@@ -149,7 +145,7 @@ public class RadiationSystem {
                             }
                             break;
                         case VERY_HIGH:
-                            if (world.provider.getWorldTime() % 2400 == 0) {
+                            if (world.getGameTime() % 2400 == 0) {
                                 if (radiation.getRadiation() > 1) {
                                     radiation.removeRadiation(radiation.getRadiation() / 2);
                                 } else {
@@ -165,4 +161,8 @@ public class RadiationSystem {
         }
     }
 
+    public void clear() {
+        this.map.clear();
+        this.radiationList.clear();
+    }
 }

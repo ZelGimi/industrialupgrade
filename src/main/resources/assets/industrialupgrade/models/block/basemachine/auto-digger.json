@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/auto-digger",
-    "particle" : "industrialupgrade:models/auto-digger"
+    "0" : "industrialupgrade:block/auto-digger",
+    "particle" : "industrialupgrade:block/auto-digger"
   },
   "elements" : [
     {

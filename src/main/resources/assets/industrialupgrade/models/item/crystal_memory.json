@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/crystal_memory"
+		"layer0": "industrialupgrade:item/crystal_memory"
 	}
 }

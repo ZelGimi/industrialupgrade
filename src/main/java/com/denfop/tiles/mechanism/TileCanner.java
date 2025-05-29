@@ -1,46 +1,28 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.componets.TypeUpgrade;
-import com.denfop.container.ContainerCanner;
-import com.denfop.gui.GuiCanner;
+import com.denfop.componets.*;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
-import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.Fluid;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -61,8 +43,8 @@ public class TileCanner extends TileElectricLiquidTankInventory
     public MachineRecipe output;
     private int fluid_amount;
 
-    public TileCanner() {
-        super(300, 1, 10);
+    public TileCanner(BlockPos pos, BlockState state) {
+        super(300, 1, 10,BlockBaseMachine3.canner_iu,pos,state);
         fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
         this.inputSlotA = new InvSlotRecipes(this, "cannerenrich", this, this.fluidTank);
         Recipes.recipes.addInitRecipes(this);
@@ -89,57 +71,13 @@ public class TileCanner extends TileElectricLiquidTankInventory
     }
 
 
-    public static void addEnrichRecipe(FluidStack input, ItemStack additive, Fluid output) {
-        int count = input.amount / 1000;
-        Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
-                new Input(
-                        input,
-                        com.denfop.api.Recipes.inputFactory.getInput(IUItem.FluidCell),
-                        com.denfop.api.Recipes.inputFactory.getInput(additive)
-                ),
-                new RecipeOutput(null, ModUtils.getCellFromFluid(output))
-        ));
-        ItemStack stack = ModUtils.getCellFromFluid(input.getFluid());
-        stack.setCount(count);
-        if (input.amount <= 1000) {
-            Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
-                    new Input(
-                            com.denfop.api.Recipes.inputFactory.getInput(stack),
-                            com.denfop.api.Recipes.inputFactory.getInput(additive, 1)
-                    ),
-                    new RecipeOutput(null, ModUtils.getCellFromFluid(output))
-            ));
-        }
-    }
-
-    public static void addEnrichRecipe(FluidStack input, int i, String additive, Fluid output) {
-        Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
-                new Input(
-                        input,
-                        com.denfop.api.Recipes.inputFactory.getInput(IUItem.FluidCell),
-                        com.denfop.api.Recipes.inputFactory.getInput(additive, i)
-                ),
-                new RecipeOutput(null, ModUtils.getCellFromFluid(output))
-        ));
-        ItemStack stack = ModUtils.getCellFromFluid(input.getFluid());
-        stack.setCount(input.amount / 1000);
-        if (input.amount <= 1000) {
-            Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
-                    new Input(
-                            com.denfop.api.Recipes.inputFactory.getInput(stack),
-                            com.denfop.api.Recipes.inputFactory.getInput(additive, i)
-                    ),
-                    new RecipeOutput(null, ModUtils.getCellFromFluid(output))
-            ));
-        }
-    }
 
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.canner_iu;
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 
@@ -164,7 +102,7 @@ public class TileCanner extends TileElectricLiquidTankInventory
         this.outputTank.setFluid(inputStack);
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         this.switchTanks();
         this.getOutput();
 
@@ -173,7 +111,7 @@ public class TileCanner extends TileElectricLiquidTankInventory
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -192,42 +130,14 @@ public class TileCanner extends TileElectricLiquidTankInventory
 
     }
 
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
 
-            return ModUtils.interactWithFluidHandler(player, hand,
-                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
-            );
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
 
     public MachineRecipe getOutput() {
         this.output = this.inputSlotA.process();
         return this.output;
     }
 
-    @Override
-    public ContainerCanner getGuiContainer(final EntityPlayer var1) {
 
-        return new ContainerCanner(this, var1);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public GuiCanner getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCanner(getGuiContainer(var1));
-    }
 
 
     public double getEnergy() {

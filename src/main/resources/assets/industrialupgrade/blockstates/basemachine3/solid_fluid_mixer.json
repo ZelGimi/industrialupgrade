@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=solid_fluid_mixer": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer"
+    },
+    "facing=south,type=solid_fluid_mixer": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer",
+      "y": 180
+    },
+    "facing=west,type=solid_fluid_mixer": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer",
+      "y": 270
+    },
+    "facing=east,type=solid_fluid_mixer": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer",
+      "y": 90
+    },
+    "facing=down,type=solid_fluid_mixer": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer",
+      "x": 90
+    },
+    "facing=up,type=solid_fluid_mixer": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer",
+      "x": 270
+    },
+    "facing=north,type=solid_fluid_mixer_invalid": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active"
+    },
+    "facing=south,type=solid_fluid_mixer_invalid": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "y": 180
+    },
+    "facing=west,type=solid_fluid_mixer_invalid": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "y": 270
+    },
+    "facing=east,type=solid_fluid_mixer_invalid": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "y": 90
+    },
+    "facing=down,type=solid_fluid_mixer_invalid": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "x": 90
+    },
+    "facing=up,type=solid_fluid_mixer_invalid": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "x": 270
+    },
+    "facing=north,type=solid_fluid_mixer_active": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active"
+    },
+    "facing=south,type=solid_fluid_mixer_active": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "y": 180
+    },
+    "facing=west,type=solid_fluid_mixer_active": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "y": 270
+    },
+    "facing=east,type=solid_fluid_mixer_active": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "y": 90
+    },
+    "facing=down,type=solid_fluid_mixer_active": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "x": 90
+    },
+    "facing=up,type=solid_fluid_mixer_active": {
+      "model": "industrialupgrade:block/basemachine/solid_fluid_mixer_active",
+      "x": 270
+    }
+  }
+}

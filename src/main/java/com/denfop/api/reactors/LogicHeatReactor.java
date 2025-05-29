@@ -2,6 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.blocks.FluidName;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class LogicHeatReactor extends LogicReactor {
                         col1 = 0;
                         if (this.heatReactor.getHeliumTank().getFluidAmount() >= col * level) {
                             this.heatReactor.addHeliumToRegenerate((col * level) / 2D);
-                            this.heatReactor.getHeliumTank().drain((int) (col * level), true);
+                            this.heatReactor.getHeliumTank().drain((int) (col * level), IFluidHandler.FluidAction.EXECUTE);
                             temp_heat -= rand.nextInt(100);
                             if (temp_heat < 0) {
                                 temp_heat = 0;
@@ -78,7 +79,7 @@ public class LogicHeatReactor extends LogicReactor {
                             col1 = 0;
                             if (this.heatReactor.getHeliumTank().getFluidAmount() >= col * level) {
                                 this.heatReactor.addHeliumToRegenerate((col * level) / 2D);
-                                this.heatReactor.getHeliumTank().drain((int) (col * level), true);
+                                this.heatReactor.getHeliumTank().drain((int) (col * level), IFluidHandler.FluidAction.EXECUTE);
                                 temp_heat -= rand.nextInt(100);
                                 if (temp_heat < 0) {
                                     temp_heat = 0;
@@ -136,10 +137,10 @@ public class LogicHeatReactor extends LogicReactor {
                         this.heatReactor
                                 .getHeliumTank().fill(
                                         new FluidStack(
-                                                FluidName.fluidHelium.getInstance(),
+                                                FluidName.fluidHelium.getInstance().get(),
                                                 (int) col
                                         ),
-                                        true
+                                        IFluidHandler.FluidAction.EXECUTE
                                 );
                         this.temp_heat -= this.rand.nextInt(20 * power);
                         if (temp_heat < 0) {
@@ -150,10 +151,10 @@ public class LogicHeatReactor extends LogicReactor {
                         this.heatReactor
                                 .getHeliumTank().fill(
                                         new FluidStack(
-                                                FluidName.fluidHelium.getInstance(),
+                                                FluidName.fluidHelium.getInstance().get(),
                                                 power
                                         ),
-                                        true
+                                        IFluidHandler.FluidAction.EXECUTE
                                 );
                         this.temp_heat -= this.rand.nextInt(10 * power);
                         if (temp_heat < 0) {
@@ -185,20 +186,20 @@ public class LogicHeatReactor extends LogicReactor {
                                 .getOxygenTank()
                                 .getCapacity()) {
                             this.heatReactor
-                                    .getWaterTank().drain(15 * power, true);
+                                    .getWaterTank().drain(15 * power, IFluidHandler.FluidAction.EXECUTE);
                             this.heatReactor
                                     .getHydrogenTank().fill(
                                             new FluidStack(
-                                                    FluidName.fluidhyd.getInstance(),
+                                                    FluidName.fluidhyd.getInstance().get(),
                                                     10 * power
                                             ),
-                                            true
+                                            IFluidHandler.FluidAction.EXECUTE
                                     );
                             this.heatReactor
                                     .getOxygenTank().fill(new FluidStack(
-                                            FluidName.fluidoxy.getInstance(),
+                                            FluidName.fluidoxy.getInstance().get(),
                                             5 * power
-                                    ), true);
+                                    ), IFluidHandler.FluidAction.EXECUTE);
                             this.heatReactor.damagePump(j);
                             this.temp_heat -= rand.nextInt(power * 20);
                             if (temp_heat < 0) {

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=minipanel": {
+      "model": "industrialupgrade:block/basemachine/minipanel"
+    },
+    "facing=south,type=minipanel": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "y": 180
+    },
+    "facing=west,type=minipanel": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "y": 270
+    },
+    "facing=east,type=minipanel": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "y": 90
+    },
+    "facing=down,type=minipanel": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "x": 90
+    },
+    "facing=up,type=minipanel": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "x": 270
+    },
+    "facing=north,type=minipanel_invalid": {
+      "model": "industrialupgrade:block/basemachine/minipanel"
+    },
+    "facing=south,type=minipanel_invalid": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "y": 180
+    },
+    "facing=west,type=minipanel_invalid": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "y": 270
+    },
+    "facing=east,type=minipanel_invalid": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "y": 90
+    },
+    "facing=down,type=minipanel_invalid": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "x": 90
+    },
+    "facing=up,type=minipanel_invalid": {
+      "model": "industrialupgrade:block/basemachine/minipanel",
+      "x": 270
+    }
+  }
+}

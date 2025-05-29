@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/tungsten"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_480_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BBB",
+    "CCC"
+  ],
+  "result": {
+    "count": 8,
+    "item": "industrialupgrade:crafting_elements/crafting_122_element"
+  },
+  "show_notification": true
+}

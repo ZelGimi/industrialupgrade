@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "industrialupgrade:items/pollution_device",
-		"particle": "industrialupgrade:items/pollution_device"
+		"1": "industrialupgrade:item/pollution_device",
+		"particle": "industrialupgrade:item/pollution_device"
 	},
 	"elements": [
 		{

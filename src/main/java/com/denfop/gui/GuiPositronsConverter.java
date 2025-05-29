@@ -5,9 +5,9 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerPositronsConverter;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiPositronsConverter extends GuiIU<ContainerPositronsConverter> {
+public class GuiPositronsConverter<T extends ContainerPositronsConverter> extends GuiIU<ContainerPositronsConverter> {
 
     public GuiPositronsConverter(ContainerPositronsConverter guiContainer) {
         super(guiContainer);
@@ -30,19 +30,5 @@ public class GuiPositronsConverter extends GuiIU<ContainerPositronsConverter> {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
 
 }

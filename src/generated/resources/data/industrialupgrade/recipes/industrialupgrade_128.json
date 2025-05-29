@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:doubleplate/alumel"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    },
+    "D": [
+      {
+        "tag": "forge:doubleplate/vitalium"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:plastic_plate"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "EDE"
+  ],
+  "result": {
+    "item": "industrialupgrade:modules/storage"
+  },
+  "show_notification": true
+}

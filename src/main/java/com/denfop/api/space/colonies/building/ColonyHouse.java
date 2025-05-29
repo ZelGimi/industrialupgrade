@@ -10,7 +10,7 @@ import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class ColonyHouse extends Building implements IBuildingHouse {
 
@@ -29,12 +29,11 @@ public class ColonyHouse extends Building implements IBuildingHouse {
         this.timeToIncrease = 20;
         this.freeWorkers = peoples;
         this.workers = 0;
-        if (!simulate) {
+        if (!simulate)
             this.getColony().addBuilding(this);
-        }
     }
 
-    public ColonyHouse(final NBTTagCompound tag, IColony colonie) {
+    public ColonyHouse(final CompoundTag tag, IColony colonie) {
         super(colonie);
         int id = tag.getByte("id");
         this.houses = EnumHouses.getID(id);
@@ -89,9 +88,8 @@ public class ColonyHouse extends Building implements IBuildingHouse {
         if (peoples > 0) {
             int prev = this.peoples;
             this.peoples += (byte) peoples;
-            if (this.peoples > this.getMaxPeople()) {
+            if (this.peoples > this.getMaxPeople())
                 this.peoples = (byte) this.getMaxPeople();
-            }
             prev = this.peoples - prev;
             this.freeWorkers += (byte) (prev);
             this.getColony().addFreeWorkers(prev);
@@ -140,14 +138,14 @@ public class ColonyHouse extends Building implements IBuildingHouse {
     }
 
     @Override
-    public NBTTagCompound writeTag(final NBTTagCompound tag) {
+    public CompoundTag writeTag(final CompoundTag tag) {
         super.writeTag(tag);
-        tag.setByte("id", (byte) this.houses.ordinal());
-        tag.setByte("people", (byte) (this.peoples));
-        tag.setByte("workers", (byte) (this.workers));
-        tag.setByte("freeWorkers", (byte) (this.freeWorkers));
-        tag.setByte("timeToDecrease", (byte) (this.timeToDecrease));
-        tag.setByte("timeToDecrease", (byte) (this.timeToIncrease));
+        tag.putByte("id", (byte) this.houses.ordinal());
+        tag.putByte("people", (byte) (this.peoples));
+        tag.putByte("workers", (byte) (this.workers));
+        tag.putByte("freeWorkers", (byte) (this.freeWorkers));
+        tag.putByte("timeToDecrease", (byte) (this.timeToDecrease));
+        tag.putByte("timeToDecrease", (byte) (this.timeToIncrease));
         return tag;
     }
 
@@ -189,9 +187,7 @@ public class ColonyHouse extends Building implements IBuildingHouse {
         }
         if (!problem) {
             this.timeToDecrease = 3;
-            if (this.getPeople() < this.getMaxPeople() && this.getColony().canUseFood(this.houses) && this
-                    .getColony()
-                    .canUseOxygen(this.houses)) {
+            if (this.getPeople() < this.getMaxPeople() && this.getColony().canUseFood(this.houses) && this.getColony().canUseOxygen(this.houses)) {
                 if (timeToIncrease == 0) {
                     this.addPeople(1);
                     this.timeToIncrease = 20;

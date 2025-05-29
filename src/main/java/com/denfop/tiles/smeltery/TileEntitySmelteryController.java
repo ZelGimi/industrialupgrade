@@ -2,6 +2,7 @@ package com.denfop.tiles.smeltery;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -11,31 +12,32 @@ import com.denfop.blocks.mechanism.BlockSmeltery;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSmelteryController;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSmelteryController;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+;
 
 public class TileEntitySmelteryController extends TileMultiBlockBase implements IController, IHasRecipe, IUpdatableTileEvent {
 
@@ -52,9 +54,10 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
     public List<IFuelTank> listFuelTank = new ArrayList<>();
     public ICasting casting;
     public List<IFurnace> furnaces = new ArrayList<>();
+    private Integer prevIndex;
 
-    public TileEntitySmelteryController() {
-        super(InitMultiBlockSystem.SmelterMultiBlock);
+    public TileEntitySmelteryController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.SmelterMultiBlock,BlockSmeltery.smeltery_controller,pos,state);
         this.fluidManager = new FluidHandlerRecipe[3];
         for (int i = 0; i < 3; i++) {
             this.fluidManager[i] = new FluidHandlerRecipe("smeltery");
@@ -69,7 +72,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (var2 >= 0 && var2 <= 18) {
             if (list.contains((int) var2)) {
                 list.removeIf(i -> i == (int) var2);
@@ -79,7 +82,8 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
             if (!casting.getInputSlotB().isEmpty()) {
                 casting.getFluid_handler().setOutput(null);
                 casting.getFluid_handler().setName("empty");
-                int damage = casting.getInputSlotB().get().getItemDamage();
+
+                int damage =   ((ItemCraftingElements<?>) casting.getInputSlotB().get(0).getItem()).getElement().getId();
                 if (damage == 496) {
                     casting.getFluid_handler().setName("ingot_casting");
                     if (this.getMain() != null) {
@@ -117,8 +121,8 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         FluidStack fluid1 = tank1.getFluid();
                         FluidStack fluid2 = tank2.getFluid();
 
-                        boolean hasFluid1 = fluid1 != null && fluid1.amount > 0;
-                        boolean hasFluid2 = fluid2 != null && fluid2.amount > 0;
+                        boolean hasFluid1 = !fluid1.isEmpty() && fluid1.getAmount() > 0;
+                        boolean hasFluid2 = !fluid2.isEmpty() && fluid2.getAmount() > 0;
                         if (hasFluid1 && !hasFluid2) {
                             return -1;
                         } else if (!hasFluid1 && hasFluid2) {
@@ -169,8 +173,8 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         FluidStack fluid1 = tank1.getFluid();
                         FluidStack fluid2 = tank2.getFluid();
 
-                        boolean hasFluid1 = fluid1 != null && fluid1.amount > 0;
-                        boolean hasFluid2 = fluid2 != null && fluid2.amount > 0;
+                        boolean hasFluid1 = !fluid1.isEmpty()    && fluid1.getAmount() > 0;
+                        boolean hasFluid2 = !fluid2.isEmpty() && fluid2.getAmount() > 0;
                         if (hasFluid1 && !hasFluid2) {
                             return -1;
                         } else if (!hasFluid1 && hasFluid2) {
@@ -184,14 +188,14 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
 
             cycle:
             for (Map.Entry<FluidStack, List<FluidStack>> mapRecipes : mapRecipes1.entrySet()) {
-                if (fluidTanks1.get(list.get(0)).getFluid() != null) {
+                if (!fluidTanks1.get(list.get(0)).getFluid().isEmpty()) {
                     if (mapRecipes.getKey().getFluid() == fluidTanks1.get(list.get(0)).getFluid().getFluid()) {
                         for (FluidStack fluidStack : mapRecipes.getValue()) {
                             if (!this.fluidManager[0].canFillFluid(fluidStack)) {
                                 continue cycle;
                             }
                         }
-                        if (fluidTanks1.get(list.get(0)).getFluidAmount() < mapRecipes.getKey().amount) {
+                        if (fluidTanks1.get(list.get(0)).getFluidAmount() < mapRecipes.getKey().getAmount()) {
                             continue cycle;
                         }
                         for (FluidStack fluidStack : mapRecipes.getValue()) {
@@ -213,8 +217,8 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         FluidStack fluid1 = tank1.getFluid();
                         FluidStack fluid2 = tank2.getFluid();
 
-                        boolean hasFluid1 = fluid1 != null && fluid1.amount > 0;
-                        boolean hasFluid2 = fluid2 != null && fluid2.amount > 0;
+                        boolean hasFluid1 = !fluid1.isEmpty() && fluid1.getAmount() > 0;
+                        boolean hasFluid2 = !fluid2.isEmpty() && fluid2.getAmount() > 0;
                         if (hasFluid1 && !hasFluid2) {
                             return -1;
                         } else if (!hasFluid1 && hasFluid2) {
@@ -254,7 +258,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                                 ));
                                 this.fluidManager[0].fillFluid(mapRecipes.getValue());
                                 for (Map.Entry<Integer, FluidStack> entry : fluidStackMap.entrySet()) {
-                                    if (fluidTanks1.get(entry.getKey()).getFluidAmount() < entry.getValue().amount) {
+                                    if (fluidTanks1.get(entry.getKey()).getFluidAmount() < entry.getValue().getAmount()) {
                                         break cycle2;
                                     }
                                 }
@@ -269,7 +273,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         work = nbttagcompound.getBoolean("work");
 
@@ -330,7 +334,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                 throw new RuntimeException(e);
             }
             if (fluidTank2 != null) {
-                tank.getTank().readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                tank.getTank().readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
         }
 
@@ -346,28 +350,28 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
     }
 
     @Override
-    public ContainerSmelteryController getGuiContainer(final EntityPlayer var1) {
+    public ContainerSmelteryController getGuiContainer(final Player var1) {
         return new ContainerSmelteryController(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSmelteryController(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSmelteryController((ContainerSmelteryController) menu);
     }
 
-    private Integer prevIndex;
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.isFull()) {
             boolean work = false;
-            if (this.getWorld().getWorldTime() % 20 == 0) {
+            if (this.getWorld().getGameTime() % 20 == 0) {
                 for (int i = 0; i < listTank.size(); i++) {
                     FluidTank tank1 = listTank.get(i).getTank();
                     FluidStack fluid1 = tank1.getFluid();
 
-                    if (fluid1 != null) {
+                    if (!fluid1.isEmpty()) {
                         for (int j = 0; j < listTank.size(); j++) {
                             if (i == j) {
                                 continue;
@@ -376,17 +380,14 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                             FluidTank tank2 = listTank.get(j).getTank();
                             FluidStack fluid2 = tank2.getFluid();
 
-                            if (fluid2 != null && fluid1.isFluidEqual(fluid2)) {
-                                int amountNeeded = tank1.getCapacity() - fluid1.amount;
+                            if (!fluid2.isEmpty() && fluid1.isFluidEqual(fluid2)) {
+                                int amountNeeded = tank1.getCapacity() - fluid1.getAmount();
                                 if (amountNeeded > 0) {
-                                    int transferAmount = Math.min(amountNeeded, fluid2.amount);
-                                    fluid1.amount += transferAmount;
-                                    fluid2.amount -= transferAmount;
+                                    int transferAmount = Math.min(amountNeeded, fluid2.getAmount());
+                                    fluid1.grow(transferAmount);
+                                    fluid2.shrink(transferAmount);
                                     tank1.setFluid(fluid1);
                                     tank2.setFluid(fluid2);
-                                    if (fluid2.amount == 0) {
-                                        tank2.setFluid(null);
-                                    }
                                 }
                             }
                         }
@@ -396,7 +397,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
             }
             int i = 0;
             if (this.casting != null && !casting.getInputSlotB().isEmpty()) {
-                if (this.getWorld().getWorldTime() % 20 == 0) {
+                if (this.getWorld().getGameTime() % 20 == 0) {
                     if (this.list.isEmpty()) {
                         this.firstTank = null;
                         this.prevIndex = -1;
@@ -406,8 +407,8 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                                     FluidStack fluid1 = tank1.getFluid();
                                     FluidStack fluid2 = tank2.getFluid();
 
-                                    boolean hasFluid1 = fluid1 != null && fluid1.amount > 0;
-                                    boolean hasFluid2 = fluid2 != null && fluid2.amount > 0;
+                                    boolean hasFluid1 = !fluid1.isEmpty() && fluid1.getAmount() > 0;
+                                    boolean hasFluid2 = !fluid2.isEmpty() && fluid2.getAmount() > 0;
 
 
                                     if (hasFluid1 && !hasFluid2) {
@@ -419,7 +420,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
 
                                     return 0;
                                 })
-                                .collect(Collectors.toList()).get(this.list.get(0));
+                                .toList().get(this.list.get(0));
                         this.prevIndex = this.list.get(0);
                     }
                 }
@@ -427,7 +428,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
 
                 if ((casting.getFluid_handler().output() == null && this.getFirstTank() != null && this
                         .getFirstTank()
-                        .getFluidAmount() >= 1 && ( this.prevIndex == this.list.get(0)))) {
+                        .getFluidAmount() >= 1) && ( this.prevIndex == this.list.get(0))) {
                     casting.getFluid_handler().getOutput(this.getFirstTank());
                 } else {
                     if (casting.getFluid_handler().output() != null && !casting.getFluid_handler().checkFluids()) {
@@ -446,7 +447,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                     fuel = 1;
                     for (IFuelTank fuelTank : this.listFuelTank) {
                         int fuel1 = Math.min(fuelTank.getFuelTank().getFluidAmount(), fuel);
-                        fuelTank.getFuelTank().drain(fuel1, true);
+                        fuelTank.getFuelTank().drain(fuel1, IFluidHandler.FluidAction.EXECUTE);
                         fuel -= fuel1;
                         if (fuel == 0) {
                             break;
@@ -471,7 +472,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
             for (IFurnace furnace : furnaces) {
                 if (furnace != null && !this.listFuelTank.isEmpty()) {
                     if ((this.fluidManager[i].output() == null && furnace.getRecipeOutput() != null)) {
-                        this.fluidManager[i].getOutput(furnace.getInvSlot().get());
+                        this.fluidManager[i].getOutput(furnace.getInvSlot().get(0));
                     } else {
                         if (this.fluidManager[i].output() != null && furnace.getRecipeOutput() == null) {
                             this.fluidManager[i].setOutput(null);
@@ -502,7 +503,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         if (fuel1 > 0) {
                             for (IFuelTank fuelTank : this.listFuelTank) {
                                 if (fuelTank.getSpeed() > 1) {
-                                    fuelTank.getFuelTank().drain(1, true);
+                                    fuelTank.getFuelTank().drain(1, IFluidHandler.FluidAction.EXECUTE);
                                     drain = true;
                                     break;
                                 }
@@ -511,7 +512,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         if (!drain) {
                             for (IFuelTank fuelTank : this.listFuelTank) {
                                 if (fuelTank.getSpeed() == 1 && fuelTank.getFuelTank().getFluidAmount() > 0) {
-                                    fuelTank.getFuelTank().drain(1, true);
+                                    fuelTank.getFuelTank().drain(1, IFluidHandler.FluidAction.EXECUTE);
                                     break;
                                 }
                             }
@@ -547,8 +548,8 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        nbttagcompound.setBoolean("work", work);
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
+        nbttagcompound.putBoolean("work", work);
         return super.writeToNBT(nbttagcompound);
     }
 
@@ -579,7 +580,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         ITank.class
                 );
         for (BlockPos pos2 : pos1) {
-            this.listTank.add((ITank) this.getWorld().getTileEntity(pos2));
+            this.listTank.add((ITank) this.getWorld().getBlockEntity(pos2));
         }
         pos1 = this
                 .getMultiBlockStucture()
@@ -587,21 +588,21 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
                         IFurnace.class
                 );
         for (BlockPos pos2 : pos1) {
-            this.furnaces.add((IFurnace) this.getWorld().getTileEntity(pos2));
+            this.furnaces.add((IFurnace) this.getWorld().getBlockEntity(pos2));
         }
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         ICasting.class
                 );
-        this.casting = (ICasting) this.getWorld().getTileEntity(pos1.get(0));
+        this.casting = (ICasting) this.getWorld().getBlockEntity(pos1.get(0));
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
                         IFuelTank.class
                 );
         for (BlockPos pos2 : pos1) {
-            this.listFuelTank.add((IFuelTank) this.getWorld().getTileEntity(pos2));
+            this.listFuelTank.add((IFuelTank) this.getWorld().getBlockEntity(pos2));
         }
         List<Fluids.InternalFluidTank> fluidTanks = new ArrayList<>();
         for (ITank tank : listTank) {
@@ -615,7 +616,7 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
         if (!casting.getInputSlotB().isEmpty()) {
             casting.getFluid_handler().setName("empty");
             casting.getFluid_handler().setOutput(null);
-            int damage = casting.getInputSlotB().get().getItemDamage();
+            int damage =  ((ItemCraftingElements<?>) casting.getInputSlotB().get(0).getItem()).getElement().getId();
             if (damage == 496) {
                 casting.getFluid_handler().setName("ingot_casting");
                 if (this.getMain() != null) {
@@ -642,9 +643,9 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote && this.isFull()) {
+        if (!this.getWorld().isClientSide && this.isFull()) {
             for (int i = 0; i < 3; i++) {
-                this.fluidManager[i].load(furnaces.get(i).getInvSlot().get());
+                this.fluidManager[i].load(furnaces.get(i).getInvSlot().get(0));
             }
         }
     }
@@ -661,166 +662,166 @@ public class TileEntitySmelteryController extends TileMultiBlockBase implements 
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.smeltery;
+        return IUItem.smeltery.getBlock(getTeBlock());
     }
 
 
     @Override
     public void init() {
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidiron.getInstance(), 144 * 3),
-                new FluidStack(FluidName.fluidcarbon.getInstance(), 144 * 2)
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 144 * 3),
+                new FluidStack(FluidName.fluidcarbon.getInstance().get(), 144 * 2)
         ), new FluidStack(
-                FluidName.fluidsteel.getInstance(),
+                FluidName.fluidsteel.getInstance().get(),
                 144
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidquartz.getInstance(), 144 * 2),
-                new FluidStack(FluidName.fluidiron.getInstance(), 144 * 1),
-                new FluidStack(FluidName.fluidmagnesium.getInstance(), 144 * 1)
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144 * 2),
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 144 * 1),
+                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 144 * 1)
         ), new FluidStack(
-                FluidName.fluidobsidian.getInstance(),
+                FluidName.fluidobsidian.getInstance().get(),
                 144
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidtitanium.getInstance(), 144 * 2),
-                new FluidStack(FluidName.fluidsteel.getInstance(), 144 * 2)
+                new FluidStack(FluidName.fluidtitanium.getInstance().get(), 144 * 2),
+                new FluidStack(FluidName.fluidsteel.getInstance().get(), 144 * 2)
         ), new FluidStack(
-                FluidName.fluidtitaniumsteel.getInstance(),
+                FluidName.fluidtitaniumsteel.getInstance().get(),
                 144
         ));
 
         mapRecipes1.put(
                 new FluidStack(
-                        FluidName.fluidelectrum.getInstance(),
+                        FluidName.fluidelectrum.getInstance().get(),
                         144
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidgold.getInstance(), 72),
-                        new FluidStack(FluidName.fluidsilver.getInstance(), 72)
+                        new FluidStack(FluidName.fluidgold.getInstance().get(), 72),
+                        new FluidStack(FluidName.fluidsilver.getInstance().get(), 72)
                 )
         );
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidgold.getInstance(), 144 * 1),
-                new FluidStack(FluidName.fluidsilver.getInstance(), 144 * 2)
+                new FluidStack(FluidName.fluidgold.getInstance().get(), 144 * 1),
+                new FluidStack(FluidName.fluidsilver.getInstance().get(), 144 * 2)
         ), new FluidStack(
-                FluidName.fluidelectrum.getInstance(),
+                FluidName.fluidelectrum.getInstance().get(),
                 144
         ));
         mapRecipes1.put(
                 new FluidStack(
-                        FluidName.fluidinvar.getInstance(),
+                        FluidName.fluidinvar.getInstance().get(),
                         144
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidiron.getInstance(), 144 / 3),
-                        new FluidStack(FluidName.fluidnickel.getInstance(), 72)
+                        new FluidStack(FluidName.fluidiron.getInstance().get(), 144 / 3),
+                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 72)
                 )
         );
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidiron.getInstance(), 144 * 1),
-                new FluidStack(FluidName.fluidnickel.getInstance(), 144 * 1)
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 144 * 1),
+                new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
         ), new FluidStack(
-                FluidName.fluidinvar.getInstance(),
+                FluidName.fluidinvar.getInstance().get(),
                 144
         ));
         mapRecipes1.put(new FluidStack(
-                FluidName.fluidbronze.getInstance(),
+                FluidName.fluidbronze.getInstance().get(),
                 144
         ), Arrays.asList(
-                new FluidStack(FluidName.fluidcopper.getInstance(), 3 * 144 / 4),
-                new FluidStack(FluidName.fluidtin.getInstance(), 144 / 4)
+                new FluidStack(FluidName.fluidcopper.getInstance().get(), 3 * 144 / 4),
+                new FluidStack(FluidName.fluidtin.getInstance().get(), 144 / 4)
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidcopper.getInstance(), 144 * 4),
-                new FluidStack(FluidName.fluidtin.getInstance(), 144 * 1)
+                new FluidStack(FluidName.fluidcopper.getInstance().get(), 144 * 4),
+                new FluidStack(FluidName.fluidtin.getInstance().get(), 144 * 1)
         ), new FluidStack(
-                FluidName.fluidbronze.getInstance(),
+                FluidName.fluidbronze.getInstance().get(),
                 144
         ));
         mapRecipes1.put(
                 new FluidStack(
-                        FluidName.fluidwolframite.getInstance(),
+                        FluidName.fluidwolframite.getInstance().get(),
                         144
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidtungsten.getInstance(), 144 * 1),
-                        new FluidStack(FluidName.fluidnickel.getInstance(), 144 * 1)
+                        new FluidStack(FluidName.fluidtungsten.getInstance().get(), 144 * 1),
+                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
                 )
         );
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidtungsten.getInstance(), 144 * 1),
-                new FluidStack(FluidName.fluidnickel.getInstance(), 144 * 1)
+                new FluidStack(FluidName.fluidtungsten.getInstance().get(), 144 * 1),
+                new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
         ), new FluidStack(
-                FluidName.fluidwolframite.getInstance(),
+                FluidName.fluidwolframite.getInstance().get(),
                 144
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidmagnesium.getInstance(), 144 * 2),
-                new FluidStack(FluidName.fluidaluminium.getInstance(), 144 * 2)
+                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 144 * 2),
+                new FluidStack(FluidName.fluidaluminium.getInstance().get(), 144 * 2)
         ), new FluidStack(
-                FluidName.fluidduralumin.getInstance(),
+                FluidName.fluidduralumin.getInstance().get(),
                 144
         ));
         mapRecipes1.put(
                 new FluidStack(
-                        FluidName.fluidnichrome.getInstance(),
+                        FluidName.fluidnichrome.getInstance().get(),
                         144
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidchromium.getInstance(), 144 * 1),
-                        new FluidStack(FluidName.fluidnickel.getInstance(), 144 * 1)
+                        new FluidStack(FluidName.fluidchromium.getInstance().get(), 144 * 1),
+                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
                 )
         );
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidchromium.getInstance(), 144 * 2),
-                new FluidStack(FluidName.fluidnickel.getInstance(), 144 * 1)
+                new FluidStack(FluidName.fluidchromium.getInstance().get(), 144 * 2),
+                new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
         ), new FluidStack(
-                FluidName.fluidnichrome.getInstance(),
+                FluidName.fluidnichrome.getInstance().get(),
                 144
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidwolframite.getInstance(), 144 * 1),
-                new FluidStack(FluidName.fluidquartz.getInstance(), 144 * 1)
+                new FluidStack(FluidName.fluidwolframite.getInstance().get(), 144 * 1),
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144 * 1)
         ), new FluidStack(
-                FluidName.fluidtemperedglass.getInstance(),
+                FluidName.fluidtemperedglass.getInstance().get(),
                 144
         ));
 
         mapRecipes1.put(
                 new FluidStack(
-                        FluidName.fluidarsenicum_gallium.getInstance(),
+                        FluidName.fluidarsenicum_gallium.getInstance().get(),
                         144
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidarsenicum.getInstance(), 144 * 2),
-                        new FluidStack(FluidName.fluidgallium.getInstance(), 144 * 1)
+                        new FluidStack(FluidName.fluidarsenicum.getInstance().get(), 144 * 2),
+                        new FluidStack(FluidName.fluidgallium.getInstance().get(), 144 * 1)
                 )
         );
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidarsenicum.getInstance(), 144 * 3),
-                new FluidStack(FluidName.fluidgallium.getInstance(), 144 * 2)
+                new FluidStack(FluidName.fluidarsenicum.getInstance().get(), 144 * 3),
+                new FluidStack(FluidName.fluidgallium.getInstance().get(), 144 * 2)
         ), new FluidStack(
-                FluidName.fluidarsenicum_gallium.getInstance(),
+                FluidName.fluidarsenicum_gallium.getInstance().get(),
                 144
         ));
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidaluminium.getInstance(), 144 * 2),
-                new FluidStack(FluidName.fluidbronze.getInstance(), 144 * 1)
+                new FluidStack(FluidName.fluidaluminium.getInstance().get(), 144 * 2),
+                new FluidStack(FluidName.fluidbronze.getInstance().get(), 144 * 1)
         ), new FluidStack(
-                FluidName.fluidaluminiumbronze.getInstance(),
+                FluidName.fluidaluminiumbronze.getInstance().get(),
                 144
         ));
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidiron.getInstance(), 144 * 2),
-                new FluidStack(FluidName.fluidmanganese.getInstance(), 144 * 2)
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 144 * 2),
+                new FluidStack(FluidName.fluidmanganese.getInstance().get(), 144 * 2)
         ), new FluidStack(
-                FluidName.fluidferromanganese.getInstance(),
+                FluidName.fluidferromanganese.getInstance().get(),
                 144
         ));
     }

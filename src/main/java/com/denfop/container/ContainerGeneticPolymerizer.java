@@ -1,16 +1,16 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityGeneticPolymerizer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGeneticPolymerizer extends ContainerFullInv<TileEntityGeneticPolymerizer> {
 
-    public ContainerGeneticPolymerizer(EntityPlayer entityPlayer, TileEntityGeneticPolymerizer tileEntity1) {
+    public ContainerGeneticPolymerizer(Player entityPlayer, TileEntityGeneticPolymerizer tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 56, 53, 56, 17, 116, 35, 152, 8);
     }
 
     public ContainerGeneticPolymerizer(
-            EntityPlayer entityPlayer, TileEntityGeneticPolymerizer tileEntity1, int height, int dischargeX,
+            Player entityPlayer, TileEntityGeneticPolymerizer tileEntity1, int height, int dischargeX,
             int dischargeY, int inputX, int inputY, int outputX, int outputY, int upgradeX, int upgradeY
     ) {
         super(entityPlayer, tileEntity1, height);

@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/lead"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/tungsten"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_479_element"
+      }
+    ]
+  },
+  "pattern": [
+    "AB ",
+    "BA ",
+    "CC "
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialupgrade:crafting_elements/crafting_363_element"
+  },
+  "show_notification": true
+}

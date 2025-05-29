@@ -1,43 +1,48 @@
 package com.denfop.tiles.mechanism.steamturbine.tank;
 
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamTurbineTank;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamTurbineTank;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
-import com.denfop.render.tank.DataFluid;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.steamturbine.ITank;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 
 public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement implements ITank {
 
-    private final int level;
+    private final int blockLevel;
     private final Fluids fluids;
     private final Fluids.InternalFluidTank tank;
-    @SideOnly(Side.CLIENT)
-    public DataFluid dataFluid;
+
     private int amount;
 
-    public TileEntityBaseSteamTurbineTank(int level) {
-        this.level = level;
+    public TileEntityBaseSteamTurbineTank(int blockLevel, IMultiTileBlock tileBlock, BlockPos pos, BlockState state) {
+        super(tileBlock,pos,state);
+        this.blockLevel = blockLevel;
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = this.fluids.addTankInsert("tank", 10000 * (level + 1));
+        this.tank = this.fluids.addTankInsert("tank", 10000 * (blockLevel + 1));
     }
 
     public void updateEntityServer() {
@@ -55,19 +60,7 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
         return this.getMain() != null;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     public void updateField(String name, CustomPacketBuffer is) {
 
@@ -82,34 +75,27 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && this.getMain() != null) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null && this.getMain() != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 
+
+
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSteamTurbineTank(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSteamTurbineTank((ContainerSteamTurbineTank) menu);
     }
 
     @Override
-    public ContainerSteamTurbineTank getGuiContainer(final EntityPlayer var1) {
+    public ContainerSteamTurbineTank getGuiContainer(final Player var1) {
         return new ContainerSteamTurbineTank(this, var1);
     }
 
@@ -125,26 +111,26 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
 
     @Override
     public void setWaterTank() {
-        this.tank.setAcceptedFluids(Fluids.fluidPredicate(FluidRegistry.WATER));
+        this.tank.setAcceptedFluids(Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER));
         this.tank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
     }
 
     @Override
     public void setSteamTank() {
 
-        this.tank.setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidsteam.getInstance()));
+        this.tank.setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidsteam.getInstance().get()));
         this.tank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
     }
 
     @Override
     public void clear(final boolean steam) {
         if (steam) {
-            if (this.tank.getFluid() != null && this.tank.getFluid().getFluid() == FluidRegistry.WATER) {
-                this.tank.drain(this.tank.getFluidAmount(), true);
+            if (!this.tank.getFluid().isEmpty() && this.tank.getFluid().getFluid() == net.minecraft.world.level.material.Fluids.WATER) {
+                this.tank.drain(this.tank.getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
             }
         } else {
-            if (this.tank.getFluid() != null && this.tank.getFluid().getFluid() == FluidName.fluidsteam.getInstance()) {
-                this.tank.drain(this.tank.getFluidAmount(), true);
+            if (!this.tank.getFluid().isEmpty() && this.tank.getFluid().getFluid() == FluidName.fluidsteam.getInstance().get()) {
+                this.tank.drain(this.tank.getFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
             }
         }
     }

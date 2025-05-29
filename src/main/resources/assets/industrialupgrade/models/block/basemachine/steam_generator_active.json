@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/steam_generator_main_active",
-    "down" : "industrialupgrade:blocks/steam_generator_side1",
-    "up" : "industrialupgrade:blocks/steam_generator_side1",
-    "north" : "industrialupgrade:blocks/steam_generator_main_active",
-    "east" : "industrialupgrade:blocks/steam_generator_side_active",
-    "south" : "industrialupgrade:blocks/steam_generator_side1",
-    "west" : "industrialupgrade:blocks/steam_generator_side_active"
+    "particle" : "industrialupgrade:block/steam_generator_main_active",
+    "down" : "industrialupgrade:block/steam_generator_side1",
+    "up" : "industrialupgrade:block/steam_generator_side1",
+    "north" : "industrialupgrade:block/steam_generator_main_active",
+    "east" : "industrialupgrade:block/steam_generator_side_active",
+    "south" : "industrialupgrade:block/steam_generator_side1",
+    "west" : "industrialupgrade:block/steam_generator_side_active"
   }
 }

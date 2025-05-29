@@ -5,9 +5,10 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerHeatSocket;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiHeatSocket extends GuiIU<ContainerHeatSocket> {
+public class GuiHeatSocket<T extends ContainerHeatSocket> extends GuiIU<ContainerHeatSocket> {
 
     public GuiHeatSocket(ContainerHeatSocket guiContainer) {
         super(guiContainer);
@@ -15,24 +16,16 @@ public class GuiHeatSocket extends GuiIU<ContainerHeatSocket> {
         this.addComponent(new GuiComponent(this, 72, 40, EnumTypeComponent.ENERGY_WEIGHT,
                 new Component<>(this.container.base.getEnergy())
         ));
-        this.xSize = 186;
-        this.ySize = 211;
+        this.imageWidth = 186;
+        this.imageHeight = 211;
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-    }
+
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

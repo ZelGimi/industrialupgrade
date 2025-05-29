@@ -1,66 +1,72 @@
 package com.denfop.render.panel;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
-import java.util.Random;
+import java.util.Set;
 
-@SideOnly(Side.CLIENT)
-public class PollutionModel extends ModelBase {
+@OnlyIn(Dist.CLIENT)
+public class PollutionModel<T extends Entity> extends EntityModel<T> {
 
-    private final ModelRenderer pollution;
-    List<ModelCord> list = new ArrayList<>();
+    private final ModelPart pollution;
 
-    public PollutionModel(Random random, int index) {
-        this.textureWidth = 0;
-        this.textureHeight = 0;
-        this.pollution = new ModelRenderer(this, 0, 0);
+    public PollutionModel(RandomSource random, int index) {
+        super(RenderType::entityCutoutNoCull);
+        var mesh = new MeshDefinition();
+        var root = mesh.getRoot();
 
-        int maxIterations;
-        if (index == 0) {
-            maxIterations = 0;
-        } else if (index == 1) {
-            maxIterations = 64;
-        } else if (index == 2) {
-            maxIterations = 128;
-        } else {
-            maxIterations = 192;
-        }
+        Set<ModelCord> set = new HashSet<>();
 
-        if (maxIterations > 0) {
-            int i = 0;
-            while (i < maxIterations) {
-                int x = random.nextInt(16);
-                int z = random.nextInt(16);
-                final ModelCord modelCord = new ModelCord(x, z);
-                if (!list.contains(modelCord)) {
-                    list.add(modelCord);
-                    i++;
-                    this.pollution.setTextureSize(x, z);
-                    pollution.addBox(x, 16.1F, z, 1, 0, 1);
-                }
+        int maxIterations = switch (index) {
+            case 1 -> 64;
+            case 2 -> 128;
+            case 3 -> 192;
+            default -> 0;
+        };
+
+        for (int i = 0; i < maxIterations; ) {
+            int x = random.nextInt(16);
+            int z = random.nextInt(16);
+            ModelCord cord = new ModelCord(x, z);
+
+            if (set.add(cord)) {
+                // y = 16.1 заменено на y = 0.1F здесь для примера
+                root.addOrReplaceChild("box" + i,
+                        CubeListBuilder.create().texOffs(0, 0).addBox(x, 16.1F, z, 1, 0, 1),
+                        PartPose.ZERO);
+                i++;
             }
         }
-        list.clear();
 
+        this.pollution = LayerDefinition.create(mesh, 0, 0).bakeRoot();
+    }
+
+    @Override
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float scale) {
-        this.pollution.render(0.0625F);
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight,
+                               int packedOverlay, float red, float green, float blue, float alpha) {
+        pollution.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
 }
-
-@SideOnly(Side.CLIENT)
 class ModelCord {
-
     private final int x;
     private final int z;
 
@@ -69,29 +75,15 @@ class ModelCord {
         this.z = z;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ModelCord modelCord = (ModelCord) o;
-        return x == modelCord.x && z == modelCord.z;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ModelCord that)) return false;
+        return x == that.x && z == that.z;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(x, z);
     }
-
 }

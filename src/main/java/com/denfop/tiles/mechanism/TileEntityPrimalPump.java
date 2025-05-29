@@ -7,30 +7,29 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockPrimalPump;
 import com.denfop.componets.ComponentProgress;
-import com.denfop.container.ContainerPump;
-import com.denfop.gui.GuiPump;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,29 +40,12 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
     public ComponentProgress componentProgress;
     private int prevAmount;
 
-    public TileEntityPrimalPump() {
-        super(0, 1, 4);
+    public TileEntityPrimalPump(BlockPos pos, BlockState state) {
+        super(0, 1, 4, BlockPrimalPump.primal_pump, pos, state);
         componentProgress = this.addComponent(new ComponentProgress(this, 1, (short) 25));
         this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -72,7 +54,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.primal_pump;
+        return IUItem.primal_pump.getBlock();
     }
 
     @Override
@@ -88,7 +70,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -102,7 +84,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -112,15 +94,8 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
     }
 
     @Override
-    public boolean onSneakingActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && this.fluidTank.getFluidAmount() + 1000 <= this.fluidTank.getCapacity()) {
+    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && this.fluidTank.getFluidAmount() + 1000 <= this.fluidTank.getCapacity()) {
             if (componentProgress.getProgress() < componentProgress.getMaxValue()) {
                 componentProgress.addProgress(0, (short) 4);
             } else {
@@ -132,30 +107,22 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
         } else {
             this.setActive(false);
         }
-        return super.onSneakingActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onSneakingActivated(player, hand, side, vec3);
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
 
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
+
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
@@ -211,8 +178,11 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
                     liquid = this.pump(new BlockPos(i, k,
                             j
                     ), false);
-                    if (this.getFluidTank().fill(liquid, false) > 0) {
-                        this.getFluidTank().fill(liquid, true);
+                    if (liquid == null || liquid.isEmpty())
+                        continue;
+
+                    if (this.getFluidTank().fill(liquid, IFluidHandler.FluidAction.SIMULATE) > 0) {
+                        this.getFluidTank().fill(liquid, IFluidHandler.FluidAction.EXECUTE);
                         canOperate = true;
                     }
                 }
@@ -229,36 +199,36 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
         int freespace = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
 
         if (freespace >= 1000) {
-            IBlockState block = this.getWorld().getBlockState(pos);
-            if (block.getMaterial().isLiquid()) {
+            BlockState block = this.getWorld().getBlockState(pos);
+            if (block.liquid()) {
 
 
                 if (block.getBlock() instanceof IFluidBlock) {
                     IFluidBlock liquid = (IFluidBlock) block.getBlock();
-                    if ((this.fluidTank.getFluid() == null || this.fluidTank
+                    if ((this.fluidTank.getFluid().isEmpty() || this.fluidTank
                             .getFluid()
                             .getFluid() == liquid.getFluid()) && liquid.canDrain(
                             this.getWorld(),
                             pos
                     )) {
                         if (!sim) {
-                            ret = liquid.drain(this.getWorld(), pos, true);
-                            this.getWorld().setBlockToAir(pos);
+                            ret = liquid.drain(this.getWorld(), pos, IFluidHandler.FluidAction.EXECUTE);
+                            this.getWorld().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                         } else {
                             ret = new FluidStack(liquid.getFluid(), 1000);
                         }
                     }
                 } else {
-                    if (block.getBlock().getMetaFromState(block) != 0) {
-                        return null;
+                    if (!block.getBlock().getFluidState(block).isSource()) {
+                        return FluidStack.EMPTY;
                     }
 
-                    ret = new FluidStack(FluidRegistry.getFluid(block.getBlock().getUnlocalizedName().substring(5)), 1000);
-                    if (this.fluidTank.getFluid() == null || this.fluidTank
+                    ret = new FluidStack(block.getBlock().getFluidState(block).getType(), 1000);
+                    if (this.fluidTank.getFluid().isEmpty() || this.fluidTank
                             .getFluid()
                             .getFluid() == ret.getFluid()) {
                         if (!sim) {
-                            this.getWorld().setBlockToAir(pos);
+                            this.getWorld().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                         }
                     }
                 }
@@ -290,22 +260,13 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         return nbttagcompound;
-    }
-
-    public ContainerPump getGuiContainer(EntityPlayer entityPlayer) {
-        return null;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public GuiPump getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return null;
     }
 
 

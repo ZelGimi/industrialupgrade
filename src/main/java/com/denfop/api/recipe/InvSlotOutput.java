@@ -3,7 +3,8 @@ package com.denfop.api.recipe;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.invslot.InvSlot;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -40,6 +41,47 @@ public class InvSlotOutput extends InvSlot {
         return can;
     }
 
+    public void add(ItemStack stack, int size) {
+        int count = size * stack.getCount();
+        for (int i = 0; i < this.size(); i++) {
+            ItemStack slot = this.get(i);
+            if (slot.isEmpty()) {
+                final int size1 = Math.min(count, stack.getMaxStackSize());
+                count -= size1;
+                slot = stack.copy();
+                slot.setCount(size1);
+                this.set(i, slot);
+                if (count == 0) {
+                    return;
+                }
+            } else {
+                if (ModUtils.checkItemEquality(slot, stack)) {
+                    if (slot.getCount() == stack.getMaxStackSize()) {
+                        continue;
+                    }
+                    if (stack.getTag() == null && slot.getTag() == null) {
+                        final int size1 = Math.min(count, stack.getMaxStackSize() - slot.getCount());
+                        count -= size1;
+                        this.get(i).grow(size1);
+                        if (count == 0) {
+                            return;
+                        }
+                    } else {
+                        if (ModUtils.checkNbtEquality(stack.getTag(), slot.getTag())) {
+                            final int size1 = Math.min(count, stack.getMaxStackSize() - slot.getCount());
+                            count -= size1;
+                            this.get(i).grow(size1);
+                            if (count == 0) {
+                                return;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
     public boolean canAdd(ItemStack stack) {
         if (stack == null) {
             throw new NullPointerException("null ItemStack");
@@ -48,7 +90,7 @@ public class InvSlotOutput extends InvSlot {
         }
     }
 
-    public boolean add(List<ItemStack> stacks, boolean simulate) {
+    public boolean add(List<ItemStack> stacks, int size) {
 
         if (stacks != null && !stacks.isEmpty()) {
             for (ItemStack stack : stacks) {
@@ -60,15 +102,54 @@ public class InvSlotOutput extends InvSlot {
                             minSlot = i;
                         }
                     } else {
-                        if (this.get(i).isItemEqual(stack)) {
+                        if (ModUtils.checkItemEquality(this.get(i), stack)) {
+                            if (this.get(i).getCount() + stack.getCount() * size <= stack.getMaxStackSize()) {
+                                if (stack.getTag() == null && this.get(i).getTag() == null) {
+                                    this.get(i).grow(stack.getCount() * size);
+                                    return true;
+                                } else {
+                                    if (ModUtils.checkNbtEquality(stack.getTag(), this.get(i).getTag())) {
+                                        this.get(i).grow(stack.getCount() * size);
+
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (minSlot != this.size()) {
+                    stack = stack.copy();
+                    stack.setCount(stack.getCount() * size);
+                    this.set(minSlot, stack);
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public boolean add(List<ItemStack> stacks, boolean simulate) {
+
+        if (stacks != null && !stacks.isEmpty()) {
+            for (ItemStack stack : stacks) {
+
+                int minSlot = this.size();
+                for (int i = 0; i < this.size(); i++) {
+                    if (this.get(i).isEmpty()) {
+                        if (i < minSlot)
+                            minSlot = i;
+                    } else {
+                        if (ModUtils.checkItemEquality(this.get(i), stack)) {
                             if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTagCompound() == null && this.get(i).getTagCompound() == null) {
+                                if (stack.getTag() == null && this.get(i).getTag() == null) {
                                     if (!simulate) {
                                         this.get(i).grow(stack.getCount());
                                     }
                                     return true;
                                 } else {
-                                    if (ModUtils.checkNbtEquality(stack.getTagCompound(), this.get(i).getTagCompound())) {
+                                    if (NbtUtils.compareNbt(stack.getTag(), this.get(i).getTag(), true)) {
                                         if (!simulate) {
                                             this.get(i).grow(stack.getCount());
 
@@ -82,7 +163,7 @@ public class InvSlotOutput extends InvSlot {
                 }
                 if (minSlot != this.size()) {
                     if (!simulate) {
-                        this.put(minSlot, stack.copy());
+                        this.set(minSlot, stack.copy());
 
                     }
                     return true;
@@ -108,9 +189,9 @@ public class InvSlotOutput extends InvSlot {
                             minSlot = i;
                         }
                     } else {
-                        if (this.get(i).isItemEqual(stack)) {
+                        if (ModUtils.checkItemEquality(this.get(i), stack)) {
                             if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTagCompound() == null && this.get(i).getTagCompound() == null) {
+                                if (stack.getTag() == null && this.get(i).getTag() == null) {
                                     if (!simulate) {
                                         this.get(i).grow(stack.getCount());
                                     }
@@ -118,7 +199,7 @@ public class InvSlotOutput extends InvSlot {
                                     linkedList.add(i);
                                     continue cycle;
                                 } else {
-                                    if (ModUtils.checkNbtEquality(stack.getTagCompound(), this.get(i).getTagCompound())) {
+                                    if (ModUtils.checkNbtEquality(stack.getTag(), this.get(i).getTag())) {
                                         if (!simulate) {
                                             this.get(i).grow(stack.getCount());
 
@@ -134,7 +215,7 @@ public class InvSlotOutput extends InvSlot {
                 }
                 if (minSlot != this.size()) {
                     if (!simulate) {
-                        this.put(minSlot, stack.copy());
+                        this.set(minSlot, stack.copy());
 
                     }
                     col++;
@@ -147,86 +228,4 @@ public class InvSlotOutput extends InvSlot {
         }
         return true;
     }
-
-    public boolean add(List<ItemStack> stacks, int size) {
-
-        if (stacks != null && !stacks.isEmpty()) {
-            for (ItemStack stack : stacks) {
-
-                int minSlot = this.size();
-                for (int i = 0; i < this.size(); i++) {
-                    if (this.get(i).isEmpty()) {
-                        if (i < minSlot) {
-                            minSlot = i;
-                        }
-                    } else {
-                        if (this.get(i).isItemEqual(stack)) {
-                            if (this.get(i).getCount() + stack.getCount() * size <= stack.getMaxStackSize()) {
-                                if (stack.getTagCompound() == null && this.get(i).getTagCompound() == null) {
-                                    this.get(i).grow(stack.getCount() * size);
-                                    return true;
-                                } else {
-                                    if (ModUtils.checkNbtEquality(stack.getTagCompound(), this.get(i).getTagCompound())) {
-                                        this.get(i).grow(stack.getCount() * size);
-
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (minSlot != this.size()) {
-                    stack = stack.copy();
-                    stack.setCount(stack.getCount() * size);
-                    this.put(minSlot, stack);
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
-    }
-
-    public void add(ItemStack stack, int size) {
-        int count = size * stack.getCount();
-        for (int i = 0; i < this.size(); i++) {
-            ItemStack slot = this.get(i);
-            if (slot.isEmpty()) {
-                final int size1 = Math.min(count, stack.getMaxStackSize());
-                count -= size1;
-                slot = stack.copy();
-                slot.setCount(size1);
-                this.put(i, slot);
-                if (count == 0) {
-                    return;
-                }
-            } else {
-                if (slot.isItemEqual(stack)) {
-                    if (slot.getCount() == stack.getMaxStackSize()) {
-                        continue;
-                    }
-                    if (stack.getTagCompound() == null && slot.getTagCompound() == null) {
-                        final int size1 = Math.min(count, stack.getMaxStackSize() - slot.getCount());
-                        count -= size1;
-                        this.get(i).grow(size1);
-                        if (count == 0) {
-                            return;
-                        }
-                    } else {
-                        if (ModUtils.checkNbtEquality(stack.getTagCompound(), slot.getTagCompound())) {
-                            final int size1 = Math.min(count, stack.getMaxStackSize() - slot.getCount());
-                            count -= size1;
-                            this.get(i).grow(size1);
-                            if (count == 0) {
-                                return;
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-
 }

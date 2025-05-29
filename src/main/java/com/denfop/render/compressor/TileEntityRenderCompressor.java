@@ -1,113 +1,62 @@
 package com.denfop.render.compressor;
 
+
 import com.denfop.tiles.mechanism.TileEntityCompressor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 
-public class TileEntityRenderCompressor extends TileEntitySpecialRenderer<TileEntityCompressor> {
+import static net.minecraft.world.item.ItemDisplayContext.GROUND;
 
-    public void render(
-            TileEntityCompressor tile,
-            double x,
-            double y,
-            double z,
-            float partialTicks,
-            int destroyStage,
-            float alpha
-    ) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        ItemStack itemstack = tile.inputSlotA.get();
-        if (!itemstack.isEmpty()) {
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.enableBlend();
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.tryBlendFuncSeparate(
-                    GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                    GlStateManager.SourceFactor.ONE,
-                    GlStateManager.DestFactor.ZERO
-            );
-            if ((itemstack.getItem() instanceof ItemBlock)) {
-                if (tile.facing == 4 || tile.facing == 5) {
-                    GlStateManager.translate(0.5, 0.45, 0.31);
-                } else {
-                    GlStateManager.translate(0.5, 0.45, 0.3);
-                }
-            } else {
-                GlStateManager.translate(0.5, 0.42, 0.37501);
-            }
-            GlStateManager.rotate(90, 1, 0, 0);
-            IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                    itemstack,
-                    tile.getWorld(),
-                    null
-            );
+public class TileEntityRenderCompressor implements BlockEntityRenderer<TileEntityCompressor> {
+    private final BlockEntityRendererProvider.Context contex;
 
-            IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                    ibakedmodel,
-                    ItemCameraTransforms.TransformType.GROUND,
-                    false
-            );
-            Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE)
-                    .restoreLastBlurMipmap();
-        }
-        GlStateManager.popMatrix();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        itemstack = tile.outputSlot.get();
-        if (!itemstack.isEmpty()) {
-            this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.enableBlend();
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.tryBlendFuncSeparate(
-                    GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                    GlStateManager.SourceFactor.ONE,
-                    GlStateManager.DestFactor.ZERO
-            );
-            GlStateManager.translate(0.5, 0.42, 0.37501);
-
-
-            GlStateManager.rotate(90, 1, 0, 0);
-            IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
-                    itemstack,
-                    tile.getWorld(),
-                    null
-            );
-
-            IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
-                    ibakedmodel,
-                    ItemCameraTransforms.TransformType.GROUND,
-                    false
-            );
-            Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.disableBlend();
-            Minecraft
-                    .getMinecraft()
-                    .getRenderManager().renderEngine
-                    .getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE)
-                    .restoreLastBlurMipmap();
-        }
-        GlStateManager.popMatrix();
+    public TileEntityRenderCompressor(BlockEntityRendererProvider.Context p_173636_) {
+        this.contex = p_173636_;
     }
 
+    @Override
+    public void render(TileEntityCompressor te, float partialTicks, PoseStack poseStack,
+                       MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
+        ItemStack itemstack = te.outputSlot.get(0);
+        if (!itemstack.isEmpty()) {
+            poseStack.pushPose();
+            if ((itemstack.getItem() instanceof BlockItem)) {
+                if (te.facing == 4 || te.facing == 5) {
+                    poseStack.translate(0.5, 0.41, 0.31);
+                } else {
+                    poseStack.translate(0.5, 0.41, 0.3);
+                }
+            } else {
+                poseStack.translate(0.5, 0.42, 0.37501);
+            }
+
+            poseStack.mulPose(Axis.XP.rotationDegrees(90));
+            contex.getItemRenderer().renderStatic(itemstack, GROUND,
+                    packedLight, combinedOverlay, poseStack, bufferSource,te.getLevel(), 0);
+            poseStack.popPose();
+        }
+        itemstack = te.inputSlotA.get(0);
+        if (!itemstack.isEmpty()) {
+            poseStack.pushPose();
+            if ((itemstack.getItem() instanceof BlockItem)) {
+                if (te.facing == 4 || te.facing == 5) {
+                    poseStack.translate(0.5, 0.41, 0.31);
+                } else {
+                    poseStack.translate(0.5, 0.41, 0.3);
+                }
+            } else {
+                poseStack.translate(0.5, 0.42, 0.37501);
+            }
+
+            poseStack.mulPose(Axis.XP.rotationDegrees(90));
+            contex.getItemRenderer().renderStatic(itemstack,GROUND,
+                    packedLight, combinedOverlay, poseStack, bufferSource,te.getLevel(), 0);
+            poseStack.popPose();
+        }
+    }
 }

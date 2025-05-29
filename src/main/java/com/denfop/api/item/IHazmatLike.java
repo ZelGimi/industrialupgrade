@@ -1,29 +1,28 @@
 package com.denfop.api.item;
 
+
 import com.denfop.api.radiationsystem.EnumLevelRadiation;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.EntityEquipmentSlot.Type;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 public interface IHazmatLike {
 
-    static boolean hasCompleteHazmat(EntityLivingBase living) {
+    static boolean hasCompleteHazmat(LivingEntity living) {
         return hasCompleteHazmat(living, EnumLevelRadiation.LOW);
     }
 
-    static boolean hasCompleteHazmat(EntityLivingBase living, EnumLevelRadiation levelRadiation) {
-        EntityEquipmentSlot[] var1 = EntityEquipmentSlot.values();
+    static boolean hasCompleteHazmat(LivingEntity living, EnumLevelRadiation levelRadiation) {
+        EquipmentSlot[] var1 = EquipmentSlot.values();
         int var2 = var1.length;
 
-        for (EntityEquipmentSlot slot : var1) {
-            if (slot.getSlotType() == Type.ARMOR) {
-                ItemStack stack = living.getItemStackFromSlot(slot);
-                if (stack.isEmpty() || !(stack.getItem() instanceof IHazmatLike)) {
+        for (EquipmentSlot slot : var1) {
+            if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+                ItemStack stack = living.getItemBySlot(slot);
+                if (stack.isEmpty() || !(stack.getItem() instanceof IHazmatLike hazmat)) {
                     return false;
                 }
 
-                IHazmatLike hazmat = (IHazmatLike) stack.getItem();
                 if (!hazmat.addsProtection(living, slot, stack)) {
                     return false;
                 }
@@ -67,9 +66,9 @@ public interface IHazmatLike {
         return 1;
     }
 
-    boolean addsProtection(EntityLivingBase var1, EntityEquipmentSlot var2, ItemStack var3);
+    boolean addsProtection(LivingEntity var1, EquipmentSlot var2, ItemStack var3);
 
-    default boolean fullyProtects(EntityLivingBase entity, EntityEquipmentSlot slot, ItemStack stack) {
+    default boolean fullyProtects(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
         return false;
     }
 

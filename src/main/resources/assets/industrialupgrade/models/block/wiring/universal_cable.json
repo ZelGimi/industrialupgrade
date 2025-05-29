@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/wiring/universal_cable/glass_cable"
+    "all" : "industrialupgrade:block/wiring/universal_cable/glass_cable"
   }
 }

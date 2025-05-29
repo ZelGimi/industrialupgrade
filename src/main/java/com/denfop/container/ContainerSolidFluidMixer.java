@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntitySolidFluidMixer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSolidFluidMixer extends ContainerFullInv<TileEntitySolidFluidMixer> {
 
-    public ContainerSolidFluidMixer(EntityPlayer var1, TileEntitySolidFluidMixer tileEntity1) {
+    public ContainerSolidFluidMixer(Player var1, TileEntitySolidFluidMixer tileEntity1) {
         super(var1, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 36, 99));

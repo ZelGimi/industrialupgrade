@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/volcano_hazmat_helmet"
+		"layer0": "industrialupgrade:item/volcano_hazmat_helmet"
 	}
 }

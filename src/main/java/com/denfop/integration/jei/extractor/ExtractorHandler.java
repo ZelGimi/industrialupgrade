@@ -3,7 +3,7 @@ package com.denfop.integration.jei.extractor;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,16 @@ public class ExtractorHandler {
 
     private static final List<ExtractorHandler> recipes = new ArrayList<>();
     private final ItemStack input, output;
+    private final BaseMachineRecipe container;
 
-    public ExtractorHandler(ItemStack input, ItemStack output) {
+    public ExtractorHandler(ItemStack input, ItemStack output, BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
+        this.container = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<ExtractorHandler> getRecipes() {
@@ -25,8 +31,8 @@ public class ExtractorHandler {
         return recipes;
     }
 
-    public static ExtractorHandler addRecipe(ItemStack input, ItemStack output) {
-        ExtractorHandler recipe = new ExtractorHandler(input, output);
+    public static ExtractorHandler addRecipe(ItemStack input, ItemStack output, BaseMachineRecipe container) {
+        ExtractorHandler recipe = new ExtractorHandler(input, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -52,10 +58,11 @@ public class ExtractorHandler {
             try {
                 addRecipe(
                         container.input.getInputs().get(0).getInputs().get(0),
-                        container.getOutput().items.get(0)
+                        container.getOutput().items.get(0),container
                 );
 
             } catch (Exception ignored) {
+                System.out.println(2);
             }
         }
     }

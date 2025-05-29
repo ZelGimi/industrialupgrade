@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/stainless_steel_nugget"	}
+		"layer0": "industrialupgrade:item/stainless_steel_nugget"	}
 }

@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/heat_reactor/coolant/per_coolant_side"
+    "all" : "industrialupgrade:block/heat_reactor/coolant/per_coolant_side"
   }
 }

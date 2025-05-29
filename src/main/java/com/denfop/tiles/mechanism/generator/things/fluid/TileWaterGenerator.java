@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.generator.things.fluid;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -10,22 +11,25 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWaterGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWaterGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -40,8 +44,8 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
     private final float energycost;
     private double lastEnergy;
 
-    public TileWaterGenerator() {
-        super(10000, 1, 1);
+    public TileWaterGenerator(BlockPos pos, BlockState state) {
+        super(10000, 1, 1,BlockBaseMachine3.watergenerator,pos,state);
 
         this.energycost = 40;
         this.outputSlot = new InvSlotOutput(this, 1);
@@ -50,12 +54,12 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
                 InvSlot.TypeItemSlot.INPUT,
                 1,
                 InvSlotFluid.TypeFluidSlot.OUTPUT,
-                FluidRegistry.WATER
+                net.minecraft.world.level.material.Fluids.WATER
         );
 
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.TypeItemSlot.OUTPUT,
-                Fluids.fluidPredicate(FluidRegistry.WATER)
+                Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER)
         );
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.25));
@@ -73,23 +77,23 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         this.lastEnergy = nbt.getDouble("lastEnergy");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setDouble("lastEnergy", this.lastEnergy);
+        nbt.putDouble("lastEnergy", this.lastEnergy);
         return nbt;
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.setUpgradestat();
         }
 
@@ -107,11 +111,11 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
 
             if (this.energy.getEnergy() >= this.energycost) {
                 this.attemptGeneration();
-                if (this.world.provider.getWorldTime() % 40 == 0) {
+                if (this.level.getGameTime() % 40 == 0) {
                     initiate(0);
                 }
             } else {
-                if (this.world.provider.getWorldTime() % 40 == 0) {
+                if (this.level.getGameTime() % 40 == 0) {
                     initiate(2);
                 }
             }
@@ -139,7 +143,7 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
             return;
         }
         m = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
-        this.fluidTank.fillInternal(new FluidStack(FluidRegistry.WATER, Math.min(m, k)), true);
+        this.fluidTank.fill(new FluidStack(net.minecraft.world.level.material.Fluids.WATER, Math.min(m, k)), IFluidHandler.FluidAction.EXECUTE);
         this.energy.useEnergy(this.energycost * Math.min(m, k));
     }
 
@@ -148,13 +152,14 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
         return "" + p + "%";
     }
 
-    public ContainerWaterGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerWaterGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerWaterGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiWaterGenerator(new ContainerWaterGenerator(entityPlayer, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiWaterGenerator((ContainerWaterGenerator) menu);
     }
 
 

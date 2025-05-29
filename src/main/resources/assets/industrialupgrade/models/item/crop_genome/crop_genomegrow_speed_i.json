@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/crop_genomegrow_speed_i"
+    "layer0" : "industrialupgrade:item/crop_genomegrow_speed_i"
   }
 }

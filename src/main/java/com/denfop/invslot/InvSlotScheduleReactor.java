@@ -1,12 +1,12 @@
 package com.denfop.invslot;
 
 import com.denfop.api.inv.IAdvInventory;
-import com.denfop.items.resource.ItemCraftingElements;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,9 +42,9 @@ public class InvSlotScheduleReactor extends InvSlot {
     public boolean accepts(final ItemStack stack, final int index) {
         Item item = stack.getItem();
         if (item instanceof ItemCraftingElements) {
-            if (stack.getItemDamage() == 143) {
-                final NBTTagCompound nbt = ModUtils.nbt(stack);
-                return type == nbt.getInteger("type") && level == nbt.getInteger("level");
+            if (((ItemCraftingElements<?>) item).getElement().getId() == 143) {
+                final CompoundTag nbt = ModUtils.nbt(stack);
+                return type == nbt.getInt("type") && level == nbt.getInt("level");
             }
             return false;
         } else {
@@ -54,22 +54,22 @@ public class InvSlotScheduleReactor extends InvSlot {
 
     public void update() {
         this.accepts.clear();
-        if (!this.get().isEmpty()) {
-            final NBTTagCompound nbt = ModUtils.nbt(this.get());
-            NBTTagList nbtTagList = nbt.getTagList("Items", 10);
+        if (!this.get(0).isEmpty()) {
+            final CompoundTag nbt = ModUtils.nbt(this.get(0));
+            ListTag nbtTagList = nbt.getList("Items", 10);
             List<ItemStack> stackList = new ArrayList<>();
-            for (int i = 0; i < nbtTagList.tagCount(); ++i) {
-                NBTTagCompound contentTag = nbtTagList.getCompoundTagAt(i);
-                ItemStack stack = new ItemStack(contentTag);
+            for (int i = 0; i < nbtTagList.size(); ++i) {
+                CompoundTag contentTag = nbtTagList.getCompound(i);
+                ItemStack stack =  ItemStack.of(contentTag);
                 stackList.add(stack);
             }
             for (int y = 0; y < this.y; y++) {
                 for (int x = 0; x < this.x; x++) {
-                    NBTTagCompound tag = nbt.getCompoundTag(String.valueOf(y * this.x + x));
+                    CompoundTag tag = nbt.getCompound(String.valueOf(y * this.x + x));
                     if (tag.getBoolean("empty")) {
                         accepts.put(y * this.x + x, ItemStack.EMPTY);
                     } else {
-                        final int indexItem = tag.getInteger("index");
+                        final int indexItem = tag.getInt("index");
                         accepts.put(y * this.x + x, stackList.get(indexItem));
                     }
                 }
@@ -78,30 +78,31 @@ public class InvSlotScheduleReactor extends InvSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.accepts = new HashMap<>();
         if (!content.isEmpty()) {
-            final NBTTagCompound nbt = ModUtils.nbt(content);
-            NBTTagList nbtTagList = nbt.getTagList("Items", 10);
+            final CompoundTag nbt = ModUtils.nbt(content);
+            ListTag nbtTagList = nbt.getList("Items", 10);
             List<ItemStack> stackList = new ArrayList<>();
-            for (int i = 0; i < nbtTagList.tagCount(); ++i) {
-                NBTTagCompound contentTag = nbtTagList.getCompoundTagAt(i);
-                ItemStack stack = new ItemStack(contentTag);
+            for (int i = 0; i < nbtTagList.size(); ++i) {
+                CompoundTag contentTag = nbtTagList.getCompound(i);
+                ItemStack stack =  ItemStack.of(contentTag);
                 stackList.add(stack);
             }
             for (int y = 0; y < this.y; y++) {
                 for (int x = 0; x < this.x; x++) {
-                    NBTTagCompound tag = nbt.getCompoundTag(String.valueOf(y * this.x + x));
+                    CompoundTag tag = nbt.getCompound(String.valueOf(y * this.x + x));
                     if (tag.getBoolean("empty")) {
                         accepts.put(y * this.x + x, ItemStack.EMPTY);
                     } else {
-                        final int indexItem = tag.getInteger("index");
+                        final int indexItem = tag.getInt("index");
                         accepts.put(y * this.x + x, stackList.get(indexItem));
                     }
                 }
             }
         }
+        return content;
     }
 
 }

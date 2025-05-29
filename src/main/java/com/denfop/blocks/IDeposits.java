@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface IDeposits {
 
-    List<String> getInformationFromMeta(int meta);
+    List<String> getInformationFromMeta();
 
 }

@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:water_reactors/water_adv_controller"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_378_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_374_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_373_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_371_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "DAD",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:water_reactors/water_imp_controller"
+  },
+  "show_notification": true
+}

@@ -11,5 +11,4 @@ public interface IExchanger extends IMultiElement {
     double getPower();
 
     IExchangerItem getExchanger();
-
 }

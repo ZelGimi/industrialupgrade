@@ -5,6 +5,7 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
@@ -12,7 +13,9 @@ import com.denfop.blocks.BlockResource;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerStorageExp;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiStorageExp;
 import com.denfop.invslot.InvSlotExpStorage;
 import com.denfop.network.DecoderHandler;
@@ -23,16 +26,17 @@ import com.denfop.network.packet.PacketStopSound;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,7 +53,8 @@ public class TileStorageExp extends TileEntityInventory implements
     private double energy1;
     private boolean sound = true;
 
-    public TileStorageExp() {
+    public TileStorageExp(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine2.expierence_block, pos, state);
         this.inputSlot = new InvSlotExpStorage(this);
         this.energy = this.addComponent(new ComponentBaseEnergy(EnergyType.EXPERIENCE, this, 4000000000d, ModUtils.allFacings,
                 ModUtils.allFacings, 14
@@ -58,7 +63,7 @@ public class TileStorageExp extends TileEntityInventory implements
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
 
@@ -88,9 +93,9 @@ public class TileStorageExp extends TileEntityInventory implements
         return packet;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
         return nbttagcompound;
     }
 
@@ -107,13 +112,13 @@ public class TileStorageExp extends TileEntityInventory implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
             tooltip.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
@@ -130,15 +135,15 @@ public class TileStorageExp extends TileEntityInventory implements
                     final ComponentBaseEnergy component2 = this.energy;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
-                            final NBTTagCompound nbt = ModUtils.nbt(drop);
-                            nbt.setDouble("energy", component2.getEnergy());
+                            final CompoundTag nbt = ModUtils.nbt(drop);
+                            nbt.putDouble("energy", component2.getEnergy());
                         }
                     }
                     return drop;
                 case None:
                     return null;
                 case Generator:
-                    return new ItemStack(IUItem.basemachine2, 1, 78);
+                    return new ItemStack(IUItem.basemachine2.getItem(78), 1);
                 case Machine:
                     return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                 case AdvMachine:
@@ -149,17 +154,17 @@ public class TileStorageExp extends TileEntityInventory implements
         final ComponentBaseEnergy component2 = this.energy;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
-                final NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy", component2.getEnergy());
+                final CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.putDouble("energy", component2.getEnergy());
             }
         }
 
         return drop;
     }
 
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
             this.energy.addEnergy(energy1);
@@ -171,21 +176,13 @@ public class TileStorageExp extends TileEntityInventory implements
         return this.sound;
     }
 
-    public String getStartSoundFile() {
-        return "Machines/zab.ogg";
+
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiStorageExp((ContainerStorageExp) isAdmin);
     }
 
-    public String getInterruptSoundFile() {
-        return "Machines/zap.ogg";
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiStorageExp(new ContainerStorageExp(entityPlayer, this));
-    }
-
-    public ContainerStorageExp getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerStorageExp getGuiContainer(Player entityPlayer) {
         return new ContainerStorageExp(entityPlayer, this);
     }
 
@@ -224,10 +221,10 @@ public class TileStorageExp extends TileEntityInventory implements
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
             new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.zab.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, EnumSound.zab.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
             new PacketStopSound(getWorld(), this.pos);
         }
@@ -251,7 +248,7 @@ public class TileStorageExp extends TileEntityInventory implements
     }
 
     @Override
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         // 0 убрать с меха опыт
         // 1 добавить в мех опыт
         if (event == 1) {

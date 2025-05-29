@@ -7,7 +7,6 @@ import java.util.Map;
 
 public class EnergyBase {
 
-    public static GlobalNet NE;
     public static GlobalNet QE;
     public static GlobalNet EXP;
     public static List<IGlobalNet> listGlobal = new ArrayList<>();
@@ -19,6 +18,7 @@ public class EnergyBase {
     public static GlobalNet steam;
     public static GlobalNet ampere;
     public static GlobalNet biofuel;
+    public static GlobalNet NE;
 
     public static void init() {
         handler = new EnergyHandler();

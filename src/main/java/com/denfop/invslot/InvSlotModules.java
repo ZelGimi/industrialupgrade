@@ -6,8 +6,8 @@ import com.denfop.Localization;
 import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.tiles.base.TileAutoSpawner;
 import com.denfop.utils.CapturedMobUtils;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotModules extends InvSlot {
 
@@ -24,7 +24,7 @@ public class InvSlotModules extends InvSlot {
         if (!(itemStack.getItem() instanceof ItemEntityModule)) {
             return false;
         }
-        if (itemStack.getItemDamage() == 0) {
+        if (((ItemEntityModule<?>) itemStack.getItem()).getElement().getId() == 0) {
             return false;
         }
 
@@ -37,12 +37,12 @@ public class InvSlotModules extends InvSlot {
             if (!this.get(i).isEmpty()) {
                 final CapturedMobUtils captured = CapturedMobUtils.create(this.get(i));
                 assert captured != null;
-                EntityLiving entityLiving = (EntityLiving) captured.getEntity(tile.getWorld(), true);
+                LivingEntity entityLiving = (LivingEntity) captured.getEntity(tile.getWorld(), true);
                 this.tile.mobUtils[i] = entityLiving;
                 this.tile.loot_Tables[i] = IUCore.lootTables.get(captured.getResource());
                 this.tile.maxprogress[i] = 100 * captured.getCoefficient();
                 this.tile.description_mobs[i] =
-                        entityLiving.getName() + "\n" + Localization.translate("iu.show.health") + (int) entityLiving.getHealth() + "/" + (int) entityLiving.getMaxHealth()
+                        entityLiving.getName().getString() + "\n" + Localization.translate("iu.show.health") + (int) entityLiving.getHealth() + "/" + (int) entityLiving.getMaxHealth()
                                 + "\n" + Localization.translate("iu.show.speed") + (int) this.tile.maxprogress[i];
             } else {
                 this.tile.mobUtils[i] = null;
@@ -55,8 +55,8 @@ public class InvSlotModules extends InvSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
 
         if (!content.isEmpty()) {
             this.tile.mobUtils[index] = null;
@@ -66,13 +66,13 @@ public class InvSlotModules extends InvSlot {
             this.tile.description_mobs[index] = "";
             final CapturedMobUtils captured = CapturedMobUtils.create(content);
             assert captured != null;
-            EntityLiving entityLiving = (EntityLiving) captured.getEntity(tile.getWorld(), true);
+            LivingEntity entityLiving = (LivingEntity) captured.getEntity(tile.getWorld(), true);
 
             this.tile.mobUtils[index] = entityLiving;
             this.tile.maxprogress[index] = 100 * captured.getCoefficient();
             this.tile.loot_Tables[index] = IUCore.lootTables.get(captured.getResource());
             this.tile.description_mobs[index] =
-                    entityLiving.getName() + "\n" + Localization.translate("iu.show.health") + (int) entityLiving.getHealth() + "/" + (int) entityLiving.getMaxHealth()
+                    entityLiving.getName().getString() + "\n" + Localization.translate("iu.show.health") + (int) entityLiving.getHealth() + "/" + (int) entityLiving.getMaxHealth()
                             + "\n" + Localization.translate("iu.show.speed") + (int) this.tile.maxprogress[index];
 
         } else {
@@ -83,7 +83,7 @@ public class InvSlotModules extends InvSlot {
             this.tile.description_mobs[index] = "";
 
         }
-
+        return content;
     }
 
     public int getStackSizeLimit() {

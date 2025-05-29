@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/peat_balls"
+    "layer0" : "industrialupgrade:item/peat_balls"
   }
 }

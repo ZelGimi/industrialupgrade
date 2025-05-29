@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=replicator_iu": {
+      "model": "industrialupgrade:block/basemachine/replicator"
+    },
+    "facing=south,type=replicator_iu": {
+      "model": "industrialupgrade:block/basemachine/replicator",
+      "y": 180
+    },
+    "facing=west,type=replicator_iu": {
+      "model": "industrialupgrade:block/basemachine/replicator",
+      "y": 270
+    },
+    "facing=east,type=replicator_iu": {
+      "model": "industrialupgrade:block/basemachine/replicator",
+      "y": 90
+    },
+    "facing=down,type=replicator_iu": {
+      "model": "industrialupgrade:block/basemachine/replicator",
+      "x": 90
+    },
+    "facing=up,type=replicator_iu": {
+      "model": "industrialupgrade:block/basemachine/replicator",
+      "x": 270
+    },
+    "facing=north,type=replicator_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/replicator_active"
+    },
+    "facing=south,type=replicator_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "y": 180
+    },
+    "facing=west,type=replicator_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "y": 270
+    },
+    "facing=east,type=replicator_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "y": 90
+    },
+    "facing=down,type=replicator_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "x": 90
+    },
+    "facing=up,type=replicator_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "x": 270
+    },
+    "facing=north,type=replicator_iu_active": {
+      "model": "industrialupgrade:block/basemachine/replicator_active"
+    },
+    "facing=south,type=replicator_iu_active": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "y": 180
+    },
+    "facing=west,type=replicator_iu_active": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "y": 270
+    },
+    "facing=east,type=replicator_iu_active": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "y": 90
+    },
+    "facing=down,type=replicator_iu_active": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "x": 90
+    },
+    "facing=up,type=replicator_iu_active": {
+      "model": "industrialupgrade:block/basemachine/replicator_active",
+      "x": 270
+    }
+  }
+}

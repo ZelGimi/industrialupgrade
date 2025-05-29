@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/steam_peat_generator"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/advanced_machine"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    " A ",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/peat_generator"
+  },
+  "show_notification": true
+}

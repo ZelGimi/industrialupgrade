@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/makemake_gold"
+    "all" : "industrialupgrade:block/makemake_gold"
   }
 }

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:blockspace4/titan_titanium_ore"
+  },
+  "result": "industrialupgrade:itemingots/titanium_ingot"
+}

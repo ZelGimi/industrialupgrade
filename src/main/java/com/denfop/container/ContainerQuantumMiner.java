@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityQuantumMiner;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerQuantumMiner extends ContainerFullInv<TileEntityQuantumMiner> {
 
-    public ContainerQuantumMiner(EntityPlayer entityPlayer, TileEntityQuantumMiner tileEntity1) {
+    public ContainerQuantumMiner(Player entityPlayer, TileEntityQuantumMiner tileEntity1) {
         this(entityPlayer, tileEntity1, 166);
         if (tileEntity1.outputSlot != null) {
 
@@ -31,7 +31,7 @@ public class ContainerQuantumMiner extends ContainerFullInv<TileEntityQuantumMin
         }
     }
 
-    public ContainerQuantumMiner(EntityPlayer entityPlayer, TileEntityQuantumMiner tileEntity1, int height) {
+    public ContainerQuantumMiner(Player entityPlayer, TileEntityQuantumMiner tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
     }
 

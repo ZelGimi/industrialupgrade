@@ -3,21 +3,17 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRotorAssembler;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRotorAssembler;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
@@ -25,15 +21,14 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,7 +51,8 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
     public int operationLength;
     public int operationsPerTick = 1;
 
-    public TileEntityRotorAssembler() {
+    public TileEntityRotorAssembler(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.rotor_assembler,pos,state);
         this.inputSlotA = new InvSlotRecipes(this, "rotor_assembler", this);
         inputSlotA.setStackSizeLimit(1);
         this.defaultEnergyConsume = this.energyConsume = 2;
@@ -73,33 +69,21 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
 
     public static void addRecipe(int meta, int meta1, ItemStack stack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        ((ItemDamage) stack.getItem()).setCustomDamage(stack, ((ItemDamage) stack.getItem()).getMaxCustomDamage(stack));
+        ((ItemDamage) stack.getItem()).setCustomDamage(stack, 0);
         Recipes.recipes.addRecipe("rotor_assembler", new BaseMachineRecipe(
                 new Input(
-                        input.getInput(new ItemStack(IUItem.windrod, 1, meta)),
-                        input.getInput(new ItemStack(IUItem.windrod, 1, meta)),
-                        input.getInput(new ItemStack(IUItem.windrod, 1, meta)),
-                        input.getInput(new ItemStack(IUItem.windrod, 1, meta)),
-                        input.getInput(new ItemStack(IUItem.corewind, 1, meta1))
+                        input.getInput(new ItemStack(IUItem.windrod.getStack(meta), 1)),
+                        input.getInput(new ItemStack(IUItem.windrod.getStack(meta), 1)),
+                        input.getInput(new ItemStack(IUItem.windrod.getStack(meta), 1)),
+                        input.getInput(new ItemStack(IUItem.windrod.getStack(meta), 1)),
+                        input.getInput(new ItemStack(IUItem.corewind.getStack(meta1), 1))
 
                 ),
                 new RecipeOutput(null, stack)
         ));
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -132,25 +116,25 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     public void init() {
-        addRecipe(0, 0, new ItemStack(IUItem.rotor_wood));
-        addRecipe(1, 1, new ItemStack(IUItem.rotor_bronze));
-        addRecipe(2, 2, new ItemStack(IUItem.rotor_iron));
-        addRecipe(3, 3, new ItemStack(IUItem.rotor_steel));
-        addRecipe(4, 4, new ItemStack(IUItem.rotor_carbon));
+        addRecipe(0, 0, new ItemStack(IUItem.rotor_wood.getItem()));
+        addRecipe(1, 1, new ItemStack(IUItem.rotor_bronze.getItem()));
+        addRecipe(2, 2, new ItemStack(IUItem.rotor_iron.getItem()));
+        addRecipe(3, 3, new ItemStack(IUItem.rotor_steel.getItem()));
+        addRecipe(4, 4, new ItemStack(IUItem.rotor_carbon.getItem()));
 
-        addRecipe(5, 5, IUItem.iridium);
-        addRecipe(6, 6, IUItem.compressiridium);
-        addRecipe(7, 7, IUItem.spectral);
-        addRecipe(8, 8, IUItem.myphical);
-        addRecipe(10, 10, IUItem.photon);
-        addRecipe(9, 9, IUItem.neutron);
-        addRecipe(11, 11, IUItem.barionrotor);
-        addRecipe(12, 12, IUItem.adronrotor);
-        addRecipe(13, 13, IUItem.ultramarinerotor);
+        addRecipe(5, 5, IUItem.iridium.getItemStack());
+        addRecipe(6, 6, IUItem.compressiridium.getItemStack());
+        addRecipe(7, 7, IUItem.spectral.getItemStack());
+        addRecipe(8, 8, IUItem.myphical.getItemStack());
+        addRecipe(10, 10, IUItem.photon.getItemStack());
+        addRecipe(9, 9, IUItem.neutron.getItemStack());
+        addRecipe(11, 11, IUItem.barionrotor.getItemStack());
+        addRecipe(12, 12, IUItem.adronrotor.getItemStack());
+        addRecipe(13, 13, IUItem.ultramarinerotor.getItemStack());
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
@@ -174,15 +158,15 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
         super.addInformation(stack, tooltip);
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -252,14 +236,15 @@ public class TileEntityRotorAssembler extends TileEntityInventory implements IUp
 
 
     @Override
-    public ContainerRotorAssembler getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerRotorAssembler getGuiContainer(final Player entityPlayer) {
         return new ContainerRotorAssembler(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiRotorAssembler(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiRotorAssembler((ContainerRotorAssembler) menu);
     }
 
 

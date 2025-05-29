@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/enchanter_books_active_main",
-    "down" : "industrialupgrade:blocks/enchanter_books_active_all",
-    "up" : "industrialupgrade:blocks/enchanter_books_active_top",
-    "north" : "industrialupgrade:blocks/enchanter_books_active_main",
-    "east" : "industrialupgrade:blocks/enchanter_books_active_all",
-    "south" : "industrialupgrade:blocks/enchanter_books_active_all",
-    "west" : "industrialupgrade:blocks/enchanter_books_active_all"
+    "particle" : "industrialupgrade:block/enchanter_books_active_main",
+    "down" : "industrialupgrade:block/enchanter_books_active_all",
+    "up" : "industrialupgrade:block/enchanter_books_active_top",
+    "north" : "industrialupgrade:block/enchanter_books_active_main",
+    "east" : "industrialupgrade:block/enchanter_books_active_all",
+    "south" : "industrialupgrade:block/enchanter_books_active_all",
+    "west" : "industrialupgrade:block/enchanter_books_active_all"
   }
 }

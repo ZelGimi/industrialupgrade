@@ -1,15 +1,10 @@
 package com.denfop.api.recipe;
 
 import com.denfop.recipe.IInputItemStack;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RecipesFluidCore implements IFluidRecipes {
 
@@ -176,7 +171,7 @@ public class RecipesFluidCore implements IFluidRecipes {
                     break;
 
                 }
-                if (recipeInputList.get(i).amount > stack1.get(i).amount) {
+                if (recipeInputList.get(i).getAmount() > stack1.get(i).getAmount()) {
                     need = true;
                     break;
                 }
@@ -187,7 +182,7 @@ public class RecipesFluidCore implements IFluidRecipes {
             }
             if (adjustInput) {
                 for (int j = 0; j < stack1.size(); j++) {
-                    stack1.get(j).amount = stack1.get(j).amount - recipeInputList.get(j).amount;
+                    stack1.get(j).setAmount(stack1.get(j).getAmount() - recipeInputList.get(j).getAmount());
                 }
 
             } else {
@@ -226,7 +221,7 @@ public class RecipesFluidCore implements IFluidRecipes {
             }
             if (adjustInput) {
                 for (int j = 0; j < stacks.size(); j++) {
-                    stacks.get(j).amount = stacks.get(j).amount - recipeInputList.get(j).amount;
+                    stacks.get(j).setAmount(stacks.get(j).getAmount() - recipeInputList.get(j).getAmount());
                 }
 
             } else {

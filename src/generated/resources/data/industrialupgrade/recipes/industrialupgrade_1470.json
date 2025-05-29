@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:energy/impmagnet"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine1/magnet_generator"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:compresscarbon"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/nichrome"
+      }
+    ]
+  },
+  "pattern": [
+    "CDC",
+    "ABA",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine1/magnet"
+  },
+  "show_notification": true
+}

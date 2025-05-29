@@ -1,14 +1,15 @@
 package com.denfop.tiles.quarry_earth;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class DataPos {
 
     public final BlockPos pos;
-    public final IBlockState state;
+    public final BlockState state;
 
-    public DataPos(BlockPos pos, IBlockState state) {
+    public DataPos(BlockPos pos, BlockState state) {
         this.pos = pos;
         this.state = state;
     }
@@ -17,7 +18,7 @@ public class DataPos {
         return pos;
     }
 
-    public IBlockState getState() {
+    public BlockState getState() {
         return state;
     }
 

@@ -1,24 +1,27 @@
 package com.denfop.tiles.quarry_earth;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockEarthQuarry;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerEarthAnalyzer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiEarthAnalyzer;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,13 +39,14 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
     private boolean fullAnalyzer;
     private ChunkPos chunkPos;
 
-    public TileEntityEarthQuarryAnalyzer() {
-
+    public TileEntityEarthQuarryAnalyzer(BlockPos pos, BlockState state) {
+        super(BlockEarthQuarry.earth_analyzer, pos, state);
     }
+
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.earthQuarry;
+        return IUItem.earthQuarry.getBlock(getTeBlock());
     }
 
     @Override
@@ -51,14 +55,14 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
     }
 
     @Override
-    public ContainerEarthAnalyzer getGuiContainer(final EntityPlayer var1) {
+    public ContainerEarthAnalyzer getGuiContainer(final Player var1) {
         return new ContainerEarthAnalyzer(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiEarthAnalyzer(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiEarthAnalyzer((ContainerEarthAnalyzer) menu);
     }
 
     @Override
@@ -86,33 +90,33 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        nbt.setBoolean("analyzer", this.analyzer);
-        nbt.setBoolean("fullAnalyzer", this.fullAnalyzer);
-        nbt.setInteger("blockCol", this.blockCol);
-        nbt.setInteger("blockOres", this.blockOres);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        nbt.putBoolean("analyzer", this.analyzer);
+        nbt.putBoolean("fullAnalyzer", this.fullAnalyzer);
+        nbt.putInt("blockCol", this.blockCol);
+        nbt.putInt("blockOres", this.blockOres);
         return super.writeToNBT(nbt);
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         this.analyzer = nbtTagCompound.getBoolean("analyzer");
         this.fullAnalyzer = nbtTagCompound.getBoolean("fullAnalyzer");
-        this.blockCol = nbtTagCompound.getInteger("blockCol");
-        this.blockOres = nbtTagCompound.getInteger("blockOres");
+        this.blockCol = nbtTagCompound.getInt("blockCol");
+        this.blockOres = nbtTagCompound.getInt("blockOres");
     }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        this.chunkPos = this.world.getChunkFromBlockCoords(this.pos).getPos();
+        this.chunkPos = this.level.getChunkAt(this.pos).getPos();
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 10 == 0) {
+        if (this.getWorld().getGameTime() % 10 == 0) {
             if (analyzer && !fullAnalyzer && this.getMain() != null) {
                 if (z == 2) {
                     if (!this.chunkPosListHashMap.isEmpty()) {
@@ -124,11 +128,11 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
                     analyzer = false;
                 }
                 TileEntityEarthQuarryController controller = (TileEntityEarthQuarryController) this.getMain();
-                final Chunk chunk1 = this.world.getChunkFromChunkCoords(this.chunkPos.x + x, this.chunkPos.z + z);
+                final LevelChunk chunk1 = this.level.getChunk(this.chunkPos.x + x, this.chunkPos.z + z);
                 if (!TileEntityEarthQuarryController.chunkPos.contains(chunk1.getPos())) {
                     for (int x = 0; x < 16; x++) {
                         for (int z = 0; z < 16; z++) {
-                            int height = chunk1.getHeightValue(
+                            int height = chunk1.getHeight(Heightmap.Types.WORLD_SURFACE,
                                     (chunk1.getPos().x * 16 + x) & 15,
                                     (chunk1.getPos().z * 16 + z) & 15
                             );
@@ -141,7 +145,7 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
                                             chunk1.getPos().z * 16 + z
                                     );
                                     this.blockCol++;
-                                    IBlockState state = world.getBlockState(pos);
+                                    BlockState state = level.getBlockState(pos);
                                     if (state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.GRAVEL || state.getBlock() == Blocks.SAND) {
                                         List<DataPos> dataPos = this.chunkPosListHashMap.getOrDefault(
                                                 chunk1.getPos(),
@@ -200,7 +204,7 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (var2 == 0 && this.getMain() != null) {
             if (!this.analyzer) {
                 this.analyzer = true;

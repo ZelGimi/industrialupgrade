@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=photonic_fermer": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer"
+    },
+    "facing=south,type=photonic_fermer": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer",
+      "y": 180
+    },
+    "facing=west,type=photonic_fermer": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer",
+      "y": 270
+    },
+    "facing=east,type=photonic_fermer": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer",
+      "y": 90
+    },
+    "facing=down,type=photonic_fermer": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer",
+      "x": 90
+    },
+    "facing=up,type=photonic_fermer": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer",
+      "x": 270
+    },
+    "facing=north,type=photonic_fermer_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active"
+    },
+    "facing=south,type=photonic_fermer_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_fermer_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_fermer_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_fermer_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_fermer_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "x": 270
+    },
+    "facing=north,type=photonic_fermer_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active"
+    },
+    "facing=south,type=photonic_fermer_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_fermer_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_fermer_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_fermer_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_fermer_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_fermer_active",
+      "x": 270
+    }
+  }
+}

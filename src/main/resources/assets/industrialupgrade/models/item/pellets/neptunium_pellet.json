@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/neptunium_pellet"
+    "layer0" : "industrialupgrade:item/neptunium_pellet"
   }
 }

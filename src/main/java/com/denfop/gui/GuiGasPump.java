@@ -2,20 +2,13 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.api.vein.Type;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerGasPump;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
 
-@SideOnly(Side.CLIENT)
-public class GuiGasPump extends GuiIU<ContainerGasPump> {
+public class GuiGasPump<T extends ContainerGasPump> extends GuiIU<ContainerGasPump> {
 
     public final ContainerGasPump container;
 
@@ -59,19 +52,6 @@ public class GuiGasPump extends GuiIU<ContainerGasPump> {
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-
-
-        super.drawForegroundLayer(par1, par2);
-
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-
-
-    }
 
 
     public ResourceLocation getTexture() {

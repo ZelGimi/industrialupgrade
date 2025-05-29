@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=electrolyzer_iu": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu"
+    },
+    "facing=south,type=electrolyzer_iu": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu",
+      "y": 180
+    },
+    "facing=west,type=electrolyzer_iu": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu",
+      "y": 270
+    },
+    "facing=east,type=electrolyzer_iu": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu",
+      "y": 90
+    },
+    "facing=down,type=electrolyzer_iu": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu",
+      "x": 90
+    },
+    "facing=up,type=electrolyzer_iu": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu",
+      "x": 270
+    },
+    "facing=north,type=electrolyzer_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active"
+    },
+    "facing=south,type=electrolyzer_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "y": 180
+    },
+    "facing=west,type=electrolyzer_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "y": 270
+    },
+    "facing=east,type=electrolyzer_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "y": 90
+    },
+    "facing=down,type=electrolyzer_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "x": 90
+    },
+    "facing=up,type=electrolyzer_iu_invalid": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "x": 270
+    },
+    "facing=north,type=electrolyzer_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active"
+    },
+    "facing=south,type=electrolyzer_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "y": 180
+    },
+    "facing=west,type=electrolyzer_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "y": 270
+    },
+    "facing=east,type=electrolyzer_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "y": 90
+    },
+    "facing=down,type=electrolyzer_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "x": 90
+    },
+    "facing=up,type=electrolyzer_iu_active": {
+      "model": "industrialupgrade:block/basemachine/electrolyzer_iu_active",
+      "x": 270
+    }
+  }
+}

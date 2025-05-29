@@ -3,53 +3,56 @@ package com.denfop.integration.jei.sunnarium;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockSunnariumMaker;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
+import com.denfop.tiles.mechanism.TileEntityStampMechanism;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumWrapper> {
+public class SunnariumCategory extends GuiIU implements IRecipeCategory<SunnariumHandler> {
 
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
-
+    JeiInform jeiInform;
     public SunnariumCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker" +
+        super(((TileEntityStampMechanism) BlockBaseMachine3.stamp_mechanism.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker".toLowerCase() +
                         ".png"), 3, 3, 140,
                 77
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
+    }
+
+    @Override
+    public RecipeType<SunnariumHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getUid() {
-        return BlockSunnariumMaker.gen_sunnarium_plate.getName();
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.sunnariumpanelmaker).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.sunnariumpanelmaker).getUnlocalizedName());
-    }
-
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -57,9 +60,8 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(SunnariumHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
         energy++;
         int energylevel = (int) Math.min(14.0F * energy / 100, 14);
@@ -69,43 +71,32 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
             progress = 0;
         }
 
-        mc.getTextureManager().bindTexture(getTexture());
+        bindTexture(getTexture());
 
 
-        drawTexturedModalRect(+9, 59 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect( stack, +9, 59 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
 
-        drawTexturedModalRect(+46, +21, 177, 20, xScale + 1, 33);
-        drawTexturedModalRect(+82, +21, 177, 56, xScale1 + 1, 33);
-
+        drawTexturedModalRect( stack, +46, +21, 177, 20, xScale + 1, 33);
+        drawTexturedModalRect( stack, +82, +21, 177, 56, xScale1 + 1, 33);
 
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final SunnariumWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 28, 17);
+    public void setRecipe(IRecipeLayoutBuilder builder, SunnariumHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,29,18).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT,65,18).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT,29,40).addItemStack(recipe.getInput2());
+        builder.addSlot(RecipeIngredientRole.INPUT,65,40).addItemStack(recipe.getInput3());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,100,29).addItemStack(recipe.getOutput());
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
-        isg.set(0, recipes.getInput());
-        isg.init(1, true, 64, 17);
-        isg.set(1, recipes.getInput1());
-        isg.init(2, true, 28, 39);
-        isg.set(2, recipes.getInput2());
-        isg.init(3, true, 64, 39);
-        isg.set(3, recipes.getInput3());
-
-        isg.init(4, false, 99, 28);
-        isg.set(4, recipes.getOutput());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSunnariumMaker.png".toLowerCase());
     }
 
 

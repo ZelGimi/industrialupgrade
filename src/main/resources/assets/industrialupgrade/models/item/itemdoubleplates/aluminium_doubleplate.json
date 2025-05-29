@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/aluminium_doubleplate"
+    "layer0" : "industrialupgrade:item/aluminium_doubleplate"
   }
 }

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityInsulator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerInsulator extends ContainerFullInv<TileEntityInsulator> {
 
-    public ContainerInsulator(EntityPlayer entityPlayer, TileEntityInsulator tileEntity1) {
+    public ContainerInsulator(Player entityPlayer, TileEntityInsulator tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA, 0, 25, 40));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 47, 99));

@@ -8,30 +8,36 @@ import com.denfop.blocks.mechanism.BlockBlastFurnace;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastOutputItem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class TileEntityBlastOutput extends TileEntityMultiBlockElement implements IBlastOutputItem {
 
 
+    public TileEntityBlastOutput(BlockPos pos, BlockState state) {
+        super(BlockBlastFurnace.blast_furnace_output, pos, state);
+    }
+
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.blastfurnace.info1"));
         tooltip.add(Localization.translate("iu.blastfurnace.info3") + Localization.translate(new ItemStack(
-                IUItem.blastfurnace,
-                1,
-                0
-        ).getUnlocalizedName()));
+                IUItem.blastfurnace.getItem(0)
+        ).getDescriptionId()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 
@@ -40,23 +46,16 @@ public class TileEntityBlastOutput extends TileEntityMultiBlockElement implement
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.blastfurnace;
+        return IUItem.blastfurnace.getBlock(getTeBlock().getId());
     }
 
     @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
         if (this.getMain() != null) {
-            return ((TileMultiBlockBase) this.getMain()).hasCapability(capability, facing);
+            return ((TileMultiBlockBase) this.getMain()).getCapability(cap, facing);
         }
-        return super.hasCapability(capability, facing);
+        return super.getCapability(cap, facing);
     }
 
-    @Override
-    public <T> T getCapability(@NotNull final Capability<T> capability, final EnumFacing facing) {
-        if (this.getMain() != null) {
-            return ((TileMultiBlockBase) this.getMain()).getCapability(capability, facing);
-        }
-        return super.getCapability(capability, facing);
-    }
 
 }

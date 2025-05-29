@@ -1,65 +1,38 @@
 package com.denfop.items.reactors;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUPotion;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IHazmatLike;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.Locale;
 
-public class RadiationPellets extends ItemSubTypes<RadiationPellets.Types> implements IModelRegister, IRadioactiveItemType {
-
-    protected static final String NAME = "pellets";
-
-    public RadiationPellets() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ReactorsTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class RadiationPellets<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IRadioactiveItemType {
+    public RadiationPellets(T element) {
+        super(new Item.Properties(), element);
     }
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
-    }
-
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
-
-        if (entity instanceof EntityLivingBase) {
-            EntityLivingBase entityLiving = (EntityLivingBase) entity;
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotIndex, boolean isCurrentItem) {
+        if (entity instanceof LivingEntity) {
+            LivingEntity entityLiving = (LivingEntity) entity;
             if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
-                IUPotion.radiation.applyTo(
-                        entityLiving,
-                        this.getRadiationDuration(),
-                        this.getRadiationAmplifier()
-                );
+                IUPotion.radiation.applyEffect(entityLiving, this.getRadiationDuration());
             }
         }
-
     }
 
-
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ReactorsTab;
+    }
     @Override
     public int getRadiationDuration() {
         return 200;
@@ -102,9 +75,13 @@ public class RadiationPellets extends ItemSubTypes<RadiationPellets.Types> imple
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "pellets";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

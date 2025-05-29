@@ -1,16 +1,14 @@
 package com.denfop.api.vein;
 
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
 
 public interface IVein {
 
     int getMeta();
 
     void setMeta(int meta);
-
-    boolean isOldMineral();
 
     Type getType();
 
@@ -30,13 +28,15 @@ public interface IVein {
 
     boolean canMining();
 
-    NBTTagCompound writeTag();
+    CompoundTag writeTag();
 
     CustomPacketBuffer writePacket();
 
+    boolean equals(Object o);
 
     boolean get();
 
     void setFind(boolean find);
 
+    boolean isOldMineral();
 }

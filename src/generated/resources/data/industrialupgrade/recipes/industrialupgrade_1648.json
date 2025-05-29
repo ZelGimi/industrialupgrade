@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": [
+      {
+        "item": "industrialupgrade:battery/lapotron_crystal"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/charging_energy_crystal"
+      }
+    ]
+  },
+  "pattern": [
+    " B ",
+    "BCB",
+    " B "
+  ],
+  "result": {
+    "item": "industrialupgrade:battery/charging_lapotron_crystal"
+  },
+  "show_notification": true
+}

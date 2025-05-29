@@ -8,16 +8,18 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileCentrifuge extends TileMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileCentrifuge() {
+    public TileCentrifuge(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.Centrifuge.usagePerTick,
-                EnumMultiMachine.Centrifuge.lenghtOperation
+                EnumMultiMachine.Centrifuge.lenghtOperation, BlockMoreMachine3.centrifuge_iu, pos, state
         );
         this.cold.upgrade = true;
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
@@ -29,7 +31,7 @@ public class TileCentrifuge extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base3;
+        return IUItem.machines_base3.getBlock(getTeBlock().getId());
     }
 
     @Override

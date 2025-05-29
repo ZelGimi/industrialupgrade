@@ -1,25 +1,30 @@
 package com.denfop.tiles.cyclotron;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCyclotron;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCyclotronQuantum;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiCyclotronQuantum;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityCyclotronQuantum extends TileEntityMultiBlockElement implements IQuantum {
 
 
     private final ComponentBaseEnergy positrons;
 
-    public TileEntityCyclotronQuantum() {
+    public TileEntityCyclotronQuantum(BlockPos pos, BlockState state) {
+        super( BlockCyclotron.cyclotron_quantum, pos, state);
         this.positrons = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 10000));
     }
 
@@ -29,14 +34,14 @@ public class TileEntityCyclotronQuantum extends TileEntityMultiBlockElement impl
     }
 
     @Override
-    public ContainerCyclotronQuantum getGuiContainer(final EntityPlayer var1) {
+    public ContainerCyclotronQuantum getGuiContainer(final Player var1) {
         return new ContainerCyclotronQuantum(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCyclotronQuantum(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiCyclotronQuantum((ContainerCyclotronQuantum) menu);
     }
 
     @Override
@@ -46,7 +51,7 @@ public class TileEntityCyclotronQuantum extends TileEntityMultiBlockElement impl
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.cyclotron;
+        return IUItem.cyclotron.getBlock(getTeBlock());
     }
 
 

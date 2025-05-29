@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_257_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine/quantum_quarry"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_138_element"
+      }
+    ]
+  },
+  "pattern": [
+    "C C",
+    " B ",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine/adv_quantum_quarry"
+  },
+  "show_notification": true
+}

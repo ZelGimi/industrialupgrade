@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.bee.TileEntityApiary;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerApiary extends ContainerFullInv<TileEntityApiary> {
 
-    public ContainerApiary(EntityPlayer entityPlayer, TileEntityApiary tileEntity1) {
+    public ContainerApiary(Player entityPlayer, TileEntityApiary tileEntity1) {
         super(entityPlayer, tileEntity1, 207);
 
 

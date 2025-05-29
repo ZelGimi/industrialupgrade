@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "industrialupgrade:models/dual_multi_crop",
-		"particle": "industrialupgrade:models/dual_multi_crop"
+		"1": "industrialupgrade:block/dual_multi_crop",
+		"particle": "industrialupgrade:block/dual_multi_crop"
 	},
 	"elements": [
 		{

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/irradiantglasspane"
+    "layer0" : "industrialupgrade:item/irradiantglasspane"
   }
 }

@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/tool/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/diamond_drill_demon"	}
+		"layer0": "industrialupgrade:item/diamond_drill_demon"	}
 }

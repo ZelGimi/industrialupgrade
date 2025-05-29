@@ -1,31 +1,22 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.Action;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.SoilPollutionComponent;
-import com.denfop.componets.TypeAction;
-import com.denfop.componets.TypeLoad;
-import com.denfop.componets.TypeUpgrade;
-import com.denfop.container.ContainerBaseWitherMaker;
+import com.denfop.componets.*;
 import com.denfop.invslot.InvSlotUpgrade;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
@@ -38,16 +29,13 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
     private final ComponentUpgrade componentUpgrades;
+
     public MachineRecipe output;
     public InvSlotRecipes inputSlotA;
-    private ItemStack WITHER_SKELETON_SKULL;
-    private ItemStack  SOUL_SAND;
-    public TileBaseWitherMaker(int energyPerTick, int length, int outputSlots) {
-        this(energyPerTick, length, outputSlots, 1);
-    }
 
-    public TileBaseWitherMaker(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
-        super(energyPerTick * length, 1, outputSlots);
+
+    public TileBaseWitherMaker(int energyPerTick, int length, int outputSlots, IMultiTileBlock multiTileBlock, BlockPos pos, BlockState state) {
+        super(energyPerTick * length, 1, outputSlots, multiTileBlock, pos, state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.output = null;
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -87,10 +75,8 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
     public void onLoaded() {
         super.onLoaded();
         inputSlotA.load();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.getWorld().isClientSide) {
             this.output = this.getOutput();
-            WITHER_SKELETON_SKULL = new ItemStack(Items.SKULL,1,1);
-            SOUL_SAND = new ItemStack(Blocks.SOUL_SAND);
         }
 
     }
@@ -98,17 +84,18 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+        if (this.getWorld().getGameTime() % 20 == 0) {
             if (!this.inputSlotA.isEmpty()) {
-                balanceSlots(this.inputSlotA.subList(0, 3), WITHER_SKELETON_SKULL);
-                balanceSlots(this.inputSlotA.subList(3, 7), SOUL_SAND);
+                balanceSlots(this.inputSlotA.subList(0, 3), Items.WITHER_SKELETON_SKULL);
+                balanceSlots(this.inputSlotA.subList(3, 7), Blocks.SOUL_SAND.asItem());
             }
         }
+
     }
-    public void balanceSlots(List<ItemStack> slots, ItemStack targetItem) {
+    public void balanceSlots(List<ItemStack> slots, Item targetItem) {
         int total = 0;
         for (ItemStack stack : slots) {
-            if (!stack.isEmpty() && stack.isItemEqual(targetItem)) {
+            if (!stack.isEmpty() && stack.getItem() == targetItem) {
                 total += stack.getCount();
             }
         }
@@ -122,12 +109,13 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
         for (int i = 0; i < slots.size(); i++) {
             if (perSlot > 0 || (i < remainder)) {
                 int count = perSlot + (i < remainder ? 1 : 0);
-                slots.set(i, new ItemStack(targetItem.getItem(), count,targetItem.getItemDamage()));
+                slots.set(i, new ItemStack(targetItem, count));
             } else {
                 slots.set(i, ItemStack.EMPTY);
             }
         }
     }
+
     public MachineRecipe getOutput() {
 
         this.output = this.inputSlotA.process();
@@ -136,11 +124,6 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
         return this.output;
     }
 
-
-    public ContainerBaseWitherMaker getGuiContainer(EntityPlayer entityPlayer) {
-        return new ContainerBaseWitherMaker(
-                entityPlayer, this);
-    }
 
     @Override
     public SoundEvent getSound() {

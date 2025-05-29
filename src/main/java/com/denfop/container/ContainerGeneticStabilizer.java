@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityGeneticStabilize;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGeneticStabilizer extends ContainerFullInv<TileEntityGeneticStabilize> {
 
-    public ContainerGeneticStabilizer(EntityPlayer var1, TileEntityGeneticStabilize tileEntity1) {
+    public ContainerGeneticStabilizer(Player var1, TileEntityGeneticStabilize tileEntity1) {
         super(var1, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 36, 99));

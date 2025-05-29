@@ -15,17 +15,19 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileAssamplerScrap extends TileMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileAssamplerScrap() {
+    public TileAssamplerScrap(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.AssamplerScrap.usagePerTick,
-                EnumMultiMachine.AssamplerScrap.lenghtOperation
+                EnumMultiMachine.AssamplerScrap.lenghtOperation, BlockMoreMachine3.assamplerscrap, pos, state
         );
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
@@ -50,7 +52,7 @@ public class TileAssamplerScrap extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base3;
+        return IUItem.machines_base3.getBlock(getTeBlock().getId());
     }
 
     public void init() {
@@ -60,7 +62,7 @@ public class TileAssamplerScrap extends TileMultiMachine {
         );
         addrecipe(
                 ModUtils.setSize(IUItem.scrapBox, 9),
-                new ItemStack(IUItem.doublescrapBox, 1)
+                new ItemStack(IUItem.doublescrapBox.getItem(), 1)
         );
     }
 

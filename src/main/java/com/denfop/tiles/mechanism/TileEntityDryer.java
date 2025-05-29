@@ -1,17 +1,11 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -19,8 +13,6 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockDryer;
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerOilPurifier;
-import com.denfop.gui.GuiOilPurifier;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -28,25 +20,22 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class TileEntityDryer extends TileEntityInventory implements IUpgradableBlock, IHasRecipe {
 
@@ -55,10 +44,10 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
     public InvSlotOutput outputSlot;
     public short progress;
 
-    public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.DRYER);
+    public Map<UUID, Double> data;
 
-    public TileEntityDryer() {
-        super();
+    public TileEntityDryer(BlockPos pos, BlockState state) {
+        super(BlockDryer.dryer, pos, state);
         this.progress = 0;
 
         Fluids fluids = this.addComponent(new Fluids(this));
@@ -77,8 +66,8 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.6D, 1.0D));
+    public List<AABB> getAabbs(boolean forCollision) {
+        return Collections.singletonList(new AABB(0.0D, 0.0D, 0.0D, 1.0D, 1.6D, 1.0D));
 
     }
 
@@ -92,47 +81,47 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("dryer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidrawlatex.getInstance(), 100)), new RecipeOutput(
+                new FluidStack(FluidName.fluidrawlatex.getInstance().get(), 100)), new RecipeOutput(
                 null,
                 IUItem.latex
         )));
 
         Recipes.recipes.getRecipeFluid().addRecipe("dryer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidhoney.getInstance(), 500)), new RecipeOutput(
+                new FluidStack(FluidName.fluidhoney.getInstance().get(), 500)), new RecipeOutput(
                 null,
-                new ItemStack(IUItem.honeycomb)
+                new ItemStack(IUItem.honeycomb.getItem())
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("dryer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidbeeswax.getInstance(), 500)), new RecipeOutput(
+                new FluidStack(FluidName.fluidbeeswax.getInstance().get(), 500)), new RecipeOutput(
                 null,
-                new ItemStack(IUItem.beeswax)
+                new ItemStack(IUItem.beeswax.getItem())
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("dryer", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidplantmixture.getInstance(), 500)), new RecipeOutput(
+                new FluidStack(FluidName.fluidplantmixture.getInstance().get(), 500)), new RecipeOutput(
                 null,
-                new ItemStack(IUItem.plant_mixture)
+                new ItemStack(IUItem.plant_mixture.getItem())
         )));
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
 
     public void onLoaded() {
         super.onLoaded();
-        data = PrimitiveHandler.getPlayersData(EnumPrimitive.DRYER);
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
+            data = PrimitiveHandler.getPlayersData(EnumPrimitive.DRYER);
             this.fluid_handler.load();
             new PacketUpdateFieldTile(this, "slot", outputSlot);
             new PacketUpdateFieldTile(this, "fluidtank", fluidTank1);
@@ -152,53 +141,49 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (this.world.isRemote) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (this.level.isClientSide) {
             return true;
         }
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(
-                        CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,
+        if (!this.getWorld().isClientSide && player
+                .getItemInHand(hand)
+                .getCapability(
+                        ForgeCapabilities.FLUID_HANDLER_ITEM,
                         null
-                ) && this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity()) {
+                ).orElse((IFluidHandlerItem) player
+                        .getItemInHand(hand).getItem().initCapabilities(player
+                                .getItemInHand(hand), player
+                                .getItemInHand(hand).getTag())) != null && this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity()) {
+
+
             ModUtils.interactWithFluidHandler(player, hand,
-                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    this.getComp(Fluids.class).getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
-            if (!world.isRemote) {
+            if (!level.isClientSide) {
                 new PacketUpdateFieldTile(this, "fluidtank", fluidTank1);
             }
             return true;
         } else {
-            if (!outputSlot.isEmpty()) {
-                if (!world.isRemote) {
-                    ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
-                }
-                outputSlot.put(0, ItemStack.EMPTY);
-                if (!world.isRemote) {
-                    new PacketUpdateFieldTile(this, "slot3", false);
-                }
-                return true;
+            if (!level.isClientSide) {
+                ModUtils.dropAsEntity(level, pos, outputSlot.get(0));
             }
+            outputSlot.set(0, ItemStack.EMPTY);
+            if (!level.isClientSide) {
+                new PacketUpdateFieldTile(this, "slot3", false);
+            }
+            return true;
         }
-        return false;
     }
+
 
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -230,17 +215,14 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
                 setActive(true);
             }
 
-            this.progress = (short) (this.progress + 1 + (data.getOrDefault(getComponentPrivate().getPlayersUUID().get(0),
-                    0.0) / 20));
+            this.progress = (short) (this.progress + 1 + (data.getOrDefault(getComponentPrivate().getPlayersUUID().get(0), 0.0) / 20));
             double k = this.progress;
 
             if (this.progress >= 100) {
                 operate();
-                if (!this.getWorld().isRemote) {
+                if (!this.getWorld().isClientSide)
                     PrimitiveHandler.addExperience(EnumPrimitive.DRYER, 0.25,
-                            getComponentPrivate().getPlayersUUID().get(0)
-                    );
-                }
+                            getComponentPrivate().getPlayersUUID().get(0));
                 this.progress = 0;
             }
         } else {
@@ -261,7 +243,7 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -270,14 +252,14 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot3")) {
-            outputSlot.put(0, ItemStack.EMPTY);
+            outputSlot.set(0, ItemStack.EMPTY);
         }
     }
 
@@ -306,17 +288,9 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.dryer;
+        return IUItem.dryer.getBlock();
     }
 
-    public ContainerOilPurifier getGuiContainer(EntityPlayer entityPlayer) {
-        return null;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public GuiOilPurifier getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return null;
-    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,

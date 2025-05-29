@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/earth_collector",
-    "particle" : "industrialupgrade:models/earth_collector"
+    "0" : "industrialupgrade:block/earth_collector",
+    "particle" : "industrialupgrade:block/earth_collector"
   },
   "elements" : [
     {

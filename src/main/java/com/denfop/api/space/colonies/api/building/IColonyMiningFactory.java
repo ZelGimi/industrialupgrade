@@ -16,5 +16,4 @@ public interface IColonyMiningFactory extends IColonyBuilding {
     void addWorkers(int workers);
 
     void removeWorkers(int remove);
-
 }

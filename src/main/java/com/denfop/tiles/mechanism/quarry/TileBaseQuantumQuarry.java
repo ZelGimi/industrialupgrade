@@ -1,14 +1,15 @@
 package com.denfop.tiles.mechanism.quarry;
 
-import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.api.vein.Type;
@@ -18,7 +19,9 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerQuantumQuarry;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiQuantumQuarry;
 import com.denfop.invslot.InvSlotQuantumQuarry;
 import com.denfop.items.modules.EnumQuarryModules;
@@ -30,26 +33,24 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudioFixer,
         IUpgradableBlock, IType, IUpdatableTileEvent {
@@ -85,11 +86,11 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
     public boolean plasma;
     private boolean sound = true;
 
-    public TileBaseQuantumQuarry(int coef) {
-
+    public TileBaseQuantumQuarry(int coef, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block, pos, state);
         this.progress = 0;
         this.getblock = 0;
-        this.energyconsume = Config.enerycost * coef;
+        this.energyconsume = 25000 * coef;
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 5E7D, 14));
         this.inputslot = new InvSlotQuantumQuarry(this, 24, 0);
         this.inputslotA = new InvSlotQuantumQuarry(this, 1, 1);
@@ -141,7 +142,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.energyconsume + Localization.translate(
                     "iu.machines_work_energy_type_qe"));
         }
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
             tooltip.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
@@ -190,15 +191,15 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
                     final ComponentBaseEnergy component2 = this.energy;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
-                            final NBTTagCompound nbt = ModUtils.nbt(drop);
-                            nbt.setDouble("energy", component2.getEnergy());
+                            final CompoundTag nbt = ModUtils.nbt(drop);
+                            nbt.putDouble("energy", component2.getEnergy());
                         }
                     }
                     return drop;
                 case None:
                     return null;
                 case Generator:
-                    return new ItemStack(IUItem.basemachine2, 1, 78);
+                    return new ItemStack(IUItem.basemachine2.getItem(78), 1);
                 case Machine:
                     return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                 case AdvMachine:
@@ -209,8 +210,8 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         final ComponentBaseEnergy component2 = this.energy;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
-                final NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy", component2.getEnergy());
+                final CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.putDouble("energy", component2.getEnergy());
             }
         }
 
@@ -242,12 +243,12 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
             if (soundEvent == 0) {
-                this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+                this.getWorld().playSound(null, this.getBlockPos(), getSound(), SoundSource.BLOCKS, 1F, 1);
             } else if (soundEvent == 1) {
-                new PacketStopSound(getWorld(), this.pos);
-                this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+                new PacketStopSound(getWorld(), this.getBlockPos());
+                this.getWorld().playSound(null, this.getBlockPos(), EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
             } else {
-                new PacketStopSound(getWorld(), this.pos);
+                new PacketStopSound(getWorld(), this.getBlockPos());
             }
         }
     }
@@ -259,18 +260,18 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         return list(tile.list_modules, stack1);
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.progress = nbttagcompound.getInteger("progress");
+        this.progress = nbttagcompound.getInt("progress");
         this.getblock = nbttagcompound.getDouble("getblock");
         this.sound = nbttagcompound.getBoolean("sound");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setDouble("getblock", this.getblock);
-        nbttagcompound.setInteger("progress", this.progress);
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putDouble("getblock", this.getblock);
+        nbttagcompound.putInt("progress", this.progress);
+        nbttagcompound.putBoolean("sound", this.sound);
         return nbttagcompound;
     }
 
@@ -281,16 +282,16 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         this.inputslotA.update();
         this.inputslotB.update();
         this.inputslotC.update();
-        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkAt(this.getBlockPos()).getPos());
         if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 return;
             }
             final ItemStack stack;
             if (vein.isOldMineral()) {
-                stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                stack = new ItemStack(IUItem.heavyore.getItem(vein.getMeta()), 1);
             } else {
-                stack = new ItemStack(IUItem.mineral, 1, vein.getMeta());
+                stack = new ItemStack(IUItem.mineral.getItem(vein.getMeta()), 1);
             }
 
             if (list(this.list_modules, stack)) {
@@ -302,23 +303,23 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
 
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
-        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkAt(this.getBlockPos()).getPos());
         if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 return;
             }
             final ItemStack stack1;
             if (vein.isOldMineral()) {
-                stack1 = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                stack1 = new ItemStack(IUItem.heavyore.getItem(vein.getMeta()), 1);
             } else {
-                stack1 = new ItemStack(IUItem.mineral, 1, vein.getMeta());
+                stack1 = new ItemStack(IUItem.mineral.getItem(vein.getMeta()), 1);
             }
 
             if (list(this.list_modules, stack1)) {
@@ -338,9 +339,9 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
                 if (this.vein.getType() == Type.VEIN && this.vein.getCol() > 0 && this.energy.getEnergy() > consume) {
                     final ItemStack stack;
                     if (vein.isOldMineral()) {
-                        stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                        stack = new ItemStack(IUItem.heavyore.getItem(vein.getMeta()), 1);
                     } else {
-                        stack = new ItemStack(IUItem.mineral, 1, vein.getMeta());
+                        stack = new ItemStack(IUItem.mineral.getItem(vein.getMeta()), 1);
                     }
 
                     if (this.can_dig_vein) {
@@ -357,7 +358,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
             }
         }
         this.col_tick = 0;
-        if (this.analyzer && !Config.enableonlyvein && plasma) {
+        if (this.analyzer && plasma) {
             double col = this.col;
             int chance2 = this.chance;
             int coble = rand.nextInt((int) col + 1);
@@ -386,12 +387,12 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
                     if (this.original) {
                         Item item = stack.getStack().getItem();
                         if ((!stack.isGem() && !stack.isShard()
-                                && item != Items.REDSTONE && item != Items.DYE && item != Items.COAL && item != Items.GLOWSTONE_DUST) && chance2 >= 1) {
+                                && item != Items.REDSTONE && item != Items.LAPIS_LAZULI && item != Items.COAL && item != Items.GLOWSTONE_DUST ) && chance2 >= 1) {
 
                             this.outputSlot.add(stack.getStack());
 
                         } else {
-                            int k = this.world.rand.nextInt(chance2 + 1);
+                            int k = this.level.random.nextInt(chance2 + 1);
                             for (int j = 0; j < k + 1; j++) {
                                 this.outputSlot.add(stack.getStack());
                             }
@@ -425,21 +426,21 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         }
 
 
-        if (this.world.getWorldTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
+        if (this.level.getGameTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
             ModUtils.tick(this.outputSlot, this);
         }
 
     }
 
-    public ContainerQuantumQuarry getGuiContainer(EntityPlayer player) {
+    public ContainerQuantumQuarry getGuiContainer(Player player) {
         return new ContainerQuantumQuarry(player, this);
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiQuantumQuarry getGui(EntityPlayer player, boolean isAdmin) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> containerBase) {
 
-        return new GuiQuantumQuarry(new ContainerQuantumQuarry(player, this));
+        return new GuiQuantumQuarry((ContainerQuantumQuarry) containerBase);
     }
 
     public boolean list(EnumQuarryModules type, ItemStack stack1) {
@@ -487,7 +488,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         sound = !sound;
         new PacketUpdateFieldTile(this, "sound", this.sound);
 

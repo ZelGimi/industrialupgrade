@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/titania_polonium_ore"
+    "all" : "industrialupgrade:block/titania_polonium_ore"
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/proteus_stone"
+    "all" : "industrialupgrade:block/proteus_stone"
   }
 }

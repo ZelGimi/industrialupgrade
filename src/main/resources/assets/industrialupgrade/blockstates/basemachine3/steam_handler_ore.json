@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=steam_handler_ore": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore"
+    },
+    "facing=south,type=steam_handler_ore": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore",
+      "y": 180
+    },
+    "facing=west,type=steam_handler_ore": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore",
+      "y": 270
+    },
+    "facing=east,type=steam_handler_ore": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore",
+      "y": 90
+    },
+    "facing=down,type=steam_handler_ore": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore",
+      "x": 90
+    },
+    "facing=up,type=steam_handler_ore": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore",
+      "x": 270
+    },
+    "facing=north,type=steam_handler_ore_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active"
+    },
+    "facing=south,type=steam_handler_ore_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "y": 180
+    },
+    "facing=west,type=steam_handler_ore_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "y": 270
+    },
+    "facing=east,type=steam_handler_ore_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "y": 90
+    },
+    "facing=down,type=steam_handler_ore_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "x": 90
+    },
+    "facing=up,type=steam_handler_ore_invalid": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "x": 270
+    },
+    "facing=north,type=steam_handler_ore_active": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active"
+    },
+    "facing=south,type=steam_handler_ore_active": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "y": 180
+    },
+    "facing=west,type=steam_handler_ore_active": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "y": 270
+    },
+    "facing=east,type=steam_handler_ore_active": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "y": 90
+    },
+    "facing=down,type=steam_handler_ore_active": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "x": 90
+    },
+    "facing=up,type=steam_handler_ore_active": {
+      "model": "industrialupgrade:block/basemachine/steam_handler_ore_active",
+      "x": 270
+    }
+  }
+}

@@ -1,9 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "industrialupgrade:blocks/hydro_turbine_casing_1",
-		"1": "industrialupgrade:blocks/hydro_turbine_casing_1",
-		"particle":"industrialupgrade:blocks/hydro_turbine_casing_1"
+		"1": "industrialupgrade:block/hydro_turbine_casing_1",
+		"particle": "industrialupgrade:block/hydro_turbine_casing_1"
 	},
 	"elements": [
 		{
@@ -16,7 +15,7 @@
 				"south": {"uv": [16, 8, 0, 16], "texture": "#1"},
 				"west": {"uv": [16, 8, 0, 16], "texture": "#1"},
 				"up": {"uv": [0, 16, 16, 0], "texture": "#1"},
-				"down": {"uv": [16, 0, 0, 16], "rotation": 270, "texture": "#0"}
+				"down": {"uv": [16, 0, 0, 16], "rotation": 270, "texture": "#1"}
 			}
 		},
 		{
@@ -29,8 +28,32 @@
 				"south": {"uv": [16, 0, 0, 8], "texture": "#1"},
 				"west": {"uv": [8, 0, 16, 8], "texture": "#1"},
 				"up": {"uv": [16, 8, 0, 0], "texture": "#1"},
-				"down": {"uv": [16, 0, 0, 16], "rotation": 270, "texture": "#0"}
+				"down": {"uv": [16, 0, 0, 16], "rotation": 270, "texture": "#missing"}
 			}
 		}
-	]
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_lefthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [25, -120, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }

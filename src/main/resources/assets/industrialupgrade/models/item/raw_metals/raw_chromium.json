@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/raw_chromium"	}
+		"layer0": "industrialupgrade:item/raw_chromium"	}
 }

@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/small_power_unit"
+		"layer0": "industrialupgrade:item/small_power_unit"
 	}
 }

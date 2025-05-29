@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:graphene_plate"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/gold"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:polonium_palladium_composite"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:voltage_sensor_for_mechanism"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:motors_with_improved_bearings_"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BDB",
+    "CEC"
+  ],
+  "result": {
+    "item": "industrialupgrade:medium_current_converter_to_low"
+  },
+  "show_notification": true
+}

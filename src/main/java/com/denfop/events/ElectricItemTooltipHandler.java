@@ -5,15 +5,16 @@ import com.denfop.Constants;
 import com.denfop.ElectricItem;
 import com.denfop.Localization;
 import com.denfop.api.item.IEnergyItem;
-import net.minecraft.item.ItemStack;
+import com.denfop.utils.KeyboardIU;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ElectricItemTooltipHandler {
 
     public ElectricItemTooltipHandler() {
@@ -26,12 +27,12 @@ public class ElectricItemTooltipHandler {
         if (!stack.isEmpty() && stack.getItem() instanceof IEnergyItem) {
             String tooltip = ElectricItem.manager.getToolTip(stack);
             if (!tooltip.isEmpty()) {
-                event.getToolTip().add(tooltip);
-                if (Keyboard.isKeyDown(42)) {
-                    event.getToolTip().add(Localization.translate(
+                event.getToolTip().add(Component.literal(tooltip));
+                if (KeyboardIU.isKeyDown(42)) {
+                    event.getToolTip().add(Component.literal(Localization.translate(
                             Constants.ABBREVIATION + ".item.tooltip.PowerTier",
                             ElectricItem.manager.getTier(stack)
-                    ));
+                    )));
                 }
             }
         }

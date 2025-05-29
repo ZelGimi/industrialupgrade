@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/chemical_plant_waste",
-    "down" : "industrialupgrade:blocks/chemical_plant_casing1",
-    "up" : "industrialupgrade:blocks/chemical_plant_casing1",
-    "north" : "industrialupgrade:blocks/chemical_plant_waste",
-    "east" : "industrialupgrade:blocks/chemical_plant_waste",
-    "south" : "industrialupgrade:blocks/chemical_plant_waste",
-    "west" : "industrialupgrade:blocks/chemical_plant_waste"
+    "particle" : "industrialupgrade:block/chemical_plant_waste",
+    "down" : "industrialupgrade:block/chemical_plant_casing1",
+    "up" : "industrialupgrade:block/chemical_plant_casing1",
+    "north" : "industrialupgrade:block/chemical_plant_waste",
+    "east" : "industrialupgrade:block/chemical_plant_waste",
+    "south" : "industrialupgrade:block/chemical_plant_waste",
+    "west" : "industrialupgrade:block/chemical_plant_waste"
   }
 }

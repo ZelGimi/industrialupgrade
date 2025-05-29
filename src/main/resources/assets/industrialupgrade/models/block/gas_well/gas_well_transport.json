@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_well_tank",
-    "down" : "industrialupgrade:blocks/gas_well_casing",
-    "up" : "industrialupgrade:blocks/gas_well_casing",
-    "north" : "industrialupgrade:blocks/gas_well_tank",
-    "east" : "industrialupgrade:blocks/gas_well_tank",
-    "south" : "industrialupgrade:blocks/gas_well_tank",
-    "west" : "industrialupgrade:blocks/gas_well_tank"
+    "particle" : "industrialupgrade:block/gas_well_tank",
+    "down" : "industrialupgrade:block/gas_well_casing",
+    "up" : "industrialupgrade:block/gas_well_casing",
+    "north" : "industrialupgrade:block/gas_well_tank",
+    "east" : "industrialupgrade:block/gas_well_tank",
+    "south" : "industrialupgrade:block/gas_well_tank",
+    "west" : "industrialupgrade:block/gas_well_tank"
   }
 }

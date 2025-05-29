@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/tungsten"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:redstone"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/galliumarsenic"
+      }
+    ]
+  },
+  "pattern": [
+    "AAB",
+    "ABA",
+    "C C"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_730_element"
+  },
+  "show_notification": true
+}

@@ -3,23 +3,19 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gasvein.TypeGas;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerGasWellController;
 import com.denfop.tiles.gaswell.TileEntityGasWellController;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +23,7 @@ import java.util.List;
 import static com.denfop.api.gui.GuiElement.bindBlockTexture;
 import static com.denfop.api.gui.GuiElement.getBlockTextureMap;
 
-public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
+public class GuiGasWellController<T extends ContainerGasWellController> extends GuiIU<ContainerGasWellController> {
 
     public GuiGasWellController(ContainerGasWellController guiContainer) {
         super(guiContainer);
@@ -58,15 +54,7 @@ public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
         this.elements.add(TankGauge.createNormal(this, 110, 15, guiContainer.base.tank.getTank()));
     }
 
-    @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
 
-    }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
@@ -88,30 +76,30 @@ public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
         if (container.base.vein != null && container.base.vein.isFind() && container.base.vein.getType() != TypeGas.NONE) {
             String text = "";
             if (container.base.vein.getType() == TypeGas.IODINE) {
-                text = Localization.translate(FluidName.fluidiodine.getInstance().getUnlocalizedName());
+                text = Localization.translate(FluidName.fluidiodine.getInstance().get().getFluidType().getDescriptionId());
             }
 
 
             if (container.base.vein.getType() == TypeGas.BROMIDE) {
-                text = Localization.translate(FluidName.fluidbromine.getInstance().getUnlocalizedName());
+                text = Localization.translate(FluidName.fluidbromine.getInstance().get().getFluidType().getDescriptionId());
             }
 
             if (container.base.vein.getType() == TypeGas.CHLORINE) {
-                text = Localization.translate(FluidName.fluidchlorum.getInstance().getUnlocalizedName());
+                text = Localization.translate(FluidName.fluidchlorum.getInstance().get().getFluidType().getDescriptionId());
             }
             if (container.base.vein.getType() == TypeGas.FLORINE) {
-                text = Localization.translate(FluidName.fluidfluor.getInstance().getUnlocalizedName());
+                text = Localization.translate(FluidName.fluidfluor.getInstance().get().getFluidType().getDescriptionId());
             }
 
             new Area(this, 70, 32, 18, 18)
                     .withTooltip((text + " " + container.base.vein.getCol() + "/" + container.base.vein.getMaxCol() + "mb"))
-                    .drawForeground(
+                    .drawForeground(poseStack,
                             par1,
                             par2
                     );
@@ -122,23 +110,30 @@ public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawBackground(GuiGraphics poseStack) {
+
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+        componentList.forEach(guiComponent -> guiComponent.drawBackground(poseStack, guiLeft(), guiTop()));
+
         if (container.base.vein != null && container.base.vein.isFind() && container.base.vein.getType() != TypeGas.NONE) {
 
             FluidStack fs;
             switch (container.base.vein.getType()) {
                 case CHLORINE:
-                    fs = new FluidStack(FluidName.fluidchlorum.getInstance(), container.base.vein.getCol());
+                    fs = new FluidStack(FluidName.fluidchlorum.getInstance().get(), container.base.vein.getCol());
                     break;
                 case BROMIDE:
-                    fs = new FluidStack(FluidName.fluidbromine.getInstance(), container.base.vein.getCol());
+                    fs = new FluidStack(FluidName.fluidbromine.getInstance().get(), container.base.vein.getCol());
                     break;
                 case FLORINE:
-                    fs = new FluidStack(FluidName.fluidfluor.getInstance(), container.base.vein.getCol());
+                    fs = new FluidStack(FluidName.fluidfluor.getInstance().get(), container.base.vein.getCol());
                     break;
                 default:
-                    fs = new FluidStack(FluidName.fluidiodine.getInstance(), container.base.vein.getCol());
+                    fs = new FluidStack(FluidName.fluidiodine.getInstance().get(), container.base.vein.getCol());
                     break;
             }
             int fluidX = 70 + 1;
@@ -146,14 +141,13 @@ public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
             int fluidWidth = 16;
             int fluidHeight = 16;
             Fluid fluid = fs.getFluid();
-            TextureAtlasSprite sprite = fluid != null
-                    ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                    : null;
-            int color = fluid != null ? fluid.getColor(fs) : -1;
+            IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+            int color = extensions.getTintColor();
             bindBlockTexture();
-            this.drawSprite(
-                    fluidX,
-                    fluidY,
+            this.drawSprite(poseStack,
+                  +guiLeft+  fluidX,
+                   guiTop()+    fluidY,
                     fluidWidth,
                     fluidHeight,
                     sprite,
@@ -164,17 +158,16 @@ public class GuiGasWellController extends GuiIU<ContainerGasWellController> {
             );
 
         }
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 10, 10);
+       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, 10, 10);
     }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawBackgroundAndTitle(poseStack,partialTicks, mouseX, mouseY);
+       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
 

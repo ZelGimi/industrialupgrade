@@ -2,6 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.blocks.FluidName;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class LogicFluidReactor extends LogicReactor {
 
@@ -29,14 +30,14 @@ public class LogicFluidReactor extends LogicReactor {
             }
 
             if (reactorFluid.getInputTank().getFluidAmount() >= 5 * this.reactorFluid.getPressure()) {
-                reactorFluid.getInputTank().drain(5 * this.reactorFluid.getPressure(), true);
+                reactorFluid.getInputTank().drain(5 * this.reactorFluid.getPressure(), IFluidHandler.FluidAction.EXECUTE);
                 if (reactorFluid.getOutputTank().getFluidAmount() + 2 * this.reactorFluid.getPressure() <= reactorFluid
                         .getOutputTank()
                         .getCapacity()) {
                     reactorFluid.getOutputTank().fill(new FluidStack(
-                            FluidName.fluidsteam.getInstance(),
+                            FluidName.fluidsteam.getInstance().get(),
                             2 * this.reactorFluid.getPressure()
-                    ), true);
+                    ), IFluidHandler.FluidAction.EXECUTE);
                     if (temp_heat > this.getMaxHeat()) {
                         temp_heat -= rand.nextInt((int) Math.max(temp_heat - this.getMaxHeat(), 1));
                         if (temp_heat < 0) {
@@ -62,11 +63,11 @@ public class LogicFluidReactor extends LogicReactor {
                 if (this.reactorFluid.getHotCoolantTank().getFluidAmount() + 2 <= this.reactorFluid
                         .getHotCoolantTank()
                         .getCapacity()) {
-                    reactorFluid.getCoolantTank().drain(5, true);
+                    reactorFluid.getCoolantTank().drain(5, IFluidHandler.FluidAction.EXECUTE);
                     reactorFluid.getHotCoolantTank().fill(new FluidStack(
-                            FluidName.fluidhot_coolant.getInstance(),
+                            FluidName.fluidhot_coolant.getInstance().get(),
                             2
-                    ), true);
+                    ), IFluidHandler.FluidAction.EXECUTE);
                     if ((int) (temp_heat * 0.2) > 0) {
                         temp_heat -= rand.nextInt((int) (temp_heat * 0.2));
                         if (temp_heat < 0) {

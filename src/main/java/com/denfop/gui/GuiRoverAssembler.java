@@ -6,14 +6,15 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerRoverAssembler;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiRoverAssembler extends GuiIU<ContainerRoverAssembler> {
+public class GuiRoverAssembler<T extends ContainerRoverAssembler> extends GuiIU<ContainerRoverAssembler> {
 
     public GuiRoverAssembler(ContainerRoverAssembler guiContainer) {
         super(guiContainer, EnumTypeStyle.SPACE);
-        this.xSize = 232;
-        this.ySize = 213;
+        this.imageWidth = 232;
+        this.imageHeight = 213;
         this.componentList.clear();
         this.addComponent(new GuiComponent(this, 198, 86, EnumTypeComponent.ENERGY_WEIGHT_2,
                 new Component<>(this.container.base.energy)
@@ -23,22 +24,18 @@ public class GuiRoverAssembler extends GuiIU<ContainerRoverAssembler> {
         ));
     }
 
+
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer( poseStack, partialTicks, mouseX, mouseY);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect( poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect( poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

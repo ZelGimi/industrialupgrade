@@ -1,9 +1,9 @@
 package com.denfop.api.sytem;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public interface IAcceptor extends ITile {
 
-    boolean acceptsFrom(IEmitter var1, EnumFacing var2);
+    boolean acceptsFrom(IEmitter var1, Direction var2);
 
 }

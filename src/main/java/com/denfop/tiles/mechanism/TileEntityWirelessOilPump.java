@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
@@ -11,7 +12,9 @@ import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWirelessOilPump;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWirelessOilPump;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemVeinSensor;
@@ -20,18 +23,21 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -44,21 +50,23 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
     public final Energy energy;
     public final InvSlot invslot;
     public List<Vein> veinList = new LinkedList<>();
-    public int level;
+    public int levelBlock;
 
-    public TileEntityWirelessOilPump() {
+    public TileEntityWirelessOilPump(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.wireless_oil_pump,pos,state);
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = fluids.addTank("tank", 256000, Fluids.fluidPredicate(FluidName.fluidneft.getInstance(),
-                FluidName.fluidsour_light_oil.getInstance(), FluidName.fluidsour_heavy_oil.getInstance(),
-                FluidName.fluidsour_medium_oil.getInstance(), FluidName.fluidsweet_medium_oil.getInstance(),
-                FluidName.fluidsweet_heavy_oil.getInstance()
+        this.fluidTank = fluids.addTank("tank", 256000, Fluids.fluidPredicate(FluidName.fluidneft.getInstance().get(),
+                FluidName.fluidsour_light_oil.getInstance().get(), FluidName.fluidsour_heavy_oil.getInstance().get(),
+                FluidName.fluidsour_medium_oil.getInstance().get(), FluidName.fluidsweet_medium_oil.getInstance().get(),
+                FluidName.fluidsweet_heavy_oil.getInstance().get()
         ));
         this.energy = this.addComponent(Energy.asBasicSink(this, 50000, 14));
         this.invslot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 4) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 updateList();
+                return content;
             }
 
             @Override
@@ -66,7 +74,7 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
                 if (!(stack.getItem() instanceof ItemVeinSensor)) {
                     return false;
                 }
-                final NBTTagCompound nbt = ModUtils.nbt(stack);
+                final CompoundTag nbt = ModUtils.nbt(stack);
                 if (!nbt.getString("type").isEmpty()) {
                     return nbt.getString("type").equals("oil");
                 }
@@ -77,17 +85,17 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiWirelessOilPump(this.getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiWirelessOilPump((ContainerWirelessOilPump) menu);
     }
 
     @Override
-    public ContainerWirelessOilPump getGuiContainer(final EntityPlayer var1) {
+    public ContainerWirelessOilPump getGuiContainer(final Player var1) {
         return new ContainerWirelessOilPump(this, var1);
     }
 
@@ -97,41 +105,35 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.level = nbtTagCompound.getInteger("level");
+        this.levelBlock = nbtTagCompound.getInt("level");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("level", level);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("level", levelBlock);
         return nbtTagCompound;
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-
-        if (level < 10) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (levelBlock < 10) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
+                return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);
-                this.level++;
+                this.levelBlock++;
                 return true;
             }
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
+
+
 
     @Override
     public void updateEntityServer() {
@@ -140,7 +142,7 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
         for (Vein vein : this.veinList) {
             if (this.energy.getEnergy() >= 10 && vein.isFind()) {
                 if (vein.getCol() >= 1) {
-                    int size = Math.min((this.level + 1) * 2, vein.getCol());
+                    int size = Math.min((this.levelBlock + 1) * 2, vein.getCol());
                     size = Math.min(size, this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount());
                     if (this.fluidTank.getFluidAmount() + size <= this.fluidTank.getCapacity()) {
                         int variety = vein.getMeta() / 3;
@@ -149,18 +151,18 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
                             case 0:
                                 switch (type) {
                                     case 0:
-                                        this.fluidTank.fill(new FluidStack(FluidName.fluidneft.getInstance(), size), true);
+                                        this.fluidTank.fill(new FluidStack(FluidName.fluidneft.getInstance().get(), size),  IFluidHandler.FluidAction.EXECUTE);
                                         break;
                                     case 1:
                                         this.fluidTank.fill(
-                                                new FluidStack(FluidName.fluidsweet_medium_oil.getInstance(), size),
-                                                true
+                                                new FluidStack(FluidName.fluidsweet_medium_oil.getInstance().get(), size),
+                                                IFluidHandler.FluidAction.EXECUTE
                                         );
                                         break;
                                     case 2:
                                         this.fluidTank.fill(
-                                                new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance(), size),
-                                                true
+                                                new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance().get(), size),
+                                                IFluidHandler.FluidAction.EXECUTE
                                         );
                                         break;
                                 }
@@ -169,20 +171,20 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
                                 switch (type) {
                                     case 0:
                                         this.fluidTank.fill(
-                                                new FluidStack(FluidName.fluidsour_light_oil.getInstance(), size),
-                                                true
+                                                new FluidStack(FluidName.fluidsour_light_oil.getInstance().get(), size),
+                                                IFluidHandler.FluidAction.EXECUTE
                                         );
                                         break;
                                     case 1:
                                         this.fluidTank.fill(
-                                                new FluidStack(FluidName.fluidsour_medium_oil.getInstance(), size),
-                                                true
+                                                new FluidStack(FluidName.fluidsour_medium_oil.getInstance().get(), size),
+                                                IFluidHandler.FluidAction.EXECUTE
                                         );
                                         break;
                                     case 2:
                                         this.fluidTank.fill(
-                                                new FluidStack(FluidName.fluidsour_heavy_oil.getInstance(), size),
-                                                true
+                                                new FluidStack(FluidName.fluidsour_heavy_oil.getInstance().get(), size),
+                                                IFluidHandler.FluidAction.EXECUTE
                                         );
                                         break;
                                 }
@@ -199,11 +201,11 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
         this.setActive(active);
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.level != 0) {
-            ret.add(new ItemStack(IUItem.upgrade_speed_creation, this.level));
-            this.level = 0;
+        if (this.levelBlock != 0) {
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.levelBlock));
+            this.levelBlock = 0;
         }
         return ret;
     }
@@ -218,11 +220,11 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
             tooltip.add(Localization.translate("iu.machines_work_energy") + 10 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) stack.getTagCompound().getTag("fluid"));
+        if (stack.hasTag() && stack.getTag().contains("fluid")) {
+            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getLocalizedName());
-            tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.amount / 1000 + " B");
+            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getString());
+            tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
         super.addInformation(stack, tooltip);
@@ -259,20 +261,20 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             updateList();
         }
     }
 
     public void updateList() {
         veinList.clear();
-        for (ItemStack stack : this.invslot.getContents()) {
+        for (ItemStack stack : this.invslot) {
             if (stack.isEmpty()) {
                 continue;
             }
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
-            int x = nbt.getInteger("x");
-            int z = nbt.getInteger("z");
+            final CompoundTag nbt = ModUtils.nbt(stack);
+            int x = nbt.getInt("x");
+            int z = nbt.getInt("z");
             ChunkPos chunkPos = new ChunkPos(x >> 4, z >> 4);
             final Vein vein = VeinSystem.system.getVein(chunkPos);
             if (vein.isFind() && vein.getType() == Type.OIL) {
@@ -282,18 +284,18 @@ public class TileEntityWirelessOilPump extends TileEntityInventory implements IM
     }
 
     @Override
-    public int getLevel() {
-        return this.level;
+    public int getLevelMechanism() {
+        return this.levelBlock;
     }
 
     @Override
-    public void setLevel(final int level) {
-        this.level = level;
+    public void setLevelMech(final int level) {
+        this.levelBlock = level;
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.levelBlock -= level;
     }
 
 }

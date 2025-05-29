@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/cobaltchrome"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/niobiumtitanium"
+      }
+    ]
+  },
+  "pattern": [
+    " AB",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_739_element"
+  },
+  "show_notification": true
+}

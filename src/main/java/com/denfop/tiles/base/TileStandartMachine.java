@@ -3,13 +3,15 @@ package com.denfop.tiles.base;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.Energy;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.PacketStopSound;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class TileStandartMachine extends TileEntityInventory implements IAudioFixer,
         IUpdatableTileEvent {
@@ -21,7 +23,8 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
 
-    public TileStandartMachine(int count) {
+    public TileStandartMachine(int count, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block, pos, state);
         if (count != 0) {
             this.outputSlot = new InvSlotOutput(this, count);
         }
@@ -50,22 +53,18 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.getBlockPos(), getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
-            new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            new PacketStopSound(getWorld(), this.getBlockPos());
+            this.getWorld().playSound(null, this.getBlockPos(), EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
-            new PacketStopSound(getWorld(), this.pos);
+            new PacketStopSound(getWorld(), this.getBlockPos());
         }
     }
 
 
     public SoundEvent getSound() {
         return null;
-    }
-
-
-    public void onGuiClosed(EntityPlayer player) {
     }
 
 

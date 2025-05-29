@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityFluidIntegrator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerFluidIntegrator extends ContainerFullInv<TileEntityFluidIntegrator> {
 
-    public ContainerFluidIntegrator(EntityPlayer var1, TileEntityFluidIntegrator tileEntity1) {
+    public ContainerFluidIntegrator(Player var1, TileEntityFluidIntegrator tileEntity1) {
         super(var1, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 115, 44));

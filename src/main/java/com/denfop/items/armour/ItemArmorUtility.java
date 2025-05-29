@@ -1,41 +1,25 @@
 package com.denfop.items.armour;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraftforge.common.ISpecialArmor;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.ItemStack;
 
-public class ItemArmorUtility extends ItemArmorBase implements ISpecialArmor {
-
-    public ItemArmorUtility(String armorName, EntityEquipmentSlot type) {
-        super(ArmorMaterial.DIAMOND, armorName, type);
+public class ItemArmorUtility extends ItemArmorBase {
+    public ItemArmorUtility(String armorName, Type p_40387_) {
+        super(ArmorMaterials.DIAMOND, armorName, p_40387_);
     }
 
-    public int getItemEnchantability() {
-        return 0;
+    public ItemArmorUtility(ArmorMaterial material, String armorName, Type p_40387_) {
+        super(material, armorName, p_40387_);
     }
 
-    public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
+    @Override
+    public boolean isEnchantable(ItemStack p_41456_) {
         return false;
     }
 
-    public ISpecialArmor.ArmorProperties getProperties(
-            EntityLivingBase player,
-            ItemStack armor,
-            DamageSource source,
-            double damage,
-            int slot
-    ) {
-        return new ISpecialArmor.ArmorProperties(0, 0.0, 0);
+    @Override
+    public boolean isRepairable(ItemStack stack) {
+        return false;
     }
-
-    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-        return 0;
-    }
-
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
-    }
-
 }

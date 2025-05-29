@@ -3,18 +3,15 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.container.ContainerLavaGenerator;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiLavaGenerator extends GuiIU<ContainerLavaGenerator> {
+@OnlyIn(Dist.CLIENT)
+public class GuiLavaGenerator<T extends ContainerLavaGenerator> extends GuiIU<ContainerLavaGenerator> {
 
     public final ContainerLavaGenerator container;
     public final String progressLabel;
@@ -32,10 +29,10 @@ public class GuiLavaGenerator extends GuiIU<ContainerLavaGenerator> {
     }
 
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(this.progressLabel, 8, 22, 4210752);
-        this.fontRenderer.drawString(this.container.base.getProgressAsString(), 18, 31, 4210752);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+       draw(poseStack, this.progressLabel, 8, 22, 4210752);
+        draw(poseStack, this.container.base.getProgressAsString(), 18, 31, 4210752);
 
 
     }

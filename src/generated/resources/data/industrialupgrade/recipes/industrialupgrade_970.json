@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:gears/osmium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:ingots/mikhail"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "BAB",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_323_element"
+  },
+  "show_notification": true
+}

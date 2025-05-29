@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:energy_tools/nano_bow"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:doubleplate/alcled"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CDC",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/quantum_bow"
+  },
+  "show_notification": true
+}

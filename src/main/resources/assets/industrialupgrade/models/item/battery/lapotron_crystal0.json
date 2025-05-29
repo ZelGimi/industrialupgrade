@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/battery/lapotron_crystal_0"
+    "layer0" : "industrialupgrade:item/battery/lapotron_crystal_0"
   }
 }

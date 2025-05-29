@@ -2,6 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -10,17 +11,19 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerDigger;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiDigger;
 import com.denfop.invslot.InvSlotDigger;
 import com.denfop.invslot.InvSlotInput;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -39,7 +42,8 @@ public class TileEntityAutoDigger extends TileEntityInventory {
     public double consume;
     public double energyconsume;
 
-    public TileEntityAutoDigger() {
+    public TileEntityAutoDigger(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.auto_digger,pos,state);
         this.chance = 0;
         this.col = 1;
         this.furnace = false;
@@ -68,7 +72,7 @@ public class TileEntityAutoDigger extends TileEntityInventory {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -100,7 +104,7 @@ public class TileEntityAutoDigger extends TileEntityInventory {
                 }
             }
         }
-        if (this.world.getWorldTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
+        if (this.level.getGameTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
             ModUtils.tick(this.outputSlot, this);
         }
     }
@@ -109,40 +113,17 @@ public class TileEntityAutoDigger extends TileEntityInventory {
         this.baseMachineRecipe[slotid] = baseMachineRecipe;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     @Override
-    public ContainerDigger getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerDigger getGuiContainer(final Player entityPlayer) {
         return new ContainerDigger(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiDigger getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiDigger(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiDigger((ContainerDigger) menu);
     }
 
 

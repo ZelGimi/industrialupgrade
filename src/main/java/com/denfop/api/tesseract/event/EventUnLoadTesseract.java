@@ -1,14 +1,14 @@
 package com.denfop.api.tesseract.event;
 
 import com.denfop.api.tesseract.ITesseract;
-import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.level.LevelEvent;
 
-public class EventUnLoadTesseract extends WorldEvent {
+public class EventUnLoadTesseract extends LevelEvent {
 
     private final ITesseract tesseract;
 
-    public EventUnLoadTesseract(ITesseract tesseract, final World world) {
+    public EventUnLoadTesseract(ITesseract tesseract, final Level world) {
         super(world);
         this.tesseract = tesseract;
     }

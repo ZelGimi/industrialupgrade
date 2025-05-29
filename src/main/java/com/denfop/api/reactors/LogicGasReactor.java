@@ -2,6 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.blocks.FluidName;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class LogicGasReactor extends LogicReactor {
 
@@ -39,7 +40,7 @@ public class LogicGasReactor extends LogicReactor {
             if (!this.gasReactor.isFull()) {
                 return;
             }
-            this.gasReactor.getHeliumTank().drain((int) (5 * log), true);
+            this.gasReactor.getHeliumTank().drain((int) (5 * log), IFluidHandler.FluidAction.EXECUTE);
             if (temp_heat <= getMaxHeat()) {
                 temp_heat += rand.nextInt(Math.max((int) (getMaxHeat() - temp_heat), 4));
                 if (temp_heat > getMaxHeat()) {
@@ -64,9 +65,9 @@ public class LogicGasReactor extends LogicReactor {
                         .getHeliumTank()
                         .getFluidAmount() + col * this.gasReactor.getPressure(j) <= this.gasReactor.getCapacityHelium()) {
                     this.gasReactor.getHeliumTank().fill(new FluidStack(
-                            FluidName.fluidHelium.getInstance(),
+                            FluidName.fluidHelium.getInstance().get(),
                             col * this.gasReactor.getPressure(j)
-                    ), true);
+                    ), IFluidHandler.FluidAction.EXECUTE);
                     this.gasReactor.addHeliumToRegenerate(-col * this.gasReactor.getPressure(j));
                 }
 
@@ -97,11 +98,11 @@ public class LogicGasReactor extends LogicReactor {
                                 .getFluidAmount() > 2 * power) {
                             this.gasReactor.getWaterTank(j).drain(
                                     2 * power
-                                    , true);
+                                    , IFluidHandler.FluidAction.EXECUTE);
                             this.gasReactor
-                                    .getHydrogenTank(j).fill(new FluidStack(FluidName.fluidhyd.getInstance(), 2 * power), true);
+                                    .getHydrogenTank(j).fill(new FluidStack(FluidName.fluidhyd.getInstance().get(), 2 * power), IFluidHandler.FluidAction.EXECUTE);
                             this.gasReactor
-                                    .getOxygenTank(j).fill(new FluidStack(FluidName.fluidoxy.getInstance(), power), true);
+                                    .getOxygenTank(j).fill(new FluidStack(FluidName.fluidoxy.getInstance().get(), power), IFluidHandler.FluidAction.EXECUTE);
                             this.gasReactor.damagePump(j);
                         }
                     }
@@ -123,7 +124,7 @@ public class LogicGasReactor extends LogicReactor {
 
                             if (this.gasReactor.getWaterTank(jj).getFluidAmount() > 0) {
                                 int temp1 = Math.min(this.gasReactor.getWaterTank(jj).getFluidAmount(), power - col);
-                                this.gasReactor.getWaterTank(jj).drain(temp1, true);
+                                this.gasReactor.getWaterTank(jj).drain(temp1, IFluidHandler.FluidAction.EXECUTE);
                                 col += temp1;
                             }
                         }

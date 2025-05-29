@@ -1,28 +1,27 @@
 package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.state.DefaultDrop;
+import com.denfop.blocks.state.HarvestTool;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.quarry_earth.TileEntityCasing;
-import com.denfop.tiles.quarry_earth.TileEntityChest;
-import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryAnalyzer;
-import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryController;
-import com.denfop.tiles.quarry_earth.TileEntityEarthTransport;
-import com.denfop.tiles.quarry_earth.TileEntityRigDrill;
+import com.denfop.tiles.quarry_earth.*;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
 public enum BlockEarthQuarry implements IMultiTileBlock {
+
 
     earth_controller(TileEntityEarthQuarryController.class, 0),
     earth_analyzer(TileEntityEarthQuarryAnalyzer.class, 1),
@@ -33,18 +32,27 @@ public enum BlockEarthQuarry implements IMultiTileBlock {
     ;
 
 
-    public static final ResourceLocation IDENTITY = IUCore.getIdentifier("earth_quarry");
-
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
+    private final Rarity rarity;
     int idBlock;
     private TileEntityBlock dummyTe;
+    private BlockState defaultState;
+    private RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockType;
+
+    ;
 
     BlockEarthQuarry(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
+        this(teClass, itemMeta, Rarity.UNCOMMON);
+
+    }
+
+    ;
+
+    BlockEarthQuarry(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final Rarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
-
-        GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
+        this.rarity = rarity;
 
 
     }
@@ -53,37 +61,47 @@ public enum BlockEarthQuarry implements IMultiTileBlock {
         return idBlock;
     }
 
-    ;
-
     public void setIdBlock(int id) {
         idBlock = id;
     }
 
-    ;
+    @Override
+    public MapColor getMaterial() {
+        return MapColor.METAL;
+    }
 
     public void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
+        final ModContainer mc = ModLoadingContext.get().getActiveContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
         }
-        for (final BlockEarthQuarry block : values()) {
-            if (block.teClass != null) {
-                try {
-                    block.dummyTe = block.teClass.newInstance();
-                } catch (Exception ignored) {
+        if (this.getTeClass() != null) {
+            try {
+                this.dummyTe = (TileEntityBlock) this.teClass.getConstructors()[0].newInstance(BlockPos.ZERO, defaultState);
+            } catch (Exception e) {
 
-                }
             }
         }
     }
 
     @Override
-    public Material getMaterial() {
-        return IMultiTileBlock.MACHINE;
+    public void setDefaultState(BlockState blockState) {
+        this.defaultState = blockState;
     }
 
-    public float getHardness() {
-        return 0.5F;
+    @Override
+    public void setType(RegistryObject<BlockEntityType<? extends TileEntityBlock>> blockEntityType) {
+        this.blockType = blockEntityType;
+    }
+
+    @Override
+    public BlockEntityType<? extends TileEntityBlock> getBlockType() {
+        return this.blockType.get();
+    }
+
+    @Override
+    public String getMainPath() {
+        return "earth_quarry";
     }
 
 
@@ -97,15 +115,10 @@ public enum BlockEarthQuarry implements IMultiTileBlock {
         return this.itemMeta;
     }
 
-    @Override
-    @Nonnull
-    public ResourceLocation getIdentifier() {
-        return IDENTITY;
-    }
 
     @Override
     public boolean hasItem() {
-        return this.teClass != null && this.itemMeta != -1;
+        return true;
     }
 
     @Override
@@ -116,34 +129,44 @@ public enum BlockEarthQuarry implements IMultiTileBlock {
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     @Nonnull
-    public Set<EnumFacing> getSupportedFacings() {
+    public Set<Direction> getSupportedFacings() {
         return ModUtils.horizontalFacings;
     }
 
     @Override
-    @Nonnull
-    public MultiTileBlock.HarvestTool getHarvestTool() {
-        return MultiTileBlock.HarvestTool.Pickaxe;
+    public float getHardness() {
+        return 1.0F;
     }
 
     @Override
     @Nonnull
-    public MultiTileBlock.DefaultDrop getDefaultDrop() {
-        return MultiTileBlock.DefaultDrop.Self;
+    public HarvestTool getHarvestTool() {
+        return HarvestTool.Wrench;
+    }
+
+    @Override
+    @Nonnull
+    public DefaultDrop getDefaultDrop() {
+        return DefaultDrop.Self;
     }
 
     @Override
     public boolean allowWrenchRotating() {
-        return true;
+        return false;
     }
 
     @Override
     public TileEntityBlock getDummyTe() {
         return this.dummyTe;
+    }
+
+    @Override
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
+        return IMultiTileBlock.super.getMultiModels(teBlock);
     }
 }

@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/plate/dense_bronze"
+		"layer0": "industrialupgrade:item/plate/dense_bronze"
 	}
 }

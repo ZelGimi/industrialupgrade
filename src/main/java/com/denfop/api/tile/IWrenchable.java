@@ -1,29 +1,30 @@
 package com.denfop.api.tile;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
 public interface IWrenchable {
 
-    EnumFacing getFacing(World var1, BlockPos var2);
+    Direction getFacing(Level var1, BlockPos var2);
 
-    default boolean canSetFacing(World world, BlockPos pos, EnumFacing newDirection, EntityPlayer player) {
+    default boolean canSetFacing(Level world, BlockPos pos, Direction newDirection, Player player) {
         return true;
     }
 
-    boolean setFacing(World var1, BlockPos var2, EnumFacing var3, EntityPlayer var4);
+    boolean setFacing(Level var1, BlockPos var2, Direction var3, Player var4);
 
-    boolean wrenchCanRemove(World var1, BlockPos var2, EntityPlayer var3);
+    boolean wrenchCanRemove(Level var1, BlockPos var2, Player var3);
 
-    List<ItemStack> getWrenchDrops(World var1, BlockPos var2, IBlockState var3, TileEntity var4, EntityPlayer var5, int var6);
+    List<ItemStack> getWrenchDrops(Level var1, BlockPos var2, BlockState var3, BlockEntity var4, Player var5, int var6);
 
-    void wrenchBreak(World world, BlockPos pos);
+    void wrenchBreak(Level world, BlockPos pos);
 
 }

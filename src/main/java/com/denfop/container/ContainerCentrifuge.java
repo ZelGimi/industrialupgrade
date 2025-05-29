@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityCentrifuge;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerCentrifuge extends ContainerFullInv<TileEntityCentrifuge> {
 
-    public ContainerCentrifuge(final EntityPlayer player, final TileEntityCentrifuge base) {
+    public ContainerCentrifuge(final Player player, final TileEntityCentrifuge base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.outputSlot, 0, 100, 35));

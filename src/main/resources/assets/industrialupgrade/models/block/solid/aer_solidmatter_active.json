@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/aer_solid_active",
-    "down" : "industrialupgrade:blocks/aer_solid_active",
-    "up" : "industrialupgrade:blocks/aer_solid_active",
-    "north" : "industrialupgrade:blocks/aer_solid_active",
-    "east" : "industrialupgrade:blocks/aer_solid_active",
-    "south" : "industrialupgrade:blocks/aer_solid_active",
-    "west" : "industrialupgrade:blocks/aer_solid_active"
+    "particle" : "industrialupgrade:block/aer_solid_active",
+    "down" : "industrialupgrade:block/aer_solid_active",
+    "up" : "industrialupgrade:block/aer_solid_active",
+    "north" : "industrialupgrade:block/aer_solid_active",
+    "east" : "industrialupgrade:block/aer_solid_active",
+    "south" : "industrialupgrade:block/aer_solid_active",
+    "west" : "industrialupgrade:block/aer_solid_active"
   }
 }

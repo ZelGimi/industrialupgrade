@@ -1,24 +1,26 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileBaseWitherMaker;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 
 public class ContainerBaseWitherMaker
         extends ContainerFullInv<TileBaseWitherMaker> {
 
-    public ContainerBaseWitherMaker(EntityPlayer entityPlayer, TileBaseWitherMaker tileEntity1) {
+    public ContainerBaseWitherMaker(Player entityPlayer, TileBaseWitherMaker tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerBaseWitherMaker(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileBaseWitherMaker tileEntity1,
             int height,
             int upgradeX,
             int upgradeY
     ) {
         super(null, tileEntity1, height);
+        this.player = entityPlayer;
+        this.inventory = player.getInventory();
         if ((tileEntity1).inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 0, 8, 27));
         }
@@ -56,7 +58,7 @@ public class ContainerBaseWitherMaker
         for (col = 0; col < 3; ++col) {
             for (int col1 = 0; col1 < 9; ++col1) {
                 this.addSlotToContainer(new Slot(
-                        entityPlayer.inventory,
+                        entityPlayer.getInventory(),
                         col1 + col * 9 + 9,
                         xStart + col1 * 18,
                         height + 1 + -82 + col * 18
@@ -64,7 +66,7 @@ public class ContainerBaseWitherMaker
             }
         }
         for (col = 0; col < 9; ++col) {
-            this.addSlotToContainer(new Slot(entityPlayer.inventory, col, xStart + col * 18, height + -24));
+            this.addSlotToContainer(new Slot(entityPlayer.getInventory(), col, xStart + col * 18, height + -24));
         }
     }
 

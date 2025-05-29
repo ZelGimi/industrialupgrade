@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/io_sulfur"
+    "all" : "industrialupgrade:block/io_sulfur"
   }
 }

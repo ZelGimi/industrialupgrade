@@ -8,9 +8,10 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TanksGauge;
 import com.denfop.container.ContainerLevelFuel;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiLevelFuel extends GuiIU<ContainerLevelFuel> {
+public class GuiLevelFuel<T extends ContainerLevelFuel> extends GuiIU<ContainerLevelFuel> {
 
     public GuiLevelFuel(ContainerLevelFuel guiContainer) {
         super(guiContainer);
@@ -27,35 +28,30 @@ public class GuiLevelFuel extends GuiIU<ContainerLevelFuel> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(Localization.translate("iu.potion.radiation") + ": " + ModUtils.getString(
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
+        draw(poseStack, Localization.translate("iu.potion.radiation") + ": " + ModUtils.getString(
                 this.container.base.getReactor().getRadGeneration()) + "☢", 100, 7, ModUtils.convertRGBcolorToInt(19, 40, 73));
-        this.fontRenderer.drawString(Localization.translate("gui.iu.tier") + ": " + ModUtils.getString(
+       draw(poseStack,Localization.translate("gui.iu.tier") + ": " + ModUtils.getString(
                 this.container.base.getLevelReactor()), 100, 19, ModUtils.convertRGBcolorToInt(19, 40, 73));
-        this.fontRenderer.drawString(this.container.base.getLevelReactor() < this.container.base.getMaxLevelReactor() ?
+       draw(poseStack,this.container.base.getLevelReactor() < this.container.base.getMaxLevelReactor() ?
                         Localization.translate("reactor.canupgrade") : Localization.translate("reactor.notcanupgrade"), 100, 31,
                 ModUtils.convertRGBcolorToInt(19, 40, 73)
         );
-        this.fontRenderer.drawString(Localization.translate("iu.minipanel.output") + ModUtils.getString(
+       draw(poseStack,Localization.translate("iu.minipanel.output") + ModUtils.getString(
                         this.container.base.output), 100, 43,
                 ModUtils.convertRGBcolorToInt(19, 40, 73)
         );
-        this.fontRenderer.drawString(Localization.translate("gui.SuperSolarPanel.generating") + ": " + ModUtils.getString(
+      draw(poseStack,Localization.translate("gui.SuperSolarPanel.generating") + ": " + ModUtils.getString(
                 this.container.base.output) + " EF/t", 100, 56, ModUtils.convertRGBcolorToInt(19, 40, 73));
 
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-
-    }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

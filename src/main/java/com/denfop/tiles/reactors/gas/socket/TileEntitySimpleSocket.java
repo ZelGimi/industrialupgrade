@@ -5,11 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
 import com.denfop.tiles.reactors.gas.ISocket;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySimpleSocket extends TileEntityMainSocket implements ISocket {
 
-    public TileEntitySimpleSocket() {
-        super(10000);
+    public TileEntitySimpleSocket(BlockPos pos, BlockState state) {
+        super(10000,BlockGasReactor.gas_socket,pos,state);
     }
 
     @Override
@@ -19,7 +21,7 @@ public class TileEntitySimpleSocket extends TileEntityMainSocket implements ISoc
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_reactor;
+        return IUItem.gas_reactor.getBlock(getTeBlock());
     }
 
     @Override

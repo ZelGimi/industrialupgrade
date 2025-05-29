@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/ceres_copper_ore"
+    "all" : "industrialupgrade:block/ceres_copper_ore"
   }
 }

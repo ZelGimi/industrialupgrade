@@ -7,12 +7,10 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerIndustrialOrePurifier;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-@SideOnly(Side.CLIENT)
-public class GuiIndustrialOrePurifier extends GuiIU<ContainerIndustrialOrePurifier> {
+public class GuiIndustrialOrePurifier<T extends ContainerIndustrialOrePurifier> extends GuiIU<ContainerIndustrialOrePurifier> {
 
     public final ContainerIndustrialOrePurifier container;
 
@@ -38,27 +36,23 @@ public class GuiIndustrialOrePurifier extends GuiIU<ContainerIndustrialOrePurifi
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
 
 
-    }
-
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+       bindTexture(getTexture());
 
 
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
+        int xoffset = guiLeft;
+        int yoffset = guiTop;
 
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2 + 15, 5, name, 4210752, false);
+        this.drawXCenteredString(poseStack,this.imageWidth / 2 + 15, 5, name, 4210752, false);
 
     }
 

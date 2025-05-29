@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
     "textures": {
-        "all": "industrialupgrade:blocks/graphite_reactor/heat_exchanger/exchanger_side"
+        "all": "industrialupgrade:block/graphite_reactor/heat_exchanger/exchanger_side"
     }
 }

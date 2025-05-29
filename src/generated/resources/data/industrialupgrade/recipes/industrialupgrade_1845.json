@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_reactor/gas_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_327_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_414_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:doubleplate/chromium"
+      }
+    ]
+  },
+  "pattern": [
+    "   ",
+    "BAB",
+    "CDC"
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_reactor/gas_socket"
+  },
+  "show_notification": true
+}

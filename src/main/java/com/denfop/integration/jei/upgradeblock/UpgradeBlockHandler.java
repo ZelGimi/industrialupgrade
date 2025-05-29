@@ -3,8 +3,8 @@ package com.denfop.integration.jei.upgradeblock;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +12,14 @@ import java.util.List;
 public class UpgradeBlockHandler {
 
     private static final List<UpgradeBlockHandler> recipes = new ArrayList<>();
-    public final NBTTagCompound metadata;
+    public final CompoundTag metadata;
     private final ItemStack input, input1, output;
 
     public UpgradeBlockHandler(
             ItemStack input,
             ItemStack input1,
             ItemStack output,
-            final NBTTagCompound metadata
+            final CompoundTag metadata
     ) {
         this.input = input;
         this.input1 = input1;
@@ -38,7 +38,7 @@ public class UpgradeBlockHandler {
             ItemStack input,
             ItemStack input1,
             ItemStack output,
-            final NBTTagCompound metadata
+            final CompoundTag metadata
     ) {
         UpgradeBlockHandler recipe = new UpgradeBlockHandler(input, input1, output, metadata);
         if (recipes.contains(recipe)) {
@@ -86,7 +86,7 @@ public class UpgradeBlockHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

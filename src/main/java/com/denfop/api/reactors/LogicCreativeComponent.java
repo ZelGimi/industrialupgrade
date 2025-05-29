@@ -2,7 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.api.item.IDamageItem;
 import com.denfop.items.reactors.ItemComponentVent;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collections;

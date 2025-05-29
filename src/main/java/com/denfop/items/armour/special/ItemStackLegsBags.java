@@ -1,20 +1,20 @@
 package com.denfop.items.armour.special;
 
 import com.denfop.ElectricItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.container.ContainerBase;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.ItemStackInventory;
 import com.denfop.items.bags.BagsDescription;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class ItemStackLegsBags extends ItemStackInventory {
     public final ItemStack itemStack1;
     private final double coef;
 
-    public ItemStackLegsBags(EntityPlayer player, ItemStack stack) {
+    public ItemStackLegsBags(Player player, ItemStack stack) {
         super(player, stack, 45);
         this.inventorySize = 45;
         this.itemStack1 = stack;
@@ -36,18 +36,18 @@ public class ItemStackLegsBags extends ItemStackInventory {
         this.updatelist();
     }
 
-    public ContainerBase<ItemStackLegsBags> getGuiContainer(EntityPlayer player) {
+    public ContainerBase<ItemStackLegsBags> getGuiContainer(Player player) {
         return new ContainerLegsBags(player, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiLegsBags(new ContainerLegsBags(player, this), itemStack1);
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiLegsBags((ContainerLegsBags) isAdmin, itemStack1);
     }
 
     @Override
-    public TileEntityInventory getParent() {
-        return null;
+    public ItemStackInventory getParent() {
+        return this;
     }
 
 
@@ -73,7 +73,8 @@ public class ItemStackLegsBags extends ItemStackInventory {
 
     }
 
-    public void setInventorySlotContents(int slot, ItemStack stack) {
+    @Override
+    public void setItem(int slot, ItemStack stack) {
         if (!ModUtils.isEmpty(stack) && ModUtils.getSize(stack) > this.getInventoryStackLimit()) {
             stack = ModUtils.setSize(stack, this.getInventoryStackLimit());
         }
@@ -87,6 +88,7 @@ public class ItemStackLegsBags extends ItemStackInventory {
         this.updatelist();
         this.save();
     }
+
 
     private void updatelist() {
         List<BagsDescription> list = new ArrayList<>();
@@ -105,13 +107,13 @@ public class ItemStackLegsBags extends ItemStackInventory {
                 list.add(new BagsDescription(stack));
             }
         }
-        final NBTTagCompound nbt = ModUtils.nbt(itemStack1);
-        NBTTagCompound nbt1 = new NBTTagCompound();
-        nbt1.setInteger("size", list.size());
+        final CompoundTag nbt = ModUtils.nbt(itemStack1);
+        CompoundTag nbt1 = new CompoundTag();
+        nbt1.putInt("size", list.size());
         for (int i = 0; i < list.size(); i++) {
-            nbt1.setTag(String.valueOf(i), list.get(i).write(new NBTTagCompound()));
+            nbt1.put(String.valueOf(i), list.get(i).write(new CompoundTag()));
         }
-        nbt.setTag("bag", nbt1);
+        nbt.put("bag", nbt1);
     }
 
     public ItemStack get(int index) {
@@ -147,17 +149,17 @@ public class ItemStackLegsBags extends ItemStackInventory {
                         }
                         return true;
                     } else {
-                        if (this.get(i).isItemEqual(stack)) {
+                        if (this.get(i).is(stack.getItem())) {
                             if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTagCompound() == null && this.get(i).getTagCompound() == null) {
+                                if (stack.getTag() == null && this.get(i).getTag() == null) {
                                     if (!simulate) {
                                         this.get(i).grow(stack.getCount());
                                         stack.setCount(0);
                                     }
                                     return true;
                                 } else {
-                                    if (stack.getTagCompound() != null &&
-                                            stack.getTagCompound().equals(this.get(i).getTagCompound())) {
+                                    if (stack.getTag() != null &&
+                                            stack.getTag().equals(this.get(i).getTag())) {
                                         if (!simulate) {
                                             this.get(i).grow(stack.getCount());
                                             stack.setCount(0);

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/programming_table_front",
-    "down" : "industrialupgrade:blocks/programming_table_side",
-    "up" : "industrialupgrade:blocks/programming_table_top",
-    "north" : "industrialupgrade:blocks/programming_table_front",
-    "east" : "industrialupgrade:blocks/programming_table_side",
-    "south" : "industrialupgrade:blocks/programming_table_side",
-    "west" : "industrialupgrade:blocks/programming_table_side"
+    "particle" : "industrialupgrade:block/programming_table_front",
+    "down" : "industrialupgrade:block/programming_table_side",
+    "up" : "industrialupgrade:block/programming_table_top",
+    "north" : "industrialupgrade:block/programming_table_front",
+    "east" : "industrialupgrade:block/programming_table_side",
+    "south" : "industrialupgrade:block/programming_table_side",
+    "west" : "industrialupgrade:block/programming_table_side"
   }
 }

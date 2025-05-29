@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/tantalum_tungsten_hafnium_doubleplate"	}
+		"layer0": "industrialupgrade:item/tantalum_tungsten_hafnium_doubleplate"	}
 }

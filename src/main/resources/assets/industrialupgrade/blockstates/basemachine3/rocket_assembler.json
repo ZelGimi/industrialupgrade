@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=rocket_assembler": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler"
+    },
+    "facing=south,type=rocket_assembler": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 180
+    },
+    "facing=west,type=rocket_assembler": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 270
+    },
+    "facing=east,type=rocket_assembler": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 90
+    },
+    "facing=down,type=rocket_assembler": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "x": 90
+    },
+    "facing=up,type=rocket_assembler": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "x": 270
+    },
+    "facing=north,type=rocket_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler"
+    },
+    "facing=south,type=rocket_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 180
+    },
+    "facing=west,type=rocket_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 270
+    },
+    "facing=east,type=rocket_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 90
+    },
+    "facing=down,type=rocket_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "x": 90
+    },
+    "facing=up,type=rocket_assembler_invalid": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "x": 270
+    },
+    "facing=north,type=rocket_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler"
+    },
+    "facing=south,type=rocket_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 180
+    },
+    "facing=west,type=rocket_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 270
+    },
+    "facing=east,type=rocket_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "y": 90
+    },
+    "facing=down,type=rocket_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "x": 90
+    },
+    "facing=up,type=rocket_assembler_active": {
+      "model": "industrialupgrade:block/basemachine/rocket_assembler",
+      "x": 270
+    }
+  }
+}

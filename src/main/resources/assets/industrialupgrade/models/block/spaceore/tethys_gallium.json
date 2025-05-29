@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/tethys_gallium"
+    "all" : "industrialupgrade:block/tethys_gallium"
   }
 }

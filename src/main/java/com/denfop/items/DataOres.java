@@ -1,18 +1,19 @@
 package com.denfop.items;
 
-import net.minecraft.block.state.IBlockState;
+
+import net.minecraft.world.level.block.state.BlockState;
 
 public class DataOres {
 
     private final int color;
-    private final IBlockState blockState;
+    private final BlockState blockState;
 
-    public DataOres(IBlockState blockState, int color) {
+    public DataOres(BlockState blockState, int color) {
         this.blockState = blockState;
         this.color = color;
     }
 
-    public IBlockState getBlockState() {
+    public BlockState getBlockState() {
         return blockState;
     }
 

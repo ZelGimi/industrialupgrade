@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/spectral_helmet_demon"
+		"layer0": "industrialupgrade:item/spectral_helmet_demon"
 	}
 }

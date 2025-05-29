@@ -6,12 +6,14 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksPhotonicMachine;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TilePhotonicCentrifuge extends TileMultiMachine {
 
-    public TilePhotonicCentrifuge() {
+    public TilePhotonicCentrifuge(BlockPos pos, BlockState state) {
         super(
-                EnumMultiMachine.Pho_Centrifuge
+                EnumMultiMachine.Pho_Centrifuge, BlocksPhotonicMachine.photonic_centrifuge, pos, state
         );
         this.cold.upgrade = true;
     }
@@ -27,7 +29,7 @@ public class TilePhotonicCentrifuge extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.pho_machine;
+        return IUItem.pho_machine.getBlock(getTeBlock().getId());
     }
 
     @Override

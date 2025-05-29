@@ -1,17 +1,17 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityPrimalSolderingMechanism;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSolderingMechanism
         extends ContainerFullInv<TileEntityPrimalSolderingMechanism> {
 
-    public ContainerSolderingMechanism(EntityPlayer entityPlayer, TileEntityPrimalSolderingMechanism tileEntity1) {
+    public ContainerSolderingMechanism(Player entityPlayer, TileEntityPrimalSolderingMechanism tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerSolderingMechanism(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileEntityPrimalSolderingMechanism tileEntity1,
             int height,
             int upgradeX,

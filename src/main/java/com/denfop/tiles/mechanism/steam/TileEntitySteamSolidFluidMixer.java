@@ -1,19 +1,10 @@
 package com.denfop.tiles.mechanism.steam;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -22,7 +13,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamSolidFluidMixer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamSolidFluidMixer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -31,19 +24,22 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -74,8 +70,8 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
     public double guiProgress;
     protected short progress;
 
-    public TileEntitySteamSolidFluidMixer() {
-        super(0, 1, 1);
+    public TileEntitySteamSolidFluidMixer(BlockPos pos, BlockState state) {
+        super(0, 1, 1,BlockBaseMachine3.steam_solid_fluid_mixer,pos,state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -93,7 +89,7 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
         this.fluid_handler = new FluidHandlerRecipe("solid_fluid_mixer", fluids);
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 2));
         this.fluidTank = fluids.addTank("fluidTank6", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
-                FluidName.fluidsteam.getInstance()
+                FluidName.fluidsteam.getInstance().get()
         ));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.steam.setFluidTank(fluidTank);
@@ -127,29 +123,19 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
         return EnumSound.steam.getSoundEvent();
     }
 
+
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 
-    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -161,16 +147,16 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
 
     }
 
-    public ContainerSteamSolidFluidMixer getGuiContainer(final EntityPlayer var1) {
+    public ContainerSteamSolidFluidMixer getGuiContainer(final Player var1) {
         return new ContainerSteamSolidFluidMixer(var1, this);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiSteamSolidFluidMixer(getGuiContainer(var1));
+        return new GuiSteamSolidFluidMixer((ContainerSteamSolidFluidMixer) menu);
     }
 
     @Override
@@ -180,7 +166,7 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -195,24 +181,24 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
-            this.fluid_handler.load(inputSlotA.get());
+            this.fluid_handler.load(this.inputSlotA.get(0));
             this.getOutput();
         }
 
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -260,7 +246,7 @@ public class TileEntitySteamSolidFluidMixer extends TileElectricMachine implemen
 
 
         if ((this.fluid_handler.output() == null && this.output != null && this.fluidTank1.getFluidAmount() > 0)) {
-            this.fluid_handler.getOutput(inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.output == null) {
                 this.fluid_handler.setOutput(null);

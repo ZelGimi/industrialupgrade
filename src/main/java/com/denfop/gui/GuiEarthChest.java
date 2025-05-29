@@ -2,9 +2,9 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerEarthChest;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiEarthChest extends GuiIU<ContainerEarthChest> {
+public class GuiEarthChest<T extends ContainerEarthChest> extends GuiIU<ContainerEarthChest> {
 
     public GuiEarthChest(ContainerEarthChest guiContainer) {
         super(guiContainer);

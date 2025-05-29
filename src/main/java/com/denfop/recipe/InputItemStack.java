@@ -1,14 +1,18 @@
 package com.denfop.recipe;
 
+
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
 
 public class InputItemStack implements IInputItemStack {
-
+    public  static InputItemStack EMPTY = new InputItemStack(ItemStack.EMPTY,1,true);
     public final ItemStack input;
     public int amount;
 
@@ -16,31 +20,50 @@ public class InputItemStack implements IInputItemStack {
         this(input, ModUtils.getSize(input));
     }
 
-    InputItemStack(ItemStack input, int amount) {
+    public InputItemStack(ItemStack input, int amount) {
+        if (ModUtils.isEmpty(input)) {
+            throw new IllegalArgumentException("invalid input stack");
+        } else {
+            this.input = input.copy();
+            this.amount = amount;
+        }
+    }
+    InputItemStack(ItemStack input, int amount,boolean f) {
         this.input = input.copy();
         this.amount = amount;
     }
-
+    @Override
+    public void growAmount(final int col) {
+        this.amount++;
+        this.input.setCount(amount);
+    }
     public boolean matches(ItemStack subject) {
         boolean energy = (this.input.getItem() instanceof IEnergyItem && subject.getItem() instanceof IEnergyItem);
-        return subject.getItem() == this.input.getItem() && (subject.getMetadata() == this.input.getMetadata() || this.input.getMetadata() == 32767 || energy) && (this.input.getMetadata() == 32767 || (energy || ModUtils.matchesNBT(
-                subject.getTagCompound(),
-                this.input.getTagCompound()
-        )));
+        return subject.getItem() == this.input.getItem() && ModUtils.checkItemEquality(this.input,subject);
     }
 
     public int getAmount() {
         return this.amount;
     }
 
-    @Override
-    public void growAmount(final int col) {
-        this.amount++;
-        this.input.setCount(amount);
-    }
-
     public List<ItemStack> getInputs() {
         return Collections.singletonList(ModUtils.setSize(this.input, this.getAmount()));
+    }
+
+    @Override
+    public boolean hasTag() {
+        return false;
+    }
+
+    @Override
+    public TagKey<Item> getTag() {
+        return null;
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buffer) {
+        buffer.writeInt(0);
+        buffer.writeItem(this.input);
     }
 
     public String toString() {

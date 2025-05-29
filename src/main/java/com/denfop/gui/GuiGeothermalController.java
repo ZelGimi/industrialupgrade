@@ -7,15 +7,15 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerGeothermalController;
 import com.denfop.tiles.geothermalpump.TileEntityGeothermalController;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiGeothermalController extends GuiIU<ContainerGeothermalController> {
+public class GuiGeothermalController<T extends ContainerGeothermalController> extends GuiIU<ContainerGeothermalController> {
 
     private boolean hover = false;
 
@@ -59,19 +59,11 @@ public class GuiGeothermalController extends GuiIU<ContainerGeothermalController
         }
     }
 
-    @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
 
-    }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
         handleUpgradeTooltip(par1, par2);
         if (!this.container.base.work) {
@@ -82,35 +74,34 @@ public class GuiGeothermalController extends GuiIU<ContainerGeothermalController
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack, partialTicks, mouseX, mouseY);
     }
 
     @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack,final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawBackgroundAndTitle(poseStack, partialTicks, mouseX, mouseY);
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         bindTexture();
-        drawTexturedModalRect(this.guiLeft + 70,
+        drawTexturedModalRect( poseStack,this.guiLeft + 70,
                 this.guiTop + 35
                 , 231, 1, 24, 24
         );
         if (this.container.base.work) {
-            drawTexturedModalRect(this.guiLeft + 70,
+            drawTexturedModalRect( poseStack,this.guiLeft + 70,
                     this.guiTop + 35
                     , 231, 51, 24, 24
             );
         }
         if (this.hover) {
-            drawTexturedModalRect(this.guiLeft + 70,
+            drawTexturedModalRect( poseStack,this.guiLeft + 70,
                     this.guiTop + 35
                     , 231, 26, 24, 24
             );
         }
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 10, 10);
+       bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect( poseStack,this.guiLeft, this.guiTop, 0, 0, 10, 10);
     }
 
     @Override

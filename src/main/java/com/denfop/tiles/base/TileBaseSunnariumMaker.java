@@ -1,23 +1,19 @@
 package com.denfop.tiles.base;
 
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
-import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgrade;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.TypeUpgrade;
+import com.denfop.componets.*;
 import com.denfop.invslot.InvSlotUpgrade;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
@@ -34,12 +30,12 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
     public InvSlotRecipes inputSlotA;
     public MachineRecipe output;
 
-    public TileBaseSunnariumMaker(int energyPerTick, int length, int outputSlots) {
-        this(energyPerTick, length, outputSlots, 1);
+    public TileBaseSunnariumMaker(int energyPerTick, int length, int outputSlots, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        this(energyPerTick, length, outputSlots, 1, block, pos, state);
     }
 
-    public TileBaseSunnariumMaker(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
-        super(energyPerTick * length, 1, outputSlots);
+    public TileBaseSunnariumMaker(int energyPerTick, int length, int outputSlots, int aDefaultTier, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(energyPerTick * length, 1, outputSlots, block, pos, state);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.output = null;
         this.sunenergy = this.addComponent(ComponentBaseEnergy
@@ -63,7 +59,7 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!getLevel().isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -102,7 +98,5 @@ public abstract class TileBaseSunnariumMaker extends TileElectricMachine
         return null;
     }
 
-    public void onGuiClosed(EntityPlayer entityPlayer) {
-    }
 
 }

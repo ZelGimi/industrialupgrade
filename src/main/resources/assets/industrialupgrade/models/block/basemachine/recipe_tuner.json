@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/recipe_tuner_front",
-    "down" : "industrialupgrade:blocks/recipe_tuner_other-sides",
-    "up" : "industrialupgrade:blocks/recipe_tuner_other-sides",
-    "north" : "industrialupgrade:blocks/recipe_tuner_front",
-    "east" : "industrialupgrade:blocks/recipe_tuner_other-sides",
-    "south" : "industrialupgrade:blocks/recipe_tuner_other-sides",
-    "west" : "industrialupgrade:blocks/recipe_tuner_other-sides"
+    "particle" : "industrialupgrade:block/recipe_tuner_front",
+    "down" : "industrialupgrade:block/recipe_tuner_other-sides",
+    "up" : "industrialupgrade:block/recipe_tuner_other-sides",
+    "north" : "industrialupgrade:block/recipe_tuner_front",
+    "east" : "industrialupgrade:block/recipe_tuner_other-sides",
+    "south" : "industrialupgrade:block/recipe_tuner_other-sides",
+    "west" : "industrialupgrade:block/recipe_tuner_other-sides"
   }
 }

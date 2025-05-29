@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/mars_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/mars_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/mars_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/mars_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/mars_boulder"
+  }
+}

@@ -1,44 +1,30 @@
 package com.denfop.items.resource.alloys;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemAlloysNugget extends ItemSubTypes<ItemAlloysNugget.Types> implements IModelRegister {
-
-    protected static final String NAME = "alloynugget";
-
-    public ItemAlloysNugget() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemAlloysNugget<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemAlloysNugget(T element) {
+        super(new Item.Properties(), element);
     }
 
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("iu.alloy", "iu.alloys"));
+    @Override
+    public Item getItem() {
+        return this;
     }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        return new String[]{"forge:nuggets/" + getElement().getName().replace("_alloy", "").replace("_", ""), "forge:nuggets"};
     }
 
     public enum Types implements ISubEnum {
@@ -88,8 +74,14 @@ public class ItemAlloysNugget extends ItemSubTypes<ItemAlloysNugget.Types> imple
             return values()[ID % values().length];
         }
 
+        @Override
         public String getName() {
-            return this.name;
+            return name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "alloynugget";
         }
 
         public int getId() {

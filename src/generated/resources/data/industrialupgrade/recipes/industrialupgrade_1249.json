@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_41_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/invar"
+      }
+    ]
+  },
+  "pattern": [
+    "C C",
+    "BAB",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:macerator/macerator"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/dione_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/dione_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/dione_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/dione_boulder"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:spacecobblestone/dione_cobblestone"
+  }
+}

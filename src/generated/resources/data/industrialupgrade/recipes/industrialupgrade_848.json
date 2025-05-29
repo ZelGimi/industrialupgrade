@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/muntsa"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/nichrome"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_15_element"
+  },
+  "show_notification": true
+}

@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -9,18 +10,21 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.Redstone;
 import com.denfop.componets.RedstoneHandler;
 import com.denfop.container.ContainerAutoFuse;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiAutoFuse;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityAutoFuse extends TileEntityInventory {
 
@@ -31,11 +35,12 @@ public class TileEntityAutoFuse extends TileEntityInventory {
     public int timer = 60;
     private boolean boom = false;
 
-    public TileEntityAutoFuse() {
+    public TileEntityAutoFuse(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.autofuse,pos,state);
         this.slotBomb = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.nuclear_bomb.itemBlock;
+                return stack.getItem() == IUItem.nuclear_bomb.getItem();
             }
         };
         this.rad_energy = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.RADIATION, this, 100000));
@@ -58,7 +63,7 @@ public class TileEntityAutoFuse extends TileEntityInventory {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -77,13 +82,13 @@ public class TileEntityAutoFuse extends TileEntityInventory {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiAutoFuse(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiAutoFuse((ContainerAutoFuse) menu);
     }
 
     @Override
-    public ContainerAutoFuse getGuiContainer(final EntityPlayer var1) {
+    public ContainerAutoFuse getGuiContainer(final Player var1) {
         return new ContainerAutoFuse(this, var1);
     }
 
@@ -105,20 +110,19 @@ public class TileEntityAutoFuse extends TileEntityInventory {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setBoolean("fuse", fuse);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putBoolean("fuse", fuse);
         return nbtTagCompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         fuse = nbtTagCompound.getBoolean("fuse");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.fuse && !this.slotBomb.isEmpty()) {
@@ -127,25 +131,27 @@ public class TileEntityAutoFuse extends TileEntityInventory {
                 if (timer == 0) {
                     if (boom) {
                         boom = false;
-                        this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.pos.getX(), this.pos.getY() + 1,
-                                this.pos.getZ(), 0D, 0.0D, 0.0D
-                        );
+                        this.level.addParticle(ParticleTypes.EXPLOSION,
+                                this.worldPosition.getX() + 0.5D,
+                                this.worldPosition.getY() + 1.0D,
+                                this.worldPosition.getZ() + 0.5D,
+                                0.0D, 0.0D, 0.0D);
                     }
                     this.timer = 60;
                 } else {
-                    this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.pos.getX(), this.pos.getY() + 0.5D,
-                            this.pos.getZ(),
-                            0.0D, 0.0D,
-                            0.0D
-                    );
-                    this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.pos.getX(), this.pos.getY() + 0.5D,
-                            this.pos.getZ(),
-                            0.0D, 0.0D,
-                            0.0D
-                    );
+                    this.level.addParticle(ParticleTypes.SMOKE,
+                            this.worldPosition.getX() + 0.5D,
+                            this.worldPosition.getY() + 0.5D,
+                            this.worldPosition.getZ() + 0.5D,
+                            0.0D, 0.0D, 0.0D);
+                    this.level.addParticle(ParticleTypes.LARGE_SMOKE,
+                            this.worldPosition.getX() + 0.5D,
+                            this.worldPosition.getY() + 0.5D,
+                            this.worldPosition.getZ() + 0.5D,
+                            0.0D, 0.0D, 0.0D);
                 }
-
             }
+
         }
     }
 
@@ -163,7 +169,7 @@ public class TileEntityAutoFuse extends TileEntityInventory {
                 }
                 if (timer == 0) {
                     this.rad_energy.addEnergy(300);
-                    this.slotBomb.get().shrink(1);
+                    this.slotBomb.get(0).shrink(1);
                     timer = 60;
                 }
 

@@ -1,16 +1,14 @@
 package com.denfop.container;
 
-import com.denfop.Config;
 import com.denfop.tiles.base.TileCombinerMatter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerCombinerMatter extends ContainerFullInv<TileCombinerMatter> {
 
-    public ContainerCombinerMatter(EntityPlayer entityPlayer, TileCombinerMatter tileEntity1) {
+    public ContainerCombinerMatter(Player entityPlayer, TileCombinerMatter tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
-        if (Config.amplifierSlot) {
-            addSlotToContainer(new SlotInvSlot(tileEntity1.amplifierSlot, 0, 72, 40));
-        }
+        addSlotToContainer(new SlotInvSlot(tileEntity1.amplifierSlot, 0, 72, 40));
+
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));
         addSlotToContainer(new SlotInvSlot(tileEntity1.containerslot, 0, 125, 23));
         for (int i = 0; i < 4; i++) {

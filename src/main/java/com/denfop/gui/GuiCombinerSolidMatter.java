@@ -5,14 +5,15 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerCombinerSolidMatter;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 
-public class GuiCombinerSolidMatter extends GuiIU<ContainerCombinerSolidMatter> {
+public class GuiCombinerSolidMatter<T extends ContainerCombinerSolidMatter> extends GuiIU<ContainerCombinerSolidMatter> {
 
-    public final ContainerCombinerSolidMatter container;
+    public final T container;
 
-    public GuiCombinerSolidMatter(ContainerCombinerSolidMatter container1) {
+    public GuiCombinerSolidMatter(T container1) {
         super(container1);
         this.container = container1;
         this.addComponent(new GuiComponent(this, 70, 25, EnumTypeComponent.ENERGY_HEIGHT,
@@ -21,19 +22,19 @@ public class GuiCombinerSolidMatter extends GuiIU<ContainerCombinerSolidMatter> 
     }
 
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
         if (this.container.base != null) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
-        this.mc.getTextureManager().bindTexture(getTexture());
+        bindTexture();
 
 
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
     }
 

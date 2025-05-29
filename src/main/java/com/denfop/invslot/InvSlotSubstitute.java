@@ -1,7 +1,12 @@
 package com.denfop.invslot;
 
+import com.denfop.IUItem;
+import com.denfop.blocks.blockitem.ItemBlockTileEntity;
+import com.denfop.blocks.mechanism.BlockCable;
 import com.denfop.tiles.mechanism.energy.TileEnergySubstitute;
-import net.minecraft.item.ItemStack;
+import com.denfop.tiles.transport.tiles.TileEntityCable;
+import com.denfop.tiles.transport.types.CableType;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,14 +56,16 @@ public class InvSlotSubstitute extends InvSlot {
 
     @Override
     public boolean accepts(final ItemStack stack, final int index) {
-        return stack.getItem() instanceof com.denfop.items.transport.ItemCable;
+        if (!(stack.getItem() instanceof ItemBlockTileEntity<?>))
+            return false;
+        return IUItem.cable.contains(stack);
     }
 
     @Override
     public void onChanged() {
         super.onChanged();
         try {
-            if (!this.tile.getWorld().isRemote) {
+            if (!this.tile.getWorld().isClientSide) {
                 this.tile.getCableItemList().clear();
                 this.tile.max_value = 0;
                 List<CableItem> cableItemList = new ArrayList<>();
@@ -66,10 +73,10 @@ public class InvSlotSubstitute extends InvSlot {
                     if (stack.isEmpty()) {
                         continue;
                     }
-                    if (stack.getItem() instanceof com.denfop.items.transport.ItemCable) {
+                    ItemBlockTileEntity<BlockCable> cable1 = IUItem.cable.getItem(stack);
                         boolean need = false;
                         for (CableItem cableItem : cableItemList) {
-                            if (cableItem.equals(new CableItem(com.denfop.items.transport.ItemCable.getCableType(stack).capacity,
+                            if (cableItem.equals(new CableItem(((CableType)((TileEntityCable)cable1.getElement().getDummyTe()).cableItem).capacity,
                                     stack.getCount(), stack
                             ))) {
                                 cableItem.addCount(stack.getCount());
@@ -78,14 +85,14 @@ public class InvSlotSubstitute extends InvSlot {
                             }
                         }
                         if (!need) {
-                            cableItemList.add(new CableItem(com.denfop.items.transport.ItemCable.getCableType(stack).capacity,
+                            cableItemList.add(new CableItem(((CableType)((TileEntityCable)cable1.getElement().getDummyTe()).cableItem).capacity,
                                     stack.getCount(), stack
                             ));
                         }
 
 
                     }
-                }
+
                 this.tile.setCableItemList(cableItemList);
                 cableItemList.forEach(cableItem -> this.tile.setMaxValue(
                         this.tile.max_value,

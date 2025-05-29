@@ -8,37 +8,35 @@ import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.Path;
 import com.denfop.api.energy.event.EventLoadController;
 import com.denfop.api.energy.event.EventUnloadController;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerController;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiEnergyController;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TileEnergyController extends TileEntityInventory implements
         IUpdatableTileEvent, IEnergyController {
@@ -46,13 +44,14 @@ public class TileEnergyController extends TileEntityInventory implements
     public List<Path> energyPathList = new ArrayList<>();
     public boolean work = false;
     public int size;
-    Map<EnumFacing, IEnergyTile> energyConductorMap = new HashMap<>();
+    Map<Direction, IEnergyTile> energyConductorMap = new HashMap<>();
     List<InfoTile<IEnergyTile>> validReceivers = new LinkedList<>();
     int hashCodeSource;
     private ChunkPos chunkPos;
     private long id;
 
-    public TileEnergyController() {
+    public TileEnergyController(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.energy_controller,pos,state);
         this.addComponent(Energy.asBasicSink(this, 0, 14));
     }
 
@@ -61,10 +60,10 @@ public class TileEnergyController extends TileEntityInventory implements
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    @SideOnly(Side.CLIENT)
+
     public void addInformation(ItemStack stack, List<String> tooltip) {
         tooltip.add(Localization.translate("iu.controller.info"));
         tooltip.add(Localization.translate("iu.controller.info1"));
@@ -74,8 +73,8 @@ public class TileEnergyController extends TileEntityInventory implements
         return validReceivers;
     }
 
-    public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void RemoveTile(IEnergyTile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
@@ -106,41 +105,18 @@ public class TileEnergyController extends TileEntityInventory implements
         hashCodeSource = hashCode;
     }
 
-    public void AddTile(IEnergyTile tile, final EnumFacing facing1) {
-        if (!this.getWorld().isRemote) {
+    public void AddTile(IEnergyTile tile, final Direction facing1) {
+        if (!this.getWorld().isClientSide) {
             this.energyConductorMap.put(facing1, tile);
             validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
         }
     }
 
-    public Map<EnumFacing, IEnergyTile> getTiles() {
+    public Map<Direction, IEnergyTile> getTiles() {
         return energyConductorMap;
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -167,7 +143,7 @@ public class TileEnergyController extends TileEntityInventory implements
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.energyConductorMap.clear();
             validReceivers.clear();
             MinecraftForge.EVENT_BUS.post(new EventLoadController(this));
@@ -178,7 +154,7 @@ public class TileEnergyController extends TileEntityInventory implements
 
     @Override
     public void onUnloaded() {
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             MinecraftForge.EVENT_BUS.post(new EventUnloadController(this));
         }
         super.onUnloaded();
@@ -186,25 +162,25 @@ public class TileEnergyController extends TileEntityInventory implements
 
 
     @Override
-    public ContainerController getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerController getGuiContainer(final Player entityPlayer) {
         return new ContainerController(this, entityPlayer);
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiEnergyController(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiEnergyController((ContainerController) menu);
     }
 
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        nbt.setBoolean("work", work);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        nbt.putBoolean("work", work);
         return super.writeToNBT(nbt);
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         this.work = nbtTagCompound.getBoolean("work");
 
@@ -216,16 +192,16 @@ public class TileEnergyController extends TileEntityInventory implements
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
-        if (this.world.isRemote) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
+        if (this.level.isClientSide) {
             return;
         }
         if (i == 0) {
             energyPathList.clear();
-            for (EnumFacing facing : EnumFacing.values()) {
+            for (Direction facing : Direction.values()) {
                 final List<Path> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
                         this.getWorld(),
-                        this.getBlockPos().offset(facing)
+                        this.getBlockPos().offset(facing.getNormal())
                 );
 
                 for (Path path : energyPathList1) {
@@ -250,10 +226,10 @@ public class TileEnergyController extends TileEntityInventory implements
     public void work() {
         if (this.getWork()) {
             energyPathList.clear();
-            for (EnumFacing facing : EnumFacing.values()) {
+            for (Direction facing : Direction.values()) {
                 final List<Path> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
                         this.getWorld(),
-                        this.getBlockPos().offset(facing)
+                        this.getBlockPos().offset(facing.getNormal())
                 );
 
                 for (Path path : energyPathList1) {
@@ -275,7 +251,7 @@ public class TileEnergyController extends TileEntityInventory implements
 
 
     @Override
-    public TileEntity getTileEntity() {
+    public BlockEntity getTileEntity() {
         return this;
     }
 

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:itemcell/itemcell",
+      "nbt": "{Fluid:{Amount:1000,FluidName:\"industrialupgrade:iufluidhyd\"}}"
+    },
+    "B": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/adamantium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/stellite"
+      }
+    ]
+  },
+  "pattern": [
+    "ACA",
+    "DBD",
+    "ACA"
+  ],
+  "result": {
+    "item": "industrialupgrade:itemcoolupgrade/hydrogen"
+  },
+  "show_notification": true
+}

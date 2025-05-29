@@ -1,17 +1,12 @@
 package com.denfop.api.space.colonies;
 
-import com.denfop.api.space.IAsteroid;
-import com.denfop.api.space.IBody;
-import com.denfop.api.space.IPlanet;
-import com.denfop.api.space.ISatellite;
-import com.denfop.api.space.SpaceInit;
-import com.denfop.api.space.SpaceNet;
+import com.denfop.api.space.*;
 import com.denfop.api.space.colonies.api.IColony;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.utils.Timer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.LinkedList;
@@ -54,38 +49,38 @@ public class Sends {
         return body;
     }
 
-    public Sends(NBTTagCompound tagCompound) {
-        this.uuid = tagCompound.getUniqueId("uuid");
+    public Sends(CompoundTag tagCompound) {
+        this.uuid = tagCompound.getUUID("uuid");
         this.body = SpaceNet.instance.getBodyFromName(tagCompound.getString("body"));
-        this.timerToPlanet = new Timer(tagCompound.getCompoundTag("time"));
-        NBTTagList nbtTagList = tagCompound.getTagList("items", 10);
+        this.timerToPlanet = new Timer(tagCompound.getCompound("time"));
+        ListTag nbtTagList = tagCompound.getList("items", 10);
         this.stacks.clear();
-        for (int i = 0; i < nbtTagList.tagCount(); i++) {
-            this.stacks.add(new ItemStack(nbtTagList.getCompoundTagAt(i)));
+        for (int i = 0; i < nbtTagList.size(); i++) {
+            this.stacks.add(ItemStack.of(nbtTagList.getCompound(i)));
         }
-        NBTTagList nbtTagList1 = tagCompound.getTagList("fluids", 10);
+        ListTag nbtTagList1 = tagCompound.getList("fluids", 10);
         this.fluidStacks.clear();
-        for (int i = 0; i < nbtTagList1.tagCount(); i++) {
-            this.fluidStacks.add(FluidStack.loadFluidStackFromNBT(nbtTagList1.getCompoundTagAt(i)));
+        for (int i = 0; i < nbtTagList1.size(); i++) {
+            this.fluidStacks.add(FluidStack.loadFluidStackFromNBT(nbtTagList1.getCompound(i)));
         }
 
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        tagCompound.setUniqueId("uuid", uuid);
-        tagCompound.setString("body", body.getName());
-        tagCompound.setTag("time", this.timerToPlanet.writeNBT(new NBTTagCompound()));
-        NBTTagList nbtTagList = new NBTTagList();
+    public CompoundTag writeToNbt() {
+        CompoundTag tagCompound = new CompoundTag();
+        tagCompound.putUUID("uuid", uuid);
+        tagCompound.putString("body", body.getName());
+        tagCompound.put("time", this.timerToPlanet.writeNBT(new CompoundTag()));
+        ListTag nbtTagList = new ListTag();
         for (ItemStack stack : stacks) {
-            nbtTagList.appendTag(stack.serializeNBT());
+            nbtTagList.add(stack.serializeNBT());
         }
-        tagCompound.setTag("items", nbtTagList);
-        NBTTagList nbtTagList1 = new NBTTagList();
+        tagCompound.put("items", nbtTagList);
+        ListTag nbtTagList1 = new ListTag();
         for (FluidStack fluidStack : fluidStacks) {
-            nbtTagList1.appendTag(fluidStack.writeToNBT(new NBTTagCompound()));
+            nbtTagList1.add(fluidStack.writeToNBT(new CompoundTag()));
         }
-        tagCompound.setTag("fluids", nbtTagList1);
+        tagCompound.put("fluids", nbtTagList1);
         return tagCompound;
     }
 

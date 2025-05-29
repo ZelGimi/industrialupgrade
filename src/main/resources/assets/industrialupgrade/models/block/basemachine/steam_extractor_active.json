@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "industrialupgrade:models/steam_machine/steam_extractor_active",
-		"particle": "industrialupgrade:models/steam_machine/steam_extractor_active"
+		"0": "industrialupgrade:block/steam_machine/steam_extractor_active",
+		"particle": "industrialupgrade:block/steam_machine/steam_extractor_active"
 	},
 	"elements": [
 		{

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/reactor_rod_factory_active_main",
-    "down" : "industrialupgrade:blocks/reactor_rod_factory_active_all",
-    "up" : "industrialupgrade:blocks/reactor_rod_factory_active_all",
-    "north" : "industrialupgrade:blocks/reactor_rod_factory_active_main",
-    "east" : "industrialupgrade:blocks/reactor_rod_factory_active_left-right",
-    "south" : "industrialupgrade:blocks/reactor_rod_factory_active_all",
-    "west" : "industrialupgrade:blocks/reactor_rod_factory_active_left-right"
+    "particle" : "industrialupgrade:block/reactor_rod_factory_active_main",
+    "down" : "industrialupgrade:block/reactor_rod_factory_active_all",
+    "up" : "industrialupgrade:block/reactor_rod_factory_active_all",
+    "north" : "industrialupgrade:block/reactor_rod_factory_active_main",
+    "east" : "industrialupgrade:block/reactor_rod_factory_active_left-right",
+    "south" : "industrialupgrade:block/reactor_rod_factory_active_all",
+    "west" : "industrialupgrade:block/reactor_rod_factory_active_left-right"
   }
 }

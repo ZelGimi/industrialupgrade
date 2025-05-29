@@ -1,14 +1,15 @@
 package com.denfop.api.pollution;
 
-import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
 
-public class PollutionSoilUnLoadEvent extends WorldEvent {
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.level.LevelEvent;
+
+public class PollutionSoilUnLoadEvent extends LevelEvent {
 
     public final IPollutionMechanism tile;
 
 
-    public PollutionSoilUnLoadEvent(World world, IPollutionMechanism energyTile1) {
+    public PollutionSoilUnLoadEvent(Level world, IPollutionMechanism energyTile1) {
         super(world);
         this.tile = energyTile1;
     }

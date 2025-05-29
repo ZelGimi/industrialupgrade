@@ -7,12 +7,11 @@ import com.denfop.api.gui.ImageInterface;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerWaterRotorUpgrade;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
-
-public class GuiWaterRotorUpgrade extends GuiIU<ContainerWaterRotorUpgrade> {
+public class GuiWaterRotorUpgrade<T extends ContainerWaterRotorUpgrade> extends GuiIU<ContainerWaterRotorUpgrade> {
 
     public final ContainerWaterRotorUpgrade container;
     public final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guiwaterrotorupgrade.png");
@@ -21,8 +20,8 @@ public class GuiWaterRotorUpgrade extends GuiIU<ContainerWaterRotorUpgrade> {
     public GuiWaterRotorUpgrade(ContainerWaterRotorUpgrade guiContainer) {
         super(guiContainer);
         this.container = guiContainer;
-        this.ySize = 206;
-        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.imageHeight = 206;
+        this.elements.add(new ImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         this.componentList.clear();
         inventory = new GuiComponent(this, 7, 123, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
@@ -35,43 +34,53 @@ public class GuiWaterRotorUpgrade extends GuiIU<ContainerWaterRotorUpgrade> {
         componentList.add(slots);
     }
 
-    @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
-    }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        this.mc.getTextureManager().bindTexture(background);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
+       bindTexture(background);
 
         if (!this.container.base.rotor_slot.isEmpty()) {
-            int j = (this.width - this.xSize) / 2;
-            int k = (this.height - this.ySize) / 2;
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            int j = guiLeft;
+            int k = guiTop;
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
             setTexture(rotors_gui);
-            drawTexturedModalRect(j + 71, k + 5, 32 * (this.container.base.getRotor().getIndex() % 8),
+            drawTexturedModalRect(poseStack,j + 71, k + 5, 32 * (this.container.base.getRotor().getIndex() % 8),
                     55 * (this.container.base.getRotor().getIndex() / 8), 32, 54
             );
-            drawTexturedModalRect(j + 71, k + 57, 32 * (this.container.base.getRotor().getIndex() % 8),
+            drawTexturedModalRect(poseStack,j + 71, k + 57, 32 * (this.container.base.getRotor().getIndex() % 8),
                     55 * (this.container.base.getRotor().getIndex() / 8), 32, 54
             );
-            drawTexturedModalRect(j + 33, k + 43, 55 * (this.container.base.getRotor().getIndex() % 4),
+            drawTexturedModalRect(poseStack,j + 33, k + 43, 55 * (this.container.base.getRotor().getIndex() % 4),
                     112 + 33 * (this.container.base.getRotor().getIndex() / 4), 54, 32
             );
-            drawTexturedModalRect(j + 85, k + 43, 55 * (this.container.base.getRotor().getIndex() % 4),
+            drawTexturedModalRect(poseStack,j + 85, k + 43, 55 * (this.container.base.getRotor().getIndex() % 4),
                     112 + 33 * (this.container.base.getRotor().getIndex() / 4), 54, 32
             );
             setTexture(background);
-          slots.drawBackground(guiLeft,guiTop);
+            drawTexturedModalRect(poseStack,j + 77, k + 6, 230,
+                    33, 18, 18
+            );
+            drawTexturedModalRect(poseStack,j + 34, k + 49, 230,
+                    33, 18, 18
+            );
+            drawTexturedModalRect(poseStack,j + 77, k + 49, 212,
+                    33, 18, 18
+            );
+            drawTexturedModalRect(poseStack,j + 120, k + 49, 230,
+                    33, 18, 18
+            );
+            drawTexturedModalRect(poseStack,j + 77, k + 92, 230,
+                    33, 18, 18
+            );
 
         }
 
     }
 
     @Override
-    protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) throws IOException {
+    protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
@@ -81,12 +90,12 @@ public class GuiWaterRotorUpgrade extends GuiIU<ContainerWaterRotorUpgrade> {
     }
 
     void setTexture(ResourceLocation resourceLocation) {
-        this.mc.getTextureManager().bindTexture(resourceLocation);
+        bindTexture(resourceLocation);
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
 }

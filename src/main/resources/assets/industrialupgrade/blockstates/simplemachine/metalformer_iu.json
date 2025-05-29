@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=metalformer_iu": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former"
+    },
+    "facing=south,type=metalformer_iu": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former",
+      "y": 180
+    },
+    "facing=west,type=metalformer_iu": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former",
+      "y": 270
+    },
+    "facing=east,type=metalformer_iu": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former",
+      "y": 90
+    },
+    "facing=down,type=metalformer_iu": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former",
+      "x": 90
+    },
+    "facing=up,type=metalformer_iu": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former",
+      "x": 270
+    },
+    "facing=north,type=metalformer_iu_invalid": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active"
+    },
+    "facing=south,type=metalformer_iu_invalid": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "y": 180
+    },
+    "facing=west,type=metalformer_iu_invalid": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "y": 270
+    },
+    "facing=east,type=metalformer_iu_invalid": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "y": 90
+    },
+    "facing=down,type=metalformer_iu_invalid": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "x": 90
+    },
+    "facing=up,type=metalformer_iu_invalid": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "x": 270
+    },
+    "facing=north,type=metalformer_iu_active": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active"
+    },
+    "facing=south,type=metalformer_iu_active": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "y": 180
+    },
+    "facing=west,type=metalformer_iu_active": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "y": 270
+    },
+    "facing=east,type=metalformer_iu_active": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "y": 90
+    },
+    "facing=down,type=metalformer_iu_active": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "x": 90
+    },
+    "facing=up,type=metalformer_iu_active": {
+      "model": "industrialupgrade:block/ic2:machine/processing/advanced/metal_former_active",
+      "x": 270
+    }
+  }
+}

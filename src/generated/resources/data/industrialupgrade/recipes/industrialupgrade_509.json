@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:circuit/quantumcircuit_part1"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_549_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_282_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ]
+  },
+  "pattern": [
+    "CCC",
+    "ABA",
+    "DDD"
+  ],
+  "result": {
+    "item": "industrialupgrade:circuit/quantumcircuit_part3"
+  },
+  "show_notification": true
+}

@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism.generator.energy.fluid;
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
@@ -13,7 +14,9 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPetrolGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPetrolGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotCharge;
@@ -26,15 +29,17 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityLiquidTankInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.io.IOException;
@@ -55,20 +60,20 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
     private boolean sound = true;
 
-    public TilePetrolGenerator() {
-        super(12);
+    public TilePetrolGenerator(BlockPos pos, BlockState state) {
+        super(12, BlockBaseMachine2.gen_pet, pos, state);
         this.coef = 1;
         this.fluidSlot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
                 1,
                 InvSlotFluid.TypeFluidSlot.INPUT,
-                FluidName.fluidbenz.getInstance(),
-                FluidName.fluidpetrol90.getInstance(),
-                FluidName.fluidpetrol95.getInstance()
+                FluidName.fluidbenz.getInstance().get(),
+                FluidName.fluidpetrol90.getInstance().get(),
+                FluidName.fluidpetrol95.getInstance().get()
                 ,
-                FluidName.fluidpetrol100.getInstance(),
-                FluidName.fluidpetrol105.getInstance()
+                FluidName.fluidpetrol100.getInstance().get(),
+                FluidName.fluidpetrol105.getInstance().get()
         );
         this.outputSlot = new InvSlotOutput(this, 1);
         this.energy = this.addComponent(Energy.asBasicSource(
@@ -77,8 +82,8 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
                 3
         ).addManagedSlot(chargeSlot));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(
-                FluidName.fluidbenz.getInstance(), FluidName.fluidpetrol90.getInstance(), FluidName.fluidpetrol95.getInstance()
-                , FluidName.fluidpetrol100.getInstance(), FluidName.fluidpetrol105.getInstance()));
+                FluidName.fluidbenz.getInstance().get(), FluidName.fluidpetrol90.getInstance().get(), FluidName.fluidpetrol95.getInstance().get()
+                , FluidName.fluidpetrol100.getInstance().get(), FluidName.fluidpetrol105.getInstance().get()));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.45));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.75));
     }
@@ -88,7 +93,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     @Override
@@ -114,20 +119,20 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
         return nbttagcompound;
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         sound = !sound;
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
@@ -179,10 +184,10 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
             new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
             new PacketStopSound(getWorld(), this.pos);
         }
@@ -196,20 +201,20 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.fluidTank.getFluid() != null) {
+        if (!this.fluidTank.getFluid().isEmpty()) {
             Fluid fluid = this.fluidTank.getFluid().getFluid();
-            if (fluid == FluidName.fluidbenz.getInstance()) {
+            if (fluid == FluidName.fluidbenz.getInstance().get()) {
                 coef = 1;
-            } else if (fluid == FluidName.fluidpetrol90.getInstance()) {
+            } else if (fluid == FluidName.fluidpetrol90.getInstance().get()) {
                 coef = 2;
 
-            } else if (fluid == FluidName.fluidpetrol95.getInstance()) {
+            } else if (fluid == FluidName.fluidpetrol95.getInstance().get()) {
                 coef = 4;
 
-            } else if (fluid == FluidName.fluidpetrol100.getInstance()) {
+            } else if (fluid == FluidName.fluidpetrol100.getInstance().get()) {
                 coef = 8;
 
-            } else if (fluid == FluidName.fluidpetrol105.getInstance()) {
+            } else if (fluid == FluidName.fluidpetrol105.getInstance().get()) {
                 coef = 16;
 
             }
@@ -234,7 +239,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
         if (this.getActive() != newActive) {
             this.setActive(newActive);
         }
-        if (this.getActive() && getWorld().provider.getWorldTime() % 60 == 0) {
+        if (this.getActive() && getWorld().getGameTime() % 60 == 0) {
             initiate(2);
         }
     }
@@ -242,7 +247,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
     public boolean gainEnergy() {
         if (this.isConverting()) {
             this.energy.addEnergy(this.production * coef);
-            this.getFluidTank().drain(2, true);
+            this.getFluidTank().drain(2, IFluidHandler.FluidAction.EXECUTE);
             initiate(0);
             return true;
         } else {
@@ -256,13 +261,13 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
     }
 
 
-    public ContainerPetrolGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPetrolGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerPetrolGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiPetrolGenerator(new ContainerPetrolGenerator(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiPetrolGenerator((ContainerPetrolGenerator) isAdmin);
     }
 
 

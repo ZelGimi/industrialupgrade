@@ -47,5 +47,4 @@ public class HeatTickList<T extends HeatTick<IHeatSource, Path>> extends ArrayLi
         }
         return null;
     }
-
 }

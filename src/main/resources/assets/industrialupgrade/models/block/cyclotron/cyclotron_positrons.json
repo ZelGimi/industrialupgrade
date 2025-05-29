@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/cyclotron_positrons",
-    "down" : "industrialupgrade:blocks/cyclotron_casing",
-    "up" : "industrialupgrade:blocks/cyclotron_casing",
-    "north" : "industrialupgrade:blocks/cyclotron_positrons",
-    "east" : "industrialupgrade:blocks/cyclotron_casing",
-    "south" : "industrialupgrade:blocks/cyclotron_casing",
-    "west" : "industrialupgrade:blocks/cyclotron_casing"
+    "particle" : "industrialupgrade:block/cyclotron_positrons",
+    "down" : "industrialupgrade:block/cyclotron_casing",
+    "up" : "industrialupgrade:block/cyclotron_casing",
+    "north" : "industrialupgrade:block/cyclotron_positrons",
+    "east" : "industrialupgrade:block/cyclotron_casing",
+    "south" : "industrialupgrade:block/cyclotron_casing",
+    "west" : "industrialupgrade:block/cyclotron_casing"
   }
 }

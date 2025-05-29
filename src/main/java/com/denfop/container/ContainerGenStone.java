@@ -2,16 +2,16 @@ package com.denfop.container;
 
 
 import com.denfop.tiles.mechanism.TileBaseGenStone;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGenStone extends ContainerFullInv<TileBaseGenStone> {
 
-    public ContainerGenStone(EntityPlayer entityPlayer, TileBaseGenStone tileEntity1) {
+    public ContainerGenStone(Player entityPlayer, TileBaseGenStone tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 56 - 48, 53, 152, 8);
     }
 
     public ContainerGenStone(
-            EntityPlayer entityPlayer, TileBaseGenStone tileEntity1, int height, int dischargeX, int dischargeY,
+            Player entityPlayer, TileBaseGenStone tileEntity1, int height, int dischargeX, int dischargeY,
             int upgradeX, int upgradeY
     ) {
         super(entityPlayer, tileEntity1, height);

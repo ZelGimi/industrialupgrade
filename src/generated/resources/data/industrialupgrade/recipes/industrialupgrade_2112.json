@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:royal_jelly"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/advancedalloy"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/carbon"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_295_element"
+      }
+    ]
+  },
+  "pattern": [
+    "DBD",
+    "CAC",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_666_element"
+  },
+  "show_notification": true
+}

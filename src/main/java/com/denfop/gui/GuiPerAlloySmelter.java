@@ -9,14 +9,11 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerPerAlloySmelter;
 import com.denfop.tiles.mechanism.TileEntityPerAlloySmelter;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collections;
 
-@SideOnly(Side.CLIENT)
-public class GuiPerAlloySmelter extends GuiIU<ContainerPerAlloySmelter> {
+public class GuiPerAlloySmelter<T extends ContainerPerAlloySmelter> extends GuiIU<ContainerPerAlloySmelter> {
 
     public final ContainerPerAlloySmelter container;
 
@@ -53,18 +50,7 @@ public class GuiPerAlloySmelter extends GuiIU<ContainerPerAlloySmelter> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
 
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-
-
-    }
 
     @Override
     protected ResourceLocation getTexture() {

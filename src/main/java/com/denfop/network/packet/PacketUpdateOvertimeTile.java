@@ -3,11 +3,11 @@ package com.denfop.network.packet;
 import com.denfop.IUCore;
 import com.denfop.network.DecoderHandler;
 import com.denfop.tiles.base.TileEntityBlock;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.io.IOException;
 
@@ -17,13 +17,13 @@ public class PacketUpdateOvertimeTile implements IPacket {
 
     }
 
-    public PacketUpdateOvertimeTile(CustomPacketBuffer data, EntityPlayerMP player) {
+    public PacketUpdateOvertimeTile(CustomPacketBuffer data, ServerPlayer player) {
         IUCore.network.getServer().sendPacket(data, player);
     }
 
-    public static void apply(BlockPos pos, World world, byte[] is) {
-        if (world.isBlockLoaded(pos, false)) {
-            TileEntity te = world.getTileEntity(pos);
+    public static void apply(BlockPos pos, Level world, byte[] is) {
+        if (world.isLoaded(pos)) {
+            BlockEntity te = world.getBlockEntity(pos);
             final CustomPacketBuffer buf = new CustomPacketBuffer();
             buf.writeBytes(is);
             if (te != null) {
@@ -39,8 +39,7 @@ public class PacketUpdateOvertimeTile implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
-        final int dimensionId = is.readInt();
+    public void readPacket(final CustomPacketBuffer is, final Player entityPlayer) {
         BlockPos pos;
         try {
             pos = DecoderHandler.decode(is, BlockPos.class);
@@ -49,15 +48,7 @@ public class PacketUpdateOvertimeTile implements IPacket {
         }
         byte[] bytes = new byte[is.writerIndex() - is.readerIndex()];
         is.readBytes(bytes);
-        if (!(is.readerIndex() < is.writerIndex())) {
-            IUCore.proxy.requestTick(false, () -> {
-                World world = IUCore.proxy.getPlayerWorld();
-                if (world != null && world.provider.getDimension() == dimensionId) {
-                    apply(pos, world, bytes);
-
-                }
-            });
-        }
+        apply(pos, entityPlayer.level(), bytes);
 
     }
 

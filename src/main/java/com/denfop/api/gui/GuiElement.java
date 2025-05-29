@@ -6,9 +6,11 @@ import com.denfop.gui.GuiCore;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,40 +80,41 @@ public abstract class GuiElement<T extends GuiElement<T>> {
     }
 
     protected static void bindTexture(ResourceLocation texture) {
-        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        GuiCore.bindTexture(texture);
     }
 
     public static void bindCommonTexture() {
-        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture);
+        GuiCore.bindTexture(commonTexture);
     }
 
     public static void bindCommonTexture1() {
-        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture1);
+        GuiCore.bindTexture(commonTexture1);
     }
 
     public static void bindCommonTexture2() {
-        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture2);
+        GuiCore.bindTexture(commonTexture2);
     }
 
     public static void bindCommonTexture3() {
-        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture3);
+        GuiCore.bindTexture(commonTexture3);
     }
 
     public static void bindCommonTexture4() {
-        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture4);
+        GuiCore.bindTexture(commonTexture4);
     }
 
     public static void bindCommonTexture5() {
-        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture5);
+        GuiCore.bindTexture(commonTexture5);
     }
 
     public static void bindBlockTexture() {
-        Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        GuiCore.bindTexture(TextureAtlas.LOCATION_BLOCKS);
     }
 
-    public static TextureMap getBlockTextureMap() {
-        return Minecraft.getMinecraft().getTextureMapBlocks();
+    public static TextureAtlas getBlockTextureMap() {
+        return (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS);
     }
+
 
     public boolean visible() {
         return true;
@@ -126,7 +129,7 @@ public abstract class GuiElement<T extends GuiElement<T>> {
     }
 
     public boolean contains(int x, int y) {
-        return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
+        return x >= this.x && x < this.x + this.width && y >= this.y && y < this.y + this.height;
     }
 
     public T withTooltip(String tooltip) {
@@ -170,10 +173,10 @@ public abstract class GuiElement<T extends GuiElement<T>> {
     public void tick() {
     }
 
-    public void drawBackground(int mouseX, int mouseY) {
+    public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
     }
 
-    public void drawForeground(int mouseX, int mouseY) {
+    public void drawForeground(GuiGraphics poseStack, int mouseX, int mouseY) {
         if (this.contains(mouseX, mouseY) && !this.suppressTooltip(mouseX, mouseY)) {
             List<String> lines = this.getToolTip();
             if (this.tooltipProvider != null) {
@@ -202,7 +205,7 @@ public abstract class GuiElement<T extends GuiElement<T>> {
         return onThis && this.onMouseDrag(mouseX, mouseY, button, timeFromLastClick);
     }
 
-    protected boolean onMouseDrag(int mouseX, int mouseY, MouseButton button, long timeFromLastClick) {
+    public boolean onMouseDrag(int mouseX, int mouseY, MouseButton button, long timeFromLastClick) {
         return false;
     }
 
@@ -229,7 +232,7 @@ public abstract class GuiElement<T extends GuiElement<T>> {
         return new ArrayList<>();
     }
 
-    protected final IInventory getBase() {
+    protected final Container getBase() {
         return this.gui.getContainer().base;
     }
 

@@ -1,23 +1,32 @@
 package com.denfop.events;
 
 import com.denfop.IUCore;
+import com.denfop.damagesource.IUDamageSource;
+import com.denfop.items.armour.ISpecialArmor;
 import com.denfop.network.WorldData;
-import com.denfop.world.GeneratorVolcano;
 import com.denfop.world.IWorldTickCallback;
-import com.denfop.world.WorldGenVolcano;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TickHandlerIU {
 
 
-    public static void requestSingleWorldTick(World world, IWorldTickCallback callback) {
+    public static void requestSingleWorldTick(Level world, IWorldTickCallback callback) {
         WorldData.get(world).singleUpdates.add(callback);
 
     }
 
-    private static void processUpdates(World world, WorldData worldData) {
+    private static void processUpdates(Level world, WorldData worldData) {
 
         IWorldTickCallback callback;
         for (; (callback = worldData.singleUpdates.poll()) != null; callback.onTick(world)) {
@@ -28,30 +37,32 @@ public class TickHandlerIU {
     }
 
     @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event) {
-        World world = event.world;
-        WorldData worldData = WorldData.get(world, false);
-        if (event.phase == TickEvent.Phase.START) {
-            if (world.provider.getDimension() == 0 && !world.isRemote) {
-                if (!WorldGenVolcano.generatorVolcanoList.isEmpty()) {
-                    GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
-                    generatorVolcano.generate();
-                    if (generatorVolcano.isEnd()) {
-                        WorldGenVolcano.generatorVolcanoList.remove(0);
-                    }
-                }
-            }
+    public void hurt(LivingHurtEvent event) {
+        if (event.getEntity() instanceof LivingEntity) {
+            NonNullList<ItemStack> armorList = NonNullList.withSize(4, ItemStack.EMPTY);
+            armorList.set(0, (event.getEntity().getItemBySlot(EquipmentSlot.FEET)));
+            armorList.set(1, (event.getEntity().getItemBySlot(EquipmentSlot.LEGS)));
+            armorList.set(2, (event.getEntity().getItemBySlot(EquipmentSlot.CHEST)));
+            armorList.set(3, (event.getEntity().getItemBySlot(EquipmentSlot.HEAD)));
+            float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getAmount());
+            event.setAmount(damageAmount);
         }
+    }
+
+
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.LevelTickEvent event) {
+        Level world = event.level;
+        WorldData worldData = WorldData.get(world, false);
         if (worldData != null) {
             if (event.phase == TickEvent.Phase.START) {
                 processUpdates(world, worldData);
 
             } else {
-                if (world.isRemote) {
+                if (world.isClientSide) {
                     IUCore.network.getClient().onTickEnd(worldData);
                 } else {
                     IUCore.network.getServer().onTickEnd(worldData);
-
                 }
             }
 
@@ -59,11 +70,16 @@ public class TickHandlerIU {
     }
 
     @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             IUCore.keyboard.sendKeyUpdate();
-            World world = IUCore.proxy.getPlayerWorld();
-            if (world != null) {
+
+            if (Minecraft.getInstance().level != null) {
+                if (IUDamageSource.current == null)
+                    IUDamageSource.initDamage(Minecraft.getInstance().level.registryAccess());
+
+                ClientLevel world = Minecraft.getInstance().level;
                 processUpdates(world, WorldData.get(world));
 
             }

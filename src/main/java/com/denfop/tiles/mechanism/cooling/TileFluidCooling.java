@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism.cooling;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
@@ -11,7 +12,9 @@ import com.denfop.componets.CoolComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerFluidCoolMachine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiFluidCoolMachine;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.network.DecoderHandler;
@@ -19,18 +22,18 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,34 +49,22 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
     public int max;
     public boolean work;
 
-    public TileFluidCooling() {
-        super(0, 0, 1);
+    public TileFluidCooling(BlockPos pos, BlockState state) {
+        super(0, 0, 1,BlockBaseMachine3.fluid_cooling,pos,state);
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, 14));
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
         this.fluid = this.addComponent(new Fluids(this));
-        this.tank = this.fluid.addTankInsert("insert", 5000, Fluids.fluidPredicate(FluidName.fluidazot.getInstance(),
-                FluidName.fluidhyd.getInstance(), FluidName.fluidHelium.getInstance()
+        this.tank = this.fluid.addTankInsert("insert", 5000, Fluids.fluidPredicate(FluidName.fluidazot.getInstance().get(),
+                FluidName.fluidhyd.getInstance().get(), FluidName.fluidHelium.getInstance().get()
         ));
-        this.fluidSlot1 = new InvSlotFluidByList(this, 1, Arrays.asList(FluidName.fluidazot.getInstance(),
-                FluidName.fluidhyd.getInstance(), FluidName.fluidHelium.getInstance()
+        this.fluidSlot1 = new InvSlotFluidByList(this, 1, Arrays.asList(FluidName.fluidazot.getInstance().get(),
+                FluidName.fluidhyd.getInstance().get(), FluidName.fluidHelium.getInstance().get()
         ));
 
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public boolean needUpdate() {
@@ -149,27 +140,27 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.max = nbttagcompound.getInteger("max");
+        this.max = nbttagcompound.getInt("max");
         this.work = nbttagcompound.getBoolean("work");
         this.cold.setCapacity(this.max);
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("max", this.max);
-        nbttagcompound.setBoolean("work", this.work);
+        nbttagcompound.putInt("max", this.max);
+        nbttagcompound.putBoolean("work", this.work);
         return nbttagcompound;
 
     }
 
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
         if (i == 0) {
             this.cold.setCapacity(this.max + 4);
             if (this.cold.getCapacity() > 16) {
@@ -196,7 +187,6 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
 
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -217,10 +207,10 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
         int coef = 1;
         FluidStack fluidStack = tank.getFluid();
         int time = 20;
-        if (fluidStack != null) {
-            if (fluidStack.getFluid() == FluidName.fluidhyd.getInstance()) {
+        if (!fluidStack.isEmpty()) {
+            if (fluidStack.getFluid() == FluidName.fluidhyd.getInstance().get()) {
                 coef = max / 4;
-            } else if (fluidStack.getFluid() == FluidName.fluidazot.getInstance()) {
+            } else if (fluidStack.getFluid() == FluidName.fluidazot.getInstance().get()) {
                 coef = (max / 8) + 1;
                 time = 40;
             } else {
@@ -239,18 +229,18 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
             }
         }
         if (this.cold.allow || work) {
-            if (this.tank.getFluidAmount() >= coef && this.cold.getEnergy() < this.cold.getCapacity()) {
+            if (!this.tank.getFluid().isEmpty() && this.tank.getFluidAmount() >= coef && this.cold.getEnergy() < this.cold.getCapacity()) {
                 this.cold.addEnergy(1);
-                this.tank.drain(coef, true);
+                this.tank.drain(coef, IFluidHandler.FluidAction.EXECUTE);
                 initiate(0);
                 this.setActive(true);
 
             }
-            if (this.world.provider.getWorldTime() % 400 == 0) {
+            if (this.level.getGameTime() % 400 == 0) {
                 initiate(2);
             }
 
-            if (this.tank.getFluidAmount() < coef) {
+            if (this.tank.getFluid().isEmpty() || this.tank.getFluidAmount() < coef) {
                 initiate(2);
                 this.setActive(false);
             } else {
@@ -261,21 +251,21 @@ public class TileFluidCooling extends TileElectricMachine implements IUpdatableT
             initiate(2);
             this.setActive(false);
         }
-        if (this.world.provider.getWorldTime() % time == 0 && this.cold.getEnergy() >= 1) {
+        if (this.level.getGameTime() % time == 0 && this.cold.getEnergy() >= 1) {
             this.cold.addEnergy(-1);
         }
     }
 
 
     @Override
-    public ContainerFluidCoolMachine getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerFluidCoolMachine getGuiContainer(final Player entityPlayer) {
         return new ContainerFluidCoolMachine(entityPlayer, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiFluidCoolMachine(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiFluidCoolMachine((ContainerFluidCoolMachine) menu);
     }
 
 

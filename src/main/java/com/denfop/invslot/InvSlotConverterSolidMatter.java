@@ -1,11 +1,12 @@
 package com.denfop.invslot;
 
 
+import com.denfop.IUItem;
 import com.denfop.api.recipe.ISlotInv;
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.base.TileConverterSolidMatter;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
 
@@ -15,13 +16,14 @@ public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.getmatter();
         TileConverterSolidMatter tile = (TileConverterSolidMatter) base;
         if (tile.getRecipeOutput() != null) {
             tile.getrequiredmatter(tile.getRecipeOutput().getRecipe().getOutput());
         }
+        return content;
     }
 
     public void getmatter() {
@@ -29,7 +31,7 @@ public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
         for (int i = 0; i < this.size(); i++) {
             if (!get(i).isEmpty()) {
                 TileConverterSolidMatter tile = (TileConverterSolidMatter) base;
-                int meta = get(i).getItemDamage();
+                int meta = IUItem.matter.getMeta(get(i));
                 while (!this.get(i).isEmpty() && tile.quantitysolid[meta % tile.quantitysolid.length] <= 99800) {
                     tile.quantitysolid[meta % tile.quantitysolid.length] += 200;
                     this.consume(i, 1);
@@ -47,7 +49,7 @@ public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
-        return itemStack.getItem() instanceof ItemSolidMatter && index == itemStack.getItemDamage();
+        return itemStack.getItem() instanceof ItemSolidMatter && index == IUItem.matter.getMeta(itemStack);
     }
 
     public void consume(int content, int amount) {
@@ -68,7 +70,7 @@ public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
 
     @Override
     public boolean accepts(final int index, final ItemStack stack) {
-        return index == stack.getItemDamage();
+        return index == IUItem.matter.getMeta(stack);
     }
 
 }

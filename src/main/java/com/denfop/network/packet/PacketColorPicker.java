@@ -2,7 +2,7 @@ package com.denfop.network.packet;
 
 import com.denfop.IUCore;
 import com.denfop.render.streak.PlayerStreakInfo;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class PacketColorPicker implements IPacket {
 
@@ -25,7 +25,7 @@ public class PacketColorPicker implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
+    public void readPacket(final CustomPacketBuffer is, final Player entityPlayer) {
         final String nick = is.readString();
         PlayerStreakInfo playerStreakInfo = new PlayerStreakInfo(is);
         IUCore.mapStreakInfo.remove(nick);

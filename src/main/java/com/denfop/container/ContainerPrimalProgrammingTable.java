@@ -1,17 +1,17 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityPrimalProgrammingTable;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerPrimalProgrammingTable
         extends ContainerFullInv<TileEntityPrimalProgrammingTable> {
 
-    public ContainerPrimalProgrammingTable(EntityPlayer entityPlayer, TileEntityPrimalProgrammingTable tileEntity1) {
+    public ContainerPrimalProgrammingTable(Player entityPlayer, TileEntityPrimalProgrammingTable tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerPrimalProgrammingTable(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileEntityPrimalProgrammingTable tileEntity1,
             int height,
             int upgradeX,

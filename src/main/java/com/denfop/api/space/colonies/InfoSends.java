@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class InfoSends {
-
     List<Timer> timers = new LinkedList<>();
 
     public InfoSends() {
@@ -27,9 +26,8 @@ public class InfoSends {
     public CustomPacketBuffer writeBuffer() {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
         customPacketBuffer.writeInt(timers.size());
-        for (Timer timer : timers) {
+        for (Timer timer : timers)
             timer.writeBuffer(customPacketBuffer);
-        }
         return customPacketBuffer;
     }
 

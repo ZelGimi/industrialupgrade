@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "industrialupgrade:blocks/untreated_peat"
+		"all": "industrialupgrade:block/untreated_peat"
 	}
 }

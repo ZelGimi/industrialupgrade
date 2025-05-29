@@ -1,0 +1,12 @@
+{
+  "values": [
+    "industrialupgrade:baseore1/lithium",
+    "industrialupgrade:baseore1/beryllium",
+    "industrialupgrade:baseore1/bor",
+    "industrialupgrade:baseore1/saltpeter",
+    "industrialupgrade:baseore1/calcium",
+    "industrialupgrade:apatite/humus",
+    "industrialupgrade:blockresource/peat",
+    "industrialupgrade:blockresource/untreated_peat"
+  ]
+}

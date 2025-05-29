@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/titan_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/titan_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/titan_boulder"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/titan_boulder"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:spacecobblestone1/titan_cobblestone"
+  }
+}

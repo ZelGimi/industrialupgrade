@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/smeltery_furnace_front-back-left-right",
-    "down" : "industrialupgrade:blocks/smeltery_furnace_top-bottom",
-    "up" : "industrialupgrade:blocks/smeltery_furnace_top-bottom",
-    "north" : "industrialupgrade:blocks/smeltery_furnace_front-back-left-right",
-    "east" : "industrialupgrade:blocks/smeltery_furnace_top-bottom",
-    "south" : "industrialupgrade:blocks/smeltery_furnace_top-bottom",
-    "west" : "industrialupgrade:blocks/smeltery_furnace_top-bottom"
+    "particle" : "industrialupgrade:block/smeltery_furnace_front-back-left-right",
+    "down" : "industrialupgrade:block/smeltery_furnace_top-bottom",
+    "up" : "industrialupgrade:block/smeltery_furnace_top-bottom",
+    "north" : "industrialupgrade:block/smeltery_furnace_front-back-left-right",
+    "east" : "industrialupgrade:block/smeltery_furnace_top-bottom",
+    "south" : "industrialupgrade:block/smeltery_furnace_top-bottom",
+    "west" : "industrialupgrade:block/smeltery_furnace_top-bottom"
   }
 }

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityCollectorProductBee;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerCollectorProductBee extends ContainerFullInv<TileEntityCollectorProductBee> {
 
-    public ContainerCollectorProductBee(TileEntityCollectorProductBee tileEntityChickenFarm, EntityPlayer var1) {
+    public ContainerCollectorProductBee(TileEntityCollectorProductBee tileEntityChickenFarm, Player var1) {
         super(var1, tileEntityChickenFarm, 206);
         this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.fluidSlot, 0, 25, 79));
         this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.outputSlot, 0, 25, 99));

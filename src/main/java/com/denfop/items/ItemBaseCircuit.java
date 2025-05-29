@@ -1,84 +1,52 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Locale;
 
-public class ItemBaseCircuit extends ItemSubTypes<ItemBaseCircuit.Types> implements IModelRegister {
-
-    protected static final String NAME = "circuit";
-
-    public ItemBaseCircuit() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemBaseCircuit<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IProperties {
+    public ItemBaseCircuit(T element) {
+        super(new Item.Properties(), element);
+        if (properties().length > 0)
+            IUCore.proxy.addProperties(this);
+    }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
 
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+    @Override
+    public String[] properties() {
+        if (getElement().getId() != 9 && getElement().getId() != 10 && getElement().getId() != 11 && getElement().getId() != 21)
+            return new String[]{};
+        return new String[]{"level"};
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String extraName) {
-        if (meta >= 9 && meta <= 11 || meta == 21) {
-            ModelLoader.setCustomMeshDefinition(this, stack -> {
-                final NBTTagCompound nbt = ModUtils.nbt(stack);
-                int level = nbt.getInteger("level");
-                switch (stack.getItemDamage()) {
-                    case 9:
-                        level = level - 5;
-                        break;
-                    case 10:
-                        level = level - 7;
-                        break;
-                    case 11:
-                        level = level - 9;
-                        break;
-                    case 21:
-                        level = level - 11;
-                        break;
-                }
-                return new ModelResourceLocation(
-                        Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(stack.getItemDamage()).getName() + (level == 1
-                                ? "_1"
-                                : ""),
-                        null
-                );
-
-            });
-            String[] mode = {"", "_1"};
-            for (final String s : mode) {
-                ModelBakery.registerItemVariants(
-                        this,
-                        new ModelResourceLocation(
-                                Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName() + s,
-                                null
-                        )
-                );
-
-            }
-        } else {
-            ModelLoader.setCustomModelResourceLocation(
-                    this,
-                    meta,
-                    new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-            );
-        }
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public float getItemProperty(ItemStack stack, ClientLevel world, LivingEntity entity, int p174679, String property) {
+        final CompoundTag nbt = ModUtils.nbt(stack);
+        int level = nbt.getInt("level");
+        if (level == 0)
+            return 0;
+        level = switch (this.getElement().getId()) {
+            case 9 -> level - 5;
+            case 10 -> level - 7;
+            case 11 -> level - 9;
+            case 21 -> level - 11;
+            default -> level;
+        };
+        return level;
     }
 
     public enum Types implements ISubEnum {
@@ -118,13 +86,19 @@ public class ItemBaseCircuit extends ItemSubTypes<ItemBaseCircuit.Types> impleme
             return values()[ID % values().length];
         }
 
+
+        @Override
         public String getName() {
-            return this.name;
+            return name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "circuit";
         }
 
         public int getId() {
             return this.ID;
         }
     }
-
 }

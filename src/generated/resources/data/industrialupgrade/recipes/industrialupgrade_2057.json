@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/bismuth"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/cobaltchrome"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/thallium"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "BBB",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_747_element"
+  },
+  "show_notification": true
+}

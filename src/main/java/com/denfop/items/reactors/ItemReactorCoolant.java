@@ -1,46 +1,46 @@
 package com.denfop.items.reactors;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
+import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IReactorItem;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
+public class ItemReactorCoolant extends ItemDamage implements IReactorItem, IItemTab {
 
     private final int level;
     private final int heat;
 
-    public ItemReactorCoolant(final String name, int level, int damage, int heat) {
-        super(name, damage);
+    public ItemReactorCoolant(int level, int damage, int heat) {
+        super(new Item.Properties().stacksTo(1), damage);
         this.level = level;
         this.heat = heat;
-        setMaxStackSize(1);
     }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "reactors" + "/" + name;
-        return new ModelResourceLocation(loc, null);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ReactorsTab;
     }
+    @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(p_41421_) - this.getCustomDamage(
+                p_41421_)) + "/" + this.getMaxCustomDamage(p_41421_)));
+        p_41423_.add(Component.literal(Localization.translate("reactor.component_level") + this.level));
+        p_41423_.add(Component.literal(Localization.translate("reactor.component_level1")));
 
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
+
     }
 
     @Override
@@ -48,16 +48,23 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
         return this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack) == 0;
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+        }
 
-    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
-        return true;
+        return this.nameItem;
     }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
-
     @Override
     public EnumTypeComponent getType() {
         return EnumTypeComponent.COOLANT_ROD;
@@ -99,21 +106,6 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
     }
 
     @Override
-    public void addInformation(
-            @Nonnull final ItemStack stack,
-            final World world,
-            @Nonnull final List<String> tooltip,
-            @Nonnull final ITooltipFlag advanced
-    ) {
-        super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
-                stack)) + "/" + this.getMaxCustomDamage(stack));
-
-        tooltip.add(Localization.translate("reactor.component_level") + this.level);
-        tooltip.add(Localization.translate("reactor.component_level1"));
-    }
-
-    @Override
     public boolean updatableItem() {
         return true;
     }
@@ -134,9 +126,8 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
         final int custom = this.getCustomDamage(
                 stack);
         final int min = max / 1000;
-        if (max - custom == max) {
+        if (max - custom == max)
             return 0;
-        }
         return (max - custom) / min;
     }
 

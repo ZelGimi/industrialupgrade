@@ -3,9 +3,10 @@ package com.denfop.integration.jei.enchanter;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EnchantHandler {
@@ -77,9 +78,11 @@ public class EnchantHandler {
     public ItemStack getOutput() {
         return output.copy();
     }
-
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1);
+    }
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

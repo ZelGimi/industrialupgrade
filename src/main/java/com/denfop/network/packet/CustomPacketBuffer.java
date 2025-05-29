@@ -2,12 +2,12 @@ package com.denfop.network.packet;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class CustomPacketBuffer extends PacketBuffer {
+public class CustomPacketBuffer extends FriendlyByteBuf {
 
     private static final Charset utf8 = StandardCharsets.UTF_8;
 

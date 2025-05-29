@@ -6,12 +6,14 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSolarPanels;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileQuantumSolarPanel extends TileSolarPanel {
 
 
-    public TileQuantumSolarPanel() {
-        super(EnumSolarPanels.QUANTUM_SOLAR_PANEL);
+    public TileQuantumSolarPanel(BlockPos pos, BlockState state) {
+        super(EnumSolarPanels.QUANTUM_SOLAR_PANEL, BlockSolarPanels.quantum_solar_paneliu, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -19,7 +21,7 @@ public class TileQuantumSolarPanel extends TileSolarPanel {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.blockpanel;
+        return IUItem.blockpanel.getBlock(getTeBlock().getId());
     }
 
 }

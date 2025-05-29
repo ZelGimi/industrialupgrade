@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityItemDivider;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerItemDivider extends ContainerFullInv<TileEntityItemDivider> {
 
-    public ContainerItemDivider(EntityPlayer var1, TileEntityItemDivider tileEntity1) {
+    public ContainerItemDivider(Player var1, TileEntityItemDivider tileEntity1) {
         super(var1, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 120, 99));

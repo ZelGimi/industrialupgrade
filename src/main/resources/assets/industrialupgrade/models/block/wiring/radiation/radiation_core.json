@@ -1,0 +1,6 @@
+{
+	"parent": "industrialupgrade:block/wiring/cable/cable_base",
+	"textures": {
+		"texture": "industrialupgrade:block/wiring/radcable/rad_cable_radcable"
+	}
+}

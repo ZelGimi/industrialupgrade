@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_485_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/zeliber"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/nitenol"
+      }
+    ]
+  },
+  "pattern": [
+    " C ",
+    "BAB",
+    " C "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_490_element"
+  },
+  "show_notification": true
+}

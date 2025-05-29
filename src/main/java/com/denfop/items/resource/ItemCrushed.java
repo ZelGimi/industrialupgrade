@@ -1,70 +1,57 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
-import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class ItemCrushed extends ItemSubTypes<ItemCrushed.Types> implements IModelRegister {
+public class ItemCrushed<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemCrushed(T element) {
+        super(new Item.Properties(), element);
 
-    protected static final String NAME = "crushed";
-
-    public ItemCrushed() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
     }
 
+    @Override
+    public Item getItem() {
+        return this;
+    }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        String name = getElement().getName();
+        switch (this.getElement().getId()) {
+            case 3:
+                name = "tungsten";
+                break;
+            case 2:
+                name = "vanady";
+                break;
 
-    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
-
-            for (final Types type : this.typeProperty.getAllowedValues()) {
-                if (type != Types.invar && type != Types.electrium && type != Types.caravky) {
-                    subItems.add(this.getItemStackUnchecked(type));
-                }
-            }
 
         }
+        return new String[]{"forge:crushed/" + name, "forge:crushed"};
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
-    }
 
     public enum Types implements ISubEnum {
         mikhail(0),
         aluminium(1),
-        vanady(2),
+        vanadium(2),
         wolfram(3),
-        invar(4),
-        caravky(5),
         cobalt(6),
         magnesium(7),
         nickel(8),
-        platium(9),
+        platinum(9),
         titanium(10),
         chromium(11),
         spinel(12),
-        electrium(13),
         silver(14),
         zinc(15),
         manganese(16),
@@ -108,13 +95,22 @@ public class ItemCrushed extends ItemSubTypes<ItemCrushed.Types> implements IMod
             return values()[ID % values().length];
         }
 
+        @Override
+        public String getSerializedName() {
+            return getName();
+        }
+
         public String getName() {
             return this.name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "crushed";
         }
 
         public int getId() {
             return this.ID;
         }
     }
-
 }

@@ -4,8 +4,8 @@
     128
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/object_collector",
-    "particle" : "industrialupgrade:models/object_collector"
+    "0" : "industrialupgrade:block/object_collector",
+    "particle" : "industrialupgrade:block/object_collector"
   },
   "elements" : [
     {

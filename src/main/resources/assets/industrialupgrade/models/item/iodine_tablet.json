@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/iodine_tablet"
+		"layer0": "industrialupgrade:item/iodine_tablet"
 	}
 }

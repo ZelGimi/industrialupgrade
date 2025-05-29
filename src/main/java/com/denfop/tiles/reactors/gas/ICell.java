@@ -2,7 +2,7 @@ package com.denfop.tiles.reactors.gas;
 
 import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.componets.Fluids;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
 
 public interface ICell extends IMultiElement {
 

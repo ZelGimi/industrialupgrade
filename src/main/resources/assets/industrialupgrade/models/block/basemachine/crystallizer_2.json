@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/crystallizer_2",
-    "particle" : "industrialupgrade:models/crystallizer_2"
+    "0" : "industrialupgrade:block/crystallizer_2",
+    "particle" : "industrialupgrade:block/crystallizer_2"
   },
   "elements" : [
     {

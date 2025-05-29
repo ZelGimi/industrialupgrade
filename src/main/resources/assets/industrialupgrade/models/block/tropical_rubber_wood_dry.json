@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube",
 	"textures": {
-		"particle": "industrialupgrade:blocks/tropical_rubber_wood_dry_leftrightback",
-		"down": "industrialupgrade:blocks/tropical_rubber_wood_dry_bottomtop",
-		"up": "industrialupgrade:blocks/tropical_rubber_wood_dry_bottomtop",
-		"north": "industrialupgrade:blocks/tropical_rubber_wood_dry_front",
-		"east": "industrialupgrade:blocks/tropical_rubber_wood_dry_leftrightback",
-		"south": "industrialupgrade:blocks/tropical_rubber_wood_dry_leftrightback",
-		"west": "industrialupgrade:blocks/tropical_rubber_wood_dry_leftrightback"
+		"particle": "industrialupgrade:block/tropical_rubber_wood_dry_leftrightback",
+		"down": "industrialupgrade:block/tropical_rubber_wood_dry_bottomtop",
+		"up": "industrialupgrade:block/tropical_rubber_wood_dry_bottomtop",
+		"north": "industrialupgrade:block/tropical_rubber_wood_dry_front",
+		"east": "industrialupgrade:block/tropical_rubber_wood_dry_leftrightback",
+		"south": "industrialupgrade:block/tropical_rubber_wood_dry_leftrightback",
+		"west": "industrialupgrade:block/tropical_rubber_wood_dry_leftrightback"
 	}
 }

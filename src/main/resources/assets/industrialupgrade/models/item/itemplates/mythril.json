@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/mythril_plate"
+    "layer0" : "industrialupgrade:item/mythril_plate"
   }
 }

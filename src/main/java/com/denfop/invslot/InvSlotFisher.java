@@ -3,8 +3,8 @@ package com.denfop.invslot;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.item.ItemFishingRod;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.FishingRodItem;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotFisher extends InvSlot implements ITypeSlot {
 
@@ -21,7 +21,7 @@ public class InvSlotFisher extends InvSlot implements ITypeSlot {
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
-        return itemStack.getItem() instanceof ItemFishingRod;
+        return itemStack.getItem() instanceof FishingRodItem;
     }
 
     public int getStackSizeLimit() {

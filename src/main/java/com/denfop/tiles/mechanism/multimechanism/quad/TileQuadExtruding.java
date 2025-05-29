@@ -9,16 +9,18 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileQuadExtruding extends TileMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileQuadExtruding() {
+    public TileQuadExtruding(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.QUAD_Extruding.usagePerTick,
-                EnumMultiMachine.QUAD_Extruding.lenghtOperation
+                EnumMultiMachine.QUAD_Extruding.lenghtOperation, BlockMoreMachine2.quad_extruder, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
@@ -30,7 +32,7 @@ public class TileQuadExtruding extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base2;
+        return IUItem.machines_base2.getBlock(getTeBlock().getId());
     }
 
     public EnumMultiMachine getMachine() {

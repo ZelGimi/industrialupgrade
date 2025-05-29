@@ -2,7 +2,7 @@ package com.denfop.utils;
 
 import com.denfop.Localization;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 import java.io.IOException;
 
@@ -32,12 +32,12 @@ public class Timer {
         this.max = hour * 3600 + minute * 60 + seconds;
     }
 
-    public Timer(NBTTagCompound tagCompound) {
-        this.hour = tagCompound.getInteger("hour");
+    public Timer(CompoundTag tagCompound) {
+        this.hour = tagCompound.getInt("hour");
         this.minute = tagCompound.getByte("minute");
         this.seconds = tagCompound.getByte("seconds");
         this.canWork = tagCompound.getBoolean("canWork");
-        this.max = tagCompound.getInteger("max");
+        this.max = tagCompound.getInt("max");
     }
 
     public Timer(CustomPacketBuffer is) {
@@ -64,12 +64,12 @@ public class Timer {
         buffer.writeInt(this.max);
     }
 
-    public NBTTagCompound writeNBT(NBTTagCompound tagCompound) {
-        tagCompound.setInteger("hour", this.hour);
-        tagCompound.setByte("minute", (byte) this.minute);
-        tagCompound.setByte("seconds", (byte) this.seconds);
-        tagCompound.setBoolean("canWork", this.canWork);
-        tagCompound.setInteger("max", this.max);
+    public CompoundTag writeNBT(CompoundTag tagCompound) {
+        tagCompound.putInt("hour", this.hour);
+        tagCompound.putByte("minute", (byte) this.minute);
+        tagCompound.putByte("seconds", (byte) this.seconds);
+        tagCompound.putBoolean("canWork", this.canWork);
+        tagCompound.putInt("max", this.max);
         return tagCompound;
     }
 
@@ -158,8 +158,8 @@ public class Timer {
         this.canWork = canWork;
     }
 
-    public void readNBT(NBTTagCompound tagCompound) {
-        this.hour = tagCompound.getInteger("hour");
+    public void readNBT(CompoundTag tagCompound) {
+        this.hour = tagCompound.getInt("hour");
         this.minute = tagCompound.getByte("minute");
         this.seconds = tagCompound.getByte("seconds");
         this.canWork = tagCompound.getBoolean("canWork");
@@ -186,9 +186,8 @@ public class Timer {
         this.hour = this.hour - timerTo.hour;
         this.minute = this.minute - timerTo.minute;
         this.seconds = this.seconds - timerTo.seconds;
-        if (this.seconds < 0) {
+        if (this.seconds < 0)
             this.seconds = Math.abs(seconds);
-        }
         this.max = hour * 3600 + minute * 60 + seconds;
         ;
     }

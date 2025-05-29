@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/moon_spotter_active_main",
-    "down" : "industrialupgrade:blocks/moon_spotter_active_all",
-    "up" : "industrialupgrade:blocks/moon_spotter_active_up",
-    "north" : "industrialupgrade:blocks/moon_spotter_active_main",
-    "east" : "industrialupgrade:blocks/moon_spotter_active_all",
-    "south" : "industrialupgrade:blocks/moon_spotter_active_all",
-    "west" : "industrialupgrade:blocks/moon_spotter_active_all"
+    "particle" : "industrialupgrade:block/moon_spotter_active_main",
+    "down" : "industrialupgrade:block/moon_spotter_active_all",
+    "up" : "industrialupgrade:block/moon_spotter_active_up",
+    "north" : "industrialupgrade:block/moon_spotter_active_main",
+    "east" : "industrialupgrade:block/moon_spotter_active_all",
+    "south" : "industrialupgrade:block/moon_spotter_active_all",
+    "west" : "industrialupgrade:block/moon_spotter_active_all"
   }
 }

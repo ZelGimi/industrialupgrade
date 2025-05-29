@@ -1,48 +1,63 @@
 package com.denfop.api;
 
-import com.denfop.api.crafting.BaseRecipe;
-import com.denfop.api.crafting.BaseShapelessRecipe;
 import com.denfop.api.recipe.IRecipes;
+import com.denfop.api.recipe.RecipesCore;
 import com.denfop.recipe.CraftingManager;
 import com.denfop.recipe.IInputHandler;
-import com.denfop.recipe.InputHandler;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.world.item.crafting.Recipe;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class Recipes {
 
-    public static IRecipes recipes;
 
     public static IInputHandler inputFactory;
-    public static CraftingManager recipe;
+    public static com.denfop.recipe.CraftingManager recipe;
+    public static IRecipes recipes;
+    static Map<String, Recipe> recipeMap = new ConcurrentHashMap<>();
     private static int recipeID = 0;
 
     public static void registerWithSorter() {
-        RecipeSorter.Category shaped = RecipeSorter.Category.SHAPED;
-        RecipeSorter.Category shapeless = RecipeSorter.Category.SHAPELESS;
-        RecipeSorter.register("iu:shaped", BaseRecipe.class, shaped, "after:minecraft:shapeless");
-        RecipeSorter.register("iu:shapeless", BaseShapelessRecipe.class, shapeless, "after:iu:shaped");
 
     }
 
-    public static void registerRecipe(IRecipe recipe) {
-        registerRecipe(new ResourceLocation("industrialupgrade", "" + recipeID++), recipe);
+    public static void registerRecipe(Consumer<FinishedRecipe> consumer, RecipeBuilder recipe) {
+        recipe.save(consumer, "industrialupgrade:" + "industrialupgrade_" + recipeID++);
     }
 
-    public static void registerRecipe(ResourceLocation rl, IRecipe recipe) {
-        recipe.setRegistryName(rl);
-        ForgeRegistries.RECIPES.register(recipe);
+    public static void registerRecipe(Consumer<FinishedRecipe> consumer, RecipeBuilder recipe, String id) {
+        try {
+            recipe.save(consumer, id);
+        }catch (Exception e){
+            System.out.println(recipe);
+        };
     }
 
     static void loadRecipes() {
-        Recipes.recipe = new CraftingManager();
+        Recipes.recipe = new com.denfop.recipe.CraftingManager();
     }
 
     public static void registerRecipes() {
         inputFactory = new InputHandler();
+        recipes = new RecipesCore();
         loadRecipes();
     }
 
+    public static CraftingManager getRecipe() {
+        return recipe;
+    }
+
+    public static Map<String, Recipe> getRecipeMap() {
+        return recipeMap;
+    }
+
+    public static String registerRecipe(Recipe Recipe) {
+        String id = "industrialupgrade:" + "industrialupgrade_" + recipeID++;
+        recipeMap.put(id, Recipe);
+        return id;
+    }
 }

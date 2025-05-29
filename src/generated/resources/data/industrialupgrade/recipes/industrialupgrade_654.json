@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:energy_tools/spectralpickaxe"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:energy_tools/spectralshovel"
+      }
+    ],
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
+    },
+    "E": [
+      {
+        "item": "industrialupgrade:spectral_box"
+      }
+    ],
+    "H": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_525_element"
+      }
+    ]
+  },
+  "pattern": [
+    "EHE",
+    "ABC",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/spectraldrill"
+  },
+  "show_notification": true
+}

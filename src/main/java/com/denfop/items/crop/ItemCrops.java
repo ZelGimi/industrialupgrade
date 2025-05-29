@@ -1,198 +1,138 @@
 package com.denfop.items.crop;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.agriculture.ICrop;
 import com.denfop.api.agriculture.ICropItem;
 import com.denfop.api.agriculture.genetics.Genome;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
+import com.denfop.items.ItemMain;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelManager;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.registry.RegistrySimple;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
 
-import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-public class ItemCrops extends ItemSubTypes<ItemCrops.Types> implements IModelRegister, ICropItem {
-
-    protected static final String NAME = "crops";
-    Map<Integer, ModelResourceLocation> modelResourceLocationMap = new HashMap<>();
-
-    public ItemCrops() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.CropsTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemCrops<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements ICropItem {
+    public ItemCrops(T element) {
+        super(new Item.Properties(), element);
     }
 
-    @Override
-    public void onUpdate(
-            @Nonnull ItemStack itemStack,
-            @Nonnull World p_77663_2_,
-            @Nonnull Entity p_77663_3_,
-            int p_77663_4_,
-            boolean p_77663_5_
-    ) {
-        if (!(p_77663_3_ instanceof EntityPlayer)) {
-            return;
+
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu.crops.seeds";
         }
 
+        return this.nameItem;
     }
 
-
-
-    private int getIndex(Item item, int meta) {
-        return Item.getIdFromItem(item) << 16 | meta;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, final int meta, final String extraName) {
-        ModelBakery.registerItemVariants(
-                this,
-                new ModelResourceLocation(
-                        Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(),
-                        null
-                )
-        );
-
-        ModelLoader.setCustomMeshDefinition(this, stack -> {
-                    final NBTTagCompound nbt = ModUtils.nbt(stack);
-                    final boolean hasKey = nbt.hasKey("crop_id");
-                    if (!hasKey) {
-                        return new ModelResourceLocation(
-                                Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(),
-                                null
-                        );
-                    } else {
-                        final ICrop crop = CropNetwork.instance.getCrop(nbt.getInteger("crop_id"));
-
-                        final ModelManager modelManager = Minecraft.getMinecraft().modelManager;
-                        boolean isShiftPressed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-                        if (isShiftPressed && !crop.getDrops().isEmpty()) {
-                            ItemStack stack1 = crop.getDrops().get(0);
-                            ModelResourceLocation modelResourceLocation = modelResourceLocationMap.get(nbt.getInteger("crop_id"));
-                            if (modelResourceLocation == null) {
-                                final RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple<ModelResourceLocation, IBakedModel>) modelManager.modelRegistry;
-                                IBakedModel ibakedmodel = Minecraft
-                                        .getMinecraft()
-                                        .getItemRenderer().itemRenderer.getItemModelWithOverrides(
-                                                stack1,
-                                                null,
-                                                null
-                                        );
-                                for (Map.Entry<ModelResourceLocation, IBakedModel> entry : registry.registryObjects.entrySet()) {
-                                    if (entry.getValue() == ibakedmodel) {
-                                        modelResourceLocationMap.put(nbt.getInteger("crop_id"), entry.getKey());
-                                        return entry.getKey();
-                                    }
-                                }
-                            } else {
-                                return modelResourceLocation;
-                            }
-                        }
-
-                    }
-                    return new ModelResourceLocation(
-                            Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(),
-                            null
-                    );
-
-                }
-        );
-
-    }
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(
-            final ItemStack p_77624_1_,
-            @Nullable final World p_77624_2_,
-            final List<String> p_77624_3_,
-            final ITooltipFlag p_77624_4_
+    public void appendHoverText(
+            ItemStack stack,
+            @Nullable Level level,
+            List<Component> tooltip,
+            TooltipFlag flag
     ) {
-        p_77624_3_.add(Localization.translate("iu.use_agriculture_analyzer") + Localization.translate(IUItem.agricultural_analyzer.getUnlocalizedName()));
-        super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
-        ICrop crop = getCrop(0, p_77624_1_);
+       tooltip.add(Component.translatable("iu.use_agriculture_analyzer").append(Component.translatable(IUItem.agricultural_analyzer.getItem().getDescriptionId())));
+
+        super.appendHoverText(stack, level, tooltip, flag);
+
+        ICrop crop = getCrop(0, stack);
         if (crop.getId() != 3) {
             ItemStack soil = crop.getSoil().getStack();
             if (!soil.isEmpty()) {
-                p_77624_3_.add(TextFormatting.YELLOW + Localization.translate("iu.crop.oneprobe.soil") + " " + soil.getDisplayName());
+                tooltip.add(Component.translatable("iu.crop.oneprobe.soil")
+                        .append(" ")
+                        .append(soil.getHoverName())
+                        .withStyle(ChatFormatting.YELLOW));
             }
 
             if (!crop.getDrops().isEmpty()) {
-                ItemStack stack = crop.getDrops().get(0);
-                if (!stack.isEmpty()) {
-                    p_77624_3_.add(TextFormatting.AQUA + Localization.translate("iu.crop.oneprobe.drop") + " " + stack.getDisplayName());
+                ItemStack drop = crop.getDrops().get(0);
+                if (!drop.isEmpty()) {
+                    tooltip.add(Component.translatable("iu.crop.oneprobe.drop")
+                            .append(" ")
+                            .append(drop.getHoverName())
+                            .withStyle(ChatFormatting.AQUA));
                 }
             }
+
             if (!crop.getCropCombine().isEmpty()) {
-                p_77624_3_.add(TextFormatting.GREEN + Localization.translate("iu.crop.breeding"));
+                tooltip.add(Component.translatable("iu.crop.breeding").withStyle(ChatFormatting.GREEN));
                 for (ICrop crop1 : crop.getCropCombine()) {
-                    p_77624_3_.add(Localization.translate("crop." + crop1.getName()));
+                    tooltip.add(Component.translatable("crop." + crop1.getName()));
                 }
             }
         }
     }
     @Override
-    public String getItemStackDisplayName(final ItemStack stack) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        final ICrop crop = CropNetwork.instance.getCrop(nbt.getInteger("crop_id"));
-        return super.getItemStackDisplayName(stack) + ": " + Localization.translate("crop." + crop.getName());
+    public Component getName(ItemStack stack) {
+        CompoundTag tag = ModUtils.nbt(stack);
+        ICrop crop = CropNetwork.instance.getCrop(tag.getInt("crop_id"));
+        return  Component.translatable(super.getDescriptionId(stack)).append(Component.literal(": "))
+                .append(Component.translatable("crop." + crop.getName()));
+    }
+
+
+
+    public ICrop getCrop(int meta, ItemStack stack) {
+        CompoundTag tag = ModUtils.nbt(stack);
+        return CropNetwork.instance.getCrop(tag.getInt("crop_id"));
     }
 
     @Override
-    public ICrop getCrop(final int meta, final ItemStack stack) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        return CropNetwork.instance.getCrop(nbt.getInteger("crop_id"));
-    }
-
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
+    public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
+        if (allowedIn(tab)) {
             CropNetwork.instance.getCropMap().forEach((id, crop) -> {
                 if (id != 3) {
                     ItemStack stack = new ItemStack(this);
-                    final NBTTagCompound nbt = ModUtils.nbt(stack);
-                    nbt.setInteger("crop_id", id);
+                    CompoundTag tag = ModUtils.nbt(stack);
+                    tag.putInt("crop_id", id);
                     new Genome(stack);
-                    subItems.add(stack);
+                    items.add(stack);
                 }
             });
         }
     }
 
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.CropsTab;
+    }
+
     public enum Types implements ISubEnum {
-        seeds,
-        ;
+        crop;
 
         private final String name;
         private final int ID;
+
+        Types(final int ID) {
+            this.name = this.name().toLowerCase(Locale.US);
+            this.ID = ID;
+        }
 
         Types() {
             this.name = this.name().toLowerCase(Locale.US);
@@ -207,9 +147,13 @@ public class ItemCrops extends ItemSubTypes<ItemCrops.Types> implements IModelRe
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "crops";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nuclear/curium_dust"
+		"layer0": "industrialupgrade:item/nuclear/curium_dust"
 	}
 }

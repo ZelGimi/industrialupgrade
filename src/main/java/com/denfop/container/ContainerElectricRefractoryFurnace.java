@@ -1,16 +1,16 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityElectricRefractoryFurnace;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerElectricRefractoryFurnace extends ContainerFullInv<TileEntityElectricRefractoryFurnace> {
 
-    public ContainerElectricRefractoryFurnace(EntityPlayer entityPlayer, TileEntityElectricRefractoryFurnace tileEntity1) {
+    public ContainerElectricRefractoryFurnace(Player entityPlayer, TileEntityElectricRefractoryFurnace tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 56, 53, 116, 35, 152, 8);
     }
 
     public ContainerElectricRefractoryFurnace(
-            EntityPlayer entityPlayer, TileEntityElectricRefractoryFurnace tileEntity1, int height, int dischargeX,
+            Player entityPlayer, TileEntityElectricRefractoryFurnace tileEntity1, int height, int dischargeX,
             int dischargeY, int outputX, int outputY, int upgradeX, int upgradeY
     ) {
         super(entityPlayer, tileEntity1, height);

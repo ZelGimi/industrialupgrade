@@ -4,72 +4,71 @@ import com.denfop.Constants;
 import com.denfop.api.solar.EnumTypeParts;
 import com.denfop.api.solar.ISolarItem;
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TileEntityMiniPanelRender<T extends TileEntityMiniPanels> extends TileEntitySpecialRenderer<T> {
+public class TileEntityMiniPanelRender implements BlockEntityRenderer<TileEntityMiniPanels> {
 
-    private static final Map<Integer, ModelBase> panelModels = new HashMap<>();
-    private static final Map<Integer, ModelBase> bottomModels = new HashMap<>();
+    private static final Map<Integer, ModelMiniPanelGlass> panelModels = new HashMap<>();
+    private static final Map<Integer, BottomModel> bottomModels = new HashMap<>();
     private static final ResourceLocation bottomTextures = new ResourceLocation(
             Constants.TEXTURES,
-            "textures/blocks/admsp_bottom.png"
+            "textures/block/admsp_bottom.png"
     );
-    private static final ModelBase bonusPanel = new ModelMiniPanelGlass(10);
-    private static final ModelBase bonusBottom = new BottomModel(10);
+    private static final ModelMiniPanelGlass bonusPanel = new ModelMiniPanelGlass(10);
+    private static final BottomModel bonusBottom = new BottomModel(10);
 
+    public TileEntityMiniPanelRender(BlockEntityRendererProvider.Context context) {}
+
+    @Override
     public void render(
             TileEntityMiniPanels te,
-            double x,
-            double y,
-            double z,
             float partialTicks,
-            int destroyStage,
-            float alpha
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            int packedLight,
+            int packedOverlay
     ) {
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
+        poseStack.pushPose();
+        panelModels.clear();
         if (te.getBonus(EnumTypeParts.GENERATION) == 0) {
             for (int i = 0; i < 9; i++) {
-                if (te.invSlotGlass.get(i).isEmpty()) {
+                ItemStack stack = te.invSlotGlass.get(i);
+                if (stack.isEmpty()) {
                     continue;
                 }
 
-                ModelBase model = panelModels.get(i);
-                if (model == null) {
-                    model = new ModelMiniPanelGlass(i);
-                    panelModels.put(i, model);
-                }
-                ModelBase model1 = bottomModels.get(i);
-                if (model1 == null) {
-                    model1 = new BottomModel(i);
-                    bottomModels.put(i, model1);
-                }
-                this.bindTexture(((ISolarItem) te.invSlotGlass.get(i).getItem()).getResourceLocation(te.invSlotGlass
-                        .get(i)
-                        .getItemDamage()));
-                model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
-                this.bindTexture(bottomTextures);
-                model1.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
+                ModelMiniPanelGlass model = panelModels.computeIfAbsent(i, ModelMiniPanelGlass::new);
+                BottomModel model1 = bottomModels.computeIfAbsent(i, BottomModel::new);
 
+                ResourceLocation glassTexture = ((ISolarItem) stack.getItem()).getResourceLocation(0);
+
+                VertexConsumer glassConsumer = bufferSource.getBuffer(RenderType.entitySolid(glassTexture));
+                model.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay,1,1,1,1);
+
+                VertexConsumer bottomConsumer = bufferSource.getBuffer(RenderType.entitySolid(bottomTextures));
+                model1.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay,1,1,1,1);
             }
         } else {
-            this.bindTexture(((ISolarItem) te.invSlotGlass.get(0).getItem()).getResourceLocation(te.invSlotGlass
-                    .get(0)
-                    .getItemDamage()));
-            bonusPanel.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
-            this.bindTexture(bottomTextures);
-            bonusBottom.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
+            ItemStack stack = te.invSlotGlass.get(0);
+            ResourceLocation glassTexture = ((ISolarItem) stack.getItem()).getResourceLocation(stack.getDamageValue());
 
+            VertexConsumer glassConsumer = bufferSource.getBuffer(RenderType.entitySolid(glassTexture));
+            bonusPanel.renderToBuffer(poseStack, glassConsumer, packedLight, packedOverlay,1,1,1,1);
+
+            VertexConsumer bottomConsumer = bufferSource.getBuffer(RenderType.entitySolid(bottomTextures));
+            bonusBottom.renderToBuffer(poseStack, bottomConsumer, packedLight, packedOverlay,1,1,1,1);
         }
-        GlStateManager.popMatrix();
 
+        poseStack.popPose();
     }
-
 }

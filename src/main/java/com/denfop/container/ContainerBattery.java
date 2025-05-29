@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityBatteryFactory;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerBattery extends ContainerFullInv<TileEntityBatteryFactory> {
 
-    public ContainerBattery(TileEntityBatteryFactory tileEntityBatteryFactory, EntityPlayer var1) {
+    public ContainerBattery(TileEntityBatteryFactory tileEntityBatteryFactory, Player var1) {
         super(tileEntityBatteryFactory, var1);
         for (int i = 0; i < 9; i++) {
             this.addSlotToContainer(new SlotInvSlot(

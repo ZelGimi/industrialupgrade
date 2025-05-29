@@ -20,7 +20,7 @@ public class Action {
     }
 
     public void doAction() {
-        if (this.inventory.getWorld().provider.getWorldTime() % tick == 0) {
+        if (this.inventory.getLevel().getGameTime() % tick == 0) {
             if (typeAction == TypeAction.AUDIO && this.param.length > 0) {
                 ((IAudioFixer) this.inventory).initiate((Integer) param[0]);
 

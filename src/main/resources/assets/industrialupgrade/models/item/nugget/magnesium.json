@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/magnesium_nugget"
+    "layer0" : "industrialupgrade:item/magnesium_nugget"
   }
 }

@@ -7,12 +7,9 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.container.ContainerPeatGenerator;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
 
-@SideOnly(Side.CLIENT)
-public class GuiPeatGenerator extends GuiIU<ContainerPeatGenerator> {
+public class GuiPeatGenerator<T extends ContainerPeatGenerator> extends GuiIU<ContainerPeatGenerator> {
 
 
     public ContainerPeatGenerator container;
@@ -36,19 +33,12 @@ public class GuiPeatGenerator extends GuiIU<ContainerPeatGenerator> {
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-
-
-    }
 
     @Override
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-    }
+
 
 }

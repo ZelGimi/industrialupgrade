@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:energy_tools/spectralaxe"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:energy_tools/spectralshovel"
+      }
+    ],
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/photoncircuit",
+      "nbt": "{level:12}"
+    },
+    "D": [
+      {
+        "item": "industrialupgrade:energy_tools/spectralpickaxe"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:quantumitems3"
+      }
+    ],
+    "F": [
+      {
+        "item": "industrialupgrade:upgrades/overclockerupgrade2"
+      }
+    ]
+  },
+  "pattern": [
+    "ACB",
+    "FDF",
+    "ECE"
+  ],
+  "result": {
+    "item": "industrialupgrade:energy_tools/vajra"
+  },
+  "show_notification": true
+}

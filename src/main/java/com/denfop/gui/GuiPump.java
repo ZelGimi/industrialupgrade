@@ -3,12 +3,12 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.api.gui.*;
 import com.denfop.container.ContainerPump;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiPump extends GuiIU<ContainerPump> {
+@OnlyIn(Dist.CLIENT)
+public class GuiPump<T extends ContainerPump> extends GuiIU<ContainerPump> {
 
     public final ContainerPump container;
 
@@ -23,18 +23,6 @@ public class GuiPump extends GuiIU<ContainerPump> {
         this.addComponent(new GuiComponent(this, 93, 36, EnumTypeComponent.FLUID_PART3,
                 new Component<>(new ComponentEmpty())
         ));
-    }
-
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-
-
     }
 
 

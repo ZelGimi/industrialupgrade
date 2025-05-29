@@ -2,11 +2,11 @@ package com.denfop.container;
 
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.multimechanism.IFarmer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerMultiMachine extends ContainerFullInv<TileMultiMachine> {
 
-    public ContainerMultiMachine(EntityPlayer entityPlayer, TileMultiMachine tileEntity1, int sizeWorkingSlot) {
+    public ContainerMultiMachine(Player entityPlayer, TileMultiMachine tileEntity1, int sizeWorkingSlot) {
         super(entityPlayer, tileEntity1, 166);
         if (tileEntity1 instanceof IFarmer) {
             if (tileEntity1.getMachine().sizeWorkingSlot != 8) {
@@ -83,7 +83,7 @@ public class ContainerMultiMachine extends ContainerFullInv<TileMultiMachine> {
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.dischargeSlot, 0, 8, 63));
     }
 
-    public ContainerMultiMachine(EntityPlayer entityPlayer, TileMultiMachine tileEntity1, int sizeWorkingSlot, boolean jei) {
+    public ContainerMultiMachine(Player entityPlayer, TileMultiMachine tileEntity1, int sizeWorkingSlot, boolean jei) {
         super(entityPlayer, tileEntity1, 166);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             int xDisplayPosition1 = 80 + (32 - sizeWorkingSlot) * i - sizeWorkingSlot * 10;

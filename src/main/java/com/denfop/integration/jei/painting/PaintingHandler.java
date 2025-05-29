@@ -3,8 +3,8 @@ package com.denfop.integration.jei.painting;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.List;
 public class PaintingHandler {
 
     private static final List<PaintingHandler> recipes = new ArrayList<>();
-    public final NBTTagCompound metadata;
+    public final CompoundTag metadata;
     private final ItemStack input, input1, output;
 
-    public PaintingHandler(ItemStack input, ItemStack input1, ItemStack output, final NBTTagCompound metadata) {
+    public PaintingHandler(ItemStack input, ItemStack input1, ItemStack output, final CompoundTag metadata) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
@@ -33,7 +33,7 @@ public class PaintingHandler {
             ItemStack input,
             ItemStack input1,
             ItemStack output,
-            final NBTTagCompound metadata
+            final CompoundTag metadata
     ) {
         PaintingHandler recipe = new PaintingHandler(input, input1, output, metadata);
         if (recipes.contains(recipe)) {
@@ -81,7 +81,7 @@ public class PaintingHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
+        return true;
     }
 
 }

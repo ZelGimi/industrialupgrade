@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/cooling_mixture"
+    "layer0" : "industrialupgrade:item/cooling_mixture"
   }
 }

@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/daynight/bar"
+		"layer0": "industrialupgrade:item/daynight/bar"
 	}
 }

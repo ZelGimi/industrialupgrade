@@ -1,21 +1,25 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPalletGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPalletGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +33,8 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
     public double generate = 0;
 
 
-    public TileEntityPalletGenerator() {
-        super(0, 14, 0);
+    public TileEntityPalletGenerator(BlockPos pos, BlockState state) {
+        super(0, 14, 0,BlockBaseMachine3.pallet_generator,pos,state);
         this.energy = this.addComponent(Energy.asBasicSource(this, 5000000, tier));
         this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 1000000D));
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 6) {
@@ -38,7 +42,7 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
             public boolean accepts(final ItemStack stack, final int index) {
 
                 for (Map.Entry<ItemStack, Double> entry : TileEntityPalletGenerator.integerMap.entrySet()) {
-                    if (entry.getKey().isItemEqual(stack)) {
+                    if (entry.getKey().is(stack.getItem())) {
                         return true;
                     }
                 }
@@ -46,10 +50,11 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 TileEntityPalletGenerator tile = (TileEntityPalletGenerator) this.base;
                 tile.update = true;
+                return content;
             }
 
         };
@@ -58,32 +63,32 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
 
 
     public static void init() {
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.nuclear_res, 1, 8), 1.1);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 8), 1.2);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.nuclear_res, 1, 9), 1.3);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 4), 1.6);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 0), 1.75);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 1), 1.9);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 9), 2.05);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 2), 2.2);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 3), 2.45);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 6), 2.7);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 7), 2.85);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 10), 3.162);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 5), 3.32);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 11), 3.7);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets, 1, 12), 4d);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.nuclear_res.getStack(8)), 1.1);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(8)), 1.2);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.nuclear_res.getStack(9)), 1.3);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(4)), 1.6);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(0)), 1.75);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(1)), 1.9);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(9)), 2.05);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(2)), 2.2);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(3)), 2.45);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(6)), 2.7);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(7)), 2.85);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(10)), 3.162);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(5)), 3.32);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(11)), 3.7);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets.getStack(12)), 4d);
     }
 
     @Override
-    public ContainerPalletGenerator getGuiContainer(final EntityPlayer var1) {
+    public ContainerPalletGenerator getGuiContainer(final Player var1) {
         return new ContainerPalletGenerator(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiPalletGenerator(this.getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiPalletGenerator((ContainerPalletGenerator) menu);
     }
 
     @Override
@@ -93,9 +98,9 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
             this.update = false;
             double num = 0;
             this.generate = 0;
-            for (ItemStack stack : this.slot.getContents()) {
+            for (ItemStack stack : this.slot) {
                 for (Map.Entry<ItemStack, Double> entry : TileEntityPalletGenerator.integerMap.entrySet()) {
-                    if (entry.getKey().isItemEqual(stack)) {
+                    if (entry.getKey().is(stack.getItem())) {
                         if (num == 0) {
                             num = entry.getValue();
                         } else {
@@ -135,7 +140,7 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

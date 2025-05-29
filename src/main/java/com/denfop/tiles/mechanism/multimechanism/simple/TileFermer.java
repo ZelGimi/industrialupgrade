@@ -17,10 +17,12 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.multimechanism.IFarmer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileFermer extends TileMultiMachine implements IFarmer {
 
@@ -29,12 +31,12 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
     private final SoilPollutionComponent pollutionSoil;
     int col = 0;
 
-    public TileFermer() {
-        super(EnumMultiMachine.Fermer.usagePerTick, EnumMultiMachine.Fermer.lenghtOperation);
+    public TileFermer(BlockPos pos, BlockState state) {
+        super(EnumMultiMachine.Fermer.usagePerTick, EnumMultiMachine.Fermer.lenghtOperation, BlockMoreMachine3.farmer, pos, state);
         this.fertilizerSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.fertilizer;
+                return stack.getItem() == IUItem.fertilizer.getItem();
             }
 
             public EnumTypeSlot getTypeSlot() {
@@ -80,8 +82,7 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
                         new Input(
                                 input1.getInput(new ItemStack(input))
                         ),
-                        new RecipeOutput(null, new ItemStack(output.getItem(), n,
-                                output.getItemDamage()
+                        new RecipeOutput(null, new ItemStack(output.getItem(), n
                         )
                         )
                 )
@@ -155,14 +156,14 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
 
     @Override
     public int getSize(int size) {
-        size = Math.min(super.getSize(size), fertilizerSlot.get().getCount() * 8 + col);
+        size = Math.min(super.getSize(size), fertilizerSlot.get(0).getCount() * 8 + col);
         return size;
 
     }
 
     @Override
     public boolean canoperate(final int size) {
-        return !fertilizerSlot.isEmpty() && fertilizerSlot.get().getCount() * 8 + col >= size;
+        return !fertilizerSlot.isEmpty() && fertilizerSlot.get(0).getCount() * 8 + col >= size;
     }
 
     @Override
@@ -171,7 +172,7 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
         while (size1 > 0) {
             if (col == 0) {
                 col += 16;
-                fertilizerSlot.get().shrink(1);
+                fertilizerSlot.get(0).shrink(1);
             }
             if (size1 <= col) {
                 col -= size1;
@@ -189,34 +190,38 @@ public class TileFermer extends TileMultiMachine implements IFarmer {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base3;
+        return IUItem.machines_base3.getBlock(getTeBlock().getId());
     }
 
     public void init() {
         addrecipe(Items.WHEAT_SEEDS, Items.WHEAT, 2);
         addrecipe(Items.WHEAT, Items.WHEAT_SEEDS, 1);
-        addrecipe(new ItemStack(IUItem.rubberSapling), new ItemStack(IUItem.rubWood), 1);
-        addrecipe(new ItemStack(IUItem.rubWood), new ItemStack(IUItem.rawLatex, 2), 2);
-        addrecipe(IUItem.rawLatex, new ItemStack(IUItem.rubberSapling), 1);
+        addrecipe(new ItemStack(IUItem.rubberSapling.getItem()), new ItemStack(IUItem.rubWood.getItem(0)), 1);
+        addrecipe(new ItemStack(IUItem.rubWood.getItem(0)), new ItemStack(IUItem.rawLatex.getItem(), 2), 2);
+        addrecipe(IUItem.rawLatex.getItem(), new ItemStack(IUItem.rubberSapling.getItem()), 1);
         addrecipe(Items.CARROT, Items.CARROT, 2);
         addrecipe(Items.POTATO, Items.POTATO, 2);
-        addrecipe(Item.getItemFromBlock(Blocks.PUMPKIN), Items.PUMPKIN_SEEDS, 1);
+        addrecipe(Blocks.PUMPKIN.asItem(), Items.PUMPKIN_SEEDS, 1);
 
-        addrecipe(Items.PUMPKIN_SEEDS, Item.getItemFromBlock(Blocks.PUMPKIN), 2);
+        addrecipe(Items.PUMPKIN_SEEDS, Blocks.PUMPKIN.asItem(), 2);
         addrecipe(Items.MELON_SEEDS, Items.MELON, 2);
         addrecipe(Items.MELON, Items.MELON_SEEDS, 1);
-        for (int i = 0; i < 4; i++) {
-            addrecipe(new ItemStack(Blocks.SAPLING, 1, i), new ItemStack(Blocks.LOG, 2, i));
-        }
-        for (int i = 0; i < 2; i++) {
-            addrecipe(new ItemStack(Blocks.SAPLING, 1, i + 4), new ItemStack(Blocks.LOG2, 2, i));
-        }
-        for (int i = 0; i < 4; i++) {
-            addrecipe(new ItemStack(Blocks.LOG, 1, i), new ItemStack(Blocks.SAPLING, 1, i));
-        }
-        for (int i = 0; i < 2; i++) {
-            addrecipe(new ItemStack(Blocks.LOG2, 1, i), new ItemStack(Blocks.SAPLING, 1, i + 4));
-        }
+
+        addrecipe(new ItemStack(Blocks.OAK_SAPLING, 1), new ItemStack(Blocks.OAK_LOG, 2));
+        addrecipe(new ItemStack(Blocks.BIRCH_SAPLING, 1), new ItemStack(Blocks.BIRCH_LOG, 2));
+        addrecipe(new ItemStack(Blocks.ACACIA_SAPLING, 1), new ItemStack(Blocks.ACACIA_LOG, 2));
+        addrecipe(new ItemStack(Blocks.JUNGLE_SAPLING, 1), new ItemStack(Blocks.JUNGLE_LOG, 2));
+        addrecipe(new ItemStack(Blocks.DARK_OAK_SAPLING, 1), new ItemStack(Blocks.DARK_OAK_LOG, 2));
+        addrecipe(new ItemStack(Blocks.SPRUCE_SAPLING, 1), new ItemStack(Blocks.SPRUCE_LOG, 2));
+
+        addrecipe(new ItemStack(Blocks.OAK_LOG, 1), new ItemStack(Blocks.OAK_SAPLING, 2));
+        addrecipe(new ItemStack(Blocks.BIRCH_LOG, 1), new ItemStack(Blocks.BIRCH_SAPLING, 2));
+        addrecipe(new ItemStack(Blocks.ACACIA_LOG, 1), new ItemStack(Blocks.ACACIA_SAPLING, 2));
+        addrecipe(new ItemStack(Blocks.JUNGLE_LOG, 1), new ItemStack(Blocks.JUNGLE_SAPLING, 2));
+        addrecipe(new ItemStack(Blocks.DARK_OAK_LOG, 1), new ItemStack(Blocks.DARK_OAK_SAPLING, 2));
+        addrecipe(new ItemStack(Blocks.SPRUCE_LOG, 1), new ItemStack(Blocks.SPRUCE_SAPLING, 2));
+
+
     }
 
     @Override

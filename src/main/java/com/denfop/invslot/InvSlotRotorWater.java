@@ -4,7 +4,7 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemWaterRotor;
 import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotRotorWater extends InvSlot implements ITypeSlot {
 
@@ -27,19 +27,20 @@ public class InvSlotRotorWater extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
+    public ItemStack set(final int index, final ItemStack content) {
         if (content.isEmpty()) {
             if (!this.contents.get(index).isEmpty()) {
                 ((TileEntityWaterRotorModifier) this.slotUpgrade.base).updateTileServer(null, 0);
             }
         }
-        super.put(index, content);
+        super.set(index, content);
         if (content.isEmpty()) {
             this.slotUpgrade.update();
         }
         if (!content.isEmpty()) {
             this.slotUpgrade.update(content);
         }
+        return content;
     }
 
 }

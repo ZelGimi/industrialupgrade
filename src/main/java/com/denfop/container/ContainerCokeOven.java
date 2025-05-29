@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.cokeoven.TileCokeOvenMain;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
 
 public class ContainerCokeOven extends ContainerFullInv<TileCokeOvenMain> {
 
-    public ContainerCokeOven(EntityPlayer entityPlayer, TileCokeOvenMain tileEntityBlastFurnaceMain) {
+    public ContainerCokeOven(Player entityPlayer, TileCokeOvenMain tileEntityBlastFurnaceMain) {
         super(entityPlayer, tileEntityBlastFurnaceMain, 182);
 
 
@@ -33,8 +33,8 @@ public class ContainerCokeOven extends ContainerFullInv<TileCokeOvenMain> {
 
 
     @Override
-    public void onContainerClosed(@Nonnull final EntityPlayer playerIn) {
-        super.onContainerClosed(playerIn);
+    public void removed(@Nonnull final Player playerIn) {
+        super.removed(playerIn);
         this.base.entityPlayerList.remove(playerIn);
     }
 

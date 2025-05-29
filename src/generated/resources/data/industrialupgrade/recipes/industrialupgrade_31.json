@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/tin"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:battery/advanced_re_battery"
+      }
+    ]
+  },
+  "pattern": [
+    "ABA",
+    "CCC",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring_storage/batbox_iu"
+  },
+  "show_notification": true
+}

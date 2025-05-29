@@ -1,41 +1,43 @@
 package com.denfop.items.resource;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.datagen.itemtag.IItemTag;
+import com.denfop.items.ItemMain;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.Locale;
 
-public class ItemGear extends ItemSubTypes<ItemGear.Types> implements IModelRegister {
-
-    protected static final String NAME = "gear";
-
-    public ItemGear() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.RecourseTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemGear<T extends Enum<T> & ISubEnum> extends ItemMain<T> implements IItemTag {
+    public ItemGear(T element) {
+        super(new Item.Properties(), element);
     }
 
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
+    @Override
+    public Item getItem() {
+        return this;
     }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.RecourseTab;
+    }
+    @Override
+    public String[] getTags() {
+        String name = getElement().getName();
+        switch (this.getElement().getId()) {
+            case 3:
+                name = "tungsten";
+                break;
+            case 9:
+                name = "platinum";
+                break;
+            case 13:
+                name = "electrum";
+                break;
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item stack, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+        }
+        return new String[]{"forge:gears/" + name, "forge:gears"};
     }
 
     public enum Types implements ISubEnum {
@@ -76,7 +78,6 @@ public class ItemGear extends ItemSubTypes<ItemGear.Types> implements IModelRegi
         strontium(34),
         thallium(35),
         zirconium(36),
-
         ;
 
         private final String name;
@@ -95,9 +96,13 @@ public class ItemGear extends ItemSubTypes<ItemGear.Types> implements IModelRegi
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "gear";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
 }

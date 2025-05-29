@@ -1,20 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -25,31 +15,29 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSolidStateElectrolyzer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSolidStateElectrolyzer;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotElectrolyzer;
-import com.denfop.invslot.InvSlotFluid;
-import com.denfop.invslot.InvSlotFluidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -79,8 +67,8 @@ public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implem
     public double guiProgress;
     protected short progress;
 
-    public TileEntitySolidStateElectrolyzer() {
-        super(200, 1, 1);
+    public TileEntitySolidStateElectrolyzer(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.solid_state_electrolyzer,pos,state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -137,82 +125,82 @@ public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implem
 
     }
 
-    public ContainerSolidStateElectrolyzer getGuiContainer(final EntityPlayer var1) {
+    public ContainerSolidStateElectrolyzer getGuiContainer(final Player var1) {
         return new ContainerSolidStateElectrolyzer(var1, this);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiSolidStateElectrolyzer(getGuiContainer(var1));
+        return new GuiSolidStateElectrolyzer((ContainerSolidStateElectrolyzer) menu);
     }
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(IUItem.iudust, 1, 42), new ItemStack(IUItem.iudust, 1, 15),
-                new FluidStack(FluidName.fluidbromine.getInstance(), 50)
+        addRecipe(new ItemStack(IUItem.iudust.getStack(42)), new ItemStack(IUItem.iudust.getStack(15)),
+                new FluidStack(FluidName.fluidbromine.getInstance().get(), 50)
         );
 
-        addRecipe(new ItemStack(IUItem.iudust, 1, 43), new ItemStack(IUItem.iudust, 1, 41),
-                new FluidStack(FluidRegistry.WATER, 20)
+        addRecipe(new ItemStack(IUItem.iudust.getStack(43)), new ItemStack(IUItem.iudust.getStack(41)),
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 20)
         );
 
-        addRecipe(new ItemStack(Blocks.CLAY), new ItemStack(IUItem.smalldust, 1, 1),
-                new FluidStack(FluidName.fluidco2.getInstance(), 10)
+        addRecipe(new ItemStack(Blocks.CLAY), new ItemStack(IUItem.smalldust.getStack(1)),
+                new FluidStack(FluidName.fluidco2.getInstance().get(), 10)
         );
-        addRecipe(new ItemStack(IUItem.iudust, 1, 63), new ItemStack(IUItem.iudust, 3, 14),
-                new FluidStack(FluidName.fluidchlorum.getInstance(), 80)
+        addRecipe(new ItemStack(IUItem.iudust.getStack(63)), new ItemStack(IUItem.iudust.getStack(14), 3),
+                new FluidStack(FluidName.fluidchlorum.getInstance().get(), 80)
         );
 
-        addRecipe(new ItemStack(IUItem.preciousgem, 1, 0), new ItemStack(IUItem.smalldust, 5, 11),
-                new FluidStack(FluidName.fluidoxy.getInstance(), 20)
+        addRecipe(new ItemStack(IUItem.preciousgem.getStack(0)), new ItemStack(IUItem.smalldust.getStack(11), 5),
+                new FluidStack(FluidName.fluidoxy.getInstance().get(), 20)
         );
-        addRecipe(new ItemStack(IUItem.preciousgem, 1, 1), new ItemStack(IUItem.smalldust, 5, 2),
-                new FluidStack(FluidName.fluidoxy.getInstance(), 20)
+        addRecipe(new ItemStack(IUItem.preciousgem.getStack(1)), new ItemStack(IUItem.smalldust.getStack(2), 5),
+                new FluidStack(FluidName.fluidoxy.getInstance().get(), 20)
         );
-        addRecipe(new ItemStack(IUItem.preciousgem, 1, 2), new ItemStack(IUItem.smalldust, 5, 10),
-                new FluidStack(FluidName.fluidoxy.getInstance(), 20)
+        addRecipe(new ItemStack(IUItem.preciousgem.getStack(2)), new ItemStack(IUItem.smalldust.getStack(10), 5),
+                new FluidStack(FluidName.fluidoxy.getInstance().get(), 20)
         );
-        addRecipe(new ItemStack(IUItem.space_stone, 1, 0), new ItemStack(IUItem.spaceItem, 3, 30),
-                new FluidStack(FluidName.fluidbromine.getInstance(), 50)
+        addRecipe(new ItemStack(IUItem.space_stone.getItem(0)), new ItemStack(IUItem.spaceItem.getStack(30), 3),
+                new FluidStack(FluidName.fluidbromine.getInstance().get(), 50)
         );
-        addRecipe(new ItemStack(IUItem.space_stone, 1, 5), new ItemStack(IUItem.spaceItem, 3, 35),
-                new FluidStack(FluidName.fluidHelium.getInstance(), 50)
+        addRecipe(new ItemStack(IUItem.space_stone.getItem(5)), new ItemStack(IUItem.spaceItem.getStack(35), 3),
+                new FluidStack(FluidName.fluidHelium.getInstance().get(), 50)
         );
-        addRecipe(new ItemStack(IUItem.space_stone, 1, 6), new ItemStack(IUItem.spaceItem, 3, 36),
-                new FluidStack(FluidName.fluidmethane.getInstance(), 50)
+        addRecipe(new ItemStack(IUItem.space_stone.getItem(6)), new ItemStack(IUItem.spaceItem.getStack(36), 3),
+                new FluidStack(FluidName.fluidmethane.getInstance().get(), 50)
         );
-        addRecipe(new ItemStack(IUItem.space_stone, 1, 10), new ItemStack(IUItem.spaceItem, 3, 40),
-                new FluidStack(FluidName.fluidcarbonmonoxide.getInstance(), 50)
+        addRecipe(new ItemStack(IUItem.space_stone.getItem(10)), new ItemStack(IUItem.spaceItem.getStack(40), 3),
+                new FluidStack(FluidName.fluidcarbonmonoxide.getInstance().get(), 50)
         );
-        addRecipe(new ItemStack(IUItem.space_stone, 1, 14), new ItemStack(IUItem.spaceItem, 3, 44),
-                new FluidStack(FluidName.fluidazot.getInstance(), 100)
+        addRecipe(new ItemStack(IUItem.space_stone.getItem(14)), new ItemStack(IUItem.spaceItem.getStack(44), 3),
+                new FluidStack(FluidName.fluidazot.getInstance().get(), 100)
         );
-        addRecipe(new ItemStack(IUItem.space_stone1, 1, 2), new ItemStack(IUItem.spaceItem, 3, 48),
-                new FluidStack(FluidName.fluidhyd.getInstance(), 100)
+        addRecipe(new ItemStack(IUItem.space_stone1.getItem(2)), new ItemStack(IUItem.spaceItem.getStack(48), 3),
+                new FluidStack(FluidName.fluidhyd.getInstance().get(), 100)
         );
-        addRecipe(new ItemStack(IUItem.space_stone1, 1, 3), new ItemStack(IUItem.spaceItem, 3, 49),
-                new FluidStack(FluidName.fluidethane.getInstance(), 100)
+        addRecipe(new ItemStack(IUItem.space_stone1.getItem(3)), new ItemStack(IUItem.spaceItem.getStack(49), 3),
+                new FluidStack(FluidName.fluidethane.getInstance().get(), 100)
         );
-        addRecipe(new ItemStack(IUItem.space_stone1, 1, 5), new ItemStack(IUItem.spaceItem, 3, 51),
-                new FluidStack(FluidName.fluidnitricacid.getInstance(), 100)
+        addRecipe(new ItemStack(IUItem.space_stone1.getItem(5)), new ItemStack(IUItem.spaceItem.getStack(51), 3),
+                new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 100)
         );
-        addRecipe(new ItemStack(IUItem.space_stone1, 1, 6), new ItemStack(IUItem.spaceItem, 3, 52),
-                new FluidStack(FluidName.fluidxenon.getInstance(), 80)
+        addRecipe(new ItemStack(IUItem.space_stone1.getItem(6)), new ItemStack(IUItem.spaceItem.getStack(52), 3),
+                new FluidStack(FluidName.fluidxenon.getInstance().get(), 80)
         );
-        addRecipe(new ItemStack(IUItem.space_stone1, 1, 7), new ItemStack(IUItem.spaceItem, 3, 53),
-                new FluidStack(FluidName.fluidnitrogenhydride.getInstance(), 100)
+        addRecipe(new ItemStack(IUItem.space_stone1.getItem(7)), new ItemStack(IUItem.spaceItem.getStack(53), 3),
+                new FluidStack(FluidName.fluidnitrogenhydride.getInstance().get(), 100)
         );
-        addRecipe(new ItemStack(IUItem.space_stone1, 1, 8), new ItemStack(IUItem.spaceItem, 3, 54),
-                new FluidStack(FluidName.fluiddecane.getInstance(), 80)
+        addRecipe(new ItemStack(IUItem.space_stone1.getItem(8)), new ItemStack(IUItem.spaceItem.getStack(54), 3),
+                new FluidStack(FluidName.fluiddecane.getInstance().get(), 80)
         );
-        addRecipe(new ItemStack(IUItem.space_stone1, 1, 10), new ItemStack(IUItem.spaceItem, 3, 56),
-                new FluidStack(FluidName.fluidchlorum.getInstance(), 80)
+        addRecipe(new ItemStack(IUItem.space_stone1.getItem(10)), new ItemStack(IUItem.spaceItem.getStack(56), 3),
+                new FluidStack(FluidName.fluidchlorum.getInstance().get(), 80)
         );
-        addRecipe(new ItemStack(IUItem.space_stone1, 1, 11), new ItemStack(IUItem.spaceItem, 3, 57),
-                new FluidStack(FluidName.fluidiodine.getInstance(), 80)
+        addRecipe(new ItemStack(IUItem.space_stone1.getItem(11)), new ItemStack(IUItem.spaceItem.getStack(57), 3),
+                new FluidStack(FluidName.fluidiodine.getInstance().get(), 80)
         );
     }
 
@@ -223,7 +211,7 @@ public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implem
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -238,24 +226,24 @@ public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implem
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
-            this.fluid_handler.load(this.inputSlotA.get());
+            this.fluid_handler.load(this.inputSlotA.get(0));
             this.getOutput();
         }
 
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -320,7 +308,7 @@ public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implem
         }
 
         if (check || (this.fluid_handler.output() == null && this.output != null)) {
-            this.fluid_handler.getOutput(this.inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.output == null) {
                 this.fluid_handler.setOutput(null);
@@ -347,18 +335,18 @@ public class TileEntitySolidStateElectrolyzer extends TileElectricMachine implem
             this.progress = (short) (this.progress + 1);
             this.energy.useEnergy(energyConsume);
             double k = this.progress;
-            ItemStack cathode = this.cathodeslot.get();
-            ItemStack anode = this.anodeslot.get();
-            if (cathode.getItemDamage() < cathode.getMaxDamage()) {
-                cathode.setItemDamage(cathode.getItemDamage() + 1);
+            ItemStack cathode = this.cathodeslot.get(0);
+            ItemStack anode = this.anodeslot.get(0);
+            if (cathode.getDamageValue() < cathode.getMaxDamage()) {
+                cathode.setDamageValue(cathode.getDamageValue() + 1);
             }
-            if (anode.getItemDamage() < anode.getMaxDamage()) {
-                anode.setItemDamage(anode.getItemDamage() + 1);
+            if (anode.getDamageValue() < anode.getMaxDamage()) {
+                anode.setDamageValue(anode.getDamageValue() + 1);
             }
-            if (cathode.getItemDamage() == cathode.getMaxDamage()) {
+            if (cathode.getDamageValue() == cathode.getMaxDamage()) {
                 this.cathodeslot.consume(1);
             }
-            if (anode.getItemDamage() == anode.getMaxDamage()) {
+            if (anode.getDamageValue() == anode.getMaxDamage()) {
                 this.anodeslot.consume(1);
             }
             this.guiProgress = (k / this.operationLength);

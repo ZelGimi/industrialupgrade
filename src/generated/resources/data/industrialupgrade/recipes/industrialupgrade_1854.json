@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_reactor/gas_cell"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_418_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_415_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_45_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_425_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    "EAE",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_reactor/adv_gas_cell"
+  },
+  "show_notification": true
+}

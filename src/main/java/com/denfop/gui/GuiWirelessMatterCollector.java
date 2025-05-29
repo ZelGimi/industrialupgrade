@@ -7,9 +7,10 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentValue;
 import com.denfop.container.ContainerWirelessMatterCollector;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiWirelessMatterCollector extends GuiIU<ContainerWirelessMatterCollector> {
+public class GuiWirelessMatterCollector<T extends ContainerWirelessMatterCollector> extends GuiIU<ContainerWirelessMatterCollector> {
 
     public GuiWirelessMatterCollector(ContainerWirelessMatterCollector guiContainer) {
         super(guiContainer);
@@ -24,11 +25,11 @@ public class GuiWirelessMatterCollector extends GuiIU<ContainerWirelessMatterCol
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         String percent = this.container.base.getIntegerPercentage() + "%";
-        int nmPos2 = (this.xSize - this.fontRenderer.getStringWidth(percent)) / 2;
-        this.fontRenderer.drawString(percent, nmPos2 - 35, 46, 4210752);
+        int nmPos2 = (this.imageWidth - this.getStringWidth(percent)) / 2;
+        draw(poseStack,percent, nmPos2 - 35, 46, 4210752);
     }
 
     @Override
@@ -36,18 +37,7 @@ public class GuiWirelessMatterCollector extends GuiIU<ContainerWirelessMatterCol
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 
-
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(
-                Constants.MOD_ID,
-                "textures/gui/guiliquidmattercollector.png"
-        ));
-
-
-    }
 
 
 }

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=uev": {
+      "model": "industrialupgrade:block/basemachine/uev"
+    },
+    "facing=south,type=uev": {
+      "model": "industrialupgrade:block/basemachine/uev",
+      "y": 180
+    },
+    "facing=west,type=uev": {
+      "model": "industrialupgrade:block/basemachine/uev",
+      "y": 270
+    },
+    "facing=east,type=uev": {
+      "model": "industrialupgrade:block/basemachine/uev",
+      "y": 90
+    },
+    "facing=down,type=uev": {
+      "model": "industrialupgrade:block/basemachine/uev",
+      "x": 90
+    },
+    "facing=up,type=uev": {
+      "model": "industrialupgrade:block/basemachine/uev",
+      "x": 270
+    },
+    "facing=north,type=uev_invalid": {
+      "model": "industrialupgrade:block/basemachine/uev_active"
+    },
+    "facing=south,type=uev_invalid": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "y": 180
+    },
+    "facing=west,type=uev_invalid": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "y": 270
+    },
+    "facing=east,type=uev_invalid": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "y": 90
+    },
+    "facing=down,type=uev_invalid": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "x": 90
+    },
+    "facing=up,type=uev_invalid": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "x": 270
+    },
+    "facing=north,type=uev_active": {
+      "model": "industrialupgrade:block/basemachine/uev_active"
+    },
+    "facing=south,type=uev_active": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "y": 180
+    },
+    "facing=west,type=uev_active": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "y": 270
+    },
+    "facing=east,type=uev_active": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "y": 90
+    },
+    "facing=down,type=uev_active": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "x": 90
+    },
+    "facing=up,type=uev_active": {
+      "model": "industrialupgrade:block/basemachine/uev_active",
+      "x": 270
+    }
+  }
+}

@@ -2,29 +2,21 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerGenStone;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.mechanism.TileBaseGenStone;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.IOException;
-
-@SideOnly(Side.CLIENT)
-public class GuiGenStone extends GuiIU<ContainerGenStone> {
+@OnlyIn(Dist.CLIENT)
+public class GuiGenStone<T extends ContainerGenStone> extends GuiIU<ContainerGenStone> {
 
     public final ContainerGenStone container;
 
@@ -40,10 +32,10 @@ public class GuiGenStone extends GuiIU<ContainerGenStone> {
         ));
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
+    protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 62 && x <= 79 && y >= 63 && y <= 80) {
@@ -52,112 +44,83 @@ public class GuiGenStone extends GuiIU<ContainerGenStone> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
 
         new Area(this, 63, 64, 18, 18)
                 .withTooltip(Localization.translate("message.text.mode") + ": " +
                         (this.container.base.getMode() == TileBaseGenStone.Mode.SAND ?
-                                new ItemStack(Blocks.SAND).getDisplayName() :
+                                new ItemStack(Blocks.SAND).getDisplayName().getString() :
                                 this.container.base.getMode() == TileBaseGenStone.Mode.GRAVEL
                                         ?
-                                        new ItemStack(Blocks.GRAVEL).getDisplayName()
-                                        : new ItemStack(Blocks.COBBLESTONE).getDisplayName()
+                                        new ItemStack(Blocks.GRAVEL).getDisplayName().getString()
+                                        : new ItemStack(Blocks.COBBLESTONE).getDisplayName().getString()
                         ))
-                .drawForeground(mouseX
+                .drawForeground(poseStack, mouseX
                         , mouseY);
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
 
-        RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GlStateManager.disableLighting();
-        GlStateManager.enableDepth();
-        this.zLevel = 100.0F;
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        bindTexture(getTexture());
+
+
         if (this.container.base.output == null) {
-            itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.STONE), xoffset + 64,
-                    yoffset + 28
-            );
+            new ItemStackImage(this, 64,
+                    28, () -> new ItemStack(Blocks.STONE)
+            ).drawBackground(poseStack, guiLeft(), guiTop());
         } else {
             switch (this.container.base.getMode()) {
                 case SAND:
-                    itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.SAND), xoffset + 64,
-                            yoffset + 28
-                    );
+                    new ItemStackImage(this, 64,
+                            28, () -> new ItemStack(Blocks.SAND)
+                    ).drawBackground(poseStack, guiLeft(), guiTop());
                     break;
                 case GRAVEL:
-                    itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.GRAVEL), xoffset + 64,
-                            yoffset + 28
-                    );
+                    new ItemStackImage(this, 64,
+                            28, () -> new ItemStack(Blocks.GRAVEL)
+                    ).drawBackground(poseStack, guiLeft(), guiTop());
                     break;
                 case COBBLESTONE:
-                    itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.COBBLESTONE), xoffset + 64,
-                            yoffset + 28
-                    );
+                    new ItemStackImage(this, 64,
+                            28, () -> new ItemStack(Blocks.COBBLESTONE)
+                    ).drawBackground(poseStack, guiLeft(), guiTop());
                     break;
             }
         }
 
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GlStateManager.enableLighting();
-        RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
 
-        RenderHelper.disableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glColor4f(0.1F, 1, 0.1F, 1);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GlStateManager.disableLighting();
-        GlStateManager.enableDepth();
-        this.zLevel = 100.0F;
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         switch (this.container.base.getMode()) {
             case SAND:
-                itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.SAND), xoffset + 63,
-                        yoffset + 64
-                );
+                new ItemStackImage(this, 63,
+                        64, () -> new ItemStack(Blocks.SAND)
+                ).drawBackground(poseStack, guiLeft(), guiTop());
                 break;
             case GRAVEL:
-                itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.GRAVEL), xoffset + 63,
-                        yoffset + 64
-                );
+                new ItemStackImage(this, 63,
+                        64, () -> new ItemStack(Blocks.GRAVEL)
+                ).drawBackground(poseStack, guiLeft(), guiTop());
                 break;
             case COBBLESTONE:
-                itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.COBBLESTONE), xoffset + 63,
-                        yoffset + 64
-                );
+                new ItemStackImage(this, 63,
+                        64, () -> new ItemStack(Blocks.COBBLESTONE)
+                ).drawBackground(poseStack, guiLeft(), guiTop());
                 break;
         }
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GlStateManager.enableLighting();
 
-        RenderHelper.enableStandardItemLighting();
-        GL11.glColor4f(0.1F, 1, 0.1F, 1);
-        GL11.glPopMatrix();
-        GL11.glColor4f(1F, 1, 1F, 1);
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png".toLowerCase());
     }
 
 }

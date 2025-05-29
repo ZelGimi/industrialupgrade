@@ -4,27 +4,32 @@ import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerBlockLimiter;
 import com.denfop.gui.GuiBlockLimiter;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlotLimiter;
+import com.denfop.items.ItemCraftingElements;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -40,12 +45,13 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     public InvSlotLimiter slot;
     public double max_value;
 
-    public TileLimiter() {
+    public TileLimiter(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.limiter,pos,state);
         this.energy = this.addComponent(new Energy(
                 this,
                 Double.MAX_VALUE,
                 Arrays
-                        .asList(EnumFacing.VALUES)
+                        .asList(Direction.values())
                         .stream()
                         .filter(facing -> facing != this.getFacing())
                         .collect(Collectors.toList()), Collections.singletonList(this.getFacing()),
@@ -85,7 +91,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     public EnumTypeAudio getTypeAudio() {
@@ -119,10 +125,10 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
             return;
         }
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
         } else if (soundEvent == 1) {
             new PacketStopSound(getWorld(), this.pos);
-            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+            this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
         } else {
             new PacketStopSound(getWorld(), this.pos);
         }
@@ -135,10 +141,10 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
         if (this.slot.isEmpty()) {
             setTier(0);
         } else {
-            setTier(this.slot.get().getItemDamage() - 205);
+            setTier(((ItemCraftingElements<?>) this.slot.get(0).getItem()).getElement().getId() - 205);
         }
         this.energy.setDirections(Arrays
-                .asList(EnumFacing.VALUES)
+                .asList(Direction.values())
                 .stream()
                 .filter(facing -> facing != this.getFacing())
                 .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
@@ -168,14 +174,14 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setDouble("max_value", max_value);
+        nbt.putDouble("max_value", max_value);
         return nbt;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         this.max_value = nbtTagCompound.getDouble("max_value");
     }
@@ -185,13 +191,13 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
+    public void updateTileServer(final Player entityPlayer, final double i) {
 
         this.energy.limit_amount += i;
         this.energy.limit_amount = (int) Math.min(this.max_value, this.energy.limit_amount);
         this.energy.limit_amount = (int) Math.max(0, this.energy.limit_amount);
         this.energy.setDirections(Arrays
-                .asList(EnumFacing.VALUES)
+                .asList(Direction.values())
                 .stream()
                 .filter(facing -> facing != this.getFacing())
                 .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
@@ -202,14 +208,14 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     }
 
     @Override
-    public ContainerBlockLimiter getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerBlockLimiter getGuiContainer(final Player entityPlayer) {
         return new ContainerBlockLimiter(this, entityPlayer);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiBlockLimiter(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiBlockLimiter((ContainerBlockLimiter) menu);
     }
 
 

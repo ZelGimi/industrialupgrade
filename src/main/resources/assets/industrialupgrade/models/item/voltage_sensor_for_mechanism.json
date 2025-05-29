@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/voltage_sensor_for_mechanism"
+    "layer0" : "industrialupgrade:item/voltage_sensor_for_mechanism"
   }
 }

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:itemspace/umbriel_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/umbriel_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/umbriel_pebble"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:itemspace/umbriel_pebble"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:itemspace/umbriel_boulder"
+  }
+}

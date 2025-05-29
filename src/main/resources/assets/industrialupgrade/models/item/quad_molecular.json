@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/quad_molecular"
+    "layer0" : "industrialupgrade:item/quad_molecular"
   }
 }

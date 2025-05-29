@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockuhev_side_active",
-    "down" : "industrialupgrade:blocks/blockuhev_side_active",
-    "up" : "industrialupgrade:blocks/blockuhev_side_active",
-    "north" : "industrialupgrade:blocks/blockuhev_main_active",
-    "east" : "industrialupgrade:blocks/blockuhev_side_active",
-    "south" : "industrialupgrade:blocks/blockuhev_side_active",
-    "west" : "industrialupgrade:blocks/blockuhev_side_active"
+    "particle" : "industrialupgrade:block/blockuhev_side_active",
+    "down" : "industrialupgrade:block/blockuhev_side_active",
+    "up" : "industrialupgrade:block/blockuhev_side_active",
+    "north" : "industrialupgrade:block/blockuhev_main_active",
+    "east" : "industrialupgrade:block/blockuhev_side_active",
+    "south" : "industrialupgrade:block/blockuhev_side_active",
+    "west" : "industrialupgrade:block/blockuhev_side_active"
   }
 }

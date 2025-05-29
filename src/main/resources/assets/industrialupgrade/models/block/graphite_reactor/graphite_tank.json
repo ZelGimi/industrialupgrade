@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/graphite_reactor/tank/tank_left-right-front-back",
-    "down" : "industrialupgrade:blocks/graphite_reactor/tank/tank_top-bottom",
-    "up" : "industrialupgrade:blocks/graphite_reactor/tank/tank_top-bottom",
-    "north" : "industrialupgrade:blocks/graphite_reactor/tank/tank_left-right-front-back",
-    "east" : "industrialupgrade:blocks/graphite_reactor/tank/tank_left-right-front-back",
-    "south" : "industrialupgrade:blocks/graphite_reactor/tank/tank_left-right-front-back",
-    "west" : "industrialupgrade:blocks/graphite_reactor/tank/tank_left-right-front-back"
+    "particle" : "industrialupgrade:block/graphite_reactor/tank/tank_left-right-front-back",
+    "down" : "industrialupgrade:block/graphite_reactor/tank/tank_top-bottom",
+    "up" : "industrialupgrade:block/graphite_reactor/tank/tank_top-bottom",
+    "north" : "industrialupgrade:block/graphite_reactor/tank/tank_left-right-front-back",
+    "east" : "industrialupgrade:block/graphite_reactor/tank/tank_left-right-front-back",
+    "south" : "industrialupgrade:block/graphite_reactor/tank/tank_left-right-front-back",
+    "west" : "industrialupgrade:block/graphite_reactor/tank/tank_left-right-front-back"
   }
 }

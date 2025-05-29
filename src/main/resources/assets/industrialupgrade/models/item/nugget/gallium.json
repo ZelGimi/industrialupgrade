@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/gallium_nugget"	}
+		"layer0": "industrialupgrade:item/gallium_nugget"	}
 }

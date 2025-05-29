@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/alumel_dust"
+    "layer0" : "industrialupgrade:item/alumel_dust"
   }
 }

@@ -3,32 +3,28 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.CustomButton;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ImageScreen;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerTransformer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiTransformer extends GuiIU<ContainerTransformer> {
+@OnlyIn(Dist.CLIENT)
+public class GuiTransformer<T extends ContainerTransformer> extends GuiIU<ContainerTransformer> {
 
     public String[] mode = new String[]{"", "", "", ""};
 
     public GuiTransformer(ContainerTransformer container) {
         super(container);
-        this.ySize = 219;
+        this.imageHeight = 219;
         componentList.clear();
         inventory = new GuiComponent(this, 7, 119, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
@@ -51,10 +47,9 @@ public class GuiTransformer extends GuiIU<ContainerTransformer> {
                     @Override
                     public void ClickEvent() {
                         super.ClickEvent();
-                        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
-                                SoundEvents.UI_BUTTON_CLICK,
-                                1.0F
-                        ));
+                        Minecraft.getInstance().getSoundManager().play(
+                                SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F)
+                        );
 
                     }
                 })
@@ -62,34 +57,31 @@ public class GuiTransformer extends GuiIU<ContainerTransformer> {
         this.addElement(new ImageScreen(this, 7, 16, 144, 30));
     }
 
-    protected void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
-        this.fontRenderer.drawString(Localization.translate("Transformer.gui.Output"), 16, 20, 2157374);
-        this.fontRenderer.drawString(Localization.translate("Transformer.gui.Input"), 16, 35, 2157374);
-        this.fontRenderer.drawString(this.container.base.getoutputflow() + " " + Localization.translate(
+    protected void drawForegroundLayer(GuiGraphics poseStack, int mouseX, int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
+      draw(poseStack, Localization.translate("Transformer.gui.Output"), 16, 20, 2157374);
+      draw(poseStack, Localization.translate("Transformer.gui.Input"), 16, 35, 2157374);
+       draw(poseStack, this.container.base.getoutputflow() + " " + Localization.translate(
                 Constants.ABBREVIATION + ".generic.text.EUt"), 62, 20, 2157374);
-        this.fontRenderer.drawString(this.container.base.getinputflow() + " " + Localization.translate(
+       draw(poseStack, this.container.base.getinputflow() + " " + Localization.translate(
                 Constants.ABBREVIATION + ".generic.text.EUt"), 62, 35, 2157374);
-        RenderItem renderItem = this.mc.getRenderItem();
-        RenderHelper.enableGUIStandardItemLighting();
         switch (this.container.base.getMode()) {
             case redstone:
-                renderItem.renderItemIntoGUI(IUItem.wrench.getDefaultInstance(), 152, 52);
+                new ItemImage(this, 152, 52, () -> new ItemStack(IUItem.wrench.getItem())).drawForeground(poseStack, guiLeft, guiTop);
                 break;
             case stepdown:
-                renderItem.renderItemIntoGUI(IUItem.wrench.getDefaultInstance(), 152, 74);
+                new ItemImage(this, 152, 74, () -> new ItemStack(IUItem.wrench.getItem())).drawForeground(poseStack, guiLeft, guiTop);
+
                 break;
             case stepup:
-                renderItem.renderItemIntoGUI(IUItem.wrench.getDefaultInstance(), 152, 96);
+                new ItemImage(this, 152, 96, () -> new ItemStack(IUItem.wrench.getItem())).drawForeground(poseStack, guiLeft, guiTop);
+                break;
         }
 
-        RenderHelper.disableStandardItemLighting();
     }
 
-    public void initGui() {
-        super.initGui();
 
-    }
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");

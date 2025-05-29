@@ -9,14 +9,14 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerTripleElectricMachine;
 import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Collections;
 
-@SideOnly(Side.CLIENT)
-public class GuiAdvAlloySmelter extends GuiIU<ContainerTripleElectricMachine> {
+@OnlyIn(Dist.CLIENT)
+public class GuiAdvAlloySmelter<T extends ContainerTripleElectricMachine> extends GuiIU<ContainerTripleElectricMachine> {
 
     public final ContainerTripleElectricMachine container;
 
@@ -53,18 +53,6 @@ public class GuiAdvAlloySmelter extends GuiIU<ContainerTripleElectricMachine> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
-
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-
-
-    }
 
     @Override
     protected ResourceLocation getTexture() {

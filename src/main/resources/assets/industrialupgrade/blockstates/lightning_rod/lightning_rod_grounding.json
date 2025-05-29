@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=lightning_rod_grounding": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding"
+    },
+    "facing=south,type=lightning_rod_grounding": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "y": 180
+    },
+    "facing=west,type=lightning_rod_grounding": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "y": 270
+    },
+    "facing=east,type=lightning_rod_grounding": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "y": 90
+    },
+    "facing=down,type=lightning_rod_grounding": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "x": 90
+    },
+    "facing=up,type=lightning_rod_grounding": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "x": 270
+    },
+    "facing=north,type=lightning_rod_grounding_invalid": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding"
+    },
+    "facing=south,type=lightning_rod_grounding_invalid": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "y": 180
+    },
+    "facing=west,type=lightning_rod_grounding_invalid": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "y": 270
+    },
+    "facing=east,type=lightning_rod_grounding_invalid": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "y": 90
+    },
+    "facing=down,type=lightning_rod_grounding_invalid": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "x": 90
+    },
+    "facing=up,type=lightning_rod_grounding_invalid": {
+      "model": "industrialupgrade:block/lightning_rod/lightning_rod_grounding",
+      "x": 270
+    }
+  }
+}

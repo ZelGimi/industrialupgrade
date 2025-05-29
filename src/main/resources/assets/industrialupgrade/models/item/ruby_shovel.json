@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/tool/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/ruby_shovel"
+    "layer0" : "industrialupgrade:item/ruby_shovel"
   }
 }

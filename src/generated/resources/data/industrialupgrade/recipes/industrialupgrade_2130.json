@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/aluminiumsilicon"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/molybdenum"
+      }
+    ]
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    "EBE"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_684_element"
+  },
+  "show_notification": true
+}

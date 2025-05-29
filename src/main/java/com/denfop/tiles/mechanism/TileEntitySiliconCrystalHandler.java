@@ -1,15 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -18,7 +12,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentTimer;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSiliconCrystalHandler;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSiliconCrystalHandler;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -28,15 +24,17 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.Timer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -51,10 +49,10 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
     public final InvSlotUpgrade upgradeSlot;
     public int col;
     private MachineRecipe output;
-    private int level;
+    private int levelBlock;
 
-    public TileEntitySiliconCrystalHandler() {
-        super(1000, 1, 1);
+    public TileEntitySiliconCrystalHandler(BlockPos pos, BlockState state) {
+        super(1000, 1, 1,BlockBaseMachine3.silicon_crystal_handler,pos,state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InvSlotRecipes(this, "silicon_recipe", this);
 
@@ -62,33 +60,33 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 7, 30)) {
             @Override
             public int getTickFromSecond() {
-                return (int) Math.max(1, 20 - ((TileEntitySiliconCrystalHandler) this.parent).level * 1.4);
+                return (int) Math.max(1, 20 - ((TileEntitySiliconCrystalHandler) this.parent).levelBlock * 1.4);
             }
         });
         this.flintSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.iudust && stack.getItemDamage() == 21;
+                return stack.getItem() == IUItem.iudust.getItemFromMeta(21);
             }
         };
         this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.level = 0;
+        this.levelBlock = 0;
     }
 
     @Override
-    public int getLevel() {
-        return this.level;
+    public int getLevelMechanism() {
+        return this.levelBlock;
     }
 
     @Override
-    public void setLevel(final int level) {
-        this.level = level;
+    public void setLevelMech(final int level) {
+        this.levelBlock = level;
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.level -= level;
+        this.levelBlock -= level;
     }
 
     @Override
@@ -113,9 +111,9 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
                 new BaseMachineRecipe(
                         new Input(
                                 input.getInput(new ItemStack(Items.FLINT)),
-                                input.getInput(new ItemStack(IUItem.iudust, 3, 60))
+                                input.getInput(new ItemStack(IUItem.iudust.getStack(60), 3))
                         ),
-                        new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 492))
+                        new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(492), 1))
                 )
         );
     }
@@ -123,7 +121,7 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -138,7 +136,7 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.getOutput();
             this.setUpgradestat();
@@ -148,14 +146,14 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
     }
 
     @Override
-    public ContainerSiliconCrystalHandler getGuiContainer(final EntityPlayer var1) {
+    public ContainerSiliconCrystalHandler getGuiContainer(final Player var1) {
         return new ContainerSiliconCrystalHandler(var1, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiSiliconCrystalHandler(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSiliconCrystalHandler((ContainerSiliconCrystalHandler) menu);
     }
 
 
@@ -172,12 +170,12 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
         } else if (!this.flintSlot.isEmpty()) {
             if (this.col + 30 <= 90) {
                 this.col += 30;
-                this.flintSlot.get().shrink(1);
+                this.flintSlot.get(0).shrink(1);
             }
         }
 
-        if (this.energy.getEnergy() < 1 || this.inputSlotA.get().isEmpty() || this.output == null || this.outputSlot
-                .get()
+        if (this.energy.getEnergy() < 1 || this.inputSlotA.get(0).isEmpty() || this.output == null || this.outputSlot
+                .get(0)
                 .getCount() >= 64 || (this.output != null && !this.inputSlotA.continue_process(this.output))) {
             this.timer.setCanWorkWithOut(false);
             this.setActive(false);
@@ -191,7 +189,7 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
 
             this.timer.setCanWork(true);
         }
-        if (this.getWorld().provider.getWorldTime() % 80 == 0) {
+        if (this.getWorld().getGameTime() % 80 == 0) {
             this.col -= 1;
         }
         this.energy.useEnergy(1);
@@ -228,49 +226,43 @@ public class TileEntitySiliconCrystalHandler extends TileElectricMachine impleme
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("level", this.level);
+        nbttagcompound.putInt("level", this.levelBlock);
         return nbttagcompound;
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (level < 10) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
-                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (levelBlock < 10) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
+                return super.onActivated(player, hand, side,vec3);
             } else {
                 stack.shrink(1);
-                this.level++;
+                this.levelBlock++;
                 return true;
             }
         } else {
-
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+
+
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.level != 0) {
-            ret.add(new ItemStack(IUItem.upgrade_speed_creation, this.level));
-            this.level = 0;
+        if (this.levelBlock != 0) {
+            ret.add(new ItemStack(IUItem.upgrade_speed_creation.getItem(), this.levelBlock));
+            this.levelBlock = 0;
         }
         return ret;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.level = nbttagcompound.getInteger("level");
+        this.levelBlock = nbttagcompound.getInt("level");
     }
 
     @Override

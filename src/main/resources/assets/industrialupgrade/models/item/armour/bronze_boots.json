@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/bronze_boots"
+		"layer0": "industrialupgrade:item/bronze_boots"
 	}
 }

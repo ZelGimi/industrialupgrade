@@ -1,15 +1,13 @@
 package com.denfop.invslot;
 
 
-import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.base.TileEntityCombinerSolidMatter;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
 
@@ -30,39 +28,42 @@ public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
     public void update() {
         this.tile.solid = new EnumSolidMatter[9];
         this.tile.solid_col = new int[9];
-        final double prev = this.tile.energy.getEnergy();
+        double prev = this.tile.energy.getEnergy();
         this.tile.energy.useEnergy(this.tile.energy.getEnergy());
         this.tile.energy.setCapacity(0);
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                this.tile.solid[i] = ItemSolidMatter.getsolidmatter(this.get(i).getItemDamage());
+                this.tile.solid[i] = ItemSolidMatter.getsolidmatter(IUItem.solidmatter.getMetaFromItemStack(this.get(i)));
                 this.tile.solid_col[i] = this.get(i).getCount();
-                this.tile.energy.addCapacity(Config.SolidMatterStorage * this.get(i).getCount());
+                this.tile.energy.addCapacity(5E7D * this.get(i).getCount());
             }
         }
         this.tile.energy.addEnergy(prev);
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.tile.solid = new EnumSolidMatter[9];
         this.tile.solid_col = new int[9];
-        final double prev = this.tile.energy.getEnergy();
+        double prev = this.tile.energy.getEnergy();
         this.tile.energy.useEnergy(this.tile.energy.getEnergy());
-        this.tile.energy.setCapacity(0);
+        this.tile.energy.capacity = 0;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
-                this.tile.solid[i] = ItemSolidMatter.getsolidmatter(this.get(i).getItemDamage());
+                this.tile.solid[i] = ItemSolidMatter.getsolidmatter(IUItem.solidmatter.getMetaFromItemStack(this.get(i)));
                 this.tile.solid_col[i] = this.get(i).getCount();
-                this.tile.energy.addCapacity(Config.SolidMatterStorage * this.get(i).getCount());
+                this.tile.energy.addCapacity(5E7D * this.get(i).getCount());
             }
         }
         this.tile.energy.addEnergy(prev);
+        return content;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {
-        return itemStack.getItem().equals(Item.getItemFromBlock(IUItem.solidmatter));
+
+        return IUItem.solidmatter.contains(itemStack);
+
     }
 
     public int getStackSizeLimit() {
@@ -77,7 +78,7 @@ public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
         double maxEnergy = 0;
         for (int i = 0; i < size(); i++) {
             if (!get(i).isEmpty()) {
-                maxEnergy += (Config.SolidMatterStorage * this.get(i).getCount());
+                maxEnergy += (5E7D * this.get(i).getCount());
             }
 
         }

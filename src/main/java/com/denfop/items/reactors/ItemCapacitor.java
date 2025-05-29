@@ -1,108 +1,77 @@
 package com.denfop.items.reactors;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
-import com.denfop.register.Register;
 import com.denfop.tiles.reactors.graphite.ICapacitorItem;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemCapacitor extends ItemDamage implements IModelRegister, ICapacitorItem {
+public class ItemCapacitor extends ItemDamage implements ICapacitorItem, IItemTab {
 
     private final double percent;
     private final int level;
-    private final String name;
 
-    public ItemCapacitor(final String name, int level, double percent, int damage) {
-        super(null, damage);
+    public ItemCapacitor(int level, double percent, int damage) {
+        super(new Item.Properties().stacksTo(1), damage);
         this.percent = percent;
         this.level = level;
-        this.setNoRepair();
-        this.name = name;
-        setMaxStackSize(1);
-        this.setCreativeTab(IUCore.ReactorsTab);
-        this.setUnlocalizedName("item_" + name);
-        Register.registerItem(this, IUCore.getIdentifier("item_" + name));
-        IUCore.proxy.addIModelRegister(this);
+
     }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "capacitor" + "/" + name;
-        return new ModelResourceLocation(loc, null);
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ReactorsTab;
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu.iu_"+pathBuilder.toString().split("\\.")[2];
+        }
 
+        return this.nameItem;
+    }
     @Override
     public double getPercent() {
         return percent;
     }
 
-    public int getLevel() {
+
+    @Override
+    public int getLevelCapacitor() {
         return level;
     }
 
-    @Override
-    public void damageItem(final ItemStack stack, final int damage) {
-        applyCustomDamage(stack, damage, null);
-    }
+
 
     @Override
-    public void registerModels() {
-        registerModels(this.name);
-    }
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("reactor.component_level") + (this.level + 1)));
+        p_41423_.add(Component.literal(Localization.translate("reactor.component_level1")));
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
-    }
 
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
     }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
-    }
-
     @Override
-    public void addInformation(
-            @Nonnull final ItemStack stack,
-            final World world,
-            @Nonnull final List<String> tooltip,
-            @Nonnull final ITooltipFlag advanced
-    ) {
-        super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
-                stack)) + "/" + this.getMaxCustomDamage(stack));
-        tooltip.add(Localization.translate("reactor.component_level") + (this.level + 1));
-        tooltip.add(Localization.translate("reactor.component_level1"));
-
+    public boolean damageItem(final ItemStack stack, final int damage) {
+        return applyCustomDamage(stack, damage, null);
     }
 
 }

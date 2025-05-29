@@ -1,20 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -24,7 +14,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerInsulator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiInsulator;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
@@ -34,14 +26,16 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -69,8 +63,8 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
     protected double guiProgress;
     private MachineRecipe output;
 
-    public TileEntityInsulator() {
-        super(100, 1, 1);
+    public TileEntityInsulator(BlockPos pos, BlockState state) {
+        super(100, 1, 1,BlockBaseMachine3.insulator,pos,state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 2 * 60 * 20;
@@ -112,26 +106,26 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
         Recipes.recipes.getRecipeFluid().addRecipe(
                 "insulator",
                 new BaseFluidMachineRecipe(new InputFluid(
-                        new FluidStack(FluidName.fluidplantmixture.getInstance(), 250), new FluidStack(
-                        FluidName.fluidprotein.getInstance(),
+                        new FluidStack(FluidName.fluidplantmixture.getInstance().get(), 250), new FluidStack(
+                        FluidName.fluidprotein.getInstance().get(),
                         500
                 )), new RecipeOutput(
                         null,
-                        new ItemStack(IUItem.larva)
+                        new ItemStack(IUItem.larva.getItem())
                 ))
         );
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "insulator",
                 new BaseMachineRecipe(
-                        new Input(input.getInput(new ItemStack(IUItem.bee_pollen))),
-                        new RecipeOutput(null, new ItemStack(IUItem.larva))
+                        new Input(input.getInput(new ItemStack(IUItem.bee_pollen.getItem()))),
+                        new RecipeOutput(null, new ItemStack(IUItem.larva.getItem()))
                 )
         );
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
@@ -150,9 +144,9 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -184,7 +178,7 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.inputSlotA.load();
             this.fluid_handler.load();
@@ -333,16 +327,18 @@ public class TileEntityInsulator extends TileElectricMachine implements IUpgrada
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerInsulator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerInsulator getGuiContainer(Player entityPlayer) {
         return new ContainerInsulator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiInsulator getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiInsulator(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiInsulator((ContainerInsulator) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

@@ -1,12 +1,12 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.steam.TileEntitySteamPressureConverter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSteamPressureConverter extends ContainerFullInv<TileEntitySteamPressureConverter> {
 
     public ContainerSteamPressureConverter(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileEntitySteamPressureConverter tileEntityBaseHeatMachine
     ) {
         super(entityPlayer, tileEntityBaseHeatMachine, 166);

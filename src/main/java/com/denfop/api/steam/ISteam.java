@@ -3,7 +3,7 @@ package com.denfop.api.steam;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.tiles.mechanism.steamturbine.IRod;
 import com.denfop.tiles.mechanism.steamturbine.ISocket;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
@@ -47,5 +47,4 @@ public interface ISteam extends IMainMultiBlock {
     double getMaxHeat();
 
     EnumSteamPhase getStableSteamPhase();
-
 }

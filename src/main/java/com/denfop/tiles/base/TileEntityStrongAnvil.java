@@ -7,14 +7,7 @@ import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.primitive.EnumPrimitive;
 import com.denfop.api.primitive.PrimitiveHandler;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockStrongAnvil;
@@ -28,22 +21,22 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -53,10 +46,10 @@ import java.util.UUID;
 
 public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdateTick, IHasRecipe, IAudioFixer {
 
-    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, -1, 1, 1.0D,
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(0, 0.0D, -1, 1, 1.0D,
             2
     ));
-    private static final List<AxisAlignedBB> aabbs1 = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, 0, 2, 1.0D,
+    private static final List<AABB> aabbs1 = Collections.singletonList(new AABB(-1, 0.0D, 0, 2, 1.0D,
             1
     ));
     public final InvSlotRecipes inputSlotA;
@@ -65,8 +58,8 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     public MachineRecipe output;
     public Map<UUID, Double> data;
 
-    public TileEntityStrongAnvil() {
-
+    public TileEntityStrongAnvil(BlockPos pos, BlockState state) {
+        super(BlockStrongAnvil.block_strong_anvil, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "strong_anvil", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
@@ -82,7 +75,7 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     }
 
     public static void addanvil(String input, String output) {
-        ItemStack stack = OreDictionary.getOres(output).get(0).copy();
+        ItemStack stack = Recipes.inputFactory.getInput(output).getInputs().get(0).copy();
         stack.setCount(2);
         final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
@@ -99,11 +92,15 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     }
 
     @Override
-    public boolean hasCapability(@NotNull final Capability<?> capability, final EnumFacing facing) {
-        return super.hasCapability(capability, facing) && capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return LazyOptional.empty();
+        return super.getCapability(cap, facing);
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+
+
+    public List<AABB> getAabbs(boolean forCollision) {
         if (!(facing == 4 || facing == 5)) {
             return aabbs1;
         }
@@ -113,13 +110,13 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("primitive_rcm.info"));
-        tooltip.add(Localization.translate("primitive_use.info") + IUItem.ObsidianForgeHammer.getItemStackDisplayName());
+        tooltip.add(Localization.translate("primitive_use.info") + IUItem.ObsidianForgeHammer.getItem().getDescription().getString());
 
     }
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.strong_anvil;
+        return IUItem.strong_anvil.getBlock();
     }
 
     @Override
@@ -127,19 +124,7 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         return BlockStrongAnvil.block_strong_anvil;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
@@ -147,18 +132,13 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         return drop;
     }
 
-    @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
-        super.onPlaced(stack, placer, facing);
 
-
-    }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
         this.data = PrimitiveHandler.getPlayersData(EnumPrimitive.STRONG_ANVIL);
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
 
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
@@ -172,23 +152,23 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         super.updateField(name, is);
         if (name.equals("slot")) {
             try {
-                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot1")) {
             try {
-                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new NBTTagCompound()));
+                outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("slot3")) {
-            inputSlotA.put(0, ItemStack.EMPTY);
+            inputSlotA.set(0, ItemStack.EMPTY);
         }
         if (name.equals("slot2")) {
-            outputSlot.put(0, ItemStack.EMPTY);
+            outputSlot.set(0, ItemStack.EMPTY);
         }
     }
 
@@ -196,8 +176,8 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
-            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new NBTTagCompound()));
+            inputSlotA.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
+            outputSlot.readFromNbt(((InvSlot) (DecoderHandler.decode(customPacketBuffer))).writeToNbt(new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -221,30 +201,23 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        ItemStack stack = player.getHeldItem(hand);
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        ItemStack stack = player.getItemInHand(hand);
 
-        if ((stack.getItem() == IUItem.ObsidianForgeHammer) && this.output != null && this.outputSlot.canAdd(
+        if ((stack.getItem() == IUItem.ObsidianForgeHammer.getItem()) && this.output != null && this.outputSlot.canAdd(
                 this.output.getRecipe().output.items.get(
                         0))) {
             progress += 10;
             this.getCooldownTracker().setTick(10);
-            if (!this.getWorld().isRemote) {
+            if (!this.getWorld().isClientSide) {
                 this.initiate(0);
             }
-            progress += (int) (data.getOrDefault(player.getUniqueID(), 0.0) / 2.5D);
+            progress += (int) (data.getOrDefault(player.getUUID(), 0.0) / 2.5D);
             if (progress >= 100) {
                 this.progress = 0;
-                player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-                if (!this.getWorld().isRemote) {
-                    PrimitiveHandler.addExperience(EnumPrimitive.STRONG_ANVIL, 0.5, player.getUniqueID());
+                player.setItemInHand(hand, stack.getItem().getCraftingRemainingItem(stack));
+                if (!this.getWorld().isClientSide) {
+                    PrimitiveHandler.addExperience(EnumPrimitive.STRONG_ANVIL, 0.5, player.getUUID());
                 }
                 ItemStack stack1 = this.output.getRecipe().output.items.get(0).copy();
                 double chance = WorldBaseGen.random.nextDouble();
@@ -257,11 +230,11 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
                 }
                 this.outputSlot.add(stack1);
                 this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
-                if (this.inputSlotA.isEmpty() || this.outputSlot.get().getCount() >= 64) {
+                if (this.inputSlotA.isEmpty() || this.outputSlot.get(0).getCount() >= 64) {
                     this.output = null;
 
                 }
-                if (!world.isRemote) {
+                if (!level.isClientSide) {
                     new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
 
@@ -269,44 +242,44 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
                 }
             }
 
-            return this.getWorld().isRemote;
+            return this.getWorld().isClientSide;
         } else {
             if (!stack.isEmpty()) {
                 if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
-                    this.inputSlotA.put(0, stack.copy());
+                    this.inputSlotA.set(0, stack.copy());
                     stack.setCount(0);
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     }
                     return true;
-                } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).isItemEqual(stack)) {
+                } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).is(stack.getItem())) {
                     int minCount = 64 - this.inputSlotA.get(0).getCount();
                     minCount = Math.min(stack.getCount(), minCount);
                     this.inputSlotA.get(0).grow(minCount);
                     stack.grow(-minCount);
-                    if (!world.isRemote) {
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                     }
                     return true;
                 }
             } else {
                 if (!outputSlot.isEmpty()) {
-                    if (!world.isRemote) {
-                        ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
+                    if (!level.isClientSide) {
+                        ModUtils.dropAsEntity(level, pos, outputSlot.get(0));
                     }
-                    outputSlot.put(0, ItemStack.EMPTY);
-                    if (!world.isRemote) {
+                    outputSlot.set(0, ItemStack.EMPTY);
+                    if (!level.isClientSide) {
                         new PacketUpdateFieldTile(this, "slot2", false);
                     }
                     return true;
                 } else {
                     if (!inputSlotA.isEmpty()) {
-                        if (!world.isRemote) {
-                            ModUtils.dropAsEntity(world, pos, inputSlotA.get(), player);
+                        if (!level.isClientSide) {
+                            ModUtils.dropAsEntity(level, pos, inputSlotA.get(0));
                         }
-                        inputSlotA.put(0, ItemStack.EMPTY);
+                        inputSlotA.set(0, ItemStack.EMPTY);
                         this.output = null;
-                        if (!world.isRemote) {
+                        if (!level.isClientSide) {
                             new PacketUpdateFieldTile(this, "slot3", false);
                         }
                         return true;
@@ -319,21 +292,14 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
         return false;
     }
 
+
+
     @Override
     public void onUpdate() {
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
 
-
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
-    }
 
     @Override
     public MachineRecipe getRecipeOutput() {
@@ -349,15 +315,40 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     public void init() {
         for (int i = 0; i < ItemRawMetals.Types.values().length; i++) {
             String s = ItemRawMetals.Types.values()[i].getName();
+            switch (i) {
+                case 3:
+                    s = "tungsten";
+                    break;
+                case 2:
+                    s = "vanady";
+                    break;
+
+
+            }
             if (s.equals("uranium")) {
                 continue;
             }
             s = s.substring(0, 1).toUpperCase() + s.substring(1);
             addanvil(
-                    "raw" + s,
-                    "crushed" + s
+                    "forge:raw_materials/" + s,
+                    "forge:crushed/" + s
             );
         }
+        String s = "iron";
+        addanvil(
+                "forge:raw_materials/" + s,
+                "forge:crushed/" + s
+        );
+        s = "gold";
+        addanvil(
+                "forge:raw_materials/" + s,
+                "forge:crushed/" + s
+        );
+        s = "copper";
+        addanvil(
+                "forge:raw_materials/" + s,
+                "forge:crushed/" + s
+        );
     }
 
     @Override
@@ -378,7 +369,7 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     @Override
     public void initiate(final int soundEvent) {
         if (soundEvent == 0) {
-            this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 0.2F, 1);
+            this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 0.2F, 1);
         }
     }
 

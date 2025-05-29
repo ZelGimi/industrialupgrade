@@ -9,13 +9,12 @@ import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.recipes.BaseRecipes;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
-import java.io.IOException;
-
-public class GuiSteamTurbineControllerRod extends GuiIU<ContainerSteamTurbineControllerRod> {
+public class GuiSteamTurbineControllerRod<T extends ContainerSteamTurbineControllerRod> extends GuiIU<ContainerSteamTurbineControllerRod> {
 
 
     private final ItemStack stack;
@@ -26,24 +25,23 @@ public class GuiSteamTurbineControllerRod extends GuiIU<ContainerSteamTurbineCon
     }
 
     @Override
-    protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+    protected void mouseClicked(final int i, final int j, final int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
+        int xMin = guiLeft;
+        int yMin = guiTop;
+        int x = i - guiLeft;
+        int y =j - guiTop;
         for (int index = 0; index < this.container.base.getRods().size(); index++) {
             if (x >= 28 + (index / 3) * 36 && x < 46 + (index / 3) * 36) {
                 if (y >= 28 + (index % 3) * 18 && y < 46 + (index % 3) * 18) {
                     TileEntityMultiBlockElement tileMultiBlockBase =
-                            (TileEntityMultiBlockElement) container.base.getWorld().getTileEntity(container.base
+                            (TileEntityMultiBlockElement) container.base
                                     .getRods()
-                                    .get(index)
-                                    .getBlockPos());
+                                    .get(index);
                     if (tileMultiBlockBase != null && tileMultiBlockBase.getMain() != null && tileMultiBlockBase
                             .getMain()
-                            .isFull() && !tileMultiBlockBase.isInvalid()) {
-                        this.container.base.updateTileServer(Minecraft.getMinecraft().player, index);
+                            .isFull() && !tileMultiBlockBase.isRemoved()) {
+                        this.container.base.updateTileServer(Minecraft.getInstance().player, index);
                         new PacketUpdateServerTile(this.container.base, index);
                     }
                 }
@@ -53,24 +51,24 @@ public class GuiSteamTurbineControllerRod extends GuiIU<ContainerSteamTurbineCon
 
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         for (int i = 0; i < this.container.base.getRods().size(); i++) {
             BlockPos pos = container.base.getRods().get(i).getBlockPos();
-            new Area(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, 18, 18).withTooltip(stack.getDisplayName() + "\n" + "x" +
-                    ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(par1, par2);
+            new Area(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
+                    ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack,par1, par2);
 
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         this.bindTexture();
         for (int i = 0; i < this.container.base.getRods().size(); i++) {
 
 
-            new ItemStackImage(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, () -> stack).drawBackground(
+            new ItemStackImage(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, () -> stack).drawBackground(poseStack,
                     this.guiLeft,
                     this.guiTop
             );

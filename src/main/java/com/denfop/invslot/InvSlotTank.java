@@ -3,7 +3,7 @@ package com.denfop.invslot;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.inv.IAdvInventory;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -31,12 +31,12 @@ public class InvSlotTank extends InvSlotFluid implements ITypeSlot {
 
     protected boolean acceptsLiquid(Fluid fluid) {
         FluidStack fs = this.tank.getFluid();
-        return fs == null || fs.getFluid() == fluid;
+        return fs.isEmpty() || fs.getFluid() == fluid;
     }
 
     protected Iterable<Fluid> getPossibleFluids() {
         FluidStack fs = this.tank.getFluid();
-        return fs == null ? null : Collections.singletonList(fs.getFluid());
+        return fs.isEmpty() ? null : Collections.singletonList(fs.getFluid());
     }
 
 

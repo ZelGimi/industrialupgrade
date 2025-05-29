@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityGasCombiner;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGasCombiner extends ContainerFullInv<TileEntityGasCombiner> {
 
-    public ContainerGasCombiner(EntityPlayer entityPlayer, TileEntityGasCombiner tileEntity1) {
+    public ContainerGasCombiner(Player entityPlayer, TileEntityGasCombiner tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 45, 99));

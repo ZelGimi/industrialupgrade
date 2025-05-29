@@ -7,22 +7,20 @@ import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
-import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.CoolComponent;
-import com.denfop.componets.Energy;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.ProcessMultiComponent;
+import com.denfop.componets.*;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerMultiMachine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiMultiMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
@@ -38,24 +36,28 @@ import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.tiles.mechanism.multimechanism.IMultiMachine;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
+import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -84,21 +86,21 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     private int tick;
     private TileSolarPanel panel;
 
-    public TileMultiMachine(EnumMultiMachine enumMultiMachine) {
-        this(1, enumMultiMachine.usagePerTick, enumMultiMachine.lenghtOperation);
+    public TileMultiMachine(EnumMultiMachine enumMultiMachine, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        this(1, enumMultiMachine.usagePerTick, enumMultiMachine.lenghtOperation, block, pos, state);
     }
 
 
-    public TileMultiMachine(int energyconsume, int OperationsPerTick) {
-        this(1, energyconsume, OperationsPerTick);
+    public TileMultiMachine(int energyconsume, int OperationsPerTick, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        this(1, energyconsume, OperationsPerTick, block, pos, state);
     }
 
     public TileMultiMachine(
             int aDefaultTier,
             int energyconsume,
-            int OperationsPerTick
+            int OperationsPerTick, IMultiTileBlock block, BlockPos pos, BlockState state
     ) {
-
+        super(block, pos, state);
         this.sizeWorkingSlot = this.getMachine().sizeWorkingSlot;
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
         this.energy = this.addComponent(Energy
@@ -110,7 +112,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         if (this.getMachine().type == EnumTypeMachines.OreWashing) {
             this.fluid = this.addComponent(new Fluids(this));
             this.tank = fluid.addTank("tank", 64000, InvSlot.TypeItemSlot.INPUT,
-                    Fluids.fluidPredicate(FluidRegistry.WATER)
+                    Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER)
             );
         }
 
@@ -138,13 +140,14 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         });
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TileMultiMachine) this.base).multi_process.inputSlots.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TileMultiMachine) this.base).multi_process.inputSlots.changeAccepts(this.get());
+                    ((TileMultiMachine) this.base).multi_process.inputSlots.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
@@ -154,7 +157,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
         };
     }
@@ -255,10 +258,10 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            if (!this.cold.upgrade && this.getMachine().sizeWorkingSlot != 8) {
+            if (!this.cold.upgrade) {
                 tooltip.add(Localization.translate("iu.multimachine.info"));
             }
-            if (this.heat != null && !this.heat.auto) {
+            if (this.heat != null) {
                 tooltip.add(Localization.translate("iu.heatmachine.info"));
             }
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.multi_process.energyConsume + Localization.translate(
@@ -274,7 +277,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
             tooltip.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
@@ -309,10 +312,10 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         }
         if (getEnable()) {
             if (soundEvent == 0) {
-                this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+                this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
             } else if (soundEvent == 1) {
                 new PacketStopSound(getWorld(), this.pos);
-                this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
+                this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundSource.BLOCKS, 1F, 1);
             } else {
                 new PacketStopSound(getWorld(), this.pos);
             }
@@ -335,9 +338,9 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final CompoundTag nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
             this.energy.addEnergy(energy1);
@@ -359,23 +362,23 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                     final Energy component = this.energy;
                     if (component != null) {
                         if (component.getEnergy() != 0) {
-                            final NBTTagCompound nbt = ModUtils.nbt(drop);
-                            nbt.setDouble("energy", component.getEnergy());
+                            final CompoundTag nbt = ModUtils.nbt(drop);
+                            nbt.putDouble("energy", component.getEnergy());
                         }
                     }
 
                     final CoolComponent component3 = this.cold;
                     if (component3 != null) {
                         if (component3.getEnergy() != 0) {
-                            final NBTTagCompound nbt = ModUtils.nbt(drop);
-                            nbt.setDouble("energy2", component3.getEnergy());
+                            final CompoundTag nbt = ModUtils.nbt(drop);
+                            nbt.putDouble("energy2", component3.getEnergy());
                         }
                     }
                     return drop;
                 case None:
                     return null;
                 case Generator:
-                    return new ItemStack(IUItem.basemachine2, 1, 78);
+                    return new ItemStack(IUItem.basemachine2.getItem(78), 1);
                 case Machine:
                     return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                 case AdvMachine:
@@ -385,22 +388,22 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         final Energy component = this.getComp(Energy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
-                final NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy", component.getEnergy());
+                final CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.putDouble("energy", component.getEnergy());
             }
         }
 
         final CoolComponent component3 = this.cold;
         if (component3 != null) {
             if (component3.getEnergy() != 0) {
-                final NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy2", component3.getEnergy());
+                final CompoundTag nbt = ModUtils.nbt(drop);
+                nbt.putDouble("energy2", component3.getEnergy());
             }
         }
         return drop;
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
         ItemStack stack_quickly = ItemStack.EMPTY;
         ItemStack stack_modulesize = ItemStack.EMPTY;
@@ -410,26 +413,26 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         ItemStack module_separate = ItemStack.EMPTY;
         ItemStack module_infinity_water = ItemStack.EMPTY;
         if (this.multi_process.quickly) {
-            stack_quickly = new ItemStack(IUItem.module_quickly);
+            stack_quickly = new ItemStack(IUItem.module_quickly.getItem());
         }
         if (this.multi_process.modulesize) {
-            stack_modulesize = new ItemStack(IUItem.module_stack);
+            stack_modulesize = new ItemStack(IUItem.module_stack.getItem());
         }
         if (this.multi_process.modulestorage) {
-            stack_modulestorage = new ItemStack(IUItem.module_storage);
+            stack_modulestorage = new ItemStack(IUItem.module_storage.getItem());
         }
         if (this.multi_process.module_separate) {
-            module_separate = new ItemStack(IUItem.module_separate);
+            module_separate = new ItemStack(IUItem.module_separate.getItem());
         }
         if (this.multi_process.module_infinity_water) {
-            module_infinity_water = new ItemStack(IUItem.module_infinity_water);
+            module_infinity_water = new ItemStack(IUItem.module_infinity_water.getItem());
         }
         if (solartype != null) {
-            panel = new ItemStack(IUItem.module6, 1, solartype.meta);
+            panel = new ItemStack(IUItem.module6.getStack(solartype.meta), 1);
         }
 
         if (this.cold.upgrade && this.getMachine().type != EnumTypeMachines.Centrifuge) {
-            colling = new ItemStack(IUItem.coolupgrade, 1, this.cold.meta);
+            colling = new ItemStack(IUItem.coolupgrade.getStack(this.cold.meta), 1);
 
         }
         if (!stack_modulestorage.isEmpty() || !stack_quickly.isEmpty() || !module_separate.isEmpty() || !module_infinity_water.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !colling.isEmpty()) {
@@ -474,57 +477,54 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
     @Override
     public boolean onActivated(
-            final EntityPlayer entityPlayer,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+            final Player entityPlayer,
+            final InteractionHand hand,
+            final Direction side,
+            final Vec3 hitX
     ) {
 
-        if (!entityPlayer.getHeldItem(hand).isEmpty()) {
-            if (entityPlayer.getHeldItem(hand).getItem() instanceof ItemModuleTypePanel) {
+        if (!entityPlayer.getItemInHand(hand).isEmpty()) {
+            if (entityPlayer.getItemInHand(hand).getItem() instanceof ItemModuleTypePanel) {
                 if (this.solartype != null) {
                     EnumSolarPanels type = this.solartype;
                     int meta = type.meta;
-                    ItemStack stack = new ItemStack(IUItem.module6, 1, meta);
-                    if (!entityPlayer.inventory.addItemStackToInventory(stack)) {
-                        EntityItem item = new EntityItem(
-                                entityPlayer.getEntityWorld(),
-                                (int) (entityPlayer.posX),
-                                (int) entityPlayer.posY - 1,
-                                (int) (entityPlayer.posZ)
+                    ItemStack stack = new ItemStack(IUItem.module6.getStack(meta));
+                    if (!entityPlayer.getInventory().add(stack)) {
+                        ItemEntity item = new ItemEntity(
+                                entityPlayer.level(),
+                                (int) (entityPlayer.getX()),
+                                (int) entityPlayer.getY() - 1,
+                                (int) (entityPlayer.getZ()), stack
                         );
-                        item.setItem(stack);
-                        item.setPosition(entityPlayer.posX, entityPlayer.posY - 1, entityPlayer.posZ);
-                        item.setDefaultPickupDelay();
-                        world.spawnEntity(item);
+
+                        item.setDefaultPickUpDelay();
+                        level.addFreshEntity(item);
                     }
 
                 }
-                this.solartype = ItemModuleTypePanel.getSolarType(entityPlayer.getHeldItem(hand).getItemDamage());
-                entityPlayer.getHeldItem(hand).shrink(1);
+                this.solartype = ItemModuleTypePanel.getSolarType(IUItem.module6.getMeta((ItemModuleTypePanel) entityPlayer.getItemInHand(hand).getItem()));
+                entityPlayer.getItemInHand(hand).shrink(1);
                 return true;
-            } else if (this.multi_process.onActivated(entityPlayer.getHeldItem(hand))) {
+            } else if (this.multi_process.onActivated(entityPlayer.getItemInHand(hand))) {
                 return true;
-            } else if (!this.getWorld().isRemote && FluidUtil.getFluidHandler(entityPlayer.getHeldItem(hand)) != null && this.fluid != null) {
+            } else if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(entityPlayer.getItemInHand(hand)) != null && this.fluid != null) {
 
                 return ModUtils.interactWithFluidHandler(entityPlayer, hand,
-                        this.fluid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                        this.fluid.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
                 );
             }
 
 
         }
-        return super.onActivated(entityPlayer, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(entityPlayer, hand, side, hitX);
     }
 
 
     public abstract EnumMultiMachine getMachine();
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        int id = nbttagcompound.getInteger("panelid");
+        int id = nbttagcompound.getInt("panelid");
         if (id != -1) {
             this.solartype = IUItem.map1.get(id);
         }
@@ -532,19 +532,19 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         if (this.solartype != null) {
-            nbttagcompound.setInteger("panelid", this.solartype.meta);
+            nbttagcompound.putInt("panelid", this.solartype.meta);
         } else {
-            nbttagcompound.setInteger("panelid", -1);
+            nbttagcompound.putInt("panelid", -1);
         }
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
 
         return nbttagcompound;
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         if (event == 0) {
             this.multi_process.cycleMode();
         } else {
@@ -565,12 +565,12 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "sound", this.sound);
             if (this.input_slot.isEmpty()) {
                 (this).multi_process.inputSlots.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).multi_process.inputSlots.changeAccepts(this.input_slot.get());
+                (this).multi_process.inputSlots.changeAccepts(this.input_slot.get(0));
             }
         }
 
@@ -605,26 +605,28 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         if (solartype != null) {
             if (this.energy.getEnergy() < this.energy.getCapacity()) {
                 if (panel == null) {
-                    this.panel = new TileSolarPanel(solartype);
-                    panel.setWorld(this.getWorld());
-                    panel.setPos(this.pos);
+                    this.panel = new TileSolarPanel(solartype, (IMultiTileBlock) solartype.block.getBlock(solartype.meta).getValue(), pos, solartype.block.getBlock(solartype.meta).defaultBlockState());
+                    panel.setLevel(this.getWorld());
                     IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
-                    panel.canRain = (this.world.getBiome(this.pos).canRain() || this.world
-                            .getBiome(this.pos)
-                            .getRainfall() > 0.0F);
-                    panel.hasSky = !this.world.provider.isNether();
-                    panel.biome = this.world.getBiome(this.pos);
-                    panel.sunCoef = advEnergyNet.getSunCoefficient(this.world);
-                    panel.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
-                            (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                                    MapColor.AIR) && !panel.noSunWorld;
-                    panel.wetBiome = panel.getWorld().getBiome(this.pos).getRainfall() > 0.0F;
-                    panel.rain = panel.wetBiome && (this.world.isRaining() || this.world.isThundering());
-                    panel.sunIsUp = this.getWorld().isDaytime();
+                    if (panel.biome == null) {
+                        panel.biome = this.getLevel().getBiome(this.pos);
+                    }
+                    panel.sunCoef = advEnergyNet.getSunCoefficient(this.level);
+                    panel.canRain = (panel.biome.value().getPrecipitationAt(pos) == Biome.Precipitation.RAIN || panel.biome.value().getModifiedClimateSettings().downfall() > 0.0F);
+                    panel.hasSky = !(this.getLevel().dimension() == Level.NETHER);
+
+                    panel.wetBiome = panel.biome.value().getModifiedClimateSettings().downfall() > 0.0F;
+                    panel.noSunWorld = this.getLevel().dimension() == Level.NETHER;
+
+                    panel.rain = panel.wetBiome && (this.getLevel().isRaining() || this.getLevel().isThundering());
+                    panel.sunIsUp = this.getLevel().isDay();
+                    panel.skyIsVisible = this.getLevel().canSeeSky(this.worldPosition) &&
+                            (this.getLevel().getBlockState(this.worldPosition.above()).getMapColor(getLevel(), this.worldPosition.above()) == MapColor.NONE) &&
+                            !panel.noSunWorld;
 
                 }
 
-                if (panel.activeState == null || this.getWorld().provider.getWorldTime() % 40 == 0) {
+                if (panel.activeState == null || this.getWorld().getGameTime() % 40 == 0) {
                     panel.updateVisibility();
                 }
                 panel.gainFuel();
@@ -652,14 +654,14 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     }
 
 
-    public ContainerMultiMachine getGuiContainer(EntityPlayer player) {
+    public ContainerMultiMachine getGuiContainer(Player player) {
         return new ContainerMultiMachine(player, this, this.sizeWorkingSlot);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiMultiMachine getGui(EntityPlayer player, boolean isAdmin) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player player, ContainerBase<? extends IAdvInventory> isAdmin) {
 
-        return new GuiMultiMachine(new ContainerMultiMachine(player, this, sizeWorkingSlot));
+        return new GuiMultiMachine((ContainerMultiMachine) isAdmin);
 
 
     }

@@ -1,0 +1,8 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "industrialupgrade:rub_tree_placed"
+  ],
+  "step": "vegetal_decoration"
+}

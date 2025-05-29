@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/nichrome"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:gems/diamond"
+      }
+    ]
+  },
+  "pattern": [
+    "A  ",
+    "BAB",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_559_element"
+  },
+  "show_notification": true
+}

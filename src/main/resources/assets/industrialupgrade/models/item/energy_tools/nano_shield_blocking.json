@@ -1,7 +1,7 @@
 {
   "parent" : "item/shield",
   "textures" : {
-    "base" : "industrialupgrade:items/nano_shield",
+    "base" : "industrialupgrade:item/nano_shield",
     "overlay" : "items/shield_overlay",
     "blocking" : "items/shield_blocking"
   },

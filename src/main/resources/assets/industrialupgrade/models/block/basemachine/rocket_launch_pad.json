@@ -4,8 +4,8 @@
     256
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/rocket_launch_pad",
-    "particle" : "industrialupgrade:models/rocket_launch_pad"
+    "0" : "industrialupgrade:block/rocket_launch_pad",
+    "particle" : "industrialupgrade:block/rocket_launch_pad"
   },
   "elements" : [
     {

@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=reactor_safety_doom": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom"
+    },
+    "facing=south,type=reactor_safety_doom": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom",
+      "y": 180
+    },
+    "facing=west,type=reactor_safety_doom": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom",
+      "y": 270
+    },
+    "facing=east,type=reactor_safety_doom": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom",
+      "y": 90
+    },
+    "facing=down,type=reactor_safety_doom": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom",
+      "x": 90
+    },
+    "facing=up,type=reactor_safety_doom": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom",
+      "x": 270
+    },
+    "facing=north,type=reactor_safety_doom_invalid": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active"
+    },
+    "facing=south,type=reactor_safety_doom_invalid": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "y": 180
+    },
+    "facing=west,type=reactor_safety_doom_invalid": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "y": 270
+    },
+    "facing=east,type=reactor_safety_doom_invalid": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "y": 90
+    },
+    "facing=down,type=reactor_safety_doom_invalid": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "x": 90
+    },
+    "facing=up,type=reactor_safety_doom_invalid": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "x": 270
+    },
+    "facing=north,type=reactor_safety_doom_active": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active"
+    },
+    "facing=south,type=reactor_safety_doom_active": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "y": 180
+    },
+    "facing=west,type=reactor_safety_doom_active": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "y": 270
+    },
+    "facing=east,type=reactor_safety_doom_active": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "y": 90
+    },
+    "facing=down,type=reactor_safety_doom_active": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "x": 90
+    },
+    "facing=up,type=reactor_safety_doom_active": {
+      "model": "industrialupgrade:block/basemachine/reactor_safety_doom_active",
+      "x": 270
+    }
+  }
+}

@@ -1,19 +1,23 @@
 package com.denfop.tiles.cyclotron;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCyclotron;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCyclotronChamber;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiCyclotronChamber;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityCyclotronChamber extends TileEntityMultiBlockElement implements IBombardmentChamber, IUpdateTick {
 
@@ -24,19 +28,20 @@ public class TileEntityCyclotronChamber extends TileEntityMultiBlockElement impl
     private int cryogen;
     private int positrons;
 
-    public TileEntityCyclotronChamber() {
+    public TileEntityCyclotronChamber(BlockPos pos, BlockState state) {
+        super(BlockCyclotron.cyclotron_bombardment_chamber, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "cyclotron", this);
     }
 
     @Override
-    public ContainerCyclotronChamber getGuiContainer(final EntityPlayer var1) {
+    public ContainerCyclotronChamber getGuiContainer(final Player var1) {
         return new ContainerCyclotronChamber(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCyclotronChamber(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiCyclotronChamber((ContainerCyclotronChamber) menu);
     }
 
     @Override
@@ -51,7 +56,7 @@ public class TileEntityCyclotronChamber extends TileEntityMultiBlockElement impl
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.cyclotron;
+        return IUItem.cyclotron.getBlock(getTeBlock());
     }
 
 
@@ -62,15 +67,15 @@ public class TileEntityCyclotronChamber extends TileEntityMultiBlockElement impl
         this.cryogen = 1;
         this.positrons = 1;
         if (this.output != null) {
-            this.chance = output.getRecipe().getOutput().metadata.hasKey("chance") ? output
+            this.chance = output.getRecipe().getOutput().metadata.contains("chance") ? output
                     .getRecipe()
-                    .getOutput().metadata.getInteger(
+                    .getOutput().metadata.getInt(
                             "chance") : 100;
-            this.cryogen = output.getRecipe().getOutput().metadata.hasKey("cryogen") ?
-                    output.getRecipe().getOutput().metadata.getInteger(
+            this.cryogen = output.getRecipe().getOutput().metadata.contains("cryogen") ?
+                    output.getRecipe().getOutput().metadata.getInt(
                             "cryogen") : 1;
-            this.positrons = output.getRecipe().getOutput().metadata.hasKey("positrons") ?
-                    output.getRecipe().getOutput().metadata.getInteger(
+            this.positrons = output.getRecipe().getOutput().metadata.contains("positrons") ?
+                    output.getRecipe().getOutput().metadata.getInt(
                             "positrons") : 1;
 
         }
@@ -92,7 +97,7 @@ public class TileEntityCyclotronChamber extends TileEntityMultiBlockElement impl
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             inputSlotA.load();
             this.getOutput();
         }
@@ -115,15 +120,15 @@ public class TileEntityCyclotronChamber extends TileEntityMultiBlockElement impl
         this.cryogen = 1;
         this.positrons = 1;
         if (this.output != null) {
-            this.chance = output.getRecipe().getOutput().metadata.hasKey("chance") ? output
+            this.chance = output.getRecipe().getOutput().metadata.contains("chance") ? output
                     .getRecipe()
-                    .getOutput().metadata.getInteger(
+                    .getOutput().metadata.getInt(
                             "chance") : 100;
-            this.cryogen = output.getRecipe().getOutput().metadata.hasKey("cryogen") ?
-                    output.getRecipe().getOutput().metadata.getInteger(
+            this.cryogen = output.getRecipe().getOutput().metadata.contains("cryogen") ?
+                    output.getRecipe().getOutput().metadata.getInt(
                             "cryogen") : 1;
-            this.positrons = output.getRecipe().getOutput().metadata.hasKey("positrons") ?
-                    output.getRecipe().getOutput().metadata.getInteger(
+            this.positrons = output.getRecipe().getOutput().metadata.contains("positrons") ?
+                    output.getRecipe().getOutput().metadata.getInt(
                             "positrons") : 1;
 
         }

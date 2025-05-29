@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_76_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/ferromanganese"
+      }
+    ],
+    "C": [
+      {
+        "tag": "minecraft:planks"
+      }
+    ]
+  },
+  "pattern": [
+    "C C",
+    "BAB",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:compressor/compressor"
+  },
+  "show_notification": true
+}

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/ampere_generator_top-bottom",
-    "down" : "industrialupgrade:blocks/ampere_generator_top-bottom",
-    "up" : "industrialupgrade:blocks/ampere_generator_top-bottom",
-    "north" : "industrialupgrade:blocks/ampere_generator_front-back-right-left_active",
-    "east" : "industrialupgrade:blocks/ampere_generator_front-back-right-left_active",
-    "south" : "industrialupgrade:blocks/ampere_generator_front-back-right-left_active",
-    "west" : "industrialupgrade:blocks/ampere_generator_front-back-right-left_active"
+    "particle" : "industrialupgrade:block/ampere_generator_top-bottom",
+    "down" : "industrialupgrade:block/ampere_generator_top-bottom",
+    "up" : "industrialupgrade:block/ampere_generator_top-bottom",
+    "north" : "industrialupgrade:block/ampere_generator_front-back-right-left_active",
+    "east" : "industrialupgrade:block/ampere_generator_front-back-right-left_active",
+    "south" : "industrialupgrade:block/ampere_generator_front-back-right-left_active",
+    "west" : "industrialupgrade:block/ampere_generator_front-back-right-left_active"
   }
 }

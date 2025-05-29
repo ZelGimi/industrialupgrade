@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:photoniy_ingot"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:wiring/glass8"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:circuit/quantumcircuit"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    "ACA",
+    "BBB"
+  ],
+  "result": {
+    "item": "industrialupgrade:wiring/glass9"
+  },
+  "show_notification": true
+}

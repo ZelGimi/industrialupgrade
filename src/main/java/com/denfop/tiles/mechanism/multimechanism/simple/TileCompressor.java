@@ -9,16 +9,18 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileCompressor extends TileMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileCompressor() {
+    public TileCompressor(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.COMPRESSER.usagePerTick,
-                EnumMultiMachine.COMPRESSER.lenghtOperation
+                EnumMultiMachine.COMPRESSER.lenghtOperation, BlockSimpleMachine.compressor_iu, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
@@ -29,7 +31,7 @@ public class TileCompressor extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.simplemachine;
+        return IUItem.simplemachine.getBlock(getTeBlock().getId());
     }
 
     public EnumMultiMachine getMachine() {

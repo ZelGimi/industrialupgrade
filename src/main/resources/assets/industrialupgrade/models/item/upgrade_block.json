@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/upgrade_block"
+    "layer0" : "industrialupgrade:item/upgrade_block"
   }
 }

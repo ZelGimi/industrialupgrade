@@ -1,93 +1,136 @@
 package com.denfop.audio;
 
-import com.denfop.Constants;
+
+import com.denfop.IUCore;
+import com.denfop.mixin.access.SoundEngineAccess;
+import com.denfop.mixin.access.SoundManagerAccess;
+import com.mojang.blaze3d.audio.Channel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.sounds.ChannelAccess;
+import net.minecraft.client.sounds.SoundEngine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-@SideOnly(Side.CLIENT)
 public class SoundHandler {
 
-    private static final SoundManager soundManager = Minecraft.getMinecraft().getSoundHandler().sndManager;
-
-
+    @OnlyIn(Dist.CLIENT)
     public static void stopSound(BlockPos pos) {
-        getSoundAtPosition(pos).ifPresent(soundManager::stopSound);
-    }
-
-
-    public static void stopAllSounds() {
-        getAllSoundsFromMod().forEach(soundManager::stopSound);
-    }
-
-
-    public static void stopSound(EnumSound sound) {
-        getSoundsMatching(sound.getNameSounds().toLowerCase()).forEach(soundManager::stopSound);
-    }
-
-
-    public static void playSound(EntityPlayer player, Object sound) {
-        if (player == null || sound == null) {
-            return;
-        }
-
-        String soundName = (sound instanceof EnumSound)
-                ? ((EnumSound) sound).getNameSounds().toLowerCase()
-                : sound.toString().toLowerCase();
-
-        if (!isSoundPlaying(soundName)) {
-            player.playSound(EnumSound.getSondFromString(soundName), 1.0F, 1.0F);
+        SoundEngine soundEngine = ((SoundManagerAccess) Minecraft.getInstance().getSoundManager()).getSoundEngine();
+        if (((SoundEngineAccess) soundEngine).getLoaded()) {
+            for (Map.Entry<SoundInstance, ChannelAccess.ChannelHandle> map : ((SoundEngineAccess) soundEngine).getInstanceToChannel().entrySet()) {
+                BlockPos pos1 = new BlockPos((int) map.getKey().getX(), (int) map.getKey().getY(),
+                        (int) map.getKey().getZ()
+                );
+                if (pos1.equals(pos)) {
+                    map.getValue().execute(Channel::stop);
+                    break;
+                }
+            }
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public static void stopSound() {
+        SoundEngine soundEngine = ((SoundManagerAccess) Minecraft.getInstance().getSoundManager()).getSoundEngine();
+        if (((SoundEngineAccess) soundEngine).getLoaded()) {
+            for (Map.Entry<SoundInstance, ChannelAccess.ChannelHandle> map : ((SoundEngineAccess) soundEngine).getInstanceToChannel().entrySet()) {
 
-    private static boolean isSoundPlaying(String soundName) {
-        return soundManager.invPlayingSounds.keySet().stream()
-                .anyMatch(sound -> isSoundFromMod(sound) && sound.getSoundLocation().getResourcePath().contains(soundName));
+                if (map.getKey().getSource() == SoundSource.PLAYERS && map
+                        .getKey()
+                        .getLocation()
+                        .getNamespace()
+                        .equals(
+                                IUCore.MODID)) {
+                    map.getValue().execute(Channel::stop);
+                    break;
+                }
+            }
+        }
     }
 
-    private static List<ISound> getAllSoundsFromMod() {
-        List<ISound> sounds = new ArrayList<>();
-        soundManager.invPlayingSounds.keySet().stream()
-                .filter(SoundHandler::isSoundFromMod)
-                .forEach(sounds::add);
-        return sounds;
+    @OnlyIn(Dist.CLIENT)
+    public static void stopSound(EnumSound sound1) {
+        SoundEngine soundEngine = ((SoundManagerAccess) Minecraft.getInstance().getSoundManager()).getSoundEngine();
+        List<SoundInstance> sounds = new ArrayList<>();
+        if (((SoundEngineAccess) soundEngine).getLoaded()) {
+            for (Map.Entry<SoundInstance, ChannelAccess.ChannelHandle> map : ((SoundEngineAccess) soundEngine).getInstanceToChannel().entrySet()) {
+
+                if (map.getKey().getSource() == SoundSource.PLAYERS && map
+                        .getKey()
+                        .getLocation()
+                        .getNamespace()
+                        .equals(
+                                IUCore.MODID) && map.getKey().getLocation().getPath().contains(sound1
+                        .getNameSounds()
+                        .toLowerCase())) {
+                    sounds.add(map.getKey());
+                    break;
+                }
+            }
+        }
+        sounds.forEach(soundEngine::stop);
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public static void playSound(Player player, EnumSound sound1) {
+        SoundEngine soundEngine = ((SoundManagerAccess) Minecraft.getInstance().getSoundManager()).getSoundEngine();
+        boolean can = true;
 
-    private static List<ISound> getSoundsMatching(String soundName) {
-        List<ISound> sounds = new ArrayList<>();
-        soundManager.invPlayingSounds.keySet().stream()
-                .filter(sound -> isSoundFromMod(sound) && sound.getSoundLocation().getResourcePath().contains(soundName))
-                .forEach(sounds::add);
-        return sounds;
+        for (Map.Entry<SoundInstance, ChannelAccess.ChannelHandle> map : ((SoundEngineAccess) soundEngine).getInstanceToChannel().entrySet()) {
+
+            if (map.getKey().getSource() == SoundSource.PLAYERS && map
+                    .getKey()
+                    .getLocation()
+                    .getNamespace()
+                    .equals(
+                            IUCore.MODID) && map.getKey().getLocation().getPath().contains(sound1
+                    .getNameSounds()
+                    .toLowerCase())) {
+                can = false;
+                break;
+            }
+        }
+
+        if (can) {
+            player.playSound(sound1.getSoundEvent(), 1, 1);
+
+        }
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public static void playSound(Player player, String sound1) {
+        SoundEngine soundEngine = ((SoundManagerAccess) Minecraft.getInstance().getSoundManager()).getSoundEngine();
+        boolean can = true;
 
-    private static Optional<ISound> getSoundAtPosition(BlockPos pos) {
-        return soundManager.invPlayingSounds.keySet().stream()
-                .filter(sound -> isSoundFromMod(sound) && isSoundAtPosition(sound, pos))
-                .findFirst();
-    }
+        for (Map.Entry<SoundInstance, ChannelAccess.ChannelHandle> map : ((SoundEngineAccess) soundEngine).getInstanceToChannel().entrySet()) {
 
+            if (map.getKey().getSource() == SoundSource.PLAYERS && map
+                    .getKey()
+                    .getLocation()
+                    .getNamespace()
+                    .equals(
+                            IUCore.MODID) && map
+                    .getKey()
+                    .getLocation()
+                    .getPath()
+                    .contains(sound1.toLowerCase())) {
+                can = false;
+                break;
+            }
+        }
 
-    private static boolean isSoundFromMod(ISound sound) {
-        return sound.getCategory() == SoundCategory.PLAYERS &&
-                sound.getSoundLocation().getResourceDomain().equals(Constants.MOD_ID);
-    }
+        if (can) {
+            player.playSound(EnumSound.getSondFromString(sound1), 1, 1);
 
-
-    private static boolean isSoundAtPosition(ISound sound, BlockPos pos) {
-        return new BlockPos(sound.getXPosF(), sound.getYPosF(), sound.getZPosF()).equals(pos);
+        }
     }
 
 }

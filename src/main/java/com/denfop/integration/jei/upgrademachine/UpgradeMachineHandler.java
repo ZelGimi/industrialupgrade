@@ -3,9 +3,10 @@ package com.denfop.integration.jei.upgrademachine;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UpgradeMachineHandler {
@@ -132,14 +133,12 @@ public class UpgradeMachineHandler {
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
+    public List<ItemStack> getInputs() {
+        return Arrays.asList(input, input1, input2, input3, input4, input5, input6, input7, input8);
+    }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3) || is.isItemEqual(
-                input4) || is.isItemEqual(
-                input5) || is.isItemEqual(
-                input6) || is.isItemEqual(
-                input7) || is.isItemEqual(
-                input8);
+        return true;
     }
 
 }

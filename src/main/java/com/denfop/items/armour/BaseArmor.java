@@ -1,75 +1,66 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
-import com.denfop.register.Register;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-
-
-public class BaseArmor extends ItemArmor implements IModelRegister {
-
-    private final String name;
-    private final String armor_type;
+public class BaseArmor extends ArmorItem implements IItemTab {
     private final int render;
+    private final String armor_type;
+    private String nameItem;
 
-    public BaseArmor(String name, ArmorMaterial material, int renderIndex, EntityEquipmentSlot slot, String name_type) {
-        super(material, renderIndex, slot);
-        setUnlocalizedName(name);
-        setCreativeTab(IUCore.EnergyTab);
-
-        this.name = name;
-        this.render = slot.getSlotIndex();
+    public BaseArmor(ArmorMaterial p_40386_, Type slot, String name_type) {
+        super(p_40386_, slot, new Properties());
+        this.render = slot.getSlot().getIndex();
         this.armor_type = name_type;
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-        IUCore.proxy.addIModelRegister(this);
+
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "armour" + "/" + name;
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem ="item."+ pathBuilder.toString().split("\\.")[2];
+        }
 
-        return new ModelResourceLocation(loc, null);
+        return this.nameItem;
     }
 
-    public String getArmorTexture(
-            @Nonnull ItemStack stack,
-            @Nonnull Entity entity,
-            @Nonnull EntityEquipmentSlot slot,
-            @Nonnull String type
-    ) {
-
-        if (this.render != 2) {
+    @Override
+    public  String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+        if (this.render != 1) {
             return Constants.TEXTURES + ":" + "textures/armor/" + armor_type + "_layer_1.png";
         } else {
             return Constants.TEXTURES + ":" + "textures/armor/" + armor_type + "_layer_2.png";
         }
     }
 
-    public void registerModels() {
-        registerModels(this.name);
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            p_41392_.add(new ItemStack(this));
+        }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> getModelLocation1(name));
-
-        ModelBakery.registerItemVariants(this, getModelLocation1(name));
-
-
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
     }
-
 }

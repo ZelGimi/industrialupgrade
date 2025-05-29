@@ -3,50 +3,50 @@ package com.denfop.integration.jei.gense;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
-import com.denfop.blocks.mechanism.BlockSolarEnergy;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
+import com.denfop.tiles.mechanism.TileEntityNuclearWasteRecycler;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> {
+public class GenSECategory extends GuiIU implements IRecipeCategory<GenSEHandler> {
 
     private final IDrawableStatic bg;
+    private final JeiInform jeiInform;
+
 
     public GenSECategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
+        super(((TileEntityNuclearWasteRecycler) BlockBaseMachine3.nuclear_waste_recycler.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform=jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/sunnariumgenerator.png"), 3, 3, 160,
                 75
         );
     }
 
-    @Nonnull
-    @Override
-    public String getUid() {
-        return BlockSolarEnergy.se_gen.getName();
-    }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.blockSE, 1, 0).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.blockSE, 1, 0).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -54,23 +54,22 @@ public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> 
         return bg;
     }
 
+    @Override
+    public RecipeType<GenSEHandler> getRecipeType() {
+        return jeiInform.recipeType;
+    }
 
     @Override
-    public void drawExtras(final Minecraft mc) {
-        mc.getTextureManager().bindTexture(getTexture());
+    public void draw(GenSEHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
 
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final GenSEWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, false, 37, 26);
-        isg.set(0, recipes.getOutput());
+    public void setRecipe(IRecipeLayoutBuilder builder, GenSEHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 38, 27).addItemStack(recipe.getOutput());
     }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/sunnariumgenerator.png");

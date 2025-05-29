@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/zirconium_casing"	}
+		"layer0": "industrialupgrade:item/zirconium_casing"	}
 }

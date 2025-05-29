@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/crop_genomebiome_iii"
+    "layer0" : "industrialupgrade:item/crop_genomebiome_iii"
   }
 }

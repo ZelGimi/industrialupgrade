@@ -1,27 +1,40 @@
 package com.denfop.tiles.mechanism.quarry;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.List;
 import java.util.Objects;
 
 public class QuarryItem {
 
     private final ItemStack stack;
-    private final String oreDict;
+    private TagKey<Item> oreDict;
 
     public QuarryItem(ItemStack stack) {
         this.stack = stack;
-        if (OreDictionary.getOreIDs(stack).length > 0) {
-            oreDict = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
-        } else {
-            oreDict = "";
+        List<TagKey<Item>> list = stack.getTags().toList();
+        try {
+            oreDict = list.get(0);
+        }catch (Exception e){
+            oreDict = new TagKey<>(Registries.ITEM,new ResourceLocation("","unknown"));
         }
     }
 
-    public QuarryItem(ItemStack stack, String oreDict) {
+    public QuarryItem(ItemStack stack, TagKey<Item> oreDict) {
         this.stack = stack;
         this.oreDict = oreDict;
+    }
+
+    public QuarryItem(String oreDict) {
+        this.oreDict = new TagKey<>(Registries.ITEM, new ResourceLocation(oreDict));
+        this.stack = new Ingredient.TagValue(this.oreDict).getItems().stream().toList().get(0);
+
     }
 
     @Override
@@ -33,7 +46,7 @@ public class QuarryItem {
             return false;
         }
         QuarryItem that = (QuarryItem) o;
-        return this.stack.isItemEqual(that.getStack());
+        return this.stack.is(that.getStack().getItem());
     }
 
     @Override
@@ -45,16 +58,16 @@ public class QuarryItem {
         return stack;
     }
 
-    public String getOreDict() {
+    public TagKey<Item> getOreDict() {
         return oreDict;
     }
 
     public boolean isGem() {
-        return this.getOreDict().startsWith("gem");
+        return this.getOreDict().location().getPath().startsWith("gem");
     }
 
     public boolean isShard() {
-        return this.getOreDict().startsWith("shard");
+        return this.getOreDict().location().getPath().startsWith("shard");
     }
 
 }

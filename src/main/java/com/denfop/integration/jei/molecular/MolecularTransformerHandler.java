@@ -1,9 +1,12 @@
 package com.denfop.integration.jei.molecular;
 
 
+import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import com.denfop.utils.ModUtils;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +16,27 @@ public class MolecularTransformerHandler {
     private static final List<MolecularTransformerHandler> recipes = new ArrayList<>();
     private final double energy;
     private final ItemStack input, output;
+    public final String inputText;
+    public final String outputText;
+    public final String totalEU;
 
     public MolecularTransformerHandler(ItemStack input, ItemStack output, double energy) {
         this.input = input;
         this.output = output;
         this.energy = energy;
+        String inputText = null;
+        if (!this.input.isEmpty()) {
+            inputText =input.getDisplayName().getString();
+        }
+
+        this.inputText = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText;
+
+        this.outputText =
+                Localization.translate("gui.MolecularTransformer.output") + ": " + output.getDisplayName().getString();
+        this.totalEU = String.format("%s %s %s", Localization.translate("gui.MolecularTransformer.energyPerOperation") + ":",
+                ModUtils.getString(energy),
+                Localization.translate(Constants.ABBREVIATION + ".generic.text.EF")
+        );
     }
 
     public static List<MolecularTransformerHandler> getRecipes() {

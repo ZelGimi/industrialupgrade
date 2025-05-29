@@ -1,13 +1,13 @@
 package com.denfop.api.transport;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 import java.util.List;
 
 
 public interface ITransportSink<T, E> extends ITransportAcceptor<T, E> {
 
-    List<Integer> getDemanded(EnumFacing facing);
+    List<Integer> getDemanded(Direction facing);
 
     boolean isSink();
 

@@ -5,9 +5,9 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerApothecaryBee;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiApothecaryBee extends GuiIU<ContainerApothecaryBee> {
+public class GuiApothecaryBee<T extends ContainerApothecaryBee> extends GuiIU<ContainerApothecaryBee> {
 
     public GuiApothecaryBee(ContainerApothecaryBee guiContainer) {
         super(guiContainer);
@@ -17,20 +17,7 @@ public class GuiApothecaryBee extends GuiIU<ContainerApothecaryBee> {
         ));
     }
 
-    @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-    }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
 
     @Override
     protected ResourceLocation getTexture() {

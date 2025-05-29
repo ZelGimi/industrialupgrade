@@ -10,19 +10,12 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerAdditionGenStone;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.mechanism.TileBaseAdditionGenStone;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-import java.io.IOException;
 
-@SideOnly(Side.CLIENT)
-public class GuiAdditionGenStone extends GuiIU<ContainerAdditionGenStone> {
+public class GuiAdditionGenStone<T extends ContainerAdditionGenStone> extends GuiIU<ContainerAdditionGenStone> {
 
     public final ContainerAdditionGenStone container;
 
@@ -38,10 +31,10 @@ public class GuiAdditionGenStone extends GuiIU<ContainerAdditionGenStone> {
         ));
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
+    protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = guiLeft;
+        int yMin =guiTop;
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 62 && x <= 79 && y >= 63 && y <= 80) {
@@ -50,112 +43,84 @@ public class GuiAdditionGenStone extends GuiIU<ContainerAdditionGenStone> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
 
         new Area(this, 63, 64, 18, 18)
                 .withTooltip(Localization.translate("message.text.mode") + ": " +
                         (this.container.base.getMode() == TileBaseAdditionGenStone.Mode.DIORITE ?
-                                this.container.base.diorite.getDisplayName() :
+                                this.container.base.diorite.getDisplayName().getString() :
                                 this.container.base.getMode() == TileBaseAdditionGenStone.Mode.ANDESITE
                                         ?
-                                        this.container.base.andesite.getDisplayName()
-                                        : this.container.base.granite.getDisplayName()
+                                        this.container.base.andesite.getDisplayName().getString()
+                                        : this.container.base.granite.getDisplayName().getString()
                         ))
-                .drawForeground(mouseX
+                .drawForeground(poseStack, mouseX
                         , mouseY);
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack,  float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,  float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
+        int xoffset = guiLeft;
+        int yoffset =guiTop;
+        bindTexture(getTexture());
 
-        RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GlStateManager.disableLighting();
-        GlStateManager.enableDepth();
-        this.zLevel = 100.0F;
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
         if (this.container.base.output == null) {
-            itemRender.renderItemAndEffectIntoGUI(container.base.granite, xoffset + 64,
-                    yoffset + 28
+           this.drawItemStack(poseStack, container.base.granite, 64,
+                     28
             );
         } else {
             switch (this.container.base.getMode()) {
                 case GRANITE:
-                    itemRender.renderItemAndEffectIntoGUI(container.base.granite, xoffset + 64,
-                            yoffset + 28
+                    this.drawItemStack(poseStack,container.base.granite, 64,
+                             28
                     );
                     break;
                 case DIORITE:
-                    itemRender.renderItemAndEffectIntoGUI(container.base.diorite, xoffset + 64,
-                            yoffset + 28
+                    this.drawItemStack(poseStack,container.base.diorite, 64,
+                            28
                     );
                     break;
                 case ANDESITE:
-                    itemRender.renderItemAndEffectIntoGUI(container.base.andesite, xoffset + 64,
-                            yoffset + 28
+                    this.drawItemStack(poseStack,container.base.andesite, 64,
+                            28
                     );
                     break;
             }
         }
 
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GlStateManager.enableLighting();
-        RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
 
-        RenderHelper.disableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glColor4f(0.1F, 1, 0.1F, 1);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GlStateManager.disableLighting();
-        GlStateManager.enableDepth();
-        this.zLevel = 100.0F;
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         switch (this.container.base.getMode()) {
             case GRANITE:
-                itemRender.renderItemAndEffectIntoGUI(container.base.granite, xoffset + 63,
-                        yoffset + 64
+                this.drawItemStack(poseStack,container.base.granite,  63,
+                         64
                 );
                 break;
             case DIORITE:
-                itemRender.renderItemAndEffectIntoGUI(container.base.diorite, xoffset + 63,
-                        yoffset + 64
+                this.drawItemStack(poseStack,container.base.diorite,  63,
+                        64
                 );
                 break;
             case ANDESITE:
-                itemRender.renderItemAndEffectIntoGUI(container.base.andesite, xoffset + 63,
-                        yoffset + 64
+                this.drawItemStack(poseStack,container.base.andesite, 63,
+                        64
                 );
                 break;
         }
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GlStateManager.enableLighting();
 
-        RenderHelper.enableStandardItemLighting();
-        GL11.glColor4f(0.1F, 1, 0.1F, 1);
-        GL11.glPopMatrix();
-        GL11.glColor4f(1F, 1, 1F, 1);
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png".toLowerCase());
     }
 
 }

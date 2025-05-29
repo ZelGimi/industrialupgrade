@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/hafnium"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/alcled"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/aluminiumsilicon"
+      }
+    ]
+  },
+  "pattern": [
+    "ABC",
+    "BAB",
+    "CBA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_768_element"
+  },
+  "show_notification": true
+}

@@ -2,7 +2,7 @@ package com.denfop.integration.jei.quarry_comb;
 
 
 import com.denfop.IUCore;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;

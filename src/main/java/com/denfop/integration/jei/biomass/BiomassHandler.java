@@ -3,7 +3,7 @@ package com.denfop.integration.jei.biomass;
 
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -46,11 +46,11 @@ public class BiomassHandler {
     public static void initRecipes() {
         addRecipe(
                 IUItem.biochaff,
-                new FluidStack(FluidName.fluidbiomass.getInstance(), 200)
+                new FluidStack(FluidName.fluidbiomass.getInstance().get(), 200)
         );
         addRecipe(
                 IUItem.plantBall,
-                new FluidStack(FluidName.fluidbiomass.getInstance(), 150)
+                new FluidStack(FluidName.fluidbiomass.getInstance().get(), 150)
         );
     }
 

@@ -1,54 +1,45 @@
 package com.denfop.blocks;
 
-import com.denfop.Constants;
-import com.denfop.api.IFluidModelProvider;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
+public class IUFluid extends ForgeFlowingFluid {
 
-public class IUFluid extends Fluid implements IFluidModelProvider {
 
-    private static final ResourceLocation fluidLocation = new ResourceLocation(Constants.MOD_ID, "fluid");
-    private final FluidName name;
+    private final boolean isSource;
+    private final Properties fluidProperty = null;
 
-    public IUFluid(FluidName name) {
-        super(name.getName(), name.getTextureLocation(false), name.getTextureLocation(true));
-        this.name = name;
-    }
-
-    public FluidName getFluid() {
-        return name;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(FluidName name) {
-        if (name.getInstance().canBePlacedInWorld()) {
-            final String variant = "type=" + name.name();
-            ModelLoader.setCustomStateMapper(this.getBlock(), blockIn -> {
-                Map<IBlockState, ModelResourceLocation> ret = new IdentityHashMap<>();
-                ModelResourceLocation loc = new ModelResourceLocation(IUFluid.fluidLocation, variant);
-
-                for (final IBlockState state : IUFluid.this.getBlock().getBlockState().getValidStates()) {
-                    ret.put(state, loc);
-                }
-
-                return ret;
-            });
-            Item item = Item.getItemFromBlock(this.getBlock());
-            if (item != Items.AIR) {
-                ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(fluidLocation, variant));
-            }
-
+    public IUFluid(Properties properties, boolean isSource) {
+        super(properties);
+        if (!isSource) {
+            registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
         }
+        this.isSource = isSource;
+
     }
+
+    protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
+        super.createFluidStateDefinition(builder);
+        if (!isSource)
+            builder.add(LEVEL);
+    }
+
+    public int getAmount(FluidState state) {
+        if (!isSource)
+            return state.getValue(LEVEL);
+        else
+            return 8;
+    }
+
+    public boolean isSource(FluidState state) {
+        return isSource;
+    }
+
+    public Properties getFluidProperty() {
+        return fluidProperty;
+    }
+
 
 }

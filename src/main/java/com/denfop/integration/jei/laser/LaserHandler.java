@@ -3,7 +3,7 @@ package com.denfop.integration.jei.laser;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +12,19 @@ public class LaserHandler {
 
     private static final List<LaserHandler> recipes = new ArrayList<>();
     private final ItemStack input, output;
+    private final BaseMachineRecipe container;
 
     public LaserHandler(
             ItemStack input,
-            ItemStack output
-    ) {
+            ItemStack output,
+            BaseMachineRecipe container) {
         this.input = input;
         this.output = output;
+        this.container = container;
+    }
+
+    public BaseMachineRecipe getContainer() {
+        return container;
     }
 
     public static List<LaserHandler> getRecipes() {
@@ -29,9 +35,9 @@ public class LaserHandler {
     }
 
     public static LaserHandler addRecipe(
-            ItemStack input, ItemStack output
-    ) {
-        LaserHandler recipe = new LaserHandler(input, output);
+            ItemStack input, ItemStack output,
+            BaseMachineRecipe container) {
+        LaserHandler recipe = new LaserHandler(input, output,container);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -55,7 +61,7 @@ public class LaserHandler {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("laser")) {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0)
+                    container.getOutput().items.get(0),container
             );
 
 
@@ -73,7 +79,7 @@ public class LaserHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

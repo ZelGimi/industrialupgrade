@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityPolymerizer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerPolymerizer extends ContainerFullInv<TileEntityPolymerizer> {
 
-    public ContainerPolymerizer(EntityPlayer entityPlayer, TileEntityPolymerizer tileEntity1) {
+    public ContainerPolymerizer(Player entityPlayer, TileEntityPolymerizer tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 45, 99));

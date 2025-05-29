@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:blastfurnace/blast_furnace_part"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:primal_fluid_heater/primal_fluid_heater"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:blastfurnace/blast_furnace_heat"
+  },
+  "show_notification": true
+}

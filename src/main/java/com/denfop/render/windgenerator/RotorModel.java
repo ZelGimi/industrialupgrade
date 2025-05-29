@@ -1,56 +1,66 @@
 package com.denfop.render.windgenerator;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.entity.Entity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.entity.Entity;
 
-public class RotorModel extends ModelBase {
+public class RotorModel<T extends Entity> extends EntityModel<T> {
 
-    ModelRenderer rotor1;
-    ModelRenderer rotor2;
-    ModelRenderer rotor3;
-    ModelRenderer rotor4;
+
+
+    private final ModelPart rotor1;
+    private final ModelPart rotor2;
+    private final ModelPart rotor3;
+    private final ModelPart rotor4;
 
     public RotorModel(int radius) {
-        this.textureWidth = 32;
-        this.textureHeight = 256;
-        this.rotor1 = new ModelRenderer(this, 0, 0);
-        this.rotor1.addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8);
-        this.rotor1.setRotationPoint(-8.0F, 0.0F, 0.0F);
-        this.rotor1.setTextureSize(32, 256);
-        this.rotor1.mirror = true;
-        setRotation(this.rotor1, 0.0F, -0.5F, 0.0F);
-        this.rotor2 = new ModelRenderer(this, 0, 0);
-        this.rotor2.addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8);
-        this.rotor2.setRotationPoint(-8.0F, 0.0F, 0.0F);
-        this.rotor2.setTextureSize(32, 256);
-        this.rotor2.mirror = true;
-        setRotation(this.rotor2, 3.1F, 0.5F, 0.0F);
-        this.rotor3 = new ModelRenderer(this, 0, 0);
-        this.rotor3.addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8);
-        this.rotor3.setRotationPoint(-8.0F, 0.0F, 0.0F);
-        this.rotor3.setTextureSize(32, 256);
-        this.rotor3.mirror = true;
-        setRotation(this.rotor3, 4.7F, 0.0F, 0.5F);
-        this.rotor4 = new ModelRenderer(this, 0, 0);
-        this.rotor4.addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8);
-        this.rotor4.setRotationPoint(-8.0F, 0.0F, 0.0F);
-        this.rotor4.setTextureSize(32, 256);
-        this.rotor4.mirror = true;
-        setRotation(this.rotor4, 1.5F, 0.0F, -0.5F);
+        super(RenderType::entityCutoutNoCull);
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+
+        rotor1 =   root.addOrReplaceChild("rotor1", CubeListBuilder.create()
+                        .texOffs(0, 0)
+                        .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
+                PartPose.rotation(0.0F, -0.5F, 0.0F)).bake(32, 256);
+
+        rotor2 =   root.addOrReplaceChild("rotor2", CubeListBuilder.create()
+                        .texOffs(0, 0)
+                        .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
+                PartPose.rotation(3.1F, 0.5F, 0.0F)).bake(32, 256);
+
+        rotor3 =   root.addOrReplaceChild("rotor3", CubeListBuilder.create()
+                        .texOffs(0, 0)
+                        .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
+                PartPose.rotation(4.7F, 0.0F, 0.5F)).bake(32, 256);
+
+        rotor4 =   root.addOrReplaceChild("rotor4", CubeListBuilder.create()
+                        .texOffs(0, 0)
+                        .addBox(0.0F, 0.0F, -4.0F, 1, radius * 8, 8).mirror(),
+                PartPose.rotation(1.5F, 0.0F, -0.5F)).bake(32, 256);
+
     }
 
-    private static void setRotation(ModelRenderer model, float x, float y, float z) {
-        model.rotateAngleX = x;
-        model.rotateAngleY = y;
-        model.rotateAngleZ = z;
+
+
+    @Override
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+                          float netHeadYaw, float headPitch) {
+
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float scale) {
-        this.rotor1.render(scale);
-        this.rotor2.render(scale);
-        this.rotor3.render(scale);
-        this.rotor4.render(scale);
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight,
+                               int packedOverlay, float red, float green, float blue, float alpha) {
+        rotor1.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        rotor2.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        rotor3.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        rotor4.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
-
 }

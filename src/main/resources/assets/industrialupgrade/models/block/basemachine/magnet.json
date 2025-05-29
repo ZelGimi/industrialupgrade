@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockmagnet_main",
-    "down" : "industrialupgrade:blocks/blockmagnet_main",
-    "up" : "industrialupgrade:blocks/blockmagnet_main",
-    "north" : "industrialupgrade:blocks/blockmagnet_main",
-    "east" : "industrialupgrade:blocks/blockmagnet_main",
-    "south" : "industrialupgrade:blocks/blockmagnet_main",
-    "west" : "industrialupgrade:blocks/blockmagnet_main"
+    "particle" : "industrialupgrade:block/blockmagnet_main",
+    "down" : "industrialupgrade:block/blockmagnet_main",
+    "up" : "industrialupgrade:block/blockmagnet_main",
+    "north" : "industrialupgrade:block/blockmagnet_main",
+    "east" : "industrialupgrade:block/blockmagnet_main",
+    "south" : "industrialupgrade:block/blockmagnet_main",
+    "west" : "industrialupgrade:block/blockmagnet_main"
   }
 }

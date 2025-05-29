@@ -12,17 +12,17 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
-import com.denfop.render.tank.DataFluid;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 
@@ -30,12 +30,11 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
 
     private final Fluids fluids;
     private final Fluids.InternalFluidTank tank;
-    @SideOnly(Side.CLIENT)
-    public DataFluid dataFluid;
     private ComponentSteamEnergy steam;
     private int amount;
 
-    public TileEntitySteamTankBoiler() {
+    public TileEntitySteamTankBoiler(BlockPos pos, BlockState state) {
+        super(BlockSteamBoiler.steam_boiler_tank,pos,state);
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = this.fluids.addTank("tank", 4000);
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSource(this, 4000));
@@ -79,7 +78,7 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "fluidTank", tank);
 
         }
@@ -94,39 +93,17 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
 
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
     @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    this.getComp(Fluids.class).getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(player, hand, side, vec3);
     }
+
 
     @Override
     public Fluids.InternalFluidTank getTank() {
@@ -146,7 +123,7 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.steam_boiler;
+        return IUItem.steam_boiler.getBlock(getTeBlock());
     }
 
     @Override

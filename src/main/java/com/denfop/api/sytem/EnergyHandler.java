@@ -1,9 +1,10 @@
 package com.denfop.api.sytem;
 
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EnergyHandler {
 
@@ -12,24 +13,24 @@ public class EnergyHandler {
     }
 
     @SubscribeEvent
-    public void tick(final TickEvent.WorldTickEvent event) {
-        if (event.world.isRemote) {
+    public void tick(final TickEvent.LevelTickEvent event) {
+        if (event.level.isClientSide) {
             return;
         }
         if (event.phase == TickEvent.Phase.END) {
             for (IGlobalNet globalNet : EnergyBase.listGlobal) {
-                globalNet.TickEnd(event.world.provider.getDimension());
+                globalNet.TickEnd(event.level.dimension());
             }
         }
     }
 
     @SubscribeEvent
-    public void tick(final WorldEvent.Unload event) {
-        if (event.getWorld().isRemote) {
+    public void tick(final LevelEvent.Unload event) {
+        if (event.getLevel().isClientSide()) {
             return;
         }
         for (IGlobalNet globalNet : EnergyBase.listGlobal) {
-            globalNet.onUnload(event.getWorld().provider.getDimension());
+            globalNet.onUnload(((Level) event.getLevel()).dimension());
         }
 
     }
@@ -40,9 +41,9 @@ public class EnergyHandler {
         IGlobalNet globalNet = EnergyBase.globalNetMap.get(event.getEnergyType());
         if (globalNet != null) {
             if (event.getEvent() == EnumTypeEvent.LOAD) {
-                globalNet.addTile(event.getWorld(), event.getTile());
+                globalNet.addTile((Level) event.getLevel(), event.getTile());
             } else {
-                globalNet.removeTile(event.getWorld(), event.getTile());
+                globalNet.removeTile((Level) event.getLevel(), event.getTile());
             }
         }
 

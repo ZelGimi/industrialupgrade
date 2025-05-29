@@ -1,10 +1,9 @@
 package com.denfop.integration.jei.solidmatters;
 
 
-import com.denfop.Config;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class MatterHandler {
 
     public MatterHandler(ItemStack input) {
         this.input = input;
-        this.energy = (int) Config.SolidMatterStorage;
+        this.energy = (int) 5E7D;
     }
 
     public static List<MatterHandler> getRecipes() {
@@ -68,7 +67,7 @@ public class MatterHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input);
+        return true;
     }
 
 }

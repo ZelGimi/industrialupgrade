@@ -5,12 +5,14 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockWindTurbine;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityWindTurbineCasing1 extends TileEntityMultiBlockElement implements ICasing1 {
+
+    public TileEntityWindTurbineCasing1(BlockPos pos, BlockState state) {
+        super( BlockWindTurbine.wind_turbine_casing_2, pos, state);
+    }
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -19,21 +21,9 @@ public class TileEntityWindTurbineCasing1 extends TileEntityMultiBlockElement im
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.windTurbine;
+        return IUItem.windTurbine.getBlock(getTeBlock());
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
 }

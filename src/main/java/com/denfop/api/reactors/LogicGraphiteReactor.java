@@ -2,6 +2,7 @@ package com.denfop.api.reactors;
 
 import com.denfop.blocks.FluidName;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,11 +64,11 @@ public class LogicGraphiteReactor extends LogicReactor {
                             if (this.graphiteReactor.getSteamTank().getFluidAmount() + col * level <= this.graphiteReactor
                                     .getSteamTank()
                                     .getCapacity()) {
-                                this.graphiteReactor.getWaterTank().drain((int) (col * level), true);
+                                this.graphiteReactor.getWaterTank().drain((int) (col * level), IFluidHandler.FluidAction.EXECUTE);
                                 this.graphiteReactor.getSteamTank().fill(new FluidStack(
-                                        FluidName.fluidsteam.getInstance(),
+                                        FluidName.fluidsteam.getInstance().get(),
                                         (int) (col * level)
-                                ), true);
+                                ), IFluidHandler.FluidAction.EXECUTE);
                                 if (temp_heat > getMaxHeat()) {
                                     temp_heat -= rand.nextInt((int) (temp_heat - getMaxHeat()));
                                     if (temp_heat < 0) {
@@ -82,14 +83,14 @@ public class LogicGraphiteReactor extends LogicReactor {
                                                 .getOxideTank()
                                                 .getFluidAmount()) {
                                             this.graphiteReactor.getSteamTank().drain((int) (col)
-                                                    , true);
+                                                    , IFluidHandler.FluidAction.EXECUTE);
                                         }
                                         this.graphiteReactor.getCoalDioxideTank().drain((int) (col * level)
-                                                , true);
+                                                , IFluidHandler.FluidAction.EXECUTE);
                                         this.graphiteReactor.getOxideTank().fill(new FluidStack(
-                                                FluidName.fluidoxy.getInstance(),
+                                                FluidName.fluidoxy.getInstance().get(),
                                                 (int) (col * level)
-                                        ), true);
+                                        ), IFluidHandler.FluidAction.EXECUTE);
                                         temp_heat -= rand.nextInt((int) (10 * col));
                                         if (temp_heat < 0) {
                                             temp_heat = 0;
@@ -113,14 +114,14 @@ public class LogicGraphiteReactor extends LogicReactor {
                                                 .getOxideTank()
                                                 .getFluidAmount()) {
                                             this.graphiteReactor.getSteamTank().drain((int) (col)
-                                                    , true);
+                                                    , IFluidHandler.FluidAction.EXECUTE);
 
                                             this.graphiteReactor.getCoalDioxideTank().drain((int) (col * level)
-                                                    , true);
+                                                    , IFluidHandler.FluidAction.EXECUTE);
                                             this.graphiteReactor.getOxideTank().fill(new FluidStack(
-                                                    FluidName.fluidoxy.getInstance(),
+                                                    FluidName.fluidoxy.getInstance().get(),
                                                     (int) (col * level)
-                                            ), true);
+                                            ), IFluidHandler.FluidAction.EXECUTE);
                                             temp_heat -= rand.nextInt((int) (10 * col));
                                             if (temp_heat < 0) {
                                                 temp_heat = 0;

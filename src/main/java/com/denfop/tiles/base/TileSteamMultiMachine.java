@@ -4,14 +4,15 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
-import com.denfop.componets.ComponentSteamEnergy;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.PressureComponent;
-import com.denfop.componets.SteamProcessMultiComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamMultiMachine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamMultiMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -21,20 +22,22 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
+import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,17 +57,17 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
     private boolean sound;
     private Fluids fluid = null;
 
-    public TileSteamMultiMachine(int energyconsume, int OperationsPerTick, int type) {
-        this(1, energyconsume, OperationsPerTick, type);
+    public TileSteamMultiMachine(int energyconsume, int OperationsPerTick, int type, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        this(1, energyconsume, OperationsPerTick, type,block,pos,state);
     }
 
     public TileSteamMultiMachine(
             int aDefaultTier,
             int energyconsume,
             int OperationsPerTick,
-            int type
-    ) {
-
+            int type,
+            IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
         this.sizeWorkingSlot = this.getMachine().sizeWorkingSlot;
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 1000));
         this.pressure = this.addComponent(PressureComponent.asBasicSink(this, 1));
@@ -143,14 +146,14 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
         }
         if (getEnable()) {
             if (soundEvent == 0) {
-                this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
+                this.getWorld().playSound(null, this.pos, getSound(), SoundSource.BLOCKS, 1F, 1);
             } else if (soundEvent == 1) {
                 new PacketStopSound(getWorld(), this.pos);
                 this.getWorld().playSound(
                         null,
                         this.pos,
                         EnumSound.interruptone_steam.getSoundEvent(),
-                        SoundCategory.BLOCKS,
+                        SoundSource.BLOCKS,
                         1F,
                         1
                 );
@@ -172,10 +175,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
 
     }
 
-    @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
-        super.onPlaced(stack, placer, facing);
-    }
+
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
@@ -186,7 +186,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
                 case None:
                     return null;
                 case Generator:
-                    return new ItemStack(IUItem.basemachine2, 1, 78);
+                    return new ItemStack(IUItem.basemachine2.getItem(78), 1);
                 case Machine:
                     return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                 case AdvMachine:
@@ -196,7 +196,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
         return drop;
     }
 
-    public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
+    public List<ItemStack> getWrenchDrops(Player player, int fortune) {
 
 
         return super.getWrenchDrops(player, fortune);
@@ -204,44 +204,39 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
 
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer entityPlayer,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
 
-        if (!entityPlayer.getHeldItem(hand).isEmpty()) {
-            if (!this.getWorld().isRemote && FluidUtil.getFluidHandler(entityPlayer.getHeldItem(hand)) != null && this.fluid != null) {
-                return ModUtils.interactWithFluidHandler(entityPlayer, hand,
-                        this.fluid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
-                );
+        if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand)) && fluid != null) {
+            for (AbstractComponent component : componentList) {
+                if (component.onBlockActivated(player, hand))
+                    return true;
             }
-
-
+            return ModUtils.interactWithFluidHandler(player, hand,
+                    fluid.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
+            );
+        } else {
+            return super.onActivated(player, hand, side, vec3);
         }
-        return super.onActivated(entityPlayer, hand, side, hitX, hitY, hitZ);
     }
+
 
 
     public abstract EnumMultiMachine getMachine();
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.putBoolean("sound", this.sound);
 
         return nbttagcompound;
     }
 
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         if (event == 0) {
 
         } else {
@@ -262,7 +257,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
 
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             new PacketUpdateFieldTile(this, "sound", this.sound);
 
         }
@@ -298,14 +293,15 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
     }
 
 
-    public ContainerSteamMultiMachine getGuiContainer(EntityPlayer player) {
+    public ContainerSteamMultiMachine getGuiContainer(Player player) {
         return new ContainerSteamMultiMachine(player, this, this.sizeWorkingSlot);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiSteamMultiMachine getGui(EntityPlayer player, boolean isAdmin) {
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiSteamMultiMachine(new ContainerSteamMultiMachine(player, this, sizeWorkingSlot));
+        return new GuiSteamMultiMachine((ContainerSteamMultiMachine) menu);
 
 
     }

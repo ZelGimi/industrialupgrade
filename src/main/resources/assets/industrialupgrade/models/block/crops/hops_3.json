@@ -1,0 +1,7 @@
+{
+    "parent": "industrialupgrade:block/crop_2",
+    "textures": {
+        "texture": "industrialupgrade:block/crop/hops_3",
+        "texture1": "industrialupgrade:block/crop/hops_top_3"
+    }
+}

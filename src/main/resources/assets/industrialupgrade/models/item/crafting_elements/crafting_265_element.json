@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/crafting_265_element"
+		"layer0": "industrialupgrade:item/crafting_265_element"
 	}
 }

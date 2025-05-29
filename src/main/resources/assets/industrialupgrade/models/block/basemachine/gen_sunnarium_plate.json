@@ -4,8 +4,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/sonarplategenerator2",
-    "particle" : "industrialupgrade:models/sonarplategenerator2"
+    "0" : "industrialupgrade:block/sonarplategenerator2",
+    "particle" : "industrialupgrade:block/sonarplategenerator2"
   },
   "elements" : [
     {

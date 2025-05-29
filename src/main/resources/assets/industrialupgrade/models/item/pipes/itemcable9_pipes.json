@@ -1,7 +1,0 @@
-{
-	"parent" : "industrialupgrade:item/default",
-	"textures" : {
-	  "layer0" : "industrialupgrade:items/iron_item_pipe_output"
-	}
-  }
-  

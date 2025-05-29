@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:wiring/copper1"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:dusts/lead"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:casing/bronze"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_476_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:charged_redstone"
+      }
+    ]
+  },
+  "pattern": [
+    "AEA",
+    "CDC",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:battery/advanced_re_battery"
+  },
+  "show_notification": true
+}

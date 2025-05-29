@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/nether_matter"
+    "layer0" : "industrialupgrade:item/nether_matter"
   }
 }

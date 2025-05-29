@@ -1,6 +1,8 @@
 package com.denfop.audio;
 
-import net.minecraft.util.SoundEvent;
+
+import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.registries.RegistryObject;
 
 public enum EnumSound {
     air_collector(TypePath.Machines, "air_collector"),
@@ -90,7 +92,7 @@ public enum EnumSound {
     ;
     private final TypePath typePath;
     private final String nameSounds;
-    private SoundEvent soundEvent;
+    private RegistryObject<SoundEvent> soundEvent;
 
     EnumSound(TypePath typePath, String nameSounds) {
         this.typePath = typePath;
@@ -100,25 +102,25 @@ public enum EnumSound {
     public static SoundEvent getSondFromString(String sound) {
         for (EnumSound sound1 : EnumSound.values()) {
             if (sound1.nameSounds.toLowerCase().trim().equals(sound.trim().toLowerCase())) {
-                return sound1.soundEvent;
+                return sound1.soundEvent.get();
             }
         }
         return null;
     }
 
     public SoundEvent getSoundEvent() {
-        return soundEvent;
+        return soundEvent.get();
     }
 
-    public void setSoundEvent(final SoundEvent soundEvent) {
+    public void setSoundEvent(final RegistryObject<SoundEvent> soundEvent) {
         this.soundEvent = soundEvent;
     }
 
     public String getNameSounds() {
-        return nameSounds;
+        return nameSounds.toLowerCase();
     }
 
     public String getSoundName() {
-        return typePath.name() + "." + nameSounds;
+        return typePath.name().toLowerCase() + "." + nameSounds.toLowerCase();
     }
 }

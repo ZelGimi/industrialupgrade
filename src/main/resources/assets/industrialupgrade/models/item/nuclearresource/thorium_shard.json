@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nuclear/thorium_shard"
+		"layer0": "industrialupgrade:item/nuclear/thorium_shard"
 	}
 }

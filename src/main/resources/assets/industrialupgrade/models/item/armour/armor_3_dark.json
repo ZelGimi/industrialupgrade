@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/supersolarpanels.itemarmorquantumlegs_dark"
+    "layer0" : "industrialupgrade:item/supersolarpanels.itemarmorquantumlegs_dark"
   }
 }

@@ -1,6 +1,7 @@
 package com.denfop.invslot;
 
-import net.minecraft.inventory.IInventory;
+
+import net.minecraft.world.Container;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.Objects;
@@ -8,14 +9,14 @@ import java.util.Objects;
 public class HandlerInventory {
 
     private final IItemHandler handler;
-    private final IInventory inventory;
+    private final Container inventory;
 
-    public HandlerInventory(IItemHandler handler, IInventory inventory) {
+    public HandlerInventory(IItemHandler handler, Container inventory) {
         this.handler = handler;
         this.inventory = inventory;
     }
 
-    public IInventory getInventory() {
+    public Container getInventory() {
         return inventory;
     }
 

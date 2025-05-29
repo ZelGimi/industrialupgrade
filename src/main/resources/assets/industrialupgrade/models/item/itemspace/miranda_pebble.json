@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/miranda_pebble"	}
+		"layer0": "industrialupgrade:item/miranda_pebble"	}
 }

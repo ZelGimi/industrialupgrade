@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/copper_boiler"
+		"layer0": "industrialupgrade:item/copper_boiler"
 	}
 }

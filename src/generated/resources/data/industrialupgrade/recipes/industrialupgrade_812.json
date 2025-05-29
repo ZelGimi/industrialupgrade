@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_142_element"
+      }
+    ],
+    [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_620_element"
+      }
+    ]
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_616_element"
+  }
+}

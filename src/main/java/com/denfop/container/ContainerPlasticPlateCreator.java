@@ -1,16 +1,16 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TilePlasticPlateCreator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerPlasticPlateCreator extends ContainerFullInv<TilePlasticPlateCreator> {
 
-    public ContainerPlasticPlateCreator(EntityPlayer entityPlayer, TilePlasticPlateCreator tileEntity1) {
+    public ContainerPlasticPlateCreator(Player entityPlayer, TilePlasticPlateCreator tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 56, 53, 116, 35, 152, 8);
     }
 
     public ContainerPlasticPlateCreator(
-            EntityPlayer entityPlayer, TilePlasticPlateCreator tileEntity1, int height, int dischargeX,
+            Player entityPlayer, TilePlasticPlateCreator tileEntity1, int height, int dischargeX,
             int dischargeY, int outputX, int outputY, int upgradeX, int upgradeY
     ) {
         super(entityPlayer, tileEntity1, height);

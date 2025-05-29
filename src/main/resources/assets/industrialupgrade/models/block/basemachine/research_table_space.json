@@ -4,8 +4,8 @@
     128
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/research_table_space",
-    "particle" : "industrialupgrade:models/research_table_space"
+    "0" : "industrialupgrade:block/research_table_space",
+    "particle" : "industrialupgrade:block/research_table_space"
   },
   "elements" : [
     {

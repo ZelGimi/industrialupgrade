@@ -1,7 +1,8 @@
 package com.denfop.api.steam;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public interface ISteamBlade {
 
@@ -12,5 +13,4 @@ public interface ISteamBlade {
     boolean damageBlade(ItemStack stack);
 
     ResourceLocation getTexture();
-
 }

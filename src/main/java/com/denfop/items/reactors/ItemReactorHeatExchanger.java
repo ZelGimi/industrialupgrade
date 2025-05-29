@@ -1,61 +1,68 @@
 package com.denfop.items.reactors;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
+import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IReactorItem;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemReactorHeatExchanger extends ItemDamage implements IReactorItem {
+public class ItemReactorHeatExchanger extends ItemDamage implements IReactorItem, IItemTab {
 
     private final int level;
     private final int heat_to_damage;
     private final double heat_damage;
 
-    public ItemReactorHeatExchanger(final String name, final int maxDamage, int level, int heat_to_damage, double heat_damage) {
-        super(name, maxDamage);
+    public ItemReactorHeatExchanger(final int maxDamage, int level, int heat_to_damage, double heat_damage) {
+        super(new Item.Properties().stacksTo(1), maxDamage);
         this.level = level;
         this.heat_to_damage = heat_to_damage;
         this.heat_damage = heat_damage;
-        setMaxStackSize(1);
     }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "reactors" + "/" + name;
-        return new ModelResourceLocation(loc, null);
-    }
-
     @Override
-    public void addInformation(
-            @Nonnull final ItemStack stack,
-            final World world,
-            @Nonnull final List<String> tooltip,
-            @Nonnull final ITooltipFlag advanced
-    ) {
-        super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
-                stack)) + "/" + this.getMaxCustomDamage(stack));
-        tooltip.add(Localization.translate("reactor.vent1", 1, this.heat_to_damage));
-        tooltip.add(Localization.translate("reactor.vent2", (int) Math.ceil((1.0 - this.heat_damage) * 100)));
-        tooltip.add(Localization.translate("reactor.component_level") + this.level);
-        tooltip.add(Localization.translate("reactor.component_level1"));
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ReactorsTab;
     }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+        }
+
+        return this.nameItem;
+    }
+    @Override
+    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+        p_41423_.add(Component.literal(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(p_41421_) - this.getCustomDamage(
+                p_41421_)) + "/" + this.getMaxCustomDamage(p_41421_)));
+        p_41423_.add(Component.literal(Localization.translate("reactor.vent1", 1, this.heat_to_damage)));
+        p_41423_.add(Component.literal(Localization.translate("reactor.vent2", (int) Math.ceil((1.0 - this.heat_damage) * 100))));
+        p_41423_.add(Component.literal(Localization.translate("reactor.component_level") + this.level));
+        p_41423_.add(Component.literal(Localization.translate("reactor.component_level1")));
+
+    }
+
 
     @Override
     public boolean needClear(ItemStack stack) {
@@ -63,14 +70,6 @@ public class ItemReactorHeatExchanger extends ItemDamage implements IReactorItem
                 stack) == 0;
     }
 
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
 
     @Override
     public EnumTypeComponent getType() {

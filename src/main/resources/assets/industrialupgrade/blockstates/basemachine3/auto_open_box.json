@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=auto_open_box": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box"
+    },
+    "facing=south,type=auto_open_box": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box",
+      "y": 180
+    },
+    "facing=west,type=auto_open_box": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box",
+      "y": 270
+    },
+    "facing=east,type=auto_open_box": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box",
+      "y": 90
+    },
+    "facing=down,type=auto_open_box": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box",
+      "x": 90
+    },
+    "facing=up,type=auto_open_box": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box",
+      "x": 270
+    },
+    "facing=north,type=auto_open_box_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active"
+    },
+    "facing=south,type=auto_open_box_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "y": 180
+    },
+    "facing=west,type=auto_open_box_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "y": 270
+    },
+    "facing=east,type=auto_open_box_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "y": 90
+    },
+    "facing=down,type=auto_open_box_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "x": 90
+    },
+    "facing=up,type=auto_open_box_invalid": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "x": 270
+    },
+    "facing=north,type=auto_open_box_active": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active"
+    },
+    "facing=south,type=auto_open_box_active": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "y": 180
+    },
+    "facing=west,type=auto_open_box_active": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "y": 270
+    },
+    "facing=east,type=auto_open_box_active": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "y": 90
+    },
+    "facing=down,type=auto_open_box_active": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "x": 90
+    },
+    "facing=up,type=auto_open_box_active": {
+      "model": "industrialupgrade:block/basemachine/auto_open_box_active",
+      "x": 270
+    }
+  }
+}

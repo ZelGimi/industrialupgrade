@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "industrialupgrade:blocks/machine"
+		"all": "industrialupgrade:block/machine"
 	}
 }

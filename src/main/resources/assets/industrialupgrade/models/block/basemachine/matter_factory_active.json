@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/matter_factory_active_main",
-    "down" : "industrialupgrade:blocks/matter_factory_active_all",
-    "up" : "industrialupgrade:blocks/matter_factory_active_up",
-    "north" : "industrialupgrade:blocks/matter_factory_active_main",
-    "east" : "industrialupgrade:blocks/matter_factory_active_all",
-    "south" : "industrialupgrade:blocks/matter_factory_active_all",
-    "west" : "industrialupgrade:blocks/matter_factory_active_all"
+    "particle" : "industrialupgrade:block/matter_factory_active_main",
+    "down" : "industrialupgrade:block/matter_factory_active_all",
+    "up" : "industrialupgrade:block/matter_factory_active_up",
+    "north" : "industrialupgrade:block/matter_factory_active_main",
+    "east" : "industrialupgrade:block/matter_factory_active_all",
+    "south" : "industrialupgrade:block/matter_factory_active_all",
+    "west" : "industrialupgrade:block/matter_factory_active_all"
   }
 }

@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:graphite_reactor/graphite_tank"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_419_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_415_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_45_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_425_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    "EAE",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:graphite_reactor/graphite_adv_tank"
+  },
+  "show_notification": true
+}

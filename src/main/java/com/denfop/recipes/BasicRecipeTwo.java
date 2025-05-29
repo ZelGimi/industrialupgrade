@@ -9,1916 +9,1923 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
 import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import com.denfop.utils.ModUtils;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 
 public class BasicRecipeTwo {
 
-    public static ItemStack DEFAULT_SENSOR = new ItemStack(IUItem.crafting_elements, 1, 21);
+    public static Item DEFAULT_SENSOR;
 
-    public static ItemStack ADV_SENSOR = new ItemStack(IUItem.crafting_elements, 1, 25);
+    public static Item ADV_SENSOR;
 
-    public static ItemStack IMP_SENSOR = new ItemStack(IUItem.crafting_elements, 1, 23);
+    public static Item IMP_SENSOR;
 
-    public static ItemStack PER_SENSOR = new ItemStack(IUItem.crafting_elements, 1, 24);
-    public static ItemStack PHOTON_SENSOR = new ItemStack(IUItem.crafting_elements, 1, 620);
+    public static Item PER_SENSOR ;
+    public static Item PHOTON_SENSOR;
 
     public static void recipe() {
+        DEFAULT_SENSOR = IUItem.crafting_elements.getItemFromMeta(21);
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 6, 1), "BBB", "CAC", "BBB",
+        ADV_SENSOR = IUItem.crafting_elements.getItemFromMeta(25);
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 122),
+        IMP_SENSOR = IUItem.crafting_elements.getItemFromMeta(23);
 
-                ('B'), "plateStainlessSteel",
+        PER_SENSOR = IUItem.crafting_elements.getItemFromMeta(24);
 
-                ('C'), new ItemStack(Items.DYE, 1, 4)
+        PHOTON_SENSOR = IUItem.crafting_elements.getItemFromMeta(620);
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 1), "BBB", "CAC", "BBB",
+
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
+
+                ('B'), "forge:plates/StainlessSteel",
+
+                ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 6, 4), "BBB", " A ", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 4), "BBB", " A ", "BBB",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 122),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "plateStainlessSteel",
+                ('B'), "forge:plates/StainlessSteel",
 
-                ('C'), new ItemStack(Items.DYE, 1, 4)
+                ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 6, 2), "BBB", "CAC", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 2), "BBB", "CAC", "BBB",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 122),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "plateStellite",
+                ('B'), "forge:plates/Stellite",
 
                 ('C'), Items.REDSTONE
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 6, 3), "BBB", "CAC", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 3), "BBB", "CAC", "BBB",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 122),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "plateStellite",
+                ('B'), "forge:plates/Stellite",
 
-                ('C'), new ItemStack(Items.DYE, 1, 4)
+                ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 6, 5), "BBB", " A ", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 5), "BBB", " A ", "BBB",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 122),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
-                ('B'), "plateStellite",
+                ('B'), "forge:plates/Stellite",
 
-                ('C'), new ItemStack(Items.DYE, 1, 4)
+                ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.simplemachine, 1, 0), " B ", "DAE", "C H",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.simplemachine, 1, 0), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 69), 'H', getBlockStack(BlockBaseMachine3.steam_macerator)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 69), 'H', getBlockStack(BlockBaseMachine3.steam_macerator)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.simplemachine, 1, 1), " B ", "DAE", "C H",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.simplemachine, 1, 1), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 63), 'H', getBlockStack(BlockBaseMachine3.steam_compressor)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 63), 'H', getBlockStack(BlockBaseMachine3.steam_compressor)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.simplemachine, 1, 2), "B H", "DAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.simplemachine, 1, 2), "B H", "DAE", " C ",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'),     ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         219
-                ), ('H'), new ItemStack(IUItem.crafting_elements, 1, 35)
+                ), ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 35)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.simplemachine, 1, 3), " B ", "DAE", "C H",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.simplemachine, 1, 3), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 159), 'H', getBlockStack(BlockBaseMachine3.steam_extractor)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 159), 'H', getBlockStack(BlockBaseMachine3.steam_extractor)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.simplemachine, 1, 5), " B ", "DAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.simplemachine, 1, 5), " B ", "DAE", " C ",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 33)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 33)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base2, 1, 0), " B ", "DAE", "C H",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base2, 1, 0), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 165), 'H', getBlockStack(BlockBaseMachine3.rolling_machine)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 165), 'H', getBlockStack(BlockBaseMachine3.rolling_machine)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base2, 1, 4), " B ", "DAE", "C H",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base2, 1, 4), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 163), 'H', getBlockStack(BlockBaseMachine3.steam_extruder)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 163), 'H', getBlockStack(BlockBaseMachine3.steam_extruder)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base2, 1, 8), " B ", "DAE", "C H",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base2, 1, 8), " B ", "DAE", "C H",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 132), 'H', getBlockStack(BlockBaseMachine3.steam_cutting)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 132), 'H', getBlockStack(BlockBaseMachine3.steam_cutting)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base3, 1, 4), "B F", "DAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base3, 1, 4), "B F", "DAE", " C ",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'),    ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         33
-                ), ('F'), new ItemStack(IUItem.crafting_elements, 1, 128)
+                ), ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 128)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base3, 1, 0), "B F", "DAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base3, 1, 0), "B F", "DAE", " C ",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'),     ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         64
-                ), ('F'), new ItemStack(IUItem.crafting_elements, 1, 61)
+                ), ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 61)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base3, 1, 16), " B ", "DAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base3, 1, 16), " B ", "DAE", " C ",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 218)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 218)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base3, 1, 12), " B ", "DAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base3, 1, 12), " B ", "DAE", " C ",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 70), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 39)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 70), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 39)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base3, 1, 8), "BGF", "DAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base3, 1, 8), "BGF", "DAE", " C ",
 
                 ('A'), IUItem.machine, ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 72), ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('B'), new ItemStack(
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), ('E'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         34
-                ), ('F'), new ItemStack(IUItem.crafting_elements, 1, 27),
-                ('G'), new ItemStack(IUItem.crafting_elements, 1, 154)
+                ), ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
+                ('G'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154)
         );
 
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base, 1, 0), "A A",
+        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base, 1, 0), "A A",
                 "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 138),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 20),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 47),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 2),
-                ('B'), new ItemStack(IUItem.simplemachine, 1, 0)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 2),
+                ('B'), ItemStackHelper.fromData(IUItem.simplemachine, 1, 0)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 1),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 1),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 78),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 78),
                 ('B'),
-                new ItemStack(IUItem.machines_base, 1, 0)
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 0)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 2),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 2),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 103),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 103),
                 ('B'),
-                new ItemStack(IUItem.machines_base, 1, 1)
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 1)
         ), 2);
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 0), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 0), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 602),
-                ('B'), new ItemStack(IUItem.machines_base, 1, 2)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 602),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base, 1, 2)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 1), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 1), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 608),
-                ('B'), new ItemStack(IUItem.machines_base, 1, 5)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 608),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base, 1, 5)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 2), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 2), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 615),
-                ('B'), new ItemStack(IUItem.machines_base, 1, 11)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 615),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base, 1, 11)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 3), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 3), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 617),
-                ('B'), new ItemStack(IUItem.machines_base, 1, 8)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 617),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base, 1, 8)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 4), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 4), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 609),
-                ('B'), new ItemStack(IUItem.machines_base2, 1, 3)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 609),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base2, 1, 3)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 5), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 5), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 616),
-                ('B'), new ItemStack(IUItem.machines_base2, 1, 7)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 616),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base2, 1, 7)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 6), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 6), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 612),
-                ('B'), new ItemStack(IUItem.machines_base2, 1, 11)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 612),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base2, 1, 11)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 11), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 11), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 606),
-                ('B'), new ItemStack(IUItem.machines_base3, 1, 19)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 606),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base3, 1, 19)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 9), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 9), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 613),
-                ('B'), new ItemStack(IUItem.machines_base3, 1, 15)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 613),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base3, 1, 15)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 8), "AHA", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 8), "AHA", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 607),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 607),
                 ('H'),
-                new ItemStack(IUItem.crafting_elements, 1, 605),
-                ('B'), new ItemStack(IUItem.machines_base3, 1, 7)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 605),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base3, 1, 7)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 7), "AHA", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 7), "AHA", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 611),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 611),
                 ('H'),
-                new ItemStack(IUItem.crafting_elements, 1, 604),
-                ('B'), new ItemStack(IUItem.machines_base3, 1, 3)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 604),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base3, 1, 3)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 10), "AHA", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 10), "AHA", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 622),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 52),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 610),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 610),
                 ('H'),
-                new ItemStack(IUItem.crafting_elements, 1, 603),
-                ('B'), new ItemStack(IUItem.machines_base3, 1, 11)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 603),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base3, 1, 11)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 11), " C ", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11), " C ", "BAB", "   ",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 21),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "plateIron",
+                ('B'), "forge:plates/Iron",
 
-                ('C'), new ItemStack(IUItem.advBattery, 1, 32767)
+                ('C'), ItemStackHelper.fromData(IUItem.advBattery, 1)
         );
         Recipes.recipe.addShapelessRecipe(
                 getBlockStack(BlockBaseMachine3.generator_iu),
-                new ItemStack(IUItem.crafting_elements, 1, 11), IUItem.machine
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11), IUItem.machine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 55), "DCD", "BAB", "CCC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 55), "DCD", "BAB", "CCC",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 21),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "plateIron",
+                ('B'), "forge:plates/Iron",
 
-                ('C'), new ItemStack(IUItem.sunnarium, 1, 4),
+                ('C'), ItemStackHelper.fromData(IUItem.sunnarium, 1, 4),
 
                 ('D'),
-                "plateGermanium"
+                "forge:plates/Germanium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.chemicalPlant, 1, 2), "DBD", "CAC", "DBD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 2), "DBD", "CAC", "DBD",
 
-                ('A'), new ItemStack(IUItem.blockResource, 1, 8),
+                ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
 
-                ('B'), "plateCobaltChrome",
+                ('B'), "forge:plates/CobaltChrome",
 
-                ('C'), "plateNiobiumTitanium",
+                ('C'), "forge:plates/NiobiumTitanium",
 
                 ('D'),
-                new ItemStack(IUItem.synthetic_plate, 1)
+                ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.geothermalpump, 1, 2), " B ", "CAC", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 2), " B ", "CAC", " B ",
 
-                ('A'), new ItemStack(IUItem.blockResource, 1, 8),
+                ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
 
-                ('B'), "plateWoods",
+                ('B'), "forge:plates/Woods",
 
-                ('C'), "platePermalloy",
+                ('C'), "forge:plates/Permalloy",
 
                 ('D'),
-                new ItemStack(IUItem.synthetic_plate, 1)
+                ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.chemicalPlant, 1, 1), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 1), " B ", "BAB", " B ",
 
-                ('A'), new ItemStack(IUItem.chemicalPlant, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 2),
 
-                ('B'), new ItemStack(IUItem.heat_exchange, 1),
+                ('B'), ItemStackHelper.fromData(IUItem.heat_exchange, 1),
 
-                ('C'), "plateNiobiumTitanium",
+                ('C'), "forge:plates/NiobiumTitanium",
 
                 ('D'),
-                new ItemStack(IUItem.synthetic_plate, 1)
+                ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.geothermalpump, 1, 1), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 1), " B ", "BAB", " B ",
 
-                ('A'), new ItemStack(IUItem.geothermalpump, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.geothermalpump, 1, 2),
 
-                ('B'), new ItemStack(IUItem.heat_exchange, 1),
+                ('B'), ItemStackHelper.fromData(IUItem.heat_exchange, 1),
 
-                ('C'), "plateNiobiumTitanium",
+                ('C'), "forge:plates/NiobiumTitanium",
 
                 ('D'),
-                new ItemStack(IUItem.synthetic_plate, 1)
+                ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.chemicalPlant, 1, 6), "BBB", " A ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 6), "BBB", " A ", "   ",
 
-                ('A'), new ItemStack(IUItem.chemicalPlant, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 2),
 
-                ('B'), new ItemStack(IUItem.basemachine2, 1, 186),
+                ('B'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 186),
 
-                ('C'), "plateNiobiumTitanium",
+                ('C'), "forge:plates/NiobiumTitanium",
 
                 ('D'),
-                new ItemStack(IUItem.synthetic_plate, 1)
+                ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.geothermalpump, 1, 6), "BBB", " A ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 6), "BBB", " A ", "   ",
 
-                ('A'), new ItemStack(IUItem.geothermalpump, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.geothermalpump, 1, 2),
 
-                ('B'), new ItemStack(IUItem.basemachine2, 1, 186),
+                ('B'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 186),
 
-                ('C'), "plateNiobiumTitanium",
+                ('C'), "forge:plates/NiobiumTitanium",
 
                 ('D'),
-                new ItemStack(IUItem.synthetic_plate, 1)
+                ItemStackHelper.fromData(IUItem.synthetic_plate, 1)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.chemicalPlant, 1, 0), "CDC", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 0), "CDC", "BAB", "   ",
 
-                ('A'), new ItemStack(IUItem.chemicalPlant, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 2),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 373),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373),
 
                 ('C'), IUItem.photoniy_ingot,
 
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.geothermalpump, 1, 0), "CDC", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 0), "CDC", "BAB", "   ",
 
-                ('A'), new ItemStack(IUItem.geothermalpump, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.geothermalpump, 1, 2),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 373),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373),
 
                 ('C'), IUItem.photoniy_ingot,
 
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.chemicalPlant, 1, 5), "CDC", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 5), "CDC", "BAB", "   ",
 
-                ('A'), new ItemStack(IUItem.chemicalPlant, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 2),
 
-                ('B'), new ItemStack(IUItem.alloygear, 1, 20),
+                ('B'), ItemStackHelper.fromData(IUItem.alloygear, 1, 20),
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 92),
-
-                ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.chemicalPlant, 1, 3), " C ", "BAB", "   ",
-
-                ('A'), new ItemStack(IUItem.chemicalPlant, 1, 2),
-
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 373),
-
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 372),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 92),
 
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.geothermalpump, 1, 3), " B ", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 3), " C ", "BAB", "   ",
 
-                ('A'), new ItemStack(IUItem.geothermalpump, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 2),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 509),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373),
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 372),
-
-                ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.geothermalpump, 1, 4), " C ", "BAB", "   ",
-
-                ('A'), new ItemStack(IUItem.geothermalpump, 1, 2),
-
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 373),
-
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 372),
-
-                ('D'),
-                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.chemicalPlant, 1, 4), " C ", "BAB", " C ",
-
-                ('A'), new ItemStack(IUItem.chemicalPlant, 1, 2),
-
-                ('B'), new ItemStack(IUItem.item_pipes, 1, 1),
-
-                ('C'), new ItemStack(IUItem.item_pipes, 1, 0),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 372),
 
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.geothermalpump, 1, 5), " C ", "BAB", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 3), " B ", "BAB", "   ",
 
-                ('A'), new ItemStack(IUItem.geothermalpump, 1, 2),
+                ('A'), ItemStackHelper.fromData(IUItem.geothermalpump, 1, 2),
 
-                ('B'), new ItemStack(IUItem.item_pipes, 1, 1),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 509),
 
-                ('C'), new ItemStack(IUItem.item_pipes, 1, 0),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 372),
 
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 59), "BCB", "DAD", "ECE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 4), " C ", "BAB", "   ",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 21),
+                ('A'), ItemStackHelper.fromData(IUItem.geothermalpump, 1, 2),
 
-                ('B'), "doubleplateMuntsa",
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373),
 
-                ('C'), "doubleplateAlcled",
-
-                ('D'),
-                "plateZinc",
-
-                ('E'), "plateCaravky"
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 6), " C ", "DAD", " C ",
-
-                ('A'), new ItemStack(IUItem.blockResource, 1, 8),
-
-                ('B'), "doubleplateMuntsa",
-
-                ('C'), "plateHafniumBoride",
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 372),
 
                 ('D'),
-                "plateTantalumTungstenHafnium",
-
-                ('E'), "plateCaravky"
+                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 1), " C ", "DAD", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 4), " C ", "BAB", " C ",
 
-                ('A'), new ItemStack(IUItem.cyclotron, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.chemicalPlant, 1, 2),
 
-                ('B'), "doubleplateMuntsa",
+                ('B'), ItemStackHelper.fromData(IUItem.item_pipes, 1, 1),
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 352),
+                ('C'), ItemStackHelper.fromData(IUItem.item_pipes, 1, 0),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 402),
-
-                ('E'), "plateCaravky"
+                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 3), " C ", "DAD", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.geothermalpump, 1, 5), " C ", "BAB", " C ",
 
-                ('A'), new ItemStack(IUItem.cyclotron, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.geothermalpump, 1, 2),
 
-                ('B'), "doubleplateMuntsa",
+                ('B'), ItemStackHelper.fromData(IUItem.item_pipes, 1, 1),
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 43),
+                ('C'), ItemStackHelper.fromData(IUItem.item_pipes, 1, 0),
+
+                ('D'),
+                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 59), "BCB", "DAD", "ECE",
+
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
+
+                ('B'), "forge:doubleplate/Muntsa",
+
+                ('C'), "forge:doubleplate/Alcled",
+
+                ('D'),
+                "forge:plates/Zinc",
+
+                ('E'), "forge:plates/Caravky"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 6), " C ", "DAD", " C ",
+
+                ('A'), ItemStackHelper.fromData(IUItem.blockResource, 1, 8),
+
+                ('B'), "forge:doubleplate/Muntsa",
+
+                ('C'), "forge:plates/HafniumBoride",
+
+                ('D'),
+                "forge:plates/TantalumTungstenHafnium",
+
+                ('E'), "forge:plates/Caravky"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 1), " C ", "DAD", "   ",
+
+                ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
+
+                ('B'), "forge:doubleplate/Muntsa",
+
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 352),
+
+                ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
+
+                ('E'), "forge:plates/Caravky"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 3), " C ", "DAD", "   ",
+
+                ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
+
+                ('B'), "forge:doubleplate/Muntsa",
+
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 43),
 
                 ('D'),
                 IUItem.cooling_mixture,
 
-                ('E'), "plateCaravky"
+                ('E'), "forge:plates/Caravky"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 2), " C ", "DAD", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 2), " C ", "DAD", "   ",
 
-                ('A'), new ItemStack(IUItem.cyclotron, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "doubleplateMuntsa",
+                ('B'), "forge:doubleplate/Muntsa",
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 43),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 43),
 
                 ('D'),
                 IUItem.cryogenic_cooling_mixture,
 
-                ('E'), "plateCaravky"
+                ('E'), "forge:plates/Caravky"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 7), " C ", "DAD", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 7), " C ", "DAD", "   ",
 
-                ('A'), new ItemStack(IUItem.cyclotron, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "doubleplateMuntsa",
+                ('B'), "forge:doubleplate/Muntsa",
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 155),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 155),
 
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
-                ('E'), "plateCaravky"
+                ('E'), "forge:plates/Caravky"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 4), " C ", " A ", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 4), " C ", " A ", " D ",
 
-                ('A'), new ItemStack(IUItem.cyclotron, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "doubleplateMuntsa",
+                ('B'), "forge:doubleplate/Muntsa",
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 470),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 470),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
 
-                ('E'), "plateCaravky"
+                ('E'), "forge:plates/Caravky"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 8), " C ", " A ", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 8), " C ", " A ", " D ",
 
-                ('A'), new ItemStack(IUItem.cyclotron, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "doubleplateMuntsa",
+                ('B'), "forge:doubleplate/Muntsa",
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 110),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 110),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
 
-                ('E'), "plateCaravky"
+                ('E'), "forge:plates/Caravky"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 0), "BCB", "DAD", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 0), "BCB", "DAD", "   ",
 
-                ('A'), new ItemStack(IUItem.cyclotron, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 398),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 398),
 
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 402),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
 
-                ('E'), "plateCaravky"
+                ('E'), "forge:plates/Caravky"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.cyclotron, 1, 5), " C ", " A ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.cyclotron, 1, 5), " C ", " A ", "   ",
 
-                ('A'), new ItemStack(IUItem.cyclotron, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.cyclotron, 1, 6),
 
-                ('B'), "doubleplateMuntsa",
+                ('B'), "forge:doubleplate/Muntsa",
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 68),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 68),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 402),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402),
 
-                ('E'), "plateCaravky"
+                ('E'), "forge:plates/Caravky"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 65), "BBB", " A ", "CCC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 65), "BBB", " A ", "CCC",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 21),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "plateGermanium",
+                ('B'), "forge:plates/Germanium",
 
-                ('C'), "plateChromium"
+                ('C'), "forge:plates/Chromium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 22), "BCB", "BCB", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 22), "BCB", "BCB", " A ",
                 ('A'), DEFAULT_SENSOR, ('B'), Blocks.GLASS,
                 ('C'), IUItem.FluidCell
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 5), "BCB", "BCB", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 5), "BCB", "BCB", " A ",
                 ('A'), ADV_SENSOR, ('B'), Blocks.GLASS,
                 ('C'), IUItem.FluidCell
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 82), "BCB", "BCB", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 82), "BCB", "BCB", " A ",
                 ('A'), IMP_SENSOR, ('B'), Blocks.GLASS,
                 ('C'), IUItem.FluidCell
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 106), "BCB", "BCB", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 106), "BCB", "BCB", " A ",
                 ('A'), PER_SENSOR, ('B'), Blocks.GLASS,
                 ('C'), IUItem.FluidCell
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 630), "BCB", "BCB", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 630), "BCB", "BCB", " A ",
                 ('A'), PHOTON_SENSOR, ('B'), Blocks.GLASS,
                 ('C'), IUItem.FluidCell
         );
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 6),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 6),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 225),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 225),
                 ('B'),
-                new ItemStack(IUItem.simplemachine, 1, 2)
+                ItemStackHelper.fromData(IUItem.simplemachine, 1, 2)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 7),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 7),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 221),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 221),
                 ('B'),
-                new ItemStack(IUItem.machines_base, 1, 6)
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 6)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 8),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 8),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 223),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 223),
                 ('B'),
-                new ItemStack(IUItem.machines_base, 1, 7)
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 7)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 9),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 9),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 160),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 160),
                 ('B'),
-                new ItemStack(IUItem.simplemachine, 1, 3)
+                ItemStackHelper.fromData(IUItem.simplemachine, 1, 3)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 10),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 10),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 161),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 161),
                 ('B'),
-                new ItemStack(IUItem.machines_base, 1, 9)
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 9)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 11),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 11),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 162),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 162),
                 ('B'),
-                new ItemStack(IUItem.machines_base, 1, 10)
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 10)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 3),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 3),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 1),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 1),
                 ('B'),
-                new ItemStack(IUItem.simplemachine, 1, 1)
+                ItemStackHelper.fromData(IUItem.simplemachine, 1, 1)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 4),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 4),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 77),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 77),
                 ('B'),
-                new ItemStack(IUItem.machines_base, 1, 3)
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 3)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base, 1, 5),
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 5),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 102),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 102),
                 ('B'),
-                new ItemStack(IUItem.machines_base, 1, 4)
+                ItemStackHelper.fromData(IUItem.machines_base, 1, 4)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 0),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 0),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 9),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 9),
                 ('B'),
-                new ItemStack(IUItem.simplemachine, 1, 5)
+                ItemStackHelper.fromData(IUItem.simplemachine, 1, 5)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 1),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 1),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 86),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 86),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 0)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 0)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 2),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 2),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 110),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 110),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 1)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 1)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 1),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 1),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 166),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 166),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 0)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 0)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 2),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 2),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 167),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 167),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 1)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 1)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 3),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 3),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 168),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 168),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 2)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 2)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 5),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 5),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 125),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 125),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 4)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 4)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 6),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 6),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 126),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 126),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 5)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 5)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 7),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 7),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 127),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 127),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 6)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 6)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 9),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 9),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 133),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 133),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 8)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 8)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 10),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 10),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 134),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 134),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 9)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 9)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base2, 1, 11),
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 11),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 136),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 136),
                 ('B'),
-                new ItemStack(IUItem.machines_base2, 1, 10)
+                ItemStackHelper.fromData(IUItem.machines_base2, 1, 10)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 17),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 17),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 224),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 224),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 16)
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 16)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 18),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 18),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 220),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 220),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 17)
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 17)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 19),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 19),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 222),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 222),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 18)
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 18)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 1),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 1),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 19),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 19),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 0),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 0),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 18)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 18)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 2),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 2),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 95),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 95),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 1),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 1),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 94)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 94)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 3),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 3),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 119),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 119),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 2),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 2),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 118)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 118)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 5),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 5),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 9),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 9),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 4),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 4),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 129)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 129)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 6),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 6),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 86),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 86),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 5),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 5),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 130)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 130)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 7),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 7),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 110),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 110),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 6),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 6),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 131)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 131)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 13),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 13),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 15),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 15),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 12)
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 12)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 14),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 14),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 91),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 91),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 13)
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 13)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 15),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 15),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 115),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 115),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 14)
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 14)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 9),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 9),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 12),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 12),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 8),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 8),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 6)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 6)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 10),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 10),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 87),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 87),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 9),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 9),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 83)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 83)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base3, 1, 11),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 11),
                 "AGA",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 111),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 111),
                 ('B'),
-                new ItemStack(IUItem.machines_base3, 1, 10),
+                ItemStackHelper.fromData(IUItem.machines_base3, 1, 10),
                 ('G'),
-                new ItemStack(IUItem.crafting_elements, 1, 107)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 107)
         ), 2);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 3),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 3),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 135),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 135),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 2)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 2)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 4),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 4),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 146),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 146),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 3)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 3)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 5),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 5),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 157),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 157),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 4)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 4)
         ), 2);
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines_base1, 1, 6), "A A", "DBE", "ACA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines_base1, 1, 6), "A A", "DBE", "ACA",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 137),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 137),
                 ('C'), IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 44),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 124),
-                ('B'), new ItemStack(IUItem.machines_base, 1, 2)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 124),
+                ('B'), ItemStackHelper.fromData(IUItem.machines_base, 1, 2)
         );
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 7),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 7),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 135),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 135),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 6)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 6)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 8),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 8),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 146),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 146),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 7)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 7)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines_base1, 1, 9),
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 9),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 120),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 157),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 157),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 8)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 8)
         ), 2);
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.pho_machine, 1, 20),
+                ItemStackHelper.fromData(IUItem.pho_machine, 1, 20),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 623),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 622),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 157),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 157),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 5)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 5)
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.pho_machine, 1, 13),
+                ItemStackHelper.fromData(IUItem.pho_machine, 1, 13),
                 "A A",
                 "DBE",
                 "ACA",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 623),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 622),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 52),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52),
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 632),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 632),
                 ('B'),
-                new ItemStack(IUItem.machines_base1, 1, 9)
+                ItemStackHelper.fromData(IUItem.machines_base1, 1, 9)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 45), "   ", "CAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 45), "   ", "CAB", "   ",
                 ('A'), IUItem.machine,
-                ('C'), IUItem.elemotor, ('B'), new ItemStack(
+                ('C'), IUItem.elemotor, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         101
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 46), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 45),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 46), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 45),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         20
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 4), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 4), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 47), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 46),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 47), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 46),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         96
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 81), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 81), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 48), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 47),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 48), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 47),
+                ('C'),     ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 105), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 105), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 49), "   ", "CAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 49), "   ", "CAB", "   ",
                 ('A'), IUItem.advancedMachine,
-                ('C'), IUItem.elemotor, ('B'), new ItemStack(
+                ('C'), IUItem.elemotor, ('B'),     ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         170
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 50), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 49),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 50), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 49),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         20
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 171), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 171), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 51), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 50),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 51), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 50),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         96
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 172), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 172), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 52), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 51),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 52), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 51),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 173), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 173), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 14), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 52),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 14), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 52),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         622
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 635), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 623)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 635), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 53), " E ", "CAB", " F ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 53), " E ", "CAB", " F ",
                 ('A'), IUItem.advancedMachine,
-                ('C'), IUItem.elemotor, ('B'), new ItemStack(
+                ('C'), IUItem.elemotor, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         58
                 ),
                 ('E'),
-                new ItemStack(
+                ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         27
-                ), ('F'), new ItemStack(IUItem.crafting_elements, 1, 154)
+                ), ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 54), "DED", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 53),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 54), "DED", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 53),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         20
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 17), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 138),
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 17), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 6)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 6)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 55), "DED", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 54),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 55), "DED", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 54),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         96
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 93), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 139),
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 93), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 83)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 83)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 56), "DED", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 55),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 56), "DED", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 55),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 117), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 140),
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 117), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 107)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 107)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 15), "DED", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 56),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 15), "DED", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 56),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         622
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 634), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 623),
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 634), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 603)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 603)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 57), " B ", " A ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 57), " B ", " A ", "   ",
                 ('A'), IUItem.advancedMachine,
-                ('C'), IUItem.elemotor, ('B'), new ItemStack(
+                ('C'), IUItem.elemotor, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         79
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 58), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 57),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 58), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 57),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         20
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 176), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 176), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 59), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 58),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 59), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 58),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         96
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 174), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 174), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 60), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 59),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 60), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 59),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 175), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 175), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 19), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 60),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 19), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 60),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 627), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 623)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 627), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 61), " B ", " A ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 61), " B ", " A ", "   ",
                 ('A'), IUItem.advancedMachine,
-                ('C'), IUItem.elemotor, ('B'), new ItemStack(
+                ('C'), IUItem.elemotor, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         68
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 62), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 61),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 62), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 61),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         20
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 179), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 179), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 63), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 62),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 63), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 62),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         96
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 177), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 177), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 64), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 63),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 64), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 63),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 178), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 178), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 18), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 64),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 18), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 64),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 626), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 623)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 626), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 65), " B ", " A ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 65), " B ", " A ", "   ",
                 ('A'), IUItem.machine,
-                ('C'), IUItem.elemotor, ('B'), new ItemStack(
+                ('C'), IUItem.elemotor, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         196
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 66), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 65),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 66), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 65),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         20
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 199), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 199), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 67), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 66),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 67), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 66),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         96
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 197), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 197), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 68), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 67),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 68), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 67),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 198), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 198), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 17), "DBD", " A ", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 68),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 17), "DBD", " A ", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 68),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 636), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 623)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 636), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 28), "   ", "CAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 28), "   ", "CAB", "   ",
                 ('A'), IUItem.machine,
-                ('C'), IUItem.elemotor, ('B'), new ItemStack(
+                ('C'), IUItem.elemotor, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         71
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 29), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 28),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 29), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 28),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         20
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 3), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 3), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 30), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 29),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 30), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 29),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         96
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 80), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 80), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 31), "D D", "CAB", "D D",
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 30),
-                ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 31), "D D", "CAB", "D D",
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 30),
+                ('C'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         120
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 104), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 104), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines, 1, 4), " B ", "CAD", " E ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 4), " B ", "CAD", " E ",
 
-                ('A'), IUItem.machine, ('B'), new ItemStack(
+                ('A'), IUItem.machine, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         74
                 ),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 70), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 70), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'), IUItem.elemotor
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 3), "F F", "BAD", "FEF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 3), "F F", "BAD", "FEF",
 
-                ('A'), new ItemStack(
+                ('A'), ItemStackHelper.fromData(
                         IUItem.machines,
                         1,
                         4
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 235),
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 138), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 49),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 20)
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 235),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 49),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20)
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 154), "F F", "BAD", "FEF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 154), "F F", "BAD", "FEF",
 
-                ('A'), new ItemStack(IUItem.basemachine, 1, 3), ('B'), new ItemStack(IUItem.crafting_elements, 1, 618),
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 139), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 96)
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine, 1, 3), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 618),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 155), "FGF", "BAD", "FEF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 155), "FGF", "BAD", "FEF",
 
-                ('A'), new ItemStack(IUItem.basemachine2, 1, 154), ('B'), new ItemStack(IUItem.crafting_elements, 1, 619),
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 140), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 51),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 120), 'G', new ItemStack(IUItem.crafting_elements, 1, 44)
+                ('A'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 154), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 619),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120), 'G', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44)
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines, 1, 6), "B F", "CAD", " E ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 6), "B F", "CAD", " E ",
 
-                ('A'), IUItem.machine, ('B'), new ItemStack(
+                ('A'), IUItem.machine, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         73
                 ),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 70), ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('E'), IUItem.elemotor, ('F'), new ItemStack(
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 70), ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('E'), IUItem.elemotor, ('F'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         51
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 5), "DBD", " A ", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 5), "DBD", " A ", " C ",
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 70),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 70),
 
                 ('C'), IUItem.imp_motors_with_improved_bearings_,
 
                 ('A'), IUItem.advancedMachine,
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 11)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 6), "D D", "BAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 6), "D D", "BAE", " C ",
 
                 ('A'), IUItem.machine,
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 70),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 70),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 11),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11),
 
                 ('C'),
                 IUItem.elemotor,
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 27)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines, 1, 7), " H ", "BAE", "DCF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 7), " H ", "BAE", "DCF",
 
                 ('A'), IUItem.machine,
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 47),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
 
                 ('C'), IUItem.elemotor,
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 227),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 230),
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 231),
-                ('H'), new ItemStack(IUItem.crafting_elements, 1, 11)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 227),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 230),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 231),
+                ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 10), "BAB", " C ", "EDE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 10), "BAB", " C ", "EDE",
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 96),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
 
-                ('C'), new ItemStack(IUItem.basemachine2, 1, 152),
+                ('C'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 152),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 11),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 72), 'E', "platePermalloy"
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 72), 'E', "forge:plates/Permalloy"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 12), " D ", "BAC", "E H",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 12), " D ", "BAC", "E H",
 
-                ('A'), IUItem.machine, ('B'), new ItemStack(
+                ('A'), IUItem.machine, ('B'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         70
                 ),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 44), ('E'),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44), ('E'),
                 IUItem.elemotor,
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 205), 'H', getBlockStack(BlockBaseMachine3.steam_handler_ore)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 205), 'H', getBlockStack(BlockBaseMachine3.steam_handler_ore)
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 40), "BDB", " A ", "BEB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 40), "BDB", " A ", "BEB",
 
-                ('A'), new ItemStack(
+                ('A'), ItemStackHelper.fromData(
                         IUItem.basemachine,
                         1,
                         12
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 138),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 20),
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 204)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 204)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 41), "BDB", " A ", "BEB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 41), "BDB", " A ", "BEB",
 
-                ('A'), new ItemStack(
+                ('A'), ItemStackHelper.fromData(
                         IUItem.basemachine2,
                         1,
                         40
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 139),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 96),
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 202)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 202)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 42), "BDB", " A ", "BEB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 42), "BDB", " A ", "BEB",
 
-                ('A'), new ItemStack(
+                ('A'), ItemStackHelper.fromData(
                         IUItem.basemachine2,
                         1,
                         41
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 140),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 120),
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 120),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 203)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 203)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 16), "BDB", " A ", "BEB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 16), "BDB", " A ", "BEB",
 
-                ('A'), new ItemStack(
+                ('A'), ItemStackHelper.fromData(
                         IUItem.basemachine2,
                         1,
                         42
-                ), ('B'), new ItemStack(IUItem.crafting_elements, 1, 623),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 622),
+                ), ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 622),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 633)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 633)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 11), " E ", "DAB", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 11), " E ", "DAB", " C ",
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 47),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
 
                 ('C'), IUItem.elemotor,
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 100),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 100),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 99),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 99),
 
                 ('A'), IUItem.advancedMachine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 10), "   ", "AEB", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 10), "   ", "AEB", " C ",
 
                 ('E'), IUItem.advancedMachine,
 
@@ -1927,142 +1934,142 @@ public class BasicRecipeTwo {
                 ('C'), IUItem.elemotor,
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 99)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 99)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.sunnariummaker), " E ", "BAC", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.sunnariummaker), " E ", "BAC", " D ",
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 128),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 128),
 
                 ('D'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 79),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 79),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
 
                 ('A'), IUItem.machine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.sunnariumpanelmaker), "CAB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.sunnariumpanelmaker), "CAB",
 
                 ('D'), IUItem.carbonPlate,
 
-                ('C'), new ItemStack(IUItem.blockSE),
+                ('C'), ItemStackHelper.fromData(IUItem.blockSE),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 55),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 55),
 
-                ('A'), new ItemStack(IUItem.sunnariummaker)
+                ('A'), ItemStackHelper.fromData(IUItem.sunnariummaker)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 13), " B ", "DAE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 13), " B ", "DAE", " C ",
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 51),
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 44),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
                 ('C'), IUItem.elemotor,
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 28),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 28),
                 ('A'), IUItem.advancedMachine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 15), "   ", "CBD", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 15), "   ", "CBD", " A ",
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 29),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 29),
 
                 ('A'), IUItem.elemotor,
 
                 ('B'), IUItem.machine,
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 11)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 14), "CDC", "ABA", "CDC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine, 1, 14), "CDC", "ABA", "CDC",
 
                 ('D'),
-                ("plateNichrome"),
-                ('A'), new ItemStack(IUItem.impmagnet, 1, 32767),
+                ("forge:plates/Nichrome"),
+                ('A'), ItemStackHelper.fromData(IUItem.impmagnet, 1),
 
-                ('B'), new ItemStack(IUItem.basemachine, 1, 15),
+                ('B'), ItemStackHelper.fromData(IUItem.basemachine, 1, 15),
 
                 ('C'),
-                new ItemStack(IUItem.compresscarbon)
+                ItemStackHelper.fromData(IUItem.compresscarbon)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 1), " B ", "DAD", "DCD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 1), " B ", "DAD", "DCD",
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 121),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 121),
 
                 ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('A'), IUItem.advancedMachine,
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 217),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 217),
 
                 ('C'), IUItem.elemotor
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 3), "   ", "BAD", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 3), "   ", "BAD", " C ",
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 62),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 62),
 
                 ('C'), IUItem.elemotor,
 
                 ('A'), IUItem.machine,
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 47)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 44), "   ", "BAD", "ECF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 44), "   ", "BAD", "ECF",
 
                 ('A'), IUItem.machine,
 
                 ('C'), IUItem.elemotor,
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 51),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
                 ('E'), Items.WATER_BUCKET,
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 243)
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 243)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 43), " E ", "BAD", "FCG",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 43), " E ", "BAD", "FCG",
 
                 ('A'), IUItem.machine,
 
                 ('C'), IUItem.elemotor,
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 51),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 66),
-                ('G'), new ItemStack(IUItem.crafting_elements, 1, 67),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 101)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 66),
+                ('G'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 67),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 101)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 8), "DED", "CAC", "CBC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 8), "DED", "CAC", "CBC",
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 67),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 67),
 
                 ('D'),
-                ("plateNichrome"),
+                ("forge:plates/Nichrome"),
                 ('C'),
-                ("plateCaravky"),
+                ("forge:plates/Caravky"),
                 ('A'),
                 IUItem.upgradeblock,
 
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.upgradeblock), " E ", "CAD", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.upgradeblock), " E ", "CAD", " B ",
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 66),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 66),
 
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('A'), IUItem.advancedMachine,
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
                 ('E'), IUItem.elemotor
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 226), "BBB", "CAC", "DED",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 226), "BBB", "CAC", "DED",
 
                 ('D'),
-                ("plateAlumel"),
+                ("forge:plates/Alumel"),
                 ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('A'), DEFAULT_SENSOR,
@@ -2070,26 +2077,26 @@ public class BasicRecipeTwo {
                 ('B'),
                 IUItem.iridiumPlate,
 
-                ('C'), new ItemStack(IUItem.plastic_plate)
+                ('C'), ItemStackHelper.fromData(IUItem.plastic_plate)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 227), "CCC", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 227), "CCC", "BAB", "   ",
 
-                ('A'), DEFAULT_SENSOR, ('B'), "gearAluminium", ('C'), Blocks.COBBLESTONE
+                ('A'), DEFAULT_SENSOR, ('B'), "forge:gears/Aluminium", ('C'), Blocks.COBBLESTONE
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 229), "CCC", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 229), "CCC", "BAB", "   ",
 
-                ('A'), DEFAULT_SENSOR, ('B'), "gearZinc", ('C'), Blocks.OBSIDIAN
+                ('A'), DEFAULT_SENSOR, ('B'), "forge:gears/Zinc", ('C'), Blocks.OBSIDIAN
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 230), "CCC", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 230), "CCC", "BAB", "   ",
 
-                ('A'), DEFAULT_SENSOR, ('B'), "gearManganese", ('C'), Blocks.SAND
+                ('A'), DEFAULT_SENSOR, ('B'), "forge:gears/Manganese", ('C'), Blocks.SAND
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 231), "CCC", "BAB", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 231), "CCC", "BAB", "   ",
 
-                ('A'), DEFAULT_SENSOR, ('B'), "gearSpinel", ('C'), Blocks.GRAVEL
+                ('A'), DEFAULT_SENSOR, ('B'), "forge:gears/Spinel", ('C'), Blocks.GRAVEL
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 228),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 228),
                 "CCC",
                 "BAB",
                 "   ",
@@ -2099,91 +2106,91 @@ public class BasicRecipeTwo {
                 ('B'),
                 Items.LAVA_BUCKET,
                 ('C'),
-                "plateRedbrass"
+                "forge:plates/Redbrass"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 234), " C ", "BAB", "   ",
-                ('A'), ADV_SENSOR, ('B'), "plateIron", ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234), " C ", "BAB", "   ",
+                ('A'), ADV_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.energy_crystal,
                         1,
                         32767
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 232), " C ", "BAB", "   ",
-                ('A'), IMP_SENSOR, ('B'), "plateIron", ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 232), " C ", "BAB", "   ",
+                ('A'), IMP_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 233), " C ", "BAB", "   ",
-                ('A'), PER_SENSOR, ('B'), "plateIron", ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 233), " C ", "BAB", "   ",
+                ('A'), PER_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 629), " C ", "BAB", "   ",
-                ('A'), PHOTON_SENSOR, ('B'), "plateIron", ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 629), " C ", "BAB", "   ",
+                ('A'), PHOTON_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
                 )
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 235),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 235),
                 "B B",
                 "DAD",
                 "CCC",
                 ('A'),
                 ADV_SENSOR,
                 ('B'),
-                "plateAlumel",
+                "forge:plates/Alumel",
                 ('C'),
-                "plateFerromanganese",
+                "forge:plates/Ferromanganese",
 
                 ('D'),
-                "plateDuralumin"
+                "forge:plates/Duralumin"
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 618),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 618),
                 "B B",
                 "DAD",
                 "CCC",
                 ('A'),
                 IMP_SENSOR,
                 ('B'),
-                "plateVanadoalumite",
+                "forge:plates/Vanadoalumite",
                 ('C'),
-                "plateAluminiumSilicon",
+                "forge:plates/AluminiumSilicon",
 
                 ('D'),
-                "plateVitalium"
+                "forge:plates/Vitalium"
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 619),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 619),
                 "B B",
                 "DAD",
                 "CCC",
                 ('A'),
                 PER_SENSOR,
                 ('B'),
-                "plateStainlessSteel",
+                "forge:plates/StainlessSteel",
                 ('C'),
-                "plateInconel",
+                "forge:plates/Inconel",
 
                 ('D'),
-                "platePermalloy"
+                "forge:plates/Permalloy"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 236), "B B", "BAB", "B B",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 236), "B B", "BAB", "B B",
 
-                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid("iufluidbenz")
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidbenz.getInstance().get())
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 237), "B B", "BAB", "B B",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 237), "B B", "BAB", "B B",
 
-                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid("iufluidhyd")
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidhyd.getInstance().get())
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 238),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 238),
                 "BCB",
                 "BAB",
                 "BCB",
@@ -2193,163 +2200,163 @@ public class BasicRecipeTwo {
                 ('B'),
                 IUItem.FluidCell,
                 ('C'),
-                "plateVanadium"
+                "forge:plates/vanady"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 239), "B B", "BAB", "B B",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 239), "B B", "BAB", "B B",
 
-                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid("iufluiddizel")
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluiddizel.getInstance().get())
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 240), "B B", "BAB", "B B",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 240), "B B", "BAB", "B B",
 
-                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluiduu_matter.getInstance())
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluiduu_matter.getInstance().get())
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 243), "CDC", "BAB", "E E",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 243), "CDC", "BAB", "E E",
 
                 ('A'), DEFAULT_SENSOR,
 
-                ('B'), "plateChromium",
+                ('B'), "forge:plates/Chromium",
 
-                ('C'), "plateCobalt",
+                ('C'), "forge:plates/Cobalt",
 
                 ('D'),
-                "plateNichrome",
+                "forge:plates/Nichrome",
 
-                ('E'), "plateAlcled"
+                ('E'), "forge:plates/Alcled"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 244), " D ", "BAC", "DDD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 244), " D ", "BAC", "DDD",
 
-                ('A'), DEFAULT_SENSOR, ('B'), new ItemStack(
+                ('A'), DEFAULT_SENSOR, ('B'), ItemStackHelper.fromData(
                         IUItem.anode,
                         1,
                         32767
-                ), ('C'), new ItemStack(IUItem.cathode, 1, 32767),
+                ), ('C'), ItemStackHelper.fromData(IUItem.cathode, 1, 32767),
                 ('D'),
-                "plateIron"
+                "forge:plates/Iron"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 241), " B ", "BAB", " B ",
-                ('A'), DEFAULT_SENSOR, ('B'), "plateDenseIron"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 241), " B ", "BAB", " B ",
+                ('A'), DEFAULT_SENSOR, ('B'), "forge:plateDense/Iron"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 248), " B ", "BAB", " B ",
-                ('A'), ADV_SENSOR, ('B'), "plateDenseIron"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 248), " B ", "BAB", " B ",
+                ('A'), ADV_SENSOR, ('B'), "forge:plateDense/Iron"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 245), " B ", "BAB", " B ",
-                ('A'), IMP_SENSOR, ('B'), "plateDenseIron"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 245), " B ", "BAB", " B ",
+                ('A'), IMP_SENSOR, ('B'), "forge:plateDense/Iron"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 242), " B ", "BAB", " B ",
-                ('A'), DEFAULT_SENSOR, ('B'), "plateLead"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 242), " B ", "BAB", " B ",
+                ('A'), DEFAULT_SENSOR, ('B'), "forge:plates/Lead"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 249), " A ", "ABA", " A ",
-                ('A'), new ItemStack(IUItem.nanoBox), ('B'), ADV_SENSOR
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 249), " A ", "ABA", " A ",
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox), ('B'), ADV_SENSOR
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 246), "CAC", "ABA", "CAC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 246), "CAC", "ABA", "CAC",
 
-                ('C'), new ItemStack(IUItem.photoniy),
+                ('C'), ItemStackHelper.fromData(IUItem.photoniy),
 
-                ('A'), new ItemStack(IUItem.quantumtool),
+                ('A'), ItemStackHelper.fromData(IUItem.quantumtool),
 
                 ('B'), IMP_SENSOR
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 247), "CAC", "ABA", "CAC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 247), "CAC", "ABA", "CAC",
 
-                ('C'), new ItemStack(IUItem.photoniy_ingot),
+                ('C'), ItemStackHelper.fromData(IUItem.photoniy_ingot),
 
-                ('A'), new ItemStack(IUItem.advQuantumtool),
+                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool),
 
                 ('B'), PER_SENSOR
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 17), " F ", "BAD", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 17), " F ", "BAD", " C ",
 
                 ('A'), IUItem.machine,
 
                 ('C'), IUItem.elemotor,
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 51),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 71),
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 243)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 71),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 243)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 21), "   ", "BAD", "GCF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 21), "   ", "BAD", "GCF",
 
                 ('A'), IUItem.machine,
 
                 ('C'), IUItem.elemotor,
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 51),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 47),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 71),
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 243),
-                ('G'), new ItemStack(IUItem.crafting_elements, 1, 128)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 71),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 243),
+                ('G'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 128)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 18), " E ", "BAD", "FCG",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 18), " E ", "BAD", "FCG",
 
                 ('A'), IUItem.machine,
 
                 ('C'), IUItem.elemotor,
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 51),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 51),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 44),
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 66),
-                ('G'), new ItemStack(IUItem.crafting_elements, 1, 67),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 71)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 66),
+                ('G'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 67),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 71)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1), " E ", "BAB", "DCD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1), " E ", "BAB", "DCD",
 
-                ('D'), new ItemStack(IUItem.module_stack),
+                ('D'), ItemStackHelper.fromData(IUItem.module_stack),
 
-                ('A'), new ItemStack(IUItem.simplemachine, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.simplemachine, 1, 6),
 
-                ('B'), new ItemStack(IUItem.core, 1, 5),
+                ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
 
                 ('E'),
-                new ItemStack(
+                ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         240
-                ), ('C'), new ItemStack(IUItem.crafting_elements, 1, 56)
+                ), ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 56)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 11), " C ", " A ", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 11), " C ", " A ", " B ",
 
                 ('A'), IUItem.machine,
 
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 112)
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 112)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 2), "   ", "CAD", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 2), "   ", "CAD", " B ",
 
                 ('A'), IUItem.advancedMachine,
 
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 226),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 226),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 158)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 158)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 4), "   ", "CAD", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 4), "   ", "CAD", " B ",
 
                 ('A'),
                 getBlockStack(BlockBaseMachine3.generator_iu),
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 27),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 239)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 239)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 5), "   ", "CAD", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 5), "   ", "CAD", " B ",
 
                 ('A'),
                 getBlockStack(BlockBaseMachine3.generator_iu),
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 27),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 236)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 236)
         );
         Recipes.recipe.addRecipe(
                 getBlockStack(BlockBaseMachine3.pump_iu), " E ", "CAD", "B H",
@@ -2358,15 +2365,15 @@ public class BasicRecipeTwo {
 
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 27),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 154),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 241), 'H', getBlockStack(BlockBaseMachine3.steam_pump)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 241), 'H', getBlockStack(BlockBaseMachine3.steam_pump)
         );
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.basemachine1, 1, 6),
+                ItemStackHelper.fromData(IUItem.basemachine1, 1, 6),
                 "F F",
                 "CAE",
                 "FBF",
@@ -2374,165 +2381,165 @@ public class BasicRecipeTwo {
                 ('A'),
                 getBlockStack(BlockBaseMachine3.pump_iu),
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 20),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20),
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 6),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 6),
 
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 248),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 248),
                 ('F'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.basemachine1, 1, 7),
+                ItemStackHelper.fromData(IUItem.basemachine1, 1, 7),
                 "F F",
                 "CAE",
                 "FBF",
 
                 ('A'),
-                new ItemStack(IUItem.basemachine1, 1, 6),
+                ItemStackHelper.fromData(IUItem.basemachine1, 1, 6),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 96),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96),
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 83),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 83),
 
                 ('E'),
-                new ItemStack(IUItem.crafting_elements, 1, 245),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 245),
                 ('F'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 9), "   ", "CAD", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 9), "   ", "CAD", " B ",
 
                 ('A'),
                 getBlockStack(BlockBaseMachine3.generator_iu),
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 27),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 237)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 237)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 8), "CCC", " A ", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 8), "CCC", " A ", " B ",
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 35),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 35),
 
                 ('A'), IUItem.machine,
 
                 ('B'), IUItem.elemotor
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.oilrefiner), "DDD", "FBE", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.oilrefiner), "DDD", "FBE", " C ",
 
-                ('A'), new ItemStack(IUItem.fluidCell),
+                ('A'), ItemStackHelper.fromData(IUItem.fluidCell),
 
                 ('B'), IUItem.advancedMachine,
 
                 ('C'), IUItem.elemotor,
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 43),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 43),
 
-                ('E'), new ItemStack(
+                ('E'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         98
-                ), ('F'), new ItemStack(IUItem.crafting_elements, 1, 33)
+                ), ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 33)
         );
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.oiladvrefiner),
+                ItemStackHelper.fromData(IUItem.oiladvrefiner),
                 " A ",
                 " B ",
                 " C ",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 9),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 9),
 
                 ('B'),
                 IUItem.oilrefiner,
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 20)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20)
         ), 0);
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 10), " C ", "DAE", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 10), " C ", "DAE", " B ",
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 229),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 229),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 154),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154),
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 27),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
                 ('B'),
                 IUItem.elemotor,
 
                 ('A'), IUItem.machine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 11), " E ", "CAB", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 11), " E ", "CAB", " D ",
 
                 ('D'), IUItem.elemotor,
 
                 ('A'), IUItem.machine,
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 47),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 27),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 65)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 65)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 13), " E ", "CAB", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 13), " E ", "CAB", " D ",
 
                 ('D'), IUItem.elemotor,
 
                 ('A'), IUItem.machine,
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 44),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 27),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 65)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 65)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 12), "   ", "CAD", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 12), "   ", "CAD", " B ",
 
                 ('A'),
                 getBlockStack(BlockBaseMachine3.generator_iu),
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 27),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 228)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 228)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 14), "   ", "CAD", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 14), "   ", "CAD", " B ",
 
                 ('A'),
                 getBlockStack(BlockBaseMachine3.generator_iu),
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 27),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 238)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 238)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine1, 1, 15), " E ", "CAD", "B H",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine1, 1, 15), " E ", "CAD", "B H",
 
                 ('A'), IUItem.machine,
 
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 27),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 154),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 244), 'H', getBlockStack(BlockBaseMachine3.steam_electrolyzer)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 244), 'H', getBlockStack(BlockBaseMachine3.steam_electrolyzer)
         );
 
 
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines, 1, 10),
+                ItemStackHelper.fromData(IUItem.machines, 1, 10),
                 "BAB",
                 " D ",
                 "B B",
@@ -2540,67 +2547,67 @@ public class BasicRecipeTwo {
                 ('D'),
                 getBlockStack(BlockBaseMachine3.generator_iu),
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 234),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines, 1, 11),
+                ItemStackHelper.fromData(IUItem.machines, 1, 11),
                 "BAB",
                 " D ",
                 "B B",
 
                 ('D'),
-                new ItemStack(IUItem.machines, 1, 10),
+                ItemStackHelper.fromData(IUItem.machines, 1, 10),
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 232),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 232),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines, 1, 12),
+                ItemStackHelper.fromData(IUItem.machines, 1, 12),
                 "BAB",
                 " D ",
                 "B B",
 
                 ('D'),
-                new ItemStack(IUItem.machines, 1, 11),
+                ItemStackHelper.fromData(IUItem.machines, 1, 11),
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 233),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 233),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         ), 2);
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.pho_machine, 1, 24),
+                ItemStackHelper.fromData(IUItem.pho_machine, 1, 24),
                 "BAB",
                 " D ",
                 "B B",
 
                 ('D'),
-                new ItemStack(IUItem.machines, 1, 12),
+                ItemStackHelper.fromData(IUItem.machines, 1, 12),
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 629),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 629),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 623)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
         Recipes.recipe.addRecipe(
                 getBlockStack(BlockBaseMachine3.geogenerator_iu), "   ", "ABC", "   ",
 
                 ('B'), IUItem.machine,
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 11),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11),
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 22)
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 22)
         );
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.basemachine, 1, 4),
+                ItemStackHelper.fromData(IUItem.basemachine, 1, 4),
                 "B B",
                 "ADC",
                 "B B",
@@ -2608,220 +2615,220 @@ public class BasicRecipeTwo {
                 ('D'),
                 getBlockStack(BlockBaseMachine3.geogenerator_iu),
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 234),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234),
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 5),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 5),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 138)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.basemachine, 1, 5),
+                ItemStackHelper.fromData(IUItem.basemachine, 1, 5),
                 "B B",
                 "ADC",
                 "B B",
 
                 ('D'),
-                new ItemStack(IUItem.basemachine, 1, 4),
+                ItemStackHelper.fromData(IUItem.basemachine, 1, 4),
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 232),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 232),
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 82),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 82),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 139)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.basemachine, 1, 6),
+                ItemStackHelper.fromData(IUItem.basemachine, 1, 6),
                 "B B",
                 "ADC",
                 "B B",
 
                 ('D'),
-                new ItemStack(IUItem.basemachine, 1, 5),
+                ItemStackHelper.fromData(IUItem.basemachine, 1, 5),
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 233),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 233),
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 106),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 106),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         ), 2);
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.pho_machine, 1, 22),
+                ItemStackHelper.fromData(IUItem.pho_machine, 1, 22),
                 "B B",
                 "ADC",
                 "B B",
 
                 ('D'),
-                new ItemStack(IUItem.basemachine, 1, 6),
+                ItemStackHelper.fromData(IUItem.basemachine, 1, 6),
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 629),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 629),
 
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 630),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 630),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 623)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
         Recipes.recipe.addRecipe(
                 getBlockStack(BlockBaseMachine3.solar_iu), "ABA", "BDB", " E ",
 
-                ('E'), getBlockStack(BlockBaseMachine3.generator_iu), ('D'), new ItemStack(
+                ('E'), getBlockStack(BlockBaseMachine3.generator_iu), ('D'), ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
                         37
                 ),
-                ('A'), "dustCoal", ('B'),
+                ('A'), "forge:dusts/Coal", ('B'),
                 Blocks.GLASS
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 9), "   ", "CAD", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 9), "   ", "CAD", " B ",
 
                 ('A'), IUItem.machine,
 
                 ('B'), IUItem.elemotor,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 101),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 101),
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 11)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.blockmolecular), "MXM", "ABA", "MXM",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockmolecular), "MXM", "ABA", "MXM",
                 ('M'), IUItem.advancedMachine,
-                ('X'), new ItemStack(IUItem.tranformer, 1, 10), ('A'),
+                ('X'), ItemStackHelper.fromData(IUItem.tranformer, 1, 10), ('A'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 75)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 75)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.blockdoublemolecular), "BDB", "CAC", "BEB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockdoublemolecular), "BDB", "CAC", "BEB",
 
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('B'), IUItem.advancedMachine,
 
-                ('A'), new ItemStack(IUItem.blockmolecular),
+                ('A'), ItemStackHelper.fromData(IUItem.blockmolecular),
 
                 ('D'),
-                new ItemStack(IUItem.tranformer, 1, 1),
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 10)
+                ItemStackHelper.fromData(IUItem.tranformer, 1, 1),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 10)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 4), "   ", "BAB", "DCE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 4), "   ", "BAB", "DCE",
 
                 ('A'), IUItem.advancedMachine,
 
-                ('B'), new ItemStack(IUItem.entitymodules, 1, 1),
+                ('B'), ItemStackHelper.fromData(IUItem.entitymodules, 1, 1),
 
                 ('C'), IUItem.elemotor,
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 59),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 59),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 54)
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 54)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.blockSE), " B ", " A ", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockSE), " B ", " A ", "   ",
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 79),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 79),
 
                 ('A'),
                 getBlockStack(BlockBaseMachine3.solar_iu)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.adv_se_generator), "   ", "CAC", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.adv_se_generator), "   ", "CAC", " B ",
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 234),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 176),
-                ('C'), new ItemStack(IUItem.blockSE)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 176),
+                ('C'), ItemStackHelper.fromData(IUItem.blockSE)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 12), " A ", " D ", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 12), " A ", " D ", " B ",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 56),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 56),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 175),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 175),
 
                 ('C'),
-                ("doubleplateDuralumin"),
+                ("forge:doubleplate/Duralumin"),
                 ('E'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('D'), IUItem.imp_se_generator
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.combinersolidmatter), "ABC", "DJE", "FGH",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.combinersolidmatter), "ABC", "DJE", "FGH",
 
-                ('J'), new ItemStack(IUItem.crafting_elements, 1, 56),
+                ('J'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 56),
 
-                ('H'), new ItemStack(IUItem.crafting_elements, 1, 145),
+                ('H'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 145),
 
-                ('G'), new ItemStack(IUItem.crafting_elements, 1, 147),
+                ('G'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 147),
 
                 ('F'),
-                new ItemStack(IUItem.crafting_elements, 1, 148),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 148),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 149),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 149),
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 150),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 150),
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 151),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 151),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 152),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 152),
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 153)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 153)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.imp_se_generator), "   ", "CAC", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.imp_se_generator), "   ", "CAC", " B ",
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 232),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 232),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 174),
-                ('C'), new ItemStack(IUItem.adv_se_generator)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 174),
+                ('C'), ItemStackHelper.fromData(IUItem.adv_se_generator)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 145), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 145), " B ", "BAB", " B ",
 
                 ('A'), DEFAULT_SENSOR,
-                ('B'), new ItemStack(IUItem.matter, 1, 2)
+                ('B'), ItemStackHelper.fromData(IUItem.matter, 1, 2)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 147), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 147), " B ", "BAB", " B ",
 
                 ('A'), DEFAULT_SENSOR,
-                ('B'), new ItemStack(IUItem.matter, 1, 7)
+                ('B'), ItemStackHelper.fromData(IUItem.matter, 1, 7)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 148), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 148), " B ", "BAB", " B ",
 
                 ('A'), DEFAULT_SENSOR,
-                ('B'), new ItemStack(IUItem.matter, 1, 1)
+                ('B'), ItemStackHelper.fromData(IUItem.matter, 1, 1)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 149), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 149), " B ", "BAB", " B ",
 
                 ('A'), DEFAULT_SENSOR,
-                ('B'), new ItemStack(IUItem.matter, 1, 4)
+                ('B'), ItemStackHelper.fromData(IUItem.matter, 1, 4)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 150), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 150), " B ", "BAB", " B ",
 
                 ('A'), DEFAULT_SENSOR,
-                ('B'), new ItemStack(IUItem.matter, 1, 3)
+                ('B'), ItemStackHelper.fromData(IUItem.matter, 1, 3)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 151), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 151), " B ", "BAB", " B ",
 
                 ('A'), DEFAULT_SENSOR,
-                ('B'), new ItemStack(IUItem.matter, 1, 0)
+                ('B'), ItemStackHelper.fromData(IUItem.matter, 1, 0)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 152), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 152), " B ", "BAB", " B ",
 
                 ('A'), DEFAULT_SENSOR,
-                ('B'), new ItemStack(IUItem.matter, 1, 6)
+                ('B'), ItemStackHelper.fromData(IUItem.matter, 1, 6)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 153), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 153), " B ", "BAB", " B ",
 
                 ('A'), DEFAULT_SENSOR,
-                ('B'), new ItemStack(IUItem.matter, 1, 5)
+                ('B'), ItemStackHelper.fromData(IUItem.matter, 1, 5)
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 251),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
                 "BCB",
                 "BAB",
                 "BCB",
@@ -2829,13 +2836,13 @@ public class BasicRecipeTwo {
                 ('A'),
                 DEFAULT_SENSOR,
                 ('B'),
-                ModUtils.getCellFromFluid("iufluidneft"),
+                ModUtils.getCellFromFluid(FluidName.fluidneft.getInstance().get()),
                 ('C'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 251),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
                 "BCB",
                 "BAB",
                 "BCB",
@@ -2843,12 +2850,12 @@ public class BasicRecipeTwo {
                 ('A'),
                 DEFAULT_SENSOR,
                 ('B'),
-                ModUtils.getCellFromFluid(FluidName.fluidsour_light_oil.getName()),
+                ModUtils.getCellFromFluid(FluidName.fluidsour_light_oil.getInstance().get()),
                 ('C'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 251),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
                 "BCB",
                 "BAB",
                 "BCB",
@@ -2856,12 +2863,12 @@ public class BasicRecipeTwo {
                 ('A'),
                 DEFAULT_SENSOR,
                 ('B'),
-                ModUtils.getCellFromFluid(FluidName.fluidsour_medium_oil.getName()),
+                ModUtils.getCellFromFluid(FluidName.fluidsour_medium_oil.getInstance().get()),
                 ('C'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 251),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
                 "BCB",
                 "BAB",
                 "BCB",
@@ -2869,13 +2876,13 @@ public class BasicRecipeTwo {
                 ('A'),
                 DEFAULT_SENSOR,
                 ('B'),
-                ModUtils.getCellFromFluid(FluidName.fluidsour_heavy_oil.getName()),
+                ModUtils.getCellFromFluid(FluidName.fluidsour_heavy_oil.getInstance().get()),
                 ('C'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 251),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
                 "BCB",
                 "BAB",
                 "BCB",
@@ -2883,13 +2890,13 @@ public class BasicRecipeTwo {
                 ('A'),
                 DEFAULT_SENSOR,
                 ('B'),
-                ModUtils.getCellFromFluid(FluidName.fluidsweet_medium_oil.getName()),
+                ModUtils.getCellFromFluid(FluidName.fluidsweet_medium_oil.getInstance().get()),
                 ('C'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 251),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
                 "BCB",
                 "BAB",
                 "BCB",
@@ -2897,23 +2904,23 @@ public class BasicRecipeTwo {
                 ('A'),
                 DEFAULT_SENSOR,
                 ('B'),
-                ModUtils.getCellFromFluid(FluidName.fluidsweet_heavy_oil.getName()),
+                ModUtils.getCellFromFluid(FluidName.fluidsweet_heavy_oil.getInstance().get()),
                 ('C'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.oilgetter), " A ", " B ", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.oilgetter), " A ", " B ", " D ",
 
                 ('D'), IUItem.elemotor,
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 251),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 251),
 
                 ('B'), IUItem.machine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.convertersolidmatter, 1), "E F", "ABC", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.convertersolidmatter, 1), "E F", "ABC", " D ",
 
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 44),
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 75),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 75),
 
                 ('A'),
                 getBlockStack(BlockBaseMachine3.replicator_iu),
@@ -2923,70 +2930,70 @@ public class BasicRecipeTwo {
 
                 ('B'), IUItem.advancedMachine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 23), " C ", " D ", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 23), " C ", " D ", " A ",
 
                 ('D'), IUItem.blockmolecular,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 10),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 10),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 152)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 152)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 39), " C ", " D ", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 39), " C ", " D ", " A ",
 
                 ('D'), IUItem.blockmolecular,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 10),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 10),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 151)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 151)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 37), " C ", " D ", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 37), " C ", " D ", " A ",
 
                 ('D'), IUItem.blockmolecular,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 10),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 10),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 150)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 150)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 36), " C ", " D ", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 36), " C ", " D ", " A ",
 
                 ('D'), IUItem.blockmolecular,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 10),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 10),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 153)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 153)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 35), " C ", " D ", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 35), " C ", " D ", " A ",
 
                 ('D'), IUItem.blockmolecular,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 10),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 10),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 145)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 145)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 34), " C ", " D ", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 34), " C ", " D ", " A ",
 
                 ('D'), IUItem.blockmolecular,
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 10),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 10),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 147)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 147)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.veinsencor, 1), " BC", "BDB", "BAB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.veinsencor, 1), " BC", "BDB", "BAB",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
-                ('B'), "plateIron", ('C'), Items.REDSTONE, ('D'),
-                "plateChromium"
+                ('B'), "forge:plates/Iron", ('C'), Items.REDSTONE, ('D'),
+                "forge:plates/Chromium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 169), "CED", "ABA", "CFD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 169), "CED", "ABA", "CFD",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
 
-                ('B'), "plateIron",
+                ('B'), "forge:plates/Iron",
 
                 ('C'), Items.REDSTONE,
 
                 ('D'),
-                new ItemStack(Items.DYE, 1, 4),
+                ItemStackHelper.fromData(Items.LAPIS_LAZULI),
 
                 ('E'), IUItem.advnanobox,
 
@@ -2995,10 +3002,10 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addShapelessRecipe(
                 getBlockStack(BlockBaseMachine3.limiter),
-                new ItemStack(IUItem.crafting_elements, 1, 169), IUItem.advancedMachine
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 169), IUItem.advancedMachine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 261), " C ", "BAB", " D ",
-                ('A'), ADV_SENSOR, ('B'), "plateIron", ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 261), " C ", "BAB", " D ",
+                ('A'), ADV_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.energy_crystal,
                         1,
                         32767
@@ -3006,8 +3013,8 @@ public class BasicRecipeTwo {
                 ('D'),
                 Blocks.REDSTONE_BLOCK
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 628), " C ", "BAB", " D ",
-                ('A'), PHOTON_SENSOR, ('B'), "plateIron", ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 628), " C ", "BAB", " D ",
+                ('A'), PHOTON_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.energy_crystal,
                         1,
                         32767
@@ -3015,8 +3022,8 @@ public class BasicRecipeTwo {
                 ('D'),
                 Blocks.REDSTONE_BLOCK
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 259), " C ", "BAB", " D ",
-                ('A'), IMP_SENSOR, ('B'), "plateIron", ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 259), " C ", "BAB", " D ",
+                ('A'), IMP_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
@@ -3024,8 +3031,8 @@ public class BasicRecipeTwo {
                 ('D'),
                 Blocks.REDSTONE_BLOCK
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 260), " C ", "BAB", " D ",
-                ('A'), PER_SENSOR, ('B'), "plateIron", ('C'), new ItemStack(
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 260), " C ", "BAB", " D ",
+                ('A'), PER_SENSOR, ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.AdvlapotronCrystal,
                         1,
                         32767
@@ -3033,67 +3040,67 @@ public class BasicRecipeTwo {
                 ('D'),
                 Blocks.REDSTONE_BLOCK
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 258), " C ", "BAB", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 258), " C ", "BAB", " D ",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 21),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "plateIron",
+                ('B'), "forge:plates/Iron",
 
-                ('C'), new ItemStack(IUItem.advBattery, 1, 32767),
+                ('C'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
                 ('D'),
                 Blocks.REDSTONE_BLOCK
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 71), "BAB", " D ", "B B",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 71), "BAB", " D ", "B B",
 
-                ('D'), new ItemStack(IUItem.basemachine2, 1, 70),
+                ('D'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 70),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 261),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 261),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 138)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 72), "BAB", " D ", "B B",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 72), "BAB", " D ", "B B",
 
-                ('D'), new ItemStack(IUItem.basemachine2, 1, 71),
+                ('D'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 71),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 259),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 259),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 139)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 73), "BAB", " D ", "B B",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 73), "BAB", " D ", "B B",
 
-                ('D'), new ItemStack(IUItem.basemachine2, 1, 72),
+                ('D'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 72),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 260),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 260),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 140)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.pho_machine, 1, 23), "BAB", " D ", "B B",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pho_machine, 1, 23), "BAB", " D ", "B B",
 
-                ('D'), new ItemStack(IUItem.basemachine2, 1, 73),
+                ('D'), ItemStackHelper.fromData(IUItem.basemachine2, 1, 73),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 628),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 628),
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 623)
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623)
         );
         Recipes.recipe.addShapelessRecipe(
                 getBlockStack(BlockBaseMachine3.redstone_generator),
-                new ItemStack(IUItem.crafting_elements, 1, 258), getBlockStack(BlockBaseMachine3.generator_iu)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 258), getBlockStack(BlockBaseMachine3.generator_iu)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 206), "ABA", "ACA", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 206), "ABA", "ACA", "ABA",
 
                 ('B'), IUItem.insulatedTinCableItem,
 
                 ('A'),
-                ("plankWood"),
+                ("planks"),
                 ('C'), DEFAULT_SENSOR
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 207), "   ", "ABA", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 207), "   ", "ABA", "   ",
 
                 ('A'), IUItem.insulatedCopperCableItem,
 
                 ('B'), DEFAULT_SENSOR
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 208), " A ", "DBC", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 208), " A ", "DBC", " A ",
 
                 ('B'), DEFAULT_SENSOR,
 
@@ -3102,9 +3109,9 @@ public class BasicRecipeTwo {
                 ('D'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('C'),
-                new ItemStack(IUItem.advBattery, 1, 32767)
+                ItemStackHelper.fromData(IUItem.advBattery, 1, 32767)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 209), " A ", "DBC", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 209), " A ", "DBC", " A ",
 
                 ('B'), DEFAULT_SENSOR,
 
@@ -3113,12 +3120,12 @@ public class BasicRecipeTwo {
                 ('D'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
 
                 ('C'),
-                new ItemStack(IUItem.lapotron_crystal, 1, 32767)
+                ItemStackHelper.fromData(IUItem.lapotron_crystal, 1, 32767)
         );
         for (int i = 0; i < 3; i++) {
             Recipes.recipe.addShapelessRecipe(
-                    new ItemStack(IUItem.tranformer, 1, i + 8),
-                    new ItemStack(IUItem.tranformer, 1, i + 7), new ItemStack(
+                    ItemStackHelper.fromData(IUItem.tranformer, 1, i + 8),
+                    ItemStackHelper.fromData(IUItem.tranformer, 1, i + 7), ItemStackHelper.fromData(
                             IUItem.crafting_elements,
                             1,
                             207 + i
@@ -3126,67 +3133,67 @@ public class BasicRecipeTwo {
             );
         }
         Recipes.recipe.addShapelessRecipe(
-                new ItemStack(IUItem.tranformer, 1, 7),
-                IUItem.machine, new ItemStack(IUItem.crafting_elements, 1, 206)
+                ItemStackHelper.fromData(IUItem.tranformer, 1, 7),
+                IUItem.machine, ItemStackHelper.fromData(IUItem.crafting_elements, 1, 206)
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.water_rotors_upgrade, 1, 16),
+                ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 16),
                 "ADA",
                 "CBC",
                 "ADA",
 
                 ('A'),
-                new ItemStack(IUItem.core, 1, 5),
+                ItemStackHelper.fromData(IUItem.core, 1, 5),
                 ('B'),
-                new ItemStack(IUItem.module_schedule),
+                ItemStackHelper.fromData(IUItem.module_schedule),
                 ('C'),
                 IUItem.compressIridiumplate,
                 (
                         'D'),
-                "doubleplateInvar"
+                "forge:doubleplate/Invar"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 262), "CCC", "BAB", "DED",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 262), "CCC", "BAB", "DED",
 
-                ('B'), "gearAlumel",
+                ('B'), "forge:gears/Alumel",
 
-                ('C'), "plateAluminumbronze",
+                ('C'), "forge:plates/Aluminumbronze",
 
-                ('D'), "plateTitanium",
+                ('D'), "forge:plates/Titanium",
 
                 ('E'),
-                "plateIron",
+                "forge:plates/Iron",
 
                 ('A'), DEFAULT_SENSOR
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 40),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 40),
                 " B ",
                 "ACA",
                 "ADA",
                 ('A'),
-                "plateRedbrass",
+                "forge:plates/Redbrass",
                 ('B'),
-                "plateIron",
+                "forge:plates/Iron",
                 ('C'),
-                "plateTitanium",
+                "forge:plates/Titanium",
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 74), " E ", "ABD", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 74), " E ", "ABD", " C ",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 47),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 70),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 70),
 
                 ('B'), IUItem.machine,
 
                 ('C'),
                 IUItem.elemotor,
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 262)
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 262)
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 256), "CDE", "BAB", "FFF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 256), "CDE", "BAB", "FFF",
 
                 ('A'), ADV_SENSOR,
 
@@ -3197,11 +3204,11 @@ public class BasicRecipeTwo {
                 ('E'),
                 Items.DIAMOND_SHOVEL,
 
-                ('B'), "gearIridium",
+                ('B'), "forge:gears/Iridium",
 
-                ('F'), "gearMagnesium"
+                ('F'), "forge:gears/Magnesium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 252), "CDE", "BAB", "FFF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 252), "CDE", "BAB", "FFF",
 
                 ('A'), IMP_SENSOR,
 
@@ -3212,11 +3219,11 @@ public class BasicRecipeTwo {
                 ('E'),
                 Items.DIAMOND_SHOVEL,
 
-                ('B'), "gearIridium",
+                ('B'), "forge:gears/Iridium",
 
-                ('F'), "gearMagnesium"
+                ('F'), "forge:gears/Magnesium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 254), "CDE", "BAB", "FFF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 254), "CDE", "BAB", "FFF",
 
                 ('A'), PER_SENSOR,
 
@@ -3227,11 +3234,11 @@ public class BasicRecipeTwo {
                 ('E'),
                 Items.DIAMOND_SHOVEL,
 
-                ('B'), "gearIridium",
+                ('B'), "forge:gears/Iridium",
 
-                ('F'), "gearMagnesium"
+                ('F'), "forge:gears/Magnesium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 631), "CDE", "BAB", "FFF",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 631), "CDE", "BAB", "FFF",
 
                 ('A'), PHOTON_SENSOR,
 
@@ -3242,124 +3249,124 @@ public class BasicRecipeTwo {
                 ('E'),
                 Items.DIAMOND_SHOVEL,
 
-                ('B'), "gearIridium",
+                ('B'), "forge:gears/Iridium",
 
-                ('F'), "gearMagnesium"
+                ('F'), "forge:gears/Magnesium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 257), "CEC", "ABA", "DED",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 257), "CEC", "ABA", "DED",
 
                 ('D'),
-                ("gemCurium"),
+                ("forge:gems/Curium"),
                 ('C'),
-                ("doubleplateCaravky"),
+                ("forge:doubleplate/Caravky"),
                 ('E'),
-                ("plateDuralumin"),
+                ("forge:plates/Duralumin"),
                 ('A'),
-                new ItemStack(IUItem.core, 1, 8),
+                ItemStackHelper.fromData(IUItem.core, 1, 8),
 
                 ('B'), ADV_SENSOR
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 253), "CEC", "ABA", "DED",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 253), "CEC", "ABA", "DED",
 
                 ('D'),
-                ("doubleplateGermanium"),
+                ("forge:doubleplate/Germanium"),
                 ('C'),
-                ("doubleplateAlcled"),
+                ("forge:doubleplate/Alcled"),
                 ('E'),
-                ("plateVitalium"),
+                ("forge:plates/Vitalium"),
                 ('A'),
-                new ItemStack(IUItem.core, 1, 11),
+                ItemStackHelper.fromData(IUItem.core, 1, 11),
 
                 ('B'), IMP_SENSOR
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 255), "CEC", "ABA", "DED",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 255), "CEC", "ABA", "DED",
 
-                ('D'), new ItemStack(IUItem.doublecompressIridiumplate),
+                ('D'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('E'),
-                ("plateTitanium"),
+                ("forge:plates/Titanium"),
                 ('A'),
-                new ItemStack(IUItem.core, 1, 12),
+                ItemStackHelper.fromData(IUItem.core, 1, 12),
 
                 ('B'), PER_SENSOR
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 250), "EDE", "BAB", "CCC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 250), "EDE", "BAB", "CCC",
 
                 ('E'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('D'), DEFAULT_SENSOR,
 
-                ('C'), new ItemStack(IUItem.compressIridiumplate),
+                ('C'), ItemStackHelper.fromData(IUItem.compressIridiumplate),
 
                 ('B'),
-                new ItemStack(IUItem.advQuantumtool),
+                ItemStackHelper.fromData(IUItem.advQuantumtool),
 
-                ('A'), new ItemStack(IUItem.core, 1, 7)
+                ('A'), ItemStackHelper.fromData(IUItem.core, 1, 7)
         );
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(new ItemStack(IUItem.machines, 1, 13), "C C", " B ",
+        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 13), "C C", " B ",
                 "CAC",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 257),
-                ('B'), new ItemStack(IUItem.machines, 1, 8),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 138)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 257),
+                ('B'), ItemStackHelper.fromData(IUItem.machines, 1, 8),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
-        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(new ItemStack(IUItem.machines, 1, 14), "C C", " B "
+        TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 14), "C C", " B "
                 , "CAC",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 253),
-                ('B'), new ItemStack(IUItem.machines, 1, 13),
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 139)
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 253),
+                ('B'), ItemStackHelper.fromData(IUItem.machines, 1, 13),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
         TileEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.machines, 1, 15),
+                ItemStackHelper.fromData(IUItem.machines, 1, 15),
                 "C C",
                 " B ",
                 "CAC",
 
                 ('A'),
-                new ItemStack(IUItem.crafting_elements, 1, 255),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 255),
                 ('B'),
-                new ItemStack(IUItem.machines, 1, 14),
+                ItemStackHelper.fromData(IUItem.machines, 1, 14),
                 ('C'),
-                new ItemStack(IUItem.crafting_elements, 1, 140)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         ), 2);
-        if (!Loader.isModLoaded("simplyquarries")) {
-            Recipes.recipe.addRecipe(new ItemStack(IUItem.machines, 1, 8), "   ", " A ", " B ",
+        // if (!Loader.isModLoaded("simplyquarries")) {
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machines, 1, 8), "   ", " A ", " B ",
 
-                    ('A'), new ItemStack(IUItem.crafting_elements, 1, 250),
-                    ('B'), IUItem.advancedMachine
-            );
-        }
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.blockadmin, 1), "   ", "BAB", "ABA",
-                ('B'), new ItemStack(IUItem.excitednucleus, 1, 13), ('A'), new ItemStack(
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 250),
+                ('B'), IUItem.advancedMachine
+        );
+        //  }
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockadmin, 1), "   ", "BAB", "ABA",
+                ('B'), ItemStackHelper.fromData(IUItem.excitednucleus, 1, 13), ('A'), ItemStackHelper.fromData(
                         IUItem.blockpanel,
                         1,
                         13
                 )
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.perfect_drill), "ACB", "F F", "ECE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.perfect_drill), "ACB", "F F", "ECE",
 
-                ('E'), new ItemStack(IUItem.advQuantumtool),
+                ('E'), ItemStackHelper.fromData(IUItem.advQuantumtool),
 
                 ('F'), IUItem.overclockerUpgrade1,
 
-                ('A'), new ItemStack(IUItem.spectralaxe, 1, 32767),
+                ('A'), ItemStackHelper.fromData(IUItem.spectralaxe, 1, 32767),
 
                 ('B'),
-                new ItemStack(IUItem.spectraldrill, 1, 32767),
+                ItemStackHelper.fromData(IUItem.spectraldrill, 1, 32767),
 
-                ('C'), TileGenerationMicrochip.getLevelCircuit(new ItemStack(IUItem.basecircuit, 1, 21), 11)
+                ('C'), TileGenerationMicrochip.getLevelCircuit(ItemStackHelper.fromData(IUItem.basecircuit, 1, 21), 11)
         );
         Recipes.recipe.addRecipe(
                 ModUtils.setSize(IUItem.glassFiberCableItem, 6), "AAA", "BCB", "AAA",
 
-                ('A'), new ItemStack(Blocks.GLASS),
+                ('A'), ItemStackHelper.fromData(Blocks.GLASS),
 
                 ('B'), IUItem.energiumDust,
 
-                ('C'), "dustSilver"
+                ('C'), "forge:dusts/Silver"
         );
         Recipes.recipe.addRecipe(IUItem.coil, "AAA", "ABA", "AAA",
 
@@ -3369,75 +3376,75 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(IUItem.powerunit, "ABD", "ACE", "ABD",
 
-                ('A'), new ItemStack(IUItem.reBattery, 1, 32767),
+                ('A'), ItemStackHelper.fromData(IUItem.reBattery, 1, 32767),
 
                 ('B'), IUItem.copperCableItem,
 
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2),
 
                 ('D'),
-                "casingIron",
+                "forge:casings/Iron",
 
                 ('E'), IUItem.elemotor
         );
         Recipes.recipe.addRecipe(IUItem.powerunitsmall, " BD", "ACE", " BD",
 
-                ('A'), new ItemStack(IUItem.advBattery, 1, 32767),
+                ('A'), ItemStackHelper.fromData(IUItem.advBattery, 1),
 
                 ('B'), IUItem.copperCableItem,
 
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
                 ('D'),
-                "casingIron",
+                "forge:casings/Iron",
 
                 ('E'), IUItem.elemotor
         );
-        Recipes.recipe.addRecipe(IUItem.reBattery
+        Recipes.recipe.addRecipe(IUItem.reBattery.getItemStack()
                 , "AEA", "CDC", "CDC",
 
                 ('A'), IUItem.insulatedTinCableItem,
 
-                ('C'), "casingAluminiumLithium",
+                ('C'), "forge:casings/AluminiumLithium",
 
-                ('D'), new ItemStack(IUItem.charged_redstone), 'E', new ItemStack(IUItem.charged_quartz)
+                ('D'), ItemStackHelper.fromData(IUItem.charged_redstone), 'E', ItemStackHelper.fromData(IUItem.charged_quartz)
         );
-        Recipes.recipe.addRecipe(IUItem.advBattery
+        Recipes.recipe.addRecipe(IUItem.advBattery.getItemStack()
                 , "AEA", "CDC", "CBC",
 
                 ('A'), IUItem.insulatedCopperCableItem,
 
                 ('C'), IUItem.casingbronze,
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 476),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 476),
 
                 ('B'),
-                "dustLead", 'E', new ItemStack(IUItem.charged_redstone, 1)
+                "forge:dusts/Lead", 'E', ItemStackHelper.fromData(IUItem.charged_redstone, 1)
         );
 
         Recipes.recipe.addRecipe(IUItem.energyStorageUpgrade, "FEF", "BDB", "ACA",
 
-                ('A'), "plateCarbon",
+                ('A'), "forge:plates/Carbon",
 
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
 
-                ('D'), new ItemStack(IUItem.advBattery, 1, 32767),
+                ('D'), ItemStackHelper.fromData(IUItem.advBattery, 1),
 
                 ('B'),
-                IUItem.insulatedCopperCableItem, 'E', IUItem.upgrade_casing, 'F', "plateObsidian"
+                IUItem.insulatedCopperCableItem, 'E', IUItem.upgrade_casing, 'F', "forge:plates/Obsidian"
         );
         Recipes.recipe.addShapelessRecipe(
-                new ItemStack(IUItem.frequency_transmitter),
+                ItemStackHelper.fromData(IUItem.frequency_transmitter),
                 IUItem.insulatedCopperCableItem, TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
         );
         Recipes.recipe.addRecipe(
-                ModUtils.setSize(IUItem.suBattery, 5), " A ", " B ", " C ",
+                ModUtils.setSize(IUItem.suBattery.getItemStack(), 5), " A ", " B ", " C ",
 
                 ('A'), IUItem.insulatedCopperCableItem,
 
                 ('B'), Items.REDSTONE,
 
-                ('C'), "dustCoal"
+                ('C'), "forge:dusts/Coal"
         );
 
 
@@ -3456,17 +3463,17 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(
                 getBlockStack(BlockBaseMachine3.teleporter_iu), " A ", " B ", "   ",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 268),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 268),
 
                 ('B'), IUItem.advancedMachine
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 268), "AEA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 268), "AEA", "CBC", "ADA",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 ('C'), IUItem.glassFiberCableItem,
 
-                ('D'), new ItemStack(IUItem.crafting_elements, 1, 270),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 270),
 
                 ('B'),
                 DEFAULT_SENSOR,
@@ -3476,91 +3483,91 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(
                 getBlockStack(BlockBaseMachine3.canner_iu), "A D", "EBF", " C ",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 265),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 265),
 
                 ('B'), IUItem.machine,
 
                 ('C'), IUItem.elemotor,
 
                 ('D'),
-                new ItemStack(IUItem.crafting_elements, 1, 27),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 27),
 
-                ('E'), new ItemStack(IUItem.crafting_elements, 1, 47),
+                ('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 47),
 
-                ('F'), new ItemStack(IUItem.crafting_elements, 1, 154)
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 154)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 265), "CCC", "BAB", "DDD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 265), "CCC", "BAB", "DDD",
 
                 ('A'), DEFAULT_SENSOR,
 
-                ('B'), "gearNickel",
+                ('B'), "forge:gears/Nickel",
 
-                ('C'), "plateTin",
+                ('C'), "forge:plates/Tin",
 
                 ('D'),
-                "gearSilver"
+                "forge:gears/Silver"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 263), " C ", "BAB", "DDD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 263), " C ", "BAB", "DDD",
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 21),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21),
 
-                ('B'), "doubleplateNichrome",
+                ('B'), "forge:doubleplate/Nichrome",
 
-                ('C'), new ItemStack(IUItem.energy_crystal, 1, 32767),
+                ('C'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
                 ('D'),
-                ModUtils.getCellFromFluid(FluidName.fluidgas.getInstance())
+                ModUtils.getCellFromFluid(FluidName.fluidgas.getInstance().get())
         );
         Recipes.recipe.addShapelessRecipe(
                 getBlockStack(BlockBaseMachine3.gas_generator),
-                new ItemStack(IUItem.crafting_elements, 1, 263), IUItem.machine
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 263), IUItem.machine
         );
         Recipes.recipe.addShapelessRecipe(
                 IUItem.lap_energystorage_upgrade,
-                IUItem.energyStorageUpgrade, new ItemStack(IUItem.reBattery, 1, 32767)
+                IUItem.energyStorageUpgrade, ItemStackHelper.fromData(IUItem.reBattery, 1, 32767)
         );
         Recipes.recipe.addShapelessRecipe(
                 IUItem.adv_lap_energystorage_upgrade,
-                IUItem.lap_energystorage_upgrade, new ItemStack(IUItem.energy_crystal, 1, 32767)
+                IUItem.lap_energystorage_upgrade, ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767)
         );
         Recipes.recipe.addShapelessRecipe(
                 IUItem.imp_lap_energystorage_upgrade,
-                IUItem.adv_lap_energystorage_upgrade, new ItemStack(IUItem.lapotron_crystal, 1, 32767)
+                IUItem.adv_lap_energystorage_upgrade, ItemStackHelper.fromData(IUItem.lapotron_crystal, 1, 32767)
         );
         Recipes.recipe.addShapelessRecipe(
                 IUItem.per_lap_energystorage_upgrade,
-                IUItem.imp_lap_energystorage_upgrade, new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
+                IUItem.imp_lap_energystorage_upgrade, ItemStackHelper.fromData(IUItem.AdvlapotronCrystal, 1, 32767)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 264), " C ", "BAB", "DDD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 264), " C ", "BAB", "DDD",
 
                 ('A'), DEFAULT_SENSOR,
 
-                ('B'), "doubleplateNichrome",
+                ('B'), "forge:doubleplate/Nichrome",
 
                 ('C'), IUItem.tinCan,
 
                 ('D'),
-                "plateVanadoalumite"
+                "forge:plates/Vanadoalumite"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.coolingsensor, 1), "CBC", "BDB", "BAB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.coolingsensor, 1), "CBC", "BDB", "BAB",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
-                ('B'), "plateIron", ('C'), new ItemStack(
+                ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.coolpipes,
                         1,
                         3
                 ), ('D'),
-                "doubleplateMikhail"
+                "forge:doubleplate/Mikhail"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.heatsensor, 1), "CBC", "BDB", "BAB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.heatsensor, 1), "CBC", "BDB", "BAB",
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
-                ('B'), "plateIron", ('C'), new ItemStack(
+                ('B'), "forge:plates/Iron", ('C'), ItemStackHelper.fromData(
                         IUItem.pipes,
                         1,
                         3
                 ), ('D'),
-                new ItemStack(IUItem.preciousblock)
+                ItemStackHelper.fromData(IUItem.preciousblock)
         );
 
         Recipes.recipe.addRecipe(
@@ -3568,61 +3575,59 @@ public class BasicRecipeTwo {
                 "BAB", "BBB", "BAB", ('B'), Blocks.GLASS, ('A'), IUItem.advancedAlloy
         );
 
-        Recipes.recipe.addRecipe(IUItem.hazmat_helmet
+        Recipes.recipe.addRecipe(IUItem.hazmat_helmet.getItemStack()
                 , "AAA", "ABA", " C ",
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 40),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 40),
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 478),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 478),
 
-                ('C'), new ItemStack(IUItem.crafting_elements, 1, 97),
+                ('C'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 97),
 
                 ('D'),
                 Blocks.IRON_BARS
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 97)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 97)
                 , "AAA", "ABA", "CAC",
 
                 ('B'), Blocks.GLASS,
 
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 501),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 501),
 
-                ('C'), "plateCarbon",
+                ('C'), "forge:plates/Carbon",
 
                 ('D'),
                 Blocks.IRON_BARS
         );
-        Recipes.recipe.addRecipe(IUItem.hazmat_chestplate
+        Recipes.recipe.addRecipe(IUItem.hazmat_chestplate.getItemStack()
                 , "B B", "BBB", "BBB",
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 478),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 478),
 
-                ('A'), new ItemStack(Items.DYE, 1, 14)
+                ('A'), ItemStackHelper.fromData(Items.ORANGE_DYE)
         );
-        Recipes.recipe.addRecipe(IUItem.hazmat_leggings
+        Recipes.recipe.addRecipe(IUItem.hazmat_leggings.getItemStack()
                 , "BBB", "B B", "B B",
 
-                ('B'), new ItemStack(IUItem.crafting_elements, 1, 478),
+                ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 478),
 
-                ('A'), new ItemStack(Items.DYE, 1, 14)
+                ('A'), ItemStackHelper.fromData(Items.ORANGE_DYE)
         );
         Recipes.recipe.addRecipe(
-                IUItem.rubber_boots
+                IUItem.rubber_boots.getItemStack()
                 ,
-                "   ", "B B", "B B", ('B'), new ItemStack(IUItem.crafting_elements, 1, 478), ('A'), new ItemStack(
-                        Items.DYE,
-                        1,
-                        14
+                "   ", "B B", "B B", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 478), ('A'), ItemStackHelper.fromData(
+                        Items.ORANGE_DYE
                 )
         );
         Recipes.recipe.addRecipe(
                 IUItem.sprayer,
-                "B  ", " B ", " AB", ('B'), "casingIron", ('A'), IUItem.fluidCell
+                "B  ", " B ", " AB", ('B'), "forge:casings/Iron", ('A'), IUItem.fluidCell
         );
         Recipes.recipe.addRecipe(IUItem.treetap
-                , " B ", "BBB", "B  ", ('B'), "plankWood");
+                , " B ", "BBB", "B  ", ('B'), "planks");
         Recipes.recipe.addRecipe(IUItem.wrench
-                , "B B", "BBB", " B ", ('B'), "ingotBronze");
+                , "B B", "BBB", " B ", ('B'), "forge:ingots/Bronze");
         Recipes.recipe.addShapelessRecipe(IUItem.electric_wrench
                 , IUItem.wrench, IUItem.powerunitsmall);
         Recipes.recipe.addShapelessRecipe(IUItem.electric_treetap
@@ -3630,19 +3635,19 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(
                 IUItem.chainsaw
                 ,
-                " BB", "BBB", "AB ", ('B'), "plateIron", ('A'), IUItem.powerunit
+                " BB", "BBB", "AB ", ('B'), "forge:plates/Iron", ('A'), IUItem.powerunit
         );
         Recipes.recipe.addRecipe(
                 IUItem.drill
                 ,
-                "   ", " B ", " A ", ('B'), new ItemStack(IUItem.crafting_elements, 1, 508), ('A'), IUItem.powerunit
+                "   ", " B ", " A ", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 508), ('A'), IUItem.powerunit
         );
         Recipes.recipe.addRecipe(IUItem.diamond_drill
                 , "   ", " B ", "BAB",
 
-                ('B'), "gemDiamond",
+                ('B'), "forge:gems/Diamond",
 
-                ('A'), new ItemStack(IUItem.drill, 1, 32767)
+                ('A'), ItemStackHelper.fromData(IUItem.drill, 1, 32767)
         );
 
 
@@ -3653,110 +3658,110 @@ public class BasicRecipeTwo {
 
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
-                ('C'), "plateCarbon",
+                ('C'), "forge:plates/Carbon",
 
                 ('D'),
                 IUItem.reinforcedGlass,
 
-                ('E'), new ItemStack(IUItem.advBattery, 1, 32767)
+                ('E'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767)
 
 
         );
         Recipes.recipe.addRecipe(
                 IUItem.lappack
                 ,
-                "CAC", "BAB", "A A", ('B'), new ItemStack(IUItem.energy_crystal, 1, 32767),
+                "CAC", "BAB", "A A", ('B'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
-                ('A'), "casingIron",
+                ('A'), "forge:casings/Iron",
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
         );
         Recipes.recipe.addRecipe(
                 IUItem.lapotron_crystal
                 ,
-                "ACA", "ABA", "ACA", ('B'), new ItemStack(IUItem.energy_crystal, 1, 32767),
+                "ACA", "ABA", "ACA", ('B'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
-                ('A'), "dustLapis",
+                ('A'), "forge:dusts/Lapis",
                 ('C'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
         );
         Recipes.recipe.addRecipe(
                 IUItem.charging_re_battery
                 ,
-                "ABA", "B B", "ABA", ('B'), new ItemStack(IUItem.advBattery, 1, 32767),
+                "ABA", "B B", "ABA", ('B'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
 
                 ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
         );
         Recipes.recipe.addRecipe(
                 IUItem.advanced_charging_re_battery
                 ,
-                " B ", "BCB", " B ", ('B'), new ItemStack(IUItem.reBattery, 1, 32767),
+                " B ", "BCB", " B ", ('B'), ItemStackHelper.fromData(IUItem.reBattery, 1, 32767),
 
 
-                ('C'), new ItemStack(IUItem.charging_re_battery, 1, 32767)
+                ('C'), ItemStackHelper.fromData(IUItem.charging_re_battery, 1, 32767)
         );
         Recipes.recipe.addRecipe(
                 IUItem.charging_energy_crystal
                 ,
-                " B ", "BCB", " B ", ('B'), new ItemStack(IUItem.energy_crystal, 1, 32767),
+                " B ", "BCB", " B ", ('B'), ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767),
 
 
-                ('C'), new ItemStack(IUItem.advanced_charging_re_battery, 1, 32767)
+                ('C'), ItemStackHelper.fromData(IUItem.advanced_charging_re_battery, 1, 32767)
         );
         Recipes.recipe.addRecipe(
                 IUItem.charging_lapotron_crystal
                 ,
-                " B ", "BCB", " B ", ('B'), new ItemStack(IUItem.lapotron_crystal, 1, 32767),
+                " B ", "BCB", " B ", ('B'), ItemStackHelper.fromData(IUItem.lapotron_crystal, 1, 32767),
 
 
-                ('C'), new ItemStack(IUItem.charging_energy_crystal, 1, 32767)
+                ('C'), ItemStackHelper.fromData(IUItem.charging_energy_crystal, 1, 32767)
         );
         Recipes.recipe.addRecipe(IUItem.ForgeHammer
-                , "AA ", "ABB", "AA ", ('B'), "stickWood",
-                ('A'), "ingotIron"
+                , "AA ", "ABB", "AA ", ('B'),Items.STICK,
+                ('A'), "forge:ingots/Iron"
         );
         Recipes.recipe.addRecipe(IUItem.ForgeHammer
-                , " AA", "BBA", " AA", ('B'), "stickWood",
-                ('A'), "ingotIron"
+                , " AA", "BBA", " AA", ('B'), Items.STICK,
+                ('A'), "forge:ingots/Iron"
         );
         Recipes.recipe.addRecipe(IUItem.cutter
-                , "A A", " A ", "B B", ('B'), "ingotCopper",
-                ('A'), "plateIron"
+                , "A A", " A ", "B B", ('B'), "forge:ingots/Copper",
+                ('A'), "forge:plates/Iron"
         );
         Recipes.recipe.addRecipe(
                 IUItem.advanced_batpack
                 ,
-                "BAB", "BCB", "B B", ('B'), new ItemStack(IUItem.advBattery, 1, 32767),
+                "BAB", "BCB", "B B", ('B'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "casingCopper"
+                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "forge:casings/Copper"
         );
         Recipes.recipe.addRecipe(
                 IUItem.batpack
                 ,
-                "BAB", "BCB", "B B", ('B'), new ItemStack(IUItem.advBattery, 1, 32767),
+                "BAB", "BCB", "B B", ('B'), ItemStackHelper.fromData(IUItem.advBattery, 1, 32767),
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "plankWood"
+                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), ('C'), "planks"
         );
         Recipes.recipe.addRecipe(IUItem.nanosaber
                 , "BA ", "BA ", "CDC", ('B'), Items.GLOWSTONE_DUST,
-                ('A'), IUItem.advancedAlloy, ('C'), "plateCarbon", ('D'),
-                new ItemStack(IUItem.energy_crystal, 1, 32767)
+                ('A'), IUItem.advancedAlloy, ('C'), "forge:plates/Carbon", ('D'),
+                ItemStackHelper.fromData(IUItem.energy_crystal, 1, 32767)
         );
 
 
         Recipes.recipe.addRecipe(IUItem.mixedMetalIngot, "AAA", "BBB", "CCC",
-                ('A'), "plateIron", ('B'), "plateCopper", ('C'), "plateTin"
+                ('A'), "forge:plates/Iron", ('B'), "forge:plates/Copper", ('C'), "forge:plates/Tin"
         );
         Recipes.recipe.addRecipe(IUItem.rawcrystalmemory, "ABA", "BAB", "ABA",
-                ('A'), "dustSiliconDioxide", ('B'), "dustObsidian"
+                ('A'), "forge:dusts/Silicon_Dioxide", ('B'), "forge:dusts/Obsidian"
         );
         Recipes.recipe.addRecipe(IUItem.carbonFiber, "AA ", "AA ", "   ",
-                ('A'), "dustCoal"
+                ('A'), "forge:dusts/Coal"
         );
         Recipes.recipe.addShapelessRecipe(IUItem.carbonMesh, IUItem.carbonFiber, IUItem.carbonFiber);
         Recipes.recipe.addRecipe(IUItem.copperboiler, "AAA", "A A", "AAA",
-                ('A'), "casingCopper"
+                ('A'), "forge:casings/Copper"
         );
         Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
-                ('A'), Items.REEDS
+                ('A'), Items.SUGAR_CANE
         );
         Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
                 ('A'), Items.WHEAT
@@ -3768,41 +3773,39 @@ public class BasicRecipeTwo {
                 ('A'), IUItem.crops
         );
         Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
-                ('A'), "treeLeaves"
+                ('A'), "leaves"
         );
         Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
                 ('A'), Items.WHEAT_SEEDS
         );
-        Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
-                ('A'), "treeLeaves"
-        );
-        Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
-                ('A'), "treeSapling"
-        );
-        Recipes.recipe.addRecipe(ModUtils.setSize(IUItem.fluidCell, 3), " A ", "ABA", " A ",
 
-                ('A'), "casingTin",
+        Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
+                ('A'), "Saplings"
+        );
+        Recipes.recipe.addRecipe(ModUtils.setSize(IUItem.fluidCell.getItemStack(), 3), " A ", "ABA", " A ",
+
+                ('A'), "forge:casings/Tin",
 
                 ('B'),
-                Item.getItemFromBlock(Blocks.GLASS_PANE)
+                Blocks.GLASS_PANE
         );
         Recipes.recipe.addRecipe(IUItem.coalBall, "AAA", "ABA", "AAA",
-                ('A'), "dustCoal", ('B'), Items.FLINT
+                ('A'), "forge:dusts/Coal", ('B'), Items.FLINT
         );
         Recipes.recipe.addRecipe(IUItem.coal_chunk, "AAA", "ABA", "AAA",
                 ('A'), IUItem.compressedCoalBall, ('B'), Blocks.OBSIDIAN
         );
 
         Recipes.recipe.addRecipe(IUItem.cfPowder, "ACA", "ABA", "ACA",
-                ('A'), "dustStone", ('B'), Items.CLAY_BALL,
+                ('A'), "forge:dusts/Stone", ('B'), Items.CLAY_BALL,
                 ('C'), Blocks.SAND
         );
 
         Recipes.recipe.addRecipe(IUItem.heatconducto, "ABA", "ABA", "ABA",
-                ('A'), IUItem.rubber, ('B'), "plateCopper"
+                ('A'), IUItem.rubber, ('B'), "forge:plates/Copper"
         );
         Recipes.recipe.addRecipe(IUItem.ejectorUpgrade, "ABA", " D ", "ACA",
-                ('A'), "plateTin", ('B'), Blocks.PISTON, 'C', IUItem.upgrade_casing, 'D', IUItem.motors_with_improved_bearings_
+                ('A'), "forge:plates/Tin", ('B'), Blocks.PISTON, 'C', IUItem.upgrade_casing, 'D', IUItem.motors_with_improved_bearings_
         );
         Recipes.recipe.addRecipe(
                 IUItem.pullingUpgrade,
@@ -3810,7 +3813,7 @@ public class BasicRecipeTwo {
                 " D ",
                 "ACA",
                 ('A'),
-                "plateTin",
+                "forge:plates/Tin",
                 ('B'),
                 Blocks.STICKY_PISTON,
                 'C',
@@ -3819,10 +3822,10 @@ public class BasicRecipeTwo {
                 IUItem.motors_with_improved_bearings_
         );
         Recipes.recipe.addRecipe(IUItem.fluidEjectorUpgrade, "ADA", " B ", "ACA",
-                ('A'), "plateTin", ('B'), IUItem.elemotor, 'C', IUItem.upgrade_casing, 'D', IUItem.fluidCell
+                ('A'), "forge:plates/Tin", ('B'), IUItem.elemotor, 'C', IUItem.upgrade_casing, 'D', IUItem.fluidCell
         );
         Recipes.recipe.addRecipe(IUItem.fluidpullingUpgrade, "ACA", " B ", "ADA",
-                ('A'), "plateTin", ('B'), IUItem.elemotor, ('C'), new ItemStack(
+                ('A'), "forge:plates/Tin", ('B'), IUItem.elemotor, ('C'), ItemStackHelper.fromData(
                         IUItem.treetap,
                         1,
                         32767
@@ -3830,23 +3833,23 @@ public class BasicRecipeTwo {
         );
 
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.gasChamber), "ABA", "BBB", "CAC",
-                ('A'), new ItemStack(IUItem.crafting_elements, 1, 601), ('B'), "plateIron", ('C'), "gearInvar"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.gasChamber), "ABA", "BBB", "CAC",
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 601), ('B'), "forge:plates/Iron", ('C'), "forge:gears/Invar"
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 464)
-                , "AAA", "AAA", "AAA", ('A'), new ItemStack(IUItem.crafting_elements, 1, 457));
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 465)
-                , "AAA", "AAA", "AAA", ('A'), new ItemStack(IUItem.crafting_elements, 1, 464));
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 464)
+                , "AAA", "AAA", "AAA", ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 457));
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 465)
+                , "AAA", "AAA", "AAA", ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 464));
 
         Recipes.recipe.addRecipe(IUItem.bronze_helmet
-                , "AAA", "A A", "   ", ('A'), "ingotBronze");
+                , "AAA", "A A", "   ", ('A'), "forge:ingots/Bronze");
         Recipes.recipe.addRecipe(IUItem.bronze_leggings
-                , "AAA", "A A", "A A", ('A'), "ingotBronze");
+                , "AAA", "A A", "A A", ('A'), "forge:ingots/Bronze");
         Recipes.recipe.addRecipe(IUItem.bronze_boots
-                , "   ", "A A", "A A", ('A'), "ingotBronze");
+                , "   ", "A A", "A A", ('A'), "forge:ingots/Bronze");
         Recipes.recipe.addRecipe(IUItem.bronze_chestplate
-                , "A A", "AAA", "AAA", ('A'), "ingotBronze");
+                , "A A", "AAA", "AAA", ('A'), "forge:ingots/Bronze");
 
 
         Recipes.recipe.addRecipe(IUItem.UranFuel, "AAA", "BBB", "AAA",
@@ -3877,11 +3880,11 @@ public class BasicRecipeTwo {
                 "CDC",
                 "ABA",
                 ('A'),
-                "plateSteel",
+                "forge:plates/Steel",
                 ('B'),
                 IUItem.advancedAlloy,
                 ('C'),
-                "plateCarbon",
+                "forge:plates/Carbon",
                 ('D'),
                 IUItem.machine
         );
@@ -3949,7 +3952,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nano_helmet,
                 ('B'),
-                "doubleplateFerromanganese",
+                "forge:doubleplate/Ferromanganese",
                 ('C'),
                 IUItem.lapotron_crystal,
                 ('D'),
@@ -3963,7 +3966,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nano_chestplate,
                 ('B'),
-                "doubleplateFerromanganese",
+                "forge:doubleplate/Ferromanganese",
                 ('C'),
                 IUItem.lapotron_crystal,
                 ('D'),
@@ -3977,7 +3980,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nano_boots,
                 ('B'),
-                "doubleplateFerromanganese",
+                "forge:doubleplate/Ferromanganese",
                 ('C'),
                 IUItem.lapotron_crystal,
                 ('D'),
@@ -3991,7 +3994,7 @@ public class BasicRecipeTwo {
                 ('A'),
                 IUItem.nano_leggings,
                 ('B'),
-                "doubleplateFerromanganese",
+                "forge:doubleplate/Ferromanganese",
                 ('C'),
                 IUItem.lapotron_crystal,
                 ('D'),
@@ -4109,295 +4112,294 @@ public class BasicRecipeTwo {
                 ('D'),
                 IUItem.doublecompressIridiumplate, 'E', IUItem.adv_spectral_box, 'F', IUItem.compressAlloy
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 437), " AA", "BCA", "BB ", 'A', "plateSteel", 'B',
-                IUItem.advancedAlloy, 'C', "stickInvar"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 437), " AA", "BCA", "BB ", 'A', "forge:plates/Steel", 'B',
+                IUItem.advancedAlloy, 'C', "forge:rods/Invar"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 337), " AA", "A A", "AA ", 'A', "plateIron");
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 339), " AA", "A A", "AA ", 'A', "plateGold");
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 305), " AA", "A A", "AA ", 'A', "gemDiamond");
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 341), " AA", "A A", "AA ", 'A', "gemEmerald");
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 337), " AA", "A A", "AA ", 'A', "forge:plates/Iron");
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 339), " AA", "A A", "AA ", 'A', "forge:plates/Gold");
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 305), " AA", "A A", "AA ", 'A', "forge:gems/Diamond");
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 341), " AA", "A A", "AA ", 'A', "forge:gems/Emerald");
 
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 433), "BAB", "ABA", "BAB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 433), "BAB", "ABA", "BAB",
 
-                ('A'), "plateZinc",
+                ('A'), "forge:plates/Zinc",
 
 
-                ('B'), "plateIridium"
+                ('B'), "forge:plates/Iridium"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 367),
-                " A ", "ABA", "CCC", 'A', "plateBeryllium", 'B', "plateIron", 'C', "plateBor"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 367),
+                " A ", "ABA", "CCC", 'A', "forge:plates/Beryllium", 'B', "forge:plates/Iron", 'C', "forge:plates/Bor"
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 415),
-                " A ", "ABA", "CCC", 'A', "plateGold", 'B', new ItemStack(IUItem.crafting_elements, 1, 367), 'C', "plateElectrum"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 415),
+                " A ", "ABA", "CCC", 'A', "forge:plates/Gold", 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 367), 'C', "forge:plates/Electrum"
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 380),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 380),
                 " A ",
                 "ABA",
                 "CCC",
                 'A',
-                "plateMikhail",
+                "forge:plates/Mikhail",
                 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 415),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 415),
                 'C',
-                "plateVanadium"
+                "forge:plates/vanady"
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 396),
-                " A ", "ABA", "CCC", 'A', "plateCadmium", 'B', new ItemStack(IUItem.crafting_elements, 1, 380), 'C', "plateSpinel"
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 396),
+                " A ", "ABA", "CCC", 'A', "forge:plates/Cadmium", 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 380), 'C', "forge:plates/Spinel"
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 336),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 336),
                 "CDC",
                 "BAB",
                 "CDC",
                 'A',
-                new ItemStack(IUItem.core, 1, 2),
+                ItemStackHelper.fromData(IUItem.core, 1, 2),
                 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 414),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'C',
-                "ingotOsmium",
+                "forge:ingots/Osmium",
                 'D',
-                "platePlatinum"
+                "forge:plates/Platinum"
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 335),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 335),
                 "CDC",
                 "BAB",
                 "CDC",
                 'A',
-                new ItemStack(IUItem.core, 1, 2),
+                ItemStackHelper.fromData(IUItem.core, 1, 2),
                 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 414),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'C',
-                "ingotOsmium",
+                "forge:ingots/Osmium",
                 'D',
-                "plateTitanium"
+                "forge:plates/Titanium"
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 334),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 334),
                 "CDC",
                 "BAB",
                 "CDC",
                 'A',
-                new ItemStack(IUItem.core, 1, 2),
+                ItemStackHelper.fromData(IUItem.core, 1, 2),
                 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 414),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'C',
-                "ingotOsmium",
+                "forge:ingots/Osmium",
                 'D',
-                "plateZinc"
+                "forge:plates/Zinc"
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 333),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 333),
                 "CDC",
                 "BAB",
                 "CDC",
                 'A',
-                new ItemStack(IUItem.core, 1, 2),
+                ItemStackHelper.fromData(IUItem.core, 1, 2),
                 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 414),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'C',
-                "ingotOsmium",
+                "forge:ingots/Osmium",
                 'D',
-                "plateTungsten"
+                "forge:plates/Tungsten"
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 427),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 427),
                 "BCB",
                 "DAD",
                 " ",
                 'A',
-                new ItemStack(IUItem.crafting_elements, 1, 435),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 435),
                 'B',
                 IUItem.nanoBox,
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 'D',
-                "plateDenseGold"
+                "forge:plateDense/Gold"
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 374),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 374),
                 "BCB",
                 "DAD",
                 " ",
                 'A',
-                new ItemStack(IUItem.crafting_elements, 1, 427),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 427),
                 'B',
                 IUItem.quantumtool,
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 'D',
-                "doubleplateOsmium"
+                "forge:doubleplate/Osmium"
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 403),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 403),
                 "BCB",
                 "DAD",
                 " ",
                 'A',
-                new ItemStack(IUItem.crafting_elements, 1, 374),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 374),
                 'B',
                 IUItem.spectral_box,
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 'D',
-                "doubleplateOsmium"
+                "forge:doubleplate/Osmium"
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 428),
-                "BCB", "DAD", " ", 'A', new ItemStack(IUItem.crafting_elements, 1, 436), 'B', IUItem.nanoBox, 'C',
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 428),
+                "BCB", "DAD", " ", 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 436), 'B', IUItem.nanoBox, 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
-                'D', "plateDenseGold"
+                'D', "forge:plateDense/Gold"
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 379),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 379),
                 "BCB",
                 "DAD",
                 " ",
                 'A',
-                new ItemStack(IUItem.crafting_elements, 1, 428),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 428),
                 'B',
                 IUItem.quantumtool,
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 'D',
-                "doubleplateOsmium"
+                "forge:doubleplate/Osmium"
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 404),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 404),
                 "BCB",
                 "DAD",
                 " ",
                 'A',
-                new ItemStack(IUItem.crafting_elements, 1, 379),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 379),
                 'B',
                 IUItem.spectral_box,
                 'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 'D',
-                "doubleplateOsmium"
+                "forge:doubleplate/Osmium"
         );
         // water reactor
         // 366
         // 420
         // 378
         // 405
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 0),
-                "AA ", "AA ", "   ", 'A', new ItemStack(IUItem.crafting_elements, 1, 366)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 0),
+                "AA ", "AA ", "   ", 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 366)
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 1),
-                "AA ", "AA ", "   ", 'A', new ItemStack(IUItem.crafting_elements, 1, 420)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 1),
+                "AA ", "AA ", "   ", 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 420)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 2),
-                "AA ", "AA ", "   ", 'A', new ItemStack(IUItem.crafting_elements, 1, 378)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 2),
+                "AA ", "AA ", "   ", 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 378)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 3),
-                "AA ", "AA ", "   ", 'A', new ItemStack(IUItem.crafting_elements, 1, 405)
-        );
-
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 4),
-                "  ", "BAB", "CDC", 'A', new ItemStack(IUItem.water_reactors_component, 1, 0), 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 322), 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 414), 'D', new ItemStack(IUItem.crafting_elements, 1, 356)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 5),
-                "BDB", "CAC", "B B", 'A', new ItemStack(IUItem.water_reactors_component, 1, 4)
-                , 'B', new ItemStack(IUItem.crafting_elements, 1, 420), 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 426), 'D', new ItemStack(IUItem.crafting_elements, 1, 424)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 6),
-                "BDB", "CAC", "B B", 'A', new ItemStack(IUItem.water_reactors_component, 1, 5), 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 378), 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 373), 'D', new ItemStack(IUItem.crafting_elements, 1, 371)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 7),
-                "BDB", "CAC", "B B", 'A', new ItemStack(IUItem.water_reactors_component, 1, 6), 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 405), 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 397), 'D', new ItemStack(IUItem.crafting_elements, 1, 402)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 3),
+                "AA ", "AA ", "   ", 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 405)
         );
 
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 8),
-                "EDE", "BAB", "FCF", 'A', new ItemStack(IUItem.water_reactors_component, 1, 0), 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 435), 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 342), 'D',
-                new ItemStack(IUItem.crafting_elements, 1, 322)
-                , 'E', new ItemStack(IUItem.crafting_elements, 1, 414), 'F', new ItemStack(IUItem.crafting_elements, 1, 356)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 4),
+                "  ", "BAB", "CDC", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 0), 'B',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 322), 'C',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 356)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 9),
-                "BCB", "DAD", "BEB", 'A', new ItemStack(IUItem.water_reactors_component, 1, 8), 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 420), 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 427), 'D', new ItemStack(IUItem.crafting_elements, 1, 426), 'E',
-                new ItemStack(IUItem.crafting_elements, 1, 424)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 5),
+                "BDB", "CAC", "B B", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 4)
+                , 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 420), 'C',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 426), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 424)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 10),
-                "BCB", "DAD", "BEB", 'A', new ItemStack(IUItem.water_reactors_component, 1, 9), 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 378), 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 374)
-                , 'D', new ItemStack(IUItem.crafting_elements, 1, 373), 'E', new ItemStack(IUItem.crafting_elements, 1, 371)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 6),
+                "BDB", "CAC", "B B", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 5), 'B',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 378), 'C',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 371)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 11),
-                "BCB", "DAD", "BEB", 'A', new ItemStack(IUItem.water_reactors_component, 1, 10), 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 405), 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 403), 'D', new ItemStack(IUItem.crafting_elements, 1, 397), 'E',
-                new ItemStack(IUItem.crafting_elements, 1, 402)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 7),
+                "BDB", "CAC", "B B", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 6), 'B',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 405), 'C',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 397), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402)
+        );
+
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 8),
+                "EDE", "BAB", "FCF", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 0), 'B',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 435), 'C',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 342), 'D',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 322)
+                , 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414), 'F', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 356)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 9),
+                "BCB", "DAD", "BEB", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 8), 'B',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 420), 'C',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 427), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 426), 'E',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 424)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 10),
+                "BCB", "DAD", "BEB", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 9), 'B',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 378), 'C',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 374)
+                , 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373), 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 371)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 11),
+                "BCB", "DAD", "BEB", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 10), 'B',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 405), 'C',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 403), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 397), 'E',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402)
         );
 
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.water_reactors_component, 1, 12),
+                ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 12),
                 "CBC",
                 "BAB",
                 " D ",
                 'A',
-                new ItemStack(IUItem.water_reactors_component, 1, 0),
+                ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 0),
                 'B',
                 IUItem.fluidpullingUpgrade,
                 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 414),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'D',
-                new ItemStack(IUItem.crafting_elements, 1, 356)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 356)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 13),
-                "BDB", "CAC", "B B", 'A', new ItemStack(IUItem.water_reactors_component, 1, 12)
-                , 'B', new ItemStack(IUItem.crafting_elements, 1, 420)
-                , 'C', new ItemStack(IUItem.crafting_elements, 1, 426), 'D', new ItemStack(IUItem.crafting_elements, 1, 424)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 13),
+                "BDB", "CAC", "B B", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 12)
+                , 'B', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 420)
+                , 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 426), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 424)
         );
         Recipes.recipe.addRecipe(
-                new ItemStack(IUItem.water_reactors_component, 1, 14),
+                ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 14),
                 "BDB",
                 "CAC",
                 "B B",
                 'A',
-                new ItemStack(IUItem.water_reactors_component, 1, 13),
+                ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 13),
                 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 378),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 378),
                 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 373),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 373),
                 'D',
-                new ItemStack(IUItem.crafting_elements, 1, 371)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 371)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_reactors_component, 1, 15),
-                "BDB", "CAC", "B B", 'A', new ItemStack(IUItem.water_reactors_component, 1, 14), 'B',
-                new ItemStack(IUItem.crafting_elements, 1, 405)
-                , 'C', new ItemStack(IUItem.crafting_elements, 1, 397), 'D', new ItemStack(IUItem.crafting_elements, 1, 402)
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 15),
+                "BDB", "CAC", "B B", 'A', ItemStackHelper.fromData(IUItem.water_reactors_component, 1, 14), 'B',
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 405)
+                , 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 397), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402)
         );
-
 
         BasicRecipeThree.recipe();
     }
 
     public static ItemStack getBlockStack(IMultiTileBlock block) {
-        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack(block);
+        return TileBlockCreator.instance.get(block.getIDBlock()).getItemStack();
     }
 
 }

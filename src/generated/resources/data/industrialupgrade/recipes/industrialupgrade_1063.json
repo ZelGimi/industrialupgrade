@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:earth_quarry/earth_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quarry_vein/quarry_vein"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    " E ",
+    "DAD",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:earth_quarry/earth_rig"
+  },
+  "show_notification": true
+}

@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/kvr_battery"
+		"layer0": "industrialupgrade:item/kvr_battery"
 	}
 }

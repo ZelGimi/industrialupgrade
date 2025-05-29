@@ -5,8 +5,8 @@
     64
   ],
   "textures" : {
-    "0" : "industrialupgrade:blocks/anti_modification_station",
-    "particle" : "industrialupgrade:blocks/anti_modification_station"
+    "0" : "industrialupgrade:block/anti_modification_station",
+    "particle" : "industrialupgrade:block/anti_modification_station"
   },
   "elements" : [
     {

@@ -1,7 +1,7 @@
 package com.denfop.api.bee;
 
 import com.denfop.api.agriculture.CropInit;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +22,7 @@ public class BeeInit {
                 100,
                 500,
                 7500,
-                new AxisAlignedBB(-8, -3, -8, 8, 3, 8),
+                new AABB(-8, -3, -8, 8, 3, 8),
                 2,
                 5,
                 false,
@@ -37,7 +37,7 @@ public class BeeInit {
                 110,
                 395,
                 6250,
-                new AxisAlignedBB(-7, -3, -7, 7, 3, 7),
+                new AABB(-7, -3, -7, 7, 3, 7),
                 2,
                 8,
                 false,
@@ -51,7 +51,7 @@ public class BeeInit {
                 120,
                 450,
                 6875,
-                new AxisAlignedBB(-8, -4, -8, 8, 4, 8),
+                new AABB(-8, -4, -8, 8, 4, 8),
                 3,
                 10,
                 true,
@@ -66,7 +66,7 @@ public class BeeInit {
                 80,
                 290,
                 6875,
-                new AxisAlignedBB(-7, -4, -7, 7, 4, 7),
+                new AABB(-7, -4, -7, 7, 4, 7),
                 2,
                 15,
                 true,
@@ -81,7 +81,7 @@ public class BeeInit {
                 100,
                 450,
                 8750,
-                new AxisAlignedBB(-8, -3, -8, 8, 3, 8),
+                new AABB(-8, -3, -8, 8, 3, 8),
                 3,
                 20,
                 true,

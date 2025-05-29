@@ -2,31 +2,74 @@ package com.denfop.api.transport;
 
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class FluidHandler implements IFluidHandler {
 
-    @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return new IFluidTankProperties[0];
-    }
 
+    /**
+     * @return
+     */
     @Override
-    public int fill(final FluidStack resource, final boolean doFill) {
+    public int getTanks() {
         return 0;
     }
 
-    @Nullable
+    /**
+     * @param tank Tank to query.
+     * @return
+     */
     @Override
-    public FluidStack drain(final FluidStack resource, final boolean doDrain) {
+    public @NotNull FluidStack getFluidInTank(int tank) {
         return null;
     }
 
-    @Nullable
+    /**
+     * @param tank Tank to query.
+     * @return
+     */
     @Override
-    public FluidStack drain(final int maxDrain, final boolean doDrain) {
+    public int getTankCapacity(int tank) {
+        return 0;
+    }
+
+    /**
+     * @param tank  Tank to query for validity
+     * @param stack Stack to test with for validity
+     * @return
+     */
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return false;
+    }
+
+    /**
+     * @param resource FluidStack representing the Fluid and maximum amount of fluid to be filled.
+     * @param action   If SIMULATE, fill will only be simulated.
+     * @return
+     */
+    @Override
+    public int fill(FluidStack resource, FluidAction action) {
+        return 0;
+    }
+
+    /**
+     * @param resource FluidStack representing the Fluid and maximum amount of fluid to be drained.
+     * @param action   If SIMULATE, drain will only be simulated.
+     * @return
+     */
+    @Override
+    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
         return null;
     }
 
+    /**
+     * @param maxDrain Maximum amount of fluid to drain.
+     * @param action   If SIMULATE, drain will only be simulated.
+     * @return
+     */
+    @Override
+    public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+        return null;
+    }
 }

@@ -1,71 +1,80 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
 import com.denfop.ElectricItem;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.api.item.IEnergyItem;
-import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-
-public abstract class BaseEnergyItem extends Item implements IEnergyItem {
-
+public  class BaseEnergyItem extends Item implements IEnergyItem, IItemTab {
     protected final double maxCharge;
     protected final double transferLimit;
     protected final int tier;
-    public String name;
+    protected String nameItem;
 
-    public BaseEnergyItem(String name, double maxCharge, double transferLimit, int tier) {
-        super();
+    public BaseEnergyItem(double maxCharge, double transferLimit, int tier) {
+        super(new Properties().setNoRepair().stacksTo(1));
         this.maxCharge = maxCharge;
         this.transferLimit = transferLimit;
         this.tier = tier;
-        this.setMaxStackSize(1);
-        this.setNoRepair();
-        this.setMaxDamage(0);
-        this.setCreativeTab(IUCore.EnergyTab);
-        this.name = name;
-        setUnlocalizedName(name);
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-
+    }
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            final ItemStack var4 = new ItemStack(this, 1);
+            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
+            p_41392_.add(var4);
+            p_41392_.add(new ItemStack(this, 1));
+        }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
+    }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = "iu."+pathBuilder.toString().split("\\.")[2];
+        }
+
+        return this.nameItem;
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
 
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "energy" + "/" + name;
-        return new ModelResourceLocation(loc, null);
+    public boolean isBarVisible(final ItemStack stack) {
+        return true;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
+    public int getBarColor(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
     }
 
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
-    }
 
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        ));
     }
 
     public boolean canProvideEnergy(ItemStack stack) {
@@ -82,35 +91,6 @@ public abstract class BaseEnergyItem extends Item implements IEnergyItem {
 
     public double getTransferEnergy(ItemStack stack) {
         return this.transferLimit;
-    }
-
-    @Override
-    public boolean showDurabilityBar(final ItemStack stack) {
-        return true;
-    }
-
-    public int getRGBDurabilityForDisplay(ItemStack stack) {
-        return ModUtils.convertRGBcolorToInt(33, 91, 199);
-    }
-
-    public double getDurabilityForDisplay(ItemStack stack) {
-        return Math.min(
-                Math.max(
-                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
-                        0.0
-                ),
-                1.0
-        );
-    }
-
-    @Override
-    public void getSubItems(@Nonnull final CreativeTabs p_150895_1_, @Nonnull final NonNullList<ItemStack> var3) {
-        if (this.isInCreativeTab(p_150895_1_)) {
-            final ItemStack var4 = new ItemStack(this, 1);
-            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
-            var3.add(var4);
-            var3.add(new ItemStack(this, 1));
-        }
     }
 
 

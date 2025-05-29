@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.sytem.EnergyType;
@@ -10,15 +11,19 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSafetyDoom;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSafetyDoom;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +37,8 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
     public List<List<IAdvReactor>> iAdvReactorList = new ArrayList<>();
     public boolean full = false;
 
-    public TileEntityReactorSafetyDoom() {
-        super(50000, 14, 1);
+    public TileEntityReactorSafetyDoom(BlockPos pos, BlockState state) {
+        super(50000, 14, 1,BlockBaseMachine3.reactor_safety_doom,pos,state);
         this.rad = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.RADIATION, this, 5000000000D));
 
     }
@@ -41,7 +46,7 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
     @Override
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
-        ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
+        ChunkPos chunkPos = this.getWorld().getChunkAt(this.pos).getPos();
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
                 ChunkPos chunkPos1 = new ChunkPos(chunkPos.x + x, chunkPos.z + z);
@@ -73,7 +78,7 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     public void onUnloaded() {
@@ -86,7 +91,7 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
 
         super.updateEntityServer();
 
-        if (getWorld().provider.getWorldTime() % 100 == 0) {
+        if (getWorld().getGameTime() % 100 == 0) {
             boolean work = false;
             this.full = false;
             if (this.rad.getEnergy() < this.rad.getCapacity() && this.energy.canUseEnergy(10)) {
@@ -118,15 +123,15 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
 
 
     @Override
-    public ContainerSafetyDoom getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerSafetyDoom getGuiContainer(final Player entityPlayer) {
         return new ContainerSafetyDoom(this, entityPlayer);
     }
 
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiSafetyDoom getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiSafetyDoom(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSafetyDoom((ContainerSafetyDoom) menu);
     }
 
     @Override

@@ -1,7 +1,0 @@
-{
-	"parent" : "industrialupgrade:item/default",
-	"textures" : {
-	  "layer0" : "industrialupgrade:items/beryllium_bronze_item_pipe"
-	}
-  }
-  

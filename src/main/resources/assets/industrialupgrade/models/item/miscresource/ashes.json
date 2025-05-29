@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/ashes"
+		"layer0": "industrialupgrade:item/ashes"
 	}
 }

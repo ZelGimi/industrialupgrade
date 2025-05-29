@@ -1,6 +1,8 @@
 package com.denfop.network;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public final class Sides<T> {
 
@@ -9,12 +11,7 @@ public final class Sides<T> {
 
     public Sides(String serverClass, String clientClass) {
         try {
-            if (FMLCommonHandler.instance().getSide().isClient()) {
-                this.clientInstance = (T) Class.forName(clientClass).newInstance();
-            } else {
-                this.clientInstance = null;
-            }
-
+            this.clientInstance = FMLEnvironment.dist == Dist.CLIENT ? (T) Class.forName(clientClass).newInstance() : null;
             this.serverInstance = (T) Class.forName(serverClass).newInstance();
         } catch (Exception var4) {
             throw new RuntimeException(var4);

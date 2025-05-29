@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/sensor_oil"
+    "layer0" : "industrialupgrade:item/sensor_oil"
   }
 }

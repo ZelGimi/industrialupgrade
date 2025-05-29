@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/mercury_stone"
+    "all" : "industrialupgrade:block/mercury_stone"
   }
 }

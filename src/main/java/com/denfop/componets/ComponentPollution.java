@@ -5,12 +5,12 @@ import com.denfop.api.pollution.ChunkLevel;
 import com.denfop.api.pollution.PollutionManager;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ComponentPollution extends AbstractComponent {
     @Override
     public void onLoaded() {
         super.onLoaded();
-        this.stack = new ItemStack(IUItem.module7, 1, 9);
+        this.stack = new ItemStack(IUItem.module7.getStack(9), 1);
         if (this.active) {
             this.timer.setCanWork(false);
         }
@@ -45,7 +45,7 @@ public class ComponentPollution extends AbstractComponent {
 
     public ChunkPos getChunkPos() {
         if (this.chunkPos == null) {
-            chunkPos = new ChunkPos(this.getParent().getPos());
+            chunkPos = new ChunkPos(this.getParent().getBlockPos());
         }
         return chunkPos;
     }
@@ -67,7 +67,7 @@ public class ComponentPollution extends AbstractComponent {
     public void updateEntityServer() {
         super.updateEntityServer();
         this.percent = 1;
-        if (this.parent.getWorld().provider.getWorldTime() % 60 == 0) {
+        if (this.parent.getWorld().getGameTime() % 60 == 0) {
             final ChunkLevel chunkLevel = PollutionManager.pollutionManager.getChunkLevelAir(this.getChunkPos());
             if (chunkLevel != null) {
                 switch (chunkLevel.getLevelPollution()) {
@@ -93,11 +93,11 @@ public class ComponentPollution extends AbstractComponent {
     }
 
     @Override
-    public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
+    public boolean onBlockActivated(final Player player, final InteractionHand hand) {
         super.onBlockActivated(player, hand);
-        final ItemStack stack = player.getHeldItem(hand);
+        final ItemStack stack = player.getItemInHand(hand);
         if (!this.active && !stack.isEmpty()) {
-            if (stack.isItemEqual(this.stack)) {
+            if (stack.is(this.stack.getItem())) {
                 this.active = true;
                 stack.shrink(1);
                 this.timer.setCanWork(false);
@@ -107,7 +107,7 @@ public class ComponentPollution extends AbstractComponent {
         return false;
     }
 
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeBoolean(this.active);
         buffer.flip();
@@ -138,19 +138,19 @@ public class ComponentPollution extends AbstractComponent {
     }
 
     @Override
-    public boolean canUsePurifier(final EntityPlayer player) {
+    public boolean canUsePurifier(final Player player) {
         return this.active;
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound nbt = super.writeToNbt();
-        nbt.setBoolean("active", active);
+    public CompoundTag writeToNbt() {
+        CompoundTag nbt = super.writeToNbt();
+        nbt.putBoolean("active", active);
         return nbt;
     }
 
     @Override
-    public void readFromNbt(final NBTTagCompound nbt) {
+    public void readFromNbt(final CompoundTag nbt) {
         super.readFromNbt(nbt);
         this.active = nbt.getBoolean("active");
     }

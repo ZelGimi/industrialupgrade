@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileAntiUpgradeBlock;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerAntiUpgrade extends ContainerFullInv<TileAntiUpgradeBlock> {
 
-    public ContainerAntiUpgrade(EntityPlayer entityPlayer, TileAntiUpgradeBlock tileEntity1) {
+    public ContainerAntiUpgrade(Player entityPlayer, TileAntiUpgradeBlock tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         addSlotToContainer(new SlotInvSlot(tileEntity1.input,
                 0, 106, 35

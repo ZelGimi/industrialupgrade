@@ -6,14 +6,18 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasWell;
 import com.denfop.componets.Energy;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityGasWellEnergy extends TileEntityMultiBlockElement implements ISocket {
 
     Energy energy;
 
-    public TileEntityGasWellEnergy() {
+    public TileEntityGasWellEnergy(BlockPos pos, BlockState state) {
+        super(BlockGasWell.gas_well_socket, pos, state);
         energy = this.addComponent(Energy.asBasicSink(this, 4000, 14));
     }
+
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -22,7 +26,7 @@ public class TileEntityGasWellEnergy extends TileEntityMultiBlockElement impleme
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_well;
+        return IUItem.gas_well.getBlock(getTeBlock());
     }
 
     @Override

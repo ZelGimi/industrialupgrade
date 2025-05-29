@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -12,28 +13,23 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCowFarm;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiCowFarm;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -50,13 +46,13 @@ public class TileEntityCowFarm extends TileEntityInventory implements IUpgradabl
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     private final ComponentUpgradeSlots componentUpgrade;
-    AxisAlignedBB searchArea = new AxisAlignedBB(
-            pos.add(-RADIUS, -RADIUS, -RADIUS),
-            pos.add(RADIUS, RADIUS, RADIUS)
+    AABB searchArea = new AABB(
+            pos.offset(-RADIUS, -RADIUS, -RADIUS),
+            pos.offset(RADIUS, RADIUS, RADIUS)
     );
-    List<Chunk> chunks = new ArrayList<>();
 
-    public TileEntityCowFarm() {
+    public TileEntityCowFarm(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.cow_farm,pos,state);
         this.slotSeeds = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -84,7 +80,7 @@ public class TileEntityCowFarm extends TileEntityInventory implements IUpgradabl
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -92,54 +88,32 @@ public class TileEntityCowFarm extends TileEntityInventory implements IUpgradabl
         return BlockBaseMachine3.cow_farm;
     }
 
-    public <T extends Entity> List<T> getEntitiesWithinAABB(
-            Class<? extends T> clazz,
-            AxisAlignedBB aabb,
-            @Nullable Predicate<? super T> filter
-    ) {
-        List<T> list = Lists.newArrayList();
-        this.chunks.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(clazz, aabb, list, filter));
-        return list;
-    }
+
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            final AxisAlignedBB aabb = searchArea.offset(pos);
-            searchArea = aabb;
-            int j2 = MathHelper.floor((aabb.minX - 2) / 16.0D);
-            int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
-            int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
-            int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
-            for (int j3 = j2; j3 < k2; ++j3) {
-                for (int k3 = l2; k3 < i3; ++k3) {
-                    final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
-                    if (!chunks.contains(chunk)) {
-                        chunks.add(chunk);
-                    }
-                }
-            }
-        }
+
     }
 
     @Override
-    public ContainerCowFarm getGuiContainer(final EntityPlayer var1) {
+    public ContainerCowFarm getGuiContainer(final Player var1) {
         return new ContainerCowFarm(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCowFarm(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiCowFarm((ContainerCowFarm) menu);
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
+        if (this.getWorld().getGameTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
             this.energy.useEnergy(50);
-            List<EntityCow> cows = getEntitiesWithinAABB(EntityCow.class, searchArea, EntitySelectors.NOT_SPECTATING);
+            List<Cow> cows = level.getEntitiesOfClass(Cow.class, searchArea);
 
 
             if (cows.size() < MAX_COWS) {
@@ -166,33 +140,40 @@ public class TileEntityCowFarm extends TileEntityInventory implements IUpgradabl
     }
 
 
-    private void breedCows(List<EntityCow> cows) {
+    private void breedCows(List<Cow> cows) {
         for (int i = 0; i < cows.size(); i++) {
             for (int j = i + 1; j < cows.size(); j++) {
-                EntityCow cow1 = cows.get(i);
-                EntityCow cow2 = cows.get(j);
+                Cow cow1 = cows.get(i);
+                Cow cow2 = cows.get(j);
 
-                if (cow1.getGrowingAge() == 0 && this.slotSeeds
-                        .get()
-                        .getCount() >= 2 && !cow1.isInLove() && !cow2.isInLove() && cow2.getGrowingAge() == 0 && cow1.getLoveCause() == null && cow2.getLoveCause() == null) {
+                if (cow1.getAge() == 0 &&
+                        cow2.getAge() == 0 &&
+                        !cow1.isInLove() &&
+                        !cow2.isInLove() &&
+                        cow1.getLoveCause() == null &&
+                        cow2.getLoveCause() == null &&
+                        !slotSeeds.isEmpty() &&
+                        slotSeeds.get(0).getCount() >= 2) {
+
                     cow1.setInLove(null);
                     cow2.setInLove(null);
-                    slotSeeds.get().shrink(2);
+                    slotSeeds.get(0).shrink(2);
                     break;
                 }
             }
         }
     }
 
-    private void killOldCows(List<EntityCow> cows) {
+    private void killOldCows(List<Cow> cows) {
         for (int i = cows.size() - 1; i >= MAX_COWS; i--) {
-            EntityCow sheep = cows.get(i);
-            sheep.setDead();
-            this.output.add(new ItemStack(Items.BEEF, 1));
-            if (world.rand.nextBoolean()) {
-                this.output.add(new ItemStack(Items.LEATHER, world.rand.nextInt(2) + 1));
+            Cow cow = cows.get(i);
+            cow.discard();
+            output.add(new ItemStack(Items.BEEF, 1));
+            if (level.random.nextBoolean()) {
+                output.add(new ItemStack(Items.LEATHER, level.random.nextInt(2) + 1));
             }
         }
     }
+
 
 }

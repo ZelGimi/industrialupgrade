@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/fluid_cell_window"
+		"layer0": "industrialupgrade:item/fluid_cell_window"
 	}
 }

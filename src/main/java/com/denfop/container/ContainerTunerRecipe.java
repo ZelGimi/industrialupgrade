@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityRecipeTuner;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerTunerRecipe extends ContainerFullInv<TileEntityRecipeTuner> {
 
-    public ContainerTunerRecipe(TileEntityRecipeTuner tileEntityRecipeTuner, EntityPlayer var1) {
+    public ContainerTunerRecipe(TileEntityRecipeTuner tileEntityRecipeTuner, Player var1) {
         super(tileEntityRecipeTuner, var1);
         for (int i = 0; i < 9; i++) {
             this.addSlotToContainer(new SlotInvSlot(tileEntityRecipeTuner.slot, i, 8 + i * 18, 62));

@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nano_chestplate_cold"
+		"layer0": "industrialupgrade:item/nano_chestplate_cold"
 	}
 }

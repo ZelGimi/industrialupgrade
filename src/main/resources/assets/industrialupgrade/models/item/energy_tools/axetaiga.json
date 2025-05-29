@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/tool/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/axetaiga"
+    "layer0" : "industrialupgrade:item/axetaiga"
   }
 }

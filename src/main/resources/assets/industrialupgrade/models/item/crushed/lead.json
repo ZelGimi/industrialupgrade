@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/crushed/lead"
+		"layer0": "industrialupgrade:item/crushed/lead"
 	}
 }

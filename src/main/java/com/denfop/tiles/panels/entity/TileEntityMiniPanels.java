@@ -5,6 +5,7 @@ import com.denfop.Localization;
 import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.SunCoef;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.solar.EnumSolarType;
 import com.denfop.api.solar.EnumTypeParts;
 import com.denfop.api.solar.ISolarTile;
@@ -15,32 +16,36 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentMiniPanel;
 import com.denfop.componets.ComponentPollution;
 import com.denfop.componets.ComponentTimer;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerMiniPanels;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiMiniPanel;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotGlassMiniPanels;
 import com.denfop.invslot.InvSlotOutputMiniPanels;
 import com.denfop.invslot.InvSlotStorageMiniPanels;
+import com.denfop.items.ItemCore;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,7 +60,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     public ComponentPollution pollution;
     public boolean canRain;
     public boolean hasSky;
-    public Biome biome;
+    public Holder<Biome> biome;
     public boolean wetBiome;
     public boolean noSunWorld;
     public boolean rain;
@@ -69,10 +74,11 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     public double genNight = 0;
     public double genDayNight = 0;
     public double generating;
-    private int level;
+    private int levelBlock;
     private SunCoef sunCoef;
 
-    public TileEntityMiniPanels() {
+    public TileEntityMiniPanels(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.minipanel,pos,state);
         this.component = this.addComponent(ComponentMiniPanel.asBasicSource(this, 0, 14));
         this.invSlotGlass = new InvSlotGlassMiniPanels(this);
         this.invSlotStorage = new InvSlotStorageMiniPanels(this);
@@ -80,14 +86,15 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
         this.invSlotCore = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 2) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.core;
+                return stack.getItem() instanceof ItemCore<?>;
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
                 SolarEnergySystem.system.calculateCores(((TileEntityMiniPanels) this.base));
                 SolarEnergySystem.system.recalculation(((TileEntityMiniPanels) this.base), EnumTypeParts.GENERATION);
+                return content;
             }
         };
         this.pollution = this.addComponent(new ComponentPollution(this));
@@ -96,14 +103,13 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack itemStack, final List<String> info) {
 
 
         if (this.getWorld() != null) {
 
 
-            if (this.world.isDaytime()) {
+            if (this.level.isDay()) {
                 info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
                         + ModUtils.getString(this.generating) + " EF/t ");
                 info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
@@ -129,12 +135,12 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AABB> getAabbs(boolean forCollision) {
 
-        return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D));
+        return Collections.singletonList(new AABB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D));
 
     }
 
@@ -154,7 +160,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             load = (double) DecoderHandler.decode(customPacketBuffer);
             listStable = (List<List<EnumState>>) DecoderHandler.decode(customPacketBuffer);
             sunIsUp = (boolean) DecoderHandler.decode(customPacketBuffer);
-            level = (int) DecoderHandler.decode(customPacketBuffer);
+            levelBlock = (int) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -177,7 +183,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             EncoderHandler.encode(packet, load);
             EncoderHandler.encode(packet, listStable);
             EncoderHandler.encode(packet, sunIsUp);
-            EncoderHandler.encode(packet, level);
+            EncoderHandler.encode(packet, levelBlock);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -189,21 +195,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
         this.component.setCapacity(capacity);
     }
 
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
 
 
     public CustomPacketBuffer writePacket() {
@@ -225,7 +217,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             pollution.onNetworkUpdate(customPacketBuffer);
             timer.onNetworkUpdate(customPacketBuffer);
             component.onNetworkUpdate(customPacketBuffer);
-            invSlotGlass.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
+            invSlotGlass.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new CompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -270,7 +262,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     private double experimental_generating() {
         if (this.sunCoef == null) {
-            this.sunCoef = EnergyNetGlobal.instance.getSunCoefficient(this.world);
+            this.sunCoef = EnergyNetGlobal.instance.getSunCoefficient(this.level);
         }
         return this.sunCoef.getCoef();
 
@@ -279,29 +271,30 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!world.isRemote) {
-            this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
-            this.hasSky = !this.world.provider.isNether();
-            this.biome = this.world.getBiome(this.pos);
+        if (!level.isClientSide) {
+            this.biome = this.level.getBiome(this.pos);
+            this.canRain = (this.biome.get().getPrecipitationAt(this.pos) == Biome.Precipitation.RAIN || this.biome.get().getModifiedClimateSettings().downfall() > 0.0F);
+            this.hasSky = this.level.dimensionType().hasSkyLight();
             updateVisibility();
             SolarEnergySystem.system.calculateCores(this);
             SolarEnergySystem.system.recalculation(this, EnumTypeParts.GENERATION);
             SolarEnergySystem.system.recalculation(this, EnumTypeParts.OUTPUT);
             SolarEnergySystem.system.recalculation(this, EnumTypeParts.CAPACITY);
             IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
-            this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
+            this.sunCoef = advEnergyNet.getSunCoefficient(this.level);
         }
     }
 
     public void updateVisibility() {
-        this.wetBiome = this.biome.getRainfall() > 0.0F;
-        this.noSunWorld = this.world.provider.isNether();
+        this.wetBiome = this.biome.get().getModifiedClimateSettings().downfall() > 0.0F;
+        this.noSunWorld = this.level.dimension() == Level.NETHER;
 
-        this.rain = this.wetBiome && (this.world.isRaining() || this.world.isThundering());
-        this.sunIsUp = this.world.isDaytime();
-        this.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
-                (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                        MapColor.AIR) && !this.noSunWorld;
+        this.rain = this.wetBiome && (this.level.isRaining() || this.level.isThundering());
+        this.sunIsUp = this.level.isDay();
+        this.skyIsVisible = this.level.canSeeSky(this.pos.above()) &&
+                this.level.getBlockState(this.pos.above()).getMapColor(level,pos.above()) == MapColor.NONE &&
+                !this.noSunWorld;
+
         if (!this.skyIsVisible) {
             this.activeState = TileSolarPanel.GenerationState.NONE;
         }
@@ -320,41 +313,30 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
                 this.activeState = TileSolarPanel.GenerationState.RAINNIGHT;
             }
         }
-        if (this.world.provider.getDimension() == 1) {
+        if (this.level.dimension() == Level.END) {
             this.activeState = TileSolarPanel.GenerationState.END;
         }
-        if (this.world.provider.getDimension() == -1) {
+        if (this.level.dimension() == Level.NETHER) {
             this.activeState = TileSolarPanel.GenerationState.NETHER;
         }
 
     }
 
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
         return super.writeToNBT(nbt);
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().provider.getWorldTime() % 80 == 0) {
+        if (this.getWorld().getGameTime() % 80 == 0) {
             updateVisibility();
         }
         this.timer.setCanWork(!this.invSlotGlass.isEmpty());
@@ -388,17 +370,17 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     @Override
     public List<ItemStack> getCapacityItems() {
-        return invSlotStorage;
+        return new ArrayList<>(invSlotStorage);
     }
 
     @Override
     public List<ItemStack> getOutputItems() {
-        return invSlotOutput;
+        return new ArrayList<>(invSlotOutput);
     }
 
     @Override
     public List<ItemStack> getGenerationItems() {
-        return invSlotGlass;
+        return new ArrayList<>(invSlotGlass);
     }
 
     @Override
@@ -452,28 +434,28 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
 
     @Override
     public List<ItemStack> getCoresItems() {
-        return invSlotCore;
+        return new ArrayList<>(invSlotCore);
     }
 
     @Override
     public int getCoreLevel() {
-        return this.level;
+        return this.levelBlock;
     }
 
     @Override
     public void setCoreLevel(final int level) {
-        this.level = level;
+        this.levelBlock = level;
     }
 
     @Override
-    public ContainerMiniPanels getGuiContainer(final EntityPlayer var1) {
+    public ContainerMiniPanels getGuiContainer(final Player var1) {
         return new ContainerMiniPanels(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiMiniPanel getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiMiniPanel(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiMiniPanel((ContainerMiniPanels) menu);
     }
 
 

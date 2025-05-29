@@ -6,12 +6,13 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerBaseWitherMaker;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiWitherMaker extends GuiIU<ContainerBaseWitherMaker> {
+@OnlyIn(Dist.CLIENT)
+public class GuiWitherMaker<T extends ContainerBaseWitherMaker> extends GuiIU<ContainerBaseWitherMaker> {
 
     public final ContainerBaseWitherMaker container;
 
@@ -30,22 +31,20 @@ public class GuiWitherMaker extends GuiIU<ContainerBaseWitherMaker> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
 
         int progress = (int) (22 * this.container.base.componentProgress.getBar());
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
+        bindTexture(getTexture());
 
 
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 77, yoffset + 35, 177, 0, progress, 18);
+            drawTexturedModalRect(poseStack, guiLeft() + 77, guiTop() + 35, 177, 0, progress, 18);
         }
 
     }
@@ -55,7 +54,7 @@ public class GuiWitherMaker extends GuiIU<ContainerBaseWitherMaker> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiWitherMaker.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiWitherMaker.png".toLowerCase());
     }
 
 }

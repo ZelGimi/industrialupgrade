@@ -2,22 +2,26 @@ package com.denfop.tiles.mechanism;
 
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPrivatizer;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPrivatizer;
 import com.denfop.invslot.InvSlotPrivatizer;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +34,8 @@ public class TilePrivatizer extends TileElectricMachine
     public final InvSlotPrivatizer inputslotA;
     public List<String> listItems = new ArrayList<>();
 
-    public TilePrivatizer() {
-        super(0, 10, 1);
+    public TilePrivatizer(BlockPos pos, BlockState state) {
+        super(0, 10, 1,BlockBaseMachine3.privatizer,pos,state);
 
 
         this.inputslot = new InvSlotPrivatizer(this, 0, 9);
@@ -43,46 +47,24 @@ public class TilePrivatizer extends TileElectricMachine
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
-    }
-
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        return nbttagcompound;
-
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 
-    public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
-        return true;
+
+
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiPrivatizer((ContainerPrivatizer) menu);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiPrivatizer getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiPrivatizer(new ContainerPrivatizer(entityPlayer, this));
-    }
-
-    public ContainerPrivatizer getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPrivatizer getGuiContainer(Player entityPlayer) {
         return new ContainerPrivatizer(entityPlayer, this);
     }
 
-
-    public String getStartSoundFile() {
-        return "Machines/pen.ogg";
-    }
-
-    public String getInterruptSoundFile() {
-        return "Machines/pen.ogg";
-    }
-
-    public float getWrenchDropRate() {
-        return 0.85F;
-    }
 
     @Override
     public void onLoaded() {
@@ -97,15 +79,15 @@ public class TilePrivatizer extends TileElectricMachine
 
 
     @Override
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         if (!this.inputslotA.isEmpty()) {
             initiate(1);
-            NBTTagCompound nbt = ModUtils.nbt(this.inputslotA.get());
+            CompoundTag nbt = ModUtils.nbt(this.inputslotA.get(0));
             for (int i = 0; i < this.listItems.size(); i++) {
-                nbt.setString("player_" + i, this.listItems.get(i));
+                nbt.putString("player_" + i, this.listItems.get(i));
 
             }
-            nbt.setInteger("size", this.listItems.size());
+            nbt.putInt("size", this.listItems.size());
         }
 
 

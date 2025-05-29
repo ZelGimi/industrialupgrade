@@ -1,55 +1,86 @@
 package com.denfop.integration.jei;
 
-
 import com.denfop.Constants;
+import com.denfop.IUItem;
 import com.denfop.Localization;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class ScrapboxRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
+import javax.annotation.Nonnull;
 
-    public static final String UID = Constants.MOD_ID + ".scrapbox";
-    private final IDrawable background;
+public class ScrapboxRecipeCategory extends GuiIU implements IRecipeCategory<ScrapboxRecipeHandler> {
 
-    public ScrapboxRecipeCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(
-                new ResourceLocation(Constants.MOD_ID + ":textures/gui/ScrapboxRecipes.png"),
+    private final IDrawableStatic bg;
+    JeiInform jeiInform;
+
+    public ScrapboxRecipeCategory(
+            IGuiHelper guiHelper, JeiInform jeiInform
+    ) {
+        super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        bg = guiHelper.createDrawable(
+                new ResourceLocation(Constants.MOD_ID + ":textures/gui/ScrapboxRecipes.png".toLowerCase()),
                 55,
                 30,
                 82,
                 26
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
 
-    public String getUid() {
-        return Constants.MOD_ID + ".scrapbox";
+    @Override
+    public RecipeType<ScrapboxRecipeHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
-    public String getTitle() {
+    @Nonnull
+    @Override
+    public String getTitles() {
         return Localization.translate(Constants.ABBREVIATION + ".crafting.scrap_box");
     }
 
+
+    @Nonnull
+    @Override
     public IDrawable getBackground() {
-        return this.background;
+        return bg;
     }
 
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
-        IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-        itemStacks.init(0, true, 0, 4);
-        itemStacks.init(1, true, 60, 4);
-        itemStacks.set(0, ingredients.getInputs(ItemStack.class).get(0));
-        itemStacks.set(1, ingredients.getOutputs(ItemStack.class).get(0));
+
+    @Override
+    public void draw(ScrapboxRecipeHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
+        float value = (float) recipe.getNeed();
+        String text;
+        if ((double) value < 0.001) {
+            text = "< 0.01";
+        } else {
+            text = "  " + String.format("%.2f", value * 100.0F);
+        }
+
+      draw(stack,text + "%", 86, 9, 4210752);
     }
 
-    public String getModName() {
-        return Constants.MOD_ID;
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, ScrapboxRecipeHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,1,5).addItemStack(IUItem.scrapBox);
+        builder.addSlot(RecipeIngredientRole.OUTPUT,61,5).addItemStack(recipe.getOutput());
     }
+
+    protected ResourceLocation getTexture() {
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png");
+    }
+
 
 }

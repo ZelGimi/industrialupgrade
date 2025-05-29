@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityCowFarm;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerCowFarm extends ContainerFullInv<TileEntityCowFarm> {
 
-    public ContainerCowFarm(TileEntityCowFarm tileEntityChickenFarm, EntityPlayer var1) {
+    public ContainerCowFarm(TileEntityCowFarm tileEntityChickenFarm, Player var1) {
         super(tileEntityChickenFarm, var1);
         this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.slotSeeds, 0, 80, 18));
         for (int i = 0; i < 9; i++) {

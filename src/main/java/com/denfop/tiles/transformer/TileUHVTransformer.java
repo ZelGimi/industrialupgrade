@@ -5,11 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockTransformer;
 import com.denfop.tiles.base.TileTransformer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileUHVTransformer extends TileTransformer {
 
-    public TileUHVTransformer() {
-        super(6);
+    public TileUHVTransformer(BlockPos pos, BlockState state) {
+        super(6, BlockTransformer.uhv,pos,state);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -17,7 +19,6 @@ public class TileUHVTransformer extends TileTransformer {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.tranformer;
+        return IUItem.tranformer.getBlock(getTeBlock().getId());
     }
-
 }

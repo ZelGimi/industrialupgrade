@@ -2,26 +2,30 @@ package com.denfop.tiles.mechanism.generator.energy;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGeoGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGeoGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotTank;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidEvent;
-import net.minecraftforge.fluids.FluidEvent.FluidSpilledEvent;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
@@ -35,9 +39,9 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
     private final double coef;
 
 
-    public TileEntityGeoGenerator(int size, double coef, int tier) {
-        super(20.0D * coef, tier, (int) (2400 * coef));
-        this.fluidTank = this.fluids.addTankInsert("fluid", size * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA));
+    public TileEntityGeoGenerator(int size, double coef, int tier, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(20.0D * coef, tier, (int) (2400 * coef), block, pos, state);
+        this.fluidTank = this.fluids.addTankInsert("fluid", size * 1000, Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.LAVA));
         this.production = Math.round(20.0F * coef * 1);
         this.fluidSlot = new InvSlotTank(
                 this,
@@ -45,7 +49,12 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
                 1,
                 InvSlotFluid.TypeFluidSlot.INPUT,
                 this.fluidTank
-        );
+        ){
+            @Override
+            protected boolean acceptsLiquid(Fluid fluid) {
+                return fluid == Fluids.LAVA;
+            }
+        };
         this.outputSlot = new InvSlotOutput(this, 1);
         this.coef = coef;
     }
@@ -78,20 +87,20 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
 
     }
 
-    public ContainerGeoGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGeoGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerGeoGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiGeoGenerator(new ContainerGeoGenerator(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiGeoGenerator((ContainerGeoGenerator) isAdmin);
     }
 
     public boolean gainFuel() {
         boolean dirty = false;
-        FluidStack ret = this.fluidTank.drainInternal(2, false);
-        if (ret != null && ret.amount >= 2) {
-            this.fluidTank.drainInternal(2, true);
+        FluidStack ret = this.fluidTank.drain(2, IFluidHandler.FluidAction.SIMULATE);
+        if (!ret.isEmpty() && ret.getAmount() >= 2) {
+            this.fluidTank.drain(2, IFluidHandler.FluidAction.EXECUTE);
             ++this.fuel;
             dirty = true;
         }
@@ -105,7 +114,10 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
 
     public void onBlockBreak(boolean wrench) {
         super.onBlockBreak(false);
-        FluidEvent.fireEvent(new FluidSpilledEvent(new FluidStack(FluidRegistry.LAVA, 1000), this.getWorld(), this.pos));
+        if (this.fluidTank.getFluidAmount() >= 1000) {
+            BlockState lavaState = net.minecraft.world.level.material.Fluids.LAVA.defaultFluidState().createLegacyBlock();
+            level.setBlock(getBlockPos(), lavaState, 3);
+        }
     }
 
 }

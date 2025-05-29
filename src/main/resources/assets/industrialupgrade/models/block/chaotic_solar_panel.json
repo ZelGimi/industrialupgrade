@@ -1,8 +1,8 @@
 {
   "parent" : "industrialupgrade:block/solar_side",
   "textures" : {
-    "bottom" : "industrialupgrade:blocks/solar_panels/bottom_panels",
-    "glass" : "industrialupgrade:blocks/solar_panels/chaotic/glass",
-    "side" : "industrialupgrade:blocks/solar_panels/chaotic/side"
+    "bottom" : "industrialupgrade:block/solar_panels/bottom_panels",
+    "glass" : "industrialupgrade:block/solar_panels/chaotic/glass",
+    "side" : "industrialupgrade:block/solar_panels/chaotic/side"
   }
 }

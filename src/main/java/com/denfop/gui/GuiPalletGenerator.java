@@ -5,9 +5,10 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerPalletGenerator;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiPalletGenerator extends GuiIU<ContainerPalletGenerator> {
+public class GuiPalletGenerator<T extends ContainerPalletGenerator> extends GuiIU<ContainerPalletGenerator> {
 
     public GuiPalletGenerator(ContainerPalletGenerator guiContainer) {
         super(guiContainer);
@@ -20,27 +21,23 @@ public class GuiPalletGenerator extends GuiIU<ContainerPalletGenerator> {
         ));
     }
 
+
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer( poseStack,partialTicks, mouseX, mouseY);
+        this.bindTexture();
+        this.drawTexturedModalRect( poseStack,this.guiLeft + 49, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect( poseStack,this.guiLeft + 49, this.guiTop + 35, 179, 30, 18, 18);
+        this.drawTexturedModalRect( poseStack,this.guiLeft + 67, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect( poseStack,this.guiLeft + 67, this.guiTop + 35, 179, 30, 18, 18);
+        this.drawTexturedModalRect( poseStack,this.guiLeft + 85, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect( poseStack,this.guiLeft + 85, this.guiTop + 35, 179, 30, 18, 18);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft + 49, this.guiTop + 17, 179, 30, 18, 18);
-        this.drawTexturedModalRect(this.guiLeft + 49, this.guiTop + 35, 179, 30, 18, 18);
-        this.drawTexturedModalRect(this.guiLeft + 67, this.guiTop + 17, 179, 30, 18, 18);
-        this.drawTexturedModalRect(this.guiLeft + 67, this.guiTop + 35, 179, 30, 18, 18);
-        this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 17, 179, 30, 18, 18);
-        this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 35, 179, 30, 18, 18);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

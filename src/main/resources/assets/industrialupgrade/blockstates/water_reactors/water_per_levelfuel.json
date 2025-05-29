@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=water_per_levelfuel": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel"
+    },
+    "facing=south,type=water_per_levelfuel": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "y": 180
+    },
+    "facing=west,type=water_per_levelfuel": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "y": 270
+    },
+    "facing=east,type=water_per_levelfuel": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "y": 90
+    },
+    "facing=down,type=water_per_levelfuel": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "x": 90
+    },
+    "facing=up,type=water_per_levelfuel": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "x": 270
+    },
+    "facing=north,type=water_per_levelfuel_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel"
+    },
+    "facing=south,type=water_per_levelfuel_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "y": 180
+    },
+    "facing=west,type=water_per_levelfuel_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "y": 270
+    },
+    "facing=east,type=water_per_levelfuel_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "y": 90
+    },
+    "facing=down,type=water_per_levelfuel_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "x": 90
+    },
+    "facing=up,type=water_per_levelfuel_invalid": {
+      "model": "industrialupgrade:block/basemachine/water_per_levelfuel",
+      "x": 270
+    }
+  }
+}

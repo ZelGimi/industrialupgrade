@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/nuclear/unprocessed_radioactive_thorium"
+		"layer0": "industrialupgrade:item/nuclear/unprocessed_radioactive_thorium"
 	}
 }

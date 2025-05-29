@@ -5,8 +5,8 @@ import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +16,7 @@ public class PacketRadiation implements IPacket {
     public PacketRadiation() {
     }
 
-    public PacketRadiation(List<Radiation> radiation, EntityPlayer player) {
+    public PacketRadiation(List<Radiation> radiation, Player player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeByte(this.getId());
         buffer.writeInt(radiation.size());
@@ -30,7 +30,7 @@ public class PacketRadiation implements IPacket {
 
 
         buffer.flip();
-        IUCore.network.getServer().sendPacket(buffer, (EntityPlayerMP) player);
+        IUCore.network.getServer().sendPacket(buffer, (ServerPlayer) player);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class PacketRadiation implements IPacket {
     }
 
     @Override
-    public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
+    public void readPacket(final CustomPacketBuffer is, final Player entityPlayer) {
 
 
         RadiationSystem.rad_system.getRadiationList().clear();

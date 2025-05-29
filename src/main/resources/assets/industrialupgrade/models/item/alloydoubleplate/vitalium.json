@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/vitalium_doubleplate"
+    "layer0" : "industrialupgrade:item/vitalium_doubleplate"
   }
 }

@@ -9,16 +9,18 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileCombQuadMacerator extends TileMultiMachine {
 
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TileCombQuadMacerator() {
+    public TileCombQuadMacerator(BlockPos pos, BlockState state) {
         super(
                 EnumMultiMachine.COMB_QUAD_MACERATOR.usagePerTick,
-                EnumMultiMachine.COMB_QUAD_MACERATOR.lenghtOperation
+                EnumMultiMachine.COMB_QUAD_MACERATOR.lenghtOperation, BlockMoreMachine1.quad_comb_macerator, pos, state
         );
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
@@ -29,7 +31,7 @@ public class TileCombQuadMacerator extends TileMultiMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines_base1;
+        return IUItem.machines_base1.getBlock(getTeBlock().getId());
     }
 
     @Override

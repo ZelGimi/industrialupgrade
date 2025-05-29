@@ -7,15 +7,16 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.container.ContainerBaseMolecular;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.IOException;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
+@OnlyIn(Dist.CLIENT)
+public class GuiMolecularTransformer<T extends ContainerBaseMolecular> extends GuiCore<ContainerBaseMolecular> {
 
     public final ContainerBaseMolecular container;
 
@@ -24,23 +25,23 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
         this.container = container1;
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 4, name, ModUtils.convertRGBcolorToInt(255, 255, 255), false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2, 4, Component.literal(name), ModUtils.convertRGBcolorToInt(255, 255, 255), false);
     }
 
     @Override
-    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(poseStack, mouseX, mouseY);
         new AdvArea(this, 21, 29, 58, 41).withTooltip(Localization.translate("iu.molecular_info") + "\n" + Localization.translate(
-                "iu.molecular_info3") + " " + (this.container.base.queue ? "x64" : "x1")).drawForeground(mouseX, mouseY);
+                "iu.molecular_info3") + " " + (this.container.base.queue ? "x64" : "x1")).drawForeground(poseStack, mouseX, mouseY);
         int dopX = container.base.maxAmount == 1 ? 0 : (container.base.maxAmount == 2 ? 25 : 30);
         new AdvArea(this, 152 + dopX, 25, 217 + dopX, 45)
                 .withTooltip(Localization.translate("iu.molecular_info1") + "\n" + Localization.translate(
                         "iu.molecular_info2"))
-                .drawForeground(
+                .drawForeground(poseStack,
                         mouseX,
                         mouseY
                 );
@@ -69,9 +70,9 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                             toolip += energyPerOperation + ModUtils.getString(-container.base.energySlots[i]) + " EF/t" + "\n";
                             MachineRecipe output1 = this.container.base.output[i];
                             toolip +=
-                                    input + this.container.base.inputSlot[i].get(0).getDisplayName() + "\n";
+                                    input + this.container.base.inputSlot[i].get(0).getDisplayName().getString() + "\n";
                             toolip +=
-                                    output + output1.getRecipe().output.items.get(0).getDisplayName() + "\n";
+                                    output + output1.getRecipe().output.items.get(0).getDisplayName().getString() + "\n";
                             toolip += energyPerOperation + ModUtils.getString(output1.getRecipe().output.metadata.getDouble(
                                     "energy")) +
                                     " EF" + "\n";
@@ -95,8 +96,8 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                                     .getInputs()
                                     .get(0)
                                     .getCount() * coef + "x" + this.container.base.inputSlot[i]
-                                    .get()
-                                    .getDisplayName() + "\n";
+                                    .get(0)
+                                    .getDisplayName().getString() + "\n";
 
                             toolip +=
                                     output + this.container.base
@@ -104,12 +105,12 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                                             .getRecipe().output.items
                                             .get(0)
                                             .getCount() * coef + "x" + this.container.base
-                                            .getOutput(i).getRecipe().output.items.get(0).getDisplayName() + "\n";
+                                            .getOutput(i).getRecipe().output.items.get(0).getDisplayName().getString() + "\n";
                             toolip += energyPerOperation + ModUtils.getString(this.container.base.maxEnergySlots[i]) + "\n";
                         }
                         new Area(this, dopX1 + i * mult, 76, 14, 20)
                                 .withTooltip(toolip)
-                                .drawForeground(
+                                .drawForeground(poseStack,
                                         mouseX,
                                         mouseY
                                 );
@@ -120,8 +121,8 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
 
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
         this.bindTexture();
         String input = Localization.translate("gui.MolecularTransformer.input") + ": ";
         String output = Localization.translate("gui.MolecularTransformer.output") + ": ";
@@ -132,18 +133,18 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
         double chargeLevel = (20.0D * this.container.base.getProgress(0));
         if (container.base.maxAmount == 1) {
             if (!this.container.base.queue) {
-                drawTexturedModalRect(this.guiLeft + 22, this.guiTop + 30, 240, 20, 16, 11);
+                drawTexturedModalRect(poseStack, this.guiLeft + 22, this.guiTop + 30, 240, 20, 16, 11);
 
             } else {
-                drawTexturedModalRect(this.guiLeft + 42, this.guiTop + 30, 240, 20, 16, 11);
+                drawTexturedModalRect(poseStack, this.guiLeft + 42, this.guiTop + 30, 240, 20, 16, 11);
 
             }
         } else {
             if (!this.container.base.queue) {
-                drawTexturedModalRect(this.guiLeft + 22, this.guiTop + 30, 27, 244, 16, 11);
+                drawTexturedModalRect(poseStack, this.guiLeft + 22, this.guiTop + 30, 27, 244, 16, 11);
 
             } else {
-                drawTexturedModalRect(this.guiLeft + 42, this.guiTop + 30, 27, 244, 16, 11);
+                drawTexturedModalRect(poseStack, this.guiLeft + 42, this.guiTop + 30, 27, 244, 16, 11);
 
             }
         }
@@ -152,33 +153,33 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                     this.container.base.outputSlot[0])) {
                 MachineRecipe output1 = this.container.base.output[0];
                 this.bindTexture();
-                drawTexturedModalRect(this.guiLeft + 23, this.guiTop + 75, 242, 32, 14, (int) chargeLevel);
+                drawTexturedModalRect(poseStack, this.guiLeft + 23, this.guiTop + 75, 242, 32, 14, (int) chargeLevel);
 
                 List<Double> time;
                 if (!this.container.base.queue) {
 
-                    this.fontRenderer.drawString(input + this.container.base.inputSlot[0].get().getDisplayName(),
+                   draw(poseStack, input + this.container.base.inputSlot[0].get(0).getDisplayName().getString(),
                             this.guiLeft + 60, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
-                    this.fontRenderer.drawString(
-                            output + output1.getRecipe().output.items.get(0).getDisplayName(),
+                   draw(poseStack,
+                            output + output1.getRecipe().output.items.get(0).getDisplayName().getString(),
                             this.guiLeft + 60,
                             this.guiTop + 65,
                             ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
-                    this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(container.base.energySlots[0]) +
+                   draw(poseStack, energyPerOperation + ModUtils.getString(container.base.energySlots[0]) +
                                     " EF",
                             this.guiLeft + 60, this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
                     if (this.container.base.getProgress(0) * 100 <= 100) {
-                        this.fontRenderer.drawString(
+                        draw(poseStack,
                                 progress + (this.container.base.getProgress(0) <= 0.01 ? 0 :
                                         ModUtils.getString(this.container.base.getProgress(0) * 100)) + "%",
                                 this.guiLeft + 60, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
                     }
-                    this.fontRenderer.drawString(
+                  draw(poseStack,
                             "EF/t: " + ModUtils.getString(this.container.base.perenergy),
                             this.guiLeft + 60, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -195,21 +196,21 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                     String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
                     String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") + "" : "";
 
-                    this.fontRenderer.drawString(
+                  draw(poseStack,
                             Localization.translate("iu.timetoend") + time1 + time2 + time3,
                             this.guiLeft + 60, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
                 } else {
 
-                    if (this.container.base.outputSlot[0].get().isEmpty() || this.container.base.outputSlot[0]
-                            .get()
+                    if (this.container.base.outputSlot[0].get(0).isEmpty() || this.container.base.outputSlot[0]
+                            .get(0)
                             .getCount() < 64) {
                         int coef =
                                 (int) (this.container.base.maxEnergySlots[0] / this.container.base
                                         .getOutput(0)
                                         .getRecipe().output.metadata.getDouble("energy"));
-                        this.fontRenderer.drawString(input + this.container.base
+                        draw(poseStack, input + this.container.base
                                         .getOutput(0)
                                         .getRecipe().input
                                         .getInputs()
@@ -217,27 +218,26 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                                         .getInputs()
                                         .get(0)
                                         .getCount() * coef + "x" + this.container.base.inputSlot[0]
-                                        .get()
-                                        .getDisplayName(),
+                                        .get(0)
+                                        .getDisplayName().getString(),
                                 this.guiLeft + 60, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
 
-                        this.fontRenderer.drawString(
+                        draw(poseStack,
                                 output + this.container.base
                                         .getOutput(0)
                                         .getRecipe().output.items
                                         .get(0)
-                                        .getCount() * coef + "x" + output1.getRecipe().output.items.get(0).getDisplayName(),
+                                        .getCount() * coef + "x" + output1.getRecipe().output.items.get(0).getDisplayName().getString(),
                                 this.guiLeft + 60,
                                 this.guiTop + 65,
                                 ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
-                        this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(this.container.base.energySlots[0]) +
-                                        " EF",
+                       draw(poseStack, energyPerOperation + ModUtils.getString(this.container.base.energySlots[0]) + " EF",
                                 this.guiLeft + 60, this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
                         if (this.container.base.getProgress(0) * 100 <= 100) {
-                            this.fontRenderer.drawString(
+                            draw(poseStack,
                                     progress + (this.container.base.getProgress(0) <= 0.01 ? 0 :
                                             ModUtils.getString(this.container.base.getProgress(0) * 100)) + "%",
                                     this.guiLeft + 60, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
@@ -245,7 +245,7 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                         }
 
 
-                        this.fontRenderer.drawString(
+                       draw(poseStack,
                                 "EF/t: " + ModUtils.getString(this.container.base.perenergy),
                                 this.guiLeft + 60, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
@@ -266,7 +266,7 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                         String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") : "";
                         String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") : "";
 
-                        this.fontRenderer.drawString(
+                        draw(poseStack,
                                 Localization.translate("iu.timetoend") + time1 + time2 + time3,
                                 this.guiLeft + 60, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
@@ -283,8 +283,8 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                 if (chargeLevel > 0 && !this.container.base.inputSlot[i].isEmpty() && this.container.base.inputSlot[i].continue_proccess(
                         this.container.base.outputSlot[i])) {
                     this.bindTexture();
-                    drawTexturedModalRect(this.guiLeft + 26 + i * 20, this.guiTop + 76, 44, 235, 14, (int) chargeLevel);
-                    this.fontRenderer.drawString(
+                    drawTexturedModalRect(poseStack, this.guiLeft + 26 + i * 20, this.guiTop + 76, 44, 235, 14, (int) chargeLevel);
+                   draw(poseStack,
                             "EF/t: " + ModUtils.getString(this.container.base.perenergy),
                             this.guiLeft + 85, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -305,7 +305,7 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                     String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") : "";
                     String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") : "";
 
-                    this.fontRenderer.drawString(
+                   draw(poseStack,
                             Localization.translate("iu.timetoend") + time1 + time2 + time3,
                             this.guiLeft + 85, this.guiTop + 65 + i * 10, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -319,8 +319,8 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                 if (chargeLevel > 0 && !this.container.base.inputSlot[i].isEmpty() && this.container.base.inputSlot[i].continue_proccess(
                         this.container.base.outputSlot[i])) {
                     this.bindTexture();
-                    drawTexturedModalRect(this.guiLeft + 10 + i * 19, this.guiTop + 76, 44, 235, 14, (int) chargeLevel);
-                    this.fontRenderer.drawString(
+                    drawTexturedModalRect(poseStack, this.guiLeft + 10 + i * 19, this.guiTop + 76, 44, 235, 14, (int) chargeLevel);
+                   draw(poseStack,
                             "EF/t: " + ModUtils.getString(this.container.base.perenergy),
                             this.guiLeft + 100, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -341,7 +341,7 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                     String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") : "";
                     String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") : "";
 
-                    this.fontRenderer.drawString(
+                    draw(poseStack,
                             Localization.translate("iu.timetoend") + time1 + time2 + time3,
                             this.guiLeft + 100, this.guiTop + 65 + i * 10, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
@@ -448,10 +448,10 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
         }
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
+    protected void mouseClicked(int i, int j, int k) {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
+        int xMin = (this.width - this.imageWidth) / 2;
+        int yMin = (this.height - this.imageHeight) / 2;
         int x = i - xMin;
         int y = j - yMin;
         int dopX = container.base.maxAmount == 1 ? 0 : (container.base.maxAmount == 2 ? 25 : 30);

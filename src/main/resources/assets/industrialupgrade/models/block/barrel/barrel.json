@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [32, 32],
 	"textures": {
-		"3": "industrialupgrade:models/barrel",
-		"particle": "industrialupgrade:models/barrel"
+		"3": "industrialupgrade:block/barrel",
+		"particle": "industrialupgrade:block/barrel"
 	},
 	"elements": [
 		{

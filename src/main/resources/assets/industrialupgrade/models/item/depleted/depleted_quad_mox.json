@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/depleted_quad_mox"
+    "layer0" : "industrialupgrade:item/depleted_quad_mox"
   }
 }

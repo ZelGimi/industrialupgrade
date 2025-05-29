@@ -2,7 +2,8 @@ package com.denfop.integration.jei.positronconverter;
 
 
 import com.denfop.IUItem;
-import net.minecraft.item.ItemStack;
+import com.denfop.recipes.ItemStackHelper;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class PositronConverterHandler {
 
     private static final List<PositronConverterHandler> recipes = new ArrayList<>();
     final ItemStack input1;
-    private final ItemStack input2;
+    final ItemStack input2;
     private final double input;
 
 
@@ -53,7 +54,7 @@ public class PositronConverterHandler {
 
     public static void initRecipes() {
 
-        addRecipe(2000, new ItemStack(IUItem.crafting_elements, 1, 352), new ItemStack(IUItem.proton));
+        addRecipe(2000,  ItemStackHelper.fromData(IUItem.crafting_elements, 1, 352), ItemStackHelper.fromData(IUItem.proton));
 
 
     }

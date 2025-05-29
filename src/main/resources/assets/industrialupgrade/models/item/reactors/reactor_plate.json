@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/reactor_plate"
+    "layer0" : "industrialupgrade:item/reactor_plate"
   }
 }

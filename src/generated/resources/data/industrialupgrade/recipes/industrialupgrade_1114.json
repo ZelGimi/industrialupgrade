@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_25_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/platinum"
+      }
+    ],
+    "C": [
+      {
+        "item": "minecraft:crafting_table"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/tin"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/iron"
+      }
+    ]
+  },
+  "pattern": [
+    "DCD",
+    "BAB",
+    " E "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_129_element"
+  },
+  "show_notification": true
+}

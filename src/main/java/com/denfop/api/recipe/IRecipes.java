@@ -1,10 +1,10 @@
 package com.denfop.api.recipe;
 
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 import java.util.Map;
@@ -137,5 +137,6 @@ public interface IRecipes {
     );
 
     void addInitRecipes(IHasRecipe hasRecipe);
+
 
 }

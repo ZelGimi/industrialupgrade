@@ -1,16 +1,16 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileBaseHandlerHeavyOre;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerHandlerHeavyOre extends ContainerFullInv<TileBaseHandlerHeavyOre> {
 
-    public ContainerHandlerHeavyOre(EntityPlayer entityPlayer, TileBaseHandlerHeavyOre tileEntity1) {
+    public ContainerHandlerHeavyOre(Player entityPlayer, TileBaseHandlerHeavyOre tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerHandlerHeavyOre(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileBaseHandlerHeavyOre tileEntity1,
             int height,
             int upgradeX,

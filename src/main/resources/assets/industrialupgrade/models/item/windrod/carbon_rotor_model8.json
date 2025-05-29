@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/carbon_rotor_model8"
+    "layer0" : "industrialupgrade:item/carbon_rotor_model8"
   }
 }

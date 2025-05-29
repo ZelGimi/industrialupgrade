@@ -1,29 +1,15 @@
 package com.denfop.heat;
 
 import com.denfop.api.cool.ICoolConductor;
-import com.denfop.api.heat.HeatTick;
-import com.denfop.api.heat.HeatTickList;
-import com.denfop.api.heat.IHeatAcceptor;
-import com.denfop.api.heat.IHeatConductor;
-import com.denfop.api.heat.IHeatEmitter;
-import com.denfop.api.heat.IHeatSink;
-import com.denfop.api.heat.IHeatSource;
-import com.denfop.api.heat.IHeatTile;
-import com.denfop.api.heat.InfoCable;
-import com.denfop.api.heat.Path;
+import com.denfop.api.heat.*;
 import com.denfop.api.sytem.InfoTile;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HeatNetLocal {
 
@@ -40,14 +26,14 @@ public class HeatNetLocal {
     public void addTile(IHeatTile tile1) {
 
 
-        this.addTileEntity(getTileFromIHeat(tile1).getPos(), tile1);
+        this.addTileEntity(getTileFromIHeat(tile1).getBlockPos(), tile1);
 
 
     }
 
-    public void addTile(IHeatTile tile, TileEntity tileentity) {
+    public void addTile(IHeatTile tile, BlockEntity tileentity) {
 
-        final BlockPos coords = tileentity.getPos();
+        final BlockPos coords = tileentity.getBlockPos();
         if (this.chunkCoordinatesIHeatTileMap.containsKey(coords)) {
             return;
         }
@@ -65,18 +51,18 @@ public class HeatNetLocal {
     }
 
     private void updateAdd(BlockPos pos, IHeatTile tile) {
-        for (final EnumFacing dir : EnumFacing.values()) {
+        for (final Direction dir : Direction.values()) {
             BlockPos pos1 = pos
-                    .offset(dir);
+                    .offset(dir.getNormal());
             final IHeatTile tile1 = this.chunkCoordinatesIHeatTileMap.get(pos1);
             if (tile1 != null) {
-                final EnumFacing inverseDirection2 = dir.getOpposite();
+                final Direction inverseDirection2 = dir.getOpposite();
                 if (tile1 instanceof IHeatEmitter && tile instanceof IHeatAcceptor) {
                     final IHeatEmitter sender2 = (IHeatEmitter) tile1;
                     final IHeatAcceptor receiver2 = (IHeatAcceptor) tile;
-                    if (sender2.emitsHeatTo(receiver2, dir) && receiver2.acceptsHeatFrom(
+                    if (sender2.emitsHeatTo(receiver2, dir.getOpposite()) && receiver2.acceptsHeatFrom(
                             sender2,
-                            inverseDirection2
+                            inverseDirection2.getOpposite()
                     )) {
                         tile1.AddHeatTile(tile, dir.getOpposite());
                         tile.AddHeatTile(tile1, dir);
@@ -84,9 +70,9 @@ public class HeatNetLocal {
                 } else if (tile1 instanceof IHeatAcceptor && tile instanceof IHeatEmitter) {
                     final IHeatEmitter sender2 = (IHeatEmitter) tile;
                     final IHeatAcceptor receiver2 = (IHeatAcceptor) tile1;
-                    if (sender2.emitsHeatTo(receiver2, dir.getOpposite()) && receiver2.acceptsHeatFrom(
+                    if (sender2.emitsHeatTo(receiver2, dir) && receiver2.acceptsHeatFrom(
                             sender2,
-                            inverseDirection2.getOpposite()
+                            inverseDirection2
                     )) {
                         tile1.AddHeatTile(tile, dir.getOpposite());
                         tile.AddHeatTile(tile1, dir);
@@ -139,9 +125,9 @@ public class HeatNetLocal {
     }
 
     private void updateRemove(BlockPos pos, IHeatTile tile) {
-        for (final EnumFacing dir : EnumFacing.values()) {
+        for (final Direction dir : Direction.values()) {
             BlockPos pos1 = pos
-                    .offset(dir);
+                    .offset(dir.getNormal());
             final IHeatTile tile1 = this.chunkCoordinatesIHeatTileMap.get(pos1);
             if (tile1 != null) {
                 tile1.RemoveHeatTile(tile, dir.getOpposite());
@@ -158,10 +144,10 @@ public class HeatNetLocal {
 
 
     public void removeTileEntity(IHeatTile tile) {
-        if (!this.chunkCoordinatesIHeatTileMap.containsKey(tile.getBlockPos())) {
+        if (!this.chunkCoordinatesIHeatTileMap.containsKey(tile.getPos())) {
             return;
         }
-        final BlockPos coord = tile.getBlockPos();
+        final BlockPos coord = tile.getPos();
         this.chunkCoordinatesIHeatTileMap.remove(coord);
         if (tile instanceof IHeatAcceptor) {
             this.removeAll(this.getSources((IHeatAcceptor) tile));
@@ -177,8 +163,8 @@ public class HeatNetLocal {
 
         if (HeatPaths == null) {
             final Tuple<List<Path>, LinkedList<IHeatConductor>> tuple = this.discover(HeatSource, tick);
-            tick.setList(tuple.getFirst());
-            tick.setConductors(tuple.getSecond());
+            tick.setList(tuple.getA());
+            tick.setConductors(tuple.getB());
             HeatPaths = tick.getList();
         }
         boolean allow = false;
@@ -221,17 +207,15 @@ public class HeatNetLocal {
     }
 
 
-    public TileEntity getTileFromIHeat(IHeatTile tile) {
+    public BlockEntity getTileFromIHeat(IHeatTile tile) {
         if (tile == null) {
             return null;
         }
         return tile.getTile();
     }
 
-    public Tuple<List<Path>, LinkedList<IHeatConductor>> discover(
-            final IHeatSource emitter,
-            final HeatTick<IHeatSource, Path> tick
-    ) {
+    public Tuple<List<Path>, LinkedList<IHeatConductor>> discover(final IHeatSource emitter,
+                                                                  final HeatTick<IHeatSource, Path> tick) {
         final LinkedList<IHeatTile> tileEntitiesToCheck = new LinkedList<>();
         List<Path> energyPaths = new LinkedList<>();
         long id = WorldBaseGen.random.nextLong();
@@ -268,7 +252,7 @@ public class HeatNetLocal {
         for (Path energyPath : energyPaths) {
             IHeatTile tileEntity = energyPath.target;
             energyPath.target.getEnergyTickList().add(tick.getSource());
-            EnumFacing energyBlockLink = energyPath.targetDirection;
+            Direction energyBlockLink = energyPath.targetDirection;
             tileEntity = tileEntity.getHeatTiles().get(energyBlockLink);
             if (!(tileEntity instanceof IHeatConductor)) {
                 continue;
@@ -300,7 +284,7 @@ public class HeatNetLocal {
     public List<InfoTile<IHeatTile>> getValidReceivers(final IHeatTile emitter) {
 
         final BlockPos tile1;
-        tile1 = emitter.getBlockPos();
+        tile1 = emitter.getPos();
         if (tile1 != null) {
 
             return emitter.getHeatValidReceivers();
@@ -354,8 +338,8 @@ public class HeatNetLocal {
 
         if (HeatPaths == null) {
             final Tuple<List<Path>, LinkedList<IHeatConductor>> tuple = this.discover(HeatSource, tick);
-            tick.setList(tuple.getFirst());
-            tick.setConductors(tuple.getSecond());
+            tick.setList(tuple.getA());
+            tick.setConductors(tuple.getB());
             HeatPaths = tick.getList();
         }
 

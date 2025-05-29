@@ -5,9 +5,11 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerCentrifuge;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiCentrifuge extends GuiIU<ContainerCentrifuge> {
+public class GuiCentrifuge<T extends ContainerCentrifuge> extends GuiIU<ContainerCentrifuge> {
 
     public GuiCentrifuge(ContainerCentrifuge guiContainer) {
         super(guiContainer);
@@ -20,23 +22,13 @@ public class GuiCentrifuge extends GuiIU<ContainerCentrifuge> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString("RPM: " + this.container.base.rpm,
+protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+        poseStack.drawString(Minecraft.getInstance().font, "RPM: " + this.container.base.rpm,
                 68, 65,
-                0
+                0,false
         );
 
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
     }
 
     @Override

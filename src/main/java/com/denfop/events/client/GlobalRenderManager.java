@@ -1,62 +1,67 @@
 package com.denfop.events.client;
 
+
 import com.denfop.gui.GuiIU;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 
 public class GlobalRenderManager {
 
+    private static final Map<String, Map<BlockPos, Function<RenderLevelStageEvent, Void>>> globalRenders = new HashMap<>();
     public static long tick = 0;
-    public static Map<Integer, Map<BlockPos, Function>> globalRenders = new HashMap<>();
 
     public GlobalRenderManager() {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static void addRender(World world, BlockPos pos, Function globalRender) {
-        Map<BlockPos, Function> map = globalRenders.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
-        if (!map.containsKey(pos)) {
-            map.put(pos, globalRender);
-        }
+    public static void addRender(Level world, BlockPos pos, Function<RenderLevelStageEvent, Void> globalRender) {
+        String dimension = world.dimension().location().toString();
+        globalRenders.computeIfAbsent(dimension, k -> new HashMap<>()).putIfAbsent(pos, globalRender);
     }
 
-    public static void removeRender(World world, BlockPos pos) {
-        Map<BlockPos, Function> map = globalRenders.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
-        map.remove(pos);
+    public static void removeRender(Level world, BlockPos pos) {
+        String dimension = world.dimension().location().toString();
+        globalRenders.computeIfPresent(dimension, (k, v) -> {
+            v.remove(pos);
+            return v.isEmpty() ? null : v;
+        });
     }
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-        if ((event.getWorld()).isRemote) {
+    public void onWorldUnload(LevelEvent.Unload event) {
+        if ((event.getLevel()).isClientSide()) {
             return;
         }
-        globalRenders.getOrDefault(event.getWorld().provider.getDimension(), new HashMap<>()).clear();
+        globalRenders.getOrDefault(((Level) event.getLevel()).dimension().toString(), new HashMap<>()).clear();
     }
 
     @SubscribeEvent
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void onWorldTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.player.getEntityWorld().isRemote && tick != event.player
-                .getEntityWorld()
-                .getWorldTime()) {
-            tick = event.player.getEntityWorld().getWorldTime();
-            GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
+        if (event.phase == TickEvent.Phase.END && event.player.level().isClientSide && tick != event.player
+                .level()
+                .getGameTime()) {
+            tick = event.player.level().getGameTime();
+            Screen guiScreen = Minecraft.getInstance().screen;
             if (guiScreen instanceof GuiIU) {
                 double ticks = 4;
                 while (ticks > 0) {
@@ -69,42 +74,42 @@ public class GlobalRenderManager {
     }
 
     @SubscribeEvent
-    @SideOnly(Side.CLIENT)
+    public void onRenderWorldLast(RenderLevelStageEvent event) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
 
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player = mc.player;
-
-        if (player == null || mc.world == null) {
+        if (player == null || mc.level == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS) {
             return;
         }
+
         try {
-            for (Map.Entry<Integer, Map<BlockPos, Function>> entry : globalRenders.entrySet()) {
-                if (entry.getKey() == mc.player.getEntityWorld().provider.getDimension()) {
-                    for (Function function : entry.getValue().values()) {
-                        double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.getPartialTicks();
-                        double y = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.getPartialTicks();
-                        double z = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.getPartialTicks();
+            for (Map.Entry<String, Map<BlockPos, Function<RenderLevelStageEvent, Void>>> entry : globalRenders.entrySet()) {
+                if (Objects.equals(entry.getKey(), mc.level.dimension().location().toString())) {
+                    PoseStack poseStack = event.getPoseStack();
+                    Vec3 camera = event.getCamera().getPosition();
 
-                        GlStateManager.pushMatrix();
-                        GlStateManager.translate(-x, -y, -z);
-                        if (mc.world.getWorldTime() % 24000 > 13000) {
-                            GlStateManager.enableLighting();
-                        }
-                        GlStateManager.enableDepth();
-                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                    double x = camera.x;
+                    double y = camera.y;
+                    double z = camera.z;
+                    double dopY = 0;
 
-                        function.apply(0);
-                        GlStateManager.disableLighting();
+                    poseStack.pushPose();
+                    poseStack.translate(-x, -y, -z);
 
-                        GlStateManager.popMatrix();
+
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+                    for (Function<RenderLevelStageEvent, Void> function : entry.getValue().values()) {
+                        function.apply(event);
                     }
+
+                    poseStack.popPose();
                 }
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        ;
     }
+
 
 }

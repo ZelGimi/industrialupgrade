@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/miranda_boulder"
+    "layer0" : "industrialupgrade:item/miranda_boulder"
   }
 }

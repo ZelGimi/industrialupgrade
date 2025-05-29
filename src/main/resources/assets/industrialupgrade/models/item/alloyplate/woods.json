@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/woods_plate"	}
+		"layer0": "industrialupgrade:item/woods_plate"	}
 }

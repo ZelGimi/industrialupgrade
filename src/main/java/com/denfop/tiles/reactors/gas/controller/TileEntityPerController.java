@@ -5,11 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
 import com.denfop.register.InitMultiBlockSystem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityPerController extends TileEntityMainController {
 
-    public TileEntityPerController() {
-        super(InitMultiBlockSystem.perGasReactorMultiBlock, EnumGasReactors.P);
+    public TileEntityPerController(BlockPos pos, BlockState state) {
+        super(InitMultiBlockSystem.perGasReactorMultiBlock, EnumGasReactors.P,BlockGasReactor.per_gas_controller,pos,state);
     }
 
     @Override
@@ -19,8 +21,7 @@ public class TileEntityPerController extends TileEntityMainController {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_reactor;
+        return IUItem.gas_reactor.getBlock(getTeBlock());
     }
-
 
 }

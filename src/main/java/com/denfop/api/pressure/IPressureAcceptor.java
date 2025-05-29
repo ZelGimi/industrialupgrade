@@ -1,9 +1,9 @@
 package com.denfop.api.pressure;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 public interface IPressureAcceptor extends IPressureTile {
 
-    boolean acceptsPressureFrom(IPressureEmitter var1, EnumFacing var2);
+    boolean acceptsPressureFrom(IPressureEmitter var1, Direction var2);
 
 }

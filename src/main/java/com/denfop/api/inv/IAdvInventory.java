@@ -1,29 +1,31 @@
 package com.denfop.api.inv;
 
 import com.denfop.container.ContainerBase;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.Container;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public interface IAdvInventory<P extends TileEntityInventory> extends IInventory {
+public interface IAdvInventory<P extends IInventory> extends Container, MenuProvider {
 
     P getParent();
 
-    default void removeInventorySlot(InvSlot var1) {
-    }
 
     void addInventorySlot(InvSlot var1);
 
     int getBaseIndex(InvSlot var1);
 
+    MenuType<?> getMenuType();
 
-    ContainerBase<?> getGuiContainer(EntityPlayer var1);
+    int getContainerId();
 
-    @SideOnly(Side.CLIENT)
-    GuiScreen getGui(EntityPlayer var1, boolean var2);
+    ContainerBase<?> getGuiContainer(Player var1);
+
+    @OnlyIn(Dist.CLIENT)
+    GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> var2);
 
 }

@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism.steam;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
@@ -11,27 +12,32 @@ import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSteamPeatGenerator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiSteamPeatGenerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.Keyboard;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,26 +54,26 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
 
     public int fuel = 0;
 
-    public TileSteamPeatGenerator() {
-        super(0, 1, 0);
+    public TileSteamPeatGenerator(BlockPos pos, BlockState state) {
+        super(0, 1, 0,BlockBaseMachine3.steam_peat_generator,pos,state);
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.cultivated_peat_balls;
+                return stack.getItem() == IUItem.cultivated_peat_balls.getItem();
             }
         };
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 4000, InvSlot.TypeItemSlot.INPUT, Fluids.fluidPredicate(
-                FluidRegistry.WATER
+                Fluids.WATER
         ));
         this.fluidTank1 = this.fluids.addTank("fluidTank1", 4000, InvSlot.TypeItemSlot.NONE, Fluids.fluidPredicate(
-                FluidName.fluidsteam.getInstance()
+                FluidName.fluidsteam.getInstance().get()
         ));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSource(this, 4000));
         this.steam.setFluidTank(fluidTank1);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
@@ -92,7 +98,7 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -106,7 +112,7 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
         return packet;
     }
 
-    @SideOnly(Side.CLIENT)
+
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
@@ -135,7 +141,7 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
         if (!this.slot.isEmpty()) {
             if (fuel == 0) {
                 fuel = 500;
-                this.slot.get().shrink(1);
+                this.slot.get(0).shrink(1);
                 if (!this.getActive()) {
                     this.setActive(true);
                 }
@@ -148,9 +154,9 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
         }
 
         if (fuel > 0 &&
-                this.fluidTank.getFluid() != null && this.fluidTank.getFluid().amount >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
+                !this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
             this.steam.addEnergy(2);
-            this.fluidTank.drain(2, true);
+            this.fluidTank.drain(1, IFluidHandler.FluidAction.EXECUTE);
             this.setActive(true);
             fuel = Math.max(0, this.fuel - 1);
         } else {
@@ -170,49 +176,40 @@ public class TileSteamPeatGenerator extends TileElectricMachine implements IType
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.fuel = nbttagcompound.getInteger("fuel");
+        this.fuel = nbttagcompound.getInt("fuel");
     }
 
     public int gaugeStorageScaled(int i) {
         return (int) (this.energy.getEnergy() * (double) i / this.energy.getCapacity());
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setInteger("fuel", this.fuel);
+        nbt.putInt("fuel", this.fuel);
         return nbt;
     }
 
-    public ContainerSteamPeatGenerator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSteamPeatGenerator getGuiContainer(Player entityPlayer) {
         return new ContainerSteamPeatGenerator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiSteamPeatGenerator(new ContainerSteamPeatGenerator(entityPlayer, this));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiSteamPeatGenerator((ContainerSteamPeatGenerator) menu);
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.hasFluidHandler(player.getItemInHand(hand))) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 

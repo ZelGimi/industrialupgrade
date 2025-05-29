@@ -8,8 +8,8 @@ import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemRecipeSchedule;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,8 +88,8 @@ public class InvSlotMultiRecipes extends InvSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (!recipe.getName().equals("recycler")) {
             final ItemStack input = this.get(index);
             if (input.isEmpty()) {
@@ -113,6 +113,7 @@ public class InvSlotMultiRecipes extends InvSlot {
 
         }
         this.tile.onUpdate();
+        return content;
     }
 
     public BaseMachineRecipe consume(MachineRecipe recipe) {
@@ -161,14 +162,14 @@ public class InvSlotMultiRecipes extends InvSlot {
                 number
         ) && (stack.getCount() >= 1 || consumeContainers || !stack
                 .getItem()
-                .hasContainerItem(stack))) {
+                .hasCraftingRemainingItem(stack))) {
             int currentAmount = Math.min(amount, stack.getCount());
             if (!simulate) {
                 if (stack.getCount() == currentAmount) {
-                    if (!consumeContainers && stack.getItem().hasContainerItem(stack)) {
-                        this.put(number, stack.getItem().getContainerItem(stack));
+                    if (!consumeContainers && stack.getItem().hasCraftingRemainingItem(stack)) {
+                        this.set(number, stack.getItem().getCraftingRemainingItem(stack));
                     } else {
-                        this.put(number, null);
+                        this.set(number, null);
                     }
                 } else {
                     stack.setCount(stack.getCount() - currentAmount);

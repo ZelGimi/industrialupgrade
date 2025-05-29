@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/mendelevium_gem_pellet"
+    "layer0" : "industrialupgrade:item/mendelevium_gem_pellet"
   }
 }

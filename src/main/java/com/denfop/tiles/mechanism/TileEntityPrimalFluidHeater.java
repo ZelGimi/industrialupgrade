@@ -1,6 +1,5 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.recipe.FluidHandlerRecipe;
@@ -12,8 +11,6 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockPrimalFluidHeater;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
-import com.denfop.container.ContainerHeatFluids;
-import com.denfop.gui.GuiFluidHeater;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -21,20 +18,18 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -58,8 +53,8 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
     private int prevAmount;
     private int prevAmount1;
 
-    public TileEntityPrimalFluidHeater() {
-        super(0, 0, 0);
+    public TileEntityPrimalFluidHeater(BlockPos pos, BlockState state) {
+        super(0, 0, 0, BlockPrimalFluidHeater.primal_fluid_heater, pos, state);
         this.progress = 0;
         this.defaultOperationLength = this.operationLength = 200;
 
@@ -82,26 +77,13 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void init() {
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
@@ -113,11 +95,11 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
             }
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -131,7 +113,7 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -149,7 +131,7 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
             try {
                 FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank2 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -177,9 +159,9 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
         }
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -195,22 +177,22 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
     }
 
     @Override
-    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+    public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
         if (work) {
-            if (this.pos.down().distanceSq(neighborPos) == 0) {
-                IBlockState blockState = world.getBlockState(this.pos.down());
-                if (blockState.getMaterial() != Material.AIR) {
-                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA;
+            if (this.pos.below().distSqr(neighborPos) == 0) {
+                BlockState blockState = level.getBlockState(this.pos.below());
+                if (!blockState.isAir()) {
+                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.LAVA_CAULDRON;
                 } else {
                     work = false;
                 }
             }
         } else {
-            if (this.pos.down().distanceSq(neighborPos) == 0) {
-                IBlockState blockState = world.getBlockState(this.pos.down());
-                if (blockState.getMaterial() != Material.AIR) {
-                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA;
+            if (this.pos.below().distSqr(neighborPos) == 0) {
+                BlockState blockState = level.getBlockState(this.pos.below());
+                if (!blockState.isAir()) {
+                    this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.LAVA_CAULDRON;
                 } else {
                     work = false;
                 }
@@ -235,12 +217,12 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
-            IBlockState blockState = world.getBlockState(this.pos.down());
-            if (blockState.getMaterial() != Material.AIR) {
-                this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.FLOWING_LAVA;
+            BlockState blockState = level.getBlockState(this.pos.below());
+            if (!blockState.isAir()) {
+                this.work = blockState.getBlock() == Blocks.LAVA || blockState.getBlock() == Blocks.LAVA_CAULDRON;
             } else {
                 work = false;
             }
@@ -253,26 +235,27 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && player
+                .getItemInHand(hand)
+                .getCapability(
+                        ForgeCapabilities.FLUID_HANDLER_ITEM,
+                        null
+                ).orElse((IFluidHandlerItem) player
+                        .getItemInHand(hand).getItem().initCapabilities(player
+                                .getItemInHand(hand), player
+                                .getItemInHand(hand).getTag())) != null && this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity()) {
+
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
 
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            return super.onActivated(player, hand, side, vec3);
         }
     }
+
 
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -313,7 +296,7 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
                 this.progress = 0;
                 initiate(2);
             }
-            if (this.world.getWorldTime() % 20 == 0) {
+            if (this.level.getGameTime() % 20 == 0) {
                 new PacketUpdateFieldTile(this, "guiProgress", this.guiProgress);
             }
         } else {
@@ -329,7 +312,7 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
                 setActive(false);
             }
         }
-        if (this.world.getWorldTime() % 20 == 0) {
+        if (this.level.getGameTime() % 20 == 0) {
             this.heat.useEnergy(1);
         }
 
@@ -365,17 +348,9 @@ public class TileEntityPrimalFluidHeater extends TileElectricMachine implements 
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.primalFluidHeater;
+        return IUItem.primalFluidHeater.getBlock();
     }
 
-    public ContainerHeatFluids getGuiContainer(EntityPlayer entityPlayer) {
-        return null;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public GuiFluidHeater getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return null;
-    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,

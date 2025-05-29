@@ -1,9 +1,13 @@
 package com.denfop.tiles.reactors.graphite.capacitor;
 
 import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.reactors.IGraphiteReactor;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCapacitor;
 import com.denfop.gui.GuiCapacitor;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -11,23 +15,25 @@ import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.graphite.ICapacitor;
 import com.denfop.tiles.reactors.graphite.ICapacitorItem;
 import com.denfop.tiles.reactors.graphite.controller.TileEntityMainController;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityCapacitor extends TileEntityMultiBlockElement implements ICapacitor, IUpdatableTileEvent {
 
-    private final int level;
+    private final int levelBlock;
     private final InvSlot slot;
     public double percent = 1;
     private int x = 0;
     private ICapacitorItem item;
 
-    public TileEntityCapacitor(int level) {
-        this.level = level;
+    public TileEntityCapacitor(int levelBlock, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
+        this.levelBlock = levelBlock;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
 
             @Override
@@ -37,13 +43,13 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ICapacitorItem && ((ICapacitorItem) stack.getItem()).getLevel() <= ((TileEntityCapacitor) this.base).getBlockLevel();
+                return stack.getItem() instanceof ICapacitorItem && ((ICapacitorItem) stack.getItem()).getLevelCapacitor() <= ((TileEntityCapacitor) this.base).getBlockLevel();
             }
 
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (!world.isRemote) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (!level.isClientSide) {
                     if (content.isEmpty()) {
                         ((TileEntityCapacitor) this.base).percent = 1;
                     } else {
@@ -51,6 +57,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
                         item = (ICapacitorItem) content.getItem();
                     }
                 }
+                return content;
             }
         };
         slot.setStackSizeLimit(1);
@@ -79,11 +86,11 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            if (this.getSlot().get().isEmpty()) {
+        if (!this.getWorld().isClientSide) {
+            if (this.getSlot().get(0).isEmpty()) {
                 this.percent = 1;
             } else {
-                this.percent = 1 - ((ICapacitorItem) this.getSlot().get().getItem()).getPercent();
+                this.percent = 1 - ((ICapacitorItem) this.getSlot().get(0).getItem()).getPercent();
             }
         }
     }
@@ -93,31 +100,31 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
         super.updateEntityServer();
         if (this.getMain() != null) {
             TileEntityMainController controller = (TileEntityMainController) this.getMain();
-            if (controller.work && !this.slot.isEmpty() && world.provider.getWorldTime() % 20 == 0) {
+            if (controller.work && !this.slot.isEmpty() && level.getGameTime() % 20 == 0) {
                 if (item == null) {
-                    this.item = (ICapacitorItem) this.slot.get().getItem();
+                    this.item = (ICapacitorItem) this.slot.get(0).getItem();
                 }
-                this.item.damageItem(this.slot.get(), -1);
+                this.item.damageItem(this.slot.get(0), -1);
             }
         }
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        x = nbtTagCompound.getInteger("capacitor_x");
+        x = nbtTagCompound.getInt("capacitor_x");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("capacitor_x", x);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
+        nbtTagCompound.putInt("capacitor_x", x);
         return nbtTagCompound;
     }
 
     @Override
     public int getBlockLevel() {
-        return level;
+        return levelBlock;
     }
 
 
@@ -135,14 +142,14 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
     }
 
     @Override
-    public ContainerCapacitor getGuiContainer(final EntityPlayer var1) {
+    public ContainerCapacitor getGuiContainer(final Player var1) {
         return new ContainerCapacitor(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCapacitor(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiCapacitor((ContainerCapacitor) menu);
     }
 
 
@@ -151,7 +158,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, final double var2) {
+    public void updateTileServer(final Player var1, final double var2) {
         if (this.getMain() == null) {
             return;
         }

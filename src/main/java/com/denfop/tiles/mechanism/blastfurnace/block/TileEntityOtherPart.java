@@ -7,27 +7,31 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBlastFurnace;
 import com.denfop.tiles.mechanism.blastfurnace.api.IOtherBlastPart;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
 public class TileEntityOtherPart extends TileEntityMultiBlockElement implements IOtherBlastPart {
 
 
+    public TileEntityOtherPart(BlockPos pos, BlockState state) {
+        super(BlockBlastFurnace.blast_furnace_part, pos, state);
+    }
+
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.blastfurnace.info1"));
         tooltip.add(Localization.translate("iu.blastfurnace.info3") + Localization.translate(new ItemStack(
-                IUItem.blastfurnace,
-                1,
-                0
-        ).getUnlocalizedName()));
+                IUItem.blastfurnace.getItem(0)
+        ).getDescriptionId()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 
@@ -36,7 +40,7 @@ public class TileEntityOtherPart extends TileEntityMultiBlockElement implements 
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.blastfurnace;
+        return IUItem.blastfurnace.getBlock(getTeBlock().getId());
     }
 
 }

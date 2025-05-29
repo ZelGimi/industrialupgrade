@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_21_element"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/strontium"
+      }
+    ],
+    "C": [
+      {
+        "tag": "minecraft:saplings"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/hafnium"
+      }
+    ]
+  },
+  "pattern": [
+    "BCB",
+    "DAD",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_674_element"
+  },
+  "show_notification": true
+}

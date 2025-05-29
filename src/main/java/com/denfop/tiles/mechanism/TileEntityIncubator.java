@@ -1,20 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseFluidMachineRecipe;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.FluidHandlerRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InputFluid;
-import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -24,7 +14,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerIncubator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiIncubator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -36,16 +28,17 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -75,8 +68,8 @@ public class TileEntityIncubator extends TileElectricMachine implements
     public double guiProgress;
     protected short progress;
 
-    public TileEntityIncubator() {
-        super(200, 1, 1);
+    public TileEntityIncubator(BlockPos pos, BlockState state) {
+        super(200, 1, 1,BlockBaseMachine3.incubator,pos,state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -133,31 +126,32 @@ public class TileEntityIncubator extends TileElectricMachine implements
 
     }
 
-    public ContainerIncubator getGuiContainer(final EntityPlayer var1) {
+    public ContainerIncubator getGuiContainer(final Player var1) {
         return new ContainerIncubator(var1, this);
 
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
 
-        return new GuiIncubator(getGuiContainer(var1));
+
+        return new GuiIncubator((ContainerIncubator) menu);
     }
 
     @Override
     public void init() {
         addRecipe(
                 new ItemStack(Blocks.BROWN_MUSHROOM),
-                new FluidStack(FluidName.fluidapianroyaljelly.getInstance(), 250),
-                new FluidStack(FluidName.fluidbacteria.getInstance()
+                new FluidStack(FluidName.fluidapianroyaljelly.getInstance().get(), 250),
+                new FluidStack(FluidName.fluidbacteria.getInstance().get()
                         , 250)
         );
 
         addRecipe(
-                new ItemStack(IUItem.iudust, 1, 40),
-                new FluidStack(FluidName.fluidbacteria.getInstance(), 250),
-                new FluidStack(FluidName.fluidplantmixture.getInstance()
+                new ItemStack(IUItem.iudust.getStack(40), 1),
+                new FluidStack(FluidName.fluidbacteria.getInstance().get(), 250),
+                new FluidStack(FluidName.fluidplantmixture.getInstance().get()
                         , 250)
         );
 
@@ -166,7 +160,7 @@ public class TileEntityIncubator extends TileElectricMachine implements
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -181,7 +175,7 @@ public class TileEntityIncubator extends TileElectricMachine implements
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             inputSlotA.load();
             this.fluid_handler.load();
             this.getOutput();
@@ -190,15 +184,15 @@ public class TileEntityIncubator extends TileElectricMachine implements
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -269,7 +263,7 @@ public class TileEntityIncubator extends TileElectricMachine implements
         }
 
         if (check || (this.fluid_handler.output() == null && this.output != null && this.fluidTank1.getFluidAmount() > 0)) {
-            this.fluid_handler.getOutput(this.inputSlotA.get());
+            this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {
             if (this.fluid_handler.output() != null && this.output == null) {
                 this.fluid_handler.setOutput(null);

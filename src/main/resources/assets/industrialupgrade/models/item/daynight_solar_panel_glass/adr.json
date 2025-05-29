@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/daynight/adr"
+		"layer0": "industrialupgrade:item/daynight/adr"
 	}
 }

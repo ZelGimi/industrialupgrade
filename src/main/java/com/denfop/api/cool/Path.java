@@ -1,6 +1,6 @@
 package com.denfop.api.cool;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,10 +9,10 @@ public class Path {
 
     public final List<ICoolConductor> conductors;
     public final ICoolSink target;
-    public final EnumFacing targetDirection;
+    public final Direction targetDirection;
     public double min = Double.MAX_VALUE;
 
-    public Path(ICoolSink sink, EnumFacing facing) {
+    public Path(ICoolSink sink, Direction facing) {
         this.target = sink;
         this.conductors = new LinkedList<>();
         this.targetDirection = facing;

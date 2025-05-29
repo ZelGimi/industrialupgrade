@@ -1,23 +1,28 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerModuleMachine;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiModuleMachine;
 import com.denfop.invslot.InvSlotModule;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +33,10 @@ public class TileModuleMachine extends TileElectricMachine
 
     public final InvSlotModule inputslot;
     public final InvSlotModule inputslotA;
-    public List<String> listItems = new ArrayList<>();
+    public List<TagKey<Item>> listItems = new ArrayList<>();
 
-    public TileModuleMachine() {
-        super(0, 10, 0);
+    public TileModuleMachine(BlockPos pos, BlockState state) {
+        super(0, 10, 0, BlockBaseMachine.modulator, pos, state);
 
 
         this.inputslot = new InvSlotModule(this, 0, 27);
@@ -44,7 +49,7 @@ public class TileModuleMachine extends TileElectricMachine
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.machines;
+        return IUItem.machines.getBlock(getTeBlock());
     }
 
     @Override
@@ -53,16 +58,13 @@ public class TileModuleMachine extends TileElectricMachine
         this.inputslot.update();
     }
 
-    public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
-        return true;
+
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiModuleMachine((ContainerModuleMachine) menu);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiModuleMachine(new ContainerModuleMachine(entityPlayer, this));
-    }
-
-    public ContainerModuleMachine getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerModuleMachine getGuiContainer(Player entityPlayer) {
         return new ContainerModuleMachine(entityPlayer, this);
     }
 
@@ -74,19 +76,19 @@ public class TileModuleMachine extends TileElectricMachine
 
 
     @Override
-    public void updateTileServer(EntityPlayer player, double event) {
+    public void updateTileServer(Player player, double event) {
         if (!this.inputslotA.isEmpty()) {
             initiate(1);
-            this.inputslotA.get(0).setTagCompound(new NBTTagCompound());
+            this.inputslotA.get(0).setTag(new CompoundTag());
             for (int i = 0; i < this.inputslot.size(); i++) {
                 String l = "number_" + i;
                 if (i < this.listItems.size()) {
-                    ModUtils.NBTSetString(inputslotA.get(), l, this.listItems.get(i));
+                    ModUtils.NBTSetString(inputslotA.get(0), l, this.listItems.get(i).location().toString());
                 }
 
             }
-            final NBTTagCompound nbt = this.inputslotA.get(0).getTagCompound();
-            nbt.setInteger("size", this.listItems.size());
+            final CompoundTag nbt = this.inputslotA.get(0).getTag();
+            nbt.putInt("size", this.listItems.size());
 
         }
 

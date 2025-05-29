@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/triple_handlerho"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_140_element"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_203_element"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_120_element"
+      }
+    ]
+  },
+  "pattern": [
+    "BDB",
+    " A ",
+    "BEB"
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/quad_handlerho"
+  },
+  "show_notification": true
+}

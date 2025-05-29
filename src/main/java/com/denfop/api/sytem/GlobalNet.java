@@ -1,8 +1,9 @@
 package com.denfop.api.sytem;
 
 import com.denfop.api.energy.NodeStats;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
 public class GlobalNet implements IGlobalNet {
 
     private final EnergyType type;
-    Map<Integer, ILocalNet> worldILocalNetMap = new HashMap<>(3);
+    Map<ResourceKey<Level>, ILocalNet> worldILocalNetMap = new HashMap<>(3);
 
     public GlobalNet(EnergyType element) {
         this.type = element;
@@ -19,8 +20,8 @@ public class GlobalNet implements IGlobalNet {
     }
 
     @Override
-    public ITile getSubTile(final World var1, final BlockPos var2) {
-        ILocalNet localNet = worldILocalNetMap.get(var1.provider.getDimension());
+    public ITile getSubTile(final Level var1, final BlockPos var2) {
+        ILocalNet localNet = worldILocalNetMap.get(var1.dimension());
         if (localNet == null) {
             return null;
         } else {
@@ -29,12 +30,12 @@ public class GlobalNet implements IGlobalNet {
     }
 
     @Override
-    public void addTile(final World var1, final ITile var2) {
-        ILocalNet localNet = worldILocalNetMap.get(var1.provider.getDimension());
+    public void addTile(final Level var1, final ITile var2) {
+        ILocalNet localNet = worldILocalNetMap.get(var1.dimension());
         if (localNet == null) {
             localNet = new LocalNet(this.type);
             localNet.addTile(var2);
-            worldILocalNetMap.put(var1.provider.getDimension(), localNet);
+            worldILocalNetMap.put(var1.dimension(), localNet);
         } else {
             localNet.addTile(var2);
         }
@@ -42,8 +43,8 @@ public class GlobalNet implements IGlobalNet {
     }
 
     @Override
-    public void removeTile(final World var1, final ITile var2) {
-        ILocalNet localNet = worldILocalNetMap.get(var1.provider.getDimension());
+    public void removeTile(final Level var1, final ITile var2) {
+        ILocalNet localNet = worldILocalNetMap.get(var1.dimension());
         if (localNet != null) {
             localNet.removeTile(var2);
         }
@@ -52,17 +53,17 @@ public class GlobalNet implements IGlobalNet {
 
 
     @Override
-    public ILocalNet getLocalSystem(final World world) {
-        return worldILocalNetMap.get(world.provider.getDimension());
+    public ILocalNet getLocalSystem(final Level world) {
+        return worldILocalNetMap.get(world.dimension());
     }
 
     @Override
-    public ILocalNet getLocalSystem(final int id) {
+    public ILocalNet getLocalSystem(final ResourceKey<Level> id) {
         return worldILocalNetMap.get(id);
     }
 
     @Override
-    public void onUnload(int id) {
+    public void onUnload(ResourceKey<Level> id) {
         ILocalNet localNet = worldILocalNetMap.get(id);
         if (localNet != null) {
             localNet.onUnload();
@@ -70,12 +71,12 @@ public class GlobalNet implements IGlobalNet {
     }
 
     @Override
-    public Map<Integer, ILocalNet> getLocalNetMap() {
+    public Map<ResourceKey<Level>, ILocalNet> getLocalNetMap() {
         return worldILocalNetMap;
     }
 
     @Override
-    public void TickEnd(int id) {
+    public void TickEnd(ResourceKey<Level> id) {
         ILocalNet localNet = worldILocalNetMap.get(id);
         if (localNet != null) {
             localNet.TickEnd();
@@ -83,8 +84,8 @@ public class GlobalNet implements IGlobalNet {
     }
 
     @Override
-    public NodeStats getNodeStats(final ITile delegate, final World world) {
-        ILocalNet localNet = worldILocalNetMap.get(world.provider.getDimension());
+    public NodeStats getNodeStats(final ITile delegate, final Level world) {
+        ILocalNet localNet = worldILocalNetMap.get(world.dimension());
         if (localNet != null) {
             return localNet.getNodeStats(delegate);
         }

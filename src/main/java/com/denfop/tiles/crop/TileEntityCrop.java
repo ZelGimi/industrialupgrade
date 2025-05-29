@@ -1,13 +1,9 @@
+
 package com.denfop.tiles.crop;
 
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.agriculture.CropInit;
-import com.denfop.api.agriculture.CropNetwork;
-import com.denfop.api.agriculture.EnumSoil;
-import com.denfop.api.agriculture.ICrop;
-import com.denfop.api.agriculture.ICropItem;
+import com.denfop.api.agriculture.*;
 import com.denfop.api.agriculture.genetics.EnumGenetic;
 import com.denfop.api.agriculture.genetics.GeneticTraits;
 import com.denfop.api.agriculture.genetics.GeneticsManager;
@@ -20,95 +16,78 @@ import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.blocks.BlockCrop;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.state.TileEntityBlockStateContainer;
+import com.denfop.blocks.mechanism.BlockCrop;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.network.packet.PacketUpdateFieldTile;
-import com.denfop.proxy.ClientProxy;
-import com.denfop.render.base.BakedBlockModel;
-import com.denfop.render.crop.CropRenderState;
-import com.denfop.render.crop.TileEntityDoubleCropRender;
 import com.denfop.render.oilquarry.DataBlock;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.bee.TileEntityApiary;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemHoe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.EnumPlantType;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.PlantType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.denfop.api.agriculture.genetics.GeneticsManager.enumGeneticListMap;
 import static com.denfop.api.agriculture.genetics.GeneticsManager.geneticTraitsMap;
 import static com.denfop.api.agriculture.genetics.Genome.geneticBiomes;
-import static com.denfop.render.crop.CropRender.renderStateProperty;
 
 public class TileEntityCrop extends TileEntityBlock implements ICropTile {
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public DataBlock upDataBlock;
     public Block downBlock = null;
-    public boolean hasDouble = false;
-    Map<BlockPos, TileEntityCrop> cropMap = new HashMap<>();
-    boolean added = false;
     private ICrop crop = null;
     private long BeeId = 0;
     private Genome genome = null;
+    public boolean hasDouble = false;
     private ItemStack cropItem = ItemStack.EMPTY;
-    private CropRenderState cropRenderState;
     private Radiation radLevel;
     private ChunkPos chunkPos;
-    private Chunk chunk;
+    private ChunkAccess chunk;
     private Biome biome;
     private int tickPest = 0;
-    private IBlockState downState;
+    private BlockState downState;
+    Map<BlockPos, TileEntityCrop> cropMap = new HashMap<>();
     private ChunkLevel chunkLevel;
     private int pestUse;
-    private AxisAlignedBB axisAlignedBB;
+    private AABB axisAlignedBB;
     private List<ChunkPos> chunkPositions = new ArrayList<>();
     private Map<ChunkPos, List<TileEntityApiary>> chunkPosListMap = new HashMap<>();
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private Function render;
     private boolean humus;
     private boolean canGrow;
 
-    public TileEntityCrop() {
-
+    public TileEntityCrop(BlockPos pos,BlockState state) {
+        super(BlockCrop.crop, pos,state);
 
     }
 
@@ -116,27 +95,19 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         return cropItem;
     }
 
-    @Override
-    public IMultiTileBlock getTeBlock() {
-        return BlockCrop.crop;
-    }
 
-    @Override
-    public BlockTileEntity getBlock() {
-        return IUItem.crop;
-    }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
         hasDouble = nbt.getBoolean("hasDouble");
         pestUse = nbt.getByte("pestUse");
         tickPest = nbt.getShort("tickPest");
-        if (nbt.hasKey("crop_id")) {
-            final int id = nbt.getInteger("crop_id");
+        if (nbt.contains("crop_id")) {
+            final int id = nbt.getInt("crop_id");
             crop = CropNetwork.instance.getCrop(id).copy();
-            crop.setTick(nbt.getInteger("tick"));
-            crop.setGeneration(nbt.getInteger("generation"));
-            this.cropItem = new ItemStack(nbt.getCompoundTag("stack_crop"));
+            crop.setTick(nbt.getInt("tick"));
+            crop.setGeneration(nbt.getInt("generation"));
+            this.cropItem =  ItemStack.of(nbt.getCompound("stack_crop"));
             this.genome = new Genome(this.cropItem);
             genome.loadCrop(crop);
         }
@@ -154,7 +125,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         return downBlock;
     }
 
-    public IBlockState getDownState() {
+    public BlockState getDownState() {
         return downState;
     }
 
@@ -162,23 +133,23 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         return biome;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         super.writeToNBT(nbt);
-        nbt.setBoolean("hasDouble", hasDouble);
-        nbt.setByte("pestUse", (byte) pestUse);
-        nbt.setShort("tickPest", (short) tickPest);
+        nbt.putBoolean("hasDouble", hasDouble);
+        nbt.putByte("pestUse", (byte) pestUse);
+        nbt.putShort("tickPest", (short) tickPest);
         if (this.crop != null) {
-            nbt.setInteger("tick", crop.getTick());
-            nbt.setInteger("generation", crop.getGeneration());
-            nbt.setInteger("crop_id", crop.getId());
-            nbt.setTag("stack_crop", this.cropItem.serializeNBT());
+            nbt.putInt("tick", crop.getTick());
+            nbt.putInt("generation", crop.getGeneration());
+            nbt.putInt("crop_id", crop.getId());
+            nbt.put("stack_crop", this.cropItem.serializeNBT());
         }
         return nbt;
     }
 
     public void event() {
-        if (!world.isRemote) {
-            world.playEvent(2005, pos, 0);
+        if (!level.isClientSide) {
+            level.levelEvent(1505, this.pos, 0);
         }
     }
 
@@ -188,7 +159,6 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         if (name.equals("hasDouble")) {
             try {
                 hasDouble = (boolean) DecoderHandler.decode(is);
-                this.updateRenderState();
                 this.rerender();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -198,42 +168,6 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             try {
                 int stage = crop.getStage();
                 this.crop.setTick((int) DecoderHandler.decode(is));
-                this.updateRenderState();
-                if (stage != crop.getStage() && !crop.getTopTexture().isEmpty()) {
-                    this.cropRenderState.setNeedTwoTexture(true);
-                    if (upDataBlock == null) {
-                        IBlockState blockState1 = this.block
-                                .getDefaultState()
-                                .withProperty(
-                                        this.block.typeProperty,
-                                        this.block.typeProperty.getState(this.teBlock, this.active)
-                                )
-                                .withProperty(
-                                        BlockTileEntity.facingProperty,
-                                        this.getFacing()
-                                );
-                        blockState1 = getExtendedState((TileEntityBlockStateContainer.PropertiesStateInstance) blockState1);
-                        upDataBlock = new DataBlock(blockState1);
-                        final IBakedModel model = ((ClientProxy) IUCore.proxy).cropRender.createModel(cropRenderState);
-                        upDataBlock.setState(model);
-                    } else {
-                        IBlockState blockState1 = this.block
-                                .getDefaultState()
-                                .withProperty(
-                                        this.block.typeProperty,
-                                        this.block.typeProperty.getState(this.teBlock, this.active)
-                                )
-                                .withProperty(
-                                        BlockTileEntity.facingProperty,
-                                        this.getFacing()
-                                );
-                        blockState1 = getExtendedState((TileEntityBlockStateContainer.PropertiesStateInstance) blockState1);
-                        upDataBlock.setBlockState(blockState1);
-                        final IBakedModel model = ((ClientProxy) IUCore.proxy).cropRender.createModel(cropRenderState);
-                        upDataBlock.setState(model);
-                    }
-                    this.cropRenderState.setNeedTwoTexture(false);
-                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -242,53 +176,23 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             try {
                 this.cropItem = (ItemStack) DecoderHandler.decode(is);
                 if (!this.cropItem.isEmpty()) {
-                    crop = ((ICropItem) cropItem.getItem()).getCrop(cropItem.getItemDamage(), cropItem).copy();
+                    crop = ((ICropItem) cropItem.getItem()).getCrop(cropItem.getDamageValue(), cropItem).copy();
                     this.genome = new Genome(cropItem);
                     this.genome.loadCrop(crop);
                 } else {
                     crop = null;
                 }
-                this.updateRenderState();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (name.equals("texture")) {
-            if (crop != null && !crop.getTopTexture().isEmpty()) {
-                this.cropRenderState.setNeedTwoTexture(true);
-                if (upDataBlock == null) {
-                    IBlockState blockState1 = this.block
-                            .getDefaultState()
-                            .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
-                            .withProperty(
-                                    BlockTileEntity.facingProperty,
-                                    this.getFacing()
-                            );
-                    blockState1 = getExtendedState((TileEntityBlockStateContainer.PropertiesStateInstance) blockState1);
-                    upDataBlock = new DataBlock(blockState1);
-                    final IBakedModel model = ((ClientProxy) IUCore.proxy).cropRender.createModel(cropRenderState);
-                    upDataBlock.setState(model);
-                } else {
-                    IBlockState blockState1 = this.block
-                            .getDefaultState()
-                            .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
-                            .withProperty(
-                                    BlockTileEntity.facingProperty,
-                                    this.getFacing()
-                            );
-                    blockState1 = getExtendedState((TileEntityBlockStateContainer.PropertiesStateInstance) blockState1);
-                    upDataBlock.setBlockState(blockState1);
-                    final IBakedModel model = ((ClientProxy) IUCore.proxy).cropRender.createModel(cropRenderState);
-                    upDataBlock.setState(model);
-                }
-                this.cropRenderState.setNeedTwoTexture(false);
-            }
+
         }
         if (name.equals("crop")) {
             try {
                 if (crop != null) {
                     this.crop.readPacket((CustomPacketBuffer) DecoderHandler.decode(is));
-                    this.updateRenderState();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -297,7 +201,6 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         if (name.equals("cropItem1")) {
             this.cropItem = ItemStack.EMPTY;
             crop = null;
-            this.updateRenderState();
         }
     }
 
@@ -309,12 +212,12 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         tickPest = 7000;
     }
 
-    public boolean canPlace(TileEntityBlock te, BlockPos pos, World world) {
+    public boolean canPlace(TileEntityBlock te, BlockPos pos, Level world) {
         EnumSoil[] soil = EnumSoil.values();
-        downState = world.getBlockState(pos.down());
+        downState = world.getBlockState(pos.below());
         downBlock = downState.getBlock();
         for (EnumSoil soil1 : soil) {
-            if ((soil1.getState() == downState && !soil1.isIgnore()) || (soil1.getBlock() == downBlock && soil1.isIgnore()) || (downBlock == IUItem.humus)) {
+            if ((soil1.getState() == downState && !soil1.isIgnore()) || (soil1.getBlock() == downBlock && soil1.isIgnore())|| (downBlock == IUItem.humus.getBlock(0))) {
                 return true;
             }
         }
@@ -325,14 +228,9 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         return 0;
     }
 
-    public void onNetworkUpdate(String field) {
-        this.updateRenderState();
-        this.rerender();
-        super.onNetworkUpdate(field);
-    }
 
-    public EnumPlantType getPlantType() {
-        return EnumPlantType.Crop;
+    public PlantType getPlantType() {
+        return PlantType.CROP;
     }
 
     public Genome getGenome() {
@@ -342,18 +240,20 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        if (!this.getWorld().isRemote && added) {
+        if (!this.getWorld().isClientSide && added) {
             CropNetwork.instance.removeCropFromWorld(this);
             this.added = false;
         }
-        if (this.getWorld().isRemote) {
+        if (this.getWorld().isClientSide) {
             GlobalRenderManager.removeRender(this.getWorld(), pos);
         }
     }
 
+    boolean added = false;
+
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             this.chunkPos = new ChunkPos(pos);
             Radiation radiation1 = RadiationSystem.rad_system.getMap().get(chunkPos);
             if (radiation1 == null) {
@@ -367,12 +267,12 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                 PollutionManager.pollutionManager.addChunkLevelSoil(chunkLevel);
             }
             this.chunkLevel = chunkLevel;
-            this.chunk = this.getWorld().getChunkFromBlockCoords(pos);
-            this.biome = this.getWorld().getBiome(pos);
+            this.chunk = this.getWorld().getChunk(pos);
+            this.biome = this.getWorld().getBiome(pos).get();
             this.cropMap.clear();
-            for (EnumFacing facing1 : ModUtils.horizontalFacings) {
-                final BlockPos pos1 = pos.offset(facing1);
-                TileEntity tile = this.getWorld().getTileEntity(pos1);
+            for (Direction facing1 : ModUtils.horizontalFacings) {
+                final BlockPos pos1 = pos.offset(facing1.getNormal());
+                BlockEntity tile = this.getWorld().getBlockEntity(pos1);
                 if (tile instanceof TileEntityCrop) {
                     cropMap.put(pos1, (TileEntityCrop) tile);
                 }
@@ -381,7 +281,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                 added = true;
                 CropNetwork.instance.addNewCropToWorld(this);
             }
-            this.axisAlignedBB = new AxisAlignedBB(
+            this.axisAlignedBB = new AABB(
                     pos.getX() - 4,
                     pos.getY() - 2,
                     pos.getZ() - 4,
@@ -403,46 +303,20 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                 }
             }
             for (ChunkPos chunkPos : chunkPositions) {
-                chunkPosListMap.put(chunkPos, BeeNetwork.instance.getApiaryFromChunk(world, chunkPos));
+                chunkPosListMap.put(chunkPos, BeeNetwork.instance.getApiaryFromChunk(level, chunkPos));
             }
-            sendUpdatePacket("texture", 0);
-            sendUpdatePacket("hasDouble", hasDouble);
         }
 
-        if (this.getWorld().isRemote) {
-            this.render = createFunction();
-            GlobalRenderManager.addRender(this.getWorld(), pos, render);
 
-            this.updateRenderState();
-        }
         if (downState == null) {
-            downState = world.getBlockState(pos.down());
+            downState = level.getBlockState(pos.below());
             downBlock = downState.getBlock();
         }
-        this.humus = downBlock == IUItem.humus;
-        this.world.setBlockState(pos.down(), downState);
+        this.humus = downBlock == IUItem.humus.getBlock(0);
+        this.level.setBlock(pos.below(), downState,3);
     }
 
-    @SideOnly(Side.CLIENT)
-    public Function createFunction() {
-        Function function = o -> {
-            if (this.upDataBlock != null && this.crop != null && this.crop.getRender() == 3) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(this.getPos().getX(), this.getPos().getY() + 1, this.getPos().getZ());
 
-                RenderHelper.enableStandardItemLighting();
-                GlStateManager.depthMask(true);
-                Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-                TileEntityDoubleCropRender.render((BakedBlockModel) this.upDataBlock.getState(),
-                        this.upDataBlock.getBlockState(), null
-                );
-
-                GL11.glPopMatrix();
-            }
-            return 0;
-        };
-        return function;
-    }
 
     @Override
     public CustomPacketBuffer writePacket() {
@@ -452,7 +326,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         customPacketBuffer.writeBoolean(this.hasDouble);
         customPacketBuffer.writeBoolean(crop != null);
         if (crop != null) {
-            customPacketBuffer.writeItemStack(this.cropItem);
+            customPacketBuffer.writeItemStack(this.cropItem,false);
             customPacketBuffer.writeInt(crop.getId());
             customPacketBuffer.writeBytes(crop.writePacket());
         }
@@ -465,16 +339,11 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         hasDouble = customPacketBuffer.readBoolean();
         boolean hasCrop = customPacketBuffer.readBoolean();
         if (hasCrop) {
-            try {
-                this.cropItem = customPacketBuffer.readItemStack();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            this.cropItem = customPacketBuffer.readItem();
             int id = customPacketBuffer.readInt();
             this.crop = CropNetwork.instance.getCrop(id).copy();
             this.crop.readPacket(customPacketBuffer);
-            this.updateRenderState();
-            this.rerender();
+
         }
     }
 
@@ -491,26 +360,26 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     }
 
     @Override
-    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+    public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        if (this.pos.down().equals(neighborPos)) {
+        if (this.pos.below().equals(neighborPos)) {
             if (crop != null) {
                 if (!this.cropItem.isEmpty() && crop.getId() != 3) {
-                    ModUtils.dropAsEntity(world, pos, cropItem, 1);
+                    ModUtils.dropAsEntity(level, pos, cropItem, 1);
                     this.cropItem = ItemStack.EMPTY;
                     this.crop = null;
-                    new PacketUpdateFieldTile(this, "cropItem1", "");
+                    this.setActive("");
                 }
             }
-            world.setBlockState(pos, net.minecraft.init.Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
-            ModUtils.dropAsEntity(world, pos, new ItemStack(IUItem.crop), hasDouble ? 2 : 1);
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), level.isClientSide ? 11 : 3);
+            ModUtils.dropAsEntity(level, pos, new ItemStack(IUItem.crop.getItem()), hasDouble ? 2 : 1);
         }
-        for (EnumFacing facing1 : ModUtils.horizontalFacings) {
-            if (pos.offset(facing1).equals(neighborPos)) {
+        for (Direction facing1 : ModUtils.horizontalFacings) {
+            if (pos.offset(facing1.getNormal()).equals(neighborPos)) {
                 if (cropMap.containsKey(neighborPos)) {
                     cropMap.remove(neighborPos);
                 } else {
-                    TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+                    BlockEntity tile = this.getWorld().getBlockEntity(neighborPos);
                     if (tile instanceof TileEntityCrop) {
                         cropMap.put(neighborPos, (TileEntityCrop) tile);
                     }
@@ -522,13 +391,13 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     public List<ItemStack> harvest(boolean dropInWorld) {
         this.crop.setGeneration(crop.getGeneration() + 1);
         this.crop.setTick(0);
-        new PacketUpdateFieldTile(this, "tick", 0);
+        this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
         if (dropInWorld) {
             for (ItemStack stack1 : crop.getDrops()) {
-                ModUtils.dropAsEntity(world, pos, stack1, this.crop.getYield());
+                ModUtils.dropAsEntity(level, pos, stack1, this.crop.getYield());
             }
             if (WorldBaseGen.random.nextInt(100) < 25) {
-                ModUtils.dropAsEntity(world, pos, this.cropItem, WorldBaseGen.random.nextInt(crop.getSizeSeed() + 1));
+                ModUtils.dropAsEntity(level, pos, this.cropItem, WorldBaseGen.random.nextInt(crop.getSizeSeed() + 1));
             }
         }
         if (this.crop.getId() != 3) {
@@ -537,7 +406,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         return crop.getDrops();
     }
 
-    public AxisAlignedBB getAxisAlignedBB() {
+    public AABB getAxisAlignedBB() {
         return axisAlignedBB;
     }
 
@@ -586,7 +455,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                                 case BIOME:
                                     if (!hasGenome) {
                                         GeneticTraits geneticTraits = genetic.get(WorldBaseGen.random.nextInt(genetic.size()));
-                                        List<Biome> biomeList = geneticBiomes.get(geneticTraits);
+                                        List<ResourceKey<Biome>> biomeList = geneticBiomes.get(geneticTraits);
                                         if (!crop.canGrowInBiome(biomeList.get(0))) {
                                             biomeList.forEach(crop::addBiome);
                                             genome.addGenome(geneticTraits, cropItem);
@@ -595,7 +464,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                                         GeneticTraits geneticTraits = genetic.get(WorldBaseGen.random.nextInt(genetic.size()));
                                         GeneticTraits geneticTraits1 = genome.removeGenome(enumGenetic, cropItem);
                                         GeneticsManager.instance.deleteGenomeCrop(crop, geneticTraits1);
-                                        List<Biome> biomeList = geneticBiomes.get(geneticTraits);
+                                        List< ResourceKey<Biome>> biomeList = geneticBiomes.get(geneticTraits);
                                         biomeList.forEach(crop::addBiome);
                                         genome.addGenome(geneticTraits, cropItem);
                                     }
@@ -1071,12 +940,12 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         }
     }
 
-    public long getBeeId() {
-        return BeeId;
-    }
-
     public void setBeeId(final long beeId) {
         BeeId = beeId;
+    }
+
+    public long getBeeId() {
+        return BeeId;
     }
 
     @Override
@@ -1096,7 +965,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         if (crop != null) {
             BeeId = 0;
             boolean work = false;
-            if (this.getWorld().getWorldTime() % 20 == 0) {
+            if (this.getWorld().getGameTime() % 20 == 0) {
                 if (chunk == null) {
                     this.chunkPos = new ChunkPos(pos);
                     Radiation radiation1 = RadiationSystem.rad_system.getMap().get(chunkPos);
@@ -1111,28 +980,27 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                         PollutionManager.pollutionManager.addChunkLevelSoil(chunkLevel);
                     }
                     this.chunkLevel = chunkLevel;
-                    this.chunk = this.getWorld().getChunkFromBlockCoords(pos);
-                    this.biome = this.getWorld().getBiome(pos);
+                    this.chunk = this.getWorld().getChunk(pos);
+                    this.biome = this.getWorld().getBiome(pos).get();
                 }
-                if (this.getWorld().getWorldTime() % 60 == 0) {
-                    this.canGrow = CropNetwork.instance.canGrow(world, pos, chunkPos, crop, radLevel, chunk, biome, chunkLevel);
+                if (this.getWorld().getGameTime() % 60 == 0) {
+                    this.canGrow = CropNetwork.instance.canGrow(level, pos, chunkPos, crop, radLevel, chunk, biome, chunkLevel);
                 }
                 if (this.canGrow && (this
                         .getWorld()
-                        .getWorldTime() % 400 != 0 || canGrow())) {
+                        .getGameTime() % 400 != 0 || canGrow())) {
 
-                    if (crop.getTick() < crop.getMaxTick() && this.getWorld().getWorldTime() % 400 == 0 && crop.getId() != 3) {
+                    if (crop.getTick() < crop.getMaxTick() && this.getWorld().getGameTime() % 400 == 0 && crop.getId() != 3) {
                         int chanceWeed = 100 - crop.getChanceWeed() - (5 * (crop.getSizeSeed() - 1));
                         work = true;
                         if (chanceWeed > 0) {
-                            if (this.getWorld().getWorldTime() % 400 == 0 && tickPest == 0 &&
+                            if (this.getWorld().getGameTime() % 400 == 0 && tickPest == 0 &&
                                     WorldBaseGen.random.nextInt(100) < chanceWeed && WorldBaseGen.random.nextInt(100) == 0) {
                                 this.crop = CropInit.weed_seed.copy();
                                 pestUse = 0;
                                 this.cropItem = CropInit.weed_seed.getStack();
                                 this.genome = new Genome(this.cropItem);
-                                new PacketUpdateFieldTile(this, "cropItem", this.cropItem);
-                                new PacketUpdateFieldTile(this, "crop", this.crop);
+                                this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
                             }
                         }
                     }
@@ -1149,43 +1017,40 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                         crop.addTick((int) (20 * crop.getGrowthSpeed() * (this.humus ? 1.25 : 1)));
                         boolean needUpdate = stage != crop.getStage();
                         if (needUpdate) {
-                            new PacketUpdateFieldTile(this, "tick", this.crop.getTick());
+                            this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
                         }
                     }
                 }
             }
         }
-        if (this.getWorld().getWorldTime() % 200 == 0 && pestUse > 0) {
+        if (this.getWorld().getGameTime() % 200 == 0 && pestUse > 0) {
             pestUse--;
         }
         if (this
                 .getWorld()
-                .getWorldTime() % 400 == 0 && tickPest == 0 && this.crop == null && !hasDouble && WorldBaseGen.random.nextInt(200) == 0) {
+                .getGameTime() % 400 == 0 && tickPest == 0 && this.crop == null && !hasDouble && WorldBaseGen.random.nextInt(200) == 0) {
             this.crop = CropInit.weed_seed.copy();
             pestUse = 0;
             this.cropItem = CropInit.weed_seed.getStack();
             this.genome = new Genome(this.cropItem);
-            new PacketUpdateFieldTile(this, "cropItem", this.cropItem);
-            new PacketUpdateFieldTile(this, "crop", this.crop);
+            this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
         }
         if (hasDouble && this
                 .getWorld()
-                .getWorldTime() % 40 == 0 && !this.cropMap.isEmpty() && WorldBaseGen.random.nextInt(50) == 0) {
+                .getGameTime() % 40 == 0 && !this.cropMap.isEmpty() && WorldBaseGen.random.nextInt(50) == 0) {
             List<TileEntityCrop> crops = this.cropMap.values().stream()
                     .filter(cropTile -> cropTile.crop != null && cropTile.crop.getTick() == cropTile.crop.getMaxTick())
-                    .collect(Collectors.toList());
+                    .toList();
 
             if (crops.size() < 2) {
                 if (this
                         .getWorld()
-                        .getWorldTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
+                        .getGameTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
                     this.hasDouble = false;
-                    new PacketUpdateFieldTile(this, "hasDouble", this.hasDouble);
                     this.crop = CropInit.weed_seed.copy();
                     pestUse = 0;
                     this.cropItem = CropInit.weed_seed.getStack();
-                    new PacketUpdateFieldTile(this, "cropItem", this.cropItem);
-                    new PacketUpdateFieldTile(this, "crop", this.crop);
+                    this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
                 }
                 return;
             }
@@ -1259,7 +1124,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     newCrop = CropNetwork.instance.getCrop(pair.get(0).getId()).copy();
                     if (!CropNetwork.instance.canPlantCrop(
                             newCrop.getStackForDrop(),
-                            world,
+                            level,
                             pos,
                             downState,
                             biome
@@ -1270,7 +1135,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     newCrop = CropNetwork.instance.canCropCombine(pair);
                     if (newCrop == null || !CropNetwork.instance.canPlantCrop(
                             newCrop.getStackForDrop(),
-                            world,
+                            level,
                             pos,
                             downState,
                             biome
@@ -1306,29 +1171,25 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     );
                 }
                 this.hasDouble = false;
-                new PacketUpdateFieldTile(this, "hasDouble", this.hasDouble);
 
                 this.cropItem = combinedGenome.getStack();
                 newCrop.setStack(cropItem);
                 this.crop = newCrop;
                 this.genome = combinedGenome;
                 this.genome.loadCrop(this.crop);
-                new PacketUpdateFieldTile(this, "cropItem", this.cropItem);
-                new PacketUpdateFieldTile(this, "crop", this.crop);
+                this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
                 can = true;
                 break;
             }
             if (!can) {
                 if (this
                         .getWorld()
-                        .getWorldTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
+                        .getGameTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
                     this.hasDouble = false;
-                    new PacketUpdateFieldTile(this, "hasDouble", this.hasDouble);
                     this.crop = CropInit.weed_seed.copy();
                     pestUse = 0;
                     this.cropItem = CropInit.weed_seed.getStack();
-                    new PacketUpdateFieldTile(this, "cropItem", this.cropItem);
-                    new PacketUpdateFieldTile(this, "crop", this.crop);
+                    this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
                 }
             }
         }
@@ -1353,8 +1214,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     .values()
                     .stream().parallel()
                     .filter(tileEntityCrop -> tileEntityCrop.crop != null && tileEntityCrop.crop.getId() != 3)
-                    .collect(
-                            Collectors.toList());
+                    .toList();
             for (TileEntityCrop crop1 : crops) {
                 if (crop.compatibilityWithCrop(crop1.getCrop())) {
                     conflictCrop(crop1.getCrop(), crop1.getGenome());
@@ -1423,36 +1283,32 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
 
     }
 
-
-    public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return this.getWorld().isRemote || this.rightClick(player, hand);
+    @Override
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        return this.getWorld().isClientSide || this.rightClick(player, hand);
     }
+
 
 
     @Override
-    public boolean onSneakingActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.cropItem.isEmpty() && crop != null && !this.getWorld().isRemote && crop.getId() != 3) {
+    public boolean onSneakingActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.cropItem.isEmpty() && crop != null && !this.getWorld().isClientSide && crop.getId() != 3) {
             if (this.crop != null && this.crop.getTick() == this.crop.getMaxTick() && this.crop.getId() != 3) {
                 harvest(true);
             }
-            ModUtils.dropAsEntity(world, pos, this.cropItem, 1);
+            ModUtils.dropAsEntity(level, pos, this.cropItem, 1);
             this.cropItem = ItemStack.EMPTY;
             this.crop = null;
             this.genome = null;
-            new PacketUpdateFieldTile(this, "cropItem1", "");
+            this.setActive("");
         }
-        return super.onSneakingActivated(player, hand, side, hitX, hitY, hitZ);
+        return super.onSneakingActivated(player, hand, side, vec3);
     }
 
-    private boolean rightClick(EntityPlayer player, EnumHand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+
+
+    private boolean rightClick(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
 
 
         if (stack.isEmpty() && this.hasDouble && this.crop == null) {
@@ -1461,22 +1317,21 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         }
 
 
-        if (stack.isItemEqual(this.getPickBlock(player, null)) && !this.hasDouble && this.crop == null) {
+        if (stack.is(this.getPickBlock(player, null).getItem()) && !this.hasDouble && this.crop == null) {
             stack.shrink(1);
             this.hasDouble = true;
-            sendUpdatePacket("hasDouble", this.hasDouble);
+            this.setActive(true);
             return true;
         }
 
 
-        if (stack.getItem() instanceof ItemHoe && !this.hasDouble && this.crop != null && this.crop.getId() == 3) {
+        if (stack.getItem() instanceof HoeItem && !this.hasDouble && this.crop != null && this.crop.getId() == 3) {
             resetCrop();
-            sendUpdatePacket("cropItem1", "");
             return true;
         }
 
 
-        if (stack.getItem() == IUItem.fertilizer && !this.hasDouble && this.crop != null && this.crop.getTick() < this.crop.getMaxTick() && this.crop.getId() != 3) {
+        if (stack.getItem() == IUItem.fertilizer.getItem() && !this.hasDouble && this.crop != null && this.crop.getTick() < this.crop.getMaxTick() && this.crop.getId() != 3) {
             fertilizeCrop(stack);
             return true;
         }
@@ -1484,7 +1339,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
 
         if (stack.getItem() instanceof ICropItem && !this.hasDouble && this.crop == null && CropNetwork.instance.canPlantCrop(
                 stack,
-                world,
+                level,
                 pos,
                 downState,
                 biome
@@ -1503,30 +1358,30 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     }
 
 
-    private void handleDoubleCropRemoval(EntityPlayer player) {
+    private void handleDoubleCropRemoval(Player player) {
         ItemStack stack1 = this.getPickBlock(player, null);
         this.hasDouble = false;
-        ModUtils.dropAsEntity(world, pos, stack1);
-        sendUpdatePacket("hasDouble", this.hasDouble);
+        this.setActive("");
+        ModUtils.dropAsEntity(level, pos, stack1);
     }
 
     public void resetCrop() {
         this.crop = null;
         this.cropItem = ItemStack.EMPTY;
         this.genome = null;
+        this.setActive("");
     }
 
 
     public void fertilizeCrop(ItemStack stack) {
         stack.shrink(1);
-        final int stage = this.crop.getStage();
         this.crop.addTick((int) (this.crop.getMaxTick() * 0.2));
         this.pestUse++;
         event();
         if (this.pestUse > 40) {
             handlePestResistance();
         } else {
-            checkAndUpdateCropStage(stage);
+            this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
         }
     }
 
@@ -1539,20 +1394,14 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             this.pestUse = 0;
             this.cropItem = CropInit.weed_seed.getStack();
             this.genome = new Genome(this.cropItem);
-            sendUpdatePacket("cropItem", this.cropItem);
-            sendUpdatePacket("crop", this.crop);
+            this.setActive(crop.getName().toLowerCase()+"_0");
         } else {
-            checkAndUpdateCropStage(this.crop.getStage());
+            this.setActive(crop.getName().toLowerCase()+"_"+this.crop.getStage());
         }
     }
 
 
-    private void checkAndUpdateCropStage(int previousStage) {
-        boolean needUpdate = previousStage != this.crop.getStage();
-        if (needUpdate) {
-            sendUpdatePacket("tick", this.crop.getTick());
-        }
-    }
+
 
 
     public void plantNewCrop(ItemStack stack) {
@@ -1562,23 +1411,19 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         this.genome = new Genome(this.cropItem);
         this.crop = CropNetwork.instance.getCropFromStack(this.cropItem).copy();
         this.genome.loadCrop(this.crop);
-        sendUpdatePacket("cropItem", this.cropItem);
-        sendUpdatePacket("crop", this.crop);
+        this.setActive(crop.getName().toLowerCase()+"_0");
     }
 
 
-    public void sendUpdatePacket(String fieldName, Object value) {
-        new PacketUpdateFieldTile(this, fieldName, value);
-    }
 
 
     public SoundType getBlockSound(Entity entity) {
-        return SoundType.PLANT;
+        return SoundType.CROP;
     }
 
 
-    public AxisAlignedBB getPhysicsBoundingBox() {
-        return new AxisAlignedBB(
+    public AABB getPhysicsBoundingBox() {
+        return new AABB(
                 0.20000000298023224,
                 -0.0625,
                 0.20000000298023224,
@@ -1588,12 +1433,24 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         );
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        List<AxisAlignedBB> ret = new ArrayList<>();
+
+    @Override
+    public IMultiTileBlock getTeBlock() {
+        return BlockCrop.crop;
+    }
+
+
+    @Override
+    public BlockTileEntity getBlock() {
+        return IUItem.crop.getBlock();
+    }
+
+    public List<AABB> getAabbs(boolean forCollision) {
+        List<AABB> ret = new ArrayList<>();
         if (forCollision) {
-            ret.add(new AxisAlignedBB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
+            ret.add(new AABB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
         } else {
-            ret.add(new AxisAlignedBB(
+            ret.add(new AABB(
                     0.20000000298023224,
                     -0.0625,
                     0.20000000298023224,
@@ -1615,21 +1472,8 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     }
 
 
-    public TileEntityBlockStateContainer.PropertiesStateInstance getExtendedState(TileEntityBlockStateContainer.PropertiesStateInstance state) {
-        state = super.getExtendedState(state);
-        CropRenderState renderState = this.cropRenderState;
-        if (renderState != null) {
-            state = state.withProperties(renderStateProperty, renderState);
-        }
 
-        return state;
-    }
-
-    private void updateRenderState() {
-        this.cropRenderState = new CropRenderState(this.crop, hasDouble, false);
-    }
-
-    public boolean wrenchCanRemove(EntityPlayer player) {
+    public boolean wrenchCanRemove(Player player) {
         return false;
     }
 

@@ -2,27 +2,24 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.ItemStackImage;
+import com.denfop.api.gui.*;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
 import com.denfop.container.ContainerWirelessMineralQuarry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiWirelessMineralQuarry extends GuiIU<ContainerWirelessMineralQuarry> {
+public class GuiWirelessMineralQuarry<T extends ContainerWirelessMineralQuarry> extends GuiIU<ContainerWirelessMineralQuarry> {
 
 
     public GuiWirelessMineralQuarry(ContainerWirelessMineralQuarry guiContainer) {
         super(guiContainer);
-        this.addComponent(new GuiComponent(this, 10, (this.ySize - 80) / 2,
+        this.addComponent(new GuiComponent(this, 10, (this.imageHeight - 80) / 2,
                 EnumTypeComponent.ENERGY,
                 new Component<>((this.container.base).energy)
         ));
@@ -48,8 +45,8 @@ public class GuiWirelessMineralQuarry extends GuiIU<ContainerWirelessMineralQuar
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
         for (int i = 0, j = 0; i < 4; i++) {
             if (!this.container.base.invslot.get(i).isEmpty() && j < this.container.base.veinList.size()) {
@@ -59,7 +56,7 @@ public class GuiWirelessMineralQuarry extends GuiIU<ContainerWirelessMineralQuar
                 int colmax = vein.getMaxCol();
                 boolean isOil = vein.getType() == Type.OIL;
                 String name_vein;
-                name_vein = this.container.base.itemStacks.get(j).getDisplayName();
+                name_vein = this.container.base.itemStacks.get(j).getDisplayName().getString();
                 j++;
                 new Area(this, 130, 8 + i * 18, 18, 18)
                         .withTooltip(name_vein + " " + col + (isOil ? "mb" : "") + "/" + colmax + (
@@ -67,14 +64,14 @@ public class GuiWirelessMineralQuarry extends GuiIU<ContainerWirelessMineralQuar
                                         ?
                                         "mb"
                                         : "") + "\n" + "x: " + (vein.getChunk().x << 4) + " z: " + (vein.getChunk().z << 4))
-                        .drawForeground(par1, par2);
+                        .drawForeground(poseStack,par1, par2);
             }
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(poseStack,partialTicks, mouseX, mouseY);
         this.bindTexture();
         for (int i = 0, j = 0; i < 4; i++) {
             if (!this.container.base.invslot.get(i).isEmpty() && j < this.container.base.veinList.size()) {
@@ -82,16 +79,16 @@ public class GuiWirelessMineralQuarry extends GuiIU<ContainerWirelessMineralQuar
                 final int finalJ = j;
                 ItemStack stack = this.container.base.itemStacks.get(finalJ);
                 stack.setCount(1);
-                new ItemStackImage(this, 130, 8 + i * 18, () -> stack).drawBackground(
+                new ItemStackImage(this, 130, 8 + i * 18, () -> stack).drawBackground(poseStack,
                         guiLeft,
                         guiTop
                 );
                 j++;
             }
         }
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
+
+        bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack,this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
     }
 
     public ResourceLocation getTexture() {

@@ -4,16 +4,17 @@ import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerCombinerMatter;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiCombinerMatter extends GuiIU<ContainerCombinerMatter> {
+@OnlyIn(Dist.CLIENT)
+public class GuiCombinerMatter<T extends ContainerCombinerMatter> extends GuiIU<ContainerCombinerMatter> {
 
     public final ContainerCombinerMatter container;
 
@@ -49,16 +50,9 @@ public class GuiCombinerMatter extends GuiIU<ContainerCombinerMatter> {
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
-        handleUpgradeTooltip(par1 - this.guiLeft, par2 - this.guiTop);
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
-
-
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+        handleUpgradeTooltip(par1 - this.guiLeft(), par2 - this.guiTop());
     }
 
 

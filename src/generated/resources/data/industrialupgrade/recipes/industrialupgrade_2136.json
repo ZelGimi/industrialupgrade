@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:basemachine3/steam_wire_insulator"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:blockresource/machine"
+      }
+    ],
+    "D": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    "BC ",
+    " D "
+  ],
+  "result": {
+    "item": "industrialupgrade:basemachine3/electric_wire_insulator"
+  },
+  "show_notification": true
+}

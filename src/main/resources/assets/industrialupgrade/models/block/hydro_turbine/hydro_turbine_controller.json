@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/hydro_turbine_controller",
-    "down" : "industrialupgrade:blocks/hydro_turbine_casing_1",
-    "up" : "industrialupgrade:blocks/hydro_turbine_casing_1",
-    "north" : "industrialupgrade:blocks/hydro_turbine_controller",
-    "east" : "industrialupgrade:blocks/hydro_turbine_casing_1",
-    "south" : "industrialupgrade:blocks/hydro_turbine_casing_1",
-    "west" : "industrialupgrade:blocks/hydro_turbine_casing_1"
+    "particle" : "industrialupgrade:block/hydro_turbine_controller",
+    "down" : "industrialupgrade:block/hydro_turbine_casing_1",
+    "up" : "industrialupgrade:block/hydro_turbine_casing_1",
+    "north" : "industrialupgrade:block/hydro_turbine_controller",
+    "east" : "industrialupgrade:block/hydro_turbine_casing_1",
+    "south" : "industrialupgrade:block/hydro_turbine_casing_1",
+    "west" : "industrialupgrade:block/hydro_turbine_casing_1"
   }
 }

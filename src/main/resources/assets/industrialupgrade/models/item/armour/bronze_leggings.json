@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/bronze_leggings"
+		"layer0": "industrialupgrade:item/bronze_leggings"
 	}
 }

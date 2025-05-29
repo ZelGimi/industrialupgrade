@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/osmiridium_casing"	}
+		"layer0": "industrialupgrade:item/osmiridium_casing"	}
 }

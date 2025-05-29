@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/field_cleaner_main",
-    "down" : "industrialupgrade:blocks/field_cleaner_bottom",
-    "up" : "industrialupgrade:blocks/field_cleaner_top",
-    "north" : "industrialupgrade:blocks/field_cleaner_main",
-    "east" : "industrialupgrade:blocks/field_cleaner_side",
-    "south" : "industrialupgrade:blocks/field_cleaner_bottom",
-    "west" : "industrialupgrade:blocks/field_cleaner_side"
+    "particle" : "industrialupgrade:block/field_cleaner_main",
+    "down" : "industrialupgrade:block/field_cleaner_bottom",
+    "up" : "industrialupgrade:block/field_cleaner_top",
+    "north" : "industrialupgrade:block/field_cleaner_main",
+    "east" : "industrialupgrade:block/field_cleaner_side",
+    "south" : "industrialupgrade:block/field_cleaner_bottom",
+    "west" : "industrialupgrade:block/field_cleaner_side"
   }
 }

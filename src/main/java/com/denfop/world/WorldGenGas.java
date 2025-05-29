@@ -1,31 +1,34 @@
 package com.denfop.world;
 
 import com.denfop.blocks.FluidName;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import com.mojang.serialization.Codec;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class WorldGenGas extends WorldGenerator {
+public class WorldGenGas extends Feature<NoneFeatureConfiguration> {
+
 
     public static Map<ChunkPos, GenData> gasMap = new HashMap<>();
     public static Map<TypeGas, FluidName> gasFluidMap = new HashMap<>();
-    private final TypeGas typeGas;
+    private BlockState block;
+    private TypeGas typeGas;
 
-    private Block block = FluidName.fluidgas.getInstance().getBlock();
-
-    public WorldGenGas(TypeGas typeGas) {
-        block = gasFluidMap.get(typeGas).getInstance().getBlock();
-        this.typeGas = typeGas;
+    public WorldGenGas(Codec<NoneFeatureConfiguration> codec) {
+        super(codec);
     }
 
     public static void registerFluid() {
@@ -37,7 +40,46 @@ public class WorldGenGas extends WorldGenerator {
     }
 
     @Override
-    public boolean generate(@Nonnull final World world, @Nonnull final Random rand, @Nonnull final BlockPos pos) {
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        if (WorldBaseGen.random.nextInt(900) + 1 > 500) {
+
+            WorldGenLevel level = context.level();
+            ChunkPos chunkPos = new ChunkPos(context.origin());
+
+            // Generate a random position within the chunk
+            int var3 = chunkPos.getMinBlockX() + WorldBaseGen.random.nextInt(16) + 8;
+            int var4 = WorldBaseGen.random.nextInt(WorldBaseGen.random.nextInt(WorldBaseGen.random.nextInt(30) + 20) + 8);
+            int var5 = chunkPos.getMinBlockZ() + WorldBaseGen.random.nextInt(16) + 8;
+
+            // Get the biome at the position
+            Holder<Biome> biome = level.getBiome(new BlockPos(var3, 0, var5));
+
+            // If the biome is ocean or river, choose a gas type
+            if (biome.is(BiomeTags.IS_OCEAN) || biome.is(BiomeTags.IS_RIVER)) {
+                int rand = WorldBaseGen.random.nextInt(100);
+                this.typeGas = (rand < 50) ? TypeGas.GAS : TypeGas.IODINE;
+                block = gasFluidMap.get(typeGas).getInstance().get().getSource().defaultFluidState().createLegacyBlock();
+                return this.generate(level, WorldBaseGen.random, new BlockPos(var3, var4, var5));
+
+            } else {
+                // For other biomes, choose from multiple gas types
+                int rand = WorldBaseGen.random.nextInt(100);
+                if (rand < 50) {
+                    this.typeGas = TypeGas.GAS;
+                } else if (rand < 75) {
+                    this.typeGas = TypeGas.BROMIDE;
+                } else {
+                    this.typeGas = TypeGas.CHLORINE;
+                }
+                block = gasFluidMap.get(typeGas).getInstance().get().getSource().defaultFluidState().createLegacyBlock();
+
+                return this.generate(level, WorldBaseGen.random, new BlockPos(var3, var4, var5));
+            }
+        }
+        return false;
+    }
+
+    private boolean generate(WorldGenLevel world, Random rand, BlockPos pos) {
         int x = pos.getX() - 8;
         int z = pos.getZ() - 8;
         int y = pos.getY();
@@ -47,6 +89,7 @@ public class WorldGenGas extends WorldGenerator {
         int zmax = Integer.MIN_VALUE;
         int ymin = 255;
         int ymax = 0;
+
         if (rand.nextInt(500) <= 450) {
             return false;
         }
@@ -57,6 +100,7 @@ public class WorldGenGas extends WorldGenerator {
         if (y <= 4) {
             return false;
         }
+
         boolean can = false;
         boolean[] arrayOfBoolean = new boolean[2048];
         int i = rand.nextInt(4) + 4;
@@ -101,29 +145,86 @@ public class WorldGenGas extends WorldGenerator {
                             || m > 0 && arrayOfBoolean[i1 - 1]) ? 1 : 0;
 
                     if (n != 0) {
-                        final IBlockState block_state1 = world.getBlockState(new BlockPos(x + j, y + m, z + k));
-                        Material localMaterial = block_state1.getMaterial();
+                        BlockState blockState1 = world.getBlockState(new BlockPos(x + j, y + m, z + k));
 
-                        if (m >= 4 && localMaterial.isLiquid()) {
+
+                        if (m >= 4 && blockState1.liquid()) {
                             return false;
                         }
-                        if (m < 4 && !localMaterial.isSolid() && block_state1
-                                .getBlock() != this.block) {
+                        if (m < 4 && !blockState1.isSolid() && blockState1 != this.block) {
                             return false;
                         }
                     }
                 }
             }
         }
+
         for (int j = 0; j < 16; j++) {
             for (k = 0; k < 16; k++) {
                 for (m = 0; m < 8; m++) {
                     if (arrayOfBoolean[(j * 16 + k) * 8 + m]) {
-                        final BlockPos pos1 = new BlockPos(x + j, y + m, z + k);
-                        world.setBlockState(pos1, m >= 4 ? Blocks.AIR.getDefaultState() :
-                                this.block.getDefaultState(), 2);
-                        if (m < 4) {
-                            can = true;
+                        BlockPos pos1 = new BlockPos(x + j, y + m, z + k);
+                        world.setBlock(pos1, m >= 4 ? Blocks.AIR.defaultBlockState() : this.block, 2);
+                        can = true;
+                        if (xmin > x + j) {
+                            xmin = x + j;
+                        }
+                        if (xmax < x + j) {
+                            xmax = x + j;
+                        }
+                        if (zmin > z + k) {
+                            zmin = z + k;
+                        }
+                        if (zmax < z + k) {
+                            zmax = z + k;
+                        }
+                        if (ymin > y + m) {
+                            ymin = y + m;
+                        }
+                        if (ymax < y + m) {
+                            ymax = y + m;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int j = 0; j < 16; j++) {
+            for (k = 0; k < 16; k++) {
+                for (m = 4; m < 8; m++) {
+                    BlockState blockState = null;
+                    boolean need = arrayOfBoolean[(j * 16 + k) * 8 + m];
+                    if (need) {
+                        blockState = world.getBlockState(new BlockPos(x + j, y + m - 1, z + k));
+                    }
+                    if (need
+                            && (blockState.getBlock() == Blocks.DIRT || blockState.getBlock() == Blocks.WATER)
+                            && world.getBrightness(LightLayer.SKY, new BlockPos(x + j, y + m - 1, z + k)) > 0) {
+                        world.setBlock(new BlockPos(x + j, y + m - 1, z + k), Blocks.GRASS_BLOCK.defaultBlockState(), 3);
+                    }
+                }
+            }
+        }
+
+
+            for (int j = 0; j < 16; j++) {
+                for (k = 0; k < 16; k++) {
+                    for (m = 0; m < 8; m++) {
+                        int i2 = (j * 16 + k) * 8 + m;
+                        int i1 = arrayOfBoolean[i2]
+                                && (j < 15 && arrayOfBoolean[((j + 1) * 16 + k) * 8 + m]
+                                || j > 0 && arrayOfBoolean[((j - 1) * 16 + k) * 8 + m]
+                                || k < 15 && arrayOfBoolean[(j * 16 + k + 1) * 8 + m]
+                                || k > 0 && arrayOfBoolean[(j * 16 + k - 1) * 8 + m]
+                                || m < 7 && arrayOfBoolean[(j * 16 + k) * 8 + m + 1]
+                                || m > 0 && arrayOfBoolean[i2 - 1]) ? 1 : 0;
+
+                        if (i1 != 0 && (m < 4 || rand.nextInt(2) != 0)
+                                && world.getBlockState(new BlockPos(x + j, y + m, z + k)).isSolid()) {
+                            world.setBlock(
+                                    new BlockPos(x + j, y + m, z + k),
+                                    this.block, 3
+                            );
                             if (xmin > x + j) {
                                 xmin = x + j;
                             }
@@ -146,98 +247,29 @@ public class WorldGenGas extends WorldGenerator {
                     }
                 }
             }
-        }
-        for (int j = 0; j < 16; j++) {
-            for (k = 0; k < 16; k++) {
-                for (m = 4; m < 8; m++) {
-                    IBlockState block_states = null;
-                    boolean need = arrayOfBoolean[(j * 16 + k) * 8 + m];
-                    if (need) {
-                        block_states = world.getBlockState(new BlockPos(x + j, y + m - 1, z + k));
-                    }
-                    if (need
-                            && (block_states.getBlock() == Blocks.DIRT || block_states
-                            .getBlock() == Blocks.WATER)
-                            && world.getSkylightSubtracted() > 0) {
-                        world.setBlockState(new BlockPos(x + j, y + m - 1, z + k), Blocks.GRASS.getDefaultState());
-
-                    }
-
-                }
-            }
-        }
-
-        for (int j = 0; j < 16; j++) {
-            for (k = 0; k < 16; k++) {
-                for (m = 0; m < 8; m++) {
-                    int i2 = (j * 16 + k) * 8 + m;
-                    int i1 = arrayOfBoolean[i2]
-                            && (j < 15 && arrayOfBoolean[((j + 1) * 16 + k) * 8 + m]
-                            || j > 0 && arrayOfBoolean[((j - 1) * 16 + k) * 8 + m]
-                            || k < 15 && arrayOfBoolean[(j * 16 + k + 1) * 8 + m]
-                            || k > 0 && arrayOfBoolean[(j * 16 + k - 1) * 8 + m]
-                            || m < 7 && arrayOfBoolean[(j * 16 + k) * 8 + m + 1]
-                            || m > 0 && arrayOfBoolean[i2 - 1]) ? 1 : 0;
-
-                    if (i1 != 0 && (m < 4 || rand.nextInt(2) != 0)
-                            && world.getBlockState(new BlockPos(x + j, y + m, z + k)).getMaterial().isSolid()) {
-                        world.setBlockState(
-                                new BlockPos(x + j, y + m, z + k),
-                                this.block.getDefaultState()
-                        );
-                        if (xmin > x + j) {
-                            xmin = x + j;
-                        }
-                        if (xmax < x + j) {
-                            xmax = x + j;
-                        }
-                        if (zmin > z + k) {
-                            zmin = z + k;
-                        }
-                        if (zmax < z + k) {
-                            zmax = z + k;
-                        }
-                        if (ymin > y + m) {
-                            ymin = y + m;
-                        }
-                        if (ymax < y + m) {
-                            ymax = y + m;
-                        }
-                        can = true;
-                    }
-                }
-            }
-        }
 
         int xCenter = (xmin + xmax) / 2;
         int zCenter = (zmin + zmax) / 2;
         int yCenter = (ymin + ymax) / 2;
 
-
         if (can) {
             can = false;
             cycle:
-            for (int x1 = -1; x1 < 2; x1++) {
-                for (int z1 = -1; z1 < 2; z1++) {
+            for (int x1 = -1; x1 < 2; x1++)
+                for (int z1 = -1; z1 < 2; z1++)
                     for (int y1 = -1; y1 < 2; y1++) {
-                        if (world
-                                .getBlockState(new BlockPos(xCenter + x1, yCenter + y1, zCenter + z1))
-                                .getMaterial()
-                                .isLiquid()) {
+                        if (world.getBlockState(new BlockPos(xCenter + x1, yCenter + y1, zCenter + z1)).liquid()) {
                             can = true;
                             break cycle;
                         }
                     }
-                }
-            }
-            if (can) {
+            if (can)
                 gasMap.put(
                         new ChunkPos(xCenter >> 4, zCenter >> 4),
                         new GenData(yCenter, xCenter, zCenter, typeGas)
                 );
-            }
         }
-        return true;
+        return can;
     }
 
 }

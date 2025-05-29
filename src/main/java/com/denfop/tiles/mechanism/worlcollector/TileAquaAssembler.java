@@ -6,70 +6,47 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.tiles.base.EnumTypeCollector;
 import com.denfop.tiles.base.TileBaseWorldCollector;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileAquaAssembler extends TileBaseWorldCollector {
 
-    public TileAquaAssembler() {
-        super(EnumTypeCollector.AQUA);
+    public TileAquaAssembler(BlockPos pos, BlockState state) {
+        super(EnumTypeCollector.AQUA,BlockBaseMachine3.aqua_assembler,pos,state);
     }
 
     public void init() {
 
-        addRecipe(new ItemStack(Items.DYE, 1, 10), 32, new ItemStack(Items.SLIME_BALL));
-        addRecipe(new ItemStack(Items.DYE, 1, 4), 8, new ItemStack(Items.DYE));
-        addRecipe(new ItemStack(Items.WATER_BUCKET), 8, new ItemStack(Blocks.ICE));
-        addRecipe(new ItemStack(Items.FISH, 1), 8, new ItemStack(Items.FISH, 1, 1));
-        addRecipe(new ItemStack(Items.FISH, 1, 1), 8, new ItemStack(Items.FISH, 1, 2));
-        addRecipe(new ItemStack(Items.FISH, 1, 2), 8, new ItemStack(Items.FISH, 1, 3));
-        addRecipe(new ItemStack(Blocks.WOOL, 1, 11), 32, new ItemStack(Blocks.LAPIS_BLOCK));
-        addRecipe(new ItemStack(Blocks.WOOL, 1, 5), 128, new ItemStack(Blocks.EMERALD_BLOCK));
-        addRecipe(new ItemStack(Blocks.WOOL, 1, 3), 128, new ItemStack(Blocks.DIAMOND_BLOCK));
-        addRecipe(new ItemStack(Blocks.WOOL, 1, 14), 32, new ItemStack(Blocks.REDSTONE_BLOCK));
-        addRecipe(new ItemStack(Blocks.WOOL, 1, 4), 64, new ItemStack(Blocks.GOLD_BLOCK));
-        addRecipe(new ItemStack(Blocks.WOOL, 1, 8), 64, new ItemStack(Blocks.IRON_BLOCK));
-        addRecipe(new ItemStack(Blocks.WOOL, 1, 15), 32, new ItemStack(Blocks.COAL_BLOCK));
-        addRecipe(new ItemStack(Items.WHEAT_SEEDS), 2, new ItemStack(Items.REEDS));
+        addRecipe(new ItemStack(Items.LIME_DYE), 32, new ItemStack(Items.SLIME_BALL));
+        addRecipe(new ItemStack(Items.YELLOW_DYE), 8, new ItemStack(Items.WHITE_DYE));
+        addRecipe(new ItemStack(Items.WATER_BUCKET), 8, new ItemStack(Items.ICE));
+        addRecipe(new ItemStack(Items.COD), 8, new ItemStack(Items.SALMON));
+        addRecipe(new ItemStack(Items.SALMON), 8, new ItemStack(Items.TROPICAL_FISH));
+        addRecipe(new ItemStack(Items.TROPICAL_FISH), 8, new ItemStack(Items.PUFFERFISH));
+
+        addRecipe(new ItemStack(Items.BLUE_WOOL), 32, new ItemStack(Items.LAPIS_BLOCK));
+        addRecipe(new ItemStack(Items.LIME_WOOL), 128, new ItemStack(Items.EMERALD_BLOCK));
+        addRecipe(new ItemStack(Items.LIGHT_BLUE_WOOL), 128, new ItemStack(Items.DIAMOND_BLOCK));
+        addRecipe(new ItemStack(Items.RED_WOOL), 32, new ItemStack(Items.REDSTONE_BLOCK));
+        addRecipe(new ItemStack(Items.YELLOW_WOOL), 64, new ItemStack(Items.GOLD_BLOCK));
+        addRecipe(new ItemStack(Items.LIGHT_GRAY_WOOL), 64, new ItemStack(Items.IRON_BLOCK));
+        addRecipe(new ItemStack(Items.BLACK_WOOL), 32, new ItemStack(Items.COAL_BLOCK));
+
+        addRecipe(new ItemStack(Items.WHEAT_SEEDS), 2, new ItemStack(Items.SUGAR_CANE));
+
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
 
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.aqua_assembler;
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

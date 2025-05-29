@@ -1,0 +1,2697 @@
+{
+    "multipart": [
+        {
+            "apply": {
+                "model": "industrialupgrade:block/crop"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_active"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crop_double"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_wheat_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/wheat_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_wheat_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/wheat_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_wheat_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/wheat_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_wheat_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/wheat_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_wheat_4"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/wheat_4"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_wheat_5"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/wheat_5"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_wheat_6"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/wheat_6"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_wheat_7"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/wheat_7"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_reed_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/reed_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_reed_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/reed_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_reed_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/reed_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_reed_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/reed_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_weed_seed_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/weed_seed_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_weed_seed_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/weed_seed_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_weed_seed_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/weed_seed_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_weed_seed_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/weed_seed_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_pink_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_pink_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_pink_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_pink_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_pink_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_pink_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_pink_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_pink_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_haustonia_gray_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/haustonia_gray_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_haustonia_gray_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/haustonia_gray_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_haustonia_gray_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/haustonia_gray_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_haustonia_gray_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/haustonia_gray_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_poppy_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/poppy_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_poppy_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/poppy_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_poppy_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/poppy_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_poppy_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/poppy_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_onion_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/onion_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_onion_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/onion_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_onion_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/onion_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_onion_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/onion_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_brown_mushroom_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/brown_mushroom_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_brown_mushroom_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/brown_mushroom_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_brown_mushroom_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/brown_mushroom_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_brown_mushroom_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/brown_mushroom_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_orange_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_orange_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_orange_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_orange_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_orange_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_orange_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_orange_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_orange_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_chamomile_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/chamomile_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_chamomile_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/chamomile_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_chamomile_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/chamomile_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_chamomile_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/chamomile_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_white_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_white_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_white_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_white_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_white_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_white_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_white_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_white_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_dandelion_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/dandelion_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_dandelion_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/dandelion_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_dandelion_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/dandelion_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_dandelion_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/dandelion_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_red_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_red_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_red_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_red_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_red_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_red_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tulip_red_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tulip_red_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_red_mushroom_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/red_mushroom_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_red_mushroom_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/red_mushroom_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_red_mushroom_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/red_mushroom_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_red_mushroom_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/red_mushroom_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_blue_orchid_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/blue_orchid_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_blue_orchid_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/blue_orchid_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_blue_orchid_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/blue_orchid_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_blue_orchid_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/blue_orchid_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_corn_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/corn_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_corn_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/corn_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_corn_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/corn_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_corn_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/corn_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_rubber_reed_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/rubber_reed_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_rubber_reed_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/rubber_reed_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_rubber_reed_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/rubber_reed_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_rubber_reed_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/rubber_reed_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_beet_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/beet_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_beet_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/beet_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_beet_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/beet_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_beet_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/beet_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_carrot_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/carrot_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_carrot_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/carrot_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_carrot_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/carrot_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_carrot_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/carrot_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_potato_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/potato_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_potato_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/potato_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_potato_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/potato_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_potato_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/potato_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tomato_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tomato_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tomato_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tomato_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tomato_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tomato_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tomato_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tomato_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_raspberry_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/raspberry_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_raspberry_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/raspberry_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_raspberry_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/raspberry_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_raspberry_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/raspberry_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_hops_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/hops_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_hops_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/hops_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_hops_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/hops_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_hops_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/hops_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_melon_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/melon_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_melon_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/melon_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_melon_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/melon_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_melon_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/melon_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_pumpkin_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/pumpkin_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_pumpkin_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/pumpkin_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_pumpkin_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/pumpkin_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_pumpkin_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/pumpkin_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_copper_heart_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/copper_heart_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_copper_heart_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/copper_heart_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_copper_heart_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/copper_heart_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_copper_heart_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/copper_heart_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_iron_crimson_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/iron_crimson_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_iron_crimson_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/iron_crimson_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_iron_crimson_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/iron_crimson_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_iron_crimson_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/iron_crimson_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gold_astral_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gold_astral_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gold_astral_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gold_astral_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gold_astral_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gold_astral_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gold_astral_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gold_astral_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_diamond_island_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/diamond_island_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_diamond_island_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/diamond_island_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_diamond_island_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/diamond_island_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_diamond_island_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/diamond_island_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_emerald_heart_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/emerald_heart_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_emerald_heart_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/emerald_heart_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_emerald_heart_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/emerald_heart_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_emerald_heart_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/emerald_heart_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_quartz_storm_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/quartz_storm_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_quartz_storm_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/quartz_storm_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_quartz_storm_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/quartz_storm_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_quartz_storm_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/quartz_storm_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_lead_stream_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/lead_stream_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_lead_stream_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/lead_stream_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_lead_stream_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/lead_stream_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_lead_stream_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/lead_stream_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tin_ghost_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tin_ghost_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tin_ghost_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tin_ghost_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tin_ghost_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tin_ghost_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tin_ghost_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tin_ghost_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_red_fury_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/red_fury_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_red_fury_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/red_fury_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_red_fury_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/red_fury_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_red_fury_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/red_fury_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_silicon_avalanche_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/silicon_avalanche_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_silicon_avalanche_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/silicon_avalanche_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_silicon_avalanche_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/silicon_avalanche_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_silicon_avalanche_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/silicon_avalanche_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_mikhailovskaya_lavra_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/mikhailovskaya_lavra_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_mikhailovskaya_lavra_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/mikhailovskaya_lavra_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_mikhailovskaya_lavra_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/mikhailovskaya_lavra_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_mikhailovskaya_lavra_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/mikhailovskaya_lavra_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_aluminum_plutonka_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/aluminum_plutonka_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_aluminum_plutonka_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/aluminum_plutonka_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_aluminum_plutonka_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/aluminum_plutonka_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_aluminum_plutonka_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/aluminum_plutonka_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tungsten_moon_flower_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tungsten_moon_flower_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tungsten_moon_flower_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tungsten_moon_flower_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tungsten_moon_flower_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tungsten_moon_flower_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tungsten_moon_flower_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tungsten_moon_flower_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_silver_melody_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/silver_melody_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_silver_melody_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/silver_melody_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_silver_melody_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/silver_melody_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_silver_melody_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/silver_melody_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_nickel_firework_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/nickel_firework_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_nickel_firework_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/nickel_firework_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_nickel_firework_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/nickel_firework_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_nickel_firework_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/nickel_firework_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_invar_crystal_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/invar_crystal_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_invar_crystal_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/invar_crystal_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_invar_crystal_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/invar_crystal_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_invar_crystal_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/invar_crystal_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_cobalt_grapefruit_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/cobalt_grapefruit_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_cobalt_grapefruit_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/cobalt_grapefruit_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_cobalt_grapefruit_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/cobalt_grapefruit_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_cobalt_grapefruit_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/cobalt_grapefruit_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_magnesium_diamond_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/magnesium_diamond_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_magnesium_diamond_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/magnesium_diamond_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_magnesium_diamond_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/magnesium_diamond_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_magnesium_diamond_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/magnesium_diamond_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_platinum_turner_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/platinum_turner_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_platinum_turner_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/platinum_turner_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_platinum_turner_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/platinum_turner_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_platinum_turner_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/platinum_turner_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_spinel_zenith_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/spinel_zenith_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_spinel_zenith_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/spinel_zenith_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_spinel_zenith_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/spinel_zenith_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_spinel_zenith_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/spinel_zenith_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_iridium_snowflake_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/iridium_snowflake_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_iridium_snowflake_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/iridium_snowflake_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_iridium_snowflake_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/iridium_snowflake_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_iridium_snowflake_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/iridium_snowflake_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_karav_green_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/karav_green_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_karav_green_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/karav_green_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_karav_green_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/karav_green_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_karav_green_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/karav_green_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_titanium_fantasy_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/titanium_fantasy_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_titanium_fantasy_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/titanium_fantasy_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_titanium_fantasy_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/titanium_fantasy_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_titanium_fantasy_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/titanium_fantasy_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_chromium_gentleness_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/chromium_gentleness_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_chromium_gentleness_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/chromium_gentleness_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_chromium_gentleness_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/chromium_gentleness_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_chromium_gentleness_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/chromium_gentleness_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_electrum_symphony_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/electrum_symphony_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_electrum_symphony_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/electrum_symphony_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_electrum_symphony_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/electrum_symphony_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_electrum_symphony_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/electrum_symphony_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_zinc_storm_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/zinc_storm_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_zinc_storm_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/zinc_storm_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_zinc_storm_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/zinc_storm_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_zinc_storm_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/zinc_storm_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_manganese_lotus_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/manganese_lotus_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_manganese_lotus_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/manganese_lotus_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_manganese_lotus_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/manganese_lotus_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_manganese_lotus_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/manganese_lotus_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_germanite_wonders_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/germanite_wonders_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_germanite_wonders_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/germanite_wonders_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_germanite_wonders_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/germanite_wonders_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_germanite_wonders_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/germanite_wonders_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_uranium_fairy_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/uranium_fairy_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_uranium_fairy_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/uranium_fairy_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_uranium_fairy_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/uranium_fairy_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_uranium_fairy_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/uranium_fairy_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_vanadium_dawn_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/vanadium_dawn_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_vanadium_dawn_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/vanadium_dawn_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_vanadium_dawn_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/vanadium_dawn_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_vanadium_dawn_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/vanadium_dawn_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_arsenite_flower_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/arsenite_flower_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_arsenite_flower_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/arsenite_flower_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_arsenite_flower_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/arsenite_flower_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_arsenite_flower_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/arsenite_flower_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_barium_star_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/barium_star_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_barium_star_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/barium_star_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_barium_star_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/barium_star_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_barium_star_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/barium_star_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_bismuth_garden_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/bismuth_garden_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_bismuth_garden_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/bismuth_garden_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_bismuth_garden_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/bismuth_garden_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_bismuth_garden_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/bismuth_garden_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gadolinium_lotus_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gadolinium_lotus_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gadolinium_lotus_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gadolinium_lotus_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gadolinium_lotus_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gadolinium_lotus_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gadolinium_lotus_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gadolinium_lotus_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gallium_song_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gallium_song_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gallium_song_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gallium_song_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gallium_song_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gallium_song_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_gallium_song_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/gallium_song_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_hafnium_leaf_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/hafnium_leaf_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_hafnium_leaf_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/hafnium_leaf_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_hafnium_leaf_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/hafnium_leaf_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_hafnium_leaf_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/hafnium_leaf_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ytterbium_bright_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ytterbium_bright_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ytterbium_bright_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ytterbium_bright_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ytterbium_bright_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ytterbium_bright_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ytterbium_bright_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ytterbium_bright_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_molybdenum_whirlwind_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/molybdenum_whirlwind_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_molybdenum_whirlwind_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/molybdenum_whirlwind_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_molybdenum_whirlwind_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/molybdenum_whirlwind_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_molybdenum_whirlwind_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/molybdenum_whirlwind_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_neodymium_glow_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/neodymium_glow_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_neodymium_glow_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/neodymium_glow_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_neodymium_glow_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/neodymium_glow_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_neodymium_glow_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/neodymium_glow_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_niobium_obelisk_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/niobium_obelisk_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_niobium_obelisk_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/niobium_obelisk_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_niobium_obelisk_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/niobium_obelisk_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_niobium_obelisk_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/niobium_obelisk_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_palladium_gentleness_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/palladium_gentleness_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_palladium_gentleness_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/palladium_gentleness_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_palladium_gentleness_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/palladium_gentleness_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_palladium_gentleness_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/palladium_gentleness_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_polonium_crystal_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/polonium_crystal_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_polonium_crystal_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/polonium_crystal_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_polonium_crystal_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/polonium_crystal_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_polonium_crystal_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/polonium_crystal_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_strontium_storm_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/strontium_storm_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_strontium_storm_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/strontium_storm_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_strontium_storm_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/strontium_storm_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_strontium_storm_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/strontium_storm_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_thallium_sunlight_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/thallium_sunlight_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_thallium_sunlight_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/thallium_sunlight_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_thallium_sunlight_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/thallium_sunlight_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_thallium_sunlight_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/thallium_sunlight_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_zirconium_dragon_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/zirconium_dragon_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_zirconium_dragon_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/zirconium_dragon_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_zirconium_dragon_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/zirconium_dragon_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_zirconium_dragon_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/zirconium_dragon_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_osmium_silk_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/osmium_silk_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_osmium_silk_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/osmium_silk_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_osmium_silk_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/osmium_silk_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_osmium_silk_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/osmium_silk_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tantalum_moon_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tantalum_moon_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tantalum_moon_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tantalum_moon_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tantalum_moon_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tantalum_moon_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_tantalum_moon_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/tantalum_moon_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_cadmium_gentleness_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/cadmium_gentleness_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_cadmium_gentleness_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/cadmium_gentleness_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_cadmium_gentleness_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/cadmium_gentleness_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_cadmium_gentleness_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/cadmium_gentleness_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_nether_wart_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/nether_wart_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_nether_wart_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/nether_wart_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_nether_wart_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/nether_wart_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ender_lily_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ender_lily_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ender_lily_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ender_lily_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ender_lily_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ender_lily_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ender_lily_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ender_lily_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_blaze_storm_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/blaze_storm_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_blaze_storm_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/blaze_storm_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_blaze_storm_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/blaze_storm_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_blaze_storm_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/blaze_storm_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ghast_dew_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ghast_dew_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ghast_dew_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ghast_dew_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ghast_dew_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ghast_dew_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_ghast_dew_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/ghast_dew_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_bone_leaf_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/bone_leaf_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_bone_leaf_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/bone_leaf_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_bone_leaf_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/bone_leaf_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_bone_leaf_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/bone_leaf_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_americium_moss_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/americium_moss_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_americium_moss_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/americium_moss_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_americium_moss_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/americium_moss_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_americium_moss_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/americium_moss_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_neptunium_wisdom_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/neptunium_wisdom_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_neptunium_wisdom_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/neptunium_wisdom_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_neptunium_wisdom_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/neptunium_wisdom_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_neptunium_wisdom_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/neptunium_wisdom_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_curie_berry_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/curie_berry_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_curie_berry_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/curie_berry_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_curie_berry_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/curie_berry_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_curie_berry_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/curie_berry_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_thorium_fist_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/thorium_fist_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_thorium_fist_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/thorium_fist_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_thorium_fist_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/thorium_fist_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_thorium_fist_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/thorium_fist_3"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_terra_wart_0"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/terra_wart_0"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_terra_wart_1"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/terra_wart_1"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_terra_wart_2"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/terra_wart_2"
+            }
+        },
+        {
+            "when": {
+                "type": "crop_terra_wart_3"
+            },
+            "apply": {
+                "model": "industrialupgrade:block/crops/terra_wart_3"
+            }
+        }
+    ]
+}

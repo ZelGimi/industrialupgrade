@@ -2,8 +2,8 @@
 	"credit": "Made by frei",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "industrialupgrade:models/water_rotor_assembler",
-		"particle": "industrialupgrade:models/water_rotor_assembler"
+		"0": "industrialupgrade:block/water_rotor_assembler",
+		"particle": "industrialupgrade:block/water_rotor_assembler"
 	},
 	"elements": [
 		{

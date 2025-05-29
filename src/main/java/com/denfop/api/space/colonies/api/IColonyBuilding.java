@@ -2,13 +2,13 @@ package com.denfop.api.space.colonies.api;
 
 import com.denfop.api.space.colonies.enums.EnumTypeBuilding;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public interface IColonyBuilding {
 
     CustomPacketBuffer writePacket(CustomPacketBuffer customPacketBuffer);
 
-    NBTTagCompound writeTag(NBTTagCompound tag);
+    CompoundTag writeTag(CompoundTag tag);
 
     IColony getColony();
 

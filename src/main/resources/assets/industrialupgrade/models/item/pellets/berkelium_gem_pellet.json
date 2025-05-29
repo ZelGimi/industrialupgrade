@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/berkelium_gem_pellet"
+    "layer0" : "industrialupgrade:item/berkelium_gem_pellet"
   }
 }

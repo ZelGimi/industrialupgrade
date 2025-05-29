@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=extruder": {
+      "model": "industrialupgrade:block/moremachine2/extruder"
+    },
+    "facing=south,type=extruder": {
+      "model": "industrialupgrade:block/moremachine2/extruder",
+      "y": 180
+    },
+    "facing=west,type=extruder": {
+      "model": "industrialupgrade:block/moremachine2/extruder",
+      "y": 270
+    },
+    "facing=east,type=extruder": {
+      "model": "industrialupgrade:block/moremachine2/extruder",
+      "y": 90
+    },
+    "facing=down,type=extruder": {
+      "model": "industrialupgrade:block/moremachine2/extruder",
+      "x": 90
+    },
+    "facing=up,type=extruder": {
+      "model": "industrialupgrade:block/moremachine2/extruder",
+      "x": 270
+    },
+    "facing=north,type=extruder_invalid": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active"
+    },
+    "facing=south,type=extruder_invalid": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "y": 180
+    },
+    "facing=west,type=extruder_invalid": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "y": 270
+    },
+    "facing=east,type=extruder_invalid": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "y": 90
+    },
+    "facing=down,type=extruder_invalid": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "x": 90
+    },
+    "facing=up,type=extruder_invalid": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "x": 270
+    },
+    "facing=north,type=extruder_active": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active"
+    },
+    "facing=south,type=extruder_active": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "y": 180
+    },
+    "facing=west,type=extruder_active": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "y": 270
+    },
+    "facing=east,type=extruder_active": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "y": 90
+    },
+    "facing=down,type=extruder_active": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "x": 90
+    },
+    "facing=up,type=extruder_active": {
+      "model": "industrialupgrade:block/moremachine2/extruder_active",
+      "x": 270
+    }
+  }
+}

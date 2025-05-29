@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.reactors.heat.controller.TileEntityMainController;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerHeatReactor extends ContainerFullInv<TileEntityMainController> {
 
-    public ContainerHeatReactor(TileEntityMainController tileEntityMainController, EntityPlayer entityPlayer) {
+    public ContainerHeatReactor(TileEntityMainController tileEntityMainController, Player entityPlayer) {
         super(entityPlayer, tileEntityMainController, 214, 250);
         addSlotToContainer(new SlotInvSlot(
                 tileEntityMainController.scheduleReactor,

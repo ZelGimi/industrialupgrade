@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityMutatron;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerMutatron extends ContainerFullInv<TileEntityMutatron> {
 
-    public ContainerMutatron(EntityPlayer entityPlayer, TileEntityMutatron tileEntity1) {
+    public ContainerMutatron(Player entityPlayer, TileEntityMutatron tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 45 - 8, 99));

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityRadioactiveOreHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerRadioactiveOreHandler extends ContainerFullInv<TileEntityRadioactiveOreHandler> {
 
-    public ContainerRadioactiveOreHandler(final EntityPlayer player, final TileEntityRadioactiveOreHandler base) {
+    public ContainerRadioactiveOreHandler(final Player player, final TileEntityRadioactiveOreHandler base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.outputSlot, 0, 100, 35));

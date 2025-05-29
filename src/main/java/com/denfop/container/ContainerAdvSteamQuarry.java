@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.steam.TileAdvSteamQuarry;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerAdvSteamQuarry extends ContainerFullInv<TileAdvSteamQuarry> {
 
-    public ContainerAdvSteamQuarry(EntityPlayer entityPlayer, TileAdvSteamQuarry tileEntity1) {
+    public ContainerAdvSteamQuarry(Player entityPlayer, TileAdvSteamQuarry tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         for (int i = 0; i < tileEntity1.output.size(); i++) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.output,

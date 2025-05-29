@@ -1,11 +1,8 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
-import com.denfop.api.tesseract.Channel;
-import com.denfop.api.tesseract.ITesseract;
-import com.denfop.api.tesseract.TesseractSystem;
-import com.denfop.api.tesseract.TypeChannel;
-import com.denfop.api.tesseract.TypeMode;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tesseract.*;
 import com.denfop.api.tesseract.event.EventAdderChannel;
 import com.denfop.api.tesseract.event.EventLoadTesseract;
 import com.denfop.api.tesseract.event.EventRemoverChannel;
@@ -15,7 +12,9 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTesseract;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiTesseract;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
@@ -23,15 +22,14 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +47,8 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
 
     List<Channel> publicChannel = new ArrayList<>();
 
-    public TileEntityTesseract() {
+    public TileEntityTesseract(BlockPos pos, BlockState state) {
+        super(BlockBaseMachine3.tesseract,pos,state);
         this.energy = this.addComponent(new Energy(this, Integer.MAX_VALUE, ModUtils.allFacings, ModUtils.allFacings, 14));
         this.fluids = this.addComponent(new Fluids(this));
         tank = this.fluids.addTank("tank", 64000);
@@ -58,35 +57,23 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
     }
 
     @Override
-    public World getLevel() {
-        return world;
+    public Level getWorld() {
+        return level;
     }
 
     @Override
-    public ContainerTesseract getGuiContainer(final EntityPlayer var1) {
+    public ContainerTesseract getGuiContainer(final Player var1) {
         return new ContainerTesseract(this, var1);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiTesseract(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiTesseract((ContainerTesseract) menu);
 
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
@@ -129,37 +116,37 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             MinecraftForge.EVENT_BUS.post(new EventLoadTesseract(this, this.getWorld()));
         }
     }
 
     @Override
     public void onUnloaded() {
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             MinecraftForge.EVENT_BUS.post(new EventUnLoadTesseract(this, this.getWorld()));
         }
         super.onUnloaded();
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
+    public CompoundTag writeToNBT(final CompoundTag nbt) {
+        CompoundTag nbtTagCompound = super.writeToNBT(nbt);
         final List<Channel> channels = new ArrayList<>(getChannels());
-        nbtTagCompound.setInteger("size", channels.size());
+        nbtTagCompound.putInt("size", channels.size());
         for (int i = 0; i < channels.size(); i++) {
             final Channel channel = channels.get(i);
-            nbtTagCompound.setTag("channel_" + i, channel.writeNBT());
+            nbtTagCompound.put("channel_" + i, channel.writeNBT());
         }
         return nbtTagCompound;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbtTagCompound) {
+    public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        int size = nbtTagCompound.getInteger("size");
+        int size = nbtTagCompound.getInt("size");
         for (int i = 0; i < size; i++) {
-            final Channel channel = new Channel(nbtTagCompound.getCompoundTag("channel_" + i));
+            final Channel channel = new Channel(nbtTagCompound.getCompound("channel_" + i));
             channel.setTesseract(this);
             channelList.add(channel);
         }
@@ -171,7 +158,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -183,7 +170,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
         try {
             InvSlot invSlot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
             for (int i = 0; i < invSlot.size(); i++) {
-                this.slot.put(i, invSlot.get(i));
+                this.slot.set(i, invSlot.get(i));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -202,7 +189,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
             try {
                 Channel channel = (Channel) DecoderHandler.decode(customPacketBuffer);
                 BlockPos pos = (BlockPos) DecoderHandler.decode(customPacketBuffer);
-                ITesseract tesseract = (ITesseract) world.getTileEntity(pos);
+                ITesseract tesseract = (ITesseract) level.getBlockEntity(pos);
                 channel.setTesseract(tesseract);
                 publicChannel.add(channel);
             } catch (IOException e) {
@@ -254,7 +241,7 @@ public class TileEntityTesseract extends TileEntityInventory implements IUpdatab
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer var1, double var2) {
+    public void updateTileServer(final Player var1, double var2) {
         switch ((int) var2) {
             case 1:
                 int maxValue1 = 0;

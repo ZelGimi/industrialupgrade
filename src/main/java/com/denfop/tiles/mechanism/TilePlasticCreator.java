@@ -4,11 +4,8 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
@@ -16,23 +13,24 @@ import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPlasticCreator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiPlasticCreator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileBasePlasticCreator;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -43,8 +41,8 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
 
-    public TilePlasticCreator() {
-        super(1, 300, 1);
+    public TilePlasticCreator(BlockPos pos, BlockState state) {
+        super(1, 300, 1, BlockBaseMachine2.plastic_creator, pos, state);
         this.inputSlotA = new InvSlotRecipes(this, "plastic", this, this.fluidTank);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
         this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
@@ -54,18 +52,19 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
         Recipes.recipes.addInitRecipes(this);
         this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
-            public void put(final int index, final ItemStack content) {
-                super.put(index, content);
-                if (this.get().isEmpty()) {
+            public ItemStack set(final int index, final ItemStack content) {
+                super.set(index, content);
+                if (this.get(0).isEmpty()) {
                     ((TilePlasticCreator) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
                 } else {
-                    ((TilePlasticCreator) this.base).inputSlotA.changeAccepts(this.get());
+                    ((TilePlasticCreator) this.base).inputSlotA.changeAccepts(this.get(0));
                 }
+                return content;
             }
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() == IUItem.recipe_schedule;
+                return stack.getItem() == IUItem.recipe_schedule.getItem();
             }
 
             @Override
@@ -75,20 +74,29 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
         };
     }
 
-    public ContainerPlasticCreator getGuiContainer(EntityPlayer entityPlayer) {
+    private static void spawnParticles(Level level, double x, double y, double z) {
+        level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0, 0.3, 0);
+        level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0.1, 0);
+        level.addParticle(ParticleTypes.FLAME, x, y - 0.1, z, 0, 0.025, 0);
+    }
+
+    private static void spawnFlame(Level level, double x, double y, double z) {
+        level.addParticle(ParticleTypes.FLAME, x, y, z, 0, 0.025, 0);
+    }
+
+    public ContainerPlasticCreator getGuiContainer(Player entityPlayer) {
         return new ContainerPlasticCreator(entityPlayer, this);
 
     }
 
-
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isClientSide) {
             if (this.input_slot.isEmpty()) {
                 (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
             } else {
-                (this).inputSlotA.changeAccepts(this.input_slot.get());
+                (this).inputSlotA.changeAccepts(this.input_slot.get(0));
             }
         }
     }
@@ -98,245 +106,154 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine1;
+        return IUItem.basemachine1.getBlock(this.getTeBlock().getId());
     }
 
     public void init() {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidRegistry.WATER, 1000),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 1, 483)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 1, 484))
+                        new FluidStack(Fluids.WATER, 1000),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(483), 1)),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(484), 1))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.plast))
+                new RecipeOutput(null, new ItemStack(IUItem.plast.getItem()))
+        ));
+        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(Fluids.WATER, 1000),
+                        input.getInput(new ItemStack(IUItem.iudust.getStack(38), 1)),
+                        input.getInput("forge:dusts/Coal", 4)
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.iudust.getStack(39), 1))
+        ));
+
+
+        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidHelium.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.cooling_mixture.getItem())),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(386), 1))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.helium_cooling_mixture.getItem()))
         ));
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidRegistry.WATER, 1000),
-                        input.getInput(new ItemStack(IUItem.iudust, 1, 38)),
-                        input.getInput("dustCoal", 4)
+                        new FluidStack(FluidName.fluidcryogen.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.helium_cooling_mixture.getItem())),
+                        input.getInput(new ItemStack(IUItem.radiationresources.getStack(3), 1))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.iudust, 1, 39))
-        ));
-        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidoxy.getInstance(), 150),
-                        input.getInput(new ItemStack(Items.REDSTONE, 6)),
-                        input.getInput("ingotBarium", 1)
-                ),
-                new RecipeOutput(null, new ItemStack(Blocks.GLOWSTONE))
+                new RecipeOutput(null, new ItemStack(IUItem.cryogenic_cooling_mixture.getItem()))
         ));
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidHelium.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.cooling_mixture)),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 1, 386))
+                        new FluidStack(FluidName.fluidazot.getInstance().get(), 12000),
+                        input.getInput("forge:storage_blocks/Vitalium"),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(269), 1))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.helium_cooling_mixture))
+                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(270), 1))
         ));
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidcryogen.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.helium_cooling_mixture)),
-                        input.getInput(new ItemStack(IUItem.radiationresources, 1, 3))
+                        new FluidStack(FluidName.fluidpolyeth.getInstance().get(), 500),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(344), 1)),
+                        input.getInput("forge:doubleplate/Titanium")
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.cryogenic_cooling_mixture))
+                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(340), 1))
         ));
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidazot.getInstance(), 12000),
-                        input.getInput("blockVitalium"),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 1, 269))
+                        new FluidStack(FluidName.fluidneft.getInstance().get(), 5000),
+                        input.getInput(new ItemStack(IUItem.crafting_elements.getStack(283), 8)),
+                        input.getInput("forge:ingots/Germanium", 4)
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 270))
+                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements.getStack(386), 1))
         ));
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidpolyeth.getInstance(), 500),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 1, 344)),
-                        input.getInput("doubleplateTitanium")
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 340))
-        ));
-
-        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidneft.getInstance(), 5000),
-                        input.getInput(new ItemStack(IUItem.crafting_elements, 8, 283)),
-                        input.getInput("ingotGermanium", 4)
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 386))
-        ));
-
-        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidtrinitrotoluene.getInstance(), 1000),
+                        new FluidStack(FluidName.fluidtrinitrotoluene.getInstance().get(), 1000),
                         input.getInput(new ItemStack(Items.GUNPOWDER, 4)),
                         input.getInput(new ItemStack(Items.GLOWSTONE_DUST, 3))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.iudust, 1, 72))
+                new RecipeOutput(null, new ItemStack(IUItem.iudust.getStack(72), 1))
         ));
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidsulfuricacid.getInstance(), 100),
-                        input.getInput(new ItemStack(IUItem.classic_ore, 4, 3)),
+                        new FluidStack(FluidName.fluidsulfuricacid.getInstance().get(), 100),
+                        input.getInput(new ItemStack(IUItem.classic_ore.getItem(3), 4)),
                         input.getInput(IUItem.stoneDust, 2)
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.nuclear_res, 1, 21))
+                new RecipeOutput(null, new ItemStack(IUItem.nuclear_res.getStack(21), 1))
         ));
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidnitricacid.getInstance(), 100),
-                        input.getInput(new ItemStack(IUItem.toriyore)),
-                        input.getInput(new ItemStack(IUItem.iudust, 2, 54), 2)
+                        new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 100),
+                        input.getInput(new ItemStack(IUItem.toriyore.getItem(0))),
+                        input.getInput(new ItemStack(IUItem.iudust.getStack(54), 2), 2)
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.nuclear_res, 9, 16))
+                new RecipeOutput(null, new ItemStack(IUItem.nuclear_res.getStack(16), 9))
         ));
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidseedoil.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.beeswax)),
+                        new FluidStack(FluidName.fluidseedoil.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.beeswax.getItem())),
                         input.getInput(new ItemStack(Items.STICK), 2)
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.wax_stick))
+                new RecipeOutput(null, new ItemStack(IUItem.wax_stick.getItem()))
         ));
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
-                        new FluidStack(FluidName.fluidhoney.getInstance(), 1000),
-                        input.getInput(new ItemStack(IUItem.wax_stick)),
-                        input.getInput(new ItemStack(IUItem.royal_jelly), 1)
+                        new FluidStack(FluidName.fluidhoney.getInstance().get(), 1000),
+                        input.getInput(new ItemStack(IUItem.wax_stick.getItem())),
+                        input.getInput(new ItemStack(IUItem.royal_jelly.getItem()), 1)
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.polished_stick))
+                new RecipeOutput(null, new ItemStack(IUItem.polished_stick.getItem()))
         ));
         for (int i = 0; i < 14; i++) {
             Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
-                    new Input(
-                            new FluidStack(FluidName.fluidtemperedglass.getInstance(), 144),
-                            input.getInput(new ItemStack(IUItem.solar_day_glass, 1, i)),
-                            input.getInput(new ItemStack(IUItem.solar_night_glass, 1, i))
-                    ),
-                    new RecipeOutput(null, new ItemStack(IUItem.solar_night_day_glass, 1, i))
+                    new Input(new FluidStack(FluidName.fluidtemperedglass.getInstance().get(), 144),
+                            input.getInput(new ItemStack(IUItem.solar_day_glass.getStack(i), 1)),
+                            input.getInput(new ItemStack(IUItem.solar_night_glass.getStack(i), 1))),
+                    new RecipeOutput(null, new ItemStack(IUItem.solar_night_day_glass.getStack(i), 1))
             ));
         }
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
-            if (this.getWorld().provider.getWorldTime() % 5 == 0) {
-                switch (facing) {
-                    case 2:
-                        this.world.spawnParticle(
-                                EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.1, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.1, 0
-                        );
-
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.8, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.8, 0, 0.025, 0
-                        );
-                        break;
-                    case 3:
-
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.5,
-                                this.getPos().getY() + 1,
-                                this.getPos().getZ(), 0, 0.025, 0
-                        );
-
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.5,
-                                this.getPos().getY() + 1,
-                                this.getPos().getZ() + 0.3, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.7,
-                                this.getPos().getY() + 1,
-                                this.getPos().getZ() + 0.3, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.3,
-                                this.getPos().getY() + 1,
-                                this.getPos().getZ() + 0.3, 0, 0.025, 0
-                        );
-                        break;
-                    case 4:
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.82,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.1, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.1, 0
-                        );
-
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.8, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.8,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.2, 0, 0.025, 0
-                        );
-                        break;
-                    case 5:
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.3, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.8, 0, 0.1, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 2,
-                                this.getPos().getZ() + 0.2, 0, 0.1, 0
-                        );
-
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.8, 0, 0.025, 0
-                        );
-                        this.world.spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.2,
-                                this.getPos().getY() + 1.9,
-                                this.getPos().getZ() + 0.2, 0, 0.025, 0
-                        );
-                        break;
+            if (this.getWorld().getGameTime() % 5 == 0) {
+                double x = pos.getX();
+                double y = pos.getY();
+                double z = pos.getZ();
+                switch (getFacing()) {
+                    case NORTH -> {
+                        spawnParticles(level, x + 0.8, y + 1.2, z + 0.8);
+                        spawnParticles(level, x + 0.2, y + 1.2, z + 0.8);
+                    }
+                    case SOUTH -> {
+                        spawnFlame(level, x + 0.5, y + 1.2, z);
+                        spawnFlame(level, x + 0.5, y + 1.2, z + 0.3);
+                        spawnFlame(level, x + 0.7, y + 1.2, z + 0.3);
+                        spawnFlame(level, x + 0.3, y + 1.2, z + 0.3);
+                    }
+                    case WEST -> {
+                        spawnParticles(level, x + 0.8, y + 1.2, z + 0.8);
+                        spawnParticles(level, x + 0.8, y + 1.2, z + 0.2);
+                    }
+                    case EAST -> {
+                        spawnParticles(level, x + 0.2, y + 1.2, z + 0.8);
+                        spawnParticles(level, x + 0.2, y + 1.2, z + 0.2);
+                    }
                 }
             }
 
@@ -354,37 +271,13 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 : this.getFluidTank().getFluidAmount() * i / this.getFluidTank().getCapacity();
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiPlasticCreator(new ContainerPlasticCreator(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiPlasticCreator((ContainerPlasticCreator) isAdmin);
 
     }
 
-    public String getStartSoundFile() {
-        return "Machines/plastic.ogg";
-    }
-
-    public String getInterruptSoundFile() {
-        return "Machines/InterruptOne.ogg";
-    }
-
-    public float getWrenchDropRate() {
-        return 0.85F;
-    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(

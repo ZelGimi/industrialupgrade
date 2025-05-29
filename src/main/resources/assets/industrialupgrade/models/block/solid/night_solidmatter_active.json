@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/night_solid_active",
-    "down" : "industrialupgrade:blocks/night_solid_active",
-    "up" : "industrialupgrade:blocks/night_solid_active",
-    "north" : "industrialupgrade:blocks/night_solid_active",
-    "east" : "industrialupgrade:blocks/night_solid_active",
-    "south" : "industrialupgrade:blocks/night_solid_active",
-    "west" : "industrialupgrade:blocks/night_solid_active"
+    "particle" : "industrialupgrade:block/night_solid_active",
+    "down" : "industrialupgrade:block/night_solid_active",
+    "up" : "industrialupgrade:block/night_solid_active",
+    "north" : "industrialupgrade:block/night_solid_active",
+    "east" : "industrialupgrade:block/night_solid_active",
+    "south" : "industrialupgrade:block/night_solid_active",
+    "west" : "industrialupgrade:block/night_solid_active"
   }
 }

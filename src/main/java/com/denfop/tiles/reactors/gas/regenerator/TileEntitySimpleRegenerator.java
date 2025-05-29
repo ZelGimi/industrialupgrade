@@ -4,11 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySimpleRegenerator extends TileEntityRegenerator {
 
-    public TileEntitySimpleRegenerator() {
-        super(0, 5000);
+    public TileEntitySimpleRegenerator(BlockPos pos, BlockState state) {
+        super(0, 5000,BlockGasReactor.gas_regenerator,pos,state);
     }
 
     @Override
@@ -18,7 +20,7 @@ public class TileEntitySimpleRegenerator extends TileEntityRegenerator {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_reactor;
+        return IUItem.gas_reactor.getBlock(getTeBlock());
     }
 
 

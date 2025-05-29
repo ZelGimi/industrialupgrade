@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileAdvOilRefiner;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerAdvOilRefiner extends ContainerFullInv<TileAdvOilRefiner> {
 
-    public ContainerAdvOilRefiner(EntityPlayer entityPlayer, TileAdvOilRefiner tileEntity1) {
+    public ContainerAdvOilRefiner(Player entityPlayer, TileAdvOilRefiner tileEntity1) {
         super(entityPlayer, tileEntity1, 202);
-        this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot1, 0, 39, 21));
+        this.addSlot(new SlotInvSlot(tileEntity1.fluidSlot1, 0, 39, 21));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 62, 95));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 1, 110, 95));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot2, 0, 87, 21));

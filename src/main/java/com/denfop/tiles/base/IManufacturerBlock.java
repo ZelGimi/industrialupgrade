@@ -2,9 +2,9 @@ package com.denfop.tiles.base;
 
 public interface IManufacturerBlock {
 
-    int getLevel();
+    int getLevelMechanism();
 
-    void setLevel(int level);
+    void setLevelMech(int levelMech);
 
     void removeLevel(int level);
 

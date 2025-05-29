@@ -95,9 +95,8 @@ public class EnergyTick {
 
     public void setList(final List<Path> energyPaths) {
         this.energyPaths = energyPaths;
-        if (this.energyPaths == null) {
+        if (this.energyPaths == null)
             this.conductors.clear();
-        }
     }
 
     public void rework() {

@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityRodFactory;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerRodFactory extends ContainerFullInv<TileEntityRodFactory> {
 
-    public ContainerRodFactory(TileEntityRodFactory tileEntityRodFactory, EntityPlayer var1) {
+    public ContainerRodFactory(TileEntityRodFactory tileEntityRodFactory, Player var1) {
         super(var1, tileEntityRodFactory);
         if (tileEntityRodFactory.type == 0) {
             this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 0, 30, 18));

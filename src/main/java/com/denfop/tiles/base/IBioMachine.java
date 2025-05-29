@@ -2,7 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.componets.HeatComponent;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public interface IBioMachine {
 

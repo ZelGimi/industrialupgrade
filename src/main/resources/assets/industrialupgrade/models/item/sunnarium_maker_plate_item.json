@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/sunnarium_maker_plate_item"
+    "layer0" : "industrialupgrade:item/sunnarium_maker_plate_item"
   }
 }

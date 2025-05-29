@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/dust/ender_pearl"
+		"layer0": "industrialupgrade:item/dust/ender_pearl"
 	}
 }

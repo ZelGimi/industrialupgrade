@@ -1,6 +1,6 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
@@ -18,28 +18,25 @@ import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.items.reactors.ItemDamage;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
-
-public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgradeItem {
-
+public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgradeItem, IItemTab {
     private final int radius;
     private final float efficiency;
     private final ResourceLocation renderTexture;
@@ -51,9 +48,7 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
             String name, int durability, float efficiency,
             ResourceLocation RenderTexture, int level, int index
     ) {
-        super(name, durability);
-        this.setCreativeTab(IUCore.ItemTab);
-        this.setMaxStackSize(1);
+        super(new Properties().stacksTo(1), durability);
         this.radius = 4;
         this.efficiency = efficiency;
         this.renderTexture = RenderTexture;
@@ -61,141 +56,103 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
         this.index = index;
         double KU1 = 20 * efficiency * 25.0F;
         this.tier = EnergyNetGlobal.instance.getTierFromPower(KU1);
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
-        for (int i = 0; i < EnumInfoRotorUpgradeModules.values().length; i++) {
-            Recipes.recipes.addRecipe(
-                    "water_rotor_upgrade",
-                    new BaseMachineRecipe(
-                            new Input(
-                                    input.getInput(new ItemStack(this, 1, 0)),
-                                    input.getInput(new ItemStack(IUItem.water_rotors_upgrade, 1, i))
-                            ),
-                            new RecipeOutput(null, new ItemStack(this, 1, 0))
-                    )
-            );
-        }
+        IUCore.runnableListAfterRegisterItem.add(() -> {
+            final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+            for (int i = 0; i < EnumInfoRotorUpgradeModules.values().length; i++) {
+                Recipes.recipes.addRecipe(
+                        "water_rotor_upgrade",
+                        new BaseMachineRecipe(
+                                new Input(
+                                        input.getInput(new ItemStack(this, 1)),
+                                        input.getInput(new ItemStack(IUItem.water_rotors_upgrade.getStack(i), 1))
+                                ),
+                                new RecipeOutput(null, new ItemStack(this, 1))
+                        )
+                );
+            }
+        });
     }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "water_rotor" + "/" + name;
-        return new ModelResourceLocation(loc, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu"));
-    }
-
-    public boolean showDurabilityBar(final ItemStack stack) {
-        return true;
-    }
-
-    public double getDurabilityForDisplay(ItemStack stack) {
-        return Math.min(
-                Math.max(
-                        1 - this.getCustomDamage(stack) / (this.getMaxCustomDamage(stack) * 1D),
-                        0.0
-                ),
-                1.0
-        );
-    }
-
-    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
-            ItemStack stack = new ItemStack(this);
-            this.setCustomDamage(stack, this.getMaxCustomDamage(stack));
-            subItems.add(stack);
-        }
-    }
-
     @Override
-    public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
-        NBTTagCompound nbt = ModUtils.nbt(itemStack);
-
-        if (!RotorUpgradeSystem.instance.hasInMap(itemStack)) {
-            nbt.setBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(world, this, itemStack));
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
+    }
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.water_rotor.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem = pathBuilder.toString();
         }
-        if (this.getMaxCustomDamage(itemStack) != nbt.getInteger("maxDamage")) {
-            nbt.setInteger("maxDamage", this.getMaxCustomDamage(itemStack));
-            this.setCustomDamage(itemStack, this.getMaxCustomDamage(itemStack));
-        }
-    }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
+        return this.nameItem;
     }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void addInformation(@Nonnull ItemStack stack, World world, List<String> tooltip, @Nonnull ITooltipFlag advanced) {
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
         int windStrength = 10;
         int windStrength1 = 20;
         double KU = windStrength * this.getEfficiency(stack) * 25.0F;
-
-
         double KU1 = windStrength1 * this.getEfficiency(stack) * 25.0F;
 
-        tooltip.add(Localization.translate("iu.watergenerator") + windStrength + " m/s " + Localization.translate("iu" +
-                ".windgenerator1") + ModUtils.getString(KU));
-        tooltip.add(Localization.translate("iu.watergenerator") + windStrength1 + " m/s " + Localization.translate("iu" +
-                ".windgenerator1") + ModUtils.getString(KU1));
-        tooltip.add(Localization.translate("gui.iu.tier") + ": " + this.getLevel());
-        tooltip.add(Localization.translate("iu.watergenerator1"));
+        tooltip.add(Component.literal(Localization.translate("iu.watergenerator") + windStrength + " m/s "
+                + Localization.translate("iu.windgenerator1") + ModUtils.getString(KU)));
+        tooltip.add(Component.literal(Localization.translate("iu.watergenerator") + windStrength1 + " m/s "
+                + Localization.translate("iu.windgenerator1") + ModUtils.getString(KU1)));
+        tooltip.add(Component.literal(Localization.translate("gui.iu.tier") + ": " + this.getLevel()));
+        tooltip.add(Component.literal(Localization.translate("iu.watergenerator1")));
 
         double hours = 0;
         double minutes = 0;
         double seconds = 0;
-        final List<Double> time = ModUtils.Time(this.getCustomDamage(stack));
+        final List<Double> time = ModUtils.Time(this.getMaxCustomDamage(stack) - this.getCustomDamage(stack));
         if (time.size() > 0) {
             hours = time.get(0);
             minutes = time.get(1);
             seconds = time.get(2);
         }
-        String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") + "" : "";
-        String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
-        String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") + "" : "";
 
-        tooltip.add(Localization.translate("iu.timetoend") + time1 + time2 + time3);
+        String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") : "";
+        String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") : "";
+        String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") : "";
+
+        tooltip.add(Component.literal(Localization.translate("iu.timetoend") + time1 + time2 + time3));
 
         if (RotorUpgradeSystem.instance.hasInMap(stack)) {
             final List<RotorUpgradeItemInform> lst = RotorUpgradeSystem.instance.getInformation(stack);
             final int col = RotorUpgradeSystem.instance.getRemaining(stack);
             if (!lst.isEmpty()) {
                 for (RotorUpgradeItemInform upgrade : lst) {
-                    tooltip.add(upgrade.getName());
+                    tooltip.add(Component.literal(upgrade.getName()));
                 }
             }
             if (col != 0) {
-                tooltip.add(Localization.translate("free_slot") + col + Localization.translate(
-                        "free_slot1"));
+                tooltip.add(Component.literal(Localization.translate("free_slot") + col + Localization.translate("free_slot1")));
             } else {
-                tooltip.add(Localization.translate("not_free_slot"));
-
+                tooltip.add(Component.literal(Localization.translate("not_free_slot")));
             }
-
-
         }
-
     }
+
+    @Override
+    public void inventoryTick(@Nonnull ItemStack itemStack, @Nonnull Level world, @Nonnull Entity entity, int slot, boolean isSelected) {
+        CompoundTag nbt = ModUtils.nbt(itemStack);
+
+        if (!RotorUpgradeSystem.instance.hasInMap(itemStack)) {
+            nbt.putBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(world, this, itemStack));
+        }
+        if (this.getMaxCustomDamage(itemStack) != nbt.getInt("maxDamage")) {
+            nbt.putInt("maxDamage", this.getMaxCustomDamage(itemStack));
+        }
+    }
+
 
     public int getDiameter(ItemStack stack) {
         return this.radius;
@@ -223,6 +180,4 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
     public int getSourceTier() {
         return tier;
     }
-
-
 }

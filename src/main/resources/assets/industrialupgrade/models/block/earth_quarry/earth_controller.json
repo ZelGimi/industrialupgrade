@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/earth_controller",
-    "down" : "industrialupgrade:blocks/earth_casing",
-    "up" : "industrialupgrade:blocks/earth_casing",
-    "north" : "industrialupgrade:blocks/earth_controller",
-    "east" : "industrialupgrade:blocks/earth_casing",
-    "south" : "industrialupgrade:blocks/earth_casing",
-    "west" : "industrialupgrade:blocks/earth_casing"
+    "particle" : "industrialupgrade:block/earth_controller",
+    "down" : "industrialupgrade:block/earth_casing",
+    "up" : "industrialupgrade:block/earth_casing",
+    "north" : "industrialupgrade:block/earth_controller",
+    "east" : "industrialupgrade:block/earth_casing",
+    "south" : "industrialupgrade:block/earth_casing",
+    "west" : "industrialupgrade:block/earth_casing"
   }
 }

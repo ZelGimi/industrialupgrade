@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/inconel_gear"	}
+		"layer0": "industrialupgrade:item/inconel_gear"	}
 }

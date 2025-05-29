@@ -5,31 +5,37 @@ import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
 import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.recipes.ItemStackHelper;
 import com.denfop.tiles.base.TileBaseHandlerHeavyOre;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerHORecipeWrapper> {
+public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerHOHandler> {
 
     private final IDrawableStatic bg;
+    private final JeiInform jeiInform;
     private int energy = 0;
     private int progress = 0;
 
     public HandlerHOCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        super(((TileBaseHandlerHeavyOre) BlockBaseMachine1.handler_ho.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
-
+        super(((TileBaseHandlerHeavyOre) BlockBaseMachine1.handler_ho.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+        this.jeiInform=jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
 
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guihandlerho" +
                         ".png"), 3, 3, 140,
@@ -37,23 +43,13 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
         );
     }
 
-    @Nonnull
-    @Override
-    public String getUid() {
-        return BlockBaseMachine1.handler_ho.getName();
-    }
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine, 1, 12).getUnlocalizedName());
+    public String getTitles() {
+        return Localization.translate(ItemStackHelper.fromData(IUItem.basemachine, 1, 12).getDescriptionId());
     }
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -61,9 +57,8 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
+    public void draw(HandlerHOHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
         progress++;
 
         energy++;
@@ -72,35 +67,43 @@ public class HandlerHOCategory extends GuiIU implements IRecipeCategory<HandlerH
         if (xScale > (218 - 178)) {
             progress = 0;
         }
+        int size = recipe.getOutput().size();
+        int y = 17;
+        int x = 128;
+
+        int temp = recipe.nbt.getShort("temperature");
 
 
-        mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(59, 34, 178, 34, xScale + 1, 14);
+        for (int i = 0; i < size; i++) {
+          drawSplitString( stack,"" + recipe.nbt.getInt("input" + i) + "%", x, y, 140 - x, 4210752);
+            y += 19;
+        }
+      draw(stack, "" + temp + "°C", 62, 75, 4210752);
 
+
+     bindTexture(getTexture());
+        drawTexturedModalRect( stack,59, 34, 178, 34, xScale + 1, 14);
 
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final HandlerHORecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 33, 32);
-        isg.set(0, recipes.getInput());
-        for (int i = 0; i < recipes.getOutput().size(); ++i) {
-            isg.init(
-                    1 + i,
-                    false,
-                    107,
-                    14 + 18 * i
-            );
-            isg.set(1 + i, recipes.getOutput().get(i));
-
-        }
-
+    public RecipeType<HandlerHOHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
+
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, HandlerHOHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 34, 33)
+                .addItemStack(recipe.getInput());
+
+
+        for (int i = 0; i < recipe.getOutput().size(); ++i) {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 108, 15 + 18 * i)
+                    .addItemStack(recipe.getOutput().get(i));
+        }
+    }
+
+
 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guihandlerho.png");

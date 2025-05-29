@@ -1,224 +1,210 @@
 package com.denfop.blocks;
 
-
-import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
+import com.denfop.DataBlock;
 import com.denfop.entity.EntityNuclearBombPrimed;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import java.util.Locale;
 
-public class BlockNuclearBomb extends BlockCore implements IModelRegister {
-
-    public static final PropertyBool VARIANT = PropertyBool.create("explode");
-    public ItemBlock itemBlock;
+public class BlockNuclearBomb<T extends Enum<T> & ISubEnum> extends BlockCore<T> {
+    public static final BooleanProperty UNSTABLE = BlockStateProperties.UNSTABLE;
 
 
-    public BlockNuclearBomb() {
-        super(Material.ROCK, Constants.MOD_ID);
-        setUnlocalizedName("nuclear_bomb");
-        setCreativeTab(IUCore.ReactorsTab);
-        setHardness(0.5F);
-        setSoundType(SoundType.STONE);
-        setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, false));
+    public BlockNuclearBomb(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
+
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.FIRE).instabreak().sound(SoundType.GRASS), elements, element, dataBlock);
+        this.registerDefaultState(this.defaultBlockState().setValue(UNSTABLE, Boolean.valueOf(false)));
     }
 
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-        super.onBlockAdded(worldIn, pos, state);
+    @Deprecated
+    public static void explode(Level p_57434_, BlockPos p_57435_) {
+        explode(p_57434_, p_57435_, (LivingEntity) null);
+    }
 
-        if (worldIn.isBlockPowered(pos)) {
-            this.onBlockDestroyedByPlayer(worldIn, pos, state.withProperty(VARIANT, Boolean.valueOf(true)));
-            worldIn.setBlockToAir(pos);
+    @Deprecated
+    private static void explode(Level p_57437_, BlockPos p_57438_, @Nullable LivingEntity p_57439_) {
+        if (!p_57437_.isClientSide) {
+            EntityNuclearBombPrimed primedtnt = new EntityNuclearBombPrimed(p_57437_, (double) p_57438_.getX() + 0.5D, (double) p_57438_.getY(), (double) p_57438_.getZ() + 0.5D, p_57439_);
+            p_57437_.addFreshEntity(primedtnt);
+            p_57437_.playSound((Player) null, primedtnt.getX(), primedtnt.getY(), primedtnt.getZ(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
+            p_57437_.gameEvent(p_57439_, GameEvent.PRIME_FUSE, p_57438_);
         }
     }
 
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        if (worldIn.isBlockPowered(pos)) {
-            this.onBlockDestroyedByPlayer(worldIn, pos, state.withProperty(VARIANT, Boolean.valueOf(true)));
-            worldIn.setBlockToAir(pos);
-        }
+    @Override
+    int getMetaFromState(BlockState state) {
+        return getElement().getId();
     }
 
-    public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
-        if (!worldIn.isRemote) {
-            EntityNuclearBombPrimed entitytntprimed = new EntityNuclearBombPrimed(
-                    worldIn,
-                    (double) ((float) pos.getX() + 0.5F),
-                    (double) pos.getY(),
-                    (double) ((float) pos.getZ() + 0.5F),
-                    explosionIn.getExplosivePlacedBy()
-            );
-            entitytntprimed.setFuse((short) (worldIn.rand.nextInt(entitytntprimed.getFuse() / 4) + entitytntprimed.getFuse() / 8));
-            worldIn.spawnEntity(entitytntprimed);
-        }
+    public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable net.minecraft.core.Direction face, @Nullable LivingEntity igniter) {
+        explode(world, pos, igniter);
     }
 
-    public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
-        this.explode(worldIn, pos, state, (EntityLivingBase) null);
-    }
-
-    public void explode(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase igniter) {
-        if (!worldIn.isRemote) {
-            if (state.getValue(VARIANT).booleanValue()) {
-                EntityNuclearBombPrimed entitytntprimed = new EntityNuclearBombPrimed(
-                        worldIn,
-                        (double) ((float) pos.getX() + 0.5F),
-                        (double) pos.getY(),
-                        (double) ((float) pos.getZ() + 0.5F),
-                        igniter
-                );
-                worldIn.spawnEntity(entitytntprimed);
-                worldIn.playSound(
-                        null,
-                        entitytntprimed.posX,
-                        entitytntprimed.posY,
-                        entitytntprimed.posZ,
-                        SoundEvents.ENTITY_TNT_PRIMED,
-                        SoundCategory.BLOCKS,
-                        1.0F,
-                        1.0F
-                );
-
-            }
-        }
-    }
-
-    public boolean onBlockActivated(
-            World worldIn,
-            BlockPos pos,
-            IBlockState state,
-            EntityPlayer playerIn,
-            EnumHand hand,
-            EnumFacing facing,
-            float hitX,
-            float hitY,
-            float hitZ
-    ) {
-        ItemStack itemstack = playerIn.getHeldItem(hand);
-
-        if (!itemstack.isEmpty() && (itemstack.getItem() == Items.FLINT_AND_STEEL || itemstack.getItem() == Items.FIRE_CHARGE)) {
-            this.explode(worldIn, pos, state.withProperty(VARIANT, Boolean.valueOf(true)), playerIn);
-            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
-
-            if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
-                itemstack.damageItem(1, playerIn);
-            } else if (!playerIn.capabilities.isCreativeMode) {
-                itemstack.shrink(1);
+    public void onPlace(BlockState p_57466_, Level p_57467_, BlockPos p_57468_, BlockState p_57469_, boolean p_57470_) {
+        if (!p_57469_.is(p_57466_.getBlock())) {
+            if (p_57467_.hasNeighborSignal(p_57468_)) {
+                onCaughtFire(p_57466_, p_57467_, p_57468_, null, null);
+                p_57467_.removeBlock(p_57468_, false);
             }
 
-            return true;
+        }
+    }
+
+    public void neighborChanged(BlockState p_57457_, Level p_57458_, BlockPos p_57459_, Block p_57460_, BlockPos p_57461_, boolean p_57462_) {
+        if (p_57458_.hasNeighborSignal(p_57459_)) {
+            onCaughtFire(p_57457_, p_57458_, p_57459_, null, null);
+            p_57458_.removeBlock(p_57459_, false);
+        }
+
+    }
+
+    public void playerWillDestroy(Level p_57445_, BlockPos p_57446_, BlockState p_57447_, Player p_57448_) {
+        if (!p_57445_.isClientSide() && !p_57448_.isCreative() && p_57447_.getValue(UNSTABLE)) {
+            onCaughtFire(p_57447_, p_57445_, p_57446_, null, null);
+        }
+
+        super.playerWillDestroy(p_57445_, p_57446_, p_57447_, p_57448_);
+    }
+
+    public void wasExploded(Level p_57441_, BlockPos p_57442_, Explosion p_57443_) {
+        if (!p_57441_.isClientSide) {
+            PrimedTnt primedtnt = new PrimedTnt(p_57441_, (double) p_57442_.getX() + 0.5D, (double) p_57442_.getY(), (double) p_57442_.getZ() + 0.5D, p_57443_.getIndirectSourceEntity());
+            int i = primedtnt.getFuse();
+            primedtnt.setFuse((short) (p_57441_.random.nextInt(i / 4) + i / 8));
+            p_57441_.addFreshEntity(primedtnt);
+        }
+    }
+
+    public InteractionResult use(BlockState p_57450_, Level p_57451_, BlockPos p_57452_, Player p_57453_, InteractionHand p_57454_, BlockHitResult p_57455_) {
+        ItemStack itemstack = p_57453_.getItemInHand(p_57454_);
+        if (!itemstack.is(Items.FLINT_AND_STEEL) && !itemstack.is(Items.FIRE_CHARGE)) {
+            return super.use(p_57450_, p_57451_, p_57452_, p_57453_, p_57454_, p_57455_);
         } else {
-            return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+            onCaughtFire(p_57450_, p_57451_, p_57452_, p_57455_.getDirection(), p_57453_);
+            p_57451_.setBlock(p_57452_, Blocks.AIR.defaultBlockState(), 11);
+            Item item = itemstack.getItem();
+            if (!p_57453_.isCreative()) {
+                if (itemstack.is(Items.FLINT_AND_STEEL)) {
+                    itemstack.hurtAndBreak(1, p_57453_, (p_57425_) -> {
+                        p_57425_.broadcastBreakEvent(p_57454_);
+                    });
+                } else {
+                    itemstack.shrink(1);
+                }
+            }
+
+            p_57453_.awardStat(Stats.ITEM_USED.get(item));
+            return InteractionResult.sidedSuccess(p_57451_.isClientSide);
         }
     }
 
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
-        if (!worldIn.isRemote && entityIn instanceof EntityArrow) {
-            EntityArrow entityarrow = (EntityArrow) entityIn;
-
-            if (entityarrow.isBurning()) {
-                this.explode(
-                        worldIn,
-                        pos,
-                        worldIn.getBlockState(pos).withProperty(VARIANT, Boolean.valueOf(true)),
-                        entityarrow.shootingEntity instanceof EntityLivingBase
-                                ? (EntityLivingBase) entityarrow.shootingEntity
-                                : null
-                );
-                worldIn.setBlockToAir(pos);
+    public void onProjectileHit(Level p_57429_, BlockState p_57430_, BlockHitResult p_57431_, Projectile p_57432_) {
+        if (!p_57429_.isClientSide) {
+            BlockPos blockpos = p_57431_.getBlockPos();
+            Entity entity = p_57432_.getOwner();
+            if (p_57432_.isOnFire() && p_57432_.mayInteract(p_57429_, blockpos)) {
+                onCaughtFire(p_57430_, p_57429_, blockpos, null, entity instanceof LivingEntity ? (LivingEntity) entity : null);
+                p_57429_.removeBlock(blockpos, false);
             }
         }
+
     }
 
-    public boolean canDropFromExplosion(Explosion explosionIn) {
+    public boolean dropFromExplosion(Explosion p_57427_) {
         return false;
     }
 
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(VARIANT, Boolean.valueOf((meta & 1) > 0));
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_57464_) {
+        p_57464_.add(UNSTABLE);
     }
 
-    public int getMetaFromState(IBlockState state) {
-        return ((Boolean) state.getValue(VARIANT)).booleanValue() ? 1 : 0;
+    @Override
+    public <T extends Enum<T> & ISubEnum> BlockState getStateForPlacement(T element, BlockPlaceContext context) {
+        return this.defaultBlockState();
     }
 
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
+    @Override
+    public <T extends Enum<T> & ISubEnum> void fillItemCategory(CreativeModeTab p40569, NonNullList<ItemStack> p40570, T element) {
+        p40570.add(new ItemStack(this.stateDefinition.any().getBlock()));
     }
 
-    public void getSubBlocks(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
-        for (int i = 0; i < 1; i++) {
-            items.add(new ItemStack(this, 1, i));
+
+    public enum Type implements ISubEnum {
+        nuclear_bomb(0),
+        ;
+
+        private final int metadata;
+        private final String name;
+
+        Type(int metadata) {
+            this.metadata = metadata;
+            this.name = this.name().toLowerCase(Locale.US);
         }
-    }
 
-    public String getUnlocalizedName(ItemStack stack) {
-
-        return "iu." + "nuclear_bomb" + ".name";
-    }
-
-    public EnumRarity getRarity(ItemStack stack) {
-
-        return EnumRarity.COMMON;
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        for (int i = 0; i < (VARIANT.getAllowedValues()).size(); i++) {
-            ModelLoader.setCustomModelResourceLocation(
-                    Item.getItemFromBlock(this),
-                    i,
-                    new ModelResourceLocation(
-                            this.modName + ":" + this.name,
-                            "explode=" + VARIANT.getAllowedValues().stream().collect(Collectors.toList()).get(i)
-                    )
-            );
+        public static Type getFromID(final int ID) {
+            return values()[ID % values().length];
         }
+
+        public int getMetadata() {
+            return this.metadata;
+        }
+
+        @Override
+        public int getId() {
+            return this.metadata;
+        }
+
+
+        @Override
+        public String getOtherPart() {
+            return "explode=";
+        }
+
+        @Nonnull
+        public String getName() {
+            return this.name;
+        }
+
+        @Override
+        public String getMainPath() {
+            return "nuclear_bomb";
+        }
+
+        public int getLight() {
+            return 0;
+        }
+
+
     }
-
-    public boolean preInit() {
-        setRegistryName("nuclear_bomb");
-        ForgeRegistries.BLOCKS.register(this);
-        this.itemBlock = new ItemBlock(this);
-        itemBlock.setRegistryName(Objects.requireNonNull(getRegistryName()));
-        ForgeRegistries.ITEMS.register(itemBlock);
-        IUCore.proxy.addIModelRegister(this);
-
-        return true;
-    }
-
-
 }

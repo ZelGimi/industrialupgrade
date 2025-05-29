@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:gas_well/gas_well_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:quarry_vein/quarry_vein"
+      }
+    ],
+    "C": [
+      {
+        "tag": "forge:plates/titanium"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:plates/steel"
+      }
+    ],
+    "E": [
+      {
+        "tag": "forge:plates/iridium"
+      }
+    ]
+  },
+  "pattern": [
+    " E ",
+    "DAD",
+    "CBC"
+  ],
+  "result": {
+    "item": "industrialupgrade:gas_well/gas_well_drill"
+  },
+  "show_notification": true
+}

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/darkbluepaint"
+    "layer0" : "industrialupgrade:item/darkbluepaint"
   }
 }

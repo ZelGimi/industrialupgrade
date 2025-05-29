@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileCrystalCharger;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerCrystalCharger extends ContainerFullInv<TileCrystalCharger> {
 
-    public ContainerCrystalCharger(final EntityPlayer player, final TileCrystalCharger base) {
+    public ContainerCrystalCharger(final Player player, final TileCrystalCharger base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50, 35));
         this.addSlotToContainer(new SlotInvSlot(base.outputSlot, 0, 100, 35));

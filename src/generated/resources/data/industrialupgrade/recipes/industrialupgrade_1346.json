@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:chemical_plant/chemical_plant_casing"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:basemachine3/steel_tank"
+      }
+    ]
+  },
+  "pattern": [
+    "BBB",
+    " A ",
+    "   "
+  ],
+  "result": {
+    "item": "industrialupgrade:chemical_plant/chemical_plant_separate"
+  },
+  "show_notification": true
+}

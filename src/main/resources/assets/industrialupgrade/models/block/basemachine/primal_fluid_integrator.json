@@ -2,8 +2,8 @@
 	"credit": "texnounits",
 	"texture_size": [128, 128],
 	"textures": {
-		"10": "industrialupgrade:models/primal_fluid_integrator",
-		"particle": "industrialupgrade:models/primal_fluid_integrator"
+		"10": "industrialupgrade:block/primal_fluid_integrator",
+		"particle": "industrialupgrade:block/primal_fluid_integrator"
 	},
 	"elements": [
 		{

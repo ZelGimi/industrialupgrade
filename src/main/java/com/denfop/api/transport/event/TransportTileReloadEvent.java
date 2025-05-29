@@ -1,15 +1,15 @@
 package com.denfop.api.transport.event;
 
 import com.denfop.api.transport.ITransportTile;
-import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.level.LevelEvent;
 
-public class TransportTileReloadEvent extends WorldEvent {
+public class TransportTileReloadEvent extends LevelEvent {
 
     public final ITransportTile newtile;
     public final ITransportTile oldtile;
 
-    public TransportTileReloadEvent(World world, ITransportTile energyTile1, ITransportTile energyTile2) {
+    public TransportTileReloadEvent(Level world, ITransportTile energyTile1, ITransportTile energyTile2) {
         super(world);
         this.newtile = energyTile1;
         this.oldtile = energyTile2;

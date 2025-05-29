@@ -3,11 +3,12 @@ package com.denfop.pressure;
 
 import com.denfop.api.pressure.event.PressureTileLoadEvent;
 import com.denfop.api.pressure.event.PressureTileUnloadEvent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EventHandler {
 
@@ -18,44 +19,44 @@ public class EventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEnergyTileLoad(final PressureTileLoadEvent event) {
-        if (event.getWorld().isRemote) {
+        if (event.getLevel().isClientSide()) {
             return;
         }
-        final PressureNetLocal local = PressureNetGlobal.getForWorld(event.getWorld());
+        final PressureNetLocal local = PressureNetGlobal.getForWorld((Level) event.getLevel());
 
         if (local != null) {
-            local.addTile(event.tile);
+            local.addTileEntity(event.tile.getPos(), event.tile);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEnergyTileUnload(final PressureTileUnloadEvent event) {
-        if (event.getWorld().isRemote) {
+        if (event.getLevel().isClientSide()) {
             return;
         }
-        final PressureNetLocal local = PressureNetGlobal.getForWorld(event.getWorld());
+        final PressureNetLocal local = PressureNetGlobal.getForWorld((Level) event.getLevel());
         if (local != null) {
             local.removeTile(event.tile);
         }
     }
 
     @SubscribeEvent
-    public void tick(final TickEvent.WorldTickEvent event) {
-        if (event.world.isRemote) {
+    public void tick(final TickEvent.LevelTickEvent event) {
+        if (event.level.isClientSide) {
             return;
         }
         if (event.phase == TickEvent.Phase.END) {
-            PressureNetGlobal.onTickEnd(event.world);
+            PressureNetGlobal.onTickEnd(event.level);
         }
     }
 
     @SubscribeEvent
-    public void onWorldUnload(final WorldEvent.Unload event) {
+    public void onWorldUnload(final LevelEvent.Unload event) {
 
-        if (event.getWorld().isRemote) {
+        if (event.getLevel().isClientSide()) {
             return;
         }
-        PressureNetGlobal.onWorldUnload(event.getWorld());
+        PressureNetGlobal.onWorldUnload((Level) event.getLevel());
     }
 
 }

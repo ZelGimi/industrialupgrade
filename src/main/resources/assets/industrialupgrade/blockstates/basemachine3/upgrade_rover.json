@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=upgrade_rover": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover"
+    },
+    "facing=south,type=upgrade_rover": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover",
+      "y": 180
+    },
+    "facing=west,type=upgrade_rover": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover",
+      "y": 270
+    },
+    "facing=east,type=upgrade_rover": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover",
+      "y": 90
+    },
+    "facing=down,type=upgrade_rover": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover",
+      "x": 90
+    },
+    "facing=up,type=upgrade_rover": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover",
+      "x": 270
+    },
+    "facing=north,type=upgrade_rover_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active"
+    },
+    "facing=south,type=upgrade_rover_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "y": 180
+    },
+    "facing=west,type=upgrade_rover_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "y": 270
+    },
+    "facing=east,type=upgrade_rover_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "y": 90
+    },
+    "facing=down,type=upgrade_rover_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "x": 90
+    },
+    "facing=up,type=upgrade_rover_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "x": 270
+    },
+    "facing=north,type=upgrade_rover_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active"
+    },
+    "facing=south,type=upgrade_rover_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "y": 180
+    },
+    "facing=west,type=upgrade_rover_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "y": 270
+    },
+    "facing=east,type=upgrade_rover_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "y": 90
+    },
+    "facing=down,type=upgrade_rover_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "x": 90
+    },
+    "facing=up,type=upgrade_rover_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_rover_active",
+      "x": 270
+    }
+  }
+}

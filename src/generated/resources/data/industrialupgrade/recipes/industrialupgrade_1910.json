@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:quantumitems7"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:module_schedule"
+      }
+    ],
+    "C": [
+      {
+        "item": "industrialupgrade:crafting_elements/crafting_285_element"
+      }
+    ],
+    "D": [
+      {
+        "tag": "forge:doubleplate/redbrass"
+      }
+    ],
+    "E": [
+      {
+        "item": "industrialupgrade:itemcore/specore"
+      }
+    ]
+  },
+  "pattern": [
+    "ADA",
+    "CBC",
+    "DED"
+  ],
+  "result": {
+    "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade13"
+  },
+  "show_notification": true
+}

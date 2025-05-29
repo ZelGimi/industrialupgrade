@@ -2,52 +2,55 @@ package com.denfop.integration.jei.upgraderover;
 
 import com.denfop.Constants;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
 import com.denfop.integration.jei.JEICompat;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class UpgradeRoverCategory extends Gui implements IRecipeCategory<UpgradeRoverWrapper> {
+public class UpgradeRoverCategory extends GuiIU implements IRecipeCategory<UpgradeRoverHandler> {
 
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
-
+    JeiInform jeiInform;
     public UpgradeRoverCategory(
-            final IGuiHelper guiHelper
+            IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock" +
+        super(((TileEntityUpgradeMachineFactory) BlockBaseMachine3.upgrade_machine.getDummyTe()).getGuiContainer(Minecraft.getInstance().player));
+
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock".toLowerCase() +
                         ".png"), 3, 3, 148,
                 80
         );
+        this.jeiInform = jeiInform;
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
+    }
+
+    @Override
+    public RecipeType<UpgradeRoverHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     @Nonnull
     @Override
-    public String getUid() {
-        return BlockBaseMachine3.upgrade_rover.getName();
+    public String getTitles() {
+        return JEICompat.getBlockStack(BlockBaseMachine3.upgrade_rover).getDisplayName().getString();
     }
 
-    @Nonnull
-    @Override
-    public String getTitle() {
-        return JEICompat.getBlockStack(BlockBaseMachine3.upgrade_rover).getDisplayName();
-    }
-
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
     @Nonnull
     @Override
@@ -55,10 +58,8 @@ public class UpgradeRoverCategory extends Gui implements IRecipeCategory<Upgrade
         return bg;
     }
 
-
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
-        progress++;
+    public void draw(UpgradeRoverHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
 
         int xScale = 27 * progress / 100;
         int xScale1 = 27 * progress / 100;
@@ -66,33 +67,25 @@ public class UpgradeRoverCategory extends Gui implements IRecipeCategory<Upgrade
             progress = 0;
         }
 
-        mc.getTextureManager().bindTexture(getTexture());
+      bindTexture(getTexture());
 
-        drawTexturedModalRect(+33, +35, 180, 7, xScale + 1, 16);
+        drawTexturedModalRect( stack,+33, +35, 180, 7, xScale + 1, 16);
 
 
-        drawTexturedModalRect(+78, +35, 225, 7, xScale1 + 1, 16);
-
+        drawTexturedModalRect( stack,+78, +35, 225, 7, xScale1 + 1, 16);
 
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final UpgradeRoverWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 15, 34);
-        isg.set(0, recipes.getInput());
-        isg.init(1, true, 60, 34);
-        isg.set(1, recipes.getInput1());
-        isg.init(2, false, 109, 34);
-        isg.set(2, recipes.getOutput());
+    public void setRecipe(IRecipeLayoutBuilder builder, UpgradeRoverHandler recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT,16,35).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT,61,35).addItemStack(recipe.getInput1());
+        builder.addSlot(RecipeIngredientRole.OUTPUT,110,35).addItemStack(recipe.getOutput());
     }
 
+
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock.png".toLowerCase());
     }
 
 

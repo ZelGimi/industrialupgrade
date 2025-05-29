@@ -1,108 +1,91 @@
 package com.denfop.items;
 
-import com.denfop.Constants;
+import com.denfop.IItemTab;
+import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.ForgeHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.DispenseFluidContainer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class ItemFluidCell extends ItemFluidContainer {
-
+public class ItemFluidCell extends ItemFluidContainer implements IItemTab {
     public ItemFluidCell() {
-        super("fluid_cell", 1000);
-        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
+        super(1000);
     }
 
-
-    public String getUnlocalizedName(ItemStack itemStack) {
-        return "iu." + super.getUnlocalizedName().substring(5);
-
+    public boolean canfill(Fluid fluid) {
+        return true;
     }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack));
-    }
-
-    @SideOnly(Side.CLIENT)
     @Override
-    public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                0,
-                new ModelResourceLocation(
-                        Constants.MOD_ID + ":" + "itemcell" + "/" + "itemcell",
-                        null
-                )
-        );
-
+    public CreativeModeTab getItemCategory() {
+        return IUCore.ItemTab;
     }
+    @Override
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+        if (this.allowedIn(p_41391_)) {
+            p_41392_.addAll(getAllStacks());
 
-    public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, NBTTagCompound nbt) {
-        return new CapabilityFluidHandlerItem(stack, ItemFluidCell.this.capacity) {
+        }
+    }
+    public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, CompoundTag nbt) {
+        return new CapabilityFluidHandlerItem(stack, 1000) {
             public boolean canFillFluidType(FluidStack fluid) {
                 return fluid != null && ItemFluidCell.this.canfill(fluid.getFluid());
             }
 
             public boolean canDrainFluidType(FluidStack fluid) {
-                return fluid != null && ItemFluidCell.this.canfill(fluid.getFluid()) && fluid.amount >= 1000;
+                return fluid != null && ItemFluidCell.this.canfill(fluid.getFluid()) && fluid.getAmount() >= 1000;
             }
 
             @Override
-            public int fill(final FluidStack resource, final boolean doFill) {
-                if (resource == null || resource.amount < 1000) {
+            public int fill(FluidStack resource, FluidAction doFill) {
+                if (resource == null || resource.getAmount() < 1000) {
                     return 0;
                 }
                 return super.fill(resource, doFill);
             }
 
             @Override
-            public FluidStack drain(final int maxDrain, final boolean doDrain) {
+            public @NotNull FluidStack drain(int maxDrain, FluidAction doDrain) {
                 if (maxDrain < 1000) {
-                    return null;
+                    return FluidStack.EMPTY;
                 }
                 return super.drain(maxDrain, doDrain);
             }
 
             @Override
-            public FluidStack drain(FluidStack resource, boolean doDrain) {
-                if (resource == null || resource.amount < 1000) {
-                    return null;
+            public @NotNull FluidStack drain(FluidStack resource, FluidAction doDrain) {
+                if (resource == FluidStack.EMPTY || resource.getAmount() < 1000) {
+                    return FluidStack.EMPTY;
                 }
                 return super.drain(resource, doDrain);
             }
@@ -110,48 +93,113 @@ public class ItemFluidCell extends ItemFluidContainer {
             @NotNull
             @Override
             public ItemStack getContainer() {
-                return getFluid() == null ? new ItemStack(IUItem.fluidCell) : container;
+                return getFluid() == FluidStack.EMPTY ? new ItemStack(IUItem.fluidCell.getItem()) : container;
             }
         };
     }
 
-    public boolean tryPlaceContainedLiquid(FluidStack fs, @Nullable EntityPlayer player, World worldIn, BlockPos posIn) {
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+
+        ItemStack itemstack = player.getItemInHand(hand);
+        IFluidHandlerItem fs = itemstack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).orElse(null);
+        if (fs == null)
+            fs = (IFluidHandlerItem) initCapabilities(itemstack,itemstack.getOrCreateTag());
+        BlockHitResult blockhitresult = getPlayerPOVHitResult(world, player, fs.getFluidInTank(0).getFluid() == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
+        if (blockhitresult.getType() == HitResult.Type.MISS) {
+            return InteractionResultHolder.pass(itemstack);
+        } else if (blockhitresult.getType() != HitResult.Type.BLOCK) {
+            return InteractionResultHolder.pass(itemstack);
+        } else {
+            BlockPos blockpos = blockhitresult.getBlockPos();
+            Direction direction = blockhitresult.getDirection();
+            BlockPos blockpos1 = blockpos.relative(direction);
+            if (world.mayInteract(player, blockpos) && player.mayUseItemAt(blockpos1, direction, itemstack)) {
+                if (fs.getFluidInTank(0).getFluid() != Fluids.EMPTY) {
+                    Fluid fluid = fs.getFluidInTank(0).getFluid();
+                    boolean flag1 = world.getBlockState(blockpos).canBeReplaced();
+                    BlockPos blockpos2 = flag1 && blockhitresult.getDirection() == Direction.UP ? blockpos : blockpos.offset(blockhitresult.getDirection().getNormal());
+                    if (tryPlaceContainedLiquid(new FluidStack(fluid, 1000), player, world, blockpos2)) {
+                        player.getItemInHand(hand).shrink(1);
+                        if (!ModUtils.storeInventoryItem(new ItemStack(this, 1),
+                                player, false
+                        )) {
+                            if (!world.isClientSide()) {
+                                ModUtils.dropAsEntity(world, player.blockPosition(), new ItemStack(this, 1));
+                            }
+                        }
+                        return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
+                    }
+
+                } else {
+                    BlockState block = world.getBlockState(blockpos);
+                    if (block.liquid()) {
+                        FluidState fluidState = block.getBlock().getFluidState(block);
+
+                        if (!fluidState.isSource()) {
+                            return InteractionResultHolder.fail(itemstack);
+                        }
+
+                        FluidStack ret = new FluidStack(fluidState.getType(), 1000);
+                        ItemStack stack = new ItemStack(this);
+                        FluidHandlerFix.getFluidHandler(stack).fill(ret, IFluidHandler.FluidAction.EXECUTE);
+
+                        stack = stack.copy();
+                        if (!ModUtils.storeInventoryItem(stack, player, false)) {
+
+                            if (!world.isClientSide()) {
+                                ModUtils.dropAsEntity(world, player.blockPosition(), stack);
+                            }
+
+                        }
+                        world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 3);
+                        itemstack.shrink(1);
+                        return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
+                    }
+                }
+
+            }
+        }
+        return InteractionResultHolder.fail(itemstack);
+    }
+
+
+    public boolean tryPlaceContainedLiquid(FluidStack fs, @Nullable Player player, Level worldIn, BlockPos posIn) {
 
         Block containedBlock;
-        if (fs.getFluid() == FluidRegistry.WATER) {
-            containedBlock = Blocks.FLOWING_WATER;
-        } else if (fs.getFluid() == FluidRegistry.LAVA) {
-            containedBlock = Blocks.FLOWING_LAVA;
+        if (fs.getFluid() == Fluids.WATER) {
+            containedBlock = Blocks.WATER;
+        } else if (fs.getFluid() == Fluids.LAVA) {
+            containedBlock = Blocks.LAVA;
         } else {
-            containedBlock = fs.getFluid().getBlock();
+            containedBlock = fs.getFluid().defaultFluidState().createLegacyBlock().getBlock();
         }
         if (containedBlock == Blocks.AIR) {
             return false;
         } else {
-            IBlockState iblockstate = worldIn.getBlockState(posIn);
-            Material material = iblockstate.getMaterial();
-            boolean flag = !material.isSolid();
-            boolean flag1 = iblockstate.getBlock().isReplaceable(worldIn, posIn);
-
-            if (!worldIn.isAirBlock(posIn) && !flag && !flag1) {
+            BlockState iblockstate = worldIn.getBlockState(posIn);
+            boolean flag1 = iblockstate.canBeReplaced();
+            if (iblockstate.liquid())
+                return false;
+            if (!iblockstate.isAir() && !flag1) {
                 return false;
             } else {
-                if (worldIn.provider.doesWaterVaporize() && containedBlock == Blocks.FLOWING_WATER) {
+                if (worldIn.dimension() == Level.NETHER && containedBlock == Blocks.WATER) {
                     int l = posIn.getX();
                     int i = posIn.getY();
                     int j = posIn.getZ();
                     worldIn.playSound(
                             player,
                             posIn,
-                            SoundEvents.BLOCK_FIRE_EXTINGUISH,
-                            SoundCategory.BLOCKS,
+                            SoundEvents.FIRE_EXTINGUISH,
+                            SoundSource.BLOCKS,
                             0.5F,
-                            2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F
+                            2.6F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.8F
                     );
 
                     for (int k = 0; k < 8; ++k) {
-                        worldIn.spawnParticle(
-                                EnumParticleTypes.SMOKE_LARGE,
+                        worldIn.addParticle(
+                                ParticleTypes.LARGE_SMOKE,
                                 (double) l + Math.random(),
                                 (double) i + Math.random(),
                                 (double) j + Math.random(),
@@ -161,148 +209,20 @@ public class ItemFluidCell extends ItemFluidContainer {
                         );
                     }
                 } else {
-                    if (!worldIn.isRemote && (flag || flag1) && !material.isLiquid()) {
+                    if (!worldIn.isClientSide && ( flag1) && !iblockstate.liquid()) {
                         worldIn.destroyBlock(posIn, true);
                     }
 
-                    SoundEvent soundevent = containedBlock == Blocks.FLOWING_LAVA
-                            ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA
-                            : SoundEvents.ITEM_BUCKET_EMPTY;
-                    worldIn.playSound(player, posIn, soundevent, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    worldIn.setBlockState(posIn, containedBlock.getDefaultState(), 11);
+                    SoundEvent soundevent = containedBlock == Blocks.LAVA
+                            ? SoundEvents.BUCKET_EMPTY_LAVA
+                            : SoundEvents.BUCKET_EMPTY;
+                    worldIn.playSound(player, posIn, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    worldIn.setBlock(posIn, fs.getFluid().defaultFluidState().createLegacyBlock(), 11);
                 }
-                fs.amount -= 1000;
+                fs.grow(-1000);
+                ;
                 return true;
             }
         }
     }
-
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(
-            World world, EntityPlayer player, EnumHand hand
-    ) {
-
-
-        RayTraceResult position = this.rayTrace(world, player, true);
-        if (position == null) {
-            return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
-        }
-        final boolean action = ForgeHooks
-                .onRightClickBlock(player, hand, position.getBlockPos(), position.sideHit, position.hitVec)
-                .isCanceled();
-        if (action) {
-            return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
-        }
-        if (world.isRemote) {
-            return ActionResult.newResult(EnumActionResult.PASS, player.getHeldItem(hand));
-        }
-
-        if (position.typeOfHit == RayTraceResult.Type.BLOCK) {
-            final BlockPos pos = position.getBlockPos();
-            final ItemStack stack = player.getHeldItem(hand);
-            final FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-            if (fluidStack != null) {
-                boolean flag1 = world.getBlockState(pos).getBlock().isReplaceable(world, pos);
-                BlockPos blockpos1 = flag1 && position.sideHit == EnumFacing.UP ? pos : pos.offset(position.sideHit);
-
-                if (fluidStack.amount >= 1000 && tryPlaceContainedLiquid(fluidStack, player, world, blockpos1)) {
-                    player.getHeldItem(hand).shrink(1);
-                    if (!ModUtils.storeInventoryItem(new ItemStack(IUItem.fluidCell, 1),
-                            player, false
-                    )) {
-                        ModUtils.dropAsEntity(world, pos, new ItemStack(IUItem.fluidCell, 1));
-                    }
-                    return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-                }
-
-            } else {
-
-                if (!world.canMineBlockBody(player, pos)) {
-                    return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
-                }
-
-                if (!player.canPlayerEdit(pos, position.sideHit, player.getHeldItem(hand))) {
-                    return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
-                }
-                IBlockState state = world.getBlockState(pos);
-                Block block = state.getBlock();
-
-                if (block instanceof IFluidBlock && ((IFluidBlock) block).canDrain(world, pos)) {
-
-
-                    if (!world.isRemote) {
-
-                        final ItemStack stack1 = new ItemStack(this);
-                        final IFluidHandlerItem fluidDestination = FluidUtil.getFluidHandler(
-                                stack1);
-                        Fluid liquid = ((IFluidBlock) block).getFluid();
-                        final FluidStack drainable = new FluidStack(liquid, 1000);
-                        fluidDestination.fill(drainable, true);
-                        world.setBlockToAir(pos);
-                        stack.shrink(1);
-                        if (!player.inventory.addItemStackToInventory(stack1)) {
-                            ModUtils.dropAsEntity(world, pos, stack1);
-
-                        }
-                    }
-                    return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-
-
-                } else if (state.getMaterial().isLiquid()) {
-
-                    if (!world.isRemote) {
-                        final FluidStack drainable = new FluidStack(FluidRegistry.getFluid(block
-                                .getUnlocalizedName()
-                                .substring(5)), 1000);
-                        final ItemStack stack1 = new ItemStack(this);
-                        final IFluidHandlerItem fluidDestination = FluidUtil.getFluidHandler(
-                                stack1);
-
-                        fluidDestination.fill(drainable, true);
-                        world.setBlockToAir(pos);
-                        stack.shrink(1);
-                        if (!player.inventory.addItemStackToInventory(stack1)) {
-                            ModUtils.dropAsEntity(world, pos, stack1);
-
-                        }
-                    }
-
-                    return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-
-                }
-            }
-        }
-
-        return ActionResult.newResult(EnumActionResult.PASS, player.getHeldItem(hand));
-
-    }
-
-
-    public boolean isRepairable() {
-        return false;
-    }
-
-
-    public boolean canfill(Fluid fluid) {
-        return true;
-    }
-
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (this.isInCreativeTab(tab)) {
-            ItemStack emptyStack = new ItemStack(this);
-            subItems.add(emptyStack);
-
-            for (final Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-                if (fluid != null && fluid.getBlock() != null) {
-                    ItemStack stack = this.getItemStack(fluid);
-                    if (stack != null) {
-                        subItems.add(stack);
-                    }
-                }
-            }
-
-        }
-    }
-
-
 }

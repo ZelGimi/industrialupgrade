@@ -8,8 +8,8 @@ import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.TilePrivatizer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotPrivatizer extends InvSlot implements ITypeSlot {
 
@@ -33,11 +33,12 @@ public class InvSlotPrivatizer extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         if (type == 0) {
             this.update();
         }
+        return content;
     }
 
     public void update() {
@@ -45,7 +46,7 @@ public class InvSlotPrivatizer extends InvSlot implements ITypeSlot {
             this.tile.listItems.clear();
             for (int i = 0; i < this.size(); i++) {
                 if (!this.get(i).isEmpty()) {
-                    NBTTagCompound nbt1 = ModUtils.nbt(this.get(i));
+                    CompoundTag nbt1 = ModUtils.nbt(this.get(i));
                     String name = nbt1.getString("name");
                     if (!this.tile.listItems.contains(name)) {
                         this.tile.listItems.add(name);
@@ -58,9 +59,9 @@ public class InvSlotPrivatizer extends InvSlot implements ITypeSlot {
 
     public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
-            return itemStack.getItem() instanceof ItemEntityModule && itemStack.getItemDamage() == 0;
+            return itemStack.getItem() instanceof ItemEntityModule && ((ItemEntityModule<?>) itemStack.getItem()).getElement().getId() == 0;
         } else {
-            return itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 0;
+            return itemStack.getItem() instanceof ItemAdditionModule && ((ItemAdditionModule<?>) itemStack.getItem()).getElement().getId() == 0;
         }
     }
 

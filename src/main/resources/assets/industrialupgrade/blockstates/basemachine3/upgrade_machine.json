@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=upgrade_machine": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine"
+    },
+    "facing=south,type=upgrade_machine": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine",
+      "y": 180
+    },
+    "facing=west,type=upgrade_machine": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine",
+      "y": 270
+    },
+    "facing=east,type=upgrade_machine": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine",
+      "y": 90
+    },
+    "facing=down,type=upgrade_machine": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine",
+      "x": 90
+    },
+    "facing=up,type=upgrade_machine": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine",
+      "x": 270
+    },
+    "facing=north,type=upgrade_machine_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active"
+    },
+    "facing=south,type=upgrade_machine_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "y": 180
+    },
+    "facing=west,type=upgrade_machine_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "y": 270
+    },
+    "facing=east,type=upgrade_machine_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "y": 90
+    },
+    "facing=down,type=upgrade_machine_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "x": 90
+    },
+    "facing=up,type=upgrade_machine_invalid": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "x": 270
+    },
+    "facing=north,type=upgrade_machine_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active"
+    },
+    "facing=south,type=upgrade_machine_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "y": 180
+    },
+    "facing=west,type=upgrade_machine_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "y": 270
+    },
+    "facing=east,type=upgrade_machine_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "y": 90
+    },
+    "facing=down,type=upgrade_machine_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "x": 90
+    },
+    "facing=up,type=upgrade_machine_active": {
+      "model": "industrialupgrade:block/basemachine/upgrade_machine_active",
+      "x": 270
+    }
+  }
+}

@@ -2,6 +2,6 @@ package com.denfop.api.gui;
 
 public enum EnumTypeRender {
     HEIGHT,
-    WEIGHT,
+    WIDTH,
     UNIQUE
 }

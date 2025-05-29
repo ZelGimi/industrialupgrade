@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/ferromanganese_plate"
+    "layer0" : "industrialupgrade:item/ferromanganese_plate"
   }
 }

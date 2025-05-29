@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityProgrammingTable;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerProgrammingTable extends ContainerFullInv<TileEntityProgrammingTable> {
 
-    public ContainerProgrammingTable(TileEntityProgrammingTable tleEntityMatterFactory, EntityPlayer var1) {
+    public ContainerProgrammingTable(TileEntityProgrammingTable tleEntityMatterFactory, Player var1) {
         super(tleEntityMatterFactory, var1);
         this.addSlotToContainer(new SlotInvSlot(tleEntityMatterFactory.inputSlotA, 0, 30, 45));
         this.addSlotToContainer(new SlotInvSlot(tleEntityMatterFactory.outputSlot, 0, 90, 45));

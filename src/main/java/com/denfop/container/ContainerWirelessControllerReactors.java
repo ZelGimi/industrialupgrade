@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityWirelessControllerReactors;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerWirelessControllerReactors extends ContainerFullInv<TileEntityWirelessControllerReactors> {
 
     public ContainerWirelessControllerReactors(
             TileEntityWirelessControllerReactors tileEntityWirelessControllerReactors,
-            EntityPlayer var1
+            Player var1
     ) {
         super(tileEntityWirelessControllerReactors, var1);
         for (int i = 0; i < 12; i++) {

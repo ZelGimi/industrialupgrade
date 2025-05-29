@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileWireInsulator;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerWireInsulator extends ContainerFullInv<TileWireInsulator> {
 
-    public ContainerWireInsulator(final EntityPlayer player, final TileWireInsulator base) {
+    public ContainerWireInsulator(final Player player, final TileWireInsulator base) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50 - 30, 35));
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 1, 46, 35));
@@ -18,7 +18,7 @@ public class ContainerWireInsulator extends ContainerFullInv<TileWireInsulator> 
         ));
     }
 
-    public ContainerWireInsulator(final EntityPlayer player, final TileWireInsulator base, boolean false1) {
+    public ContainerWireInsulator(final Player player, final TileWireInsulator base, boolean false1) {
         super(player, base);
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 0, 50 - 30, 35));
         this.addSlotToContainer(new SlotInvSlot(base.inputSlotA, 1, 46, 35));

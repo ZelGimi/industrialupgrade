@@ -4,8 +4,8 @@
     32
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/air_collector",
-    "particle" : "industrialupgrade:models/air_collector"
+    "0" : "industrialupgrade:block/air_collector",
+    "particle" : "industrialupgrade:block/air_collector"
   },
   "elements" : [
     {

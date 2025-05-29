@@ -1,9 +1,9 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.IHasRecipe;
@@ -17,7 +17,9 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerGeneticReplicator;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiGeneticReplicator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -27,15 +29,17 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -63,8 +67,8 @@ public class TileEntityGeneticReplicator extends TileElectricMachine implements 
     protected short progress;
     protected double guiProgress;
 
-    public TileEntityGeneticReplicator() {
-        super(100, 1, 3);
+    public TileEntityGeneticReplicator(BlockPos pos, BlockState state) {
+        super(100, 1, 3,BlockBaseMachine3.genetic_replicator,pos,state);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = 100;
@@ -108,28 +112,28 @@ public class TileEntityGeneticReplicator extends TileElectricMachine implements 
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("genetic_replicator", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmutagen.getInstance(), 1000), new FluidStack(
-                FluidName.fluidbeedna.getInstance(),
+                new FluidStack(FluidName.fluidmutagen.getInstance().get(), 1000), new FluidStack(
+                FluidName.fluidbeedna.getInstance().get(),
                 1000
-        )), Collections.singletonList(new FluidStack(FluidName.fluidbeegenetic.getInstance(), 1000))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidbeegenetic.getInstance().get(), 1000))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("genetic_replicator", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmutagen.getInstance(), 1000), new FluidStack(
-                FluidName.fluidcropdna.getInstance(),
+                new FluidStack(FluidName.fluidmutagen.getInstance().get(), 1000), new FluidStack(
+                FluidName.fluidcropdna.getInstance().get(),
                 1000
-        )), Collections.singletonList(new FluidStack(FluidName.fluidcropgenetic.getInstance(), 1000))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidcropgenetic.getInstance().get(), 1000))));
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -175,7 +179,7 @@ public class TileEntityGeneticReplicator extends TileElectricMachine implements 
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             setOverclockRates();
             this.fluid_handler.load();
         }
@@ -303,16 +307,18 @@ public class TileEntityGeneticReplicator extends TileElectricMachine implements 
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
-    public ContainerGeneticReplicator getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGeneticReplicator getGuiContainer(Player entityPlayer) {
         return new ContainerGeneticReplicator(entityPlayer, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    public GuiGeneticReplicator getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiGeneticReplicator(getGuiContainer(entityPlayer));
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+
+        return new GuiGeneticReplicator((ContainerGeneticReplicator) menu);
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

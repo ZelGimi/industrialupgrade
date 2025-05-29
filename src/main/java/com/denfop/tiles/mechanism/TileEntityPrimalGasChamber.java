@@ -1,6 +1,5 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
@@ -15,8 +14,6 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockGasChamber;
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerFluidMixer;
-import com.denfop.gui.GuiFluidMixer;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -25,18 +22,21 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.render.tank.DataFluid;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -55,11 +55,11 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
     public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public DataFluid dataFluid;
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public DataFluid dataFluid1;
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public DataFluid dataFluid2;
     protected short progress;
     protected double guiProgress;
@@ -67,8 +67,8 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
     private int prevAmount1;
     private int prevAmount2;
 
-    public TileEntityPrimalGasChamber() {
-        super(0, 0, 0);
+    public TileEntityPrimalGasChamber(BlockPos pos, BlockState state) {
+        super(0, 0, 0, BlockGasChamber.primal_gas_chamber, pos, state);
         this.progress = 0;
         this.defaultOperationLength = this.operationLength = 600;
 
@@ -94,59 +94,59 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        return Collections.singletonList(new AxisAlignedBB(-0.05D, 0.0D, -0.05D, 1.05D, 2D, 1.05D));
+    public List<AABB> getAabbs(boolean forCollision) {
+        return Collections.singletonList(new AABB(-0.05D, 0.0D, -0.05D, 1.05D, 2D, 1.05D));
 
     }
 
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("gas_chamber", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidhydrogensulfide.getInstance(), 200),
+                new FluidStack(FluidName.fluidhydrogensulfide.getInstance().get(), 200),
                 new FluidStack(
-                        FluidName.fluidoxy.getInstance(),
+                        FluidName.fluidoxy.getInstance().get(),
                         300
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfuroxide.getInstance(), 200))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfuroxide.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_chamber", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidacetylene.getInstance(), 400), new FluidStack(
-                FluidName.fluidhyd.getInstance(),
+                new FluidStack(FluidName.fluidacetylene.getInstance().get(), 400), new FluidStack(
+                FluidName.fluidhyd.getInstance().get(),
                 1000
-        )), Collections.singletonList(new FluidStack(FluidName.fluidethylene.getInstance(), 400))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluidethylene.getInstance().get(), 400))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_chamber", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsulfuroxide.getInstance(), 200),
+                new FluidStack(FluidName.fluidsulfuroxide.getInstance().get(), 200),
                 new FluidStack(
-                        FluidName.fluidoxy.getInstance(),
+                        FluidName.fluidoxy.getInstance().get(),
                         100
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfurtrioxide.getInstance(), 200))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfurtrioxide.getInstance().get(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_chamber", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsulfurtrioxide.getInstance(), 500),
+                new FluidStack(FluidName.fluidsulfurtrioxide.getInstance().get(), 500),
                 new FluidStack(
-                        FluidName.fluidsteam.getInstance(),
+                        FluidName.fluidsteam.getInstance().get(),
                         500
                 )
-        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfuricacid.getInstance(), 500))));
+        ), Collections.singletonList(new FluidStack(FluidName.fluidsulfuricacid.getInstance().get(), 500))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_chamber", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidpropane.getInstance(), 400), new FluidStack(
-                FluidName.fluidbromine.getInstance(),
+                new FluidStack(FluidName.fluidpropane.getInstance().get(), 400), new FluidStack(
+                FluidName.fluidbromine.getInstance().get(),
                 800
-        )), Collections.singletonList(new FluidStack(FluidName.fluiddibromopropane.getInstance(), 400))));
+        )), Collections.singletonList(new FluidStack(FluidName.fluiddibromopropane.getInstance().get(), 400))));
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
 
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -186,24 +186,11 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!this.level.isClientSide()) {
             this.fluid_handler.load();
         }
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
 
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -211,15 +198,15 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
         try {
             FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank1 != null) {
-                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
             }
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
-                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
             }
             FluidTank fluidTank3 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank3 != null) {
-                this.fluidTank3.readFromNBT(fluidTank3.writeToNBT(new NBTTagCompound()));
+                this.fluidTank3.readFromNBT(fluidTank3.writeToNBT(new CompoundTag()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -233,7 +220,7 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank1 != null) {
-                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank1.readFromNBT(fluidTank1.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -251,7 +238,7 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
             try {
                 FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank2 != null) {
-                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank2.readFromNBT(fluidTank2.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -261,7 +248,7 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
             try {
                 FluidTank fluidTank3 = (FluidTank) DecoderHandler.decode(is);
                 if (fluidTank3 != null) {
-                    this.fluidTank3.readFromNBT(fluidTank3.writeToNBT(new NBTTagCompound()));
+                    this.fluidTank3.readFromNBT(fluidTank3.writeToNBT(new CompoundTag()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -270,23 +257,24 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
     }
 
     @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && player
+                .getItemInHand(hand)
+                .getCapability(
+                        ForgeCapabilities.FLUID_HANDLER_ITEM,
+                        null
+                ).orElse((IFluidHandlerItem) player
+                        .getItemInHand(hand).getItem().initCapabilities(player
+                                .getItemInHand(hand), player
+                                .getItemInHand(hand).getTag())) != null) {
+
 
             return ModUtils.interactWithFluidHandler(player, hand,
-                    fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    fluids.getCapability(ForgeCapabilities.FLUID_HANDLER, side)
             );
         } else {
-            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+
+            return super.onActivated(player, hand, side, vec3);
         }
     }
 
@@ -348,7 +336,7 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
                 initiate(2);
                 new PacketUpdateFieldTile(this, "guiProgress", this.guiProgress);
             }
-            if (this.world.getWorldTime() % 20 == 0) {
+            if (this.level.getGameTime() % 20 == 0) {
                 new PacketUpdateFieldTile(this, "guiProgress", this.guiProgress);
             }
         } else {
@@ -389,17 +377,9 @@ public class TileEntityPrimalGasChamber extends TileElectricMachine implements I
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.gasChamber;
+        return IUItem.gasChamber.getBlock();
     }
 
-    public ContainerFluidMixer getGuiContainer(EntityPlayer entityPlayer) {
-        return null;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public GuiFluidMixer getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return null;
-    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,

@@ -1,45 +1,38 @@
 package com.denfop.componets;
 
-import com.denfop.api.pressure.IPressureAcceptor;
-import com.denfop.api.pressure.IPressureEmitter;
-import com.denfop.api.pressure.IPressureSink;
-import com.denfop.api.pressure.IPressureSource;
-import com.denfop.api.pressure.IPressureTile;
+import com.denfop.api.pressure.*;
 import com.denfop.api.pressure.event.PressureTileLoadEvent;
 import com.denfop.api.pressure.event.PressureTileUnloadEvent;
+import com.denfop.api.sytem.InfoTile;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class PressureComponent extends AbstractComponent {
 
-    public final World world;
+    public final Level world;
     public final boolean fullEnergy;
     private final double defaultCapacity;
     public double capacity;
     public double storage;
     public int sinkTier;
     public int sourceTier;
-    public Set<EnumFacing> sinkDirections;
-    public Set<EnumFacing> sourceDirections;
+    public Set<Direction> sinkDirections;
+    public Set<Direction> sourceDirections;
     public List<InvSlot> managedSlots;
     public boolean multiSource;
     public int sourcePackets;
@@ -51,6 +44,7 @@ public class PressureComponent extends AbstractComponent {
     public boolean auto;
     public boolean allow;
     Random rand = new Random();
+    private long id;
 
     public PressureComponent(TileEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
@@ -59,8 +53,8 @@ public class PressureComponent extends AbstractComponent {
     public PressureComponent(
             TileEntityInventory parent,
             double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
+            Set<Direction> sinkDirections,
+            Set<Direction> sourceDirections,
             int tier
     ) {
         this(parent, capacity, sinkDirections, sourceDirections, tier, tier, false);
@@ -69,8 +63,8 @@ public class PressureComponent extends AbstractComponent {
     public PressureComponent(
             TileEntityInventory parent,
             double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
+            Set<Direction> sinkDirections,
+            Set<Direction> sourceDirections,
             int sinkTier,
             int sourceTier,
             boolean fullEnergy
@@ -84,7 +78,7 @@ public class PressureComponent extends AbstractComponent {
         this.sinkDirections = sinkDirections;
         this.sourceDirections = sourceDirections;
         this.fullEnergy = fullEnergy;
-        this.world = parent.getWorld();
+        this.world = parent.getLevel();
         this.defaultCapacity = capacity;
         this.need = true;
         this.allow = false;
@@ -111,7 +105,7 @@ public class PressureComponent extends AbstractComponent {
         return true;
     }
 
-    public void readFromNbt(NBTTagCompound nbt) {
+    public void readFromNbt(CompoundTag nbt) {
         this.storage = nbt.getDouble("storage");
         this.capacity = nbt.getDouble("capacity");
         this.need = nbt.getBoolean("need");
@@ -131,13 +125,13 @@ public class PressureComponent extends AbstractComponent {
         return packet;
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound ret = new NBTTagCompound();
-        ret.setDouble("storage", this.storage);
-        ret.setDouble("capacity", this.capacity);
-        ret.setBoolean("need", this.need);
-        ret.setBoolean("allow", this.allow);
-        ret.setBoolean("auto", this.auto);
+    public CompoundTag writeToNbt() {
+        CompoundTag ret = new CompoundTag();
+        ret.putDouble("storage", this.storage);
+        ret.putDouble("capacity", this.capacity);
+        ret.putBoolean("need", this.need);
+        ret.putBoolean("allow", this.allow);
+        ret.putBoolean("auto", this.auto);
         return ret;
     }
 
@@ -146,14 +140,14 @@ public class PressureComponent extends AbstractComponent {
         if (this.capacity < this.defaultCapacity) {
             this.capacity = this.defaultCapacity;
         }
-        if (!this.parent.getWorld().isRemote) {
+        if (!this.parent.getLevel().isClientSide) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
 
             } else {
 
 
                 this.createDelegate();
-                MinecraftForge.EVENT_BUS.post(new PressureTileLoadEvent(this.delegate, this.parent.getWorld()));
+                MinecraftForge.EVENT_BUS.post(new PressureTileLoadEvent(this.delegate, this.parent.getLevel()));
             }
 
             this.loaded = true;
@@ -166,7 +160,7 @@ public class PressureComponent extends AbstractComponent {
         return TypePurifierJob.ItemStack;
     }
 
-    public boolean canUsePurifier(EntityPlayer player) {
+    public boolean canUsePurifier(Player player) {
         return false;
     }
 
@@ -184,20 +178,13 @@ public class PressureComponent extends AbstractComponent {
             if (delegate == null) {
                 return;
             }
-            this.delegate.setWorld(this.parent.getWorld());
-            this.delegate.setPos(this.parent.getPos());
+            this.delegate.setLevel(this.parent.getLevel());
         }
     }
 
-    @Override
-    public List<ItemStack> getDrops() {
-        final List<ItemStack> ret = super.getDrops();
-
-        return ret;
-    }
 
     @Override
-    public boolean onBlockActivated(EntityPlayer player, EnumHand hand) {
+    public boolean onBlockActivated(Player player, InteractionHand hand) {
         super.onBlockActivated(player, hand);
         return false;
     }
@@ -206,19 +193,20 @@ public class PressureComponent extends AbstractComponent {
         if (this.delegate != null) {
 
 
-            MinecraftForge.EVENT_BUS.post(new PressureTileUnloadEvent(this.delegate, this.parent.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new PressureTileUnloadEvent(this.delegate, this.parent.getLevel()));
             this.delegate = null;
         }
 
         this.loaded = false;
     }
 
-    public void onContainerUpdate(EntityPlayerMP player) {
+    public void onContainerUpdate(ServerPlayer player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeBoolean(this.need);
         buffer.writeBoolean(this.allow);
+        buffer.writeBoolean(this.auto);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
@@ -228,6 +216,7 @@ public class PressureComponent extends AbstractComponent {
         this.storage = is.readDouble();
         this.need = is.readBoolean();
         this.allow = is.readBoolean();
+        this.auto = is.readBoolean();
     }
 
 
@@ -282,7 +271,7 @@ public class PressureComponent extends AbstractComponent {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.parent.getWorld().provider.getWorldTime() % 120 == 0) {
+        if (this.parent.getLevel().getGameTime() % 120 == 0) {
             this.useEnergy(1);
         }
     }
@@ -327,12 +316,12 @@ public class PressureComponent extends AbstractComponent {
     }
 
 
-    public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
+    public void setDirections(Set<Direction> sinkDirections, Set<Direction> sourceDirections) {
 
         if (this.delegate != null) {
 
 
-            assert !this.parent.getWorld().isRemote;
+            assert !this.parent.getLevel().isClientSide;
 
             MinecraftForge.EVENT_BUS.post(new PressureTileUnloadEvent(this.delegate, this.world));
         }
@@ -348,19 +337,57 @@ public class PressureComponent extends AbstractComponent {
         if (this.delegate != null) {
 
 
-            assert !this.parent.getWorld().isRemote;
+            assert !this.parent.getLevel().isClientSide;
 
             MinecraftForge.EVENT_BUS.post(new PressureTileLoadEvent(this.delegate, this.world));
         }
 
 
     }
+    public long getIdNetwork() {
+        return this.id;
+    }
 
-    public Set<EnumFacing> getSourceDirs() {
+    public void setId(final long id) {
+        this.id = id;
+    }
+    Map<Direction, IPressureTile> energyConductorMap = new HashMap<>();
+    List<InfoTile<IPressureTile>> validReceivers = new LinkedList<>();
+    public Map<Direction, IPressureTile> getConductors() {
+        return energyConductorMap;
+    }
+
+    public void RemoveTile( IPressureTile tile, final Direction facing1) {
+        if (!this.parent.getLevel().isClientSide) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<IPressureTile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<IPressureTile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public List<InfoTile<IPressureTile>> getValidReceivers() {
+        return validReceivers;
+    }
+
+    public void AddTile(IPressureTile tile, final Direction facing1) {
+        if (!this.parent.getLevel().isClientSide) {
+            this.energyConductorMap.put(facing1, tile);
+            validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+
+        }
+    }
+
+    public Set<Direction> getSourceDirs() {
         return Collections.unmodifiableSet(this.sourceDirections);
     }
 
-    public Set<EnumFacing> getSinkDirs() {
+    public Set<Direction> getSinkDirs() {
         return Collections.unmodifiableSet(this.sinkDirections);
     }
 
@@ -369,11 +396,51 @@ public class PressureComponent extends AbstractComponent {
     }
 
 
-    private abstract static class EnergyNetDelegate extends TileEntity implements IPressureTile {
+    private abstract class EnergyNetDelegate extends BlockEntity implements IPressureTile {
+
+        private int hashCodeSource;
 
         private EnergyNetDelegate() {
+            super(PressureComponent.this.parent.getType(), PressureComponent.this.parent.getBlockPos(), PressureComponent.this.parent.getBlockState());
+
+        }
+        public long getIdNetwork() {
+            return PressureComponent.this.getIdNetwork();
         }
 
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        public void setId(final long id) {
+            PressureComponent.this.setId(id);
+        }
+
+        @Override
+        public void AddTile(final IPressureTile tile, final Direction dir) {
+            PressureComponent.this.AddTile(tile, dir);
+        }
+
+        @Override
+        public void RemoveTile(final IPressureTile tile, final Direction dir) {
+            PressureComponent.this.RemoveTile(tile, dir);
+        }
+
+        @Override
+        public Map<Direction, IPressureTile> getTiles() {
+            return PressureComponent.this.energyConductorMap;
+        }
+
+        @Override
+        public List<InfoTile<IPressureTile>> getValidReceivers() {
+            return validReceivers;
+        }
     }
 
     private class EnergyNetDelegateSink extends PressureComponent.EnergyNetDelegate implements IPressureSink {
@@ -386,13 +453,13 @@ public class PressureComponent extends AbstractComponent {
             return PressureComponent.this.sinkTier;
         }
 
-        public boolean acceptsPressureFrom(IPressureEmitter emitter, EnumFacing dir) {
+        public boolean acceptsPressureFrom(IPressureEmitter emitter, Direction dir) {
             return PressureComponent.this.sinkDirections.contains(dir);
         }
 
         @Override
-        public @NotNull BlockPos getBlockPos() {
-            return PressureComponent.this.parent.getPos();
+        public @NotNull BlockPos getPos() {
+            return PressureComponent.this.parent.getBlockPos();
         }
 
         public double getDemandedPressure() {
@@ -404,12 +471,16 @@ public class PressureComponent extends AbstractComponent {
             this.setPressureStored(amount);
 
         }
+        List<IPressureSource> systemTicks = new LinkedList<>();
 
         @Override
         public boolean needTemperature() {
             return PressureComponent.this.need;
         }
-
+        @Override
+        public List<IPressureSource> getEnergyTickList() {
+            return systemTicks;
+        }
         public void setPressureStored(double amount) {
             if (PressureComponent.this.storage < amount) {
                 PressureComponent.this.storage = amount;
@@ -417,7 +488,7 @@ public class PressureComponent extends AbstractComponent {
         }
 
         @Override
-        public TileEntity getTile() {
+        public BlockEntity getTile() {
             return PressureComponent.this.parent;
         }
 
@@ -433,7 +504,7 @@ public class PressureComponent extends AbstractComponent {
             return PressureComponent.this.sourceTier;
         }
 
-        public boolean emitsPressureTo(IPressureAcceptor receiver, EnumFacing dir) {
+        public boolean emitsPressureTo(IPressureAcceptor receiver, Direction dir) {
             return PressureComponent.this.sourceDirections.contains(dir);
         }
 
@@ -443,8 +514,8 @@ public class PressureComponent extends AbstractComponent {
         }
 
         @Override
-        public @NotNull BlockPos getBlockPos() {
-            return PressureComponent.this.parent.getPos();
+        public @NotNull BlockPos getPos() {
+            return PressureComponent.this.parent.getBlockPos();
         }
 
         public void drawPressure(double amount) {
@@ -461,7 +532,7 @@ public class PressureComponent extends AbstractComponent {
         }
 
         @Override
-        public TileEntity getTile() {
+        public BlockEntity getTile() {
             return PressureComponent.this.parent;
         }
 

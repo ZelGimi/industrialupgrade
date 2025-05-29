@@ -1,13 +1,14 @@
 package com.denfop.tiles.reactors.graphite;
 
-import net.minecraft.item.ItemStack;
+
+import net.minecraft.world.item.ItemStack;
 
 public interface ICapacitorItem {
 
     double getPercent();
 
-    int getLevel();
+    int getLevelCapacitor();
 
-    void damageItem(ItemStack stack, int damage);
+    boolean damageItem(ItemStack stack, int damage);
 
 }

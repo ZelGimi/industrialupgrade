@@ -4,11 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntitySimpleCompressor extends TileEntityBaseCompressor {
 
-    public TileEntitySimpleCompressor() {
-        super(0);
+    public TileEntitySimpleCompressor(BlockPos pos, BlockState state) {
+        super(0,BlockGasReactor.gas_compressor,pos,state);
     }
 
     @Override
@@ -18,7 +20,7 @@ public class TileEntitySimpleCompressor extends TileEntityBaseCompressor {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.gas_reactor;
+        return IUItem.gas_reactor.getBlock(getTeBlock());
     }
 
 

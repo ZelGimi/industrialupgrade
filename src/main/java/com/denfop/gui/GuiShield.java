@@ -7,9 +7,10 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerShield;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiShield extends GuiIU<ContainerShield> {
+public class GuiShield<T extends ContainerShield> extends GuiIU<ContainerShield> {
 
     public GuiShield(ContainerShield guiContainer) {
         super(guiContainer);
@@ -36,19 +37,15 @@ public class GuiShield extends GuiIU<ContainerShield> {
         ));
     }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-    }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(Localization.translate("iu.shield" + (container.base.visibleShield ? ".visible" :
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
+     draw(poseStack, Localization.translate("iu.shield" + (container.base.visibleShield ? ".visible" :
                         ".invisible")),
                 10, 42, 0
         );
-        this.fontRenderer.drawString(Localization.translate("iu.laser" + (container.base.visibleLaser ? ".visible" :
+       draw(poseStack, Localization.translate("iu.laser" + (container.base.visibleLaser ? ".visible" :
                         ".invisible")),
                 93, 42, 0
         );

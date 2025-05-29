@@ -2,13 +2,16 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerMagnet;
 import com.denfop.container.SlotInfo;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiMagnet;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -17,22 +20,23 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.tiles.base.TileEntityAntiMagnet;
 import com.google.common.collect.Lists;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.entity.LevelEntityGetter;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,11 +50,11 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
     public int x = 11;
     public int y = 11;
     public int z = 11;
-    List<Chunk> list = Lists.newArrayList();
-    private AxisAlignedBB axisalignedbb;
+    List<ChunkAccess> list = Lists.newArrayList();
+    private AABB axisalignedbb;
 
-    public TileMagnet() {
-        super(100000, 14, 24);
+    public TileMagnet(BlockPos pos, BlockState state) {
+        super(100000, 14, 24, BlockBaseMachine1.magnet, pos, state);
         this.energyconsume = 1000;
         this.player = "";
         this.work = true;
@@ -109,22 +113,22 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine;
+        return IUItem.basemachine.getBlock(getTeBlock().getId());
     }
 
     @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
-        if (placer instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) placer;
-            this.player = player.getName();
+        if (placer instanceof Player) {
+            Player player = (Player) placer;
+            this.player = player.getName().getString();
 
 
-            for (int x = this.pos.getX() - this.x; x <= this.pos.getX() + this.x; x++) {
+          for (int x = this.pos.getX() - this.x; x <= this.pos.getX() + this.x; x++) {
                 for (int y = this.pos.getY() - this.y; y <= this.pos.getY() + this.y; y++) {
                     for (int z = this.pos.getZ() - this.z; z <= this.pos.getZ() + this.z; z++) {
                         final BlockPos pos1 = new BlockPos(x, y, z);
-                        final TileEntity tileEntity = getWorld().getTileEntity(pos1);
+                        final BlockEntity tileEntity = getWorld().getBlockEntity(pos1);
 
                         if (tileEntity != null && !(pos1.equals(this.pos))) {
                             if (tileEntity instanceof TileEntityAntiMagnet) {
@@ -142,22 +146,22 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.player = nbttagcompound.getString("player");
         this.work = nbttagcompound.getBoolean("work");
-        this.x = nbttagcompound.getInteger("x1");
-        this.y = nbttagcompound.getInteger("y1");
-        this.z = nbttagcompound.getInteger("z1");
+        this.x = nbttagcompound.getInt("x1");
+        this.y = nbttagcompound.getInt("y1");
+        this.z = nbttagcompound.getInt("z1");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setString("player", this.player);
-        nbttagcompound.setBoolean("work", this.work);
-        nbttagcompound.setInteger("x1", this.x);
-        nbttagcompound.setInteger("y1", this.y);
-        nbttagcompound.setInteger("z1", this.z);
+        nbttagcompound.putString("player", this.player);
+        nbttagcompound.putBoolean("work", this.work);
+        nbttagcompound.putInt("x1", this.x);
+        nbttagcompound.putInt("y1", this.y);
+        nbttagcompound.putInt("z1", this.z);
         return nbttagcompound;
     }
 
@@ -167,7 +171,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
             List<ItemStack> WhiteItemStacks = slot.getListWhite();
             if (!WhiteItemStacks.isEmpty()) {
                 for (ItemStack stack1 : WhiteItemStacks) {
-                    if (stack1.isItemEqual(stack)) {
+                    if (stack1.is(stack.getItem())) {
                         return true;
                     }
 
@@ -177,7 +181,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
             return true;
         } else {
             for (ItemStack stack1 : BlackItemStacks) {
-                if (stack1.isItemEqual(stack)) {
+                if (stack1.is(stack.getItem())) {
                     return false;
                 }
 
@@ -193,23 +197,23 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
     }
 
     public void updateData() {
-        this.axisalignedbb = new AxisAlignedBB(
-                this.pos.getX() - this.x,
-                this.pos.getY() - this.y,
-                this.pos.getZ() - this.z,
-                this.pos.getX() + this.x,
-                this.pos.getY() + this.y,
-                this.pos.getZ() + this.z
+        this.axisalignedbb = new AABB(
+                this.getBlockPos().getX() - this.x,
+                this.getBlockPos().getY() - this.y,
+                this.getBlockPos().getZ() - this.z,
+                this.getBlockPos().getX() + this.x,
+                this.getBlockPos().getY() + this.y,
+                this.getBlockPos().getZ() + this.z
         );
-        int j2 = MathHelper.floor((axisalignedbb.minX - 2) / 16.0D);
-        int k2 = MathHelper.ceil((axisalignedbb.maxX + 2) / 16.0D);
-        int l2 = MathHelper.floor((axisalignedbb.minZ - 2) / 16.0D);
-        int i3 = MathHelper.ceil((axisalignedbb.maxZ + 2) / 16.0D);
+        int j2 = (int) Math.floor((axisalignedbb.minX - 2) / 16.0D);
+        int k2 = (int) Math.ceil((axisalignedbb.maxX + 2) / 16.0D);
+        int l2 = (int) Math.floor((axisalignedbb.minZ - 2) / 16.0D);
+        int i3 = (int) Math.ceil((axisalignedbb.maxZ + 2) / 16.0D);
         list = Lists.newArrayList();
 
         for (int j3 = j2; j3 < k2; ++j3) {
             for (int k3 = l2; k3 < i3; ++k3) {
-                Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
+                ChunkAccess chunk = getLevel().getChunkAt(new BlockPos(j3, 0, k3));
                 if (!list.contains(chunk)) {
                     list.add(chunk);
                 }
@@ -218,11 +222,15 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         }
     }
 
-    public List<EntityItem> getEntitiesWithinAABB() {
-        List<EntityItem> list = Lists.newArrayList();
-        this.list.forEach(chunk -> chunk.getEntitiesOfTypeWithinAABB(EntityItem.class, axisalignedbb, list,
-                EntitySelectors.NOT_SPECTATING
-        ));
+    public List<ItemEntity> getEntitiesWithinAABB() {
+        List<ItemEntity> list = Lists.newArrayList();
+        LevelEntityGetter<Entity> list1 = ((ServerLevel) level).getEntities();
+
+        this.list.forEach(chunk -> list1.get(axisalignedbb.move(chunk.getPos().x * 16, 0, chunk.getPos().z), (p_151522_) -> {
+            if (p_151522_ instanceof ItemEntity) {
+                list.add((ItemEntity) p_151522_);
+            }
+        }));
 
         return list;
     }
@@ -234,16 +242,16 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
             return;
         }
         boolean ret = false;
-        if (this.world.provider.getWorldTime() % 4 == 0) {
+        if (this.getWorld().getGameTime() % 4 == 0) {
 
-            List<EntityItem> list = getEntitiesWithinAABB();
-            for (EntityItem item : list) {
+            List<ItemEntity> list = getEntitiesWithinAABB();
+            for (ItemEntity item : list) {
 
-                if (!item.isDead) {
+                if (!item.isRemoved()) {
                     if (this.energy.canUseEnergy(energyconsume)) {
                         ItemStack stack = item.getItem();
                         if (this.outputSlot.canAdd(stack) && canInsertOrExtract(item.getItem())) {
-                            item.setDead();
+                            item.setRemoved(Entity.RemovalReason.KILLED);
                             initiate(0);
                             setActive(true);
                             this.energy.useEnergy(energyconsume);
@@ -257,7 +265,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
 
             }
         }
-        if (getWorld().provider.getWorldTime() % 10 == 0 && !ret && getActive()) {
+        if (getWorld().getGameTime() % 10 == 0 && !ret && getActive()) {
             setActive(false);
             initiate(2);
         }
@@ -266,7 +274,7 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
     }
 
     @Override
-    public void updateTileServer(final EntityPlayer player, final double event) {
+    public void updateTileServer(final Player player, final double event) {
         if (event == 10) {
             super.updateTileServer(player, event);
         } else {
@@ -298,21 +306,19 @@ public class TileMagnet extends TileElectricMachine implements IUpdatableTileEve
         }
     }
 
-    public int getSizeInventory() {
-        return 24;
-    }
+
 
     public double getEnergy() {
         return this.energy.getEnergy();
     }
 
 
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiMagnet(new ContainerMagnet(entityPlayer, this));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
+        return new GuiMagnet((ContainerMagnet) isAdmin);
     }
 
-    public ContainerMagnet getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerMagnet getGuiContainer(Player entityPlayer) {
         return new ContainerMagnet(entityPlayer, this);
     }
 

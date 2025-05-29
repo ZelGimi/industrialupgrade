@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=photonic_comb_recycler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler"
+    },
+    "facing=south,type=photonic_comb_recycler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler",
+      "y": 180
+    },
+    "facing=west,type=photonic_comb_recycler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler",
+      "y": 270
+    },
+    "facing=east,type=photonic_comb_recycler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler",
+      "y": 90
+    },
+    "facing=down,type=photonic_comb_recycler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler",
+      "x": 90
+    },
+    "facing=up,type=photonic_comb_recycler": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler",
+      "x": 270
+    },
+    "facing=north,type=photonic_comb_recycler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active"
+    },
+    "facing=south,type=photonic_comb_recycler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_comb_recycler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_comb_recycler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_comb_recycler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_comb_recycler_invalid": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "x": 270
+    },
+    "facing=north,type=photonic_comb_recycler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active"
+    },
+    "facing=south,type=photonic_comb_recycler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "y": 180
+    },
+    "facing=west,type=photonic_comb_recycler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "y": 270
+    },
+    "facing=east,type=photonic_comb_recycler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "y": 90
+    },
+    "facing=down,type=photonic_comb_recycler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "x": 90
+    },
+    "facing=up,type=photonic_comb_recycler_active": {
+      "model": "industrialupgrade:block/photonicmachine/photonic_comb_recycler_active",
+      "x": 270
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/hops"
+    "layer0" : "industrialupgrade:item/hops"
   }
 }

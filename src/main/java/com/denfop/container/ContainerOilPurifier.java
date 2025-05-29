@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityOilPurifier;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerOilPurifier extends ContainerFullInv<TileEntityOilPurifier> {
 
-    public ContainerOilPurifier(EntityPlayer entityPlayer, TileEntityOilPurifier tileEntity1) {
+    public ContainerOilPurifier(Player entityPlayer, TileEntityOilPurifier tileEntity1) {
         super(entityPlayer, tileEntity1, 206);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.output1, 0, 45, 99));

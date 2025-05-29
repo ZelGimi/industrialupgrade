@@ -3,7 +3,7 @@ package com.denfop.api.upgrade;
 import com.denfop.Localization;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.utils.ModUtils;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
 
 public class UpgradeItemInform {
 
@@ -30,106 +30,106 @@ public class UpgradeItemInform {
     public String getName() {
         switch (this.upgrade) {
             case GENDAY:
-                return TextFormatting.YELLOW + Localization.translate("genday") + TextFormatting.GREEN + ModUtils.getString((0.05 * this.number) * 100) + "%";
+                return ChatFormatting.YELLOW + Localization.translate("genday") + ChatFormatting.GREEN + ModUtils.getString((0.05 * this.number) * 100) + "%";
             case GENNIGHT:
-                return TextFormatting.AQUA + Localization.translate("gennight") + TextFormatting.GREEN + ModUtils.getString(0.05 * this.number * 100) + "%";
+                return ChatFormatting.AQUA + Localization.translate("gennight") + ChatFormatting.GREEN + ModUtils.getString(0.05 * this.number * 100) + "%";
             case PROTECTION:
-                return TextFormatting.GOLD + Localization.translate("protect") + TextFormatting.GREEN + ModUtils.getString(0.2 * this.number * 100) + "%";
+                return ChatFormatting.GOLD + Localization.translate("protect") + ChatFormatting.GREEN + ModUtils.getString(0.2 * this.number * 100) + "%";
             case EFFICIENCY:
-                return TextFormatting.LIGHT_PURPLE + Localization.translate("speed") + TextFormatting.GREEN + ModUtils.getString(
+                return ChatFormatting.LIGHT_PURPLE + Localization.translate("speed") + ChatFormatting.GREEN + ModUtils.getString(
                         0.2 * this.number * 100) + "%";
             case BOWENERGY:
-                return TextFormatting.RED + Localization.translate("bowenergy") + TextFormatting.GREEN + ModUtils.getString(0.1 *
+                return ChatFormatting.RED + Localization.translate("bowenergy") + ChatFormatting.GREEN + ModUtils.getString(0.1 *
                         this.number * 100) + "%";
             case SABERENERGY:
-                return TextFormatting.RED + Localization.translate("saberenergy") + TextFormatting.GREEN + ModUtils.getString(0.15 * this.number * 100) + "%";
+                return ChatFormatting.RED + Localization.translate("saberenergy") + ChatFormatting.GREEN + ModUtils.getString(0.15 * this.number * 100) + "%";
             case DIG_DEPTH:
-                return TextFormatting.AQUA + Localization.translate("depth") + TextFormatting.GREEN + this.number;
+                return ChatFormatting.AQUA + Localization.translate("depth") + ChatFormatting.GREEN + this.number;
             case FIRE_PROTECTION:
-                return TextFormatting.GOLD + Localization.translate("fireResistance");
+                return ChatFormatting.GOLD + Localization.translate("fireResistance");
             case WATER:
-                return TextFormatting.GOLD + Localization.translate("waterBreathing");
+                return ChatFormatting.GOLD + Localization.translate("waterBreathing");
             case SPEED:
-                return TextFormatting.GOLD + Localization.translate("moveSpeed");
+                return ChatFormatting.GOLD + Localization.translate("moveSpeed");
             case JUMP:
-                return TextFormatting.GOLD + Localization.translate("jump");
+                return ChatFormatting.GOLD + Localization.translate("jump");
             case BOWDAMAGE:
-                return TextFormatting.DARK_GREEN + Localization.translate("bowdamage") + TextFormatting.GREEN + ModUtils.getString(
+                return ChatFormatting.DARK_GREEN + Localization.translate("bowdamage") + ChatFormatting.GREEN + ModUtils.getString(
                         (0.25 * this.number) * 100) + "%";
             case SABER_DAMAGE:
-                return TextFormatting.DARK_AQUA + Localization.translate("saberdamage") + TextFormatting.GREEN + ModUtils.getString(
+                return ChatFormatting.DARK_AQUA + Localization.translate("saberdamage") + ChatFormatting.GREEN + ModUtils.getString(
                         0.15 * this.number * 100) + "%";
             case AOE_DIG:
-                return TextFormatting.BLUE + Localization.translate("aoe") + TextFormatting.GREEN + this.number;
+                return ChatFormatting.BLUE + Localization.translate("aoe") + ChatFormatting.GREEN + this.number;
             case FLYSPEED:
-                return TextFormatting.DARK_PURPLE + Localization.translate("speedfly") + TextFormatting.GREEN + ModUtils.getString(
+                return ChatFormatting.DARK_PURPLE + Localization.translate("speedfly") + ChatFormatting.GREEN + ModUtils.getString(
                         ((0.1 * this.number) / 0.2) * 100) + "%";
             case STORAGE:
-                return TextFormatting.BLUE + Localization.translate("storage") + TextFormatting.GREEN + ModUtils.getString(0.05 * this.number
+                return ChatFormatting.BLUE + Localization.translate("storage") + ChatFormatting.GREEN + ModUtils.getString(0.05 * this.number
                         * 100) + "%";
             case ENERGY:
-                return TextFormatting.RED + Localization.translate("energy_less_use") + TextFormatting.GREEN + ModUtils.getString(
+                return ChatFormatting.RED + Localization.translate("energy_less_use") + ChatFormatting.GREEN + ModUtils.getString(
                         0.25 * this.number * 100) + "%";
             case VAMPIRES:
-                return TextFormatting.RED + Localization.translate("vampires") + TextFormatting.GREEN + ModUtils.getString(this.number);
+                return ChatFormatting.RED + Localization.translate("vampires") + ChatFormatting.GREEN + ModUtils.getString(this.number);
             case RESISTANCE:
-                return TextFormatting.GOLD + Localization.translate("resistance") + TextFormatting.GREEN + ModUtils.getString(this.number);
+                return ChatFormatting.GOLD + Localization.translate("resistance") + ChatFormatting.GREEN + ModUtils.getString(this.number);
             case POISON:
-                return TextFormatting.GREEN + Localization.translate("poison");
+                return ChatFormatting.GREEN + Localization.translate("poison");
             case WITHER:
-                return TextFormatting.BLUE + Localization.translate("wither");
+                return ChatFormatting.BLUE + Localization.translate("wither");
             case SILK_TOUCH:
-                return TextFormatting.WHITE + Localization.translate("silk");
+                return ChatFormatting.WHITE + Localization.translate("silk");
             case INVISIBILITY:
-                return TextFormatting.WHITE + Localization.translate("invisibility");
+                return ChatFormatting.WHITE + Localization.translate("invisibility");
             case LOOT:
-                return TextFormatting.WHITE + Localization.translate("loot") + TextFormatting.GREEN + ModUtils.getString(this.number);
+                return ChatFormatting.WHITE + Localization.translate("loot") + ChatFormatting.GREEN + ModUtils.getString(this.number);
             case FIRE:
-                return TextFormatting.WHITE + Localization.translate("fire") + TextFormatting.GREEN + ModUtils.getString(this.number);
+                return ChatFormatting.WHITE + Localization.translate("fire") + ChatFormatting.GREEN + ModUtils.getString(this.number);
             case REPAIRED:
-                return TextFormatting.WHITE + Localization.translate("repaired") + TextFormatting.GREEN + 0.001 * this.number + "%";
+                return ChatFormatting.WHITE + Localization.translate("repaired") + ChatFormatting.GREEN + 0.001 * this.number + "%";
             case LUCKY:
-                return TextFormatting.BLUE + Localization.translate("lucky") + TextFormatting.GREEN + this.number;
+                return ChatFormatting.BLUE + Localization.translate("lucky") + ChatFormatting.GREEN + this.number;
             case EFFICIENT:
-                return TextFormatting.BLUE + Localization.translate("efficient") + TextFormatting.GREEN + (1 + (this.number - 1) * 2);
+                return ChatFormatting.BLUE + Localization.translate("efficient") + ChatFormatting.GREEN + (1 + (this.number - 1) * 2);
             case SMELTER:
-                return TextFormatting.GRAY + Localization.translate("iu.smelter");
+                return ChatFormatting.GRAY + Localization.translate("iu.smelter");
             case NIGTHVISION:
-                return TextFormatting.BLUE + Localization.translate("iu.nightvision");
+                return ChatFormatting.BLUE + Localization.translate("iu.nightvision");
             case THORNS:
-                return TextFormatting.GRAY + Localization.translate("iu.thorns") + TextFormatting.GREEN + this.number;
+                return ChatFormatting.GRAY + Localization.translate("iu.thorns") + ChatFormatting.GREEN + this.number;
             case EXPERIENCE:
-                return TextFormatting.GREEN + Localization.translate("iu.experience") + TextFormatting.GOLD + this.number * 50 + "%";
+                return ChatFormatting.GREEN + Localization.translate("iu.experience") + ChatFormatting.GOLD + this.number * 50 + "%";
             case BLINDNESS:
-                return TextFormatting.GRAY + Localization.translate("iu.blindness");
+                return ChatFormatting.GRAY + Localization.translate("iu.blindness");
             case PROTECTION_ARROW:
-                return TextFormatting.RED + Localization.translate("iu.protection_arrow") + TextFormatting.DARK_PURPLE + (1 + (this.number - 1) * 2);
+                return ChatFormatting.RED + Localization.translate("iu.protection_arrow") + ChatFormatting.DARK_PURPLE + (1 + (this.number - 1) * 2);
             case FALLING_DAMAGE:
-                return TextFormatting.WHITE + Localization.translate("iu.falling_damage") + TextFormatting.DARK_GREEN + this.number * 25 + "%";
+                return ChatFormatting.WHITE + Localization.translate("iu.falling_damage") + ChatFormatting.DARK_GREEN + this.number * 25 + "%";
             case MACERATOR:
-                return TextFormatting.DARK_PURPLE + Localization.translate("iu.macerator");
+                return ChatFormatting.DARK_PURPLE + Localization.translate("iu.macerator");
             case COMB_MACERATOR:
-                return TextFormatting.DARK_PURPLE + Localization.translate("iu.comb_macerator");
+                return ChatFormatting.DARK_PURPLE + Localization.translate("iu.comb_macerator");
             case RANDOM:
-                return TextFormatting.GREEN + Localization.translate("iu.random") + 0.001 * this.number + "%";
+                return ChatFormatting.GREEN + Localization.translate("iu.random") + 0.001 * this.number + "%";
             case HUNGRY:
-                return TextFormatting.DARK_RED + Localization.translate("iu.hungry");
+                return ChatFormatting.DARK_RED + Localization.translate("iu.hungry");
             case GENERATOR:
-                return TextFormatting.DARK_AQUA + Localization.translate("iu.generator");
+                return ChatFormatting.DARK_AQUA + Localization.translate("iu.generator");
             case FLY:
-                return TextFormatting.DARK_PURPLE + Localization.translate("iu.fly_mode");
+                return ChatFormatting.DARK_PURPLE + Localization.translate("iu.fly_mode");
             case SIZE:
-                return TextFormatting.AQUA + Localization.translate("iu.size_mode") + this.number;
+                return ChatFormatting.AQUA + Localization.translate("iu.size_mode") + this.number;
             case BAGS:
-                return TextFormatting.GOLD + Localization.translate("iu.bags_mode");
+                return ChatFormatting.GOLD + Localization.translate("iu.bags_mode");
             case LAPPACK_ENERGY:
-                return TextFormatting.LIGHT_PURPLE + Localization.translate("iu.lappack_mode") + 0.005 * this.number + "%";
+                return ChatFormatting.LIGHT_PURPLE + Localization.translate("iu.lappack_mode") + 0.005 * this.number + "%";
             case PURIFIER:
-                return TextFormatting.GRAY + Localization.translate("iu.purifier_mode");
+                return ChatFormatting.GRAY + Localization.translate("iu.purifier_mode");
             case LATEX:
-                return TextFormatting.GOLD + Localization.translate("iu.latex_mode");
+                return ChatFormatting.GOLD + Localization.translate("iu.latex_mode");
             case WRENCH:
-                return TextFormatting.YELLOW + Localization.translate("iu.wrench_mode");
+                return ChatFormatting.YELLOW + Localization.translate("iu.wrench_mode");
 
         }
         return "";

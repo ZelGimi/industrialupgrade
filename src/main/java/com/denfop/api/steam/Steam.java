@@ -1,11 +1,13 @@
 package com.denfop.api.steam;
 
+
 import com.denfop.tiles.mechanism.steamturbine.IRod;
 import com.denfop.world.WorldBaseGen;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
@@ -30,14 +32,12 @@ public class Steam {
             boolean update = false;
             FluidTank steamTank = this.steam.getSteamFluid();
             FluidTank waterTank = this.steam.getWaterFluid();
-            if (steamTank.getFluidAmount() > 0 && steamTank.getFluidAmount() - (this.steam.getPressure() * (this.steam
-                    .getSteamPhase()
-                    .ordinal() + 1)) >= 0) {
+            if (steamTank.getFluidAmount() > 0 && steamTank.getFluidAmount() - (this.steam.getPressure() * (this.steam.getSteamPhase().ordinal() + 1)) >= 0) {
                 int canAdd = waterTank.getCapacity() - waterTank.getFluidAmount();
                 canAdd = Math.min(canAdd, (this.steam.getPressure() * (this.steam.getSteamPhase().ordinal() + 1)));
-                steamTank.drain((this.steam.getPressure() * (this.steam.getSteamPhase().ordinal() + 1)), true);
+                steamTank.drain((this.steam.getPressure() * (this.steam.getSteamPhase().ordinal() + 1)), IFluidHandler.FluidAction.EXECUTE);
                 if (canAdd > 0) {
-                    waterTank.fill(new FluidStack(FluidRegistry.WATER, canAdd), true);
+                    waterTank.fill(new FluidStack(Fluids.WATER, canAdd), IFluidHandler.FluidAction.EXECUTE);
                 }
                 if (random.nextInt(5) <= 1 && steam.getHeat() < steam.getMaxHeat() * 0.5 && this.steam
                         .getSteamPhase()
@@ -52,11 +52,11 @@ public class Steam {
                 }
                 this.steam.addHeat(this.steam.getPressure() * (this.steam.getSteamPhase().ordinal() + 1));
                 for (ICoolant coolant : steam.getCoolant()) {
-                    if (coolant.getCoolant().getFluid() != null && coolant
+                    if (!coolant.getCoolant().getFluid().isEmpty() && coolant
                             .getCoolant()
-                            .getFluid().amount >= coolant.getPressure()) {
+                            .getFluid().getAmount() >= coolant.getPressure()) {
                         this.steam.removeHeat(coolant.getPower());
-                        coolant.getCoolant().drain(coolant.getPressure(), true);
+                        coolant.getCoolant().drain(coolant.getPressure(), IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
             } else {
@@ -64,7 +64,7 @@ public class Steam {
             }
             for (IRod rod : this.steam.getInfo()) {
                 int i = 0;
-                for (ItemStack stack : rod.getSlot().getContents()) {
+                for (ItemStack stack : rod.getSlot()) {
                     if (stack.isEmpty()) {
                         continue;
                     }

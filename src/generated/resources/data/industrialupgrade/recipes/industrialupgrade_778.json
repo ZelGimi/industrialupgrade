@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "tag": "forge:plates/duralumin"
+      }
+    ],
+    "B": [
+      {
+        "tag": "forge:plates/silver"
+      }
+    ]
+  },
+  "pattern": [
+    " A ",
+    " B ",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_189_element"
+  },
+  "show_notification": true
+}

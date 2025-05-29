@@ -1,6 +1,6 @@
 package com.denfop.api.heat;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,10 +9,10 @@ public class Path {
 
     public final List<IHeatConductor> conductors;
     public final IHeatSink target;
-    public final EnumFacing targetDirection;
+    public final Direction targetDirection;
     public double min = Double.MAX_VALUE;
 
-    public Path(IHeatSink sink, EnumFacing facing) {
+    public Path(IHeatSink sink, Direction facing) {
         this.target = sink;
         this.conductors = new LinkedList<>();
         this.targetDirection = facing;

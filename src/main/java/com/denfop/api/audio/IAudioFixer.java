@@ -1,7 +1,7 @@
 package com.denfop.api.audio;
 
 
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
 
 public interface IAudioFixer {
 

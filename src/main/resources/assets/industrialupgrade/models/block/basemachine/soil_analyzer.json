@@ -4,8 +4,8 @@
     128
   ],
   "textures" : {
-    "0" : "industrialupgrade:models/soil_analyzer",
-    "particle" : "industrialupgrade:models/soil_analyzer"
+    "0" : "industrialupgrade:block/soil_analyzer",
+    "particle" : "industrialupgrade:block/soil_analyzer"
   },
   "elements" : [
     {

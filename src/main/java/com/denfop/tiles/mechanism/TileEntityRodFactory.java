@@ -1,41 +1,35 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRodFactory;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRodFactory;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -54,8 +48,8 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
     public int type;
     public MachineRecipe output;
 
-    public TileEntityRodFactory() {
-        super(2000, 1, 1);
+    public TileEntityRodFactory(BlockPos pos, BlockState state) {
+        super(2000, 1, 1,BlockBaseMachine3.reactor_rod_factory,pos,state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -87,7 +81,7 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     @Override
@@ -97,61 +91,61 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
 
     @Override
     public void init() {
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 5), 1, IUItem.reactormendeleviumSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 6), 1, IUItem.reactorberkeliumSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 7), 1, IUItem.reactoreinsteiniumSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 8), 1, IUItem.reactoruran233Simple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 5), 1, IUItem.reactormendeleviumSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 0), 1, IUItem.reactoramericiumSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 4), 1, IUItem.reactortoriySimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 9), 1, IUItem.reactorlawrenciumSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 10), 1, IUItem.reactornobeliumSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 11), 1, IUItem.reactorfermiumSimple);
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(5), 1), 1, IUItem.reactormendeleviumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(6), 1), 1, IUItem.reactorberkeliumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(7), 1), 1, IUItem.reactoreinsteiniumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(8), 1), 1, IUItem.reactoruran233Simple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(5), 1), 1, IUItem.reactormendeleviumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(0), 1), 1, IUItem.reactoramericiumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(4), 1), 1, IUItem.reactortoriySimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(9), 1), 1, IUItem.reactorlawrenciumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(10), 1), 1, IUItem.reactornobeliumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(11), 1), 1, IUItem.reactorfermiumSimple.getItemStack());
 
-        addSimpleRecipe(new ItemStack(IUItem.proton, 1), 0, IUItem.reactorprotonSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 3), 0, IUItem.reactorcaliforniaSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 2), 0, IUItem.reactorcuriumSimple);
-        addSimpleRecipe(new ItemStack(IUItem.radiationresources, 1, 1), 0, IUItem.reactorneptuniumSimple);
-        addSimpleRecipe(IUItem.UranFuel, 0, IUItem.uranium_fuel_rod);
-        addSimpleRecipe(IUItem.mox, 0, IUItem.mox_fuel_rod);
+        addSimpleRecipe(new ItemStack(IUItem.proton.getItem(), 1), 0, IUItem.reactorprotonSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(3), 1), 0, IUItem.reactorcaliforniaSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(2), 1), 0, IUItem.reactorcuriumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.radiationresources.getStack(1), 1), 0, IUItem.reactorneptuniumSimple.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.UranFuel), 0, IUItem.uranium_fuel_rod.getItemStack());
+        addSimpleRecipe(new ItemStack(IUItem.mox), 0, IUItem.mox_fuel_rod.getItemStack());
 
-        addDualRecipe(IUItem.reactormendeleviumSimple, 1, IUItem.reactormendeleviumDual);
-        addDualRecipe(IUItem.reactorberkeliumSimple, 1, IUItem.reactorberkeliumDual);
-        addDualRecipe(IUItem.reactoreinsteiniumSimple, 1, IUItem.reactoreinsteiniumDual);
-        addDualRecipe(IUItem.reactoruran233Simple, 1, IUItem.reactoruran233Dual);
-        addDualRecipe(IUItem.reactormendeleviumSimple, 1, IUItem.reactormendeleviumDual);
-        addDualRecipe(IUItem.reactorlawrenciumSimple, 1, IUItem.reactorlawrenciumDual);
-        addDualRecipe(IUItem.reactornobeliumSimple, 1, IUItem.reactornobeliumDual);
-        addDualRecipe(IUItem.reactorfermiumSimple, 1, IUItem.reactorfermiumDual);
-
-
-        addDualRecipe(IUItem.reactorprotonSimple, 0, IUItem.reactorprotonDual);
-        addDualRecipe(IUItem.reactorcaliforniaSimple, 0, IUItem.reactorcaliforniaDual);
-        addDualRecipe(IUItem.reactorcuriumSimple, 0, IUItem.reactorcuriumDual);
-        addDualRecipe(IUItem.reactorneptuniumSimple, 0, IUItem.reactorneptuniumDual);
-        addDualRecipe(IUItem.uranium_fuel_rod, 0, IUItem.dual_uranium_fuel_rod);
-        addDualRecipe(IUItem.mox_fuel_rod, 0, IUItem.dual_mox_fuel_rod);
-        addDualRecipe(IUItem.reactoramericiumSimple, 0, IUItem.reactoramericiumDual);
-        addDualRecipe(IUItem.reactortoriySimple, 0, IUItem.reactortoriyDual);
-
-        addQuadRecipe(IUItem.reactormendeleviumSimple, 1, IUItem.reactormendeleviumQuad);
-        addQuadRecipe(IUItem.reactorberkeliumSimple, 1, IUItem.reactorberkeliumQuad);
-        addQuadRecipe(IUItem.reactoreinsteiniumSimple, 1, IUItem.reactoreinsteiniumQuad);
-        addQuadRecipe(IUItem.reactoruran233Simple, 1, IUItem.reactoruran233Quad);
-        addQuadRecipe(IUItem.reactormendeleviumSimple, 1, IUItem.reactormendeleviumQuad);
-        addQuadRecipe(IUItem.reactorlawrenciumSimple, 1, IUItem.reactorlawrenciumQuad);
-        addQuadRecipe(IUItem.reactornobeliumDual, 1, IUItem.reactornobeliumQuad);
-        addQuadRecipe(IUItem.reactorfermiumDual, 1, IUItem.reactorfermiumQuad);
+        addDualRecipe(IUItem.reactormendeleviumSimple.getItemStack(), 1, IUItem.reactormendeleviumDual.getItemStack());
+        addDualRecipe(IUItem.reactorberkeliumSimple.getItemStack(), 1, IUItem.reactorberkeliumDual.getItemStack());
+        addDualRecipe(IUItem.reactoreinsteiniumSimple.getItemStack(), 1, IUItem.reactoreinsteiniumDual.getItemStack());
+        addDualRecipe(IUItem.reactoruran233Simple.getItemStack(), 1, IUItem.reactoruran233Dual.getItemStack());
+        addDualRecipe(IUItem.reactormendeleviumSimple.getItemStack(), 1, IUItem.reactormendeleviumDual.getItemStack());
+        addDualRecipe(IUItem.reactorlawrenciumSimple.getItemStack(), 1, IUItem.reactorlawrenciumDual.getItemStack());
+        addDualRecipe(IUItem.reactornobeliumSimple.getItemStack(), 1, IUItem.reactornobeliumDual.getItemStack());
+        addDualRecipe(IUItem.reactorfermiumSimple.getItemStack(), 1, IUItem.reactorfermiumDual.getItemStack());
 
 
-        addQuadRecipe(IUItem.reactorprotonSimple, 0, IUItem.reactorprotonQuad);
-        addQuadRecipe(IUItem.reactorcaliforniaSimple, 0, IUItem.reactorcaliforniaQuad);
-        addQuadRecipe(IUItem.reactorcuriumSimple, 0, IUItem.reactorcuriumQuad);
-        addQuadRecipe(IUItem.reactorneptuniumSimple, 0, IUItem.reactorneptuniumQuad);
-        addQuadRecipe(IUItem.uranium_fuel_rod, 0, IUItem.quad_uranium_fuel_rod);
-        addQuadRecipe(IUItem.mox_fuel_rod, 0, IUItem.quad_mox_fuel_rod);
-        addQuadRecipe(IUItem.reactoramericiumSimple, 0, IUItem.reactoramericiumQuad);
-        addQuadRecipe(IUItem.reactortoriySimple, 0, IUItem.reactortoriyQuad);
+        addDualRecipe(IUItem.reactorprotonSimple.getItemStack(), 0, IUItem.reactorprotonDual.getItemStack());
+        addDualRecipe(IUItem.reactorcaliforniaSimple.getItemStack(), 0, IUItem.reactorcaliforniaDual.getItemStack());
+        addDualRecipe(IUItem.reactorcuriumSimple.getItemStack(), 0, IUItem.reactorcuriumDual.getItemStack());
+        addDualRecipe(IUItem.reactorneptuniumSimple.getItemStack(), 0, IUItem.reactorneptuniumDual.getItemStack());
+        addDualRecipe(IUItem.uranium_fuel_rod.getItemStack(), 0, IUItem.dual_uranium_fuel_rod.getItemStack());
+        addDualRecipe(IUItem.mox_fuel_rod.getItemStack(), 0, IUItem.dual_mox_fuel_rod.getItemStack());
+        addDualRecipe(IUItem.reactoramericiumSimple.getItemStack(), 0, IUItem.reactoramericiumDual.getItemStack());
+        addDualRecipe(IUItem.reactortoriySimple.getItemStack(), 0, IUItem.reactortoriyDual.getItemStack());
+
+        addQuadRecipe(IUItem.reactormendeleviumSimple.getItemStack(), 1, IUItem.reactormendeleviumQuad.getItemStack());
+        addQuadRecipe(IUItem.reactorberkeliumSimple.getItemStack(), 1, IUItem.reactorberkeliumQuad.getItemStack());
+        addQuadRecipe(IUItem.reactoreinsteiniumSimple.getItemStack(), 1, IUItem.reactoreinsteiniumQuad.getItemStack());
+        addQuadRecipe(IUItem.reactoruran233Simple.getItemStack(), 1, IUItem.reactoruran233Quad.getItemStack());
+        addQuadRecipe(IUItem.reactormendeleviumSimple.getItemStack(), 1, IUItem.reactormendeleviumQuad.getItemStack());
+        addQuadRecipe(IUItem.reactorlawrenciumSimple.getItemStack(), 1, IUItem.reactorlawrenciumQuad.getItemStack());
+        addQuadRecipe(IUItem.reactornobeliumDual.getItemStack(), 1, IUItem.reactornobeliumQuad.getItemStack());
+        addQuadRecipe(IUItem.reactorfermiumDual.getItemStack(), 1, IUItem.reactorfermiumQuad.getItemStack());
+
+
+        addQuadRecipe(IUItem.reactorprotonSimple.getItemStack(), 0, IUItem.reactorprotonQuad.getItemStack());
+        addQuadRecipe(IUItem.reactorcaliforniaSimple.getItemStack(), 0, IUItem.reactorcaliforniaQuad.getItemStack());
+        addQuadRecipe(IUItem.reactorcuriumSimple.getItemStack(), 0, IUItem.reactorcuriumQuad.getItemStack());
+        addQuadRecipe(IUItem.reactorneptuniumSimple.getItemStack(), 0, IUItem.reactorneptuniumQuad.getItemStack());
+        addQuadRecipe(IUItem.uranium_fuel_rod.getItemStack(), 0, IUItem.quad_uranium_fuel_rod.getItemStack());
+        addQuadRecipe(IUItem.mox_fuel_rod.getItemStack(), 0, IUItem.quad_mox_fuel_rod.getItemStack());
+        addQuadRecipe(IUItem.reactoramericiumSimple.getItemStack(), 0, IUItem.reactoramericiumQuad.getItemStack());
+        addQuadRecipe(IUItem.reactortoriySimple.getItemStack(), 0, IUItem.reactortoriyQuad.getItemStack());
     }
 
     public void addQuadRecipe(ItemStack stack, int i, ItemStack output) {
@@ -160,13 +154,13 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
         ItemStack rightRod;
         final IInputHandler input = Recipes.inputFactory;
         if (i == 0) {
-            topRod = new ItemStack(IUItem.crafting_elements, 1, 181);
-            leftRod = new ItemStack(IUItem.crafting_elements, 1, 183);
-            rightRod = new ItemStack(IUItem.crafting_elements, 1, 182);
+            topRod = new ItemStack(IUItem.crafting_elements.getStack(181), 1);
+            leftRod = new ItemStack(IUItem.crafting_elements.getStack(183), 1);
+            rightRod = new ItemStack(IUItem.crafting_elements.getStack(182), 1);
         } else {
-            topRod = new ItemStack(IUItem.crafting_elements, 1, 191);
-            leftRod = new ItemStack(IUItem.crafting_elements, 1, 190);
-            rightRod = new ItemStack(IUItem.crafting_elements, 1, 189);
+            topRod = new ItemStack(IUItem.crafting_elements.getStack(191), 1);
+            leftRod = new ItemStack(IUItem.crafting_elements.getStack(190), 1);
+            rightRod = new ItemStack(IUItem.crafting_elements.getStack(189), 1);
         }
         Recipes.recipes.addRecipe(
                 "reactor_quad_rod",
@@ -184,9 +178,9 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
         ItemStack horizontalRod;
         final IInputHandler input = Recipes.inputFactory;
         if (i == 0) {
-            horizontalRod = new ItemStack(IUItem.crafting_elements, 1, 180);
+            horizontalRod = new ItemStack(IUItem.crafting_elements.getStack(180), 1);
         } else {
-            horizontalRod = new ItemStack(IUItem.crafting_elements, 1, 188);
+            horizontalRod = new ItemStack(IUItem.crafting_elements.getStack(188), 1);
         }
         Recipes.recipes.addRecipe(
                 "reactor_dual_rod",
@@ -205,15 +199,15 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
         ItemStack rightRod;
         final IInputHandler input = Recipes.inputFactory;
         if (i == 0) {
-            topRod = new ItemStack(IUItem.crafting_elements, 1, 185);
-            bottomRod = new ItemStack(IUItem.crafting_elements, 1, 184);
-            leftRod = new ItemStack(IUItem.crafting_elements, 1, 186);
-            rightRod = new ItemStack(IUItem.crafting_elements, 1, 187);
+            topRod = new ItemStack(IUItem.crafting_elements.getStack(185), 1);
+            bottomRod = new ItemStack(IUItem.crafting_elements.getStack(184), 1);
+            leftRod = new ItemStack(IUItem.crafting_elements.getStack(186), 1);
+            rightRod = new ItemStack(IUItem.crafting_elements.getStack(187), 1);
         } else {
-            topRod = new ItemStack(IUItem.crafting_elements, 1, 194);
-            bottomRod = new ItemStack(IUItem.crafting_elements, 1, 195);
-            leftRod = new ItemStack(IUItem.crafting_elements, 1, 193);
-            rightRod = new ItemStack(IUItem.crafting_elements, 1, 192);
+            topRod = new ItemStack(IUItem.crafting_elements.getStack(194), 1);
+            bottomRod = new ItemStack(IUItem.crafting_elements.getStack(195), 1);
+            leftRod = new ItemStack(IUItem.crafting_elements.getStack(193), 1);
+            rightRod = new ItemStack(IUItem.crafting_elements.getStack(192), 1);
         }
         Recipes.recipes.addRecipe(
                 "reactor_simple_rod",
@@ -239,7 +233,7 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
 
             switch (type) {
                 case 1:
@@ -262,19 +256,19 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
     }
 
     @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        final NBTTagCompound nbt = super.writeToNBT(nbttagcompound);
-        nbt.setInteger("type", this.type);
+    public CompoundTag writeToNBT(final CompoundTag nbttagcompound) {
+        final CompoundTag nbt = super.writeToNBT(nbttagcompound);
+        nbt.putInt("type", this.type);
         return nbt;
     }
 
     @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+    public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.type = nbttagcompound.getInteger("type");
+        this.type = nbttagcompound.getInt("type");
     }
 
-    public void updateTileServer(EntityPlayer var1, double var2) {
+    public void updateTileServer(Player var1, double var2) {
         if (var2 == 0) {
             this.type--;
             if (type < 0) {
@@ -299,7 +293,7 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
         }
         inputSlotA.load();
         this.getOutput();
-        onActivated(var1, var1.getActiveHand(), EnumFacing.SOUTH, 0, 0, 0);
+        onActivated(var1, var1.getUsedItemHand(), Direction.SOUTH, new Vec3(0,0,0));
     }
 
     @Override
@@ -355,13 +349,13 @@ public class TileEntityRodFactory extends TileElectricMachine implements IUpgrad
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiRodFactory(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiRodFactory((ContainerRodFactory) menu);
     }
 
     @Override
-    public ContainerRodFactory getGuiContainer(final EntityPlayer var1) {
+    public ContainerRodFactory getGuiContainer(final Player var1) {
         return new ContainerRodFactory(this, var1);
     }
 

@@ -2,6 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -10,22 +11,23 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerRadiationPurifier;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiRadiationPurifier;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.TileEntitySoilAnalyzer;
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,20 +43,20 @@ public class TileRadiationPurifier extends TileElectricMachine {
     public Map<BlockPos, TileEntitySoilAnalyzer> booleanMap = new HashMap<>();
     private ItemStack stack;
 
-    public TileRadiationPurifier() {
-        super(50000, 14, 1);
+    public TileRadiationPurifier(BlockPos pos,BlockState state) {
+        super(50000, 14, 1,BlockBaseMachine3.radiation_purifier,pos,state);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
 
     @Override
-    public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+    public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        if (this.getWorld().isRemote) {
+        if (this.getWorld().isClientSide) {
             return;
         }
 
-        final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+        final BlockEntity tile = this.getWorld().getBlockEntity(neighborPos);
         boolean can = tile instanceof TileEntitySoilAnalyzer;
         if (!booleanMap.containsKey(neighborPos) && can) {
             booleanMap.put(neighborPos, (TileEntitySoilAnalyzer) tile);
@@ -66,10 +68,10 @@ public class TileRadiationPurifier extends TileElectricMachine {
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote) {
-            for (EnumFacing facing1 : EnumFacing.VALUES) {
-                final BlockPos pos1 = this.pos.offset(facing1);
-                final TileEntity tile = this.getWorld().getTileEntity(pos1);
+        if (!this.getWorld().isClientSide) {
+            for (Direction facing1 : Direction.values()) {
+                final BlockPos pos1 = this.pos.offset(facing1.getNormal());
+                final BlockEntity tile = this.getWorld().getBlockEntity(pos1);
                 boolean can = tile instanceof TileEntitySoilAnalyzer;
                 if (!booleanMap.containsKey(pos1) && can) {
                     booleanMap.put(pos1, (TileEntitySoilAnalyzer) tile);
@@ -83,8 +85,8 @@ public class TileRadiationPurifier extends TileElectricMachine {
     @Override
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
-        this.radiation = RadiationSystem.rad_system.getMap().get(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-        stack = new ItemStack(IUItem.crafting_elements, 1, 443);
+        this.radiation = RadiationSystem.rad_system.getMap().get(this.getWorld().getChunkAt(this.pos).getPos());
+        stack = new ItemStack(IUItem.crafting_elements.getStack(443), 1);
 
     }
 
@@ -93,7 +95,7 @@ public class TileRadiationPurifier extends TileElectricMachine {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
     public void onUnloaded() {
@@ -105,7 +107,7 @@ public class TileRadiationPurifier extends TileElectricMachine {
     public void updateEntityServer() {
 
         super.updateEntityServer();
-        if (this.getWorld().getWorldTime() % 20 == 0) {
+        if (this.getWorld().getGameTime() % 20 == 0) {
             if (this.radiation != null && this.energy.canUseEnergy(100) && !booleanMap.isEmpty()) {
                 boolean canWork = false;
                 for (Map.Entry<BlockPos, TileEntitySoilAnalyzer> entry : booleanMap.entrySet()) {
@@ -158,15 +160,15 @@ public class TileRadiationPurifier extends TileElectricMachine {
     }
 
     @Override
-    public ContainerRadiationPurifier getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerRadiationPurifier getGuiContainer(final Player entityPlayer) {
         return new ContainerRadiationPurifier(this, entityPlayer);
     }
 
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GuiRadiationPurifier(getGuiContainer(entityPlayer));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiRadiationPurifier((ContainerRadiationPurifier) menu);
     }
 
     @Override

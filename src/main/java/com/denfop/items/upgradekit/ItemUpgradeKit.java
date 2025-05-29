@@ -1,164 +1,108 @@
 package com.denfop.items.upgradekit;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.resource.ItemSubTypes;
-import com.denfop.register.Register;
+import com.denfop.items.ItemMain;
 import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.wiring.EnumElectricBlock;
-import com.denfop.utils.ModUtils;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemUpgradeKit extends ItemSubTypes<ItemUpgradeKit.Types> implements IModelRegister {
-
-    protected static final String NAME = "upgradekitstorage";
-
-    public ItemUpgradeKit() {
-        super(Types.class);
-        this.setCreativeTab(IUCore.UpgradeTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
-        IUCore.proxy.addIModelRegister(this);
+public class ItemUpgradeKit<T extends Enum<T> & ISubEnum> extends ItemMain<T> {
+    public ItemUpgradeKit(T element) {
+        super(new Item.Properties(), element);
     }
 
     @Override
-    public void addInformation(
-            @Nonnull final ItemStack p_77624_1_,
-            @Nullable final World p_77624_2_,
-            final List<String> p_77624_3_,
-            @Nonnull final ITooltipFlag p_77624_4_
+    public void appendHoverText(
+            @Nonnull ItemStack stack,
+            @Nullable Level world,
+            @Nonnull List<Component> tooltip,
+            @Nonnull TooltipFlag flag
     ) {
-        p_77624_3_.add(Localization.translate("waring_kit"));
-        super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
-
+        tooltip.add(Component.translatable("waring_kit"));
+        super.appendHoverText(stack, world, tooltip, flag);
     }
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.UpgradeTab;
+    }
+    @Override
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        Player player = context.getPlayer();
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        InteractionHand hand = context.getHand();
 
-
-    @Nonnull
-    public EnumActionResult onItemUseFirst(
-            @Nonnull EntityPlayer player,
-            @Nonnull World world,
-            @Nonnull BlockPos pos,
-            @Nonnull EnumFacing side,
-            float hitX,
-            float hitY,
-            float hitZ,
-            @Nonnull EnumHand hand
-    ) {
-        if (IUCore.proxy.isSimulating()) {
-            final EnumActionResult hooks = ForgeHooks.onItemRightClick(player, hand);
-            if (hooks == EnumActionResult.FAIL) {
-                return hooks;
-            }
-            ItemStack stack = player.getHeldItem(hand);
-            int meta = stack.getItemDamage();
-            TileEntity tileEntity = world.getTileEntity(pos);
-
-
-            if (tileEntity instanceof TileElectricBlock) {
-                TileElectricBlock tile = (TileElectricBlock) tileEntity;
-                final EnumElectricBlock enumblock = tile.getElectricBlock();
-                if (enumblock != null && enumblock.kit_meta == meta) {
-                    ItemStack stack1;
-                    if (tile.getElectricBlock().chargepad) {
-                        stack1 = new ItemStack(
-                                IUItem.chargepadelectricblock,
-                                1,
-                                tile.getElectricBlock().meta
-                        );
-                    } else {
-                        stack1 = new ItemStack(IUItem.electricblock, 1, tile.getElectricBlock().meta);
-                    }
-                    final NBTTagCompound nbt = ModUtils.nbt(stack1);
-                    nbt.setDouble("energy", tile.energy.getEnergy());
-
-                    final IBlockState state = world.getBlockState(pos);
-                    state.getBlock().removedByPlayer(state, world, pos, (EntityPlayerMP) player, true);
-                    state.getBlock().onBlockDestroyedByPlayer(world, pos, state);
-                    state.getBlock().harvestBlock(world, (EntityPlayerMP) player, pos, state, null, stack);
-                    List<EntityItem> items = world.getEntitiesWithinAABB(
-                            EntityItem.class,
-                            new AxisAlignedBB(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1, pos.getX() + 1,
-                                    pos.getY() + 1,
-                                    pos.getZ() + 1
-                            )
-                    );
-                    for (EntityItem item : items) {
-                        item.setDead();
-                    }
-
-                    EntityItem item = new EntityItem(world);
-                    item.setItem(stack1);
-                    if (!player.getEntityWorld().isRemote) {
-                        item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                        item.setPickupDelay(0);
-                        world.spawnEntity(item);
-
-                    }
-                    List<ItemStack> list = tile.getDrop();
-                    EntityItem[] item1 = new EntityItem[list.size()];
-
-                    for (ItemStack stack2 : list) {
-                        item1[list.indexOf(stack2)] = new EntityItem(world);
-                        item1[list.indexOf(stack2)].setItem(stack2);
-
-                        if (!player.getEntityWorld().isRemote) {
-                            item1[list.indexOf(stack2)].setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                            item1[list.indexOf(stack2)].setPickupDelay(0);
-                            world.spawnEntity(item1[list.indexOf(stack2)]);
-                        }
-                    }
-
-                    stack.setCount(stack.getCount() - 1);
-
-                }
-                return EnumActionResult.PASS;
-
-            }
-
+        if (world.isClientSide || player == null) {
+            return InteractionResult.PASS;
         }
-        return EnumActionResult.PASS;
-    }
 
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(3);
-    }
+        int meta = this.getElement().getId();
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+        if (blockEntity instanceof TileElectricBlock tile) {
+            EnumElectricBlock enumblock = tile.getElectricBlock();
+            if (enumblock != null && enumblock.kit_meta == meta) {
+                ItemStack stack1 = new ItemStack(tile.getElectricBlock().chargepad
+                        ? IUItem.chargepadelectricblock.getItem(tile.getElectricBlock().meta)
+                        : IUItem.electricblock.getItem(tile.getElectricBlock().meta), 1);
+
+                CompoundTag nbt = stack1.getOrCreateTag();
+                nbt.putDouble("energy", tile.energy.getEnergy());
+
+                BlockState state = world.getBlockState(pos);
+                Block block = state.getBlock();
+
+                block.playerWillDestroy(world, pos, state, player);
+                world.removeBlock(pos, false);
+                block.destroy(world, pos, state);
+
+                List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class,
+                        new AABB(pos.offset(-1, -1, -1), pos.offset(1, 1, 1)));
+
+                for (ItemEntity item : items) {
+                    item.discard();
+                }
+
+                ItemEntity itemEntity = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack1);
+                itemEntity.setPickUpDelay(0);
+                world.addFreshEntity(itemEntity);
+
+                List<ItemStack> dropList = tile.getDrop();
+                for (ItemStack drop : dropList) {
+                    ItemEntity dropEntity = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), drop);
+                    dropEntity.setPickUpDelay(0);
+                    world.addFreshEntity(dropEntity);
+                }
+
+                stack.shrink(1);
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return InteractionResult.PASS;
     }
 
     public enum Types implements ISubEnum {
@@ -190,10 +134,13 @@ public class ItemUpgradeKit extends ItemSubTypes<ItemUpgradeKit.Types> implement
             return this.name;
         }
 
+        @Override
+        public String getMainPath() {
+            return "upgradekitstorage";
+        }
+
         public int getId() {
             return this.ID;
         }
     }
-
-
 }

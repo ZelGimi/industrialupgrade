@@ -8,10 +8,9 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.blocks.FluidName;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 
 public class ExtractorRecipe {
 
@@ -52,7 +51,7 @@ public class ExtractorRecipe {
                         new Input(
                                 input1.getInput(input, n)
                         ),
-                        new RecipeOutput(null, OreDictionary.getOres(output).get(0))
+                        new RecipeOutput(null, input1.getInput(output).getInputs().get(0))
                 )
         );
     }
@@ -96,28 +95,28 @@ public class ExtractorRecipe {
         addextractor(
                 new ItemStack(Items.REDSTONE),
                 9,
-                new ItemStack(IUItem.compressed_redstone, 1)
+                new ItemStack(IUItem.compressed_redstone.getItem(), 1)
         );
-        addextractor(new ItemStack(IUItem.crafting_elements, 4, 481), new ItemStack(Items.BONE, 2));
+        addextractor(new ItemStack(IUItem.crafting_elements.getStack(481), 4), new ItemStack(Items.BONE, 2));
 
-        addextractor(new ItemStack(IUItem.ore2, 1, 7), new ItemStack(IUItem.crafting_elements, 2, 481));
+        addextractor(new ItemStack(IUItem.ore2.getItem(7)), new ItemStack(IUItem.crafting_elements.getStack(481), 2));
         addextractor(
-                "blockWool",
+                "wool",
                 1,
-                new ItemStack(Blocks.WOOL)
+                new ItemStack(Blocks.WHITE_WOOL)
         );
         addextractor(
-                new ItemStack(Blocks.NETHER_BRICK),
+                new ItemStack(Blocks.NETHER_BRICKS),
                 1,
-                new ItemStack(Items.NETHERBRICK, 4)
+                new ItemStack(Items.NETHER_BRICK, 4)
         );
         addextractor(
                 IUItem.latex,
                 IUItem.rubber, 3
         );
         addextractor(
-                new ItemStack(IUItem.crafting_elements, 4, 477),
-                new ItemStack(IUItem.ore2, 1, 2), 1
+                new ItemStack(IUItem.crafting_elements.getStack(477), 4),
+                new ItemStack(IUItem.ore2.getItem(2), 1), 1
         );
      /*   addextractor(
                 new ItemStack(IUItem.crafting_elements,1,477),
@@ -131,11 +130,11 @@ public class ExtractorRecipe {
         );
 
         addextractor(
-                ModUtils.getCellFromFluid(FluidName.fluidair.getInstance()),
-                IUItem.FluidCell
+                ModUtils.getCellFromFluid(FluidName.fluidair.getInstance().get()),
+                new ItemStack(IUItem.fluidCell.getItem())
         );
         addextractor(
-                new ItemStack(Blocks.BRICK_BLOCK),
+                new ItemStack(Blocks.BRICKS),
                 1,
                 new ItemStack(Items.BRICK, 4)
         );

@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "industrialupgrade:items/radioprotector_model",
-		"particle": "industrialupgrade:items/radioprotector_model"
+		"0": "industrialupgrade:item/radioprotector_model",
+		"particle": "industrialupgrade:item/radioprotector_model"
 	},
 	"elements": [
 		{
@@ -263,5 +263,13 @@
 			"nbt": "{}",
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 		}
+	],
+	"overrides" : [
+    {
+      "predicate" : {
+        "full" : 1
+      },
+      "model" : "industrialupgrade:item/tools/radioprotector_full"
+    }
 	]
 }

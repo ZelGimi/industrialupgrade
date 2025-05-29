@@ -1,24 +1,20 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.ComponentCustomizeSize;
-import com.denfop.api.gui.ComponentEmpty;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerAdvOilRefiner;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiAdvOilRefiner extends GuiIU<ContainerAdvOilRefiner> {
+@OnlyIn(Dist.CLIENT)
+public class GuiAdvOilRefiner<T extends ContainerAdvOilRefiner> extends GuiIU<ContainerAdvOilRefiner> {
 
     private static final ResourceLocation background;
 
@@ -31,7 +27,7 @@ public class GuiAdvOilRefiner extends GuiIU<ContainerAdvOilRefiner> {
     public GuiAdvOilRefiner(ContainerAdvOilRefiner container1) {
         super(container1, EnumTypeStyle.ADVANCED);
         this.container = container1;
-        this.ySize = 200;
+        this.imageHeight = 200;
         componentList.clear();
         inventory = new GuiComponent(this, 7, 119, getComponent(),
                 new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
@@ -71,8 +67,8 @@ public class GuiAdvOilRefiner extends GuiIU<ContainerAdvOilRefiner> {
         ));
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer(poseStack, par1, par2);
 
     }
 
@@ -81,12 +77,13 @@ public class GuiAdvOilRefiner extends GuiIU<ContainerAdvOilRefiner> {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void renderBg(GuiGraphics poseStack, float f, int x, int y) {
+        super.renderBg(poseStack, f, x, y);
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.container.base != null) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-            this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+            bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
 
     }

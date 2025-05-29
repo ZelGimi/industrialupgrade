@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/excitedcore/adrcore"
+    "layer0" : "industrialupgrade:item/excitedcore/adrcore"
   }
 }

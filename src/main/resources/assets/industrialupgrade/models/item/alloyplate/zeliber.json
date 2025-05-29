@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/zeliber_plate"	}
+		"layer0": "industrialupgrade:item/zeliber_plate"	}
 }

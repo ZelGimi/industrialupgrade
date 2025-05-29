@@ -6,11 +6,13 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockChargepadStorage;
 import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.wiring.EnumElectricBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileChargepadGraMFSU extends TileElectricBlock {
 
-    public TileChargepadGraMFSU() {
-        super(EnumElectricBlock.GRA_MFSU_CHARGEPAD);
+    public TileChargepadGraMFSU(BlockPos pos, BlockState state) {
+        super(EnumElectricBlock.GRA_MFSU_CHARGEPAD, BlockChargepadStorage.gra_mfsu_chargepad, pos, state);
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -18,7 +20,6 @@ public class TileChargepadGraMFSU extends TileElectricBlock {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.chargepadelectricblock;
+        return IUItem.chargepadelectricblock.getBlock(getTeBlock().getId());
     }
-
 }

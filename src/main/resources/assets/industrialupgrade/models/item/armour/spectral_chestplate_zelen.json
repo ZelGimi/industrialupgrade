@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/spectral_chestplate_zelen"
+		"layer0": "industrialupgrade:item/spectral_chestplate_zelen"
 	}
 }

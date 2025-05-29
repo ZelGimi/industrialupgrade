@@ -1,12 +1,7 @@
 package com.denfop.items.armour.special;
 
-import com.denfop.Constants;
-import com.denfop.ElectricItem;
-import com.denfop.IUCore;
-import com.denfop.IUItem;
-import com.denfop.IUPotion;
-import com.denfop.Localization;
-import com.denfop.api.IModelRegister;
+
+import com.denfop.*;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
@@ -15,141 +10,121 @@ import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
 import com.denfop.audio.SoundHandler;
-import com.denfop.container.ContainerBags;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
-import com.denfop.items.bags.BagsDescription;
-import com.denfop.items.bags.ItemStackBags;
-import com.denfop.register.Register;
+import com.denfop.items.armour.ISpecialArmor;
+import com.denfop.items.armour.material.ArmorMaterials;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.KeyboardClient;
+import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.ISpecialArmor;
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.LevelEntityGetter;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
-public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItemStackInventory, ISpecialArmor, IEnergyItem,
-        IUpgradeItem {
+import static net.minecraftforge.common.ForgeMod.SWIM_SPEED;
 
-    protected final Map<Potion, Integer> potionRemovalCost = new IdentityHashMap<>();
+public class ItemSpecialArmor extends ArmorItem implements ISpecialArmor, IItemStackInventory, IEnergyItem,
+        IUpgradeItem, IItemTab{
+
+    protected final Map<MobEffect, Integer> potionRemovalCost = new IdentityHashMap<>();
     private final List<EnumCapability> listCapability;
-    private final String name;
     private final double maxCharge;
     private final int tier;
     private final double transferLimit;
     private final EnumTypeArmor armor;
-    private final EnumSubTypeArmor subTypeArmor;
+    private final String name;
     private float jumpCharge;
     private boolean lastJetpackUsed = false;
+    private String nameItem;
 
     public ItemSpecialArmor(EnumSubTypeArmor subTypeArmor, EnumTypeArmor typeArmor) {
-        super(ArmorMaterial.DIAMOND, -1, subTypeArmor.getEntityEquipmentSlot());
-        this.subTypeArmor = subTypeArmor;
+        super(ArmorMaterials.ENERGY_ITEM, subTypeArmor.getEntityType(), new Properties().stacksTo(1).setNoRepair());
         final List<EnumCapability> list = new ArrayList<>(subTypeArmor.getCapabilities());
         list.removeIf(capability -> !typeArmor.getListCapability().contains(capability));
         this.listCapability = list;
-        if (armorType == EntityEquipmentSlot.FEET) {
+        if (getEquipmentSlot() == EquipmentSlot.FEET) {
             MinecraftForge.EVENT_BUS.register(this);
         }
+        this.armor = typeArmor;
+        this.name = typeArmor.name().toLowerCase() + "_" + subTypeArmor.name().toLowerCase();
+        this.maxCharge = typeArmor.getMaxEnergy();
+        this.tier = typeArmor.getTier();
+        this.transferLimit = typeArmor.getMaxTransfer();
         if (this.listCapability.contains(EnumCapability.ACTIVE_EFFECT) || this.listCapability.contains(EnumCapability.ALL_ACTIVE_EFFECT)) {
             potionRemovalCost.put(IUPotion.radiation, 20);
-            potionRemovalCost.put(IUPotion.frostbite, 20);
-            potionRemovalCost.put(IUPotion.poison_gas, 20);
             if (this.listCapability.contains(EnumCapability.ALL_ACTIVE_EFFECT)) {
                 potionRemovalCost.put(MobEffects.POISON, 100);
                 potionRemovalCost.put(MobEffects.WITHER, 100);
                 potionRemovalCost.put(MobEffects.HUNGER, 200);
-                potionRemovalCost.put(MobEffects.SLOWNESS, 200);
+                potionRemovalCost.put(MobEffects.MOVEMENT_SLOWDOWN, 200);
                 potionRemovalCost.put(MobEffects.UNLUCK, 200);
                 potionRemovalCost.put(MobEffects.LEVITATION, 200);
-                potionRemovalCost.put(MobEffects.NAUSEA, 200);
+                potionRemovalCost.put(MobEffects.CONFUSION, 200);
                 potionRemovalCost.put(MobEffects.BLINDNESS, 200);
                 potionRemovalCost.put(MobEffects.WEAKNESS, 200);
             }
         }
 
-        this.armor = typeArmor;
-        this.name = typeArmor.name().toLowerCase() + "_" + subTypeArmor.name().toLowerCase();
 
-        this.maxCharge = typeArmor.getMaxEnergy();
-        this.tier = typeArmor.getTier();
-        this.transferLimit = typeArmor.getMaxTransfer();
-        setMaxStackSize(1);
-        setNoRepair();
-        setUnlocalizedName(name);
-        this.setMaxDamage(0);
-        setCreativeTab(IUCore.EnergyTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-        IUCore.proxy.addIModelRegister(this);
-        switch (armorType) {
+        switch (getEquipmentSlot()) {
             case HEAD:
-                UpgradeSystem.system.addRecipe(this, EnumUpgrades.HELMET.list);
+                IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.HELMET.list));
                 break;
             case CHEST:
-                UpgradeSystem.system.addRecipe(this, EnumUpgrades.BODY.list);
+                IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.BODY.list));
                 break;
             case LEGS:
-                UpgradeSystem.system.addRecipe(this, EnumUpgrades.LEGGINGS.list);
+                IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.LEGGINGS.list));
                 break;
             case FEET:
-                UpgradeSystem.system.addRecipe(this, EnumUpgrades.BOOTS.list);
+                IUCore.runnableListAfterRegisterItem.add(() -> UpgradeSystem.system.addRecipe(this, EnumUpgrades.BOOTS.list));
                 break;
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "armour" + "/" + name + extraName;
-
-        return new ModelResourceLocation(loc, null);
-    }
-
     public List<EnumInfoUpgradeModules> getUpgradeModules() {
-        switch (armorType) {
+        switch (getEquipmentSlot()) {
             case HEAD:
                 return EnumUpgrades.HELMET.list;
 
@@ -166,23 +141,52 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         return EnumUpgrades.HELMET.list;
     }
 
-    public boolean showDurabilityBar(final ItemStack stack) {
+    @Override
+    public IAdvInventory getInventory(final Player player, final ItemStack stack) {
+        if (this.getEquipmentSlot() == EquipmentSlot.LEGS)
+            return new ItemStackLegsBags(player, stack);
+        else
+            return new ItemStackStreakSettings(player, stack);
+
+    }
+
+    protected String getOrCreateDescriptionId() {
+        if (this.nameItem == null) {
+            StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", BuiltInRegistries.ITEM.getKey(this)));
+            String targetString = "industrialupgrade.";
+            String replacement = "";
+            if (replacement != null) {
+                int index = pathBuilder.indexOf(targetString);
+                while (index != -1) {
+                    pathBuilder.replace(index, index + targetString.length(), replacement);
+                    index = pathBuilder.indexOf(targetString, index + replacement.length());
+                }
+            }
+            this.nameItem ="iu."+ pathBuilder.toString().split("\\.")[2];
+        }
+
+        return this.nameItem;
+    }
+
+    public boolean isBarVisible(final ItemStack stack) {
         return true;
     }
 
-    public int getRGBDurabilityForDisplay(ItemStack stack) {
+    public int getBarColor(ItemStack stack) {
         return ModUtils.convertRGBcolorToInt(33, 91, 199);
     }
 
-    public double getDurabilityForDisplay(ItemStack stack) {
-        return Math.min(
+    public int getBarWidth(ItemStack stack) {
+
+        return 13 - (int) (13.0F * Math.min(
                 Math.max(
                         1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
                         0.0
                 ),
                 1.0
-        );
+        ));
     }
+
 
     public EnumTypeArmor getArmor() {
         return armor;
@@ -193,65 +197,22 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
     }
 
     @Override
-    public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
-        NBTTagCompound nbt = ModUtils.nbt(itemStack);
+    public void inventoryTick(ItemStack itemStack, Level world, Entity p_41406_, int p_41407_, boolean p_41408_) {
+        CompoundTag nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.setBoolean("hasID", false);
+            nbt.putBoolean("hasID", false);
             MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
         }
-
-
     }
 
-    @Override
-    public void getSubItems(final CreativeTabs subs, final NonNullList<ItemStack> items) {
-        if (this.isInCreativeTab(subs)) {
-            ItemStack stack = new ItemStack(this, 1);
 
-            NBTTagCompound nbt = ModUtils.nbt(stack);
-            ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
-            nbt.setInteger("ID_Item", Integer.MAX_VALUE);
-            items.add(stack);
-            ItemStack itemstack = new ItemStack(this, 1);
-            nbt = ModUtils.nbt(itemstack);
-            nbt.setInteger("ID_Item", Integer.MAX_VALUE);
-            items.add(itemstack);
-        }
-    }
 
-    @Override
-    public void registerModels() {
-        registerModels(this.name);
-    }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> {
-            final NBTTagCompound nbt = ModUtils.nbt(stack);
 
-            String mode = nbt.getString("mode");
-            if (nbt.getString("mode").equals("") || !armor.getSkinsList().contains(mode)) {
-                return getModelLocation1(name, "");
-            } else {
-                return getModelLocation1(name + "_" + mode.toLowerCase(), "");
-            }
-        });
-        String[] mode = {"", "_Zelen", "_Demon", "_Dark", "_Cold", "_Ender", "_Ukraine", "_Fire", "_Snow", "_Taiga", "_Desert",
-                "_Emerald"};
-        for (final String s : mode) {
-            if (s.equals("")) {
-                ModelBakery.registerItemVariants(this, getModelLocation1(name, s));
-            } else {
-                ModelBakery.registerItemVariants(this, getModelLocation1(name + s.toLowerCase(), ""));
-            }
-
-        }
-    }
-
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        int suffix = (this.armorType == EntityEquipmentSlot.LEGS) ? 2 : 1;
-        NBTTagCompound nbtData = ModUtils.nbt(stack);
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+        int suffix = (this.getEquipmentSlot() == EquipmentSlot.LEGS) ? 2 : 1;
+        CompoundTag nbtData = ModUtils.nbt(stack);
         final String mode = nbtData.getString("mode");
         if (!mode.isEmpty() && armor.getSkinsList().contains(mode)) {
             if (suffix == 1) {
@@ -273,30 +234,35 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
 
     }
 
+
     @SubscribeEvent
-    public void Potion(LivingEvent.LivingUpdateEvent event) {
-        if (!(event.getEntityLiving() instanceof EntityPlayer)) {
-            return;
+    public void Potion(LivingEvent.LivingTickEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (player.level().isClientSide) return;
+
+        CompoundTag nbtData = player.getPersistentData();
+        ItemStack boots = player.getInventory().armor.get(0);
+
+        boolean hasStepCap = false;
+        if (!boots.isEmpty() && boots.getItem() instanceof ItemSpecialArmor armor) {
+            hasStepCap = armor.listCapability.contains(EnumCapability.AUTO_JUMP);
         }
-        EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-        NBTTagCompound nbtData = player.getEntityData();
-        Item boots = player.inventory.armorInventory
-                .get(0)
-                .getItem();
-        if (boots == IUItem.spectral_boots || boots == IUItem.quantum_boots) {
-            nbtData.setBoolean("stepHeight", true);
-            player.stepHeight = 1.0F;
 
-
+        if (hasStepCap) {
+            if (!nbtData.getBoolean("stepHeight")) {
+              
+                nbtData.putBoolean("stepHeight", true);
+                player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(1F);
+            }
         } else {
             if (nbtData.getBoolean("stepHeight")) {
-                player.stepHeight = 0.5F;
-                nbtData.setBoolean("stepHeight", false);
+
+                nbtData.putBoolean("stepHeight", false);
+                player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(0F);
             }
-
-
         }
     }
+
 
     public void use(ItemStack itemStack, double amount) {
         ElectricItem.manager.discharge(itemStack, amount, 2147483647, true, false, false);
@@ -310,11 +276,34 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         return false;
     }
 
-    public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack itemStack) {
+
+    public void moveRelative(Player player, float strafe, float up, float forward, float friction) {
+        float f = strafe * strafe + up * up + forward * forward;
+        if (f >= 1.0E-4F) {
+            f = Mth.sqrt(f);
+            if (f < 1.0F) f = 1.0F;
+            f = friction / f;
+            strafe = strafe * f;
+            up = up * f;
+            forward = forward * f;
+            if (player.isInWater() || player.isInLava()) {
+
+                strafe = strafe * (float) player.getAttribute(SWIM_SPEED.get()).getValue();
+                up = up * (float) player.getAttribute(SWIM_SPEED.get()).getValue();
+                forward = forward * (float) player.getAttribute(SWIM_SPEED.get()).getValue();
+            }
+            float f1 = Mth.sin(player.getYRot() * 0.017453292F);
+            float f2 = Mth.cos(player.getYRot() * 0.017453292F);
+            Vec3 deltaMovement = player.getDeltaMovement();
+            player.setDeltaMovement(new Vec3(deltaMovement.x + (strafe * f2 - forward * f1), deltaMovement.y + up, deltaMovement.z + (forward * f2 + strafe * f1)));
+        }
+    }
+
+    public void onArmorTick(ItemStack itemStack, @Nonnull Level world, @Nonnull Player player) {
 
         boolean Nightvision;
         boolean jetpack;
-        NBTTagCompound nbtData = ModUtils.nbt(itemStack);
+        CompoundTag nbtData = ModUtils.nbt(itemStack);
         byte toggleTimer = nbtData.getByte("toggleTimer");
         boolean ret = false;
         int resistance = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RESISTANCE, itemStack) ?
@@ -324,12 +313,12 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         int repaired = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.REPAIRED, itemStack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.REPAIRED, itemStack).number : 0);
         if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.INVISIBILITY, itemStack)) {
-            player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300));
+            player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 300));
         }
 
 
         if (repaired != 0) {
-            if (world.provider.getWorldTime() % 80 == 0) {
+            if (world.getGameTime() % 80 == 0) {
                 ElectricItem.manager.charge(
                         itemStack,
                         this.getMaxEnergy(itemStack) * 0.00001 * repaired,
@@ -340,22 +329,22 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
             }
         }
         if (resistance != 0) {
-            player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 300, resistance));
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300, resistance));
         }
 
 
-        switch (this.armorType) {
+        switch (this.getEquipmentSlot()) {
             case HEAD:
-                List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+                List<MobEffectInstance> effects = new ArrayList<>(player.getActiveEffects());
 
-                for (PotionEffect effect : effects) {
+                for (MobEffectInstance effect : effects) {
 
-                    Integer cost = potionRemovalCost.get(effect.getPotion());
+                    Integer cost = potionRemovalCost.get(effect.getEffect());
                     if (cost != null) {
                         cost = cost * (effect.getAmplifier() + 1);
                         if (ElectricItem.manager.canUse(itemStack, cost)) {
                             ElectricItem.manager.use(itemStack, cost, null);
-                            IUCore.proxy.removePotion(player, effect.getPotion());
+                            IUCore.proxy.removePotion(player, effect.getEffect());
                         }
                     }
                 }
@@ -364,79 +353,75 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                 if (IUCore.keyboard.isArmorKey(player) && toggleTimer == 0) {
                     toggleTimer = 10;
                     Nightvision = !Nightvision;
-                    if (IUCore.proxy.isSimulating()) {
-                        nbtData.setBoolean("Nightvision", Nightvision);
-                        if (Nightvision) {
-                            IUCore.proxy.messagePlayer(player, "Nightvision enabled.");
-                        } else {
-                            IUCore.proxy.messagePlayer(player, "Nightvision disabled.");
-                        }
+                    if (!world.isClientSide()) {
+                        nbtData.putBoolean("Nightvision", Nightvision);
+                        if (!world.isClientSide())
+                            if (Nightvision) {
+                                IUCore.proxy.messagePlayer(player, "Nightvision enabled.");
+                            } else {
+                                IUCore.proxy.messagePlayer(player, "Nightvision disabled.");
+                            }
                     }
                 }
-                if (IUCore.proxy.isSimulating() && toggleTimer > 0) {
+                if (!world.isClientSide() && toggleTimer > 0) {
                     toggleTimer = (byte) (toggleTimer - 1);
-                    nbtData.setByte("toggleTimer", toggleTimer);
+                    nbtData.putByte("toggleTimer", toggleTimer);
                 }
-                boolean NightvisioModule = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RESISTANCE, itemStack);
-                if (!NightvisioModule) {
-                    if (Nightvision && IUCore.proxy.isSimulating() &&
-                            ElectricItem.manager.use(itemStack, 1.0D, player)) {
-                        int x = MathHelper.floor(player.posX);
-                        int z = MathHelper.floor(player.posZ);
-                        int y = MathHelper.floor(player.posY);
-                        int skylight = player.getEntityWorld().getLightFromNeighbors(new BlockPos(x, y, z));
-                        boolean with = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITH);
-                        boolean without = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITHOUT);
-                        if (without || with) {
-                            if (skylight > 8) {
-                                IUCore.proxy.removePotion(player, MobEffects.NIGHT_VISION);
-                                if (with) {
-                                    player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0, true, true));
 
-                                }
-                            } else {
-                                if (with) {
-                                    IUCore.proxy.removePotion(player, MobEffects.BLINDNESS);
+                if (Nightvision && !world.isClientSide &&
+                        ElectricItem.manager.use(itemStack, 1.0D, player)) {
+                    int x = Mth.floor(player.getX());
+                    int z = Mth.floor(player.getZ());
+                    int y = Mth.floor(player.getY());
+                    BlockPos pos = new BlockPos(x, y, z);
+                    int skylight = player.level().getMaxLocalRawBrightness(pos);
+                    boolean with = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITH);
+                    boolean without = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITHOUT);
+                    if (without || with) {
+                        if (skylight > 8) {
+                            IUCore.proxy.removePotion(player, MobEffects.NIGHT_VISION);
+                            if (with) {
+                                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 0, true, true));
 
-                                }
-                                player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
                             }
                         } else {
-                            player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
-                        }
-                        ret = true;
-                    }
-                } else {
-                    player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
+                            if (with) {
+                                IUCore.proxy.removePotion(player, MobEffects.BLINDNESS);
 
+                            }
+                            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 300, 0));
+                        }
+                    } else {
+                        player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 300, 0));
+                    }
+                    ret = true;
                 }
                 if (this.listCapability.contains(EnumCapability.FOOD) && ElectricItem.manager.canUse(itemStack, 1000.0D) && player
-                        .getFoodStats()
-                        .needFood()) {
+                        .getFoodData()
+                        .needsFood()) {
                     int slot = -1;
-                    for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
-                        if (!player.inventory.mainInventory.get(i).isEmpty()
-                                && player.inventory.mainInventory.get(i).getItem() instanceof ItemFood) {
+                    for (int i = 0; i < player.getInventory().items.size(); i++) {
+                        if (!player.getInventory().items.get(i).isEmpty()
+                                && player.getInventory().items.get(i).getItem().isEdible()) {
                             slot = i;
                             break;
                         }
                     }
                     if (slot > -1) {
-                        ItemStack stack = player.inventory.mainInventory.get(slot);
-                        ItemFood can = (ItemFood) stack.getItem();
-                        stack = can.onItemUseFinish(stack, world, player);
+                        ItemStack stack = player.getInventory().items.get(slot);
+                        stack = stack.getItem().finishUsingItem(stack,world, player);
                         if (stack.getCount() <= 0) {
-                            player.inventory.mainInventory.set(slot, ItemStack.EMPTY);
+                            player.getInventory().items.set(slot, ItemStack.EMPTY);
                         }
                         ElectricItem.manager.use(itemStack, 1000.0D, player);
                         ret = true;
                     }
                 }
                 if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WATER, itemStack)) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300));
+                    player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 300));
                 }
                 if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.NIGTHVISION, itemStack)) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300));
+                    player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 300));
                 }
 
 
@@ -446,19 +431,19 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                 if (nbtData.getBoolean("jetpack")) {
                     player.fallDistance = 0;
 
-                    if (nbtData.getBoolean("jump") && !nbtData.getBoolean("canFly") && !player.capabilities.allowFlying && IUCore.keyboard.isJumpKeyDown(
+                    if (nbtData.getBoolean("jump") && !nbtData.getBoolean("canFly") && !player.getAbilities().mayfly && IUCore.keyboard.isJumpKeyDown(
                             player) && !nbtData.getBoolean(
                             "isFlyActive") && toggleTimer == 0) {
                         toggleTimer = 10;
-                        nbtData.setBoolean("canFly", true);
+                        nbtData.putBoolean("canFly", true);
                     }
-                    nbtData.setBoolean("jump", !player.onGround);
+                    nbtData.putBoolean("jump", !player.onGround());
 
-                    if (!player.onGround) {
+                    if (!player.onGround()) {
                         if (ElectricItem.manager.canUse(itemStack, 45)) {
                             ElectricItem.manager.use(itemStack, 45, null);
                         } else {
-                            nbtData.setBoolean("jetpack", false);
+                            nbtData.putBoolean("jetpack", false);
                         }
                     }
                 }
@@ -470,16 +455,17 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                 if (this.listCapability.contains(EnumCapability.VERTICAL_FLY) && IUCore.keyboard.isVerticalMode(player) && toggleTimer == 0) {
                     toggleTimer = 10;
                     vertical = !vertical;
-                    if (IUCore.proxy.isSimulating()) {
+                    if (!world.isClientSide()) {
 
-                        nbtData.setBoolean("vertical", vertical);
-                        if (vertical) {
-                            IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info2"));
+                        nbtData.putBoolean("vertical", vertical);
+                        if (!world.isClientSide())
+                            if (vertical) {
+                                IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info2"));
 
-                        } else {
-                            IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info3"));
+                            } else {
+                                IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info3"));
 
-                        }
+                            }
                     }
                 }
                 if (vertical && jetpack) {
@@ -487,63 +473,70 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                     if (IUCore.keyboard.isJumpKeyDown(player)) {
                         motion = 0.3;
                     }
-                    if (player.isSneaking()) {
+                    if (player.isShiftKeyDown()) {
                         motion = -0.3;
                     }
-
-                    player.motionY += motion;
+                    Vec3 deltaMotion = player.getDeltaMovement();
+                    player.setDeltaMovement(new Vec3(deltaMotion.x, deltaMotion.y + motion, deltaMotion.z));
                 }
 
 
-                if (IUCore.keyboard.isStreakKeyDown(player) && toggleTimer == 0 && IUItem.spectral_chestplate == this) {
+                if (IUCore.keyboard.isStreakKeyDown(player) && toggleTimer == 0 && IUItem.spectral_chestplate.getItem() == this) {
                     toggleTimer = 10;
-                    player.openGui(
-                            IUCore.instance,
-                            4,
-                            player.getEntityWorld(),
-                            (int) player.posX,
-                            (int) player.posY,
-                            (int) player.posZ
-                    );
+                    if (!world.isClientSide()) {
+                        save(itemStack, player);
+                        CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+                        growingBuffer.writeByte(3);
+
+                        growingBuffer.flip();
+                        NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, itemStack), buf -> buf.writeBytes(growingBuffer));
+
+
+                    }
+
 
                 }
-                int reTimer = nbtData.getInteger("reTimer");
+                int reTimer = nbtData.getInt("reTimer");
                 if (this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
 
                     if (reTimer > 0) {
                         reTimer--;
-                        nbtData.setInteger("reTimer", reTimer);
+                        nbtData.putInt("reTimer", reTimer);
                     }
                 }
                 if ((this.listCapability.contains(EnumCapability.FLY) || this.listCapability.contains(EnumCapability.JETPACK_FLY)) && IUCore.keyboard.isFlyModeKeyDown(
                         player) && toggleTimer == 0 && reTimer == 0) {
                     toggleTimer = 10;
                     jetpack = !jetpack;
-                    if (IUCore.proxy.isSimulating()) {
-                        nbtData.setBoolean("jetpack", jetpack);
+                    if (!world.isClientSide()) {
+                        nbtData.putBoolean("jetpack", jetpack);
 
                         if (jetpack) {
-                            IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info"));
+                            if (!world.isClientSide())
+                                IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info"));
                             if (this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
-                                nbtData.setInteger("timer", 600);
+                                nbtData.putInt("timer", 600);
                             }
                         } else {
-                            IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info1"));
+                            if (!world.isClientSide())
+                                IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info1"));
 
                         }
                     }
                 }
                 if (this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
                     jetpack = nbtData.getBoolean("jetpack");
-                    int timer = nbtData.getInteger("timer");
+                    int timer = nbtData.getInt("timer");
                     if (timer > 0) {
                         timer--;
-                        nbtData.setInteger("timer", timer);
+                        nbtData.putInt("timer", timer);
                     } else {
                         if (jetpack) {
-                            nbtData.setBoolean("jetpack", false);
-                            nbtData.setInteger("reTimer", 5 * 20 * 60);
-                            IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info1"));
+                            nbtData.putBoolean("jetpack", false);
+                            nbtData.putInt("reTimer", 5 * 20 * 60);
+                            if (!world.isClientSide())
+                                IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info1"));
                         }
                     }
 
@@ -553,7 +546,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                             jetpackUsed = this.useJetpack(player);
                         }
                     }
-                    if (IUCore.proxy.isRendering() && player == IUCore.proxy.getPlayerInstance()) {
+                    if (world.isClientSide && player == IUCore.proxy.getPlayerInstance()) {
                         if (lastJetpackUsed != jetpackUsed) {
                             if (jetpackUsed) {
                                 SoundHandler.playSound(player, "JetpackLoop");
@@ -565,22 +558,22 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                                 SoundHandler.stopSound(EnumSound.JetpackLoop);
                             }
                         }
-                        final Random rnd = world.rand;
+                        final Random rnd = IUCore.random;
                         if (jetpackUsed) {
                             for (int i = 0; i < rnd.nextInt(10); i++) {
-                                world.spawnParticle(
-                                        EnumParticleTypes.SMOKE_NORMAL,
-                                        (float) (player.posX - player.motionX) + rnd.nextFloat(),
-                                        (float) (player.posY),
-                                        (float) (player.posZ - player.motionZ) + rnd.nextFloat(), 0, -0.25, 0
+                                world.addParticle(
+                                        ParticleTypes.SMOKE,
+                                        (float) (player.getX() - player.getDeltaMovement().x) + rnd.nextFloat(),
+                                        (float) (player.getY()),
+                                        (float) (player.getZ() - player.getDeltaMovement().z) + rnd.nextFloat(), 0, -0.25, 0
                                 );
                             }
                             for (int i = 0; i < rnd.nextInt(10); i++) {
-                                world.spawnParticle(
-                                        EnumParticleTypes.FLAME,
-                                        (float) (player.posX - player.motionX) + rnd.nextFloat(),
-                                        (float) (player.posY),
-                                        (float) (player.posZ - player.motionZ) + rnd.nextFloat(), 0, -0.25, 0
+                                world.addParticle(
+                                        ParticleTypes.FLAME,
+                                        (float) (player.getX() - player.getDeltaMovement().x) + rnd.nextFloat(),
+                                        (float) (player.getY()),
+                                        (float) (player.getZ() - player.getDeltaMovement().z) + rnd.nextFloat(), 0, -0.25, 0
                                 );
                             }
                         }
@@ -595,7 +588,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                             jetpackUsed = this.useJetpack(player);
                         }
                     }
-                    if (IUCore.proxy.isRendering() && player == IUCore.proxy.getPlayerInstance()) {
+                    if (world.isClientSide && player == IUCore.proxy.getPlayerInstance()) {
                         if (lastJetpackUsed != jetpackUsed) {
                             if (jetpackUsed) {
                                 SoundHandler.playSound(player, "JetpackLoop");
@@ -607,22 +600,22 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                                 SoundHandler.stopSound(EnumSound.JetpackLoop);
                             }
                         }
-                        final Random rnd = world.rand;
+                        final Random rnd = IUCore.random;
                         if (jetpackUsed) {
                             for (int i = 0; i < rnd.nextInt(10); i++) {
-                                world.spawnParticle(
-                                        EnumParticleTypes.SMOKE_NORMAL,
-                                        (float) (player.posX - player.motionX) + rnd.nextFloat(),
-                                        (float) (player.posY),
-                                        (float) (player.posZ - player.motionZ) + rnd.nextFloat(), 0, -0.25, 0
+                                world.addParticle(
+                                        ParticleTypes.SMOKE,
+                                        (float) (player.getX() - player.getDeltaMovement().x) + rnd.nextFloat(),
+                                        (float) (player.getY()),
+                                        (float) (player.getZ() - player.getDeltaMovement().z) + rnd.nextFloat(), 0, -0.25, 0
                                 );
                             }
                             for (int i = 0; i < rnd.nextInt(10); i++) {
-                                world.spawnParticle(
-                                        EnumParticleTypes.FLAME,
-                                        (float) (player.posX - player.motionX) + rnd.nextFloat(),
-                                        (float) (player.posY),
-                                        (float) (player.posZ - player.motionZ) + rnd.nextFloat(), 0, -0.25, 0
+                                world.addParticle(
+                                        ParticleTypes.FLAME,
+                                        (float) (player.getX() - player.getDeltaMovement().x) + rnd.nextFloat(),
+                                        (float) (player.getY()),
+                                        (float) (player.getZ() - player.getDeltaMovement().z) + rnd.nextFloat(), 0, -0.25, 0
                                 );
                             }
                         }
@@ -631,17 +624,17 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                     }
                 }
 
-                if (IUCore.proxy.isSimulating() && toggleTimer > 0) {
+                if (!world.isClientSide() && toggleTimer > 0) {
                     toggleTimer = (byte) (toggleTimer - 1);
-                    nbtData.setByte("toggleTimer", toggleTimer);
+                    nbtData.putByte("toggleTimer", toggleTimer);
                 }
 
 
                 if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.FIRE_PROTECTION, itemStack)) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300));
+                    player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 300));
                 }
 
-                player.extinguish();
+                player.clearFire();
                 break;
             case LEGS:
 
@@ -649,7 +642,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                 if (this.listCapability.contains(EnumCapability.SPEED) && ElectricItem.manager.canUse(
                         itemStack,
                         1000.0D
-                ) && (player.onGround || player.isInWater()) && IUCore.keyboard.isForwardKeyDown(player)) {
+                ) && (player.onGround() || player.isInWater()) && player.isSprinting()) {
                     byte speedTicker = nbtData.getByte("speedTicker");
                     speedTicker = (byte) (speedTicker + 1);
                     if (speedTicker >= 10) {
@@ -657,22 +650,28 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                         ElectricItem.manager.use(itemStack, 1000.0D, null);
                         ret = true;
                     }
-                    nbtData.setByte("speedTicker", speedTicker);
+                    nbtData.putByte("speedTicker", speedTicker);
                     float speed = 0.22F;
                     if (player.isInWater()) {
                         speed = 0.1F;
                         if (IUCore.keyboard.isJumpKeyDown(player)) {
-                            player.motionY += 0.10000000149011612D;
+                            player.getDeltaMovement().add(0, 0.10000000149011612D, 0);
                         }
                     }
-                    player.moveRelative(0.0F, 0.0F, 1.0F, speed);
+                    moveRelative(player, 0.0F, (float) 0, 1.0F, (float) (speed));
                 }
                 if (this.listCapability.contains(EnumCapability.BAGS)) {
                     if (IUCore.keyboard.isLeggingsMode(player) && IUCore.keyboard.isBootsMode(player) && toggleTimer == 0) {
                         toggleTimer = 10;
-                        if (IUCore.proxy.isSimulating()) {
+                        if (!world.isClientSide()) {
                             save(itemStack, player);
-                            player.openGui(IUCore.instance, 2, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+                            CustomPacketBuffer growingBuffer = new CustomPacketBuffer();
+
+                            growingBuffer.writeByte(2);
+
+                            growingBuffer.flip();
+                            NetworkHooks.openScreen((ServerPlayer) player, getInventory(player, itemStack), buf -> buf.writeBytes(growingBuffer));
+
 
                         }
                     }
@@ -682,19 +681,21 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
 
                     if (IUCore.keyboard.isLeggingsMode(player) && IUCore.keyboard.isChangeKeyDown(player) && toggleTimer == 0) {
                         toggleTimer = 10;
-                        if (IUCore.proxy.isSimulating()) {
+                        if (!world.isClientSide()) {
                             if (magnet) {
-                                IUCore.proxy.messagePlayer(player, "Magnet enabled.");
+                                if (!world.isClientSide())
+                                    IUCore.proxy.messagePlayer(player, "Magnet enabled.");
                             }
                             if (!magnet) {
-                                IUCore.proxy.messagePlayer(player, "Magnet disabled.");
+                                if (!world.isClientSide())
+                                    IUCore.proxy.messagePlayer(player, "Magnet disabled.");
                             }
-                            nbtData.setBoolean("magnet", magnet);
+                            nbtData.putBoolean("magnet", magnet);
                         }
                     }
                     if (IUCore.keyboard.isLeggingsMode(player) && IUCore.keyboard.isSaveModeKeyDown(player) && toggleTimer == 0) {
                         toggleTimer = 10;
-                        if (IUCore.proxy.isSimulating()) {
+                        if (!world.isClientSide()) {
                             int mode = ModUtils.NBTGetInteger(itemStack, "mode1");
                             mode++;
                             if (mode > 2 || mode < 0) {
@@ -702,92 +703,95 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                             }
 
                             ModUtils.NBTSetInteger(itemStack, "mode1", mode);
-                            IUCore.proxy.messagePlayer(
-                                    player,
-                                    TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
-                                            + Localization.translate("message.magnet.mode." + mode)
-                            );
+                            if (!world.isClientSide())
+                                IUCore.proxy.messagePlayer(
+                                        player,
+                                        ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": "
+                                                + Localization.translate("message.magnet.mode." + mode)
+                                );
                         }
                     }
                     int mode = ModUtils.NBTGetInteger(itemStack, "mode1");
                     if (mode != 0) {
                         int radius = 11;
-                        AxisAlignedBB axisalignedbb = new AxisAlignedBB(player.posX - radius, player.posY - radius,
-                                player.posZ - radius, player.posX + radius, player.posY + radius, player.posZ + radius
+                        AABB axisalignedbb = new AABB(player.getX() - radius, player.getY() - radius,
+                                player.getZ() - radius, player.getX() + radius, player.getY() + radius, player.getZ() + radius
                         );
-                        List<Entity> list = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(
-                                player,
-                                axisalignedbb
-                        );
-                        boolean ret1 = false;
-                        for (Entity entityinlist : list) {
-                            if (entityinlist instanceof EntityItem) {
-                                EntityItem item = (EntityItem) entityinlist;
-                                if (ElectricItem.manager.canUse(itemStack, 200)) {
-                                    if (mode == 1) {
-
-                                        item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                                        if (!player.world.isRemote) {
-                                            ((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(item));
-                                        }
-                                        item.setPickupDelay(0);
-                                        ElectricItem.manager.use(itemStack, 200, null);
-                                        ret1 = true;
-                                    } else if (mode == 2) {
-                                        boolean xcoord = item.posX + 2 >= player.posX && item.posX - 2 <= player.posX;
-                                        boolean zcoord = item.posZ + 2 >= player.posZ && item.posZ - 2 <= player.posZ;
-
-                                        if (!xcoord && !zcoord) {
-                                            item.setPosition(player.posX, player.posY - 1, player.posZ);
-                                            item.setPickupDelay(10);
-                                        }
-
-                                    }
+                        if (world instanceof ServerLevel) {
+                            LevelEntityGetter<Entity> list1 = ((ServerLevel) world).getEntities();
+                            List<Entity> list = Lists.newArrayList();
+                            list1.get(axisalignedbb, (p_151522_) -> {
+                                if (p_151522_ instanceof ItemEntity) {
+                                    list.add(p_151522_);
                                 }
+                            });
+                            boolean ret1 = false;
+                            for (Entity entityinlist : list) {
+                                if (entityinlist instanceof ItemEntity) {
+                                    ItemEntity item = (ItemEntity) entityinlist;
+                                    if (ElectricItem.manager.canUse(itemStack, 200)) {
+                                        if (mode == 1) {
 
+                                            item.moveTo(player.getX(), player.getY(), player.getZ(), 0.0F, 0.0F);
+                                            if (!player.level().isClientSide) {
+                                                ((ServerPlayer) player).connection.send(new ClientboundTeleportEntityPacket(item));
+                                            }
+                                            item.setPickUpDelay(0);
+                                            ElectricItem.manager.use(itemStack, 200, null);
+                                            ret1 = true;
+                                        } else if (mode == 2) {
+                                            boolean xcoord = item.getX() + 2 >= player.getX() && item.getX() - 2 <= player.getX();
+                                            boolean zcoord = item.getZ() + 2 >= player.getZ() && item.getZ() - 2 <= player.getZ();
+
+                                            if (!xcoord && !zcoord) {
+                                                item.moveTo(player.getX(), player.getY() - 1, player.getZ());
+                                                item.setPickUpDelay(10);
+                                            }
+
+                                        }
+                                    }
+
+                                }
+                            }
+                            if (ret1) {
+                                player.containerMenu.broadcastChanges();
                             }
                         }
-                        if (ret1) {
-                            player.inventoryContainer.detectAndSendChanges();
-                        }
-
                     }
                 }
 
                 if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SPEED, itemStack)) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300));
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300));
 
                 }
-                if (IUCore.proxy.isSimulating() && toggleTimer > 0) {
+                if (!world.isClientSide() && toggleTimer > 0) {
                     toggleTimer = (byte) (toggleTimer - 1);
-                    nbtData.setByte("toggleTimer", toggleTimer);
+                    nbtData.putByte("toggleTimer", toggleTimer);
                 }
                 break;
             case FEET:
-                if (IUCore.proxy.isSimulating()) {
-                    boolean wasOnGround = !nbtData.hasKey("wasOnGround") || nbtData.getBoolean("wasOnGround");
-                    if (wasOnGround && !player.onGround && IUCore.keyboard
+                if (!world.isClientSide()) {
+                    boolean wasOnGround = !nbtData.contains("wasOnGround") || nbtData.getBoolean("wasOnGround");
+                    if (wasOnGround && !player.onGround() && IUCore.keyboard
 
                             .isJumpKeyDown(player) && IUCore.keyboard
                             .isChangeKeyDown(player)) {
                         ElectricItem.manager.use(itemStack, 4000.0D, null);
                         ret = true;
                     }
-                    if (player.onGround != wasOnGround) {
-                        nbtData.setBoolean("wasOnGround", player.onGround);
+                    if (player.onGround() != wasOnGround) {
+                        nbtData.putBoolean("wasOnGround", player.onGround());
                     }
-                } else {
-                    if (ElectricItem.manager.canUse(itemStack, 4000.0D) && player.onGround) {
+                    if (ElectricItem.manager.canUse(itemStack, 4000.0D) && player.onGround()) {
 
                         this.jumpCharge = 1.0F;
                     }
-                    if (player.motionY >= 0.0D && this.jumpCharge > 0.0F && !player.isInWater()) {
+                    if (player.getDeltaMovement().y >= 0.0D && this.jumpCharge > 0.0F && !player.isInWater()) {
                         if (IUCore.keyboard.isJumpKeyDown(player) && IUCore.keyboard.isBootsMode(player)) {
+                            Vec3 deltaMovement = player.getDeltaMovement();
                             if (this.jumpCharge == 1.0F) {
-                                player.motionX *= 3.5D;
-                                player.motionZ *= 3.5D;
+                                player.setDeltaMovement(new Vec3(deltaMovement.x * 3.5D, deltaMovement.y + this.jumpCharge * 0.6F, deltaMovement.z * 3.5D));
                             }
-                            player.motionY += (this.jumpCharge * 0.3F);
                             this.jumpCharge = (float) (this.jumpCharge * 0.75D);
                         } else if (this.jumpCharge < 1.0F) {
                             this.jumpCharge = 0.0F;
@@ -798,104 +802,86 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                 if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.JUMP, itemStack)) {
 
 
-                    player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 300));
+                    player.addEffect(new MobEffectInstance(MobEffects.JUMP, 300));
                 }
                 break;
 
         }
 
         if (ret) {
-            player.openContainer.detectAndSendChanges();
+            player.containerMenu.broadcastChanges();
         }
     }
 
-    public String getUnlocalizedName() {
-        return Constants.ABBREVIATION + "." + super.getUnlocalizedName().substring(5);
-    }
 
-    public String getUnlocalizedName(ItemStack stack) {
-        return this.getUnlocalizedName();
-    }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack));
-    }
-
-    public void save(ItemStack stack, EntityPlayer player) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
+    public void save(ItemStack stack, Player player) {
+     /*   final NBTTagCompound nbt = ModUtils.nbt(stack);
         nbt.setBoolean("open", true);
-        nbt.setInteger("slot_inventory", player.inventory.currentItem);
+        nbt.setInteger("slot_inventory", player.inventory.currentItem);*/
     }
 
-    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, Player player) {
+     /*   if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
             ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAsThrown(stack);
                 player.closeScreen();
             }
         }
-
+*/
         return true;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(
-            @Nonnull final ItemStack itemStack,
-            @Nullable final World worldIn,
-            @Nonnull final List<String> info,
-            @Nonnull final ITooltipFlag flagIn
-    ) {
-        NBTTagCompound nbtData = ModUtils.nbt(itemStack);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> info, TooltipFlag p_41424_) {
+        super.appendHoverText(itemStack, p_41422_, info, p_41424_);
+        CompoundTag nbtData = ModUtils.nbt(itemStack);
 
         if (this.listCapability.contains(EnumCapability.FLY) || this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
-            info.add(Localization.translate("iu.fly") + " " + ModUtils.Boolean(nbtData.getBoolean("jetpack")));
+            info.add(Component.literal(Localization.translate("iu.fly") + " " + ModUtils.Boolean(nbtData.getBoolean("jetpack"))));
         }
 
 
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            info.add(Localization.translate("press.lshift"));
+        if (!KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
+            info.add(Component.literal(Localization.translate("press.lshift")));
         }
 
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+        if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
             boolean with = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITH);
             boolean without = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITHOUT);
             boolean auto = this.listCapability.contains(EnumCapability.NIGHT_VISION_AUTO);
             if (listCapability.contains(EnumCapability.SPEED)) {
-                info.add(Localization.translate("iu.special_armor_speed"));
+                info.add(Component.literal(Localization.translate("iu.special_armor_speed")));
             }
             if (with || without || auto) {
-                info.add(Localization.translate("iu.special_armor_nightvision") + Keyboard.getKeyName(Math.abs(KeyboardClient.armormode.getKeyCode())));
+                info.add(Component.literal(Localization.translate("iu.special_armor_nightvision") + KeyboardClient.armormode.getKey().getDisplayName().getString()));
                 if (with) {
-                    info.add(Localization.translate("iu.special_armor_nightvision_1"));
+                    info.add(Component.literal(Localization.translate("iu.special_armor_nightvision_1")));
                 }
                 if (without) {
-                    info.add(Localization.translate("iu.special_armor_nightvision_2"));
+                    info.add(Component.literal(Localization.translate("iu.special_armor_nightvision_2")));
                 }
                 if (auto) {
-                    info.add(Localization.translate("iu.special_armor_nightvision_3"));
+                    info.add(Component.literal(Localization.translate("iu.special_armor_nightvision_3")));
                 }
             }
             if (this.listCapability.contains(EnumCapability.BIG_JUMP)) {
-                info.add(Localization.translate("iu.special armor big jump") + Keyboard.getKeyName(
-                        Math.abs(Keyboard.KEY_SPACE)) + " + " + Keyboard.getKeyName(Math.abs(KeyboardClient.bootsmode.getKeyCode())));
+                info.add(Component.literal(Localization.translate("iu.special armor big jump") + InputConstants.getKey(InputConstants.KEY_SPACE, InputConstants.KEY_SPACE).getDisplayName().getString() + " + " + KeyboardClient.bootsmode.getKey().getDisplayName().getString()));
             }
             if (this.listCapability.contains(EnumCapability.AUTO_JUMP)) {
-                info.add(Localization.translate("iu.special_armor_auto_jump"));
+                info.add(Component.literal(Localization.translate("iu.special_armor_auto_jump")));
             }
             if (this.listCapability.contains(EnumCapability.ACTIVE_EFFECT)) {
-                info.add(Localization.translate("iu.special_armor_active_effect"));
+                info.add(Component.literal(Localization.translate("iu.special_armor_active_effect")));
             }
             if (this.listCapability.contains(EnumCapability.ALL_ACTIVE_EFFECT)) {
-                info.add(Localization.translate("iu.special_armor_all_active_effect"));
+                info.add(Component.literal(Localization.translate("iu.special_armor_all_active_effect")));
             }
             if (this.listCapability.contains(EnumCapability.BAGS)) {
-                info.add("Open bag: " + Keyboard.getKeyName(Math.abs(KeyboardClient.bootsmode.getKeyCode())) + " + " + Keyboard.getKeyName(
-                        Math.abs(KeyboardClient.leggingsmode.getKeyCode())));
+                info.add(Component.literal("Open bag: " + KeyboardClient.bootsmode.getKey().getDisplayName().getString() + " + " + KeyboardClient.leggingsmode.getKey().getDisplayName().getString()));
 
-                final NBTTagCompound nbt = ModUtils.nbt(itemStack);
+            /*    final NBTTagCompound nbt = ModUtils.nbt(itemStack);
                 if (nbt.hasKey("bag")) {
 
                     List<BagsDescription> list = new ArrayList<>();
@@ -909,25 +895,25 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                                 .getStack()
                                 .getDisplayName());
                     }
-                }
+                }*/
             }
             if (this.listCapability.contains(EnumCapability.FLY) || this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
-                info.add(Localization.translate("iu.fly_need"));
-                info.add(Localization.translate("iu.changemode_fly") + Keyboard.getKeyName(Math.abs(KeyboardClient.flymode.getKeyCode())));
+                info.add(Component.literal(Localization.translate("iu.fly_need")));
+                info.add(Component.literal(Localization.translate("iu.changemode_fly") + KeyboardClient.flymode.getKey().getDisplayName().getString()));
             }
             if (this.listCapability.contains(EnumCapability.VERTICAL_FLY)) {
 
-                info.add(Localization.translate("iu.vertical") + Keyboard.getKeyName(Math.abs(KeyboardClient.verticalmode.getKeyCode())));
+                info.add(Component.literal(Localization.translate("iu.vertical") + KeyboardClient.verticalmode.getKey().getDisplayName().getString()));
             }
             if (this.listCapability.contains(EnumCapability.FOOD)) {
-                info.add(Localization.translate("iu.food_mode_helmet"));
+                info.add(Component.translatable(Localization.translate("iu.food_mode_helmet")));
             }
             if (this.listCapability.contains(EnumCapability.JETPACK_FLY)) {
-                info.add(Localization.translate("iu.jetpack_fly_chestplate"));
+                info.add(Component.literal(Localization.translate("iu.jetpack_fly_chestplate")));
 
-                final NBTTagCompound nbt = ModUtils.nbt(itemStack);
-                final int reTimer = nbt.getInteger("reTimer");
-                final int timer = nbt.getInteger("timer");
+                final CompoundTag nbt = ModUtils.nbt(itemStack);
+                final int reTimer = nbt.getInt("reTimer");
+                final int timer = nbt.getInt("timer");
                 if (timer > 0) {
                     final List<Double> time = ModUtils.Time(timer / 20D);
                     double hours = 0;
@@ -942,8 +928,8 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                     String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
                     String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") + "" : "";
 
-                    info.add(Localization.translate("iu.timetoend") + time1 + time2 + time3 + " " + Localization.translate(
-                            "iu.jetpack_fly_chestplate_2"));
+                    info.add(Component.literal(Localization.translate("iu.timetoend") + time1 + time2 + time3 + " " + Localization.translate(
+                            "iu.jetpack_fly_chestplate_2")));
                 }
                 if (reTimer > 0) {
                     final List<Double> time = ModUtils.Time(reTimer / 20D);
@@ -959,27 +945,25 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                     String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
                     String time3 = seconds > 0 ? ModUtils.getString(seconds) + Localization.translate("iu.seconds") + "" : "";
 
-                    info.add(Localization.translate("iu.timetoend") + time1 + time2 + time3 + " " + Localization.translate(
-                            "iu.jetpack_fly_chestplate_1"));
+                    info.add(Component.translatable(Localization.translate("iu.timetoend") + time1 + time2 + time3 + " " + Localization.translate(
+                            "iu.jetpack_fly_chestplate_1")));
                 }
             }
-            if (itemStack.getItem() == IUItem.spectral_chestplate) {
-                info.add(Localization.translate("iu.streak") + Keyboard.getKeyName(KeyboardClient.streakmode.getKeyCode()));
+            if (itemStack.getItem() == IUItem.spectral_chestplate.getItem()) {
+                info.add(Component.literal(Localization.translate("iu.streak") + KeyboardClient.streakmode.getKey().getDisplayName().getString()));
             }
             if (this.listCapability.contains(EnumCapability.MAGNET)) {
-                info.add(Localization.translate("iu.magnet_mode") + Keyboard.getKeyName(Math.abs(KeyboardClient.changemode.getKeyCode())) + " + " + Keyboard.getKeyName(
-                        Math.abs(KeyboardClient.leggingsmode.getKeyCode())));
-                info.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(Math.abs(KeyboardClient.leggingsmode.getKeyCode())) + " + " + Keyboard.getKeyName(
-                        Math.abs(KeyboardClient.savemode.getKeyCode())));
+                info.add(Component.literal(Localization.translate("iu.magnet_mode") + KeyboardClient.changemode.getKey().getDisplayName().getString() + " + " + KeyboardClient.leggingsmode.getKey().getDisplayName().getString()));
+                info.add(Component.literal(Localization.translate("iu.changemode_key") + KeyboardClient.leggingsmode.getKey().getDisplayName().getString() + " + " + KeyboardClient.savemode.getKey().getDisplayName().getString()));
                 int mode = ModUtils.NBTGetInteger(itemStack, "mode1");
                 if (mode > 2 || mode < 0) {
                     mode = 0;
                 }
 
-                info.add(
-                        TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
+                info.add(Component.literal(
+                        ChatFormatting.GREEN + Localization.translate("message.text.mode") + ": "
                                 + Localization.translate("message.magnet.mode." + mode)
-                );
+                ));
             }
 
 
@@ -987,8 +971,9 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         ModUtils.mode(itemStack, info);
     }
 
-    public boolean useJetpack(EntityPlayer player) {
-        ItemStack jetpack = player.inventory.armorInventory.get(2);
+
+    public boolean useJetpack(Player player) {
+        ItemStack jetpack = player.getInventory().armor.get(2);
         if (this.getCharge(jetpack) <= 0.0D) {
             return false;
         } else {
@@ -1010,13 +995,13 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
 
                 float forwardpower = power * retruster * 2.0F;
                 if (forwardpower > 0.0F) {
-                    player.moveRelative(0.0F, 0.0F, 0.4F * forwardpower, 0.02F);
+                    player.moveRelative(0.0F, new Vec3(0.0F, 0.4F * forwardpower, 0.02F));
                 }
             }
 
-            int worldHeight = player.getEntityWorld().getHeight();
+            int worldHeight = player.level().getHeight();
             int maxFlightHeight = electric ? (int) ((float) worldHeight / 1.28F) : worldHeight;
-            double y = player.posY;
+            double y = player.getY();
             if (y > (double) (maxFlightHeight - 25)) {
                 if (y > (double) maxFlightHeight) {
                     y = maxFlightHeight;
@@ -1025,7 +1010,10 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                 power = (float) ((double) power * (((double) maxFlightHeight - y) / 25.0D));
             }
 
-            player.motionY = Math.min(player.motionY + (double) (power * 0.2F), 0.6000000238418579D);
+            Vec3 affectedMotion = player.getDeltaMovement();
+
+            double moveY = Math.min(affectedMotion.y + (double) (power * 0.2F), 0.6000000238418579D);
+            player.setDeltaMovement(affectedMotion.x, moveY, affectedMotion.z);
 
 
             int consume = 2;
@@ -1033,21 +1021,21 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
 
             consume += 6;
 
-            if (!player.onGround) {
+            if (!player.onGround()) {
                 this.use(jetpack, consume);
             }
 
             player.fallDistance = 0.0F;
-            player.distanceWalkedModified = 0.0F;
+            player.walkDist = 0.0F;
             return true;
         }
     }
 
     @SubscribeEvent
     public void onEntityLivingFallEvent(LivingFallEvent event) {
-        if (IUCore.proxy.isSimulating() && event.getEntity() instanceof EntityLivingBase) {
-            EntityLivingBase entity = (EntityLivingBase) event.getEntity();
-            ItemStack armor = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+        if (!event.getEntity().level().isClientSide() && event.getEntity() instanceof LivingEntity) {
+            LivingEntity entity = (LivingEntity) event.getEntity();
+            ItemStack armor = entity.getItemBySlot(EquipmentSlot.FEET);
             if (armor.getItem() == this) {
                 int fallDamage = Math.max((int) event.getDistance() - 10, 0);
 
@@ -1062,8 +1050,8 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                     event.setCanceled(true);
                 }
             }
-            if (entity instanceof EntityPlayer && entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == this) {
-                if (entity.getEntityData().getBoolean("isFlyActive")) {
+            if (entity instanceof Player && entity.getItemBySlot(EquipmentSlot.CHEST).getItem() == this) {
+                if (entity.getPersistentData().getBoolean("isFlyActive")) {
                     event.setCanceled(true);
                 }
             }
@@ -1093,13 +1081,13 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
 
     @Override
     public ArmorProperties getProperties(
-            final EntityLivingBase player,
+            final LivingEntity player,
             @NotNull final ItemStack armor,
             final DamageSource source,
             final double damage,
             final int slot
     ) {
-        if (source == DamageSource.FALL && this.armorType.getIndex() == 3) {
+        if (source.is(DamageTypeTags.IS_FALL) && this.getEquipmentSlot().getIndex() == 0) {
             int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, armor) ?
                     UpgradeSystem.system.getModules(EnumInfoUpgradeModules.PROTECTION, armor).number : 0);
 
@@ -1129,14 +1117,14 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
     }
 
 
-    public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
+    public int getArmorDisplay(Player player, @Nonnull ItemStack armor, int slot) {
         return ElectricItem.manager.getCharge(armor) >= this.armor.getDamageEnergy()
                 ? (int) Math.round(40.0D * this.getBaseAbsorptionRatio())
                 : 0;
     }
 
     private double getBaseAbsorptionRatio() {
-        switch (this.armorType) {
+        switch (this.getEquipmentSlot()) {
             case FEET:
                 return this.armor.getArmorMulDamage().getBootsMul();
             case HEAD:
@@ -1152,10 +1140,10 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
 
     @Override
     public void damageArmor(
-            final EntityLivingBase entity,
+            final LivingEntity entity,
             @NotNull final ItemStack stack,
             final DamageSource source,
-            final int damage,
+            final float damage,
             final int slot
     ) {
         int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, stack) ?
@@ -1171,9 +1159,25 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         );
     }
 
+
     @Override
-    public IAdvInventory getInventory(final EntityPlayer player, final ItemStack stack) {
-        return new ItemStackLegsBags(player, stack);
+    public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> items) {
+        if (this.allowedIn(p_41391_)) {
+            ItemStack stack = new ItemStack(this, 1);
+
+            CompoundTag nbt = ModUtils.nbt(stack);
+            ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
+            nbt.putInt("ID_Item", Integer.MAX_VALUE);
+            items.add(stack);
+            ItemStack itemstack = new ItemStack(this, 1);
+            nbt = ModUtils.nbt(itemstack);
+            nbt.putInt("ID_Item", Integer.MAX_VALUE);
+            items.add(itemstack);
+        }
     }
 
+    @Override
+    public CreativeModeTab getItemCategory() {
+        return IUCore.EnergyTab;
+    }
 }

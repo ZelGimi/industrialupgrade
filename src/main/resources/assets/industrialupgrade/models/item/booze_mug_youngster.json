@@ -1,8 +1,8 @@
 {
 	"credit": "texnounits",
 	"textures": {
-		"0": "industrialupgrade:items/youbgster",
-		"particle": "industrialupgrade:items/youbgster"
+		"0": "industrialupgrade:item/youbgster",
+		"particle": "industrialupgrade:item/youbgster"
 	},
 	"elements": [
 		{

@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/reactordepletedcaliforniaquad"
+    "layer0" : "industrialupgrade:item/reactordepletedcaliforniaquad"
   }
 }

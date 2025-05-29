@@ -1,32 +1,35 @@
 package com.denfop.tiles.tank;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerTank;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileEntityLiquedTank;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntitySteelTank extends TileEntityLiquedTank {
 
-    public TileEntitySteelTank() {
-        super(10);
+    public TileEntitySteelTank(BlockPos pos, BlockState state) {
+        super(10,BlockBaseMachine3.steel_tank,pos,state);
         this.containerslot1.setTypeItemSlot(InvSlot.TypeItemSlot.NONE);
     }
 
     @Override
-    public ContainerTank getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerTank getGuiContainer(final Player entityPlayer) {
         return null;
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean isAdmin) {
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player entityPlayer, ContainerBase<? extends IAdvInventory> isAdmin) {
         return null;
     }
 
@@ -35,7 +38,7 @@ public class TileEntitySteelTank extends TileEntityLiquedTank {
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2;
+        return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
 }

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/ore_washing_plant_bottom",
-    "down" : "industrialupgrade:blocks/ore_washing_plant_bottom",
-    "up" : "industrialupgrade:blocks/ore_washing_plant_bottom",
-    "north" : "industrialupgrade:blocks/ore_washing_plant_front_active",
-    "east" : "industrialupgrade:blocks/ore_washing_plant_left_active",
-    "south" : "industrialupgrade:blocks/ore_washing_plant_bottom",
-    "west" : "industrialupgrade:blocks/ore_washing_plant_left_active"
+    "particle" : "industrialupgrade:block/ore_washing_plant_bottom",
+    "down" : "industrialupgrade:block/ore_washing_plant_bottom",
+    "up" : "industrialupgrade:block/ore_washing_plant_bottom",
+    "north" : "industrialupgrade:block/ore_washing_plant_front_active",
+    "east" : "industrialupgrade:block/ore_washing_plant_left_active",
+    "south" : "industrialupgrade:block/ore_washing_plant_bottom",
+    "west" : "industrialupgrade:block/ore_washing_plant_left_active"
   }
 }

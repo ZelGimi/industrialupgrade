@@ -9,16 +9,14 @@ import com.denfop.api.gui.SteamImageInterface;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSteamSharpener;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class GuiSteamSharpener extends GuiIU<ContainerSteamSharpener> {
+public class GuiSteamSharpener<T extends ContainerSteamSharpener> extends GuiIU<ContainerSteamSharpener> {
 
     public final ContainerSteamSharpener container;
 
@@ -26,7 +24,7 @@ public class GuiSteamSharpener extends GuiIU<ContainerSteamSharpener> {
         super(container1, EnumTypeStyle.STEAM);
         this.container = container1;
 
-        this.addElement(new SteamImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.addElement(new SteamImageInterface(this, 0, 0, this.imageWidth, this.imageHeight));
         this.addComponent(new GuiComponent(this, 10, 54, EnumTypeComponent.NULL,
                 new Component<>(this.container.base.pressure)
         ));
@@ -64,26 +62,26 @@ public class GuiSteamSharpener extends GuiIU<ContainerSteamSharpener> {
         }
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
+        super.drawForegroundLayer( poseStack,par1, par2);
         handleUpgradeTooltip(par1, par2);
 
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack,float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack,this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
-        this.mc.getTextureManager().bindTexture(getTexture());
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack,float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack,f, x, y);
+        bindTexture(getTexture());
 
 
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2 + 15, 5, name, 4210752, false);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        this.drawXCenteredString(poseStack,this.imageWidth / 2 + 15, 5, name, 4210752, false);
+        bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(poseStack,3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 

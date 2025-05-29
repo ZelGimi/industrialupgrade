@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileGasPump;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGasPump extends ContainerFullInv<TileGasPump> {
 
-    public ContainerGasPump(EntityPlayer entityPlayer, TileGasPump tileEntity1) {
+    public ContainerGasPump(Player entityPlayer, TileGasPump tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));
         addSlotToContainer(new SlotInvSlot(tileEntity1.containerslot, 0, 125, 23));

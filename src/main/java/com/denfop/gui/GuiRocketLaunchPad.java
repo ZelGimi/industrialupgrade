@@ -2,25 +2,24 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
+import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerRocketLaunchPad;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import static com.denfop.api.gui.GuiElement.bindBlockTexture;
 import static com.denfop.api.gui.GuiElement.getBlockTextureMap;
 
-public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
+public class GuiRocketLaunchPad<T extends ContainerRocketLaunchPad> extends GuiIU<ContainerRocketLaunchPad> {
 
     public GuiRocketLaunchPad(ContainerRocketLaunchPad guiContainer) {
         super(guiContainer);
-        ySize = 220;
+        imageHeight = 220;
         this.componentList.clear();
         this.addElement(new TankGauge(this, 106, 15, 12, 35, guiContainer.base.tank, TankGauge.TankGuiStyle.Plain));
 
@@ -30,8 +29,8 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
     }
 
     @Override
-    protected void drawForegroundLayer(final int par1, final int par2) {
-        super.drawForegroundLayer(par1, par2);
+    protected void drawForegroundLayer(GuiGraphics poseStack, final int par1, final int par2) {
+        super.drawForegroundLayer( poseStack,par1, par2);
         for (int i = 0; i < 9; i++) {
             if (container.base.tanks[i].getFluidAmount() <= 0) {
                 continue;
@@ -39,16 +38,16 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
             FluidStack fs = container.base.tanks[i].getFluid();
             new Area(this, 8 + i * 18, 60, 18, 18).withTooltip(fs
                     .getFluid()
-                    .getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb")).drawForeground(
-                    par1,
+                    .getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb")).drawForeground(
+                    poseStack, par1,
                     par2
             );
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics  poseStack, final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer( poseStack,partialTicks, mouseX, mouseY);
         for (int i = 0; i < 9; i++) {
             if (container.base.tanks[i].getFluidAmount() <= 0) {
                 continue;
@@ -59,14 +58,15 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
             int fluidWidth = 16;
             int fluidHeight = 16;
             Fluid fluid = fs.getFluid();
-            TextureAtlasSprite sprite = fluid != null
-                    ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString())
-                    : null;
-            int color = fluid != null ? fluid.getColor(fs) : -1;
+            if (fluid == net.minecraft.world.level.material.Fluids.WATER)
+                fluid = FluidName.fluidwater.getInstance().get();
+            IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
+            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+            int color = extensions.getTintColor();
             bindBlockTexture();
-            this.drawSprite(
-                    fluidX,
-                    fluidY,
+            this.drawSprite(poseStack,
+                  guiLeft+  fluidX,
+                    guiTop+ fluidY,
                     fluidWidth,
                     fluidHeight,
                     sprite,
@@ -79,10 +79,7 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
         }
     }
 
-    @Override
-    protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
-    }
+
 
     @Override
     protected ResourceLocation getTexture() {

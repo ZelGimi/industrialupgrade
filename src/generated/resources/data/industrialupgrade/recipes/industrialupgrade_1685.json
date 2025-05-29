@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": [
+      {
+        "item": "industrialupgrade:nuclearresource/uranium_238"
+      }
+    ],
+    "B": [
+      {
+        "item": "industrialupgrade:nuclearresource/plutonium"
+      }
+    ]
+  },
+  "pattern": [
+    "AAA",
+    "BBB",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:nuclearresource/mox"
+  },
+  "show_notification": true
+}

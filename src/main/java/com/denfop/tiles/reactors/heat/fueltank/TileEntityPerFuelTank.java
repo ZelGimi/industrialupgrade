@@ -4,11 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockHeatReactor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityPerFuelTank extends TileEntityMainTank {
 
-    public TileEntityPerFuelTank() {
-        super(160000);
+    public TileEntityPerFuelTank(BlockPos pos, BlockState state) {
+        super(160000,BlockHeatReactor.heat_per_fueltank,pos,state);
     }
 
     @Override
@@ -23,7 +25,7 @@ public class TileEntityPerFuelTank extends TileEntityMainTank {
 
     @Override
     public BlockTileEntity getBlock() {
-        return IUItem.heat_reactor;
+        return IUItem.heat_reactor.getBlock(getTeBlock());
     }
 
 }

@@ -3,13 +3,9 @@ package com.denfop.invslot;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.base.TileEntityInventory;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.world.level.material.Fluid;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class InvSlotFluidByList extends InvSlotFluid implements ITypeSlot {
 
@@ -18,7 +14,7 @@ public class InvSlotFluidByList extends InvSlotFluid implements ITypeSlot {
 
     public InvSlotFluidByList(
             TileEntityInventory base1,
-            TypeItemSlot typeItemSlot1,
+            InvSlot.TypeItemSlot typeItemSlot1,
             int count,
             TypeFluidSlot typeFluidSlot,
             Fluid... fluidlist
@@ -28,22 +24,22 @@ public class InvSlotFluidByList extends InvSlotFluid implements ITypeSlot {
     }
 
     public InvSlotFluidByList(TileEntityInventory base1, int count, Fluid fluidlist) {
-        super(base1, TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
+        super(base1, InvSlot.TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
         this.acceptedFluids = new HashSet<>(Collections.singletonList(fluidlist));
     }
 
     public InvSlotFluidByList(TileEntityInventory base1, int count, Fluid... fluidlist) {
-        super(base1, TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
+        super(base1, InvSlot.TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
         this.acceptedFluids = new HashSet<>(Arrays.asList(fluidlist));
     }
 
     public InvSlotFluidByList(TileEntityInventory base1, int count, List<Fluid> fluidlist) {
-        super(base1, TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
+        super(base1, InvSlot.TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
         this.acceptedFluids = new HashSet<>(fluidlist);
     }
 
     public InvSlotFluidByList(TileEntityInventory base1, String name1, int count, Fluid fluidlist, TypeFluidSlot TypeFluidSlot) {
-        super(base1, TypeItemSlot.INPUT, count, TypeFluidSlot);
+        super(base1, InvSlot.TypeItemSlot.INPUT, count, TypeFluidSlot);
         this.acceptedFluids = new HashSet<>(Collections.singletonList(fluidlist));
     }
 

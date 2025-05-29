@@ -1,6 +1,6 @@
 {
   "parent" : "block/cube_all",
   "textures" : {
-    "all" : "industrialupgrade:blocks/gas_reactor/recirculation/adv_recirculation_side"
+    "all" : "industrialupgrade:block/gas_reactor/recirculation/adv_recirculation_side"
   }
 }

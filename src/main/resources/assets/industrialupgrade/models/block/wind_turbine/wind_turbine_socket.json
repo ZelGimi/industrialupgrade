@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/wind_turbine_socket",
-    "down" : "industrialupgrade:blocks/wind_turbine_casing_1",
-    "up" : "industrialupgrade:blocks/wind_turbine_casing_1",
-    "north" : "industrialupgrade:blocks/wind_turbine_socket",
-    "east" : "industrialupgrade:blocks/wind_turbine_casing_1",
-    "south" : "industrialupgrade:blocks/wind_turbine_casing_1",
-    "west" : "industrialupgrade:blocks/wind_turbine_casing_1"
+    "particle" : "industrialupgrade:block/wind_turbine_socket",
+    "down" : "industrialupgrade:block/wind_turbine_casing_1",
+    "up" : "industrialupgrade:block/wind_turbine_casing_1",
+    "north" : "industrialupgrade:block/wind_turbine_socket",
+    "east" : "industrialupgrade:block/wind_turbine_casing_1",
+    "south" : "industrialupgrade:block/wind_turbine_casing_1",
+    "west" : "industrialupgrade:block/wind_turbine_casing_1"
   }
 }

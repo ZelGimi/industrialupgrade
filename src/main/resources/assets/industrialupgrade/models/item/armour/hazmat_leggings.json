@@ -1,6 +1,6 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/hazmat_leggings"
+		"layer0": "industrialupgrade:item/hazmat_leggings"
 	}
 }

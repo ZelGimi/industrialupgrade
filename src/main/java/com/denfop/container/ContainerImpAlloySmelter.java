@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.TileEntityImpAlloySmelter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerImpAlloySmelter extends ContainerFullInv<TileEntityImpAlloySmelter> {
 
 
     public ContainerImpAlloySmelter(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileEntityImpAlloySmelter tileEntity1
     ) {
         super(entityPlayer, tileEntity1);

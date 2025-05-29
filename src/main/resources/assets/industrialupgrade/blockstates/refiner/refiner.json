@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=refiner": {
+      "model": "industrialupgrade:block/basemachine/refiner"
+    },
+    "facing=south,type=refiner": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "y": 180
+    },
+    "facing=west,type=refiner": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "y": 270
+    },
+    "facing=east,type=refiner": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "y": 90
+    },
+    "facing=down,type=refiner": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "x": 90
+    },
+    "facing=up,type=refiner": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "x": 270
+    },
+    "facing=north,type=refiner_invalid": {
+      "model": "industrialupgrade:block/basemachine/refiner"
+    },
+    "facing=south,type=refiner_invalid": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "y": 180
+    },
+    "facing=west,type=refiner_invalid": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "y": 270
+    },
+    "facing=east,type=refiner_invalid": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "y": 90
+    },
+    "facing=down,type=refiner_invalid": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "x": 90
+    },
+    "facing=up,type=refiner_invalid": {
+      "model": "industrialupgrade:block/basemachine/refiner",
+      "x": 270
+    }
+  }
+}

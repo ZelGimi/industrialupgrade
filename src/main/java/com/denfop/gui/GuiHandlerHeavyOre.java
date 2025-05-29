@@ -7,12 +7,13 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerHandlerHeavyOre;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class GuiHandlerHeavyOre extends GuiIU<ContainerHandlerHeavyOre> {
+@OnlyIn(Dist.CLIENT)
+public class GuiHandlerHeavyOre<T extends ContainerHandlerHeavyOre> extends GuiIU<ContainerHandlerHeavyOre> {
 
     public final ContainerHandlerHeavyOre container;
 
@@ -29,34 +30,29 @@ public class GuiHandlerHeavyOre extends GuiIU<ContainerHandlerHeavyOre> {
 
     }
 
-    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, this.imageWidth, this.imageHeight);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 2, name, 4210752, false);
+        this.drawXCenteredString(poseStack, this.imageWidth / 2, 2, net.minecraft.network.chat.Component.literal(name), 4210752, false);
     }
 
-    protected void drawForegroundLayer(int par1, int par2) {
-        super.drawForegroundLayer(par1, par2);
 
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+    protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         this.bindTexture();
 
         int progress = (int) ((218 - 178) * this.container.base.componentProgress.getBar());
 
         if (progress > 0) {
-            drawTexturedModalRect(this.guiLeft + 62, this.guiTop + 37, 178, 34, progress + 1, 14);
+            drawTexturedModalRect(poseStack, this.guiLeft() + 62, this.guiTop() + 37, 178, 34, progress + 1, 14);
         }
 
 
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIHandlerHO.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIHandlerHO.png".toLowerCase());
     }
 
 }

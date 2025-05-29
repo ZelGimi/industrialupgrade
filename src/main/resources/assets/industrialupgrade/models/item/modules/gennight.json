@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/gennight"
+    "layer0" : "industrialupgrade:item/gennight"
   }
 }

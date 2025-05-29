@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,type=aircollector": {
+      "model": "industrialupgrade:block/basemachine/aircollector"
+    },
+    "facing=south,type=aircollector": {
+      "model": "industrialupgrade:block/basemachine/aircollector",
+      "y": 180
+    },
+    "facing=west,type=aircollector": {
+      "model": "industrialupgrade:block/basemachine/aircollector",
+      "y": 270
+    },
+    "facing=east,type=aircollector": {
+      "model": "industrialupgrade:block/basemachine/aircollector",
+      "y": 90
+    },
+    "facing=down,type=aircollector": {
+      "model": "industrialupgrade:block/basemachine/aircollector",
+      "x": 90
+    },
+    "facing=up,type=aircollector": {
+      "model": "industrialupgrade:block/basemachine/aircollector",
+      "x": 270
+    },
+    "facing=north,type=aircollector_invalid": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active"
+    },
+    "facing=south,type=aircollector_invalid": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "y": 180
+    },
+    "facing=west,type=aircollector_invalid": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "y": 270
+    },
+    "facing=east,type=aircollector_invalid": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "y": 90
+    },
+    "facing=down,type=aircollector_invalid": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "x": 90
+    },
+    "facing=up,type=aircollector_invalid": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "x": 270
+    },
+    "facing=north,type=aircollector_active": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active"
+    },
+    "facing=south,type=aircollector_active": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "y": 180
+    },
+    "facing=west,type=aircollector_active": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "y": 270
+    },
+    "facing=east,type=aircollector_active": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "y": 90
+    },
+    "facing=down,type=aircollector_active": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "x": 90
+    },
+    "facing=up,type=aircollector_active": {
+      "model": "industrialupgrade:block/basemachine/aircollector_active",
+      "x": 270
+    }
+  }
+}

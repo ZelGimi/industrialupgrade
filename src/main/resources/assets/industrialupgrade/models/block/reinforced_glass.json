@@ -1,6 +1,7 @@
 {
 	"parent": "block/cube_all",
+	 "render_type": "cutout",
 	"textures": {
-		"all": "industrialupgrade:blocks/reinforced_glass"
+		"all": "industrialupgrade:block/reinforced_glass"
 	}
 }

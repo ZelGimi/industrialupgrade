@@ -7,7 +7,7 @@ import com.denfop.items.ItemWindRotor;
 import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import com.denfop.utils.DamageHandler;
 import com.denfop.utils.ModUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InvSlotWindRotor extends InvSlot implements ITypeSlot {
 
@@ -29,7 +29,7 @@ public class InvSlotWindRotor extends InvSlot implements ITypeSlot {
     public int damage(int amount, double chance) {
         int damageApplied = 0;
         if (chance > 0) {
-            if (!(this.windGenerator.getWorld().rand.nextInt(101) <= (int) (chance * 100))) {
+            if (!(this.windGenerator.getWorld().random.nextInt(101) <= (int) (chance * 100))) {
                 return 0;
             }
         }
@@ -38,7 +38,7 @@ public class InvSlotWindRotor extends InvSlot implements ITypeSlot {
         ItemWindRotor rotor = (ItemWindRotor) stack.getItem();
         if (!ModUtils.isEmpty(stack)) {
             DamageHandler.damage(stack, amount, null);
-            if (DamageHandler.getDamage(stack) <= DamageHandler.getMaxDamage(stack) * 0.75) {
+            if (DamageHandler.getDamage(stack) >= DamageHandler.getMaxDamage(stack) * 0.25) {
                 this.windGenerator.need_repair = true;
             }
         }
@@ -56,15 +56,15 @@ public class InvSlotWindRotor extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public void put(final int index, final ItemStack content) {
-        super.put(index, content);
+    public ItemStack set(final int index, final ItemStack content) {
+        super.set(index, content);
         this.windGenerator.change();
         if (!content.isEmpty()) {
             this.windGenerator.energy.setSourceTier(this.windGenerator.getRotor().getSourceTier());
         } else {
             this.windGenerator.energy.setSourceTier(1);
         }
-
+        return content;
     }
 
 }

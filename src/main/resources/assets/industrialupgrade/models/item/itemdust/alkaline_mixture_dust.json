@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/alkaline_mixture"	}
+		"layer0": "industrialupgrade:item/alkaline_mixture"	}
 }

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=geothermal_rig": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig"
+    },
+    "facing=south,type=geothermal_rig": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "y": 180
+    },
+    "facing=west,type=geothermal_rig": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "y": 270
+    },
+    "facing=east,type=geothermal_rig": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "y": 90
+    },
+    "facing=down,type=geothermal_rig": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "x": 90
+    },
+    "facing=up,type=geothermal_rig": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "x": 270
+    },
+    "facing=north,type=geothermal_rig_invalid": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig"
+    },
+    "facing=south,type=geothermal_rig_invalid": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "y": 180
+    },
+    "facing=west,type=geothermal_rig_invalid": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "y": 270
+    },
+    "facing=east,type=geothermal_rig_invalid": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "y": 90
+    },
+    "facing=down,type=geothermal_rig_invalid": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "x": 90
+    },
+    "facing=up,type=geothermal_rig_invalid": {
+      "model": "industrialupgrade:block/geothermalpump/geothermal_rig",
+      "x": 270
+    }
+  }
+}

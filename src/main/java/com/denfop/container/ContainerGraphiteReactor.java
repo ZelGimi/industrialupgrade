@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.reactors.graphite.controller.TileEntityMainController;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerGraphiteReactor extends ContainerFullInv<TileEntityMainController> {
 
-    public ContainerGraphiteReactor(TileEntityMainController tileEntityMainController, EntityPlayer entityPlayer) {
+    public ContainerGraphiteReactor(TileEntityMainController tileEntityMainController, Player entityPlayer) {
         super(entityPlayer, tileEntityMainController, 214, 250);
         addSlotToContainer(new SlotInvSlot(
                 tileEntityMainController.scheduleReactor,

@@ -1,8 +1,8 @@
 package com.denfop.integration.jei.genlava;
 
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.componets.Fluids;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class GenLavaHandler {
 
     public static void initRecipes() {
 
-        addRecipe(80000, new FluidStack(FluidRegistry.LAVA, 1000));
+        addRecipe(80000, new FluidStack(Fluids.LAVA, 1000));
 
 
     }

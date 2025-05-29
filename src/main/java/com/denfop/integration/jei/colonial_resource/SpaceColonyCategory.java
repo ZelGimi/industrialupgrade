@@ -2,53 +2,51 @@ package com.denfop.integration.jei.colonial_resource;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.gui.GuiIU;
+import com.denfop.integration.jei.IRecipeCategory;
+import com.denfop.integration.jei.JeiInform;
+import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class SpaceColonyCategory extends Gui implements IRecipeCategory<SpaceColonyRecipeWrapper> {
+public class SpaceColonyCategory extends GuiIU implements IRecipeCategory<SpaceColonyHandler> {
 
     private final IDrawableStatic bg;
-
+    JeiInform jeiInform;
     public SpaceColonyCategory(
-            final IGuiHelper guiHelper
+            final IGuiHelper guiHelper, JeiInform jeiInform
     ) {
-
+        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getInstance().player));
+        this.jeiInform=jeiInform;
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3" +
                         ".png"), 3, 3, 140,
                 170
         );
+        this.title = net.minecraft.network.chat.Component.literal(getTitles());
     }
+
 
     @Nonnull
     @Override
-    public String getUid() {
-        return "spacecolony_iu";
-    }
-
-    @Nonnull
-    @Override
-    public String getTitle() {
+    public String getTitles() {
         return Localization.translate("spacecolony_jei");
     }
 
 
-    @Nonnull
-    @Override
-    public String getModName() {
-        return Constants.MOD_NAME;
-    }
 
+    @SuppressWarnings("removal")
     @Nonnull
     @Override
     public IDrawable getBackground() {
@@ -57,44 +55,38 @@ public class SpaceColonyCategory extends Gui implements IRecipeCategory<SpaceCol
 
 
     @Override
-    public void drawExtras(@Nonnull final Minecraft mc) {
-
-
+    public void draw(SpaceColonyHandler recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics stack, double mouseX, double mouseY) {
+       drawSplitString( stack,
+                Localization.translate("iu.space_recipe.jei") + Localization.translate("iu.body." + recipe.body.getName().toLowerCase()),
+                5,
+                3,
+               140 - 5,
+                4210752
+        );
+        drawSplitString( stack,
+                Localization.translate("iu.space_recipe.jei2"), 5, 20,
+                140 - 5, 4210752
+        );
     }
 
     @Override
-    public void setRecipe(
-            final IRecipeLayout layout,
-            final SpaceColonyRecipeWrapper recipes,
-            @Nonnull final IIngredients ingredients
-    ) {
-        IGuiItemStackGroup isg = layout.getItemStacks();
-        final IGuiFluidStackGroup fff = layout.getFluidStacks();
-        int amount = recipes.getInputs1().size() + recipes.getOutputs().size();
+    public void setRecipe(IRecipeLayoutBuilder builder, SpaceColonyHandler recipes, IFocusGroup focuses) {
+        int amount = recipes.getInput().size() + recipes.getOutput().size();
         for (int i = 0; i < amount; i++) {
             int x = 5 + (i % 6) * 20;
             int y = 65 + (i / 6) * 19;
-            if (i < recipes.getInputs1().size()) {
-                isg.init(i, true, x, y);
-                isg.set(i, recipes.getInputs1().get(i));
+            if (i < recipes.getInput().size()) {
+                builder.addSlot(RecipeIngredientRole.OUTPUT,x,y).addItemStack(recipes.getInput().get(i));
             } else {
-                fff.init(
-                        i - recipes.getInputs1().size(),
-                        true,
-                        x,
-                        y,
-                        16,
-                        16,
-                        recipes.getOutputs().get(i - recipes.getInputs1().size()).amount,
-                        true,
-                        null
-                );
-                fff.set(i - recipes.getInputs1().size(), recipes.getOutputs().get(i - recipes.getInputs1().size()));
+                builder.addSlot(RecipeIngredientRole.OUTPUT,x,y).setFluidRenderer(1,true,16,16).addFluidStack(recipes.getOutput().get(i- recipes.getInput().size()).getFluid(),recipes.getOutput().get(i- recipes.getInput().size()).getAmount());
             }
 
         }
+    }
 
-
+    @Override
+    public RecipeType<SpaceColonyHandler> getRecipeType() {
+        return jeiInform.recipeType;
     }
 
     protected ResourceLocation getTexture() {

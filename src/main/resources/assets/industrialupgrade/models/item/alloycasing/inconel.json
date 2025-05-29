@@ -1,5 +1,5 @@
 {
 	"parent": "industrialupgrade:item/default",
 	"textures": {
-		"layer0": "industrialupgrade:items/inconel_casing"	}
+		"layer0": "industrialupgrade:item/inconel_casing"	}
 }

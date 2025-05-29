@@ -1,45 +1,27 @@
 package com.denfop.tiles.reactors.water.socket;
 
-import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.componets.Energy;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerWaterSocket;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiWaterSocket;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.water.ISocket;
-import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityMainSocket extends TileEntityMultiBlockElement implements ISocket {
 
     private final Energy energy;
-    private boolean addedToEnergyNet;
 
-    public TileEntityMainSocket(int Capacity) {
-        this.energy = this.addComponent((new Energy(
-                this,
-                Capacity,
-                ModUtils.allFacings,
-                ModUtils.allFacings,
-                14,
-                14,
-                false
-        )));
-        this.energy.receivingDisabled = true;
-        this.energy.sendingSidabled = false;
-    }
-
-    @Override
-    public void onLoaded() {
-        super.onLoaded();
-
+    public TileEntityMainSocket(int Capacity, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(block,pos,state);
+        this.energy = this.addComponent(Energy.asBasicSource(this, Capacity, 14));
     }
 
     public Energy getEnergy() {
@@ -52,13 +34,13 @@ public class TileEntityMainSocket extends TileEntityMultiBlockElement implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiWaterSocket(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(Player var1, ContainerBase<? extends IAdvInventory> menu) {
+        return new GuiWaterSocket((ContainerWaterSocket) menu);
     }
 
     @Override
-    public ContainerWaterSocket getGuiContainer(final EntityPlayer var1) {
+    public ContainerWaterSocket getGuiContainer(final Player var1) {
         return new ContainerWaterSocket(this, var1);
     }
 

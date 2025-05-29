@@ -1,11 +1,11 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileSteamMultiMachine;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerSteamMultiMachine extends ContainerFullInv<TileSteamMultiMachine> {
 
-    public ContainerSteamMultiMachine(EntityPlayer entityPlayer, TileSteamMultiMachine tileEntity1, int sizeWorkingSlot) {
+    public ContainerSteamMultiMachine(Player entityPlayer, TileSteamMultiMachine tileEntity1, int sizeWorkingSlot) {
         super(entityPlayer, tileEntity1, 166);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             int xDisplayPosition1 = 80 + (32 - sizeWorkingSlot) * i - sizeWorkingSlot * 10;
@@ -34,7 +34,7 @@ public class ContainerSteamMultiMachine extends ContainerFullInv<TileSteamMultiM
     }
 
     public ContainerSteamMultiMachine(
-            EntityPlayer entityPlayer,
+            Player entityPlayer,
             TileSteamMultiMachine tileEntity1,
             int sizeWorkingSlot,
             boolean jei

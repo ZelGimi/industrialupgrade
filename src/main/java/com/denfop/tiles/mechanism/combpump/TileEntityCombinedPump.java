@@ -1,17 +1,20 @@
 package com.denfop.tiles.mechanism.combpump;
 
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerCombPump;
 import com.denfop.gui.GuiCompPump;
+import com.denfop.gui.GuiCore;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -19,20 +22,20 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidRegistry;
+import com.denfop.utils.Keyboard;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -60,8 +63,8 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
     public int y;
     boolean canWork = true;
 
-    public TileEntityCombinedPump(int size, int operationLength, EnumTypePump typePump) {
-        super(0, 0, size);
+    public TileEntityCombinedPump(int size, int operationLength, EnumTypePump typePump, IMultiTileBlock block, BlockPos pos, BlockState state) {
+        super(0, 0, size, block, pos, state);
         this.containerSlot = new InvSlotFluid(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
@@ -105,14 +108,14 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
     }
 
     @Override
-    public ContainerCombPump getGuiContainer(final EntityPlayer var1) {
+    public ContainerCombPump getGuiContainer(final Player var1) {
         return new ContainerCombPump(var1, this);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        return new GuiCompPump(getGuiContainer(var1));
+    @OnlyIn(Dist.CLIENT)
+    public GuiCore<ContainerBase<? extends IAdvInventory>> getGui(final Player var1, final ContainerBase<? extends IAdvInventory> var2) {
+        return new GuiCompPump((ContainerCombPump) var2);
     }
 
     @Override
@@ -139,14 +142,14 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
                 this.energyQe.useEnergy(energyConsume);
             } else {
                 for (int i = 0; i < operationsPerTick; i++) {
-                    if (x < this.getPos().getX() + this.typePump.getXz()) {
+                    if (x < this.getBlockPos().getX() + this.typePump.getXz()) {
                         x++;
-                    } else if (z < this.getPos().getZ() + this.typePump.getXz()) {
+                    } else if (z < this.getBlockPos().getZ() + this.typePump.getXz()) {
                         z++;
-                        x = this.getPos().getX();
-                    } else if (y >= this.getPos().getY() - this.typePump.getY()) {
-                        z = this.getPos().getZ();
-                        x = this.getPos().getX();
+                        x = this.getBlockPos().getX();
+                    } else if (y >= this.getBlockPos().getY() - this.typePump.getY()) {
+                        z = this.getBlockPos().getZ();
+                        x = this.getBlockPos().getX();
                         y--;
                     } else {
                         canWork = false;
@@ -193,8 +196,8 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
         }
         liquid = this.pump(new BlockPos(x, y, z
         ), false);
-        if (this.getFluidTank().fill(liquid, false) > 0) {
-            this.getFluidTank().fill(liquid, true);
+        if (this.getFluidTank().fill(liquid, IFluidHandler.FluidAction.SIMULATE) > 0) {
+            this.getFluidTank().fill(liquid, IFluidHandler.FluidAction.EXECUTE);
             canOperate = true;
 
 
@@ -205,53 +208,34 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
     }
 
     public FluidStack pump(BlockPos pos, boolean sim) {
-        FluidStack ret = null;
+        FluidStack ret = FluidStack.EMPTY;
         int freespace = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
 
         if (freespace >= 1000) {
-            IBlockState block = this.getWorld().getBlockState(pos);
-            if (block.getMaterial().isLiquid()) {
+            BlockState block = this.getWorld().getBlockState(pos);
+            if (block.liquid()) {
+                FluidState fluidState = block.getBlock().getFluidState(block);
 
+                if (!fluidState.isSource()) {
+                    return FluidStack.EMPTY;
+                }
 
-                if (block.getBlock() instanceof IFluidBlock) {
-                    IFluidBlock liquid = (IFluidBlock) block.getBlock();
-                    if ((this.fluidTank.getFluid() == null || this.fluidTank
-                            .getFluid()
-                            .getFluid() == liquid.getFluid()) && liquid.canDrain(
-                            this.getWorld(),
-                            pos
-                    )) {
-                        if (!sim) {
-                            ret = liquid.drain(this.getWorld(), pos, true);
-                            this.getWorld().setBlockToAir(pos);
-                        } else {
-                            ret = new FluidStack(liquid.getFluid(), 1000);
-                        }
-                    }
-                } else {
-                    if (block.getBlock().getMetaFromState(block) != 0) {
-                        return null;
-                    }
-
-                    ret = new FluidStack(FluidRegistry.getFluid(block.getBlock().getUnlocalizedName().substring(5)), 1000);
-                    if (this.fluidTank.getFluid() == null || this.fluidTank
-                            .getFluid()
-                            .getFluid() == ret.getFluid()) {
-                        if (!sim) {
-                            this.getWorld().setBlockToAir(pos);
-                        }
+                ret = new FluidStack(fluidState.getType(), 1000);
+                if (this.fluidTank.getFluid().isEmpty() || this.fluidTank
+                        .getFluid()
+                        .getFluid() == ret.getFluid()) {
+                    if (!sim) {
+                        this.getWorld().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                     }
                 }
             }
         }
-
-
         return ret;
     }
 
     public void onLoaded() {
         super.onLoaded();
-        if (IUCore.proxy.isSimulating()) {
+        if (!level.isClientSide) {
             this.setUpgradestat();
             x = this.pos.getX();
             y = this.pos.getY() - 1;
@@ -306,22 +290,22 @@ public class TileEntityCombinedPump extends TileElectricLiquidTankInventory impl
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
+    public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
-        this.x = nbttagcompound.getInteger("x_pump");
-        this.y = nbttagcompound.getInteger("y_pump");
-        this.z = nbttagcompound.getInteger("z_pump");
+        this.x = nbttagcompound.getInt("x_pump");
+        this.y = nbttagcompound.getInt("y_pump");
+        this.z = nbttagcompound.getInt("z_pump");
         this.canWork = nbttagcompound.getBoolean("canWork");
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
-        nbttagcompound.setInteger("x_pump", this.x);
-        nbttagcompound.setInteger("y_pump", this.y);
-        nbttagcompound.setInteger("z_pump", this.z);
-        nbttagcompound.setBoolean("canWork", this.canWork);
+        nbttagcompound.putShort("progress", this.progress);
+        nbttagcompound.putInt("x_pump", this.x);
+        nbttagcompound.putInt("y_pump", this.y);
+        nbttagcompound.putInt("z_pump", this.z);
+        nbttagcompound.putBoolean("canWork", this.canWork);
         return nbttagcompound;
     }
 

@@ -1,13 +1,13 @@
 package com.denfop.container;
 
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ContainerMiniPanels extends ContainerFullInv<TileEntityMiniPanels> {
 
     private final TileEntityMiniPanels tileentity;
 
-    public ContainerMiniPanels(TileEntityMiniPanels tileEntityMiniPanels, EntityPlayer var1) {
+    public ContainerMiniPanels(TileEntityMiniPanels tileEntityMiniPanels, Player var1) {
         super(var1, tileEntityMiniPanels, 204, 234);
         this.tileentity = tileEntityMiniPanels;
         for (int j = 0; j < 4; ++j) {
