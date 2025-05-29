@@ -5,6 +5,7 @@ import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.register.Register;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.item.EntityItem;
@@ -96,7 +97,8 @@ public class ItemDeplanner extends Item implements IModelRegister {
                         default:
                             throw new IllegalStateException("Unexpected value: ");
                     }
-                    itemStackList.add(entry.getValue().copy());
+                    TileEntityBlock block = (TileEntityBlock) world.getTileEntity(pos.add(pos1));
+                    itemStackList.add(block.getPickBlock(null,null));
                     world.removeTileEntity(pos.add(pos1));
                     world.setBlockToAir(pos.add(pos1));
 

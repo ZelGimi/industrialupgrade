@@ -28,6 +28,7 @@ import com.denfop.invslot.InvSlotUpgrade;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
@@ -87,6 +88,20 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
+
+    @Override
+    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+        NBTTagCompound compound = super.writeToNBT(nbttagcompound);
+        compound.setInteger("levelMech",level);
+        return compound;
+    }
+
+    @Override
+    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        level = nbttagcompound.getInteger("levelMech");
+    }
+
 
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);

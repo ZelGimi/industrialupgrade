@@ -327,13 +327,16 @@ public class ColonyNet implements IColonyNet {
                             if (sends1.stacks.size() == 27) {
                                 break;
                             }
+                            if (stack != null && !stack.isEmpty())
                             sends1.addStack(stack.copy());
                         }
                         for (FluidStack fluidStack : storage.getFluidStacks()) {
                             if (sends1.fluidStacks.size() == 9) {
                                 break;
                             }
-                            sends1.addStack(fluidStack.copy());
+                            if (fluidStack != null) {
+                                sends1.addStack(fluidStack.copy());
+                            }
                         }
                         storage.getStacks().clear();
                         storage.getFluidStacks().clear();

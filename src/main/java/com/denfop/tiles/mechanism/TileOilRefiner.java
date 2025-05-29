@@ -100,7 +100,18 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
     }
+    @Override
+    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+        NBTTagCompound compound = super.writeToNBT(nbttagcompound);
+        compound.setInteger("levelMech",level);
+        return compound;
+    }
 
+    @Override
+    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        level = nbttagcompound.getInteger("levelMech");
+    }
     @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);

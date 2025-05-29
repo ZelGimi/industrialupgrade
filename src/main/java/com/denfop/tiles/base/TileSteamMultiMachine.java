@@ -7,6 +7,7 @@ import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.PressureComponent;
@@ -215,6 +216,10 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
 
         if (!entityPlayer.getHeldItem(hand).isEmpty()) {
             if (!this.getWorld().isRemote && FluidUtil.getFluidHandler(entityPlayer.getHeldItem(hand)) != null && this.fluid != null) {
+                for (AbstractComponent component : componentList) {
+                    if (component.onBlockActivated(entityPlayer, hand))
+                        return true;
+                }
                 return ModUtils.interactWithFluidHandler(entityPlayer, hand,
                         this.fluid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
                 );

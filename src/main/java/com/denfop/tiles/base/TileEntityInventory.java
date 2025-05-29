@@ -182,8 +182,9 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         super.readFromNBT(nbtTagCompound);
         NBTTagCompound invSlotsTag = nbtTagCompound.getCompoundTag("InvSlots");
 
-        for (final InvSlot invSlot : this.invSlots) {
-            invSlot.readFromNbt(invSlotsTag.getCompoundTag(String.valueOf(this.invSlots.indexOf(invSlot))));
+        for (int i = 0; i < invSlots.size();i++) {
+            InvSlot invSlot = invSlots.get(i);
+            invSlot.readFromNbt(invSlotsTag.getCompoundTag(String.valueOf(i)));
         }
     }
 
@@ -223,10 +224,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         super.writeToNBT(nbt);
         NBTTagCompound invSlotsTag = new NBTTagCompound();
 
-        for (final InvSlot invSlot : this.invSlots) {
+        for (int i = 0; i < invSlots.size();i++) {
+            InvSlot invSlot = invSlots.get(i);
             NBTTagCompound invSlotTag = new NBTTagCompound();
             invSlot.writeToNbt(invSlotTag);
-            invSlotsTag.setTag(String.valueOf(this.invSlots.indexOf(invSlot)), invSlotTag);
+
+            invSlotsTag.setTag(String.valueOf(i), invSlotTag);
         }
 
         nbt.setTag("InvSlots", invSlotsTag);

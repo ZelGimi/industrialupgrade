@@ -110,6 +110,18 @@ public class TileAdvOilRefiner extends TileElectricMachine implements IManufactu
         return ret;
     }
     @Override
+    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+        NBTTagCompound compound = super.writeToNBT(nbttagcompound);
+        compound.setInteger("levelMech",level);
+        return compound;
+    }
+
+    @Override
+    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        level = nbttagcompound.getInteger("levelMech");
+    }
+    @Override
     public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
