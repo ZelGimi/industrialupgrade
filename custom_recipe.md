@@ -316,7 +316,7 @@ If you add a new machine in your mod and register it under name `"my_custom_mach
 
 ## 6. Recipe Template (English)
 
-```json
+```json5
 {
   "type": "industrialupgrade:universal_recipe",
   "recipe_type": "<your_machine_name>",
