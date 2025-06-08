@@ -163,6 +163,7 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
         addRecipe("forge:ores/Lapis", new ItemStack(Items.LAPIS_LAZULI, 5));
         addRecipe("forge:ores/Sulfur", new ItemStack(IUItem.iudust.getStack(31), 4));
         addRecipe("forge:ores/Bor", new ItemStack(IUItem.crafting_elements.getStack(448)));
+        addRecipe("forge:ores/Boron", new ItemStack(IUItem.crafting_elements.getStack(448)));
         addRecipe("forge:ores/Redstone", new ItemStack(Items.REDSTONE, 5));
         addRecipe("forge:dusts/Quartz", new ItemStack(Items.QUARTZ));
         addRecipe(319, new ItemStack(IUItem.crafting_elements.getStack(357)));

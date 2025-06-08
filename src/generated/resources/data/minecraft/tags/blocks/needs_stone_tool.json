@@ -2,11 +2,11 @@
   "values": [
     "quantumgenerators:qg/phsp_gen",
     "simplyquarries:simplyquarries/simply_quarry",
-    "quantumgenerators:qg/nsp_gen",
     "simplyquarries:simplyquarries/adv_simply_quarry",
+    "quantumgenerators:qg/nsp_gen",
+    "simplyquarries:simplyquarries/imp_simply_quarry",
     "quantumgenerators:qg/bsp_gen",
     "quantumgenerators:qg/adsp_gen",
-    "simplyquarries:simplyquarries/imp_simply_quarry",
     "quantumgenerators:qg/grasp_gen",
     "quantumgenerators:qg/kvsp_gen",
     "simplyquarries:simplyquarries/per_simply_quarry",

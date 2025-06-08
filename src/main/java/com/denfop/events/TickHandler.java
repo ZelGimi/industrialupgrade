@@ -1,5 +1,6 @@
 package com.denfop.events;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
@@ -48,6 +49,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix3f;
@@ -84,6 +86,12 @@ public class TickHandler {
 
     public TickHandler() {
         MinecraftForge.EVENT_BUS.register(this);
+    }
+    @SubscribeEvent
+    public void initData(TickEvent.LevelTickEvent event){
+        if (event.level.isClientSide && event.phase == TickEvent.Phase.END){
+            IUCore.instance.registerData(event.level);
+        }
     }
 
     protected static BlockHitResult getPlayerPOVHitResult(Level p_41436_, Player p_41437_, ClipContext.Fluid p_41438_) {

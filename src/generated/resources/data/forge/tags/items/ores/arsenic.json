@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore2/arsenic"
+    "industrialupgrade:baseore2/arsenic",
+    "industrialupgrade:blockspace/charon_arsenic"
   ]
 }

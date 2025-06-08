@@ -353,7 +353,7 @@ public class TileEntityItemDivider extends TileElectricMachine implements
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
                 UpgradableProperty.ItemInput,
-                UpgradableProperty.FluidExtract
+                UpgradableProperty.FluidExtract,UpgradableProperty.ItemExtract
         );
     }
 

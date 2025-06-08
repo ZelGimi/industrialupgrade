@@ -22,6 +22,7 @@ import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.bee.ItemBeeAnalyzer;
 import com.denfop.items.bee.ItemJarBees;
+import com.denfop.items.book.ItemBook;
 import com.denfop.items.crop.ItemAgriculturalAnalyzer;
 import com.denfop.items.crop.ItemCrops;
 import com.denfop.items.energy.*;
@@ -44,6 +45,7 @@ import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.recipe.IURecipeSerializer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -58,7 +60,9 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -97,6 +101,7 @@ public class Register {
     public static DeferredRegister<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegister.create(Registries.CONFIGURED_FEATURE, IUCore.MODID);
 
     public static DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, IUCore.MODID);
+    public static DeferredRegister<RecipeType<?>> RECIPE_TYPE = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, IUCore.MODID);
     public static DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, IUCore.MODID);
 
     public static RegistryObject<DamageType> currentObject;
@@ -113,6 +118,8 @@ public class Register {
 
     public static DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, IUCore.MODID);
+    public static RegistryObject<RecipeType<Recipe<?>>> UNIVERSAL_RECIPE_TYPE;
+    public static RegistryObject<IURecipeSerializer> RECIPE_SERIALIZER_IU;
 
     public static void register() {
         ITEMS.register(IUCore.context.getModEventBus());
@@ -129,7 +136,10 @@ public class Register {
         MENU_TYPE.register(IUCore.context.getModEventBus());
         ENTITIES.register(IUCore.context.getModEventBus());
         DAMAGE_TYPE.register(IUCore.context.getModEventBus());
+        RECIPE_TYPE.register(IUCore.context.getModEventBus());
         TABS.register(IUCore.context.getModEventBus());
+        UNIVERSAL_RECIPE_TYPE = RECIPE_TYPE.register("universal_recipe", () -> new RecipeType<>() {});
+        RECIPE_SERIALIZER_IU = RECIPE_SERIALIZER.register("universal_recipe", IURecipeSerializer::new);
         TABS.register("iutab",
                 () -> IUCore.IUTab);
         TABS.register("moduletab",
@@ -738,6 +748,7 @@ public class Register {
                 EnumRoversLevelFluid.THREE, 3));
         IUItem.per_probe = new DataSimpleItem<>(new ResourceLocation("rover", "per_probe"), () -> new ItemRover("per_probe", 40000, EnumRoversLevel.FOUR, EnumTypeRovers.PROBE, 5, 5000000, 16384,
                 EnumRoversLevelFluid.FOUR, 4));
+        IUItem.book = new DataSimpleItem<>(new ResourceLocation("book", "guide_book"), () -> new ItemBook("guide_book"));
 
         IUItem.rover = new DataSimpleItem<>(new ResourceLocation("rover", "rover"), () -> new ItemRover("rover", 10000, EnumRoversLevel.ONE, EnumTypeRovers.ROVERS, 2, 500000, 2048,
                 EnumRoversLevelFluid.ONE, 1));
@@ -962,38 +973,38 @@ public class Register {
                 Constants.MOD_ID,
                 "textures/item/rotor/steel_rotor_model_1.png"
         )));
-        IUItem.carbon_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_carbon"), () -> new ItemSteamRod(1, 0.15, (int) (60800 * 1.5), new ResourceLocation(
+        IUItem.carbon_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_carbon"), () -> new ItemSteamRod(1, 0.2, (int) (60800 * 1.5), new ResourceLocation(
                 Constants.MOD_ID, "textures/item/rotor/carbon_rotor_model_1.png")));
 
 
-        IUItem.iridium_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_iridium"), () -> new ItemSteamRod(1, 0.2, (int) (60800 * 2),
+        IUItem.iridium_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_iridium"), () -> new ItemSteamRod(1, 0.4, (int) (60800 * 2),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbo_rotor_model1.png")
         ));
-        IUItem.compressiridium_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_compressiridium"), () -> new ItemSteamRod(1, 0.25, (int) (60800 * 3),
+        IUItem.compressiridium_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_compressiridium"), () -> new ItemSteamRod(1, 0.6, (int) (60800 * 3),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_2.png")
         ));
-        IUItem.spectral_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_spectral"), () -> new ItemSteamRod(1, 0.35, (int) (60800 * 4),
+        IUItem.spectral_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_spectral"), () -> new ItemSteamRod(1, 0.95, (int) (60800 * 4),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_3.png")
         ));
-        IUItem.myphical_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_myphical"), () -> new ItemSteamRod(2, 0.45, (int) (60800 * 6),
+        IUItem.myphical_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_myphical"), () -> new ItemSteamRod(2, 1.15, (int) (60800 * 6),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_4.png")
         ));
 
-        IUItem.photon_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_photon"), () -> new ItemSteamRod(2, 0.6, (int) (60800 * 10),
+        IUItem.photon_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_photon"), () -> new ItemSteamRod(2, 1.5, (int) (60800 * 10),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_6.png")
         ));
-        IUItem.neutron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_neutron"), () -> new ItemSteamRod(2, 0.7, (int) (60800 * 15),
+        IUItem.neutron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_neutron"), () -> new ItemSteamRod(2, 2.0, (int) (60800 * 15),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_5.png")
         ));
 
-        IUItem.barion_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_barion"), () -> new ItemSteamRod(3, 0.825, (int) (60800 * 20),
+        IUItem.barion_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_barion"), () -> new ItemSteamRod(3, 2.5, (int) (60800 * 20),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_7.png")
         ));
 
-        IUItem.hadron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_hadron"), () -> new ItemSteamRod(3, 0.95, (int) (60800 * 30),
+        IUItem.hadron_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_hadron"), () -> new ItemSteamRod(3, 3, (int) (60800 * 30),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_8.png")
         ));
-        IUItem.ultramarine_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_ultramarine"), () -> new ItemSteamRod(3, 1.15, (int) (60800 * 50),
+        IUItem.ultramarine_steam_blade = new DataSimpleItem<>(new ResourceLocation("steam_blade", "steam_blade_ultramarine"), () -> new ItemSteamRod(3, 3.5, (int) (60800 * 50),
                 new ResourceLocation(Constants.MOD_ID, "textures/item/carbon_rotor_model_9.png")
         ));
         IUItem.hops = new DataSimpleItem<>(new ResourceLocation("", "hops"), () -> (IUItemBase) new IUItemBase(IUCore.CropsTab));

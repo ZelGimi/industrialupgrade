@@ -32,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -106,7 +107,7 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteH
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GraphiteHandler recipe, IFocusGroup focuses) {
         final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
-        final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
+        final List<ItemStack> inputs = Arrays.asList(recipe.getInput(),recipe.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
             builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));

@@ -14,6 +14,7 @@ import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.bee.ItemBeeAnalyzer;
 import com.denfop.items.bee.ItemJarBees;
+import com.denfop.items.book.ItemBook;
 import com.denfop.items.crop.ItemAgriculturalAnalyzer;
 import com.denfop.items.crop.ItemCrops;
 import com.denfop.items.energy.*;
@@ -826,6 +827,7 @@ public class IUItem {
     public static DataSimpleItem<ItemAxe, ResourceLocation> topaz_axe;
     public static DataSimpleItem<ItemShovel, ResourceLocation> topaz_shovel;
     public static DataSimpleItem<ItemShovel, ResourceLocation> sapphire_shovel;
+    public static DataSimpleItem<ItemBook, ResourceLocation> book;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

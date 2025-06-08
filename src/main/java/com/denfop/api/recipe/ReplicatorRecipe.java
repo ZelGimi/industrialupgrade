@@ -3,12 +3,16 @@ package com.denfop.api.recipe;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.recipes.ItemStackHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+
+import static com.denfop.register.RegisterOreDictionary.list_baseore1;
+import static com.denfop.register.RegisterOreDictionary.list_string;
 
 public class ReplicatorRecipe {
 
@@ -181,6 +185,25 @@ public class ReplicatorRecipe {
         add(Items.GUNPOWDER, 2.361);
         add(Items.STRING, 146.8);
         add(Items.BONE, 80.57);
+        for (String s : list_string) {
+            add("forge:ingots/" + s, 25);
+        }
+        for (String s : list_baseore1) {
+            add("forge:ingots/" + s, 25);
+        }
+        for (String s : list_string) {
+            add("forge:storage_blocks/" + s, 25 * 9 * 0.9);
+        }
+        for (String s : list_baseore1) {
+            add("forge:storage_blocks/" + s, 25 * 9 * 0.9);
+        }
+        add(ItemStackHelper.fromData(IUItem.iudust, 1, 66), 8);
+        add(ItemStackHelper.fromData(IUItem.iudust, 1, 69), 8);
+        add(ItemStackHelper.fromData(IUItem.iudust, 1, 70), 8);
+        add(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 461), 5);
+        add(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 462), 3);
+        add(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 463), 3);
+        add(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 481), 6.5);
     }
 
     public static double getInBuckets(ItemStack request) {

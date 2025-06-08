@@ -80,7 +80,7 @@ public class TileEntityGasTurbineController extends TileMultiBlockBase implement
                         for (IRecuperator recuperator : recuperators) {
                             ((IExchangerItem) recuperator.getExchanger().get(0).getItem()).damageItem(recuperator
                                     .getExchanger()
-                                    .get(0), -1);
+                                    .get(0), 1);
                         }
                     }
                     energy.getEnergy().setSourceTier(EnergyNetGlobal.instance.getTierFromPower(generate * coef) + 1);

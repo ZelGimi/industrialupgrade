@@ -46,7 +46,9 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
         if (random.nextInt(3) > 0) {
             return false;
         }
-        Holder<Biome> biome = level.getBiome(blockPos);
+         int height2 = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, blockPos.getX(), blockPos.getZ());
+
+        Holder<Biome> biome = level.getBiome(new BlockPos(blockPos.getX(),height2,blockPos.getZ()));
         final int value = random.nextInt(101 + ((biome.is(BiomeTags.IS_HILL)) ? 20 : 0));
         if (value <= 55) {
             veinType.setVein(TypeVein.SMALL);
@@ -68,7 +70,7 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
             } else if (veinType.getVein() == TypeVein.BIG) {
                 radius = level.getRandom().nextInt(7) + 5;
             }
-            pos = new BlockPos(blockPos.getX(), (int) (height - radius * 0.9 - random.nextInt(15)), blockPos.getZ());
+            pos = new BlockPos(blockPos.getX(), (int) (height - radius * 0.9 - random.nextInt(35)), blockPos.getZ());
             ChunkPos chunkPos = null;
             ChunkAccess chunk1 = null;
             for (int x = -radius; x <= radius; x++) {
@@ -638,10 +640,18 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
             if (state.isAir() || pos.getY() >= chunk.getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()) - 4) {
                 return false;
             }
+            if (isCoralOrCoralBlock(state) || isWaterPlant(state) || state.is(BlockTags.LOGS)
+                    || state.is(BlockTags.SWORD_EFFICIENT)  || state.is(BlockTags.REPLACEABLE_BY_TREES)|| state.is(BlockTags.DIRT)|| state.is(BlockTags.BAMBOO_PLANTABLE_ON)) {
+                return false;
+            }
             MapColor color = state.getMapColor(world,pos);
             return color != MapColor.SAND && color != MapColor.CLAY && color != MapColor.WOOD && !state.liquid();
         }
         if (state.isAir() || pos.getY() >= chunk.getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()) - 4) {
+            return false;
+        }
+        if (isCoralOrCoralBlock(state) || isWaterPlant(state) || state.is(BlockTags.LOGS)
+                || state.is(BlockTags.SWORD_EFFICIENT) || state.is(BlockTags.REPLACEABLE_BY_TREES)|| state.is(BlockTags.DIRT)|| state.is(BlockTags.BAMBOO_PLANTABLE_ON)) {
             return false;
         }
         MapColor color = state.getMapColor(world,pos);
@@ -677,10 +687,9 @@ public class AlgorithmVein extends Feature<NoneFeatureConfiguration> {
         if (state.isAir() || pos.getY() >= chunk.getHeight(Heightmap.Types.WORLD_SURFACE, pos.getX(), pos.getZ()) - 4) {
             return false;
         }
-        if (pos.getY() >= 60) {
-            return false;
-        }
-        if (isCoralOrCoralBlock(state) || isWaterPlant(state)) {
+
+        if (isCoralOrCoralBlock(state) || isWaterPlant(state)  || state.is(BlockTags.LOGS)
+                || state.is(BlockTags.REPLACEABLE_BY_TREES)|| state.is(BlockTags.DIRT) || state.is(BlockTags.BAMBOO_PLANTABLE_ON)|| state.is(BlockTags.SWORD_EFFICIENT)) {
             return false;
         }
         MapColor color = state.getMapColor(world,pos);

@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore1/osmium"
+    "industrialupgrade:baseore1/osmium",
+    "industrialupgrade:blockspace4/rhea_osmium_ore"
   ]
 }

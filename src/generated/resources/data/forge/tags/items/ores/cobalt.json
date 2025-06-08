@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore/cobalt"
+    "industrialupgrade:baseore/cobalt",
+    "industrialupgrade:blockspace3/mars_cobalt_ore"
   ]
 }

@@ -328,7 +328,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                             continue;
                         }
                         this.removeHeat(exchanger.getPower());
-                        boolean update = exchanger.getExchanger().damageItem(exchanger.getSlot().get(0), -1);
+                        boolean update = exchanger.getExchanger().damageItem(exchanger.getSlot().get(0), 1);
                         if (update) {
                             exchanger.getSlot().set(0, ItemStack.EMPTY);
                         }

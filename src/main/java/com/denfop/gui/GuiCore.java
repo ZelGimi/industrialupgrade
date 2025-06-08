@@ -846,7 +846,7 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
 
     public void drawItem(GuiGraphics graphics, int x, int y, ItemStack itemStack) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        graphics.renderItemDecorations(font, itemStack, x, y);
+        graphics.renderItem(itemStack, x + this.guiLeft(), y + this.guiTop());
     }
 
     public void drawColoredRect(GuiGraphics poseStack, int x, int y, int width, int height, int color, BufferBuilder bufferBuilder) {
@@ -1037,6 +1037,30 @@ public class GuiCore<T extends ContainerBase<? extends IAdvInventory>> extends A
 
     public void drawTexturedModalRect(GuiGraphics poseStack, int i, int i1, int i2, int i3, int i4, int i5) {
         poseStack.blit(currentTexture, i, i1, i2, i3, i4, i5);
+    }
+
+    public void drawTextInCanvasWithScissor(GuiGraphics poseStack, String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, int scale) {
+        int maxWidth = (int) (canvasWidth / 1);
+        int lineHeight = (int) (10 * 1);
+        int x = canvasX;
+        int y = canvasY;
+
+
+        List<String> lines = wrapTextWithNewlines(text, maxWidth);
+
+
+        for (int i = scale - 1; i < lines.size();i++) {
+            String line = lines.get(i);
+            if (y + lineHeight > canvasY + canvasHeight) {
+                break;
+            }
+            poseStack.pose().pushPose();
+            poseStack.pose().scale(1, 1, 1);
+            drawString(poseStack,line, (int) (x / 1), (int) (y / 1), 0xFFFFFF);
+            poseStack.pose().popPose();
+
+            y += lineHeight;
+        }
     }
 
     private static class Tooltip {

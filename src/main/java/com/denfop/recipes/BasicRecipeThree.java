@@ -599,7 +599,7 @@ public class BasicRecipeThree {
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.gas_reactor, 1, 20),
                 "EFE", "CAC", "DBD", 'A', ItemStackHelper.fromData(IUItem.gas_reactor, 1, 12),
-                'B', getBlockStack(BlockBaseMachine3.refrigerator_coolant),
+                'B', getBlockStack(BlockBaseMachine3.fluid_cooling),
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 414),
                 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 320), 'F', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 326), 'E',
                 "forge:plates/Carbon"

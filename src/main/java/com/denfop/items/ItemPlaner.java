@@ -113,7 +113,7 @@ public class ItemPlaner extends Item implements IItemTab {
                         BlockPos pos2 = pos.offset(pos1);
                         ItemBlockTileEntity item1 = (ItemBlockTileEntity) item.getItem();
                         BlockEntity tileEntity = world.getBlockEntity(pos2);
-                        if (tileEntity == null && world.getBlockState(pos2).isAir()) {
+                        if (tileEntity == null  && canPlace(world.getBlockState(pos2))) {
                             BlockPlaceContext placeContext = new BlockPlaceContext(context.getLevel(), context.getPlayer(), context.getHand(), context.getItemInHand(), new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos2, false));
                             if (item1.place(placeContext) == InteractionResult.SUCCESS) {
                                 TileEntityMultiBlockElement tileEntity2 = (TileEntityMultiBlockElement) world.getBlockEntity(pos2);
@@ -175,7 +175,7 @@ public class ItemPlaner extends Item implements IItemTab {
     }
 
     private boolean canPlace(BlockState state) {
-        return state.isAir()|| state.getBlock() == Blocks.TALL_GRASS || state.liquid();
+        return state.isAir()|| state.getBlock() == Blocks.TALL_GRASS || state.liquid() || state.canBeReplaced();
     }
 
 }

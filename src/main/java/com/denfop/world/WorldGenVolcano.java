@@ -1,9 +1,11 @@
 package com.denfop.world;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -20,7 +22,9 @@ public class WorldGenVolcano extends Feature<NoneFeatureConfiguration> {
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_159749_) {
-        Holder<Biome> holder = p_159749_.level().getBiome(p_159749_.origin());
+        int y = p_159749_.level().getHeight(Heightmap.Types.WORLD_SURFACE_WG, p_159749_.origin().getX(), p_159749_.origin().getZ());
+
+        Holder<Biome> holder = p_159749_.level().getBiome(new BlockPos(p_159749_.origin().getX(),y,p_159749_.origin().getZ()));
         if (holder.is(BiomeTags.IS_MOUNTAIN) || holder.is(BiomeTags.IS_HILL)) {
             if (WorldBaseGen.random.nextInt(100) == 95) {
                 if (WorldBaseGen.random.nextInt(100) >= 60) {

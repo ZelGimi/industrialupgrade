@@ -202,7 +202,6 @@ public class ItemSteelHammer extends ItemToolIU {
             }
 
             if (world.destroyBlock(pos, true, entity)) {
-                block.playerDestroy(world, player, pos, state, null, stack);
 
                 List<ItemEntity> items = world.getEntitiesOfClass(
                         ItemEntity.class,

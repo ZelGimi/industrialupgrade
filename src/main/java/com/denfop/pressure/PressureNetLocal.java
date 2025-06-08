@@ -54,6 +54,7 @@ public class PressureNetLocal implements IPressureNet {
 
     public void remove(final IPressureSource par1) {
         final PressureTick<IPressureSource, PressurePath> energyTick = this.senderPath.removeSource(par1);
+        if (energyTick != null)
         if (energyTick.getList() != null) {
             for (PressurePath PressurePath : energyTick.getList()) {
                 PressurePath.target.getEnergyTickList().remove(energyTick.getSource());

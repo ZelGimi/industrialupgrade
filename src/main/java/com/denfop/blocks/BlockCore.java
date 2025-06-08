@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -115,6 +116,7 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
     public T[] getElements() {
         return elements;
     }
+
 
 
 

@@ -88,7 +88,7 @@ public class GuiChemicalExchanger<T extends ContainerDefaultMultiElement> extend
                 76, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground(poseStack,mouseX, mouseY);
+            element.drawBackground(poseStack,guiLeft,guiTop);
         }
     }
 

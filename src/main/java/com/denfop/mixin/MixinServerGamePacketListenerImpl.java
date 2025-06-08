@@ -70,33 +70,34 @@ public abstract class MixinServerGamePacketListenerImpl {
                 BlockEntity blockEntity = this.player.level().getBlockEntity(blockpos);
                 if (blockEntity instanceof TileEntityBlock base) {
                     AABB aabb = base.getAabb(false);
-                    if ((Math.abs(vec32.x()) > 1 || Math.abs(vec32.y()) > 1 || Math.abs(vec32.z()) > 1) &&  Math.abs(vec32.x()) <= aabb.maxX && Math.abs(vec32.y()) <= aabb.maxY && Math.abs(vec32.z()) <= aabb.maxZ) {
-                        Direction direction = blockhitresult.getDirection();
-                        this.player.resetLastActionTime();
-                        int i = this.player.level().getMaxBuildHeight();
-                        if (blockpos.getY() < i) {
-                            if (this.awaitingPositionFromClient == null && serverlevel.mayInteract(this.player, blockpos)) {
-                                InteractionResult interactionresult = this.player.gameMode.useItemOn(this.player, serverlevel, itemstack, interactionhand, blockhitresult);
-                                if (direction == Direction.UP && !interactionresult.consumesAction() && blockpos.getY() >= i - 1 && wasBlockPlacementAttempt(this.player, itemstack)) {
-                                    Component component = Component.translatable("build.tooHigh", i - 1).withStyle(ChatFormatting.RED);
-                                    this.player.sendSystemMessage(component, true);
-                                } else if (interactionresult.shouldSwing()) {
-                                    this.player.swing(interactionhand, true);
+                    if (aabb.maxX > 1 || aabb.maxY > 1 && aabb.maxZ > 1)
+                        if ((Math.abs(vec32.x()) > 1 || Math.abs(vec32.y()) > 1 || Math.abs(vec32.z()) > 1) && Math.abs(vec32.x()) <= aabb.maxX && Math.abs(vec32.y()) <= aabb.maxY && Math.abs(vec32.z()) <= aabb.maxZ) {
+                            Direction direction = blockhitresult.getDirection();
+                            this.player.resetLastActionTime();
+                            int i = this.player.level().getMaxBuildHeight();
+                            if (blockpos.getY() < i) {
+                                if (this.awaitingPositionFromClient == null && serverlevel.mayInteract(this.player, blockpos)) {
+                                    InteractionResult interactionresult = this.player.gameMode.useItemOn(this.player, serverlevel, itemstack, interactionhand, blockhitresult);
+                                    if (direction == Direction.UP && !interactionresult.consumesAction() && blockpos.getY() >= i - 1 && wasBlockPlacementAttempt(this.player, itemstack)) {
+                                        Component component = Component.translatable("build.tooHigh", i - 1).withStyle(ChatFormatting.RED);
+                                        this.player.sendSystemMessage(component, true);
+                                    } else if (interactionresult.shouldSwing()) {
+                                        this.player.swing(interactionhand, true);
+                                    }
                                 }
+                            } else {
+                                Component component1 = Component.translatable("build.tooHigh", i - 1).withStyle(ChatFormatting.RED);
+                                this.player.sendSystemMessage(component1, true);
                             }
-                        } else {
-                            Component component1 = Component.translatable("build.tooHigh", i - 1).withStyle(ChatFormatting.RED);
-                            this.player.sendSystemMessage(component1, true);
-                        }
 
-                        this.player.connection.send(new ClientboundBlockUpdatePacket(serverlevel, blockpos));
-                        this.player.connection.send(new ClientboundBlockUpdatePacket(serverlevel, blockpos.relative(direction)));
-                    } else {
-                        LOGGER.warn("Rejecting UseItemOnPacket from {}: Location {} too far away from hit block {}.", this.player.getGameProfile().getName(), vec3, blockpos);
-                    }
-                }
+                            this.player.connection.send(new ClientboundBlockUpdatePacket(serverlevel, blockpos));
+                            this.player.connection.send(new ClientboundBlockUpdatePacket(serverlevel, blockpos.relative(direction)));
+                        } else {
+                            LOGGER.warn("Rejecting UseItemOnPacket from {}: Location {} too far away from hit block {}.", this.player.getGameProfile().getName(), vec3, blockpos);
+                        }
                 }
             }
         }
     }
+}
 

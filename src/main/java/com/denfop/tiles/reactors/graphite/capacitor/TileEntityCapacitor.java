@@ -104,7 +104,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
                 if (item == null) {
                     this.item = (ICapacitorItem) this.slot.get(0).getItem();
                 }
-                this.item.damageItem(this.slot.get(0), -1);
+                this.item.damageItem(this.slot.get(0), 1);
             }
         }
     }

@@ -2,6 +2,7 @@ package com.denfop.utils;
 
 
 import com.denfop.api.item.IDamageItem;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -50,6 +51,7 @@ public class DamageHandler {
         } else if (item instanceof IDamageItem) {
             return ((IDamageItem) item).applyCustomDamage(stack, damage, src);
         } else
+            stack.hurtAndBreak(damage,src,(p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             return false;
     }
 

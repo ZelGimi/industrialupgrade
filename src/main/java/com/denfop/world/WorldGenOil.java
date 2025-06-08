@@ -10,6 +10,7 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -36,7 +37,10 @@ public class WorldGenOil extends Feature<NoneFeatureConfiguration> {
         this.spreadBlock = fluidName.getInstance().get().getSource().defaultFluidState().createLegacyBlock();
 
         BlockPos pos = context.origin();
-        Holder<Biome> holder = context.level().getBiome(pos);
+        int y = context.level().getHeight(Heightmap.Types.WORLD_SURFACE_WG, context.origin().getX(), context.origin().getZ());
+
+        Holder<Biome> holder = context.level().getBiome(new BlockPos(context.origin().getX(),y,context.origin().getZ()));
+
         if (!holder.is(Tags.Biomes.IS_DESERT)) {
             return false;
         }
@@ -44,7 +48,7 @@ public class WorldGenOil extends Feature<NoneFeatureConfiguration> {
         WorldGenLevel world = context.level();
         int x = pos.getX();
         int z = pos.getZ();
-        int y =  context.random().nextInt(context.random().nextInt(context.random().nextInt(112) + 8) + 8) + 60;
+         y =  context.random().nextInt(context.random().nextInt(context.random().nextInt(112) + 8) + 8) + 60;
         BlockState block_state = world.getBlockState(pos);
         while (y > 40 && block_state.isAir()) {
             y--;

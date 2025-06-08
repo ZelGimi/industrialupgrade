@@ -139,6 +139,7 @@ public class ClientProxy extends CommonProxy {
             if (ItemUpgradeMachinesKit.tick % 40 == 0) {
                 for (int i = 0; i < ItemUpgradeMachinesKit.inform.length; i++) {
                     final List<ItemStack> list1 = IUItem.map_upgrades.get(i);
+                    if (list1 != null)
                     ItemUpgradeMachinesKit.inform[i] = ++ItemUpgradeMachinesKit.inform[i] % list1.size();
                 }
             }

@@ -530,6 +530,8 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
             this.chunkLevel = chunkLevel;
 
         }
+        if (queen != null)
+            queen = BeeNetwork.instance.getBee(queen.getId());
     }
 
     @Override

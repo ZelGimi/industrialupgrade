@@ -996,7 +996,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
     public void damageFan(final int i) {
         ((ItemsFan) listInterCooler.get(i).getSlot().get(0).getItem()).applyCustomDamage(
                 listInterCooler.get(i).getSlot().get(0),
-                -1,
+                1,
                 null
         );
 
@@ -1037,7 +1037,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
         ((ItemsPumps) listReCirculationPump.get(i).getSlot().get(0).getItem()).applyCustomDamage(listReCirculationPump
                 .get(i)
                 .getSlot()
-                .get(0), -1, null);
+                .get(0), 1, null);
     }
 
 }

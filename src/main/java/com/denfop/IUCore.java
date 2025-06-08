@@ -5,6 +5,7 @@ import com.denfop.api.agriculture.CropInit;
 import com.denfop.api.cool.CoolNet;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gasvein.GasVeinSystem;
+import com.denfop.api.guidebook.GuideBookCore;
 import com.denfop.api.heat.HeatNet;
 import com.denfop.api.multiblock.MultiBlockSystem;
 import com.denfop.api.pollution.PollutionManager;
@@ -192,15 +193,7 @@ public class IUCore
         IUCore.instance = this;
         new TileBlockCreator();
         ElectricItem.manager = new ElectricItemManager();
-        Config.loadValues();
-        CommentedFileConfig configData = CommentedFileConfig.builder(FMLPaths.CONFIGDIR.get().resolve(Constants.MOD_ID + ".toml"))
-                .sync()
-                .autosave()
-                .preserveInsertionOrder()
-                .writingMode(WritingMode.REPLACE)
-                .build();
-        configData.load();
-        Config.SPEC.setConfig(configData);
+
         new MultiBlockSystem();
         Recipes.registerRecipes();
         new VeinSystem();
@@ -691,30 +684,12 @@ public class IUCore
 
         }
     }
-    boolean reg = false;
-    List<RegistryObject<?>> objects = new ArrayList<>();
-    @SubscribeEvent
-    public void registerItemTab(BuildCreativeModeTabContentsEvent event) {
-        if (!reg){
-            objects.addAll(DataItem.objects);
-            objects.addAll(DataBlockEntity.objects);
-            objects.addAll(DataBlock.objects);
-            reg = true;
-        }
-        NonNullList<ItemStack> stackNonNullList =  NonNullList.create();
-        for (RegistryObject<?> object : objects){
-            if (object.get() instanceof IItemTab){
-                IItemTab iItemTab = (IItemTab) object.get();
-                iItemTab.fillItemCategory(event.getTab(),stackNonNullList);
-
-            }
-        }
-        stackNonNullList.forEach(event::accept);
-    }
-    @SubscribeEvent
-    public void onServerStarting(ServerStartedEvent event) {
+    public void registerData(Level level) {
         if (!register1) {
             register1 = true;
+            Recipes.recipes.initializationRecipes();
+            Recipes.recipes.removeAllRecipesFromList();
+            Recipes.recipes.addAllRecipesFromList();
             List<IMultiTileBlock> tiles = TileBlockCreator.instance.getAllTiles();
             for (IMultiTileBlock tileBlock : tiles)
 
@@ -723,18 +698,16 @@ public class IUCore
                         mechanism_info1.put(tileBlock, tileBlock.getDummyTe().getPickBlock(null, null).getDisplayName());
                     }
                 }
-            RegistryAccess registryAccess = event.getServer().registryAccess();
-            Registry<Biome> biomeRegistry = registryAccess.registryOrThrow(Registries.BIOME);
-            CropInit.initBiomes(biomeRegistry);
-            ServerLevel level = event.getServer().overworld();
+
+            CropInit.initBiomes(level.registryAccess().registryOrThrow(Registries.BIOME));
             RecipeManager recipeManager = level.getRecipeManager();
-            IUDamageSource.initDamage(event.getServer().overworld().registryAccess());
+
 
             Collection<SmeltingRecipe> furnaceRecipes = recipeManager.getAllRecipesFor(RecipeType.SMELTING);
 
             for (SmeltingRecipe recipe : furnaceRecipes) {
                 ItemStack input = recipe.getIngredients().get(0).getItems()[0];
-                ItemStack output = recipe.getResultItem(event.getServer().getLevel(Level.OVERWORLD).registryAccess());
+                ItemStack output = recipe.getResultItem(level.registryAccess());
                 if (input.isEmpty()) {
                     continue;
                 }
@@ -904,28 +877,276 @@ public class IUCore
             }
             try {
 
-                Field potionMixesField = ObfuscationReflectionHelper.findField(PotionBrewing.class, "f_43494_");
-                potionMixesField.setAccessible(true);
-                List<?> potionMixes = (List<?>) potionMixesField.get(null);
+                PotionRecipes.init();
+                List<PotionRecipes.Mix<Potion>> potionMixes = PotionRecipes.potionMixes;
+                for (PotionRecipes.Mix<Potion> mix : potionMixes) {
+                    Holder<Potion> from = mix.from();
+                    Ingredient ingredient = mix.ingredient();
+                    Holder<Potion> to = mix.to();
+
+                    ItemStack inputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), from.value());
+                    ItemStack outputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), to.value());
 
 
-                Class<?> mixClass = Class.forName("net.minecraft.world.item.alchemy.PotionBrewing$Mix");
+                    Recipes.recipes.addRecipe(
+                            "brewing",
+                            new BaseMachineRecipe(
+                                    new Input(
+                                            inputFactory.getInput(inputPotion),
+                                            inputFactory.getInput(ingredient.getItems()[0])
+                                    ),
+                                    new RecipeOutput(null, outputPotion)
+                            )
+                    );
+                }
 
-                Field fromField = ObfuscationReflectionHelper.findField(mixClass, "f_43532_");
-                Field ingredientField = ObfuscationReflectionHelper.findField(mixClass, "f_43533_");
-                Field toField = ObfuscationReflectionHelper.findField(mixClass, "f_43534_");
 
-                fromField.setAccessible(true);
-                ingredientField.setAccessible(true);
-                toField.setAccessible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ;
+        }
+    }
+    boolean reg = false;
+    List<RegistryObject<?>> objects = new ArrayList<>();
+    @SubscribeEvent
+    public void registerItemTab(BuildCreativeModeTabContentsEvent event) {
+        if (!reg){
+            objects.addAll(DataItem.objects);
+            objects.addAll(DataBlockEntity.objects);
+            objects.addAll(DataBlock.objects);
+            reg = true;
+        }
+        NonNullList<ItemStack> stackNonNullList =  NonNullList.create();
+        for (RegistryObject<?> object : objects){
+            if (object.get() instanceof IItemTab){
+                IItemTab iItemTab = (IItemTab) object.get();
+                iItemTab.fillItemCategory(event.getTab(),stackNonNullList);
 
-                for (Object mix : potionMixes) {
-                    Potion from = ((net.minecraft.core.Holder.Reference<Potion>) fromField.get(mix)).get();
-                    Ingredient ingredient = (Ingredient) ingredientField.get(mix);
-                    Potion to = ((net.minecraft.core.Holder.Reference<Potion>) toField.get(mix)).get();
+            }
+        }
+        stackNonNullList.forEach(event::accept);
+    }
+    @SubscribeEvent
+    public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity().level().isClientSide) {
+            return;
+        }
+        if (!GuideBookCore.uuidGuideMap.containsKey(event.getEntity().getUUID())){
+            GuideBookCore.instance.load(event.getEntity().getUUID(),event.getEntity());
+        }
 
-                    ItemStack inputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), from);
-                    ItemStack outputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), to);
+        event.getEntity().addItem(new ItemStack(IUItem.book.getItem()));
+    }
+    @SubscribeEvent
+    public void onServerStarting(ServerStartedEvent event) {
+        if (!register1) {
+            register1 = true;
+            Recipes.recipes.initializationRecipes();
+            Recipes.recipes.removeAllRecipesFromList();
+            Recipes.recipes.addAllRecipesFromList();
+            List<IMultiTileBlock> tiles = TileBlockCreator.instance.getAllTiles();
+            for (IMultiTileBlock tileBlock : tiles)
+
+                if (tileBlock.getDummyTe() instanceof IManufacturerBlock) {
+                    if (!mechanism_info1.containsKey(tileBlock)) {
+                        mechanism_info1.put(tileBlock, tileBlock.getDummyTe().getPickBlock(null, null).getDisplayName());
+                    }
+                }
+            RegistryAccess registryAccess = event.getServer().registryAccess();
+            Registry<Biome> biomeRegistry = registryAccess.registryOrThrow(Registries.BIOME);
+            CropInit.initBiomes(biomeRegistry);
+            new GuideBookCore();
+            GuideBookCore.init();
+            ServerLevel level = event.getServer().overworld();
+            RecipeManager recipeManager = level.getRecipeManager();
+            IUDamageSource.initDamage(event.getServer().overworld().registryAccess());
+
+            Collection<SmeltingRecipe> furnaceRecipes = recipeManager.getAllRecipesFor(RecipeType.SMELTING);
+
+            for (SmeltingRecipe recipe : furnaceRecipes) {
+                ItemStack input = recipe.getIngredients().get(0).getItems()[0];
+                ItemStack output = recipe.getResultItem(event.getServer().getLevel(Level.OVERWORLD).registryAccess());
+                if (input.isEmpty()) {
+                    continue;
+                }
+                CompoundTag nbt = new CompoundTag();
+                try {
+                    nbt.putFloat("experience", recipe.getExperience());
+                } catch (Exception e) {
+                    nbt.putFloat("experience", 0.1F);
+
+                }
+                Recipes.recipes.addRecipe(
+                        "furnace",
+                        new BaseMachineRecipe(
+                                new Input(
+                                        inputFactory.getInput(input)
+                                ),
+                                new RecipeOutput(nbt, output)
+                        )
+                );
+            }
+            final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+            for (int i = 0; i < 8; i++) {
+                Recipes.recipes.addRecipe(
+                        "matter",
+                        new BaseMachineRecipe(
+                                new Input(
+                                        input.getInput(new ItemStack(IUItem.matter.getStack(i), 1))
+                                ),
+                                new RecipeOutput(null, new ItemStack(IUItem.matter.getStack(i), 1))
+                        )
+                );
+            }
+            if (!change) {
+                change = true;
+                removeOre("forge:gems/Iridium");
+                removeOre("forge:gems/Americium");
+                removeOre("forge:gems/Neptunium");
+                removeOre("forge:gems/Curium");
+                removeOre("forge:gems/Thorium");
+                removeOre("forge:gems/Bor");
+                removeOre("forge:gems/CrystalFlux");
+                removeOre("forge:gems/Beryllium");
+                addOre1(new ItemStack(Items.REDSTONE));
+                for (String name : RegisterOreDictionary.list_heavyore) {
+                    removeOre("forge:ores/" + name);
+                }
+                for (String name : RegisterOreDictionary.list_mineral) {
+                    removeOre("forge:ores/" + name);
+                }
+                for (String name : RegisterOreDictionary.spaceElementList) {
+                    removeOre("forge:ores/" + name);
+                }
+                removeOre("forge:ores/Sulfur");
+                removeOre("forge:ores/apatite");
+                removeOre("forge:ores/Redstone");
+                removeOre("forge:ores/Boron");
+                removeOre("forge:ores/Beryllium");
+                removeOre("forge:ores/Lithium");
+                removeOre("forge:ores/Calcium");
+                removeOre("forge:ores/Draconium");
+                removeOre("forge:ores/netherite_scrap");
+                removeOre("forge:ores/saltpeter");
+                for (ItemStack stack : IUCore.list) {
+                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("macerator", false, stack);
+                    if (recipe != null) {
+                        this.get_crushed.add(recipe.getOutput().items.get(0));
+                    } else {
+                        this.get_crushed.add(stack);
+                    }
+                }
+                this.get_comb_crushed.clear();
+                for (ItemStack stack : IUCore.list) {
+                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("comb_macerator", false, stack);
+                    if (recipe != null) {
+                        this.get_comb_crushed.add(recipe.getOutput().items.get(0));
+                    } else {
+                        this.get_comb_crushed.add(stack);
+                    }
+                }
+                get_ingot.clear();
+                for (ItemStack stack : IUCore.list) {
+                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("furnace", false, stack);
+                    if (recipe != null) {
+                        this.get_ingot.add(recipe.getOutput().items.get(0));
+                    } else {
+                        this.get_ingot.add(stack);
+                    }
+                }
+
+
+                IUCore.list.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+                get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack));
+                IUCore.get_ingot.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+
+                get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack));
+                IUCore.get_comb_crushed.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+                get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack));
+                IUCore.get_crushed.forEach(stack -> {
+
+                    get_all_list.add(new RecipeInputStack(stack));
+                });
+
+                IUCore.get_crushed.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_crushed_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_polisher.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_polisher_quarry.add(new QuarryItem(stack));
+                    }
+                });
+
+                IUCore.list.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                list_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_ingot.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_ingot_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                IUCore.get_comb_crushed.forEach(stack -> {
+                    if (!stack.isEmpty()) {
+                        this.
+                                get_comb_crushed_quarry.add(new QuarryItem(stack));
+                    }
+                });
+                for (ItemStack stack : IUCore.list) {
+                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("macerator", false, stack);
+                    if (recipe != null) {
+                        this.get_crushed.add(recipe.getOutput().items.get(0));
+                    } else {
+                        this.get_crushed.add(stack);
+                    }
+                }
+                this.get_comb_crushed.clear();
+                for (ItemStack stack : IUCore.list) {
+                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("comb_macerator", false, stack);
+                    if (recipe != null) {
+                        this.get_comb_crushed.add(recipe.getOutput().items.get(0));
+                    } else {
+                        this.get_comb_crushed.add(stack);
+                    }
+                }
+                get_ingot.clear();
+                for (ItemStack stack : IUCore.list) {
+                    BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("furnace", false, stack);
+                    if (recipe != null) {
+                        this.get_ingot.add(recipe.getOutput().items.get(0));
+                    } else {
+                        this.get_ingot.add(stack);
+                    }
+                }
+            }
+            try {
+
+                PotionRecipes.init();
+                List<PotionRecipes.Mix<Potion>> potionMixes = PotionRecipes.potionMixes;
+                for (PotionRecipes.Mix<Potion> mix : potionMixes) {
+                    Holder<Potion> from = mix.from();
+                    Ingredient ingredient = mix.ingredient();
+                    Holder<Potion> to = mix.to();
+
+                    ItemStack inputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), from.value());
+                    ItemStack outputPotion = PotionUtils.setPotion(new ItemStack(Items.POTION), to.value());
 
 
                     Recipes.recipes.addRecipe(
@@ -1029,9 +1250,7 @@ public class IUCore
             BaseSpaceUpgradeSystem.list.forEach(Runnable::run);
             IUCore.runnableListAfterRegisterItem.forEach(Runnable::run);
             new ScrapboxRecipeManager();
-            Recipes.recipes.initializationRecipes();
-            Recipes.recipes.removeAllRecipesFromList();
-            Recipes.recipes.addAllRecipesFromList();
+
 
 
         }

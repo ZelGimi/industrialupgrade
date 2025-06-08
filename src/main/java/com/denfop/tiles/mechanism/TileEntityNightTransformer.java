@@ -58,7 +58,7 @@ public class TileEntityNightTransformer extends TileEntityInventory implements I
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         if (levelBlock < 10) {
             ItemStack stack = player.getItemInHand(hand);
-            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation.getItem())) {
                 return super.onActivated(player, hand, side, vec3);
             } else {
                 stack.shrink(1);

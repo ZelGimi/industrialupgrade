@@ -13,7 +13,7 @@ public interface IItemTab extends ItemLike {
 
     default boolean allowedIn(CreativeModeTab p_220153_) {
         CreativeModeTab creativemodetab = this.getItemCategory();
-        return creativemodetab != null && (p_220153_.getType() == CreativeModeTab.Type.SEARCH || p_220153_ == creativemodetab);
+        return creativemodetab != null && (p_220153_ == creativemodetab);
     }
     CreativeModeTab getItemCategory();
 }

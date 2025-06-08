@@ -22,6 +22,7 @@ import com.denfop.world.WorldGenGas;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
@@ -30,6 +31,8 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+
+import static com.denfop.api.guidebook.GuideBookCore.uuidGuideMap;
 
 public class WorldSavedDataIU extends SavedData {
 
@@ -222,6 +225,37 @@ public class WorldSavedDataIU extends SavedData {
         } else {
             compound.put("relocator", new CompoundTag());
         }
+        Map<UUID, Map<String, List<String>>> mapData = new HashMap<>();
+        uuidGuideMap.clear();
+        if (compound.contains("guide_book")) {
+            CompoundTag data = compound.getCompound("guide_book");
+            ListTag list = data.getList("list", 10);
+
+            for (int i = 0; i < list.size(); i++) {
+                CompoundTag data1 = list.getCompound(i);
+                UUID uuid = data1.getUUID("uuid");
+
+                Map<String, List<String>> mapQuest = new HashMap<>();
+                ListTag list1 = data1.getList("list", 10);
+
+                for (int j = 0; j < list1.size(); j++) {
+                    CompoundTag data2 = list1.getCompound(j);
+                    String tab = data2.getString("tab");
+
+                    ListTag list2 = data2.getList("list", 8);
+                    List<String> names = new ArrayList<>();
+
+                    for (int k = 0; k < list2.size(); k++) {
+                        names.add(list2.getString(k));
+                    }
+
+                    mapQuest.put(tab, names);
+                }
+
+                mapData.put(uuid, mapQuest);
+            }
+        }
+        uuidGuideMap = mapData;
     }
 
     public Level getWorld() {
@@ -374,7 +408,29 @@ public class WorldSavedDataIU extends SavedData {
 
         relocatorTag.put("worldUUID", worldListTag);
         compound.put("relocator", relocatorTag);
-
+        final Map<UUID, Map<String, List<String>>> mapData = uuidGuideMap;
+        if (!mapData.isEmpty()){
+            CompoundTag data = new CompoundTag();
+            ListTag list = new ListTag();
+            for (Map.Entry<UUID, Map<String, List<String>>> entry : mapData.entrySet()){
+                CompoundTag data1 = new CompoundTag();
+                data1.putUUID("uuid",entry.getKey());
+                ListTag list1 = new ListTag();
+                Map<String, List<String>> mapQuest = entry.getValue();
+                for (Map.Entry<String, List<String>> quest : mapQuest.entrySet()){
+                    CompoundTag data2 = new CompoundTag();
+                    data2.putString("tab",quest.getKey());
+                    ListTag list2 = new ListTag();
+                    quest.getValue().forEach(name -> list2.add(StringTag.valueOf(name)));
+                    data2.put("list",list2);
+                    list1.add(data2);
+                }
+                data1.put("list",list1);
+                list.add(data1);
+            }
+            data.put("list",list);
+            compound.put("guide_book", data);
+        }
 
         this.tagCompound = compound;
         return compound;

@@ -997,7 +997,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         ((ItemsPumps) listCirculationPump.get(i).getSlot().get(0).getItem()).applyCustomDamage(listCirculationPump
                 .get(i)
                 .getSlot()
-                .get(0), -1, null);
+                .get(0), 1, null);
     }
 
     @Override

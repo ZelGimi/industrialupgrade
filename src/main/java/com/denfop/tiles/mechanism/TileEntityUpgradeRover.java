@@ -79,6 +79,8 @@ public class TileEntityUpgradeRover extends TileDoubleElectricMachine implements
                 if (module.isEmpty()) {
                     return;
                 }
+
+                module = module.copy();
                 CompoundTag nbt1 = ModUtils.nbt(stack1);
                 if (module.getItem() instanceof ItemSpaceUpgradeModule<?>) {
                     if (SpaceUpgradeSystem.system.getRemaining(stack1) == 0) {

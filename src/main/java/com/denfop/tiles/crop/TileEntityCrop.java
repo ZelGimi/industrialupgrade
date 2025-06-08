@@ -312,6 +312,15 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             downState = level.getBlockState(pos.below());
             downBlock = downState.getBlock();
         }
+        if (crop != null){
+            int tick = crop.getTick();
+            int gen = crop.getGeneration();
+            crop = CropNetwork.instance.getCrop(crop.getId()).copy();
+            crop.setTick(tick);
+            crop.setGeneration(gen);
+            this.genome = new Genome(this.cropItem);
+            genome.loadCrop(crop);
+        }
         this.humus = downBlock == IUItem.humus.getBlock(0);
         this.level.setBlock(pos.below(), downState,3);
     }

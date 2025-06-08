@@ -6,9 +6,9 @@ plugins {
     id 'idea'
 }
 
-version = "${mod_version}"
+version = "${mc_version}"+ '-' + "${mod_version}"
 group = 'com/denfop'
-archivesBaseName = "industrialupgrade"
+archivesBaseName = "IndustrialUpgrade"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -109,7 +109,10 @@ dependencies {
     }*/
 
     implementation fg.deobf("curse.maven:immersive-engineering-231951:5224387")
+    implementation fg.deobf("curse.maven:crafttweaker-239197:6256146")
 
+    compileOnly fg.deobf("curse.maven:kubejs-238086:5853326")
+    implementation fg.deobf("curse.maven:terralith-513688:5512076")
     implementation fg.deobf("curse.maven:the-lost-cities-269024:6174986")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
@@ -124,7 +127,7 @@ dependencies {
         transitive = false
     }
     compileOnly fileTree('lib')
-    compileOnly fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
+    runtimeOnly fileTree('lib')
     compileOnly fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
     compileOnly fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
     //implementation fg.deobf("curse.maven:ftb-library-forge-404465:5282375")

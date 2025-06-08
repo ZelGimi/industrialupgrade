@@ -638,6 +638,7 @@ public class EnergyNetLocal {
 
     public void remove(final IEnergySource par1) {
         final EnergyTick energyTick = this.energyTickList.removeSource(par1);
+        if (energyTick != null)
         if (energyTick.getList() != null) {
             for (Path path : energyTick.getList()) {
                 path.target.getEnergyTickList().remove((Object) energyTick.hashCode());

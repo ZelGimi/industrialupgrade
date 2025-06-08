@@ -82,7 +82,7 @@ public class GuiGeothermalGenerator<T extends ContainerGeothermalgenerator> exte
                 98, 20, 55
         );
         for (final GuiElement<?> element : this.elements) {
-            element.drawBackground( poseStack,mouseX, mouseY);
+            element.drawBackground( poseStack,guiLeft, guiTop);
         }
     }
 

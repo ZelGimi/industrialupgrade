@@ -1,5 +1,7 @@
 {
   "values": [
-    "industrialupgrade:baseore/iridium"
+    "industrialupgrade:baseore/iridium",
+    "industrialupgrade:blockspace2/haumea_iridium",
+    "industrialupgrade:blockspace3/pluto_iridium"
   ]
 }

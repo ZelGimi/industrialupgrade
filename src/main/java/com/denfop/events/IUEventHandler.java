@@ -439,7 +439,7 @@ public class IUEventHandler {
 
         if (stack.getItem() instanceof BlockItem) {
             BlockItem blockItem = (BlockItem) stack.getItem();
-            BlockState state = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(player.level(), player, player.getUsedItemHand(), stack, new BlockHitResult(new Vec3(0, 0, 0), Direction.UP, BlockPos.ZERO, false)));
+            BlockState state = blockItem.getBlock().defaultBlockState();
             List<Component> list = ModUtils.getInformationFromOre(state);
             if (!list.isEmpty()) {
                 event.getToolTip().add(Component.literal(Localization.translate("veins_ores.info1")));

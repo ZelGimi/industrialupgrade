@@ -1,5 +1,6 @@
 {
   "values": [
-    "industrialupgrade:baseore2/sulfur"
+    "industrialupgrade:baseore2/sulfur",
+    "industrialupgrade:blockspace2/io_sulfur"
   ]
 }

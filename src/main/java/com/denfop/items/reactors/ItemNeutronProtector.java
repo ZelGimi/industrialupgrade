@@ -93,7 +93,7 @@ public class ItemNeutronProtector extends ItemDamage implements IReactorItem, II
 
     @Override
     public void damageItem(final ItemStack stack, final int damage) {
-        applyCustomDamage(stack, -1, null);
+        applyCustomDamage(stack, 1, null);
     }
 
     @Override

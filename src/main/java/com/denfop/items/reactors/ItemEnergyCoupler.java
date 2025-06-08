@@ -100,7 +100,7 @@ public class ItemEnergyCoupler extends ItemDamage implements IReactorItem, IItem
 
     @Override
     public void damageItem(final ItemStack stack, final int damage) {
-        applyCustomDamage(stack, -1, null);
+        applyCustomDamage(stack, 1, null);
     }
 
     @Override

@@ -41,7 +41,7 @@ public class ItemSteamRod extends ItemDamage implements ISteamBlade, IItemTab {
 
     @Override
     public boolean damageBlade(final ItemStack stack) {
-        return applyCustomDamage(stack, -1, null);
+        return applyCustomDamage(stack, 1, null);
     }
 
     @Override

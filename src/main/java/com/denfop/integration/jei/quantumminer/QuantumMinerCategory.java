@@ -108,7 +108,7 @@ public class QuantumMinerCategory extends GuiIU implements IRecipeCategory<Quant
         final List<ItemStack> inputs = Arrays.asList(recipe.getInput1());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT,slots1.get(i).getJeiX() + 51, slots1.get(i).getJeiY() - 9).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.OUTPUT,slots1.get(i).getJeiX() + 51, slots1.get(i).getJeiY() - 9).addItemStack(inputs.get(i));
 
 
         }

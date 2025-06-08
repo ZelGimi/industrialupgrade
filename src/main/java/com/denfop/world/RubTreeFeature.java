@@ -14,17 +14,22 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.fml.ModList;
 
 import java.util.*;
 
@@ -296,6 +301,8 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
     }
+
+
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_159749_) {
 
@@ -306,27 +313,32 @@ public class RubTreeFeature extends Feature<NoneFeatureConfiguration> {
         ChunkPos chunkPos = new ChunkPos(p_159749_.origin());
         for (rubberTrees = 0; rubberTrees < 5; ++rubberTrees) {
             int x = chunkPos.getMinBlockX() + 8 + (rubberTrees & 2) * 15;
-            int i = chunkPos.getMinBlockZ() + 8 + ((rubberTrees & 2) >>> 1) * 15;
-            BlockPos pos = new BlockPos(x, 0, i);
-            biomes.add(p_159749_.level().getBiome(pos));
+            int z = chunkPos.getMinBlockZ() + 8 + ((rubberTrees & 2) >>> 1) * 15;
+            int y = p_159749_.level().getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z);
+            BlockPos pos = new BlockPos(x, y, z);
+
+            ChunkAccess chunkAccess = p_159749_.level().getChunk(chunkPos.x, chunkPos.z, ChunkStatus.EMPTY);
+            Holder<Biome> biome = chunkAccess.getNoiseBiome(x >> 2, y >> 2, z >> 2);
+
+            biomes.add(biome);
         }
 
         rubberTrees = 0;
 
 
-        for (Holder<Biome> biome : biomes) {
-            if (biome != null) {
-                if (biome.is(Tags.Biomes.IS_SWAMP)) {
-                    rubberTrees += WorldBaseGen.random.nextInt(10) + 2;
-                }
-                if (biome.is(BiomeTags.IS_JUNGLE)) {
-                    rubberTrees += WorldBaseGen.random.nextInt(15) + 5;
-                }
-                if (biome.is(BiomeTags.IS_FOREST)) {
-                    rubberTrees += WorldBaseGen.random.nextInt(5) + 1;
+            for (Holder<Biome> biome : biomes) {
+                if (biome != null) {
+                    if (biome.is(Tags.Biomes.IS_SWAMP)) {
+                        rubberTrees += WorldBaseGen.random.nextInt(10) + 2;
+                    }
+                    if (biome.is(BiomeTags.IS_JUNGLE)) {
+                        rubberTrees += WorldBaseGen.random.nextInt(15) + 5;
+                    }
+                    if (biome.is(BiomeTags.IS_FOREST)) {
+                        rubberTrees += WorldBaseGen.random.nextInt(5) + 1;
+                    }
                 }
             }
-        }
 
 
         rubberTrees = Math.round((float) rubberTrees * 2);
