@@ -24,7 +24,6 @@ This guide explains how to write a JSON script for registering **Quantum Quarry*
 
 | Field             | Description                                                                    |
 | ----------------- | ------------------------------------------------------------------------------ |
-| `id`              | Recipe ID, used internally (e.g. `industrialupgrade:quarry_default_add`).      |
 | `recipe_type`     | Determines which processing list is targeted:                                  |
 |                   | - `default`       → general quarry recipes                                     |
 |                   | - `furnace`       → furnace-specific quarry recipes                            |
